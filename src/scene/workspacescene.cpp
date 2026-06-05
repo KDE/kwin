@@ -405,7 +405,7 @@ QList<Item *> WorkspaceScene::layerCandidates(ssize_t maxTotalCount) const
         if (maxTotalCount > 1
             && !s_forceSoftwareCursor
             && cursorItem()->isVisible()
-            && painted_delegate->viewport().intersects(cursorItem()->mapToView(cursorItem()->boundingRect(), painted_delegate))) {
+            && m_paintContext.view->viewport().intersects(cursorItem()->mapToView(cursorItem()->boundingRect(), m_paintContext.view))) {
             ret.push_back(cursorItem());
         }
         ret.push_back(containerItem());
@@ -422,7 +422,7 @@ QList<Item *> WorkspaceScene::layerCandidates(ssize_t maxTotalCount) const
 
     const auto overlayItems = m_overlayItem->sortedChildItems();
     for (Item *item : overlayItems | std::views::reverse) {
-        if (!item->isVisible() || !painted_delegate->viewport().intersects(item->mapToView(item->boundingRect(), painted_delegate))) {
+        if (!item->isVisible() || !m_paintContext.view->viewport().intersects(item->mapToView(item->boundingRect(), m_paintContext.view))) {
             continue;
         }
         if (item == cursorItem()) {
@@ -441,7 +441,7 @@ QList<Item *> WorkspaceScene::layerCandidates(ssize_t maxTotalCount) const
             }
             continue;
         }
-        result = findOverlayCandidates(painted_delegate, item, maxTotalCount, occupied, opaque, effected, overlays, underlays, cornerStack, needsCompositedScene);
+        result = findOverlayCandidates(m_paintContext.view, item, maxTotalCount, occupied, opaque, effected, overlays, underlays, cornerStack, needsCompositedScene);
         if (result.has_value()) {
             if (*result) {
                 break;
@@ -452,7 +452,7 @@ QList<Item *> WorkspaceScene::layerCandidates(ssize_t maxTotalCount) const
     }
 
     if (!result) {
-        result = findOverlayCandidates(painted_delegate, m_containerItem.get(), maxTotalCount, occupied, opaque, effected, overlays, underlays, cornerStack, needsCompositedScene);
+        result = findOverlayCandidates(m_paintContext.view, m_containerItem.get(), maxTotalCount, occupied, opaque, effected, overlays, underlays, cornerStack, needsCompositedScene);
         if (result.has_value() && !*result) {
             return fallback();
         }
@@ -490,8 +490,8 @@ static double getDesiredHdrHeadroom(Item *item)
 double WorkspaceScene::desiredHdrHeadroom() const
 {
     double maxHeadroom = 1;
-    for (const auto &item : stacking_order) {
-        if (!item->window()->frameGeometry().intersects(painted_delegate->viewport())) {
+    for (const auto &item : m_paintContext.stackingOrder) {
+        if (!item->window()->frameGeometry().intersects(m_paintContext.view->viewport())) {
             continue;
         }
         maxHeadroom = std::max(maxHeadroom, getDesiredHdrHeadroom(item));
@@ -511,8 +511,8 @@ void WorkspaceScene::frame(SceneView *delegate, OutputFrame *frame)
 
 void WorkspaceScene::prePaint(SceneView *delegate, OutputFrame *frame)
 {
-    painted_delegate = delegate;
-    painted_screen = painted_delegate->logicalOutput();
+    m_paintContext.view = delegate;
+    m_paintContext.screen = delegate->logicalOutput();
 
     createStackingOrder();
 
@@ -521,7 +521,7 @@ void WorkspaceScene::prePaint(SceneView *delegate, OutputFrame *frame)
 
     ScreenPrePaintData prePaintData;
     prePaintData.mask = 0;
-    prePaintData.screen = painted_screen;
+    prePaintData.screen = m_paintContext.screen;
     prePaintData.view = delegate;
     prePaintData.frame = frame;
 
@@ -529,7 +529,7 @@ void WorkspaceScene::prePaint(SceneView *delegate, OutputFrame *frame)
     Q_EMIT preFrameRender();
 
     effects->prePaintScreen(prePaintData);
-    m_paintContext.deviceDamage = painted_delegate->mapToDeviceCoordinatesAligned(prePaintData.paint) & painted_delegate->deviceRect();
+    m_paintContext.deviceDamage = m_paintContext.view->mapToDeviceCoordinatesAligned(prePaintData.paint) & m_paintContext.view->deviceRect();
     m_paintContext.mask = prePaintData.mask;
     m_paintContext.phase2Data.clear();
 
@@ -581,13 +581,13 @@ static void accumulateRepaints(Item *item, SceneView *view, Region *windowRepain
 
 void WorkspaceScene::preparePaintGenericScreen()
 {
-    for (WindowItem *windowItem : std::as_const(stacking_order)) {
-        resetRepaintsHelper(windowItem, painted_delegate);
+    for (WindowItem *windowItem : std::as_const(m_paintContext.stackingOrder)) {
+        resetRepaintsHelper(windowItem, m_paintContext.view);
 
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
 
-        effects->prePaintWindow(painted_delegate, windowItem->effectWindow(), data);
+        effects->prePaintWindow(m_paintContext.view, windowItem->effectWindow(), data);
         m_paintContext.phase2Data.append(Phase2Data{
             .item = windowItem,
             .deviceRegion = Region::infinite(),
@@ -616,16 +616,16 @@ static void addOpaqueRegionRecursive(SceneView *view, Item *item, const std::opt
 
 void WorkspaceScene::preparePaintSimpleScreen()
 {
-    for (WindowItem *windowItem : std::as_const(stacking_order)) {
+    for (WindowItem *windowItem : std::as_const(m_paintContext.stackingOrder)) {
         Window *window = windowItem->window();
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
 
-        effects->prePaintWindow(painted_delegate, windowItem->effectWindow(), data);
+        effects->prePaintWindow(m_paintContext.view, windowItem->effectWindow(), data);
 
         Region opaque;
         if (window->opacity() == 1.0 && !(data.mask & PAINT_WINDOW_TRANSLUCENT)) {
-            addOpaqueRegionRecursive(painted_delegate, windowItem, std::nullopt, opaque);
+            addOpaqueRegionRecursive(m_paintContext.view, windowItem, std::nullopt, opaque);
         }
         m_paintContext.phase2Data.append(Phase2Data{
             .item = windowItem,
@@ -639,8 +639,8 @@ void WorkspaceScene::preparePaintSimpleScreen()
 Region WorkspaceScene::collectDamage()
 {
     if (m_paintContext.mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) {
-        resetRepaintsHelper(m_overlayItem.get(), painted_delegate);
-        m_paintContext.deviceDamage = painted_delegate->deviceRect();
+        resetRepaintsHelper(m_overlayItem.get(), m_paintContext.view);
+        m_paintContext.deviceDamage = m_paintContext.view->deviceRect();
         return m_paintContext.deviceDamage;
     } else {
         // collect all damage, from bottom to top
@@ -648,25 +648,25 @@ Region WorkspaceScene::collectDamage()
         Region forceTranslucent;
         for (auto &data : m_paintContext.phase2Data) {
             data.deviceOpaque -= forceTranslucent;
-            accumulateRepaints(data.item, painted_delegate, &data.deviceRegion, &accumulatedRepaints, &forceTranslucent);
+            accumulateRepaints(data.item, m_paintContext.view, &data.deviceRegion, &accumulatedRepaints, &forceTranslucent);
         }
-        accumulateRepaints(m_overlayItem.get(), painted_delegate, &m_paintContext.deviceDamage, &accumulatedRepaints, &forceTranslucent);
+        accumulateRepaints(m_overlayItem.get(), m_paintContext.view, &m_paintContext.deviceDamage, &accumulatedRepaints, &forceTranslucent);
 
         // Perform an occlusion cull pass, to remove surface damage occluded by opaque windows.
         Region opaque;
-        addOpaqueRegionRecursive(painted_delegate, m_overlayItem.get(), std::nullopt, opaque);
+        addOpaqueRegionRecursive(m_paintContext.view, m_overlayItem.get(), std::nullopt, opaque);
         for (auto &paintData : m_paintContext.phase2Data | std::views::reverse) {
             m_paintContext.deviceDamage |= paintData.deviceRegion - opaque;
 
             // TODO make occlusion culling per item, rather than per window
-            const bool canCover = painted_delegate->shouldRenderItem(paintData.item->surfaceItem())
-                || painted_delegate->shouldRenderHole(paintData.item->surfaceItem());
+            const bool canCover = m_paintContext.view->shouldRenderItem(paintData.item->surfaceItem())
+                || m_paintContext.view->shouldRenderHole(paintData.item->surfaceItem());
             if (!(paintData.mask & (PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED)) && canCover) {
                 opaque += paintData.deviceOpaque;
             }
         }
 
-        return m_paintContext.deviceDamage & painted_delegate->deviceRect();
+        return m_paintContext.deviceDamage & m_paintContext.view->deviceRect();
     }
 }
 
@@ -674,18 +674,18 @@ void WorkspaceScene::postPaint()
 {
     effects->postPaintScreen();
 
-    painted_delegate = nullptr;
-    painted_screen = nullptr;
+    m_paintContext.view = nullptr;
+    m_paintContext.screen = nullptr;
     clearStackingOrder();
 }
 
 void WorkspaceScene::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion)
 {
-    RenderViewport viewport(painted_delegate->viewport(), painted_delegate->scale(), renderTarget, deviceOffset);
+    RenderViewport viewport(m_paintContext.view->viewport(), m_paintContext.view->scale(), renderTarget, deviceOffset);
 
     m_renderer->beginFrame(renderTarget, viewport);
 
-    effects->paintScreen(renderTarget, viewport, m_paintContext.mask, deviceRegion, painted_screen);
+    effects->paintScreen(renderTarget, viewport, m_paintContext.mask, deviceRegion, m_paintContext.screen);
 
     Q_EMIT frameRendered();
     m_renderer->endFrame();
@@ -713,9 +713,9 @@ void WorkspaceScene::paintGenericScreen(const RenderTarget &renderTarget, const 
 
     const Rect bounds = viewport.mapToDeviceCoordinates(m_overlayItem->mapToScene(m_overlayItem->boundingRect())).toRect();
     m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, bounds, WindowPaintData{}, [this](Item *item) {
-        return !painted_delegate->shouldRenderItem(item);
+        return !m_paintContext.view->shouldRenderItem(item);
     }, [this](Item *item) {
-        return painted_delegate->shouldRenderHole(item);
+        return m_paintContext.view->shouldRenderHole(item);
     });
 }
 
@@ -734,8 +734,8 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
             data->deviceRegion &= viewport.mapToDeviceCoordinatesAligned(data->item->mapToScene(data->item->boundingRect()));
 
             // TODO change effects API, so occlusion culling is per item, rather than per window
-            const bool canCover = painted_delegate->shouldRenderItem(data->item->surfaceItem())
-                || painted_delegate->shouldRenderHole(data->item->surfaceItem());
+            const bool canCover = m_paintContext.view->shouldRenderItem(data->item->surfaceItem())
+                || m_paintContext.view->shouldRenderHole(data->item->surfaceItem());
             if (!(data->mask & PAINT_WINDOW_TRANSLUCENT) && canCover) {
                 visible -= data->deviceOpaque;
             }
@@ -752,9 +752,9 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
     const Region deviceRepaint = deviceRegion & bounds;
     if (!deviceRepaint.isEmpty()) {
         m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, deviceRepaint, WindowPaintData{}, [this](Item *item) {
-            return !painted_delegate->shouldRenderItem(item);
+            return !m_paintContext.view->shouldRenderItem(item);
         }, [this](Item *item) {
-            return painted_delegate->shouldRenderHole(item);
+            return m_paintContext.view->shouldRenderHole(item);
         });
     }
 }
@@ -764,22 +764,22 @@ void WorkspaceScene::createStackingOrder()
     QList<Item *> items = m_containerItem->sortedChildItems();
     for (Item *item : std::as_const(items)) {
         WindowItem *windowItem = static_cast<WindowItem *>(item);
-        if (painted_delegate && painted_delegate->shouldHideWindow(windowItem->window())) {
+        if (m_paintContext.view && m_paintContext.view->shouldHideWindow(windowItem->window())) {
             continue;
         }
         if (windowItem->isVisible()) {
             windowItem->window()->ref();
-            stacking_order.append(windowItem);
+            m_paintContext.stackingOrder.append(windowItem);
         }
     }
 }
 
 void WorkspaceScene::clearStackingOrder()
 {
-    for (WindowItem *windowItem : std::as_const(stacking_order)) {
+    for (WindowItem *windowItem : std::as_const(m_paintContext.stackingOrder)) {
         windowItem->window()->unref();
     }
-    stacking_order.clear();
+    m_paintContext.stackingOrder.clear();
 }
 
 void WorkspaceScene::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, WindowItem *item, int mask, const Region &deviceRegion)
@@ -804,9 +804,9 @@ void WorkspaceScene::finalDrawWindow(const RenderTarget &renderTarget, const Ren
     // TODO: Reconsider how the CrossFadeEffect captures the initial window contents to remove
     // null pointer delegate checks in "should render item" and "should render hole" checks.
     m_renderer->renderItem(renderTarget, viewport, w->windowItem(), mask, deviceRegion, data, [this](Item *item) {
-        return painted_delegate && !painted_delegate->shouldRenderItem(item);
+        return m_paintContext.view && !m_paintContext.view->shouldRenderItem(item);
     }, [this](Item *item) {
-        return painted_delegate && painted_delegate->shouldRenderHole(item);
+        return m_paintContext.view && m_paintContext.view->shouldRenderHole(item);
     });
 }
 

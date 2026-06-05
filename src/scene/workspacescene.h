@@ -105,14 +105,14 @@ protected:
         Region deviceDamage;
         int mask = 0;
         QList<Phase2Data> phase2Data;
+
+        // The screen that is being currently painted
+        LogicalOutput *screen = nullptr;
+        SceneView *view = nullptr;
+
+        // windows in their stacking order
+        QList<WindowItem *> stackingOrder;
     };
-
-    // The screen that is being currently painted
-    LogicalOutput *painted_screen = nullptr;
-    SceneView *painted_delegate = nullptr;
-
-    // windows in their stacking order
-    QList<WindowItem *> stacking_order;
 
 private:
     void createDndIconItem();
