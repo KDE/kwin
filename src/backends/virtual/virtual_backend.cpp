@@ -52,11 +52,6 @@ QList<CompositingType> VirtualBackend::supportedCompositors() const
     return compositingTypes;
 }
 
-DrmDevice *VirtualBackend::drmDevice() const
-{
-    return m_renderDevice ? m_renderDevice->drmDevice() : nullptr;
-}
-
 std::unique_ptr<EglBackend> VirtualBackend::createOpenGLBackend()
 {
     return std::make_unique<VirtualEglBackend>(this);

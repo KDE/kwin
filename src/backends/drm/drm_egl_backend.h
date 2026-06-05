@@ -42,8 +42,6 @@ public:
     EglGbmBackend(DrmBackend *drmBackend);
     ~EglGbmBackend() override;
 
-    DrmDevice *drmDevice() const override;
-
     QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) override;
 
     bool init() override;

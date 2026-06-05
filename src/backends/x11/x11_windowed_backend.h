@@ -100,7 +100,6 @@ public:
     xcb_screen_t *screen() const;
     int screenNumer() const;
     xcb_window_t rootWindow() const;
-    DrmDevice *drmDevice() const;
 
     bool hasXInput() const;
 

@@ -45,7 +45,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::doBeginFram
         if (!formatTable.contains(format)) {
             return std::nullopt;
         }
-        m_swapchain = EglSwapchain::create(m_backend->drmDevice()->allocator(), m_backend->openglContext(), bufferSize, format, formatTable[format], false);
+        m_swapchain = EglSwapchain::create(m_backend->renderDevice()->allocator(), m_backend->openglContext(), bufferSize, format, formatTable[format], false);
         if (!m_swapchain) {
             return std::nullopt;
         }
@@ -169,11 +169,6 @@ X11WindowedEglBackend::~X11WindowedEglBackend()
 X11WindowedBackend *X11WindowedEglBackend::backend() const
 {
     return m_backend;
-}
-
-DrmDevice *X11WindowedEglBackend::drmDevice() const
-{
-    return m_backend->drmDevice();
 }
 
 bool X11WindowedEglBackend::initializeEgl()

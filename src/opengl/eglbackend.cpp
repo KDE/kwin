@@ -106,8 +106,6 @@ void EglBackend::initWayland()
     if (!WaylandServer::self()) {
         return;
     }
-    DrmDevice *scanoutDevice = drmDevice();
-    Q_ASSERT(scanoutDevice);
 
     auto filterFormats = [this](std::optional<uint32_t> bpc, bool withExternalOnlyYUV) {
         FormatModifierMap set;
@@ -160,17 +158,17 @@ void EglBackend::initWayland()
     };
 
     m_tranches.append({
-        .device = m_renderDevice->eglDisplay()->renderDevNode().value_or(scanoutDevice->deviceId()),
+        .device = m_renderDevice->drmDevice()->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
         .formatTable = filterFormats(10, false),
     });
     m_tranches.append({
-        .device = m_renderDevice->eglDisplay()->renderDevNode().value_or(scanoutDevice->deviceId()),
+        .device = m_renderDevice->drmDevice()->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
         .formatTable = filterFormats(8, false),
     });
     m_tranches.append({
-        .device = m_renderDevice->eglDisplay()->renderDevNode().value_or(scanoutDevice->deviceId()),
+        .device = m_renderDevice->drmDevice()->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
         .formatTable = includeShaderConversions(filterFormats(std::nullopt, true)),
     });

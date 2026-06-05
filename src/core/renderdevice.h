@@ -24,6 +24,7 @@ class EglDisplay;
 class EglContext;
 class GraphicsBuffer;
 class VulkanDevice;
+class GraphicsBufferAllocator;
 
 class KWIN_EXPORT RenderDevice : public QObject
 {
@@ -38,6 +39,7 @@ public:
      * This doesn't necessarily represent a render node!
      */
     DrmDevice *drmDevice() const;
+    GraphicsBufferAllocator *allocator() const;
     EglDisplay *eglDisplay() const;
     /**
      * @returns an EGL context suitable for rendering with this render device,

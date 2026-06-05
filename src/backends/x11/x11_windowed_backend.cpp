@@ -676,11 +676,6 @@ xcb_window_t X11WindowedBackend::rootWindow() const
     return m_screen->root;
 }
 
-DrmDevice *X11WindowedBackend::drmDevice() const
-{
-    return m_renderDevice ? m_renderDevice->drmDevice() : nullptr;
-}
-
 X11WindowedInputDevice *X11WindowedBackend::pointerDevice() const
 {
     return m_pointerDevice.get();

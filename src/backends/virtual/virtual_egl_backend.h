@@ -64,7 +64,6 @@ public:
     bool init() override;
 
     VirtualBackend *backend() const;
-    DrmDevice *drmDevice() const override;
 
 private:
     bool initializeEgl();
