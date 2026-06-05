@@ -23,6 +23,7 @@ class OutputChangeSet;
 class BrightnessDevice;
 class OutputFrame;
 class OutputLayer;
+class DrmDevice;
 
 class KWIN_EXPORT AutoBrightnessCurve
 {
@@ -129,7 +130,7 @@ public:
     };
     Q_ENUM(BrightnessReason);
 
-    explicit BackendOutput();
+    explicit BackendOutput(DrmDevice *scanoutDevice = nullptr);
     ~BackendOutput() override;
 
     void ref();
@@ -338,6 +339,8 @@ public:
 
     uint32_t abmLevel() const;
 
+    DrmDevice *scanoutDevice() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the position of this output has changed.
@@ -505,6 +508,7 @@ protected:
     Information m_information;
     int m_refCount = 1;
     std::unique_ptr<RenderLoop> m_renderLoop;
+    DrmDevice *m_scanoutDevice = nullptr;
 };
 
 }

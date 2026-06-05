@@ -119,7 +119,7 @@ const wp_fractional_scale_v1_listener WaylandOutput::s_fractionalScaleListener{
 };
 
 WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
-    : BackendOutput()
+    : BackendOutput(backend->drmDevice())
     , m_surface(backend->display()->compositor()->createSurface())
     , m_xdgShellSurface(backend->display()->xdgShell()->createSurface(m_surface.get()))
     , m_backend(backend)

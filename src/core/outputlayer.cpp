@@ -179,6 +179,14 @@ void OutputLayer::setTargetRect(const Rect &rect)
     m_targetRect = rect;
 }
 
+DrmDevice *OutputLayer::scanoutDevice() const
+{
+    if (!m_output) {
+        return nullptr;
+    }
+    return m_output->scanoutDevice();
+}
+
 FormatModifierMap OutputLayer::supportedAsyncDrmFormats() const
 {
     return supportedDrmFormats();

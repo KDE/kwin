@@ -23,11 +23,6 @@ void ScreencastLayer::setFramebuffer(GLFramebuffer *buffer, const Region &buffer
     m_bufferDamage = bufferDamage;
 }
 
-DrmDevice *ScreencastLayer::scanoutDevice() const
-{
-    return nullptr;
-}
-
 FormatModifierMap ScreencastLayer::supportedDrmFormats() const
 {
     return m_formats;

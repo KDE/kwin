@@ -16,7 +16,6 @@ public:
 
     void setFramebuffer(GLFramebuffer *buffer, const Region &bufferDamage);
 
-    DrmDevice *scanoutDevice() const override;
     FormatModifierMap supportedDrmFormats() const override;
     void releaseBuffers() override;
 
