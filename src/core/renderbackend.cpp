@@ -173,11 +173,6 @@ bool RenderBackend::checkGraphicsReset()
     return false;
 }
 
-DrmDevice *RenderBackend::drmDevice() const
-{
-    return nullptr;
-}
-
 RenderDevice *RenderBackend::renderDevice() const
 {
     return nullptr;

@@ -14,6 +14,7 @@
 #include "core/drmdevice.h"
 #include "core/inputdevice.h"
 #include "core/renderbackend.h"
+#include "core/renderdevice.h"
 #include "input_event.h"
 #include "logging_p.h"
 #include "opengl/eglcontext.h"
@@ -324,7 +325,7 @@ void OffscreenQuickView::update(OutputFrame *frame)
             }
             if (!d->m_swapchain) {
                 // TODO add non-scanout feedback on the item for this?
-                d->m_swapchain = EglSwapchain::create(Compositor::self()->backend()->drmDevice()->allocator(),
+                d->m_swapchain = EglSwapchain::create(Compositor::self()->backend()->renderDevice()->allocator(),
                                                       EglContext::currentContext(), nativeSize,
                                                       format, Compositor::self()->backend()->supportedFormats()[format],
                                                       false);

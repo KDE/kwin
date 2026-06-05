@@ -96,6 +96,11 @@ DrmDevice *RenderDevice::drmDevice() const
     return m_device.get();
 }
 
+GraphicsBufferAllocator *RenderDevice::allocator() const
+{
+    return m_device->allocator();
+}
+
 EglDisplay *RenderDevice::eglDisplay() const
 {
     return m_display.get();

@@ -12,6 +12,7 @@
 #include "core/drmdevice.h"
 #include "core/graphicsbufferallocator.h"
 #include "core/renderbackend.h"
+#include "core/renderdevice.h"
 #include "cursor.h"
 #include "kwinscreencast_logging.h"
 #include "main.h"
@@ -886,7 +887,7 @@ std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(
         return std::nullopt;
     }
 
-    GraphicsBuffer *buffer = backend->drmDevice()->allocator()->allocate(GraphicsBufferOptions{
+    GraphicsBuffer *buffer = backend->renderDevice()->allocator()->allocate(GraphicsBufferOptions{
         .size = size,
         .format = format,
         .modifiers = modifiers,
@@ -926,7 +927,7 @@ std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(
         .height = attrs->height,
         .format = attrs->format,
         .modifier = attrs->modifier,
-        .supportsSyncObj = backend->drmDevice()->supportsSyncObjTimelines(),
+        .supportsSyncObj = backend->renderDevice()->drmDevice() && backend->renderDevice()->drmDevice()->supportsSyncObjTimelines(),
     };
 }
 

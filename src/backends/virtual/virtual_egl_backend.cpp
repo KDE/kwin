@@ -9,6 +9,7 @@
 #include "virtual_egl_backend.h"
 #include "core/drmdevice.h"
 #include "core/gbmgraphicsbufferallocator.h"
+#include "core/renderdevice.h"
 #include "opengl/eglswapchain.h"
 #include "opengl/glrendertimequery.h"
 #include "opengl/glutils.h"
@@ -41,7 +42,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::doBeginFrame()
 
     const QSize nativeSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
-        m_swapchain = EglSwapchain::create(m_backend->drmDevice()->allocator(), m_backend->openglContext(), nativeSize, DRM_FORMAT_XRGB8888, m_backend->supportedFormats()[DRM_FORMAT_XRGB8888], false);
+        m_swapchain = EglSwapchain::create(m_backend->renderDevice()->allocator(), m_backend->openglContext(), nativeSize, DRM_FORMAT_XRGB8888, m_backend->supportedFormats()[DRM_FORMAT_XRGB8888], false);
         if (!m_swapchain) {
             return std::nullopt;
         }
@@ -104,11 +105,6 @@ VirtualEglBackend::~VirtualEglBackend()
 VirtualBackend *VirtualEglBackend::backend() const
 {
     return m_backend;
-}
-
-DrmDevice *VirtualEglBackend::drmDevice() const
-{
-    return m_backend->drmDevice();
 }
 
 bool VirtualEglBackend::initializeEgl()

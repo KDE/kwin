@@ -23,7 +23,6 @@ class LogicalOutput;
 class OutputLayer;
 class PresentationFeedback;
 class RenderLoop;
-class DrmDevice;
 class SyncTimeline;
 class RenderDevice;
 
@@ -132,7 +131,6 @@ public:
 
     virtual QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) = 0;
 
-    virtual DrmDevice *drmDevice() const;
     virtual RenderDevice *renderDevice() const;
 
     virtual bool testImportBuffer(GraphicsBuffer *buffer);
