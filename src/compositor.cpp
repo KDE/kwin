@@ -341,7 +341,7 @@ static Rect mapItemToOutputDeviceCoordinates(Item *item, RenderView *view, Logic
 
 static bool prepareDirectScanout(RenderView *view, LogicalOutput *logicalOutput, BackendOutput *backendOutput, const std::shared_ptr<OutputFrame> &frame)
 {
-    if (!view->isVisible()) {
+    if (!view->isVisible() || !view->layer()->scanoutDevice()) {
         return false;
     }
     const auto layer = view->layer();
