@@ -326,8 +326,8 @@ void Application::applyXwaylandScale()
 
 #if KWIN_BUILD_X11
     if (x11Connection()) {
-        // rerun the fonts kcm init that does the appropriate xrdb call with the new settings
-        QProcess::startDetached("kcminit", {"kcm_fonts_init", "kcm_style_init"});
+        // rerun the script that runs xrdb with the new settings
+        QProcess::startDetached(QString(LIBEXEC_DIR) + QStringLiteral("/plasma-setup-xwayland"));
     }
 #endif
 }
