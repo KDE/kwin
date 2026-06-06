@@ -368,6 +368,11 @@ bool Effect::borderActivated(ElectricBorder)
     return false;
 }
 
+void Effect::prePaintView(SceneView *view, OutputFrame *frame)
+{
+    // intentionally empty
+}
+
 void Effect::prePaintScreen(ScreenPrePaintData &data)
 {
     effects->prePaintScreen(data);
