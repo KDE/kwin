@@ -10,12 +10,14 @@
 */
 
 #include "zoom.h"
+#include "core/pixelgrid.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "cursor.h"
 #include "effect/effecthandler.h"
 #include "focustracker.h"
 #include "opengl/glutils.h"
+#include "scene/workspacescene.h"
 #include "textcarettracker.h"
 #include "utils/keys.h"
 #include "zoomconfig.h"
@@ -119,13 +121,14 @@ ZoomEffect::ZoomEffect()
     m_timeline.setDuration(350);
     m_timeline.setFrameRange(0, 100);
     connect(&m_timeline, &QTimeLine::frameChanged, this, &ZoomEffect::timelineFrameChanged);
-    connect(effects, &EffectsHandler::windowAdded, this, &ZoomEffect::slotWindowAdded);
-    connect(effects, &EffectsHandler::screenRemoved, this, &ZoomEffect::slotScreenRemoved);
 
-    const auto windows = effects->stackingOrder();
-    for (EffectWindow *w : windows) {
-        slotWindowAdded(w);
-    }
+    connect(effects->scene(), &WorkspaceScene::viewRemoved, this, [this](RenderView *view) {
+        auto it = m_offscreenData.find(view);
+        if (it != m_offscreenData.end()) {
+            effects->makeOpenGLContextCurrent();
+            m_offscreenData.erase(it);
+        }
+    });
 
     reconfigure(ReconfigureAll);
 
@@ -198,15 +201,26 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
     bool usePatternUpscaler = ZoomConfig::usePatternUpscaler();
     if (usePatternUpscaler != m_usePatternUpscaler) {
         m_usePatternUpscaler = usePatternUpscaler;
-        effects->addRepaintFull();
+        effects->scheduleFrame();
     }
 }
 
 void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
 {
+    m_currentView = data.view;
     data.mask |= PAINT_SCREEN_TRANSFORMED;
+
+    effects->prePaintScreen(data);
+}
+
+void ZoomEffect::prePaintView(SceneView *view, OutputFrame *frame)
+{
+    if (m_paintingZoom) {
+        return;
+    }
+
     if (m_zoom != m_targetZoom) {
-        const int time = m_clock.tick(data.view).count();
+        const int time = m_clock.tick(view).count();
 
         const float zoomDist = std::abs(m_targetZoom - m_sourceZoom);
         if (m_targetZoom > m_zoom) {
@@ -300,36 +314,76 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
         if (m_yMove) {
             m_prevPoint.setY(m_prevPoint.y() + m_yMove);
         }
-        m_xTranslation = -int(m_prevPoint.x() * (m_zoom - 1.0));
-        m_yTranslation = -int(m_prevPoint.y() * (m_zoom - 1.0));
+        m_xTranslation = -int(std::max(0.0, m_prevPoint.x() * (m_zoom - 1.0)));
+        m_yTranslation = -int(std::max(0.0, m_prevPoint.y() * (m_zoom - 1.0)));
         break;
     }
     }
 
-    effects->prePaintScreen(data);
-}
+    if (m_zoom == 1.0) {
+        auto it = m_offscreenData.find(view);
+        if (it != m_offscreenData.end()) {
+            effects->makeOpenGLContextCurrent();
+            m_offscreenData.erase(it);
+            view->addDeviceRepaint(view->deviceRect());
+        }
+        return;
+    }
 
-ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, LogicalOutput *screen)
-{
-    const QSize nativeSize = viewport.deviceSize();
+    m_paintingZoom = true;
+    const auto cleanup = qScopeGuard([this]() {
+        m_paintingZoom = false;
+    });
 
-    // TODO this should be per view, rather than per logical screen.
-    OffscreenData &data = m_offscreenData[screen];
-    data.viewport = viewport.renderRect();
-    data.color = renderTarget.colorDescription();
+    OffscreenData &data = m_offscreenData[view];
+    data.color = view->logicalOutput()->blendingColor();
+    if (!data.view) {
+        data.view = std::make_unique<SceneView>(effects->scene(), view->logicalOutput(), nullptr, nullptr, view->renderDevice());
+    }
 
-    const GLenum textureFormat = renderTarget.colorDescription() == ColorDescription::sRGB ? GL_RGBA8 : GL_RGBA16F;
+    RectF newViewport = view->viewport();
+    newViewport.setWidth(newViewport.width());
+    newViewport.setHeight(newViewport.height());
+    newViewport.translate(-m_xTranslation, -m_yTranslation);
+    newViewport.scale(1.0 / m_zoom);
+    newViewport = snapToPixels(newViewport, view->scale());
+    data.view->setViewport(newViewport);
+    data.view->setScale(view->scale());
+    data.view->setNextPresentationTimestamp(view->nextPresentationTimestamp(), view->refreshRate());
+
+    if (!effects->makeOpenGLContextCurrent()) {
+        return;
+    }
+
+    const QSize nativeSize = (newViewport.size() * data.view->scale()).toSize();
+    const GLenum textureFormat = data.color == ColorDescription::sRGB ? GL_RGBA8 : GL_RGBA16F;
     if (!data.texture || data.texture->size() != nativeSize || data.texture->internalFormat() != textureFormat) {
         data.texture = GLTexture::allocate(textureFormat, nativeSize);
         if (!data.texture) {
-            return nullptr;
+            m_offscreenData.erase(view);
+            return;
         }
         data.texture->setFilter(GL_LINEAR);
         data.texture->setWrapMode(GL_CLAMP_TO_EDGE);
         data.framebuffer = std::make_unique<GLFramebuffer>(data.texture.get());
+        if (!data.framebuffer->valid()) {
+            m_offscreenData.erase(view);
+            return;
+        }
     }
 
-    return &data;
+    RenderTarget offscreenRenderTarget(data.framebuffer.get(), data.color);
+    RenderViewport offscreenViewport(newViewport, data.view->scale(), offscreenRenderTarget, QPoint());
+
+    GLFramebuffer::pushFramebuffer(data.framebuffer.get());
+    data.view->prePaint(frame);
+    data.view->paint(offscreenRenderTarget, QPoint(), Rect(QPoint(), nativeSize));
+    data.view->postPaint();
+    if (EglContext::currentContext()) {
+        GLFramebuffer::popFramebuffer();
+    }
+
+    view->addDeviceRepaint(view->deviceRect());
 }
 
 GLShader *ZoomEffect::shaderForZoom(double zoom)
@@ -360,56 +414,45 @@ GLShader *ZoomEffect::shaderForZoom(double zoom)
 
 bool ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
-    OffscreenData *offscreenData = ensureOffscreenData(renderTarget, viewport, screen);
-    if (!offscreenData) {
-        EglContext::currentContext()->setFailed();
-        return false;
+    if (m_paintingZoom) {
+        return effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
     }
-
-    // Render the scene in an offscreen texture and then upscale it.
-    RenderTarget offscreenRenderTarget(offscreenData->framebuffer.get(), renderTarget.colorDescription());
-    RenderViewport offscreenViewport(viewport.renderRect(), viewport.scale(), offscreenRenderTarget, QPoint());
-    GLFramebuffer::pushFramebuffer(offscreenData->framebuffer.get());
-    if (!effects->paintScreen(offscreenRenderTarget, offscreenViewport, mask, deviceRegion, screen)) {
-        return false;
+    auto it = m_offscreenData.find(m_currentView);
+    if (it == m_offscreenData.end()) {
+        return true;
     }
-    GLFramebuffer::popFramebuffer();
-
-    const auto scale = viewport.scale();
-
-    // Render transformed offscreen texture.
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT);
+    OffscreenData &offscreenData = it->second;
 
     GLShader *shader = shaderForZoom(m_zoom);
-    ShaderManager::instance()->pushShader(shader);
-    shader->setUniform("zoomLevel", this->m_zoom);
-    for (auto &[screen, offscreen] : m_offscreenData) {
-        QMatrix4x4 matrix;
-        matrix.translate(m_xTranslation * scale, m_yTranslation * scale);
-        matrix.scale(m_zoom, m_zoom);
-        matrix.translate(offscreen.viewport.x() * scale, offscreen.viewport.y() * scale);
-
-        shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix() * matrix);
-        shader->setUniform(GLShader::IntUniform::TextureWidth, offscreen.texture->width());
-        shader->setUniform(GLShader::IntUniform::TextureHeight, offscreen.texture->height());
-        shader->setColorspaceUniforms(offscreen.color, renderTarget.colorDescription(), RenderingIntent::Perceptual);
-
-        offscreen.texture->render(offscreen.viewport.size() * scale);
+    if (!shader) {
+        return false;
     }
+    ShaderManager::instance()->pushShader(shader);
+
+    shader->setUniform("zoomLevel", m_zoom);
+    QMatrix4x4 proj = renderTarget.transform().toMatrix();
+    proj.ortho(QRect(QPoint(), offscreenData.texture->size()));
+    shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, proj);
+    shader->setUniform(GLShader::IntUniform::TextureWidth, offscreenData.texture->width());
+    shader->setUniform(GLShader::IntUniform::TextureHeight, offscreenData.texture->height());
+    shader->setColorspaceUniforms(offscreenData.color, renderTarget.colorDescription(), RenderingIntent::Perceptual);
+
+    offscreenData.texture->render(offscreenData.texture->size());
+
     ShaderManager::instance()->popShader();
     return true;
 }
 
 void ZoomEffect::postPaintScreen()
 {
+    m_currentView = nullptr;
     if (m_zoom == m_targetZoom) {
         m_clock.reset();
     }
 
     if (m_zoom == 1.0 || m_zoom != m_targetZoom) {
         // Either animation is running or the zoom effect has stopped.
-        effects->addRepaintFull();
+        effects->scheduleFrame();
     }
 
     effects->postPaintScreen();
@@ -515,27 +558,6 @@ void ZoomEffect::slotMouseChanged(const QPointF &pos, const QPointF &old)
     if (pos != old) {
         m_cursorPoint = pos.toPoint();
         m_lastMouseEvent = QTime::currentTime();
-        effects->addRepaintFull();
-    }
-}
-
-void ZoomEffect::slotWindowAdded(EffectWindow *w)
-{
-    connect(w, &EffectWindow::windowDamaged, this, &ZoomEffect::slotWindowDamaged);
-}
-
-void ZoomEffect::slotWindowDamaged()
-{
-    if (m_zoom != 1.0) {
-        effects->addRepaintFull();
-    }
-}
-
-void ZoomEffect::slotScreenRemoved(LogicalOutput *screen)
-{
-    if (auto it = m_offscreenData.find(screen); it != m_offscreenData.end()) {
-        effects->makeOpenGLContextCurrent();
-        m_offscreenData.erase(it);
     }
 }
 
@@ -623,7 +645,7 @@ void ZoomEffect::setTargetZoom(double value)
     }
     m_targetZoom = value;
     m_configurationTimer->start();
-    effects->addRepaintFull();
+    effects->scheduleFrame();
 }
 
 void ZoomEffect::realtimeZoom(double delta)
