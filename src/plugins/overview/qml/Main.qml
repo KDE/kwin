@@ -860,7 +860,7 @@ FocusScope {
 
     Connections {
         target: effect
-        onDesktopOffsetChanged: (screen) => {
+        function onDesktopOffsetChanged(screen) {
             if (screen !== container.targetScreen) {
                 return;
             }
