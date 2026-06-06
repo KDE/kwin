@@ -338,7 +338,21 @@ void EffectsHandler::reconfigure()
     m_effectLoader->queryAndLoadAll();
 }
 
+void EffectsHandler::prePaintView(SceneView *view, OutputFrame *frame)
+{
+    auto previous = m_currentPreFrameIterator;
+    if (!previous) {
+        m_currentPreFrameIterator = loaded_effects.constBegin();
+    }
+    while (*m_currentPreFrameIterator != loaded_effects.constEnd()) {
+        (*m_currentPreFrameIterator)->second->prePaintView(view, frame);
+        (*m_currentPreFrameIterator)++;
+    }
+    m_currentPreFrameIterator = previous;
+}
+
 // the idea is that effects call this function again which calls the next one
+
 void EffectsHandler::prePaintScreen(ScreenPrePaintData &data)
 {
     if (m_currentPaintScreenIterator != m_activeEffects.constEnd()) {
@@ -1074,6 +1088,11 @@ void EffectsHandler::addRepaint(const Region &logicalRegion)
 void EffectsHandler::addRepaint(int x, int y, int w, int h)
 {
     m_scene->addLogicalRepaint(x, y, w, h);
+}
+
+void EffectsHandler::scheduleFrame()
+{
+    m_scene->scheduleFrame();
 }
 
 LogicalOutput *EffectsHandler::activeScreen() const
