@@ -790,11 +790,6 @@ void X11WindowedBackend::destroyOutputs()
     }
 }
 
-EglDisplay *X11WindowedBackend::sceneEglDisplayObject() const
-{
-    return m_renderDevice ? m_renderDevice->eglDisplay() : nullptr;
-}
-
 RenderDevice *X11WindowedBackend::renderDevice() const
 {
     return m_renderDevice;

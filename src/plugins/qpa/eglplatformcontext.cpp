@@ -40,10 +40,10 @@ EGLRenderTarget::~EGLRenderTarget()
     texture.reset();
 }
 
-EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, EglDisplay *display)
-    : m_eglDisplay(display)
+EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, EglContext *shareContext)
+    : m_eglDisplay(shareContext->displayObject())
 {
-    create(context->format(), kwinApp()->outputBackend()->sceneEglGlobalShareContext());
+    create(context->format(), shareContext);
 }
 
 EGLPlatformContext::~EGLPlatformContext()

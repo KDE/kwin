@@ -185,11 +185,6 @@ RenderDevice *VirtualBackend::renderDevice() const
     return m_renderDevice.get();
 }
 
-EglDisplay *VirtualBackend::sceneEglDisplayObject() const
-{
-    return m_renderDevice->eglDisplay();
-}
-
 } // namespace KWin
 
 #include "moc_virtual_backend.cpp"

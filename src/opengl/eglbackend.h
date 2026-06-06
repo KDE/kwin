@@ -41,6 +41,7 @@ public:
     EglContext *openglContext() const;
     std::shared_ptr<EglContext> openglContextRef() const;
     EglDisplay *eglDisplayObject() const;
+    EglContext *openglShareContext() const;
 
     bool testImportBuffer(GraphicsBuffer *buffer) override;
     FormatModifierMap supportedFormats() const override;
@@ -63,7 +64,6 @@ protected:
     bool createContext();
 
     bool ensureGlobalShareContext();
-    void destroyGlobalShareContext();
     ::EGLContext createContextInternal(::EGLContext sharedContext);
     void teardown();
 

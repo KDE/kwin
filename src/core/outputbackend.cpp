@@ -92,16 +92,6 @@ QString OutputBackend::supportInformation() const
     return QStringLiteral("Name: %1\n").arg(metaObject()->className());
 }
 
-EglContext *OutputBackend::sceneEglGlobalShareContext() const
-{
-    return m_globalShareContext;
-}
-
-void OutputBackend::setSceneEglGlobalShareContext(EglContext *context)
-{
-    m_globalShareContext = context;
-}
-
 Session *OutputBackend::session() const
 {
     return nullptr;

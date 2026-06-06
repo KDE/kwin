@@ -477,11 +477,6 @@ const std::vector<std::unique_ptr<DrmGpu>> &DrmBackend::gpus() const
     return m_gpus;
 }
 
-EglDisplay *DrmBackend::sceneEglDisplayObject() const
-{
-    return m_gpus.front()->renderDevice()->eglDisplay();
-}
-
 }
 
 #include "moc_drm_backend.cpp"

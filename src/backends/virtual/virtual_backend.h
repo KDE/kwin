@@ -57,7 +57,6 @@ public:
     QList<CompositingType> supportedCompositors() const override;
 
     RenderDevice *renderDevice() const;
-    EglDisplay *sceneEglDisplayObject() const override;
 
     DrmDevice *drmDevice() const;
 

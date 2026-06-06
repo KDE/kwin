@@ -673,11 +673,6 @@ wl_buffer *WaylandBackend::importBuffer(GraphicsBuffer *graphicsBuffer)
     return buffer->handle();
 }
 
-EglDisplay *WaylandBackend::sceneEglDisplayObject() const
-{
-    return m_renderDevice ? m_renderDevice->eglDisplay() : nullptr;
-}
-
 DrmDevice *WaylandBackend::drmDevice() const
 {
     return m_renderDevice ? m_renderDevice->drmDevice() : nullptr;

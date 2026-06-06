@@ -46,7 +46,7 @@ class EGLPlatformContext : public QObject, public QPlatformOpenGLContext, public
     Q_OBJECT
 
 public:
-    EGLPlatformContext(QOpenGLContext *context, EglDisplay *display);
+    EGLPlatformContext(QOpenGLContext *context, EglContext *shareContext);
     ~EGLPlatformContext() override;
 
     bool makeCurrent(QPlatformSurface *surface) override;

@@ -123,7 +123,6 @@ public:
     X11WindowedInputDevice *touchDevice() const;
 
     RenderDevice *renderDevice() const;
-    EglDisplay *sceneEglDisplayObject() const override;
 
 private:
     void createOutputs();

@@ -251,7 +251,6 @@ public:
     {
         m_eglBackend = eglBackend;
     }
-    EglDisplay *sceneEglDisplayObject() const override;
     RenderDevice *renderDevice() const;
 
 Q_SIGNALS:

@@ -11,18 +11,19 @@
 #include "integration.h"
 #include "backingstore.h"
 #include "clipboard.h"
+#include "compositor.h"
+#include "core/output.h"
+#include "core/renderbackend.h"
 #include "eglplatformcontext.h"
 #include "inputmethod.h"
 #include "internalinputmethodcontext.h"
 #include "logging.h"
+#include "main.h"
 #include "offscreensurface.h"
+#include "opengl/eglbackend.h"
 #include "screen.h"
 #include "wayland_server.h"
 #include "window.h"
-
-#include "core/output.h"
-#include "core/outputbackend.h"
-#include "main.h"
 #include "workspace.h"
 
 #include <QCoreApplication>
@@ -158,19 +159,12 @@ QStringList Integration::themeNames() const
 
 QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext *context) const
 {
-    if (!kwinApp()->outputBackend()) {
-        return nullptr;
-    }
-    if (!kwinApp()->outputBackend()->sceneEglGlobalShareContext()) {
+    EglBackend *egl = qobject_cast<EglBackend *>(Compositor::self()->backend());
+    if (!egl || !egl->openglShareContext()) {
         qCWarning(KWIN_QPA) << "Attempting to create a QOpenGLContext before the scene is initialized";
         return nullptr;
     }
-    const auto eglDisplay = kwinApp()->outputBackend()->sceneEglDisplayObject();
-    if (eglDisplay) {
-        EGLPlatformContext *platformContext = new EGLPlatformContext(context, eglDisplay);
-        return platformContext;
-    }
-    return nullptr;
+    return new EGLPlatformContext(context, egl->openglShareContext());
 }
 
 QPlatformAccessibility *Integration::accessibility() const

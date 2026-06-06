@@ -91,27 +91,12 @@ bool EglBackend::ensureGlobalShareContext()
     if (!s_globalShareContext) {
         s_globalShareContext = EglContext::create(m_renderDevice->eglDisplay(), EGL_NO_CONFIG_KHR, nullptr);
     }
-    if (s_globalShareContext) {
-        kwinApp()->outputBackend()->setSceneEglGlobalShareContext(s_globalShareContext.get());
-        return true;
-    } else {
-        return false;
-    }
-}
-
-void EglBackend::destroyGlobalShareContext()
-{
-    EglDisplay *const eglDisplay = kwinApp()->outputBackend()->sceneEglDisplayObject();
-    if (!eglDisplay || !s_globalShareContext) {
-        return;
-    }
-    s_globalShareContext.reset();
-    kwinApp()->outputBackend()->setSceneEglGlobalShareContext(nullptr);
+    return s_globalShareContext != nullptr;
 }
 
 void EglBackend::teardown()
 {
-    destroyGlobalShareContext();
+    s_globalShareContext.reset();
 }
 
 void EglBackend::cleanup()
@@ -300,6 +285,11 @@ FormatModifierMap EglBackend::supportedFormats() const
 EglDisplay *EglBackend::eglDisplayObject() const
 {
     return m_renderDevice->eglDisplay();
+}
+
+EglContext *EglBackend::openglShareContext() const
+{
+    return s_globalShareContext.get();
 }
 
 EglContext *EglBackend::openglContext() const
