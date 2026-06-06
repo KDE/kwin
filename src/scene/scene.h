@@ -235,6 +235,7 @@ public:
     void addDeviceRepaint(RenderView *view, const Region &deviceRegion);
     void addLogicalRepaint(int x, int y, int width, int height);
     void addRepaintFull();
+    void scheduleFrame();
     virtual Region damage() const;
 
     Rect geometry() const;
