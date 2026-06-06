@@ -34,6 +34,7 @@ struct TabletToolAxisEvent;
 class WindowPaintDataPrivate;
 class RenderView;
 class OutputFrame;
+class SceneView;
 
 /*!
  * \page kwin-effects.html
@@ -682,6 +683,14 @@ public:
      * required to ensure that the context is current if the implementation does OpenGL calls.
      */
     virtual void reconfigure(ReconfigureFlags flags);
+
+    /*!
+     * Called before prePaintScreen/Window each frame.
+     * In this method, you can render your own SceneView while
+     * the compositor is preparing the scene for a different one,
+     * and expect it not to break the Scene's internal state
+     */
+    virtual void prePaintView(SceneView *view, OutputFrame *frame);
 
     /*!
      * Called before starting to paint the screen.

@@ -87,6 +87,7 @@ struct PointerMotionEvent;
 struct PointerButtonEvent;
 class InputDevice;
 class InputDeviceTabletTool;
+class SceneView;
 
 typedef QPair<QString, Effect *> EffectPair;
 
@@ -1070,6 +1071,9 @@ public Q_SLOTS:
     Q_SCRIPTABLE QString debug(const QString &name, const QString &parameter = QString()) const;
 
 protected:
+    friend class WorkspaceScene;
+    void prePaintView(SceneView *view, OutputFrame *frame);
+
     void effectsChanged();
     void setupWindowConnections(KWin::Window *window);
 
@@ -1100,6 +1104,7 @@ protected:
     EffectsIterator m_currentDrawWindowIterator;
     EffectsIterator m_currentPaintWindowIterator;
     EffectsIterator m_currentPaintScreenIterator;
+    std::optional<QList<EffectPair>::const_iterator> m_currentPreFrameIterator;
     typedef QHash<QByteArray, QList<Effect *>> PropertyEffectMap;
 #if KWIN_BUILD_X11
     PropertyEffectMap m_propertiesForEffects;

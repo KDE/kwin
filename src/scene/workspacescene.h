@@ -22,6 +22,7 @@ class Item;
 class WindowItem;
 class WindowPaintData;
 class CursorItem;
+class SceneView;
 
 class KWIN_EXPORT WorkspaceScene : public Scene
 {
