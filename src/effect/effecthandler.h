@@ -87,6 +87,7 @@ struct PointerMotionEvent;
 struct PointerButtonEvent;
 class InputDevice;
 class InputDeviceTabletTool;
+class SceneView;
 
 typedef QPair<QString, Effect *> EffectPair;
 
@@ -464,6 +465,11 @@ public:
     Q_SCRIPTABLE void addRepaint(const Rect &logicalRegion);
     Q_SCRIPTABLE void addRepaint(const Region &logicalRegion);
     Q_SCRIPTABLE void addRepaint(int x, int y, int w, int h);
+
+    /**
+     * Schedules a frame on every screen, without adding repaints
+     */
+    void scheduleFrame();
 
     /**
      * @brief Whether the Compositor is OpenGL based (either GL 1 or 2).
@@ -1067,6 +1073,9 @@ public Q_SLOTS:
     Q_SCRIPTABLE QString debug(const QString &name, const QString &parameter = QString()) const;
 
 protected:
+    friend class WorkspaceScene;
+    void prePaintView(SceneView *view, OutputFrame *frame);
+
     void effectsChanged();
     void setupWindowConnections(KWin::Window *window);
 
@@ -1096,6 +1105,7 @@ protected:
     EffectsIterator m_currentDrawWindowIterator;
     EffectsIterator m_currentPaintWindowIterator;
     EffectsIterator m_currentPaintScreenIterator;
+    std::optional<QList<EffectPair>::const_iterator> m_currentPreFrameIterator;
     typedef QHash<QByteArray, QList<Effect *>> PropertyEffectMap;
 #if KWIN_BUILD_X11
     PropertyEffectMap m_propertiesForEffects;
