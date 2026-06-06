@@ -24,6 +24,7 @@ class Item;
 class WindowItem;
 class WindowPaintData;
 class CursorItem;
+class SceneView;
 
 class KWIN_EXPORT WorkspaceScene : public Scene
 {
@@ -70,7 +71,7 @@ public:
     void setLayerDebugging(bool enable);
 
 Q_SIGNALS:
-    void preFrameRender();
+    void preFrameRender(SceneView *view);
     void frameRendered();
 
 protected:

@@ -511,6 +511,9 @@ void WorkspaceScene::frame(SceneView *delegate, OutputFrame *frame)
 
 void WorkspaceScene::prePaint(SceneView *view, OutputFrame *frame)
 {
+    // TODO make preFrameRender go through the effects chain,
+    // to allow effects other than zoom to render their own views
+    Q_ASSERT(m_paintContexts.size() < 2);
     m_paintContexts.emplace(PaintContext{
         .screen = view->logicalOutput(),
         .view = view,
@@ -519,7 +522,7 @@ void WorkspaceScene::prePaint(SceneView *view, OutputFrame *frame)
     createStackingOrder(m_paintContexts.top());
 
     effects->makeOpenGLContextCurrent();
-    Q_EMIT preFrameRender();
+    Q_EMIT preFrameRender(view);
 
     // preparation step
     effects->startPaint();

@@ -28,6 +28,8 @@ class GLVertexBuffer;
 class GLShader;
 class FocusTracker;
 class TextCaretTracker;
+class RenderView;
+class SceneView;
 
 class ZoomEffect : public Effect
 {
@@ -73,7 +75,6 @@ private Q_SLOTS:
     void slotMouseChanged(const QPointF &pos, const QPointF &old);
     void slotWindowAdded(EffectWindow *w);
     void slotWindowDamaged();
-    void slotScreenRemoved(LogicalOutput *screen);
     void setTargetZoom(double value);
 
 private:
@@ -91,13 +92,13 @@ private:
         std::unique_ptr<GLFramebuffer> framebuffer;
         RectF viewport;
         std::shared_ptr<ColorDescription> color = ColorDescription::sRGB;
+        std::unique_ptr<SceneView> view;
     };
 
+    void preFrame(SceneView *view);
     void moveZoom(int x, int y);
     bool screenExistsAt(const QPoint &point) const;
     void realtimeZoom(double delta);
-
-    OffscreenData *ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, LogicalOutput *screen);
 
     GLShader *shaderForZoom(double zoom);
     void trackTextCaret();
@@ -119,7 +120,9 @@ private:
     int m_yTranslation = 0;
     double m_moveFactor = 20.0;
     AnimationClock m_clock;
-    std::map<LogicalOutput *, OffscreenData> m_offscreenData;
+    std::map<RenderView *, OffscreenData> m_offscreenData;
+    RenderView *m_currentView = nullptr;
+    bool m_paintingZoom = false;
     std::unique_ptr<GLShader> m_upscalerShader;
     std::unique_ptr<GLShader> m_pixelGridShader;
     double m_pixelGridZoom;
