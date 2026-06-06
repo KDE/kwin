@@ -646,6 +646,13 @@ void Scene::addRepaintFull()
     }
 }
 
+void Scene::scheduleFrame()
+{
+    for (const auto &view : std::as_const(m_views)) {
+        view->scheduleRepaint(nullptr);
+    }
+}
+
 void Scene::addLogicalRepaint(int x, int y, int width, int height)
 {
     addLogicalRepaint(Region(x, y, width, height));
