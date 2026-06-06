@@ -528,6 +528,11 @@ void WorkspaceScene::frame(SceneView *delegate, OutputFrame *frame)
 
 void WorkspaceScene::prePaint(SceneView *delegate, OutputFrame *frame)
 {
+    // prePaintView allows effects to call prePaint again,
+    // so this part needs to be re-entrant.
+    effects->prePaintView(delegate, frame);
+    // everything afterwards can only be called in combination with postPaint
+
     painted_delegate = delegate;
     painted_screen = painted_delegate->logicalOutput();
 
