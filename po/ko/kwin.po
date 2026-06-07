@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-06 00:45+0000\n"
-"PO-Revision-Date: 2026-04-26 21:31+0200\n"
+"PO-Revision-Date: 2026-05-26 22:25+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 25.08.1\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1090,11 +1090,10 @@ msgstr "창"
 
 #. i18n: ectx: property (text), widget (QPushButton, pickWindowButton)
 #: debug_console.ui:43
-#, fuzzy, kde-format
-#| msgid "Pack Window Up"
+#, kde-format
 msgctxt "@action:button"
 msgid "Pick Window…"
-msgstr "창을 맨 위로 보내기"
+msgstr "창 선택…"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:54
@@ -1797,24 +1796,16 @@ msgid "Disable Active Input Capture"
 msgstr "활성 입력 캡처 비활성화"
 
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "Control"
+msgstr "원격 제어"
 
 #: plugins/eis/eisprompter.cpp:52
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><application>%1</application> is not responding. Do you want to "
-#| "terminate this application?</para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "<application>%1</application> is asking to control input devices"
-msgstr ""
-"<para><application>%1</application>이(가) 응답하지 않습니다. 이 앱을 강제 종"
-"료하시겠습니까?</para>"
+msgstr "<application>%1</application>에서 입력 장치 제어를 요청하는 중"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
@@ -1822,7 +1813,7 @@ msgctxt ""
 "@option:check, %1 is the application name. This option always allow apps "
 "claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "%1이라고 주장하는 앱 항상 허용"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -1833,18 +1824,22 @@ msgid ""
 "revoke this permission later on <application>System Settings</application>’ "
 "“Legacy X11 App Support” page."
 msgstr ""
+"레거시 X11 앱의 식별자는 검증할 수 없습니다. <application>%1</application>이"
+"라고 주장하는 임의의 앱에서 입력 장치를 제어할 수 있습니다. 이 권한은 "
+"<application>시스템 설정</application>의 \"레거시 X11 앱 지원\" 페이지에서 나"
+"중에 철회할 수 있습니다."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
 msgctxt "@action:button Allow control of input devices"
 msgid "Allow"
-msgstr ""
+msgstr "허용"
 
 #: plugins/eis/eisprompter.cpp:70
 #, kde-format
 msgctxt "@action:button Deny control of input devices"
 msgid "Deny"
-msgstr ""
+msgstr "거부"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3634,17 +3629,15 @@ msgstr "티어링 규칙 종류"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:478
-#, fuzzy, kde-format
-#| msgid "Hide from screencast rule type"
+#, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr "스크린캐스트 규칙 형식에서 숨기기"
+msgstr "스크린샷과 화면 녹화에서 숨기기"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
-#, fuzzy, kde-format
-#| msgid "Hide from screencast rule type"
+#, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
-msgstr "스크린캐스트 규칙 형식에서 숨기기"
+msgstr "스크린샷과 화면 녹화 규칙 형식에서 숨기기"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3777,7 +3770,7 @@ msgstr "제목 표시줄과 프레임 없음(&N)"
 #: useractions.cpp:248
 #, kde-format
 msgid "&Hide from Screenshots and Screen Recordings"
-msgstr ""
+msgstr "스크린샷과 화면 녹화에서 숨기기(&H)"
 
 #: useractions.cpp:256
 #, kde-format
@@ -4284,7 +4277,7 @@ msgstr "바탕 화면 %1(으)로 전환"
 #: wayland/outputmanagement_v2.cpp:569
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
-msgstr ""
+msgstr "abm 수준이 최댓값(4)보다 높음: %1"
 
 #: wayland/outputmanagement_v2.cpp:647
 #, kde-format
@@ -4345,25 +4338,25 @@ msgstr "(응답 없음)"
 #: workspace.cpp:1310
 #, kde-format
 msgid "Built-in Screen"
-msgstr ""
+msgstr "내장 화면"
 
 #: workspace.cpp:1323
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1333
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1336
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
-msgstr ""
+msgstr "%1 %2"
 
 #: workspace.cpp:1805
 #, kde-format
