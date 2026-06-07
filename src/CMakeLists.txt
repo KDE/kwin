@@ -247,10 +247,6 @@ target_sources(kwin PRIVATE
     xxpipv1window.cpp
 )
 
-if (KWIN_BUILD_GLOBALSHORTCUTS)
-    target_sources(kwin PRIVATE kglobalaccelinterface.cpp)
-endif()
-
 target_link_libraries(kwin
     PUBLIC
         Qt::DBus
