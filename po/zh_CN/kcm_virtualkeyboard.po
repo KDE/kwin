@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-17 02:38+0000\n"
+"POT-Creation-Date: 2026-06-07 02:48+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -17,12 +17,12 @@ msgstr ""
 "X-Crowdin-File: /kf6-stable/messages/kwin/kcm_virtualkeyboard.pot\n"
 "X-Crowdin-File-ID: 52192\n"
 
-#: kcmvirtualkeyboard.cpp:82
+#: kcmvirtualkeyboard.cpp:84
 #, kde-format
 msgid "None"
 msgstr "无"
 
-#: kcmvirtualkeyboard.cpp:86
+#: kcmvirtualkeyboard.cpp:88
 #, kde-format
 msgid "Do not use any virtual keyboard"
 msgstr "不使用虚拟键盘"

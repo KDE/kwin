@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-17 02:38+0000\n"
+"POT-Creation-Date: 2026-06-07 02:48+0000\n"
 "PO-Revision-Date: 2024-12-13 19:10+0530\n"
 "Last-Translator: Kali <EMAIL@ADDRESS>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n>2);\n"
 
-#: kcmvirtualkeyboard.cpp:82
+#: kcmvirtualkeyboard.cpp:84
 #, kde-format
 msgid "None"
 msgstr "न कश्चित्"
 
-#: kcmvirtualkeyboard.cpp:86
+#: kcmvirtualkeyboard.cpp:88
 #, kde-format
 msgid "Do not use any virtual keyboard"
 msgstr "कस्यापि वर्चुअल् कीबोर्डस्य उपयोगं न कुर्वन्तु"

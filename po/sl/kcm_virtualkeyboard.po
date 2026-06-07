@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-17 02:38+0000\n"
+"POT-Creation-Date: 2026-06-07 02:48+0000\n"
 "PO-Revision-Date: 2026-05-17 06:53+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -18,12 +18,12 @@ msgstr ""
 "%100==4 ? 3 : 0);\n"
 "X-Generator: Poedit 3.9\n"
 
-#: kcmvirtualkeyboard.cpp:82
+#: kcmvirtualkeyboard.cpp:84
 #, kde-format
 msgid "None"
 msgstr "Nobena"
 
-#: kcmvirtualkeyboard.cpp:86
+#: kcmvirtualkeyboard.cpp:88
 #, kde-format
 msgid "Do not use any virtual keyboard"
 msgstr "Ne uporabljajte virtualne tipkovnice"

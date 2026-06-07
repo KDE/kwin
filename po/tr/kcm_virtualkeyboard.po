@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-17 02:38+0000\n"
+"POT-Creation-Date: 2026-06-07 02:48+0000\n"
 "PO-Revision-Date: 2026-05-16 20:27+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Lokalize 26.04.0\n"
 
-#: kcmvirtualkeyboard.cpp:82
+#: kcmvirtualkeyboard.cpp:84
 #, kde-format
 msgid "None"
 msgstr "Yok"
 
-#: kcmvirtualkeyboard.cpp:86
+#: kcmvirtualkeyboard.cpp:88
 #, kde-format
 msgid "Do not use any virtual keyboard"
 msgstr "Herhangi bir sanal klavye kullanma"

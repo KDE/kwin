@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_virtualkeyboard\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-17 02:38+0000\n"
+"POT-Creation-Date: 2026-06-07 02:48+0000\n"
 "PO-Revision-Date: 2023-04-15 01:21+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -18,12 +18,12 @@ msgstr ""
 "X-Generator: translate-po (https://github.com/zcribe/translate-po)\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: kcmvirtualkeyboard.cpp:82
+#: kcmvirtualkeyboard.cpp:84
 #, kde-format
 msgid "None"
 msgstr "Neniu"
 
-#: kcmvirtualkeyboard.cpp:86
+#: kcmvirtualkeyboard.cpp:88
 #, kde-format
 msgid "Do not use any virtual keyboard"
 msgstr "Ne uzi ajnan virtualan klavaron"
