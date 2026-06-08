@@ -54,6 +54,11 @@
 #include <iomanip>
 #include <iostream>
 
+#if defined(Q_OS_LINUX)
+#include <linux/capability.h>
+#include <sys/prctl.h>
+#endif
+
 Q_IMPORT_PLUGIN(KWinIntegrationPlugin)
 Q_IMPORT_PLUGIN(KWindowSystemKWinPlugin)
 Q_IMPORT_PLUGIN(KWinIdleTimePoller)
@@ -259,6 +264,12 @@ pid_t ApplicationWayland::xwaylandPid() const
 
 int main(int argc, char *argv[])
 {
+#if defined(Q_OS_LINUX)
+    // Some Linux distros may set ambient capabilities, so clear CAP_SYS_NICE here to avoid
+    // leaking it to all child processes.
+    prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_LOWER, CAP_SYS_NICE, 0, 0);
+#endif
+
     KWin::Application::setupMalloc();
     KWin::Application::setupLocalizedString();
     KWin::gainRealTime();
