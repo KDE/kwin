@@ -94,7 +94,7 @@ void GpuManager::updateCompatibilityMap()
     m_compatibleDeviceMap.clear();
 
     int numberOfDevices = drmGetDevices2(0, nullptr, 0);
-    if (!numberOfDevices) {
+    if (numberOfDevices <= 0) {
         return;
     }
     std::vector<drmDevicePtr> devices;
