@@ -67,9 +67,7 @@ find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Svg
 )
 
-if (Qt6Gui_VERSION VERSION_GREATER_EQUAL "6.10.0")
-    find_package(Qt6GuiPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
-endif()
+find_package(Qt6GuiPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
 
 find_package(Qt6Test ${QT_MIN_VERSION} CONFIG QUIET)
 set_package_properties(Qt6Test PROPERTIES
@@ -84,9 +82,7 @@ endif()
 if (BUILD_TESTING)
     find_package(KPipeWire)
 
-    if (Qt6WaylandClient_VERSION VERSION_GREATER_EQUAL "6.10.0")
-        find_package(Qt6WaylandClientPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
-    endif()
+    find_package(Qt6WaylandClientPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
 endif()
 
 # required frameworks by Core
@@ -497,9 +493,7 @@ add_subdirectory(kconf_update)
 add_subdirectory(src)
 
 if (BUILD_TESTING)
-    if (Qt6WaylandClient_VERSION VERSION_GREATER_EQUAL "6.10.0")
-        find_package(Qt6WaylandClientPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
-    endif()
+    find_package(Qt6WaylandClientPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
 
     add_subdirectory(autotests)
     add_subdirectory(tests)
