@@ -59,6 +59,13 @@ public:
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer);
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size);
 
+    enum class GpuType {
+        Internal,
+        Discrete,
+        Software,
+    };
+    std::optional<GpuType> type() const;
+
     static bool shouldUseOpenGLES();
     static std::unique_ptr<EglDisplay> create(::EGLDisplay display, DrmDevice *drmDevice);
 
@@ -77,6 +84,7 @@ private:
     const std::optional<dev_t> m_renderDevNode;
     DrmDevice *const m_drmDevice;
 
+    const std::optional<GpuType> m_type;
     const bool m_supportsBufferAge;
     const bool m_supportsNativeFence;
     const bool m_isSoftwareRenderer;
