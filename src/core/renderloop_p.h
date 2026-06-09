@@ -9,6 +9,7 @@
 #include "renderbackend.h"
 #include "renderjournal.h"
 #include "renderloop.h"
+#include "utils/precisetimer.h"
 
 #include <QBasicTimer>
 
@@ -44,7 +45,7 @@ public:
     std::chrono::nanoseconds nextPresentationTimestamp = std::chrono::nanoseconds::zero();
     bool wasTripleBuffering = false;
     int doubleBufferingCounter = 0;
-    QBasicTimer compositeTimer;
+    PreciseTimer compositeTimer;
     RenderJournal renderJournal;
     int refreshRate = 60000;
     int pendingFrameCount = 0;

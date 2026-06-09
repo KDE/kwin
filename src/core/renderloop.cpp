@@ -9,11 +9,8 @@
 #include "options.h"
 #include "renderloop_p.h"
 #include "scene/surfaceitem.h"
-#include "utils/common.h"
 #include "window.h"
 #include "workspace.h"
-
-#include <filesystem>
 
 using namespace std::chrono_literals;
 
@@ -31,6 +28,9 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q, BackendOutput *output)
     : q(q)
     , output(output)
 {
+    QObject::connect(&compositeTimer, &PreciseTimer::timeout, q, [this] {
+        dispatch();
+    });
 }
 
 void RenderLoopPrivate::scheduleNextRepaint()
@@ -109,7 +109,7 @@ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimes
     }
 
     const std::chrono::nanoseconds nextRenderTimestamp = nextPresentationTimestamp - expectedCompositingTime;
-    compositeTimer.start(std::max(0ms, std::chrono::duration_cast<std::chrono::milliseconds>(nextRenderTimestamp - currentTime)), Qt::PreciseTimer, q);
+    compositeTimer.start(nextRenderTimestamp);
 }
 
 void RenderLoopPrivate::delayScheduleRepaint()
@@ -175,10 +175,7 @@ void RenderLoopPrivate::notifyVblank(std::chrono::nanoseconds timestamp)
 
 void RenderLoop::timerEvent(QTimerEvent *event)
 {
-    if (event->timerId() == d->compositeTimer.timerId()) {
-        d->compositeTimer.stop();
-        d->dispatch();
-    } else if (event->timerId() == d->delayedVrrTimer.timerId()) {
+    if (event->timerId() == d->delayedVrrTimer.timerId()) {
         d->delayedVrrTimer.stop();
         scheduleRepaint(nullptr, nullptr);
     } else {
