@@ -353,4 +353,12 @@ bool RenderDevice::isSoftwareDevice() const
     return m_display->isSoftwareRenderer() && (!m_vulkanDevice || m_vulkanDevice->isSoftwareRenderer());
 }
 
+bool RenderDevice::isInternal() const
+{
+    if (m_vulkanDevice) {
+        return m_vulkanDevice->type() == vk::PhysicalDeviceType::eIntegratedGpu;
+    }
+    return m_display->type() == EglDisplay::GpuType::Internal;
+}
+
 }

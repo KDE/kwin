@@ -75,6 +75,12 @@ public:
      */
     bool isSoftwareDevice() const;
 
+    /**
+     * @returns if this device is definitely an internal GPU. May have false negatives,
+     *          depending on driver support for Vulkan and EGL_EXT_device_type.
+     */
+    bool isInternal() const;
+
     static std::unique_ptr<RenderDevice> open(const QString &path, int authenticatedFd = -1);
     /**
      * @returns a RenderDevice without a drm device, using udmabuf for allocations

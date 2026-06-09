@@ -22,6 +22,13 @@
 #ifndef EGL_DRM_RENDER_NODE_FILE_EXT
 #define EGL_DRM_RENDER_NODE_FILE_EXT 0x3377
 #endif
+#ifndef EGL_DEVICE_TYPE_EXT
+#define EGL_DEVICE_TYPE_EXT 0x3590
+#define EGL_DEVICE_TYPE_OTHER_EXT 0x3591
+#define EGL_DEVICE_TYPE_INTEGRATED_GPU_EXT 0x3592
+#define EGL_DEVICE_TYPE_DISCRETE_GPU_EXT 0x3593
+#define EGL_DEVICE_TYPE_CPU_EXT 0x3594
+#endif
 
 namespace KWin
 {
@@ -82,6 +89,28 @@ static std::optional<dev_t> devIdForFileName(const QString &path)
     }
 }
 
+static std::optional<EglDisplay::GpuType> checkDeviceType(::EGLDisplay display)
+{
+    EGLAttrib deviceValue = 0;
+    if (!eglQueryDisplayAttribEXT(display, EGL_DEVICE_EXT, &deviceValue)) {
+        return std::nullopt;
+    }
+    EGLDeviceEXT device = reinterpret_cast<EGLDeviceEXT>(deviceValue);
+    EGLAttrib value = EGL_DEVICE_TYPE_OTHER_EXT;
+    if (!eglQueryDeviceAttribEXT(device, EGL_DEVICE_TYPE_EXT, &value)) {
+        return std::nullopt;
+    }
+    switch (value) {
+    case EGL_DEVICE_TYPE_INTEGRATED_GPU_EXT:
+        return EglDisplay::GpuType::Internal;
+    case EGL_DEVICE_TYPE_DISCRETE_GPU_EXT:
+        return EglDisplay::GpuType::Discrete;
+    case EGL_DEVICE_TYPE_CPU_EXT:
+        return EglDisplay::GpuType::Software;
+    }
+    return std::nullopt;
+}
+
 static bool checkSoftwareDevice(::EGLDisplay display)
 {
     EGLAttrib deviceValue = 0;
@@ -99,10 +128,11 @@ EglDisplay::EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions
     , m_renderNode(determineRenderNode())
     , m_renderDevNode(devIdForFileName(m_renderNode))
     , m_drmDevice(drmDevice)
+    , m_type(hasExtension("EGL_EXT_device_query") ? checkDeviceType(display) : std::nullopt)
     , m_supportsBufferAge(extensions.contains(QByteArrayLiteral("EGL_EXT_buffer_age")) && qgetenv("KWIN_USE_BUFFER_AGE") != "0")
     , m_supportsNativeFence(extensions.contains(QByteArrayLiteral("EGL_ANDROID_native_fence_sync"))
                             && extensions.contains(QByteArrayLiteral("EGL_KHR_wait_sync")))
-    , m_isSoftwareRenderer(m_clientExtensions.contains("EGL_EXT_device_query") && checkSoftwareDevice(display))
+    , m_isSoftwareRenderer(m_type ? *m_type == GpuType::Software : m_clientExtensions.contains("EGL_EXT_device_query") && checkSoftwareDevice(display))
 {
     m_functions.createImageKHR = reinterpret_cast<PFNEGLCREATEIMAGEKHRPROC>(eglGetProcAddress("eglCreateImageKHR"));
     m_functions.destroyImageKHR = reinterpret_cast<PFNEGLDESTROYIMAGEKHRPROC>(eglGetProcAddress("eglDestroyImageKHR"));
@@ -411,6 +441,11 @@ EGLImageKHR EglDisplay::importBufferAsImage(GraphicsBuffer *buffer, int plane, i
         destroyImage(m_importCache.take(key));
     });
     return image;
+}
+
+std::optional<EglDisplay::GpuType> EglDisplay::type() const
+{
+    return m_type;
 }
 
 }
