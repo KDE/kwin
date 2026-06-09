@@ -1,12 +1,13 @@
 # SPDX-FileCopyrightText: 2023 Ryuichi Yamada <ryuichi_ya220@outlook.jp>
+# SPDX-FileCopyrightText: 2026 Mint <5602mint@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-07 02:48+0000\n"
-"PO-Revision-Date: 2023-12-18 20:19+0900\n"
-"Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
-"Language-Team: Japanese <kde-jp@kde.org>\n"
+"PO-Revision-Date: 2026-06-01 07:38+0900\n"
+"Last-Translator: Mint <5602mint@gmail.com>\n"
+"Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14,7 +15,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 23.08.3\n"
+"X-Generator: Lokalize 26.04.1\n"
 
 #: kcmvirtualkeyboard.cpp:84
 #, kde-format
@@ -27,21 +28,20 @@ msgid "Do not use any virtual keyboard"
 msgstr "仮想キーボードを使用しない"
 
 #: ui/main.qml:24
-#, fuzzy, kde-format
-#| msgid "Do not use any virtual keyboard"
+#, kde-format
 msgctxt "Selector label"
 msgid "Show Virtual Keyboard:"
-msgstr "仮想キーボードを使用しない"
+msgstr "表示するタイミング:"
 
 #: ui/main.qml:32
 #, kde-format
 msgid "Never"
-msgstr ""
+msgstr "表示しない"
 
 #: ui/main.qml:33
 #, kde-format
 msgid "With Touch and Tablet"
-msgstr ""
+msgstr "タッチとタブレット"
 
 #: ui/main.qml:34
 #, kde-format
