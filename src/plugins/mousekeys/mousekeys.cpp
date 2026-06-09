@@ -117,50 +117,53 @@ void MouseKeysFilter::loadConfig(const KConfigGroup &group)
         m_delayTimer.setInterval(m_delay);
         m_repeatTimer.setInterval(m_interval);
 
-        m_keyStates[KEY_KP1] = false;
-        m_keyStates[KEY_KP2] = false;
-        m_keyStates[KEY_KP3] = false;
-        m_keyStates[KEY_KP4] = false;
-        m_keyStates[KEY_KP6] = false;
-        m_keyStates[KEY_KP7] = false;
-        m_keyStates[KEY_KP8] = false;
-        m_keyStates[KEY_KP9] = false;
+        m_heldKeys.clear();
         m_mouseButton = BTN_LEFT;
-        m_currentKey = 0;
         m_currentStep = 0;
     }
 }
 
-static QPointF deltaForKey(int key)
+QPointF MouseKeysFilter::currentDelta() const
 {
-    static constexpr int delta = 5;
+    static constexpr int step = 5;
 
-    switch (key) {
-    case KEY_KP1:
-        return {-delta, delta};
-    case KEY_KP2:
-        return {0, delta};
-    case KEY_KP3:
-        return {delta, delta};
-    case KEY_KP4:
-        return {-delta, 0};
-    case KEY_KP6:
-        return {delta, 0};
-    case KEY_KP7:
-        return {-delta, -delta};
-    case KEY_KP8:
-        return {0, -delta};
-    case KEY_KP9:
-        return {delta, -delta};
+    QPointF delta(0, 0);
+    for (const auto &key : m_heldKeys) {
+        switch (key) {
+        case KEY_KP1:
+            delta += {-step, step};
+            break;
+        case KEY_KP2:
+            delta += {0, step};
+            break;
+        case KEY_KP3:
+            delta += {step, step};
+            break;
+        case KEY_KP4:
+            delta += {-step, 0};
+            break;
+        case KEY_KP6:
+            delta += {step, 0};
+            break;
+        case KEY_KP7:
+            delta += {-step, -step};
+            break;
+        case KEY_KP8:
+            delta += {0, -step};
+            break;
+        case KEY_KP9:
+            delta += {step, -step};
+            break;
+        }
     }
 
-    return {0, 0};
+    return delta;
 }
 
 void MouseKeysFilter::delayTriggered()
 {
     m_repeatTimer.start();
-    movePointer(deltaForKey(m_currentKey));
+    movePointer(currentDelta());
 }
 
 double MouseKeysFilter::deltaFactorForStep(int step) const
@@ -181,7 +184,7 @@ void MouseKeysFilter::repeatTriggered()
 {
     ++m_currentStep;
 
-    movePointer(deltaForKey(m_currentKey) * deltaFactorForStep(m_currentStep));
+    movePointer(currentDelta() * deltaFactorForStep(m_currentStep));
 }
 
 void MouseKeysFilter::movePointer(QPointF delta)
@@ -205,19 +208,21 @@ bool MouseKeysFilter::keyboardKey(KWin::KeyboardKeyEvent *event)
         || event->nativeScanCode == KEY_KP7
         || event->nativeScanCode == KEY_KP8
         || event->nativeScanCode == KEY_KP9) {
-        if (!m_keyStates[event->nativeScanCode] && event->state == KWin::KeyboardKeyState::Pressed && m_currentKey == 0) {
-            m_keyStates[event->nativeScanCode] = true;
-            m_delayTimer.start();
-            m_currentKey = event->nativeScanCode;
+        if (event->state == KWin::KeyboardKeyState::Pressed) {
+            m_heldKeys.insert(event->nativeScanCode);
+            if (m_heldKeys.size() == 1) {
+                m_delayTimer.start();
+            }
 
-            movePointer(deltaForKey(event->nativeScanCode));
-
-        } else if (m_keyStates[event->nativeScanCode] && event->state == KWin::KeyboardKeyState::Released && event->nativeScanCode == m_currentKey) {
-            m_keyStates[event->nativeScanCode] = false;
-            m_delayTimer.stop();
-            m_repeatTimer.stop();
-            m_currentKey = 0;
-            m_currentStep = 0;
+            movePointer(currentDelta());
+        } else if (event->state == KWin::KeyboardKeyState::Released) {
+            if (m_heldKeys.remove(event->nativeScanCode)) {
+                if (m_heldKeys.isEmpty()) {
+                    m_delayTimer.stop();
+                    m_repeatTimer.stop();
+                    m_currentStep = 0;
+                }
+            }
         }
 
         return true;

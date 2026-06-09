@@ -51,15 +51,15 @@ private:
     void loadConfig(const KConfigGroup &group);
     void delayTriggered();
     void repeatTriggered();
+    QPointF currentDelta() const;
     void movePointer(QPointF delta);
     double deltaFactorForStep(int step) const;
 
     std::unique_ptr<MouseKeysInputDevice> m_inputDevice;
     KConfigWatcher::Ptr m_configWatcher;
-    QMap<quint32, bool> m_keyStates;
+    QSet<quint32> m_heldKeys;
     QTimer m_delayTimer;
     QTimer m_repeatTimer;
-    quint32 m_currentKey = 0;
     int m_currentStep = 0;
     int m_mouseButton = BTN_LEFT;
 
