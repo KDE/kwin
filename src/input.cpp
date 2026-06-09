@@ -1387,7 +1387,7 @@ std::optional<Options::MouseCommand> globalWindowWheelAction(PointerAxisEvent *e
     if (input()->pointer()->isConstrained() || workspace()->globalShortcutsDisabled()) {
         return std::nullopt;
     }
-    const auto ret = options->operationWindowMouseWheel(-event->delta);
+    const auto ret = options->operationWindowMouseWheel((event->inverted ? -1 : 1) * event->delta);
     if (ret == Options::MouseCommand::MouseNothing) {
         return std::nullopt;
     } else {
@@ -1703,7 +1703,7 @@ public:
         }
         if ((event->orientation == Qt::Vertical) && decoration->window()->titlebarPositionUnderMouse()) {
             if (float delta = m_accumulator.accumulate(event)) {
-                decoration->window()->performMousePressCommand(options->operationTitlebarMouseWheel(delta * -1),
+                decoration->window()->performMousePressCommand(options->operationTitlebarMouseWheel((event->inverted ? -1 : 1) * delta),
                                                                event->position);
             }
         }
