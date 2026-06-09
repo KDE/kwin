@@ -761,16 +761,7 @@ void InputMethodTest::testFakeEventFallback()
 
     zwp_input_method_context_v1_commit_string(context, 0, "aB äÄ 안 😊");
 
-    QSignalSpy receivedTextChangedSpy(keyboard, &Test::SimpleKeyboard::receviedTextChanged);
-    bool matched = false;
-    for (int i = 0; i < 100; ++i) {
-        if (keyboard->receviedText() == "aB äÄ 안 😊") {
-            matched = true;
-            break;
-        }
-        receivedTextChangedSpy.wait();
-    }
-    QVERIFY(matched);
+    QTRY_COMPARE(keyboard->receviedText(), QString("aB äÄ 안 😊"));
 
     shellSurface.reset();
     QVERIFY(Test::waitForWindowClosed(window));

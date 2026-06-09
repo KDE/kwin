@@ -327,16 +327,7 @@ void FakeInputTest::testKeySym()
     sendKey(0x01000000 | 0x1F60A); // smily face
     sendKey(XKB_KEY_f);
 
-    QSignalSpy receivedTextChangedSpy(keyboard, &Test::SimpleKeyboard::receviedTextChanged);
-    bool matched = false;
-    for (int i = 0; i < 10; ++i) {
-        if (keyboard->receviedText() == "aB äÄ 안😊f") {
-            matched = true;
-            break;
-        }
-        receivedTextChangedSpy.wait();
-    }
-    QVERIFY(matched);
+    QTRY_COMPARE(keyboard->receviedText(), QString("aB äÄ 안😊f"));
 
     QSignalSpy keySymReceivedSpy(keyboard, &Test::SimpleKeyboard::keySymRecevied);
     QSignalSpy modifiersChangedSpy(keyboard->keyboard(), &KWayland::Client::Keyboard::modifiersChanged);
@@ -358,7 +349,6 @@ void FakeInputTest::testKeySym()
     QVERIFY(modifiersChangedSpy.count() == 2 || modifiersChangedSpy.wait());
     QCOMPARE(keySymReceivedSpy.count(), 2);
     QCOMPARE(modifiersChangedSpy.last().at(0).toUInt(), 0U);
-
 }
 
 } // namespace KWin
