@@ -364,3 +364,5 @@ void GpuManager::removeDevice(RenderDevice *device)
 }
 
 }
+
+#include "moc_gpumanager.cpp"
