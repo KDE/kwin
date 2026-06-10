@@ -150,10 +150,7 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->hasStrut());
-    QVERIFY(!window->readyForPainting());
 
-    QMetaObject::invokeMethod(window, "setReadyForPainting");
-    QVERIFY(window->readyForPainting());
     QVERIFY(Test::waitForWaylandSurface(window));
 
     // move pointer into the window, should trigger an enter
@@ -237,8 +234,6 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     QCOMPARE(window->bufferGeometry(), RectF(0, 0, 120, 225));
     QCOMPARE(window->frameGeometry(), RectF(10, 5, 100, 200));
 
-    QMetaObject::invokeMethod(window, "setReadyForPainting");
-    QVERIFY(window->readyForPainting());
     QVERIFY(Test::waitForWaylandSurface(window));
 
     // Move pointer into the window, should trigger an enter.

@@ -332,6 +332,7 @@ bool X11Window::track(xcb_window_t w)
     getSkipCloseAnimation();
     updateShadow();
     setupItem();
+    setReadyForPainting();
 
     return true;
 }
@@ -391,14 +392,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     getWmClientMachine();
     getSyncCounter();
     setCaption(readName());
-
-    // Sending ConfigureNotify is done when setting mapping state below, getting the
-    // first sync response means window is ready for compositing.
-    //
-    // The sync request will block wl_surface commits, and with Xwayland, it is really
-    // important that wl_surfaces commits are blocked before the frame window is mapped.
-    // Otherwise Xwayland can attach a buffer before the sync request is acked.
-    sendSyncRequest();
 
     setupWindowRules();
     connect(this, &X11Window::windowClassChanged, this, &X11Window::evaluateWindowRules);
@@ -892,6 +885,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     updateWindowRules(Rules::All); // Was blocked while !isManaged()
 
     setupWindowManagementInterface();
+    setReadyForPainting();
 
     connect(kwinApp(), &Application::xwaylandScaleChanged, this, &X11Window::handleXwaylandScaleChanged);
     return true;
@@ -1836,7 +1830,7 @@ void X11Window::sendSyncRequest()
         m_syncRequest.timeout->setSingleShot(true);
         connect(m_syncRequest.timeout, &QTimer::timeout, this, &X11Window::ackSyncTimeout);
     }
-    m_syncRequest.timeout->start(ready_for_painting ? 10000 : 1000);
+    m_syncRequest.timeout->start(10000);
 
     // We increment before the notify so that after the notify
     // syncCounterSerial will equal the value we are expecting
@@ -2197,8 +2191,6 @@ void X11Window::ackSyncTimeout()
 
 void X11Window::finishSync()
 {
-    setReadyForPainting();
-
     if (m_syncRequest.interactiveResize) {
         m_syncRequest.interactiveResize = false;
 
@@ -3105,10 +3097,6 @@ void X11Window::handleCommitted()
         if (m_syncRequest.acked) {
             finishSync();
         }
-
-        if (!m_syncRequest.enabled) {
-            setReadyForPainting();
-        }
     }
 }
 
@@ -3953,10 +3941,6 @@ void X11Window::associate(XwaylandSurfaceV1Interface *shellSurface)
     if (surface()->isMapped()) {
         if (m_syncRequest.acked) {
             finishSync();
-        }
-
-        if (!m_syncRequest.enabled) {
-            setReadyForPainting();
         }
     }
 

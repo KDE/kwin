@@ -113,10 +113,6 @@ void WindowRuleTest::testApplyInitialMaximizeVert()
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->hasStrut());
-    QVERIFY(!window->readyForPainting());
-    QMetaObject::invokeMethod(window, "setReadyForPainting");
-    QVERIFY(window->readyForPainting());
-    QVERIFY(Test::waitForWaylandSurface(window));
     QCOMPARE(window->maximizeMode(), MaximizeVertical);
 
     // destroy window again
@@ -175,10 +171,6 @@ void WindowRuleTest::testWindowClassChange()
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->hasStrut());
-    QVERIFY(!window->readyForPainting());
-    QMetaObject::invokeMethod(window, "setReadyForPainting");
-    QVERIFY(window->readyForPainting());
-    QVERIFY(Test::waitForWaylandSurface(window));
     QCOMPARE(window->keepAbove(), false);
 
     // now change class
