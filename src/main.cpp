@@ -90,7 +90,6 @@ Application::Application(int &argc, char **argv)
     qRegisterMetaType<KWin::SurfaceInterface *>("KWin::SurfaceInterface *");
     qRegisterMetaType<KSharedConfigPtr>();
     qRegisterMetaType<std::chrono::nanoseconds>();
-    GpuManager::s_self = std::make_unique<GpuManager>();
 }
 
 void Application::setConfigLock(bool lock)
@@ -248,6 +247,11 @@ void Application::createAtoms()
 #if KWIN_BUILD_X11
     atoms = new Atoms;
 #endif
+}
+
+void Application::createGpuManager()
+{
+    GpuManager::s_self = std::make_unique<GpuManager>();
 }
 
 void Application::createOptions()

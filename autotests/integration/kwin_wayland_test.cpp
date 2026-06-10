@@ -92,6 +92,8 @@ WaylandTestApplication::WaylandTestApplication(int &argc, char **argv, bool runO
     removeLibraryPath(ownPath);
     addLibraryPath(ownPath);
 
+    createGpuManager();
+
     if (runOnKMS) {
         // in order to allow running the test manually on a tty,
         // we need the real session. This doesn't work in CI though,

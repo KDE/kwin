@@ -455,6 +455,8 @@ int main(int argc, char *argv[])
         a.setSessionArgument(parser.value(exitWithSessionOption));
     }
 
+    a.createGpuManager();
+
     enum class BackendType {
         Kms,
 #if KWIN_BUILD_X11

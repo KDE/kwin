@@ -228,6 +228,8 @@ public:
     void createAtoms();
     void destroyAtoms();
 
+    void createGpuManager();
+
     static void setupMalloc();
     static void setupLocalizedString();
 
