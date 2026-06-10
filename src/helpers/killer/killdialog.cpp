@@ -26,7 +26,7 @@ KillDialog::KillDialog(const QString &applicationName, const QIcon &applicationI
     option.initFrom(this);
 
     // Drop redundant application name, cf. QXcbWindow::setWindowTitle.
-    QString caption = windowName.toHtmlEscaped();
+    QString caption = windowName;
     const QString titleSeparator = QString::fromUtf8(" \xe2\x80\x94 "); // // U+2014, EM DASH
     caption.remove(titleSeparator + applicationName);
     caption.remove(QStringLiteral(" – ") + applicationName); // EN dash (Firefox)
