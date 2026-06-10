@@ -76,7 +76,6 @@ Options *options;
 #if KWIN_BUILD_X11
 Atoms *atoms;
 #endif
-int Application::crashes = 0;
 
 Application::Application(int &argc, char **argv)
     : QApplication(argc, argv)
@@ -145,21 +144,6 @@ void Application::destroyPlatform()
     m_outputBackend.reset();
 }
 
-void Application::resetCrashesCount()
-{
-    crashes = 0;
-}
-
-void Application::setCrashCount(int count)
-{
-    crashes = count;
-}
-
-bool Application::wasCrash()
-{
-    return crashes > 0;
-}
-
 void Application::createAboutData()
 {
     KAboutData aboutData(QStringLiteral("kwin"), // The program name used internally
@@ -182,16 +166,13 @@ void Application::createAboutData()
 }
 
 static const QString s_lockOption = QStringLiteral("lock");
-static const QString s_crashesOption = QStringLiteral("crashes");
 
 void Application::setupCommandLine(QCommandLineParser *parser)
 {
     QCommandLineOption lockOption(s_lockOption, i18n("Disable configuration options"));
-    QCommandLineOption crashesOption(s_crashesOption, i18n("Indicate that KWin has recently crashed n times"), QStringLiteral("n"));
 
     parser->setApplicationDescription(i18n("KDE window manager"));
     parser->addOption(lockOption);
-    parser->addOption(crashesOption);
     KAboutData::applicationData().setupCommandLine(parser);
 }
 
@@ -200,7 +181,6 @@ void Application::processCommandLine(QCommandLineParser *parser)
     KAboutData aboutData = KAboutData::applicationData();
     aboutData.processCommandLine(parser);
     setConfigLock(parser->isSet(s_lockOption));
-    Application::setCrashCount(parser->value(s_crashesOption).toInt());
 }
 
 void Application::setupMalloc()

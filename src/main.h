@@ -111,10 +111,6 @@ public:
     void setupCommandLine(QCommandLineParser *parser);
     void processCommandLine(QCommandLineParser *parser);
 
-    static void setCrashCount(int count);
-    static bool wasCrash();
-    void resetCrashesCount();
-
     /**
      * Creates the KAboutData object for the KWin instance and registers it as
      * KAboutData::setApplicationData.
@@ -315,9 +311,6 @@ protected:
     {
         m_terminating = true;
     }
-
-protected:
-    static int crashes;
 
 private:
 #if KWIN_BUILD_X11
