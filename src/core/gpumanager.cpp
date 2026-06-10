@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "gpumanager.h"
+#include "core/udmabufallocator.h"
 #include "drmdevice.h"
 #include "opengl/egldisplay.h"
 #include "utils/common.h"
@@ -53,6 +54,7 @@ GpuManager::GpuManager()
     , m_udev(std::make_unique<Udev>())
     , m_udevMonitor(m_udev->createMonitor())
     , m_udevNotifier(std::make_unique<QSocketNotifier>(m_udevMonitor->fd(), QSocketNotifier::Read))
+    , m_udmabufAllocator(m_udmabuf.isValid() ? std::make_unique<UDmabufAllocator>() : nullptr)
 {
     m_udevMonitor->filterSubsystemDevType("drm");
     connect(m_udevNotifier.get(), &QSocketNotifier::activated, this, &GpuManager::handleUdevEvent);
@@ -276,6 +278,11 @@ const FileDescriptor &GpuManager::udmabuf() const
     return m_udmabuf;
 }
 
+GraphicsBufferAllocator *GpuManager::udmabufAllocator() const
+{
+    return m_udmabufAllocator.get();
+}
+
 void GpuManager::addDevice(std::unique_ptr<RenderDevice> &&device)
 {
     m_renderDevices.push_back(std::move(device));
@@ -300,3 +307,5 @@ void GpuManager::removeDevice(RenderDevice *device)
 }
 
 }
+
+#include "moc_gpumanager.cpp"

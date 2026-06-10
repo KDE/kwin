@@ -23,6 +23,7 @@ namespace KWin
 class Udev;
 class UdevMonitor;
 class DrmDevice;
+class GraphicsBufferAllocator;
 
 class KWIN_EXPORT GpuManager : public QObject
 {
@@ -54,6 +55,7 @@ public:
      */
     std::optional<DmaBufAttributes> createUdmabuf(const ShmAttributes *attributes) const;
     const FileDescriptor &udmabuf() const;
+    GraphicsBufferAllocator *udmabufAllocator() const;
 
     void addDevice(std::unique_ptr<RenderDevice> &&kmsSoftwareDevice);
     void removeDevice(RenderDevice *kmsSoftwareDevice);
@@ -72,6 +74,7 @@ private:
     const std::unique_ptr<Udev> m_udev;
     const std::unique_ptr<UdevMonitor> m_udevMonitor;
     const std::unique_ptr<QSocketNotifier> m_udevNotifier;
+    const std::unique_ptr<GraphicsBufferAllocator> m_udmabufAllocator;
     std::vector<std::unique_ptr<RenderDevice>> m_renderDevices;
     QHash<dev_t, RenderDevice *> m_compatibleDeviceMap;
 };

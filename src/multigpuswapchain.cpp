@@ -29,6 +29,78 @@
 namespace KWin
 {
 
+class MultiGpuCopy : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit MultiGpuCopy(RenderDevice *device);
+    virtual ~MultiGpuCopy() = default;
+
+    virtual std::optional<MultiGpuSwapchain::Ret> copy(GraphicsBuffer *buffer,
+                                                       const Region &damage,
+                                                       FileDescriptor &&sync,
+                                                       OutputFrame *frame,
+                                                       const std::shared_ptr<SyncReleasePoint> &releasePoint) = 0;
+    virtual void resetDamageTracking() = 0;
+    virtual QSize size() const = 0;
+    virtual uint32_t format() const = 0;
+    virtual uint64_t modifier() const = 0;
+
+Q_SIGNALS:
+    void gpuReset();
+
+public:
+    RenderDevice *m_device = nullptr;
+    DamageJournal m_journal;
+};
+
+class VulkanMultiGpuCopy : public MultiGpuCopy
+{
+    Q_OBJECT
+
+public:
+    explicit VulkanMultiGpuCopy(RenderDevice *device, std::unique_ptr<VulkanSwapchain> &&swapchain);
+
+    std::optional<MultiGpuSwapchain::Ret> copy(GraphicsBuffer *buffer,
+                                               const Region &damage,
+                                               FileDescriptor &&sync,
+                                               OutputFrame *frame,
+                                               const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
+    void resetDamageTracking() override;
+    QSize size() const override;
+    uint32_t format() const override;
+    uint64_t modifier() const override;
+
+    std::unique_ptr<VulkanSwapchain> m_swapchain;
+    std::shared_ptr<VulkanSwapchainSlot> m_currentSlot;
+};
+
+class EglMultiGpuCopy : public MultiGpuCopy
+{
+    Q_OBJECT
+
+public:
+    explicit EglMultiGpuCopy(RenderDevice *device,
+                             std::shared_ptr<EglContext> &&context,
+                             std::shared_ptr<EglSwapchain> &&swapchain);
+    ~EglMultiGpuCopy() override;
+
+    std::optional<MultiGpuSwapchain::Ret> copy(GraphicsBuffer *buffer,
+                                               const Region &damage,
+                                               FileDescriptor &&sync,
+                                               OutputFrame *frame,
+                                               const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
+    void resetDamageTracking() override;
+    QSize size() const override;
+    uint32_t format() const override;
+    uint64_t modifier() const override;
+
+    std::shared_ptr<EglContext> m_context;
+    std::shared_ptr<EglSwapchain> m_swapchain;
+    std::shared_ptr<EglSwapchainSlot> m_currentSlot;
+};
+
 struct DrmFormat
 {
     uint32_t format;
@@ -37,17 +109,20 @@ struct DrmFormat
 
 static std::optional<DrmFormat> chooseFormat(uint32_t inputFormat, const FormatModifierMap &srcFormats, const FormatModifierMap &dstFormats)
 {
-    if (srcFormats.contains(inputFormat)) {
+    const auto modifiers = srcFormats[inputFormat].intersected(dstFormats[inputFormat]);
+    if (!modifiers.empty()) {
         return DrmFormat{
             .format = inputFormat,
-            .modifiers = srcFormats[inputFormat].intersected(dstFormats[inputFormat]),
+            .modifiers = modifiers,
         };
     }
+
     const auto info = FormatInfo::get(inputFormat).value_or(*FormatInfo::get(DRM_FORMAT_ARGB8888));
     std::optional<DrmFormat> ret;
     std::optional<uint32_t> retBPP;
     for (auto it = srcFormats.begin(); it != srcFormats.end(); it++) {
         const auto otherInfo = FormatInfo::get(it.key());
+        // TODO sort the formats and accept suboptimal ones when needed
         if (!otherInfo.has_value() || otherInfo->bitsPerColor < info.bitsPerColor || otherInfo->alphaBits < info.alphaBits) {
             continue;
         }
@@ -66,119 +141,236 @@ static std::optional<DrmFormat> chooseFormat(uint32_t inputFormat, const FormatM
     return ret;
 }
 
-std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::create(RenderDevice *copyDevice, DrmDevice *targetDevice, uint32_t format, uint64_t modifier, const QSize &size, const FormatModifierMap &importFormats, bool scanout)
+struct Ret
 {
-    if (copyDevice->isInReset()) {
+    std::unique_ptr<MultiGpuCopy> copy;
+    ModifierList sourceModifiers;
+};
+static std::optional<Ret> createCopy(RenderDevice *device,
+                                     uint32_t sourceFormat,
+                                     const ModifierList &sourceModifiers,
+                                     GraphicsBufferAllocator *allocator,
+                                     const QSize &size,
+                                     const FormatModifierMap &formats,
+                                     bool scanout)
+{
+    // use Vulkan if possible
+    if (device->vulkanDevice()) {
+        auto retModifiers = device->vulkanDevice()->supportedFormats()[sourceFormat].intersected(sourceModifiers);
+        if (!retModifiers.empty()) {
+            auto fmt = chooseFormat(sourceFormat, device->vulkanDevice()->supportedFormats(), formats);
+            if (fmt) {
+                auto swapchain = VulkanSwapchain::create(device->vulkanDevice(), allocator, size, fmt->format, fmt->modifiers, scanout);
+                if (swapchain) {
+                    return Ret{
+                        .copy = std::make_unique<VulkanMultiGpuCopy>(device, std::move(swapchain)),
+                        .sourceModifiers = retModifiers,
+                    };
+                }
+            }
+        }
+    }
+    // fall back to EGL if not
+    auto retModifiers = device->eglDisplay()->allSupportedDrmFormats()[sourceFormat].intersected(sourceModifiers);
+    if (retModifiers.empty()) {
+        return std::nullopt;
+    }
+    auto fmt = chooseFormat(sourceFormat, device->eglDisplay()->nonExternalOnlySupportedDrmFormats(), formats);
+    if (!fmt) {
+        return std::nullopt;
+    }
+    // creating the copy context will make it current
+    const auto restoreContext = qScopeGuard([ctx = EglContext::currentContext()]() {
+        if (ctx) {
+            ctx->makeCurrent();
+        }
+    });
+    auto context = device->eglContext();
+    if (!context) {
+        return std::nullopt;
+    }
+    auto swapchain = EglSwapchain::create(allocator, context.get(), size, fmt->format, fmt->modifiers, scanout);
+    if (!swapchain) {
+        return std::nullopt;
+    }
+    return Ret{
+        .copy = std::make_unique<EglMultiGpuCopy>(device, std::move(context), std::move(swapchain)),
+        .sourceModifiers = retModifiers,
+    };
+}
+
+// There's a few constraints that decide which copy path we should take:
+// - the kernel may implicitly migrate buffers to system memory when they're imported
+//   into different GPUs, which can worsen performance significantly
+// - for scanout, the destination buffer must be local, so it cannot ever be imported into the source device
+// - we can't always directly access buffers on other GPUs, because of format/modifier
+//   mismatches or simply missing hardware capabilities
+// - importing a buffer allocated on Nvidia into another GPU causes GPU resets,
+//   see https://github.com/NVIDIA/open-gpu-kernel-modules/issues/1037
+
+std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::createForSampling(RenderDevice *sourceDevice, DrmDevice *targetDevice, uint32_t format, uint64_t modifier, const QSize &size, const FormatModifierMap &importFormats)
+{
+    RenderDevice *destination = GpuManager::self()->compatibleRenderDevice(targetDevice);
+    if (sourceDevice->isInReset() || (destination && destination->isInReset())) {
         // avoid creating a suboptimal swapchain while in a reset
         return nullptr;
     }
-    if (copyDevice->vulkanDevice() && copyDevice->vulkanDevice()->supportedFormats().containsFormat(format, modifier)) {
-        const auto fmt = chooseFormat(format, copyDevice->vulkanDevice()->supportedFormats(), importFormats);
-        if (fmt) {
-            auto swapchain = VulkanSwapchain::create(copyDevice->vulkanDevice(), targetDevice->allocator(), size, fmt->format, fmt->modifiers, scanout);
-            if (swapchain) {
-                return std::make_unique<MultiGpuSwapchain>(copyDevice, targetDevice, std::move(swapchain));
-            }
-        }
+
+    if (!sourceDevice->allImportableFormats().containsFormat(format, modifier)) {
+        // This should never happen
+        return nullptr;
     }
-    if (copyDevice->eglDisplay() && copyDevice->eglDisplay()->nonExternalOnlySupportedDrmFormats().containsFormat(format, modifier)) {
-        // creating the copy context will make it current
-        const auto restoreContext = qScopeGuard([ctx = EglContext::currentContext()]() {
-            if (ctx) {
-                ctx->makeCurrent();
-            }
-        });
-        const auto context = copyDevice->eglContext();
-        if (!context) {
+
+    GraphicsBufferAllocator *sysMemAllocator = GpuManager::self()->udmabufAllocator() ? GpuManager::self()->udmabufAllocator() : sourceDevice->drmDevice()->allocator();
+    if (modifier == DRM_FORMAT_MOD_INVALID) {
+        // Since implicit modifiers can't be relied on for cross-GPU access, first
+        // do a copy to a linear buffer and only then the copy to the destination GPU
+        auto firstCopy = createCopy(sourceDevice, format, {modifier}, sysMemAllocator, size, destination->allImportableFormats(), false);
+        if (!firstCopy) {
             return nullptr;
         }
-        auto formatMod = chooseFormat(format, copyDevice->eglDisplay()->nonExternalOnlySupportedDrmFormats(), importFormats);
-        if (!formatMod) {
+        auto secondCopy = createCopy(sourceDevice, firstCopy->copy->format(), {firstCopy->copy->modifier()}, targetDevice->allocator(), size, importFormats, false);
+        if (!secondCopy) {
             return nullptr;
         }
-        auto eglSwapchain = EglSwapchain::create(copyDevice->drmDevice()->allocator(), context.get(), size, formatMod->format, formatMod->modifiers, scanout);
-        if (eglSwapchain) {
-            return std::make_unique<MultiGpuSwapchain>(copyDevice, targetDevice, context, std::move(eglSwapchain));
+        return std::make_unique<MultiGpuSwapchain>(std::move(firstCopy->copy), std::move(secondCopy->copy));
+    } else {
+        auto firstCopy = createCopy(sourceDevice, format, {modifier}, sysMemAllocator, size, importFormats, false);
+        if (!firstCopy) {
+            return nullptr;
         }
+        return std::make_unique<MultiGpuSwapchain>(std::move(firstCopy->copy), nullptr);
     }
-    return nullptr;
 }
 
-MultiGpuSwapchain::MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, const std::shared_ptr<EglContext> &eglContext, std::shared_ptr<EglSwapchain> &&eglSwapchain)
-    : m_targetDevice(targetDevice)
-    , m_copyDevice(copyDevice)
-    , m_copyContext(eglContext)
-    , m_eglSwapchain(std::move(eglSwapchain))
-    , m_format(m_eglSwapchain->format())
-    , m_modifier(m_eglSwapchain->modifier())
-    , m_size(m_eglSwapchain->size())
+std::optional<MultiGpuSwapchain::AllocationInfo> MultiGpuSwapchain::createForScanout(RenderDevice *sourceDevice, DrmDevice *targetDevice,
+                                                                                     uint32_t format, const ModifierList &modifiers,
+                                                                                     const QSize &size, const FormatModifierMap &importFormats)
 {
-    connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, &MultiGpuSwapchain::handleDeviceRemoved);
+    RenderDevice *destination = GpuManager::self()->compatibleRenderDevice(targetDevice);
+    if (sourceDevice->isInReset() || (destination && destination->isInReset())) {
+        // avoid creating a suboptimal swapchain while in a reset
+        return std::nullopt;
+    }
+
+    if (!destination) {
+        // TODO this should fall back to CPU copy
+        return std::nullopt;
+    }
+
+    // The destination buffer must not be migrated, or scanout will fail.
+    if (sourceDevice->isInternal()) {
+        auto retModifiers = destination->allImportableFormats()[format].intersected(modifiers);
+        if (!retModifiers.isEmpty()) {
+            // We can use the source buffer directly, since it's already in system memory.
+            auto copy = createCopy(destination, format, modifiers, targetDevice->allocator(), size, importFormats, true);
+            if (copy) {
+                return AllocationInfo{
+                    .swapchain = std::make_unique<MultiGpuSwapchain>(std::move(copy->copy), nullptr),
+                    .importModifiers = copy->sourceModifiers,
+                };
+            }
+        }
+        // If there's no matching formats, fall back to double copy
+    }
+
+    // The two copies are required on dedicated GPUs to
+    // avoid migrating the source buffer to system memory
+    GraphicsBufferAllocator *sysMemAllocator = GpuManager::self()->udmabufAllocator() ? GpuManager::self()->udmabufAllocator() : sourceDevice->drmDevice()->allocator();
+    auto firstCopy = createCopy(sourceDevice, format, modifiers, sysMemAllocator, size, destination->allImportableFormats(), false);
+    if (!firstCopy) {
+        return std::nullopt;
+    }
+    auto secondCopy = createCopy(destination, format, {firstCopy->copy->modifier()}, targetDevice->allocator(), size, importFormats, true);
+    if (!secondCopy) {
+        return std::nullopt;
+    }
+    return AllocationInfo{
+        .swapchain = std::make_unique<MultiGpuSwapchain>(std::move(firstCopy->copy), std::move(secondCopy->copy)),
+        .importModifiers = firstCopy->sourceModifiers,
+    };
 }
 
-MultiGpuSwapchain::MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, std::unique_ptr<VulkanSwapchain> &&swapchain)
-    : m_targetDevice(targetDevice)
-    , m_copyDevice(copyDevice)
-    , m_vulkanSwapchain(std::move(swapchain))
-    , m_format(m_vulkanSwapchain->format())
-    , m_modifier(m_vulkanSwapchain->modifier())
-    , m_size(m_vulkanSwapchain->size())
+MultiGpuSwapchain::MultiGpuSwapchain(std::unique_ptr<MultiGpuCopy> &&firstCopy, std::unique_ptr<MultiGpuCopy> &&secondCopy)
+    : m_firstCopy(std::move(firstCopy))
+    , m_secondCopy(std::move(secondCopy))
+    , m_format(m_secondCopy ? m_secondCopy->format() : m_firstCopy->format())
+    , m_modifier(m_secondCopy ? m_secondCopy->modifier() : m_firstCopy->modifier())
+    , m_size(m_firstCopy->size())
 {
     connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, &MultiGpuSwapchain::handleDeviceRemoved);
-    connect(m_copyDevice->vulkanDevice(), &VulkanDevice::deviceLost, this, &MultiGpuSwapchain::handleGpuReset);
+    connect(m_firstCopy.get(), &MultiGpuCopy::gpuReset, this, &MultiGpuSwapchain::handleGpuReset);
+    if (m_secondCopy) {
+        connect(m_secondCopy.get(), &MultiGpuCopy::gpuReset, this, &MultiGpuSwapchain::handleGpuReset);
+    }
 }
 
 MultiGpuSwapchain::~MultiGpuSwapchain()
 {
-    deleteResources();
 }
 
 std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyRgbBuffer(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
                                                                        const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
-    if (!m_copyDevice || !m_targetDevice || !buffer->dmabufAttributes()) {
+    if (!m_firstCopy) {
         return std::nullopt;
     }
-    if (m_vulkanSwapchain) {
-        return copyWithVulkan(buffer, damage, std::move(sync), frame, releasePoint);
-    } else {
-        return copyWithEGL(buffer, damage, std::move(sync), frame, releasePoint);
+    auto ret = m_firstCopy->copy(buffer, damage, std::move(sync), frame, releasePoint);
+    if (m_secondCopy && ret) {
+        ret = m_secondCopy->copy(ret->buffer, damage, std::move(ret->sync), frame, std::move(ret->releasePoint));
     }
+    return ret;
 }
 
-std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(GraphicsBuffer *src, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
-                                                                        const std::shared_ptr<SyncReleasePoint> &releasePoint)
+MultiGpuCopy::MultiGpuCopy(RenderDevice *device)
+    : m_device(device)
 {
-    if (damage.isEmpty() && m_currentVulkanSlot) {
-        return Ret{
-            .buffer = m_currentVulkanSlot->buffer(),
-            .sync = m_currentVulkanSlot->releaseFd().duplicate(),
-            .releasePoint = m_currentVulkanSlot->releasePoint(),
+}
+
+VulkanMultiGpuCopy::VulkanMultiGpuCopy(RenderDevice *device,
+                                       std::unique_ptr<VulkanSwapchain> &&swapchain)
+    : MultiGpuCopy(device)
+    , m_swapchain(std::move(swapchain))
+{
+    connect(m_device->vulkanDevice(), &VulkanDevice::deviceLost, this, &MultiGpuCopy::gpuReset);
+}
+
+std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *buffer,
+                                                               const Region &damage,
+                                                               FileDescriptor &&sync,
+                                                               OutputFrame *frame,
+                                                               const std::shared_ptr<SyncReleasePoint> &releasePoint)
+{
+    if (damage.isEmpty() && m_currentSlot) {
+        return MultiGpuSwapchain::Ret{
+            .buffer = m_currentSlot->buffer(),
+            .sync = m_currentSlot->releaseFd().duplicate(),
+            .releasePoint = m_currentSlot->releasePoint(),
         };
     }
 
-    const auto copyVk = m_copyDevice->vulkanDevice();
-    const auto srcTexture = copyVk->importBuffer(src, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+    const auto copyVk = m_device->vulkanDevice();
+    const auto srcTexture = copyVk->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
     if (!srcTexture) {
         qCWarning(KWIN_VULKAN, "Could not import buffer for multi GPU copy!");
         m_journal.clear();
         return std::nullopt;
     }
 
-    m_currentVulkanSlot = m_vulkanSwapchain->acquire();
-    if (!m_currentVulkanSlot) {
+    m_currentSlot = m_swapchain->acquire();
+    if (!m_currentSlot) {
         qCWarning(KWIN_VULKAN, "Swapchain acquire failed!");
         m_journal.clear();
         return std::nullopt;
     }
 
-    const Rect completeRect{QPoint(), m_size};
-    const Region toRender = (m_journal.accumulate(m_currentVulkanSlot->age(), completeRect) | damage) & completeRect;
+    const Rect completeRect{QPoint(), m_swapchain->size()};
+    const Region toRender = (m_journal.accumulate(m_currentSlot->age(), completeRect) | damage) & completeRect;
     if (toRender.isEmpty()) {
-        return Ret{
-            .buffer = m_currentVulkanSlot->buffer(),
-            .sync = FileDescriptor{},
-            .releasePoint = m_currentVulkanSlot->releasePoint(),
+        return MultiGpuSwapchain::Ret{
+            .buffer = m_currentSlot->buffer(),
+            .sync = m_currentSlot->releaseFd().duplicate(),
+            .releasePoint = m_currentSlot->releasePoint(),
         };
     }
     m_journal.add(damage);
@@ -206,7 +398,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
         vk::ImageLayout::eGeneral,
         vk::QueueFamilyExternal,
         copyVk->transferQueueFamily(),
-        m_currentVulkanSlot->texture()->handle(),
+        m_currentSlot->texture()->handle(),
         vk::ImageSubresourceRange{
             vk::ImageAspectFlagBits::eColor,
             0,
@@ -249,7 +441,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
         };
     }) | std::ranges::to<std::vector>();
     commandBuffer.blitImage(srcTexture->handle(), vk::ImageLayout::eGeneral,
-                            m_currentVulkanSlot->texture()->handle(), vk::ImageLayout::eGeneral,
+                            m_currentSlot->texture()->handle(), vk::ImageLayout::eGeneral,
                             regions, vk::Filter::eNearest);
 
     memoryBarrier.setSrcQueueFamilyIndex(copyVk->transferQueueFamily());
@@ -273,28 +465,69 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
     }
     auto completionFd = copyVk->submit(std::move(commandBuffer), std::move(sync));
     if (!completionFd.has_value()) {
-        m_needsRecreation = true;
         return std::nullopt;
     }
     if (releasePoint) {
         releasePoint->addReleaseFence(*completionFd);
     }
-    m_vulkanSwapchain->release(m_currentVulkanSlot.get(), completionFd->duplicate());
-    return Ret{
-        .buffer = m_currentVulkanSlot->buffer(),
+    m_swapchain->release(m_currentSlot.get(), completionFd->duplicate());
+    return MultiGpuSwapchain::Ret{
+        .buffer = m_currentSlot->buffer(),
         .sync = std::move(*completionFd),
-        .releasePoint = m_currentVulkanSlot->releasePoint(),
+        .releasePoint = m_currentSlot->releasePoint(),
     };
 }
 
-std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithEGL(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
-                                                                     const std::shared_ptr<SyncReleasePoint> &releasePoint)
+void VulkanMultiGpuCopy::resetDamageTracking()
 {
-    if (damage.isEmpty() && m_currentEglSlot) {
-        return Ret{
-            .buffer = m_currentEglSlot->buffer(),
-            .sync = m_currentEglSlot->releaseFd().duplicate(),
-            .releasePoint = m_currentEglSlot->releasePoint(),
+    m_currentSlot.reset();
+    m_swapchain->resetBufferAge();
+    m_journal.clear();
+}
+
+QSize VulkanMultiGpuCopy::size() const
+{
+    return m_swapchain->size();
+}
+
+uint32_t VulkanMultiGpuCopy::format() const
+{
+    return m_swapchain->format();
+}
+
+uint64_t VulkanMultiGpuCopy::modifier() const
+{
+    return m_swapchain->modifier();
+}
+
+EglMultiGpuCopy::EglMultiGpuCopy(RenderDevice *device,
+                                 std::shared_ptr<EglContext> &&context,
+                                 std::shared_ptr<EglSwapchain> &&swapchain)
+    : MultiGpuCopy(device)
+    , m_context(std::move(context))
+    , m_swapchain(std::move(swapchain))
+{
+}
+
+EglMultiGpuCopy::~EglMultiGpuCopy()
+{
+    auto previousContext = EglContext::currentContext();
+    m_context->makeCurrent();
+    m_currentSlot.reset();
+    m_swapchain.reset();
+    if (previousContext) {
+        previousContext->makeCurrent();
+    }
+}
+
+std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::copy(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
+                                                            const std::shared_ptr<SyncReleasePoint> &releasePoint)
+{
+    if (damage.isEmpty() && m_currentSlot) {
+        return MultiGpuSwapchain::Ret{
+            .buffer = m_currentSlot->buffer(),
+            .sync = m_currentSlot->releaseFd().duplicate(),
+            .releasePoint = m_currentSlot->releasePoint(),
         };
     }
 
@@ -306,41 +539,41 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithEGL(GraphicsBuf
             previousContext->makeCurrent();
         }
     });
-    if (!m_copyContext || m_copyContext->isFailed() || !m_copyContext->makeCurrent()) {
-        handleGpuReset();
+    if (!m_context || m_context->isFailed() || !m_context->makeCurrent()) {
+        Q_EMIT gpuReset();
         return std::nullopt;
     }
     std::unique_ptr<GLRenderTimeQuery> renderTime;
     if (frame) {
-        renderTime = std::make_unique<GLRenderTimeQuery>(m_copyContext);
+        renderTime = std::make_unique<GLRenderTimeQuery>(m_context);
         renderTime->begin();
     }
-    m_currentEglSlot = m_eglSwapchain->acquire();
-    if (!m_currentEglSlot) {
+    m_currentSlot = m_swapchain->acquire();
+    if (!m_currentSlot) {
         m_journal.clear();
         return std::nullopt;
     }
-    auto sourceTex = m_copyContext->importDmaBufAsTexture(*buffer->dmabufAttributes());
+    auto sourceTex = m_context->importDmaBufAsTexture(*buffer->dmabufAttributes());
     if (!sourceTex) {
         m_journal.clear();
         return std::nullopt;
     }
 
-    const Rect completeRect{QPoint(), m_size};
-    const Region toRender = (m_journal.accumulate(m_currentEglSlot->age(), completeRect) | damage) & completeRect;
+    const Rect completeRect{QPoint(), m_swapchain->size()};
+    const Region toRender = (m_journal.accumulate(m_currentSlot->age(), completeRect) | damage) & completeRect;
     m_journal.add(damage);
 
-    m_copyContext->pushFramebuffer(m_currentEglSlot->framebuffer());
+    m_context->pushFramebuffer(m_currentSlot->framebuffer());
     // TODO when possible, use a blit instead of a shader for better performance?
-    ShaderBinder binder(ShaderTrait::MapTexture);
+    ShaderBinder binder(sourceTex->target() == GL_TEXTURE_EXTERNAL_OES ? ShaderTrait::MapExternalTexture : ShaderTrait::MapTexture);
     QMatrix4x4 proj;
     proj.scale(1, -1);
     proj.ortho(QRectF(QPointF(), buffer->size()));
     binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, proj);
     sourceTex->render(toRender, buffer->size());
-    m_copyContext->popFramebuffer();
-    EGLNativeFence fence(m_copyContext->displayObject());
-    m_eglSwapchain->release(m_currentEglSlot, fence.fileDescriptor().duplicate());
+    m_context->popFramebuffer();
+    EGLNativeFence fence(m_context->displayObject());
+    m_swapchain->release(m_currentSlot, fence.fileDescriptor().duplicate());
 
     // destroy resources before the context switch
     sourceTex.reset();
@@ -351,57 +584,60 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithEGL(GraphicsBuf
     if (releasePoint) {
         releasePoint->addReleaseFence(fence.fileDescriptor());
     }
-    return Ret{
-        .buffer = m_currentEglSlot->buffer(),
+    return MultiGpuSwapchain::Ret{
+        .buffer = m_currentSlot->buffer(),
         .sync = fence.takeFileDescriptor(),
-        .releasePoint = m_currentEglSlot->releasePoint(),
+        .releasePoint = m_currentSlot->releasePoint(),
     };
+}
+
+void EglMultiGpuCopy::resetDamageTracking()
+{
+    m_currentSlot.reset();
+    m_swapchain->resetBufferAge();
+    m_journal.clear();
+}
+
+QSize EglMultiGpuCopy::size() const
+{
+    return m_swapchain->size();
+}
+
+uint32_t EglMultiGpuCopy::format() const
+{
+    return m_swapchain->format();
+}
+
+uint64_t EglMultiGpuCopy::modifier() const
+{
+    return m_swapchain->modifier();
 }
 
 void MultiGpuSwapchain::handleDeviceRemoved(RenderDevice *device)
 {
-    if (m_copyDevice == device || m_targetDevice == device->drmDevice()) {
-        deleteResources();
+    if (!m_firstCopy) {
+        return;
     }
-}
-
-void MultiGpuSwapchain::deleteResources()
-{
-    if (m_copyContext) {
-        const auto restoreContext = qScopeGuard([ctx = EglContext::currentContext()]() {
-            if (ctx) {
-                ctx->makeCurrent();
-            }
-        });
-        m_copyContext->makeCurrent();
-        m_currentEglSlot.reset();
-        m_eglSwapchain.reset();
-        m_copyContext.reset();
+    if (m_firstCopy->m_device == device || (m_secondCopy && m_secondCopy->m_device == device)) {
+        m_firstCopy.reset();
+        m_secondCopy.reset();
     }
-    if (m_vulkanSwapchain) {
-        m_currentVulkanSlot.reset();
-        m_vulkanSwapchain.reset();
-    }
-    m_copyDevice = nullptr;
-    m_targetDevice = nullptr;
 }
 
 void MultiGpuSwapchain::resetDamageTracking()
 {
-    m_currentEglSlot.reset();
-    if (m_eglSwapchain) {
-        m_eglSwapchain->resetBufferAge();
+    if (m_firstCopy) {
+        m_firstCopy->resetDamageTracking();
     }
-    m_currentVulkanSlot.reset();
-    if (m_vulkanSwapchain) {
-        m_vulkanSwapchain->resetBufferAge();
+    if (m_secondCopy) {
+        m_secondCopy->resetDamageTracking();
     }
-    m_journal.clear();
 }
 
 void MultiGpuSwapchain::handleGpuReset()
 {
-    deleteResources();
+    m_firstCopy.reset();
+    m_secondCopy.reset();
     m_needsRecreation = true;
 }
 
@@ -426,3 +662,6 @@ bool MultiGpuSwapchain::needsRecreation() const
 }
 
 }
+
+#include "moc_multigpuswapchain.cpp"
+#include "multigpuswapchain.moc"
