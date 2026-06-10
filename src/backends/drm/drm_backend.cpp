@@ -192,7 +192,7 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
         fd = m_session->openRestricted(fileName);
     }
     if (!fd.has_value()) {
-        qCWarning(KWIN_DRM, "Failed to open drm device %s", qPrintable(fileName));
+        qCWarning(KWIN_DRM, "Failed to open drm device %s: %s", qPrintable(fileName), strerror(errno));
         return nullptr;
     }
 
