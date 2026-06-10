@@ -14,6 +14,7 @@
 #include "utils/filedescriptor.h"
 
 #include <QObject>
+#include <optional>
 
 namespace KWin
 {
@@ -29,13 +30,16 @@ class VulkanDevice;
 class VulkanSwapchain;
 class VulkanSwapchainSlot;
 class SyncReleasePoint;
+class QPainterSwapchain;
+class QPainterSwapchainSlot;
+class VulkanBuffer;
+class MultiGpuCopy;
 
 class KWIN_EXPORT MultiGpuSwapchain : public QObject
 {
     Q_OBJECT
 public:
-    explicit MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, const std::shared_ptr<EglContext> &eglContext, std::shared_ptr<EglSwapchain> &&eglSwapchain);
-    explicit MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, std::unique_ptr<VulkanSwapchain> &&swapchain);
+    explicit MultiGpuSwapchain(std::unique_ptr<MultiGpuCopy> &&firstCopy, std::unique_ptr<MultiGpuCopy> &&secondCopy);
     ~MultiGpuSwapchain() override;
 
     struct Ret
@@ -54,35 +58,28 @@ public:
     QSize size() const;
     bool needsRecreation() const;
 
-    /**
-     * NOTE that the copyDevice needs to be chosen carefully. Importing a buffer to a given device
-     * (even if just for rendering) causes the kernel to possibly migrate the buffer to that device.
-     * If for example a buffer on a dedicated GPU is imported to an integrated GPU, it will be moved
-     * to system memory, and rendering performance on the dedicated GPU will suffer.
-     * Scanning out buffers from one GPU while it's on another GPU is also usually impossible.
-     */
-    static std::unique_ptr<MultiGpuSwapchain> create(RenderDevice *copyDevice, DrmDevice *targetDevice, uint32_t format, uint64_t modifier, const QSize &size, const FormatModifierMap &importFormats, bool scanout);
+    static std::unique_ptr<MultiGpuSwapchain> createForSampling(RenderDevice *sourceDevice, DrmDevice *targetDevice, uint32_t format, uint64_t modifier, const QSize &size, const FormatModifierMap &importFormats);
+
+    struct AllocationInfo
+    {
+        std::unique_ptr<MultiGpuSwapchain> swapchain;
+        ModifierList importModifiers;
+    };
+    static std::optional<AllocationInfo> createForScanout(RenderDevice *sourceDevice, DrmDevice *targetDevice, uint32_t format, const ModifierList &modifiers, const QSize &size, const FormatModifierMap &importFormats);
 
 private:
-    std::optional<Ret> copyWithVulkan(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
-                                      const std::shared_ptr<SyncReleasePoint> &releasePoint);
-    std::optional<Ret> copyWithEGL(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
-                                   const std::shared_ptr<SyncReleasePoint> &releasePoint);
+    std::optional<Ret> copyWithVulkanToCpu(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
+                                           const std::shared_ptr<SyncReleasePoint> &releasePoint);
     void handleDeviceRemoved(RenderDevice *device);
     void handleGpuReset();
-    void deleteResources();
 
-    DrmDevice *m_targetDevice = nullptr;
-    RenderDevice *m_copyDevice = nullptr;
-    std::shared_ptr<EglContext> m_copyContext;
-    std::shared_ptr<EglSwapchain> m_eglSwapchain;
-    std::shared_ptr<EglSwapchainSlot> m_currentEglSlot;
-    std::unique_ptr<VulkanSwapchain> m_vulkanSwapchain;
-    std::shared_ptr<VulkanSwapchainSlot> m_currentVulkanSlot;
-    DamageJournal m_journal;
+    std::unique_ptr<MultiGpuCopy> m_firstCopy;
+    std::unique_ptr<MultiGpuCopy> m_secondCopy;
     const uint32_t m_format;
     const uint64_t m_modifier;
     const QSize m_size;
     bool m_needsRecreation = false;
+    friend class EglMultiGpuCopy;
+    friend class VulkanMultiGpuCopy;
 };
 }

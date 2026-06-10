@@ -443,20 +443,27 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     const bool cpuCopy = importMode == MultiGpuImportMode::DumbBuffer || bufferTarget == BufferTarget::Dumb;
     auto ret = std::make_unique<Surface>();
     ModifierList renderModifiers = m_eglBackend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats()[format];
-    if (importMode == MultiGpuImportMode::GpuCopy) {
+    if (cpuCopy) {
+        if (!cpuCopyFormats.contains(format)) {
+            return nullptr;
+        }
+        ret->importDumbSwapchain = std::make_unique<QPainterSwapchain>(m_gpu->drmDevice()->allocator(), size, format, true);
+        if (!ret->importDumbSwapchain) {
+            return nullptr;
+        }
+    } else if (importMode == MultiGpuImportMode::GpuCopy) {
         if (!m_eglBackend->renderDevice()
             || !m_gpu->renderDevice()
             || m_eglBackend->renderDevice()->isSoftwareDevice()
             || m_gpu->renderDevice()->isSoftwareDevice()) {
             return nullptr;
         }
-        renderModifiers.intersect(m_gpu->renderDevice()->allImportableFormats().value(format));
-        // transferring non-linear buffers with implicit modifiers between GPUs is likely to yield wrong results
-        renderModifiers.erase(DRM_FORMAT_MOD_INVALID);
-    } else if (cpuCopy) {
-        if (!cpuCopyFormats.contains(format)) {
+        auto copy = MultiGpuSwapchain::createForScanout(m_eglBackend->renderDevice(), m_gpu->drmDevice(), format, renderModifiers, size, FormatModifierMap{{format, modifiers}});
+        if (!copy) {
             return nullptr;
         }
+        ret->importSwapchain = std::move(copy->swapchain);
+        renderModifiers = copy->importModifiers;
     } else {
         renderModifiers.intersect(modifiers);
     }
@@ -482,14 +489,6 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     ret->requiredAlphaBits = requiredAlphaBits;
     if (!ret->gbmSwapchain) {
         return nullptr;
-    }
-    if (cpuCopy) {
-        ret->importDumbSwapchain = std::make_unique<QPainterSwapchain>(m_gpu->drmDevice()->allocator(), size, format, true);
-    } else if (importMode == MultiGpuImportMode::GpuCopy) {
-        ret->importSwapchain = MultiGpuSwapchain::create(m_gpu->renderDevice(), m_gpu->drmDevice(), format, ret->gbmSwapchain->modifier(), size, FormatModifierMap{{format, modifiers}}, true);
-        if (!ret->importSwapchain) {
-            return nullptr;
-        }
     }
     if (!doRenderTestBuffer(ret.get())) {
         return nullptr;
