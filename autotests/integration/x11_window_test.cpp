@@ -1630,8 +1630,8 @@ void X11WindowTest::testNetWmButtonSize()
     const RectF originalGeometry = window->frameGeometry();
     const QPointF initialPointer = window->frameGeometry().center() + directionToVector(direction, originalGeometry.size() * 0.5);
     quint32 timestamp = 0;
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     Test::pointerMotion(initialPointer, timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     {
         NETRootInfo root(c.get(), NET::Properties());
         root.moveResizeRequest(window->window(), Xcb::toXNative(initialPointer.x()), Xcb::toXNative(initialPointer.y()), direction, XCB_BUTTON_INDEX_1);
