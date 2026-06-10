@@ -513,7 +513,6 @@ static X11Window *createX11Window(xcb_connection_t *connection, const Rect &geom
     }
 
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
-    QMetaObject::invokeMethod(window, "setReadyForPainting");
 
     if (!Test::waitForWaylandSurface(window)) {
         xcb_destroy_window(connection, windowId);
