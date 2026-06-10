@@ -17,39 +17,16 @@
 namespace KWin
 {
 
-class VulkanReleasePoint : public SyncReleasePoint
-{
-public:
-    explicit VulkanReleasePoint(const std::shared_ptr<VulkanSwapchainSlot> &slot);
-
-    void addReleaseFence(const FileDescriptor &fd) override;
-
-private:
-    std::shared_ptr<VulkanSwapchainSlot> m_slot;
-};
-
-VulkanReleasePoint::VulkanReleasePoint(const std::shared_ptr<VulkanSwapchainSlot> &slot)
-    : m_slot(slot)
-{
-}
-
-void VulkanReleasePoint::addReleaseFence(const FileDescriptor &fd)
-{
-    if (m_slot->m_releaseFd.isValid()) {
-        m_slot->m_releaseFd = SyncReleasePoint::mergeSyncFds(fd, m_slot->m_releaseFd);
-    } else {
-        m_slot->m_releaseFd = fd.duplicate();
-    }
-}
-
 VulkanSwapchainSlot::VulkanSwapchainSlot(GraphicsBuffer *buffer, std::shared_ptr<VulkanTexture> &&texture)
     : m_buffer(buffer)
     , m_texture(std::move(texture))
+    , m_releasePoint(std::make_shared<GraphicsBufferReleasePoint>())
 {
 }
 
 VulkanSwapchainSlot::~VulkanSwapchainSlot()
 {
+    m_releasePoint->setBuffer(m_buffer);
     m_buffer->drop();
 }
 
@@ -70,22 +47,19 @@ int VulkanSwapchainSlot::age() const
 
 bool VulkanSwapchainSlot::isBusy() const
 {
-    return m_buffer->isReferenced() || !m_releasePoint.expired() || (m_releaseFd.isValid() && !m_releaseFd.isReadable());
+    return m_buffer->isReferenced()
+        || m_releasePoint.use_count() > 1
+        || (m_releasePoint->releaseFd().isValid() && !m_releasePoint->releaseFd().isReadable());
 }
 
 const FileDescriptor &VulkanSwapchainSlot::releaseFd() const
 {
-    return m_releaseFd;
+    return m_releasePoint->releaseFd();
 }
 
 std::shared_ptr<SyncReleasePoint> VulkanSwapchainSlot::releasePoint()
 {
-    auto ret = m_releasePoint.lock();
-    if (!ret) {
-        ret = std::make_shared<VulkanReleasePoint>(shared_from_this());
-        m_releasePoint = ret;
-    }
-    return ret;
+    return m_releasePoint;
 }
 
 VulkanSwapchain::VulkanSwapchain(VulkanDevice *device, GraphicsBufferAllocator *allocator, const QSize &size, uint32_t format, uint64_t modifier, std::shared_ptr<VulkanSwapchainSlot> &&initialSlot)
@@ -146,7 +120,7 @@ std::shared_ptr<VulkanSwapchainSlot> VulkanSwapchain::acquire()
 
 void VulkanSwapchain::release(VulkanSwapchainSlot *released, FileDescriptor &&releaseFd)
 {
-    released->m_releaseFd = std::move(releaseFd);
+    released->m_releasePoint->addReleaseFence(releaseFd);
     for (const auto &slot : m_slots) {
         if (slot.get() == released) {
             slot->m_age = 1;
