@@ -143,7 +143,7 @@ bool DrmBackend::initialize()
 
     // setup udevMonitor
     if (m_udevMonitor) {
-        m_udevMonitor->filterSubsystemDevType("drm");
+        m_udevMonitor->filterSubsystemDevType("drm", "drm_minor");
         const int fd = m_udevMonitor->fd();
         if (fd != -1) {
             m_socketNotifier = std::make_unique<QSocketNotifier>(fd, QSocketNotifier::Read);
