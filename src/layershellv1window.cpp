@@ -100,6 +100,11 @@ void LayerShellV1Window::scheduleRearrange()
     workspace()->scheduleRearrange();
 }
 
+QString LayerShellV1Window::captionNormal() const
+{
+    return m_shellSurface->scope();
+}
+
 WindowType LayerShellV1Window::windowType() const
 {
     return m_windowType;

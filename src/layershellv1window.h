@@ -34,6 +34,7 @@ public:
     LayerSurfaceV1Interface *shellSurface() const;
     LogicalOutput *desiredOutput() const;
 
+    QString captionNormal() const override;
     WindowType windowType() const override;
     bool isPlaceable() const override;
     bool isCloseable() const override;
