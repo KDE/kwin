@@ -50,7 +50,7 @@
 
     <entry key="TitlebarDoubleClickCommand" type="Enum">
         <default>Maximize</default>
-        <choices>
+        <choices name="TitlebarDoubleClickCommandChoices" prefix="TitlebarDoubleClickCommand_">
             <choice name="Maximize"></choice>
             <choice name="MaximizeVerticalOnly" value="Maximize (vertical only)"></choice>
             <choice name="MaximizeHorizontalOnly" value="Maximize (horizontal only)"></choice>
@@ -64,7 +64,7 @@
 
     <entry key="MaximizeButtonLeftClickCommand" type="Enum">
         <default>Maximize</default>
-        <choices>
+        <choices name="MaximizeButtonLeftClickCommandChoices" prefix="MaximizeButtonClickCommand_">
             <choice name="Maximize"></choice>
             <choice name="MaximizeVerticalOnly" value="Maximize (vertical only)"></choice>
             <choice name="MaximizeHorizontalOnly" value="Maximize (horizontal only)"></choice>
@@ -91,7 +91,7 @@
 
     <entry key="FocusPolicy" type="Enum">
         <default>ClickToFocus</default>
-        <choices>
+        <choices name="FocusPolicyChoices">
             <choice name="ClickToFocus"/>
             <choice name="FocusFollowsMouse"/>
             <choice name="FocusUnderMouse"/>
@@ -151,7 +151,7 @@
 
     <entry key="CommandActiveTitlebar1" type="Enum">
      <default>Raise</default>
-     <choices>
+     <choices name="CommandActiveTitlebar1Choices" prefix="CommandActiveTitlebar1_">
          <choice name="Raise"></choice>
          <choice name="Lower"></choice>
          <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
@@ -190,19 +190,19 @@
 
     <entry key="CommandTitlebarWheel" type="Enum">
         <default>Nothing</default>
-        <choices>
-        <choice name="RaiseLower" value="Raise/Lower"></choice>
-        <choice name="MaxmizeRestore" value="Maximize/Restore"></choice>
-        <choice name="AboveBelow" value="Above/Below"></choice>
-        <choice name="PreviousNextDesktop" value="Previous/Next Desktop"></choice>
-        <choice name="ChangeOpacity" value="Change Opacity"></choice>
-        <choice name="Nothing"></choice>
+        <choices name="commandTitlebarWheelChoices" prefix="CommandTitlebarWheel_">
+            <choice name="RaiseLower" value="Raise/Lower"></choice>
+            <choice name="MaxmizeRestore" value="Maximize/Restore"></choice>
+            <choice name="AboveBelow" value="Above/Below"></choice>
+            <choice name="PreviousNextDesktop" value="Previous/Next Desktop"></choice>
+            <choice name="ChangeOpacity" value="Change Opacity"></choice>
+            <choice name="Nothing"></choice>
         </choices>
     </entry>
 
     <entry key="CommandInactiveTitlebar1" type="Enum">
         <default>ActivateAndRaise</default>
-        <choices>
+        <choices name="CommandInactiveTitlebar1Choices" prefix="CommandInactiveTitlebar1_">
             <choice name="ActivateAndRaise" value="Activate and raise"></choice>
             <choice name="ActivateAndLower" value="Activate and lower"></choice>
             <choice name="Activate"></choice>
@@ -250,7 +250,7 @@
 
     <entry key="CommandWindow1" type="Enum">
       <default>ActivateRaiseOnReleaseAndPassClick</default>
-      <choices>
+      <choices name="CommandWindow1Choices" prefix="CommandWindow1_">
           <choice name="ActivateRaiseOnReleaseAndPassClick" value="Activate, pass click and raise on release"></choice>
           <choice name="ActivateRaisePassClick" value="Activate, raise and pass click"></choice>
           <choice name="ActivatePassClick" value="Activate and pass click"></choice>
@@ -261,7 +261,7 @@
 
     <entry key="CommandWindow2" type="Enum">
       <default>ActivatePassClick</default>
-      <choices>
+      <choices name="CommandWindow2Choices" prefix="CommandWindow2_">
           <choice name="ActivateRaisePassClick" value="Activate, raise and pass click"></choice>
           <choice name="ActivatePassClick" value="Activate and pass click"></choice>
           <choice name="Activate"></choice>
@@ -271,7 +271,7 @@
 
     <entry key="CommandWindow3" type="Enum">
       <default>ActivatePassClick</default>
-      <choices>
+      <choices name="CommandWindow3Choices" prefix="CommandWindow3_">
           <choice name="ActivateRaisePassClick" value="Activate, raise and pass click"></choice>
           <choice name="ActivatePassClick" value="Activate and pass click"></choice>
           <choice name="Activate"></choice>
@@ -281,7 +281,7 @@
 
     <entry key="CommandWindowWheel" type="Enum">
       <default>Scroll</default>
-      <choices>
+      <choices name="CommandWindowWheelChoices">
           <choice name="Scroll"></choice>
           <choice name="ActivateScroll" value="Activate and scroll"></choice>
           <choice name="ActivateRaiseAndScroll" value="Activate, raise and scroll"></choice>
@@ -290,7 +290,7 @@
 
     <entry key="CommandAllKey" type="Enum">
       <default>Meta</default>
-      <choices>
+      <choices name="CommandAllKey">
           <choice name="Meta"></choice>
           <choice name="Alt"></choice>
       </choices>
@@ -298,7 +298,7 @@
 
     <entry key="CommandAll1" type="Enum">
       <default>ActivateRaiseAndMove</default>
-      <choices>
+      <choices name="CommandAll1Choices" prefix="CommandAll_">
           <choice name="Move"></choice>
           <choice name="ActivateRaiseAndMove" value="Activate, raise and move"></choice>
           <choice name="ActivateRaiseAndResize" value="Activate, raise and resize"></choice>
@@ -352,7 +352,7 @@
 
     <entry key="CommandAllWheel" type="Enum">
       <default>Nothing</default>
-      <choices>
+      <choices name="CommandAllWheelChoices" prefix="CommandAllWheel_">
           <choice name="RaiseLower" value="Raise/Lower"></choice>
           <choice name="MaxmizeRestore" value="Maximize/Restore"></choice>
           <choice name="AboveBelow" value="Above/Below"></choice>

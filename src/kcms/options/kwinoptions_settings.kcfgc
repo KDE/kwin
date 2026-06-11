@@ -3,4 +3,5 @@ ClassName=KWinOptionsSettings
 IncludeFiles=options.h
 Mutators=true
 DefaultValueGetters=true
+GenerateProperties=true
 ParentInConstructor=true

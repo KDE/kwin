@@ -2,34 +2,32 @@
 # KI18N Translation Domain for this library
 add_definitions(-DTRANSLATION_DOMAIN=\"kcmkwm\")
 
-set(kcm_kwinoptions_PART_SRCS
-    main.cpp
-    mouse.cpp
-    windows.cpp
+kcmutils_add_qml_kcm(kcm_kwinoptions
+    SOURCES kwinoptions.cpp kwinoptionsdata.cpp
 )
 
-ki18n_wrap_ui(kcm_kwinoptions_PART_SRCS
-    actions.ui
-    advanced.ui
-    focus.ui
-    mouse.ui
-    moving.ui
-    pip.ui
-)
-
-kcmutils_generate_module_data(
-    kcm_kwinoptions_PART_SRCS
+kcmutils_generate_module_data(kcm_kwinoptions
     MODULE_DATA_HEADER kwinoptionsdata.h
     MODULE_DATA_CLASS_NAME KWinOptionsData
     SETTINGS_HEADERS kwinoptions_settings.h kwinoptions_kdeglobals_settings.h
     SETTINGS_CLASSES KWinOptionsSettings KWinOptionsKDEGlobalsSettings
 )
 
-kconfig_add_kcfg_files(kcm_kwinoptions_PART_SRCS kwinoptions_settings.kcfgc GENERATE_MOC)
-kconfig_add_kcfg_files(kcm_kwinoptions_PART_SRCS kwinoptions_kdeglobals_settings.kcfgc GENERATE_MOC)
+kconfig_add_kcfg_files(kcm_kwinoptions kwinoptions_settings.kcfgc GENERATE_MOC)
+kconfig_add_kcfg_files(kcm_kwinoptions kwinoptions_kdeglobals_settings.kcfgc GENERATE_MOC)
 
-qt_add_dbus_interface(kcm_kwinoptions_PART_SRCS ${KWin_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface)
+target_link_libraries(kcm_kwinoptions PRIVATE
+    Qt::DBus
+    Qt::Quick
 
-kcoreaddons_add_plugin(kcm_kwinoptions SOURCES ${kcm_kwinoptions_PART_SRCS} INSTALL_NAMESPACE "plasma/kcms/systemsettings_qwidgets")
-kcmutils_generate_desktop_file(kcm_kwinoptions)
-target_link_libraries(kcm_kwinoptions kwin Qt::DBus KF6::KCMUtils KF6::I18n KF6::WindowSystem)
+    KF6::ConfigGui
+
+    KF6::KCMUtils
+    KF6::KCMUtilsQuick
+    KF6::I18n
+    KF6::WindowSystem
+    kwin
+)
+
+qt_add_dbus_interface(kcm_kwinoptions ${KWin_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface)
+
