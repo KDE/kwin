@@ -54,11 +54,11 @@ public:
         QVERIFY2(eisReply.isValid(), QTest::toString(eisReply.error()));
         eifd = eisReply.value().takeFileDescriptor();
 
-        const QList<QPair<QPoint, QPoint>> barriers = {
-            {{0, 0}, {0, 1023}},
-            {{0, 0}, {1279, 0}},
-            {{1279, 0}, {1279, 1023}},
-            {{0, 1023}, {1279, 1023}},
+        const QList<std::tuple<uint, QPoint, QPoint>> barriers = {
+            {1u, {0, 0}, {0, 1023}},
+            {2u, {0, 0}, {1279, 0}},
+            {3u, {1279, 0}, {1279, 1023}},
+            {4u, {0, 1023}, {1279, 1023}},
         };
         msg = QDBusMessage::createMethodCall(QDBusConnection::sessionBus().baseService(), dbusPath, kwinInputCaptureInterface, QStringLiteral("enable"));
         msg << QVariant::fromValue(barriers);

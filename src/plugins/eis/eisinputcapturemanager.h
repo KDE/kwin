@@ -27,6 +27,7 @@ class EisInputCaptureFilter;
 
 struct EisInputCaptureBarrier
 {
+    const uint id;
     const Qt::Orientation orientation;
     const int position;
     const int start;
@@ -47,7 +48,7 @@ public:
 
     const RamFile &keyMap() const;
 
-    void barrierHit(EisInputCapture *capture, const QPointF &position);
+    void barrierHit(EisInputCapture *capture, uint barrier, const QPointF &position);
     EisInputCapture *activeCapture();
     void deactivate();
 

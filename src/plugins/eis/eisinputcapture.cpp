@@ -165,9 +165,9 @@ eis_device *EisInputCapture::absoluteDevice() const
     return m_absoluteDevice;
 }
 
-void EisInputCapture::activate(const QPointF &position)
+void EisInputCapture::activate(uint id, const QPointF &position)
 {
-    Q_EMIT activated(++m_activationId, position);
+    Q_EMIT activated(id, ++m_activationId, position);
     if (m_pointer) {
         eis_device_start_emulating(m_pointer, m_activationId);
     }
@@ -195,15 +195,15 @@ void EisInputCapture::deactivate()
     }
 }
 
-void EisInputCapture::enable(const QList<QPair<QPoint, QPoint>> &barriers)
+void EisInputCapture::enable(const QList<std::tuple<uint, QPoint, QPoint>> &barriers)
 {
     m_barriers.clear();
     m_barriers.reserve(barriers.size());
-    for (const auto &[p1, p2] : barriers) {
+    for (const auto &[id, p1, p2] : barriers) {
         if (p1.x() == p2.x()) {
-            m_barriers.push_back({.orientation = Qt::Vertical, .position = p1.x(), .start = p1.y(), .end = p2.y()});
+            m_barriers.push_back({.id = id, .orientation = Qt::Vertical, .position = p1.x(), .start = p1.y(), .end = p2.y()});
         } else if (p1.y() == p2.y()) {
-            m_barriers.push_back({.orientation = Qt::Horizontal, .position = p1.y(), .start = p1.x(), .end = p2.x()});
+            m_barriers.push_back({.id = id, .orientation = Qt::Horizontal, .position = p1.y(), .start = p1.x(), .end = p2.x()});
         }
     }
 }
