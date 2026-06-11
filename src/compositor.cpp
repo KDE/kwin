@@ -32,6 +32,7 @@
 #include "scene/itemrenderer_qpainter.h"
 #include "scene/surfaceitem.h"
 #include "scene/surfaceitem_wayland.h"
+#include "scene/texture.h"
 #include "scene/workspacescene.h"
 #include "utils/common.h"
 #include "utils/envvar.h"
@@ -39,8 +40,6 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-
-#include "core/drm_formats.h"
 
 #include <KCrash>
 #if KWIN_BUILD_NOTIFICATIONS
@@ -388,7 +387,13 @@ static bool prepareDirectScanout(RenderView *view, LogicalOutput *logicalOutput,
     layer->setBufferTransform(candidate->bufferTransform());
     layer->setOffloadTransform(candidate->bufferTransform().combine(backendOutput->transform().inverted()));
     layer->setColor(candidate->colorDescription(), candidate->renderingIntent(), ColorPipeline::create(candidate->colorDescription(), backendOutput->layerBlendingColor(), candidate->renderingIntent()));
-    return layer->importScanoutBuffer(candidate->buffer(), frame);
+    const bool ret = layer->importScanoutBuffer(candidate->buffer(), frame);
+    if (ret && candidate->texture()) {
+        // if we keep the last composited buffer and release point referenced,
+        // the client may run out of buffers to attach
+        candidate->texture()->releaseBuffer();
+    }
+    return ret;
 }
 
 static bool prepareRendering(RenderView *view, LogicalOutput *logicalOutput, BackendOutput *backendOutput, uint32_t requiredAlphaBits)

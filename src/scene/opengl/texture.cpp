@@ -64,6 +64,10 @@ void ImageTextureOpenGL::upload(const QImage &image, const Rect &rect)
     m_planes[0]->update(image, rect);
 }
 
+void ImageTextureOpenGL::releaseBuffer()
+{
+}
+
 BufferTextureOpenGL::BufferTextureOpenGL(EglBackend *backend)
     : m_backend(backend)
 {
@@ -112,6 +116,11 @@ void BufferTextureOpenGL::attach(GraphicsBuffer *buffer, const Region &region, c
     } else {
         qCDebug(KWIN_OPENGL) << "Failed to update OpenGLSurfaceTexture for a buffer of unknown type" << buffer;
     }
+}
+
+void BufferTextureOpenGL::releaseBuffer()
+{
+    reset();
 }
 
 void BufferTextureOpenGL::upload(const QImage &image, const Rect &rect)

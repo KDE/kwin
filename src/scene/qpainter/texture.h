@@ -21,6 +21,7 @@ class TextureQPainter : public Texture
 {
 public:
     QImage nativeImage() const;
+    void releaseBuffer() override;
 
 protected:
     QImage m_image;

@@ -18,6 +18,10 @@ QImage TextureQPainter::nativeImage() const
     return m_image;
 }
 
+void TextureQPainter::releaseBuffer()
+{
+}
+
 std::unique_ptr<ImageTextureQPainter> ImageTextureQPainter::create(const QImage &image)
 {
     auto texture = std::make_unique<ImageTextureQPainter>();
