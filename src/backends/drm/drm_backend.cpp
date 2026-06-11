@@ -181,6 +181,11 @@ bool DrmBackend::initialize()
 void DrmBackend::handleUdevEvent()
 {
     while (auto device = m_udevMonitor->getDevice()) {
+        int devNum = -1;
+        const bool isPrimaryNode = sscanf(device->sysName().data(), DRM_PRIMARY_MINOR_NAME "%d", &devNum) == 1;
+        if (!isPrimaryNode) {
+            continue;
+        }
         // Ignore the device seat if the KWIN_DRM_DEVICES envvar is set.
         if (!m_explicitGpus.isEmpty()) {
             const auto canonicalPath = QFileInfo(device->devNode()).canonicalFilePath();
