@@ -41,12 +41,12 @@ void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_bind_resou
 {
     auto it = mainDevices.find(resource->client());
     if (it == mainDevices.end()) {
-        it = mainDevices.emplace(resource->client(), currentMainDevice);
+        it = mainDevices.emplace(resource->client(), currentMainDevice).first;
         QObject::connect(ClientConnection::get(resource->client()), &ClientConnection::destroyed, q, [this, c = resource->client()]() {
-            mainDevices.remove(c);
+            mainDevices.erase(c);
         });
     }
-    const dev_t mainDevice = it.value();
+    const dev_t mainDevice = it->second;
     if (resource->version() < ZWP_LINUX_DMABUF_V1_GET_DEFAULT_FEEDBACK_SINCE_VERSION) {
         const auto &formats = perDeviceFormats[mainDevice];
         for (auto it = formats.begin(); it != formats.end(); ++it) {
@@ -345,6 +345,18 @@ void LinuxDmaBufV1ClientBufferIntegration::setSupportedFormatsWithModifiers(cons
         d->currentMainDevice = tranches.first().device;
         d->table = std::make_unique<LinuxDmaBufV1FormatTable>(allFormats);
         d->defaultTranches = tranches;
+
+        // If a GPU was hotunplugged, we have no choice but to
+        // switch clients to a different device.
+        for (auto &[client, device] : d->mainDevices) {
+            const bool deviceRemoved = std::ranges::none_of(tranches, [device](const auto &tranche) {
+                return tranche.device == device;
+            });
+            if (deviceRemoved) {
+                device = tranches[0].device;
+            }
+        }
+
         d->defaultFeedback->sendTranches();
     }
 }

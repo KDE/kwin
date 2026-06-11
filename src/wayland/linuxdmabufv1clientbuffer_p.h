@@ -42,7 +42,7 @@ public:
     QHash<dev_t, FormatModifierMap> perDeviceFormats;
 
     dev_t currentMainDevice = 0;
-    QHash<wl_client *, dev_t> mainDevices;
+    std::unordered_map<wl_client *, dev_t> mainDevices;
 
 protected:
     void zwp_linux_dmabuf_v1_bind_resource(Resource *resource) override;
