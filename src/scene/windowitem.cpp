@@ -230,6 +230,9 @@ void WindowItem::updateSurfaceItem(std::unique_ptr<SurfaceItem> &&surfaceItem)
         connect(m_window, &Window::borderRadiusChanged, this, &WindowItem::updateBorderRadius);
         addSurfaceItemDamageConnects(m_surfaceItem.get());
 
+        if (m_overlay) {
+            m_overlay->stackBefore(m_surfaceItem.get());
+        }
         updateSurfacePosition();
         updateBorderRadius();
     } else {
@@ -306,6 +309,14 @@ void WindowItem::freeze()
 {
     if (m_surfaceItem) {
         m_surfaceItem->freeze();
+    }
+}
+
+void WindowItem::setOverlay(SurfaceItem *overlay)
+{
+    m_overlay = overlay;
+    if (m_overlay && m_surfaceItem) {
+        m_overlay->stackAfter(m_surfaceItem.get());
     }
 }
 

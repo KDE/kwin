@@ -21,6 +21,7 @@
 #include "layershellv1window.h"
 #include "main.h"
 #include "options.h"
+#include "overlay_window.h"
 #include "utils/envvar.h"
 #include "utils/kernel.h"
 #include "virtualdesktops.h"
@@ -48,6 +49,7 @@
 #include "wayland/idleinhibit_v1.h"
 #include "wayland/idlenotify_v1.h"
 #include "wayland/inputmethod_v1.h"
+#include "wayland/kde_overlay_shell_v1.h"
 #include "wayland/keyboard_shortcuts_inhibit_v1.h"
 #include "wayland/keystate.h"
 #include "wayland/linux_drm_syncobj_v1.h"
@@ -488,6 +490,22 @@ bool WaylandServer::init()
     m_colorRepresentation = new ColorRepresentationManagerV1(m_display, m_display);
     m_pointerWarp = new PointerWarpV1(m_display, m_display);
     m_backgroundEffect = new ExtBackgroundEffectManagerV1(m_display, m_display);
+
+    m_overlayManager = new OverlayShellManagerV1(m_display, m_display, m_XdgForeign);
+    connect(m_overlayManager, &OverlayShellManagerV1::overlayCreated, this, [this](OverlayShellSurfaceV1 *overlay, SurfaceInterface *parentSurface) {
+        // HACK !
+        // Window *window = parentSurface ? findWindow(parentSurface) : nullptr;
+        const auto it = std::ranges::find_if(m_windows, [](Window *window) {
+            return window->desktopFileName().contains("konsole");
+        });
+        Window *window = it == m_windows.end() ? nullptr : *it;
+        if (!window) {
+            overlay->close();
+        } else {
+            new WindowOverlay(overlay, window);
+        }
+    });
+
     return true;
 }
 

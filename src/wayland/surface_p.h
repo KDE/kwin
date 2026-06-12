@@ -40,6 +40,7 @@ class ColorRepresentationSurfaceV1;
 class ExtBlurSurfaceV1;
 class ExtBackgroundEffectSurfaceV1;
 class SyncObjReleasePoint;
+class OverlayShellSurfaceV1;
 
 struct SurfaceState
 {
@@ -206,6 +207,7 @@ public:
     ColorRepresentationSurfaceV1 *colorRepresentation = nullptr;
     ExtBlurSurfaceV1 *extBlur = nullptr;
     ExtBackgroundEffectSurfaceV1 *extBackgroundeffect = nullptr;
+    OverlayShellSurfaceV1 *overlayShell = nullptr;
     QTimer fifoFallbackTimer;
 
     struct

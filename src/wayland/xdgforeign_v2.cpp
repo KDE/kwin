@@ -67,6 +67,11 @@ XdgExportedSurface *XdgForeignV2Interface::exportSurface(SurfaceInterface *surfa
     return d->exporter->exportSurface(surface);
 }
 
+XdgExportedSurface *XdgForeignV2Interface::exported(const QString &handle) const
+{
+    return d->exporter->exportedSurface(handle);
+}
+
 XdgExporterV2Interface::XdgExporterV2Interface(Display *display, XdgForeignV2Interface *foreign)
     : QObject(foreign)
     , QtWaylandServer::zxdg_exporter_v2(*display, s_exporterVersion)

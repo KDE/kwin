@@ -62,6 +62,8 @@ public:
     void elevate();
     void deelevate();
 
+    void setOverlay(SurfaceItem *overlay);
+
 protected:
     explicit WindowItem(Window *window, Item *parent = nullptr);
     void updateSurfaceItem(std::unique_ptr<SurfaceItem> &&surfaceItem);
@@ -85,6 +87,7 @@ private:
     void freeze();
 
     Window *m_window;
+    SurfaceItem *m_overlay = nullptr;
     std::unique_ptr<SurfaceItem> m_surfaceItem;
     std::unique_ptr<DecorationItem> m_decorationItem;
     std::unique_ptr<ShadowItem> m_shadowItem;

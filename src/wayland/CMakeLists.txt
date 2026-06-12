@@ -21,6 +21,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-device-v2.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-management-v2.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-order-v1.xml
+        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-overlay-shell-v1.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-screen-edge-v1.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/keystate.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/org-kde-plasma-virtual-desktop.xml
@@ -114,6 +115,7 @@ target_sources(kwin PRIVATE
     idleinhibit_v1.cpp
     idlenotify_v1.cpp
     inputmethod_v1.cpp
+    kde_overlay_shell_v1.cpp
     keyboard.cpp
     keyboard_shortcuts_inhibit_v1.cpp
     keystate.cpp
@@ -203,6 +205,7 @@ install(FILES
     idleinhibit_v1.h
     idlenotify_v1.h
     inputmethod_v1.h
+    kde_overlay_shell_v1.h
     keyboard.h
     keyboard_shortcuts_inhibit_v1.h
     keystate.h
@@ -265,6 +268,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-ext-background-effect-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-fifo-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-kde-external-brightness-v1.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-kde-overlay-shell-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-linux-drm-syncobj-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-pointer-warp-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-presentation-time.h
@@ -277,6 +281,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-ext-background-effect-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-fifo-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-kde-external-brightness-v1-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-kde-overlay-shell-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-linux-drm-syncobj-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-pointer-warp-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-presentation-time-server-protocol.h
