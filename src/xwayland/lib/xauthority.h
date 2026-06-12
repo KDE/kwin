@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <QList>
+
 class QTemporaryFile;
 
-bool generateXauthorityFile(int display, QTemporaryFile *authorityFile);
+bool generateXauthorityFile(const QList<int> &displays, QTemporaryFile *authorityFile);

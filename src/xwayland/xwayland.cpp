@@ -460,18 +460,6 @@ void Xwayland::handleXwaylandReady()
 
     qCInfo(KWIN_XWL) << "Xwayland server started on display" << m_launcher->displayName();
 
-    // Helper window to claim _NET_WM_CM_S0 and WM_S0 selections. It will be destroyed together with our connection.
-    const xcb_window_t selectionOwner = xcb_generate_id(kwinApp()->x11Connection());
-    xcb_create_window(kwinApp()->x11Connection(), XCB_COPY_FROM_PARENT, selectionOwner, kwinApp()->x11RootWindow(), 0, 0, 1, 1, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
-
-    xcb_set_selection_owner(kwinApp()->x11Connection(), selectionOwner, atoms->net_wm_cm_s0, XCB_CURRENT_TIME);
-    xcb_composite_redirect_subwindows(kwinApp()->x11Connection(),
-                                      kwinApp()->x11RootWindow(),
-                                      XCB_COMPOSITE_REDIRECT_MANUAL);
-
-    // create selection owner for WM_S0 - magic X display number expected by XWayland
-    xcb_set_selection_owner(kwinApp()->x11Connection(), selectionOwner, atoms->wm_s0, XCB_CURRENT_TIME);
-
     m_dataBridge = std::make_unique<DataBridge>();
 
     connect(workspace(), &Workspace::outputOrderChanged, this, &Xwayland::updatePrimary);
@@ -486,6 +474,21 @@ void Xwayland::handleXwaylandReady()
     runXWaylandStartupScripts();
 
     Q_EMIT started();
+}
+
+void Xwayland::registerReady()
+{
+    // Helper window to claim _NET_WM_CM_S0 and WM_S0 selections. It will be destroyed together with our connection.
+    const xcb_window_t selectionOwner = xcb_generate_id(kwinApp()->x11Connection());
+    xcb_create_window(kwinApp()->x11Connection(), XCB_COPY_FROM_PARENT, selectionOwner, kwinApp()->x11RootWindow(), 0, 0, 1, 1, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+
+    xcb_set_selection_owner(kwinApp()->x11Connection(), selectionOwner, atoms->net_wm_cm_s0, XCB_CURRENT_TIME);
+    xcb_composite_redirect_subwindows(kwinApp()->x11Connection(),
+                                      kwinApp()->x11RootWindow(),
+                                      XCB_COMPOSITE_REDIRECT_MANUAL);
+
+    // create selection owner for WM_S0 - magic X display number expected by XWayland
+    xcb_set_selection_owner(kwinApp()->x11Connection(), selectionOwner, atoms->wm_s0, XCB_CURRENT_TIME);
 }
 
 void Xwayland::refreshEavesdropping()
@@ -582,18 +585,30 @@ void Xwayland::destroyX11Connection()
 
 void Xwayland::runXWaylandStartupScripts()
 {
-    QDir scriptDir(XWAYLAND_SESSION_SCRIPTS);
-    const QStringList scripts = scriptDir.entryList(QStringList(), QDir::Files, QDir::Name);
+    QProcessEnvironment setupEnv = kwinApp()->processStartupEnvironment();
+    setupEnv.insert("DISPLAY", m_launcher->initDisplayName());
 
-    for (const QString &script : scripts) {
+    std::shared_ptr<QObject> readyGuard(new QObject());
+    // captured by every process, then out of scope when finished
+    connect(readyGuard.get(), &QObject::destroyed, this, [this]() {
+        registerReady();
+    });
+
+    QDir scriptDir(XWAYLAND_SESSION_SCRIPTS);
+    QStringList scripts = scriptDir.entryList(QStringList(), QDir::Files, QDir::Name);
+    scripts << QString(LIBEXEC_DIR) + QStringLiteral("/plasma-setup-xwayland");
+
+    for (const QString &script : std::as_const(scripts)) {
         const QString path = scriptDir.filePath(script);
         qCDebug(KWIN_XWL) << "Running Xwayland startup script" << path;
-        QProcessEnvironment environment = kwinApp()->processStartupEnvironment();
 
         auto *process = new QProcess;
-        process->setProcessEnvironment(environment);
+        process->setProcessEnvironment(setupEnv);
+        connect(process, &QProcess::finished, process, [process, path, readyGuard]() {
+            qCDebug(KWIN_XWL) << "Finished Xwayland startup script" << path;
+            process->deleteLater();
+        });
         process->start(path);
-        connect(process, &QProcess::finished, process, &QProcess::deleteLater);
     }
 }
 

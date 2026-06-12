@@ -27,9 +27,6 @@
 
 #include <QAbstractEventDispatcher>
 #include <QDataStream>
-#include <QFile>
-#include <QRandomGenerator>
-#include <QScopeGuard>
 #include <QSocketNotifier>
 #include <QTimer>
 
@@ -64,6 +61,20 @@ void XwaylandLauncher::setListenFDs(const QList<int> &listenFds)
 void XwaylandLauncher::setDisplayName(const QString &displayName)
 {
     m_displayName = displayName;
+}
+
+void XwaylandLauncher::setInitFd(int initFd)
+{
+    if (initFd >= 0) {
+        m_initFd = initFd;
+    } else {
+        m_initFd.reset();
+    }
+}
+
+void XwaylandLauncher::setInitDisplayName(const QString &displayName)
+{
+    m_initDisplayName = displayName;
 }
 
 void XwaylandLauncher::setXauthority(const QString &xauthority)
@@ -101,6 +112,21 @@ void XwaylandLauncher::enable()
         m_socket = std::move(socket);
         m_displayName = m_socket->name();
         m_listenFds = m_socket->fileDescriptors();
+    }
+
+    if (m_initFd.has_value()) {
+        Q_ASSERT(!m_initDisplayName.isEmpty());
+    } else {
+        auto socket = std::make_unique<XwaylandSocket>(XwaylandSocket::OperationMode::CloseFdsOnExec);
+        if (!socket->isValid()) {
+            qCWarning(KWIN_XWL) << "Failed to establish X11 init socket";
+            return;
+        }
+        m_initDisplayName = socket->name();
+        const auto initFds = socket->fileDescriptors();
+        Q_ASSERT(!initFds.isEmpty());
+        m_initFd = initFds.constLast();
+        m_initFdSocket = std::move(socket);
     }
 
     for (int socket : std::as_const(m_listenFds)) {
@@ -173,6 +199,11 @@ bool XwaylandLauncher::start()
 
     arguments << QStringLiteral("-wm") << QString::number(wmfd->fds[1].get());
     fdsToPass << wmfd->fds[1].get();
+
+    if (m_initFd.has_value()) {
+        arguments << QStringLiteral("-initfd") << QString::number(*m_initFd);
+        fdsToPass << *m_initFd;
+    }
 
     arguments << QStringLiteral("-rootless");
 
@@ -248,6 +279,11 @@ QString XwaylandLauncher::xauthority() const
 FileDescriptor XwaylandLauncher::takeXcbConnectionFd()
 {
     return std::move(m_xcbConnectionFd);
+}
+
+QString XwaylandLauncher::initDisplayName() const
+{
+    return m_initDisplayName;
 }
 
 QProcess *XwaylandLauncher::process() const

@@ -66,6 +66,7 @@ private:
 
 #if KWIN_BUILD_X11
     std::unique_ptr<KWin::XwaylandSocket> m_xwlSocket;
+    std::unique_ptr<KWin::XwaylandSocket> m_xwlInitSocket;
     QTemporaryFile m_xauthorityFile;
 #endif
 };
@@ -83,13 +84,15 @@ KWinWrapper::KWinWrapper(QObject *parent)
 #if KWIN_BUILD_X11
     if (qApp->arguments().contains(QLatin1StringView("--xwayland"))) {
         m_xwlSocket = std::make_unique<KWin::XwaylandSocket>(KWin::XwaylandSocket::OperationMode::TransferFdsOnExec);
-        if (!m_xwlSocket->isValid()) {
+        m_xwlInitSocket = std::make_unique<KWin::XwaylandSocket>(KWin::XwaylandSocket::OperationMode::TransferFdsOnExec);
+        if (!m_xwlSocket->isValid() || !m_xwlInitSocket->isValid()) {
             qCWarning(KWIN_WRAPPER) << "Failed to create Xwayland connection sockets";
             m_xwlSocket.reset();
+            m_xwlInitSocket.reset();
         }
-        if (m_xwlSocket) {
+        if (m_xwlSocket && m_xwlInitSocket) {
             if (!qEnvironmentVariableIsSet("KWIN_WAYLAND_NO_XAUTHORITY")) {
-                if (!generateXauthorityFile(m_xwlSocket->display(), &m_xauthorityFile)) {
+                if (!generateXauthorityFile({m_xwlSocket->display(), m_xwlInitSocket->display()}, &m_xauthorityFile)) {
                     qCWarning(KWIN_WRAPPER) << "Failed to create an Xauthority file";
                 }
             }
@@ -114,12 +117,17 @@ void KWinWrapper::run()
     args << "--socket" << QString::fromUtf8(wl_socket_get_display_name(m_socket));
 
 #if KWIN_BUILD_X11
-    if (m_xwlSocket) {
+    if (m_xwlSocket && m_xwlInitSocket) {
         const auto xwaylandFileDescriptors = m_xwlSocket->fileDescriptors();
         for (const int &fileDescriptor : xwaylandFileDescriptors) {
             args << "--xwayland-fd" << QString::number(fileDescriptor);
         }
         args << "--xwayland-display" << m_xwlSocket->name();
+        const auto xwaylandInitFileDescriptors = m_xwlInitSocket->fileDescriptors();
+        if (!xwaylandInitFileDescriptors.isEmpty()) {
+            args << "--xwayland-initfd" << QString::number(xwaylandInitFileDescriptors.constLast());
+            args << "--xwayland-init-display" << m_xwlInitSocket->name();
+        }
         if (m_xauthorityFile.open()) {
             args << "--xwayland-xauthority" << m_xauthorityFile.fileName();
         }

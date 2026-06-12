@@ -11,6 +11,7 @@
 #include "xauthority.h"
 
 #include <QDataStream>
+#include <QList>
 #include <QRandomGenerator>
 #include <QStandardPaths>
 #include <QSysInfo>
@@ -45,7 +46,7 @@ static QByteArray generateXauthorityCookie()
     return cookie;
 }
 
-bool generateXauthorityFile(int display, QTemporaryFile *authorityFile)
+bool generateXauthorityFile(const QList<int> &displays, QTemporaryFile *authorityFile)
 {
     const QString runtimeDirectory = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
 
@@ -55,18 +56,19 @@ bool generateXauthorityFile(int display, QTemporaryFile *authorityFile)
     }
 
     const QByteArray hostname = QSysInfo::machineHostName().toUtf8();
-    const QByteArray displayName = QByteArray::number(display);
     const QByteArray name = QByteArrayLiteral("MIT-MAGIC-COOKIE-1");
     const QByteArray cookie = generateXauthorityCookie();
 
     QDataStream stream(authorityFile);
     stream.setByteOrder(QDataStream::BigEndian);
 
-    // Write entry with FamilyLocal and the host name as address
-    writeXauthorityEntry(stream, 256 /* FamilyLocal */, hostname, displayName, name, cookie);
+    for (const int display : displays) {
+        const QByteArray displayName = QByteArray::number(display);
 
-    // Write entry with FamilyWild, no address
-    writeXauthorityEntry(stream, 65535 /* FamilyWild */, QByteArray{}, displayName, name, cookie);
+        // Use the same cookie for every display Xwayland exposes during startup.
+        writeXauthorityEntry(stream, 256 /* FamilyLocal */, hostname, displayName, name, cookie);
+        writeXauthorityEntry(stream, 65535 /* FamilyWild */, QByteArray{}, displayName, name, cookie);
+    }
 
     if (stream.status() != QDataStream::Ok || !authorityFile->flush()) {
         authorityFile->remove();

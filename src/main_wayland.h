@@ -45,6 +45,14 @@ public:
     {
         m_xwaylandDisplay = display;
     }
+    void setXwaylandInitFd(int fd)
+    {
+        m_xwaylandInitFd = fd;
+    }
+    void setXwaylandInitDisplay(const QString &display)
+    {
+        m_xwaylandInitDisplay = display;
+    }
     void setXwaylandXauthority(const QString &xauthority)
     {
         m_xwaylandXauthority = xauthority;
@@ -90,6 +98,8 @@ private:
     std::unique_ptr<Xwl::Xwayland> m_xwayland;
     QList<int> m_xwaylandListenFds;
     QString m_xwaylandDisplay;
+    int m_xwaylandInitFd = -1;
+    QString m_xwaylandInitDisplay;
     QString m_xwaylandXauthority;
     QMap<QString, QString> m_xwaylandExtraEnvironment;
     std::vector<FileDescriptor> m_xwaylandFds;

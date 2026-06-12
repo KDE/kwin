@@ -161,11 +161,12 @@ void ApplicationWayland::performStartup()
         m_xwayland = std::make_unique<Xwl::Xwayland>(this);
         m_xwayland->xwaylandLauncher()->setListenFDs(m_xwaylandListenFds);
         m_xwayland->xwaylandLauncher()->setDisplayName(m_xwaylandDisplay);
+        m_xwayland->xwaylandLauncher()->setInitFd(m_xwaylandInitFd);
+        m_xwayland->xwaylandLauncher()->setInitDisplayName(m_xwaylandInitDisplay);
         m_xwayland->xwaylandLauncher()->setXauthority(m_xwaylandXauthority);
         m_xwayland->xwaylandLauncher()->addEnvironmentVariables(m_xwaylandExtraEnvironment);
         m_xwayland->xwaylandLauncher()->passFileDescriptors(std::move(m_xwaylandFds));
         m_xwayland->init();
-        connect(m_xwayland.get(), &Xwl::Xwayland::started, this, &ApplicationWayland::applyXwaylandScale);
     }
 #endif
     startSession();
@@ -364,6 +365,14 @@ int main(int argc, char *argv[])
                                              i18n("Name of the xwayland display that has been pre-set up"),
                                              "xwayland-display");
 
+    QCommandLineOption xwaylandInitFdOption(QStringLiteral("xwayland-initfd"),
+                                            i18n("XWayland socket to use for Xwayland's init connections"),
+                                            QStringLiteral("xwayland-initfd"));
+
+    QCommandLineOption xwaylandInitDisplayOption(QStringLiteral("xwayland-init-display"),
+                                                 i18n("Name of the xwayland init display that has been pre-set up"),
+                                                 QStringLiteral("xwayland-init-display"));
+
     QCommandLineOption xwaylandXAuthorityOption(QStringLiteral("xwayland-xauthority"),
                                                 i18n("Name of the xauthority file "),
                                                 "xwayland-xauthority");
@@ -383,6 +392,8 @@ int main(int argc, char *argv[])
     parser.addOption(waylandSocketFdOption);
     parser.addOption(xwaylandListenFdOption);
     parser.addOption(xwaylandDisplayOption);
+    parser.addOption(xwaylandInitFdOption);
+    parser.addOption(xwaylandInitDisplayOption);
     parser.addOption(xwaylandXAuthorityOption);
     parser.addOption(replaceOption);
 #if KWIN_BUILD_X11
@@ -640,6 +651,23 @@ int main(int argc, char *argv[])
                 a.setXwaylandDisplay(parser.value(xwaylandDisplayOption));
             } else {
                 std::cerr << "Using xwayland-fd without xwayland-display is undefined" << std::endl;
+                return 1;
+            }
+            if (parser.isSet(xwaylandInitFdOption)) {
+                bool ok;
+                int fd = parser.value(xwaylandInitFdOption).toInt(&ok);
+                if (!ok) {
+                    std::cerr << "FATAL ERROR: could not parse xwayland init FD" << std::endl;
+                    return 1;
+                }
+                fcntl(fd, F_SETFD, FD_CLOEXEC);
+                a.setXwaylandInitFd(fd);
+            }
+            if (parser.isSet(xwaylandInitDisplayOption)) {
+                a.setXwaylandInitDisplay(parser.value(xwaylandInitDisplayOption));
+            }
+            if (parser.isSet(xwaylandInitFdOption) != parser.isSet(xwaylandInitDisplayOption)) {
+                std::cerr << "Using xwayland-initfd without xwayland-init-display is undefined" << std::endl;
                 return 1;
             }
             if (parser.isSet(xwaylandXAuthorityOption)) {

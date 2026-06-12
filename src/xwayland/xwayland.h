@@ -81,6 +81,7 @@ private:
     void destroyX11Connection();
 
     void runXWaylandStartupScripts();
+    void registerReady();
 
     bool dragMoveFilter(Window *target, const QPointF &position) override;
     AbstractDropHandler *xwlDropHandler() override;
