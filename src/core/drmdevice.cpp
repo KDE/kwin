@@ -43,7 +43,7 @@ DrmDevice::DrmDevice(const QString &path, dev_t id, FileDescriptor &&fd, gbm_dev
     , m_isIntelXE(m_driverName == "xe")
     , m_isAmdgpu(m_driverName == "amdgpu")
     , m_isVmwgfx(m_driverName == "vmwgfx")
-    , m_isVirtualMachine(m_driverName == "virtio" || m_driverName == "qxl" || m_driverName == "vmwgfx" || m_driverName == "vboxvideo")
+    , m_isVirtualMachine(m_driverName == "virtio_gpu" || m_driverName == "qxl" || m_driverName == "vmwgfx" || m_driverName == "vboxvideo")
 {
     drmGetDevice2(m_fd.get(), 0, &m_libdrmDevice);
     uint64_t value = 0;
