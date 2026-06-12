@@ -40,6 +40,7 @@ class ColorRepresentationSurfaceV1;
 class ExtBackgroundEffectSurfaceV1;
 class SyncObjReleasePoint;
 class CommitTimingSurfaceV1;
+class OverlayShellSurfaceV1;
 
 struct SurfaceState
 {
@@ -215,6 +216,7 @@ public:
     ColorRepresentationSurfaceV1 *colorRepresentation = nullptr;
     ExtBackgroundEffectSurfaceV1 *extBackgroundeffect = nullptr;
     CommitTimingSurfaceV1 *commitTiming = nullptr;
+    OverlayShellSurfaceV1 *overlayShell = nullptr;
 
     QTimer fallbackTimer;
     std::chrono::nanoseconds fifoRefreshRate = std::chrono::nanoseconds(1'000'000'000) / 20;

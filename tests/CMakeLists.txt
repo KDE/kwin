@@ -13,6 +13,7 @@ endfunction()
 
 kwin_add_demo(fractional-scaling)
 kwin_add_demo(pip)
+kwin_add_demo(overlay-shell)
 
 if(KWIN_BUILD_X11)
     set(normalhintsbasesizetest_SRCS normalhintsbasesizetest.cpp)

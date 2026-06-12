@@ -157,6 +157,7 @@ target_sources(kwin PRIVATE
     osd.cpp
     outline.cpp
     outputconfigurationstore.cpp
+    overlay_window.cpp
     placeholderinputeventfilter.cpp
     placeholderoutput.cpp
     placement.cpp
@@ -526,6 +527,7 @@ install(FILES
     osd.h
     outline.h
     outputconfigurationstore.h
+    overlay_window.h
     placeholderoutput.h
     placement.h
     placementtracker.h

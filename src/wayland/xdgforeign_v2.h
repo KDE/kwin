@@ -65,6 +65,8 @@ public:
      */
     XdgExportedSurface *exportSurface(SurfaceInterface *surface);
 
+    XdgExportedSurface *exported(const QString &handle) const;
+
 Q_SIGNALS:
     /**
      * A surface got a new imported transient parent
