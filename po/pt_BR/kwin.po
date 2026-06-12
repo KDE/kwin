@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-11 00:46+0000\n"
+"POT-Creation-Date: 2026-06-12 00:45+0000\n"
 "PO-Revision-Date: 2026-05-20 06:25-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -1517,7 +1517,7 @@ msgstr ""
 "Selecione a janela para forçar o fechamento com clique esquerdo ou Enter. \n"
 "ESC ou clique direito para cancelar."
 
-#: main.cpp:166 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:150 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
@@ -1528,70 +1528,65 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:168 main.cpp:192
+#: main.cpp:152 main.cpp:174
 #, kde-format
 msgid "KDE window manager"
 msgstr "Gerenciador de janelas do KDE"
 
-#: main.cpp:170
+#: main.cpp:154
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2019, Os desenvolvedores do KDE"
 
-#: main.cpp:172
+#: main.cpp:156
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:173
+#: main.cpp:157
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:174
+#: main.cpp:158
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:175
+#: main.cpp:159
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:176
+#: main.cpp:160
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:177
+#: main.cpp:161
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:178
+#: main.cpp:162
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:179
+#: main.cpp:163
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:180
+#: main.cpp:164
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "Xaver Hugl"
 
-#: main.cpp:189
+#: main.cpp:172
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Desabilita as opções de configuração"
-
-#: main.cpp:190
-#, kde-format
-msgid "Indicate that KWin has recently crashed n times"
-msgstr "Indica que o KWin travou recentemente 'n' vezes"
 
 #: main_wayland.cpp:318
 #, kde-format
@@ -2631,12 +2626,12 @@ msgstr "Não foi possível encontrar saída"
 msgid "Invalid region"
 msgstr "Região inválida"
 
-#: plugins/screencast/screencaststream.cpp:372
+#: plugins/screencast/screencaststream.cpp:374
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "A composição OpenGL é requerida para gravar a tela"
 
-#: plugins/screencast/screencaststream.cpp:380
+#: plugins/screencast/screencaststream.cpp:382
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Falha ao criar fluxo do PipeWire"
@@ -4448,6 +4443,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "O Xwayland falhou"
+
+#~ msgid "Indicate that KWin has recently crashed n times"
+#~ msgstr "Indica que o KWin travou recentemente 'n' vezes"
 
 #~ msgid "Hide from screencast"
 #~ msgstr "Ocultar da gravação de tela"

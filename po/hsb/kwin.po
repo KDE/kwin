@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-11 00:46+0000\n"
+"POT-Creation-Date: 2026-06-12 00:45+0000\n"
 "PO-Revision-Date: 2008-11-21 01:39+0100\n"
 "Last-Translator: Eduard Werner <edi.werner@gmx.de>\n"
 "Language-Team: en_US <kde-i18n-doc@lists.kde.org>\n"
@@ -1530,7 +1530,7 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: main.cpp:166 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:150 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
@@ -1541,71 +1541,66 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:168 main.cpp:192
+#: main.cpp:152 main.cpp:174
 #, kde-format
 msgid "KDE window manager"
 msgstr "KDE rjadowar woknow"
 
-#: main.cpp:170
+#: main.cpp:154
 #, fuzzy, kde-format
 #| msgid "(c) 1999-2005, The KDE Developers"
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2005, wuwiwarjo KDE"
 
-#: main.cpp:172
+#: main.cpp:156
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:173
+#: main.cpp:157
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:174
+#: main.cpp:158
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:175
+#: main.cpp:159
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:176
+#: main.cpp:160
 #, kde-format
 msgid "Martin Flöser"
 msgstr ""
 
-#: main.cpp:177
+#: main.cpp:161
 #, kde-format
 msgid "David Edmundson"
 msgstr ""
 
-#: main.cpp:178
+#: main.cpp:162
 #, kde-format
 msgid "Roman Gilg"
 msgstr ""
 
-#: main.cpp:179
+#: main.cpp:163
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:180
+#: main.cpp:164
 #, kde-format
 msgid "Xaver Hugl"
 msgstr ""
 
-#: main.cpp:189
+#: main.cpp:172
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Konfiguraciju znjemóžnić"
-
-#: main.cpp:190
-#, kde-format
-msgid "Indicate that KWin has recently crashed n times"
-msgstr ""
 
 #: main_wayland.cpp:318
 #, kde-format
@@ -2665,12 +2660,12 @@ msgstr ""
 msgid "Invalid region"
 msgstr ""
 
-#: plugins/screencast/screencaststream.cpp:372
+#: plugins/screencast/screencaststream.cpp:374
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr ""
 
-#: plugins/screencast/screencaststream.cpp:380
+#: plugins/screencast/screencaststream.cpp:382
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""

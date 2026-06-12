@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-11 00:46+0000\n"
+"POT-Creation-Date: 2026-06-12 00:45+0000\n"
 "PO-Revision-Date: 2026-05-10 16:23+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -1518,7 +1518,7 @@ msgstr ""
 "இடது க்ளிக் அல்லது enter விசையை கொண்டு கட்டாயமாக மூட வேண்டிய சாளரத்தை தேர்ந்தெடுங்கள்.\n"
 "கைவிட, Escape விசையையோ வலது க்ளிக்கையோ பயன்படுத்துங்கள்."
 
-#: main.cpp:166 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:150 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
@@ -1529,70 +1529,65 @@ msgstr ""
 msgid "KWin"
 msgstr "கேவின்"
 
-#: main.cpp:168 main.cpp:192
+#: main.cpp:152 main.cpp:174
 #, kde-format
 msgid "KDE window manager"
 msgstr "கேடியி சாளர மேலாளர்"
 
-#: main.cpp:170
+#: main.cpp:154
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2001, கே.டீ.யீ. நிரலாளர்கள்"
 
-#: main.cpp:172
+#: main.cpp:156
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "மத்தையாஸ் எட்ரிச்"
 
-#: main.cpp:173
+#: main.cpp:157
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "கிரிஸ்டியன் டிபிர்னா"
 
-#: main.cpp:174
+#: main.cpp:158
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "டேனியல் எம். டூலீ"
 
-#: main.cpp:175
+#: main.cpp:159
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "லுபோசு லுனாக்"
 
-#: main.cpp:176
+#: main.cpp:160
 #, kde-format
 msgid "Martin Flöser"
 msgstr "மார்ட்டின் ஃபலோசர்"
 
-#: main.cpp:177
+#: main.cpp:161
 #, kde-format
 msgid "David Edmundson"
 msgstr "டேவிட் எட்மண்டுஸன்"
 
-#: main.cpp:178
+#: main.cpp:162
 #, kde-format
 msgid "Roman Gilg"
 msgstr "ரோமன் கில்கு"
 
-#: main.cpp:179
+#: main.cpp:163
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "விலாட் ஜாஹொரிடுனி"
 
-#: main.cpp:180
+#: main.cpp:164
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "ஜாவர் ஹுகுல்"
 
-#: main.cpp:189
+#: main.cpp:172
 #, kde-format
 msgid "Disable configuration options"
 msgstr "விருப்பத்தேர்வுகளை முடக்கு"
-
-#: main.cpp:190
-#, kde-format
-msgid "Indicate that KWin has recently crashed n times"
-msgstr "சமீபத்தில் கேவின் n முறை முறிவடைந்துள்ளதென்பதை குறிக்கும்"
 
 #: main_wayland.cpp:318
 #, kde-format
@@ -2625,12 +2620,12 @@ msgstr "திரையை கண்டுபிடிக்க முடிய�
 msgid "Invalid region"
 msgstr "செல்லுபடியாகாத பரப்பளவு"
 
-#: plugins/screencast/screencaststream.cpp:372
+#: plugins/screencast/screencaststream.cpp:374
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "திரைப்பகிர்வுக்கு OpenGL சாளரவரைவு தேவை"
 
-#: plugins/screencast/screencaststream.cpp:380
+#: plugins/screencast/screencaststream.cpp:382
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""
@@ -4434,6 +4429,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland முறிவடைந்துள்ளது"
+
+#~ msgid "Indicate that KWin has recently crashed n times"
+#~ msgstr "சமீபத்தில் கேவின் n முறை முறிவடைந்துள்ளதென்பதை குறிக்கும்"
 
 #~ msgid "Hide from screencast"
 #~ msgstr "திரைப்பகிர்விலிருந்து மறை"
