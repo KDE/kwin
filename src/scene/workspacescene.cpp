@@ -264,6 +264,9 @@ static bool isCandidate(SurfaceItem *item, const Rect &deviceRect, bool isOpaque
     }
     // fullscreen with low enough bandwidth requirements are always good to scanout
     const auto info = FormatInfo::get(item->buffer()->dmabufAttributes()->format);
+    if (!info) {
+        return false;
+    }
     return isOpaque && info->bitsPerPixel <= 32 && deviceRect.contains(view->deviceRect());
 }
 
