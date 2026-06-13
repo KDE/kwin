@@ -4369,6 +4369,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgid "Indicate that KWin has recently crashed n times"
-#~ msgstr "显示 KWin 最近崩溃了 N 次"
