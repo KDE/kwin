@@ -14,8 +14,8 @@
 // kwineffects
 #include "effect/effect.h"
 #include "effect/effectwindow.h"
+#include "effect/springmotion.h"
 #include "effect/timeline.h"
-#include "plugins/slide/springmotion.h"
 
 namespace KWin
 {

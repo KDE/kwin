@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "kwin_export.h"
+
 #include <QtGlobal>
 
 #include <chrono>
@@ -18,7 +20,7 @@ namespace KWin
  * mass-spring-damper model. The sping constant parameter controls the acceleration of the
  * spring. The damping ratio controls the oscillation of the spring.
  */
-class SpringMotion
+class KWIN_EXPORT SpringMotion
 {
 public:
     SpringMotion();
