@@ -13,6 +13,8 @@
 #include "tilemanager.h"
 #include "window.h"
 
+#include <QScopedValueRollback>
+
 namespace KWin
 {
 
@@ -67,14 +69,13 @@ void CustomTile::setRelativeGeometry(const RectF &geom)
     auto *parentT = static_cast<CustomTile *>(parentTile());
 
     if (!m_geometryLock && parentT && parentT->layoutDirection() != LayoutDirection::Floating) {
-        m_geometryLock = true;
+        QScopedValueRollback<bool> geometryLock(m_geometryLock, true);
         if (finalGeom.left() != relativeGeometry().left()) {
             Tile *tile = nextTileAt(Qt::LeftEdge);
             if (tile) {
                 RectF tileGeom = tile->relativeGeometry();
                 tileGeom.setRight(finalGeom.left());
                 if (tileGeom.width() <= tile->minimumSize().width()) {
-                    m_geometryLock = false;
                     return;
                 }
                 tile->setRelativeGeometry(tileGeom);
@@ -91,7 +92,6 @@ void CustomTile::setRelativeGeometry(const RectF &geom)
                 auto tileGeom = tile->relativeGeometry();
                 tileGeom.setBottom(finalGeom.top());
                 if (tileGeom.height() <= tile->minimumSize().height()) {
-                    m_geometryLock = false;
                     return;
                 }
                 tile->setRelativeGeometry(tileGeom);
@@ -107,7 +107,6 @@ void CustomTile::setRelativeGeometry(const RectF &geom)
                 auto tileGeom = tile->relativeGeometry();
                 tileGeom.setLeft(finalGeom.right());
                 if (tileGeom.width() <= tile->minimumSize().width()) {
-                    m_geometryLock = false;
                     return;
                 }
                 tile->setRelativeGeometry(tileGeom);
@@ -123,7 +122,6 @@ void CustomTile::setRelativeGeometry(const RectF &geom)
                 auto tileGeom = tile->relativeGeometry();
                 tileGeom.setTop(finalGeom.bottom());
                 if (tileGeom.height() <= tile->minimumSize().height()) {
-                    m_geometryLock = false;
                     return;
                 }
                 tile->setRelativeGeometry(tileGeom);
@@ -133,7 +131,6 @@ void CustomTile::setRelativeGeometry(const RectF &geom)
                 finalGeom.setBottom(1);
             }
         }
-        m_geometryLock = false;
     } else if (parentT && parentT->layoutDirection() == LayoutDirection::Floating) {
         finalGeom = geom.intersected(parentT->relativeGeometry());
     }
