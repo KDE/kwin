@@ -8,6 +8,7 @@
 
 #include "effect/effect.h"
 #include "effect/effecthandler.h"
+#include "effect/springmotion.h"
 #include "effect/timeline.h"
 #include "scene/item.h"
 
@@ -20,6 +21,11 @@ public:
     explicit SlideNotificationAnimation(EffectWindow *window);
 
     void revert();
+    void advance(RenderView *view);
+    bool done() const;
+
+    QPointF offset() const;
+    qreal opacity() const;
 
     RectF clipArea() const;
     RectF dirtyArea() const;
@@ -30,11 +36,11 @@ public:
     static std::unique_ptr<SlideNotificationAnimation> outro(EffectWindow *window);
 
     EffectWindow *window;
-    TimeLine timeline;
-    QPointF initialOffset;
-    QPointF finalOffset;
-    qreal initialOpacity;
-    qreal finalOpacity;
+    SpringMotion fade; // opacity spring, which is stiffer than the motion springs so it settles first
+    AnimationClock clock;
+    SpringMotion springX;
+    SpringMotion springY;
+    QPointF slideTarget;
 };
 
 class DisplaceNotificationAnimation
@@ -45,14 +51,19 @@ public:
     RectF dirtyArea() const;
 
     void moveTo(const QPointF &point);
+    void advance(RenderView *view);
+    bool done() const;
+
+    QPointF position() const;
 
     void apply(WindowPaintData &data);
 
     static std::unique_ptr<DisplaceNotificationAnimation> move(EffectWindow *window, const QPointF &initialPosition, const QPointF &finalPosition);
 
     EffectWindow *window;
-    QList<QPointF> path;
-    TimeLine timeline;
+    AnimationClock clock;
+    SpringMotion springX;
+    SpringMotion springY;
 };
 
 class NotificationAnimation

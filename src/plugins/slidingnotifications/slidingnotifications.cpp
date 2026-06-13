@@ -16,12 +16,6 @@ using namespace std::chrono_literals;
 namespace KWin
 {
 
-template<typename T>
-static T lerp(T a, T b, qreal progress)
-{
-    return a * (1 - progress) + b * progress;
-}
-
 static RectF panelGeometry(const EffectWindow *window)
 {
     // The layer-shell protocol has no concept of window geometry, but for the animation
@@ -231,6 +225,19 @@ static QPointF slideOffset(const EffectWindow *notification)
     }
 }
 
+static SpringMotion makeSpring()
+{
+    return SpringMotion(900.0 / effects->animationTimeFactor(), 1.0);
+}
+
+static SpringMotion makeFadeSpring()
+{
+    // Stiffer than the motion spring, so the fade settles just before the slide does.
+    SpringMotion spring(2000.0 / effects->animationTimeFactor(), 1.0);
+    spring.setEpsilon(0.01); // opacity spans 0..1, so it needs a much finer stop threshold
+    return spring;
+}
+
 SlideNotificationAnimation::SlideNotificationAnimation(EffectWindow *window)
     : window(window)
 {
@@ -238,37 +245,62 @@ SlideNotificationAnimation::SlideNotificationAnimation(EffectWindow *window)
 
 void SlideNotificationAnimation::revert()
 {
-    timeline.toggleDirection();
+    fade.setAnchor(0.0); // fade back out
+    // Slide the notification back out the way it came in.
+    springX.setAnchor(slideTarget.x());
+    springY.setAnchor(slideTarget.y());
 }
 
-static QEasingCurve cubicBezier(const QPointF &c0, const QPointF &c1)
+void SlideNotificationAnimation::advance(RenderView *view)
 {
-    QEasingCurve curve(QEasingCurve::BezierSpline);
-    curve.addCubicBezierSegment(c0, c1, QPointF(1, 1));
-    return curve;
+    const std::chrono::milliseconds delta = clock.tick(view);
+    springX.advance(delta);
+    springY.advance(delta);
+    fade.advance(delta);
+}
+
+bool SlideNotificationAnimation::done() const
+{
+    return !fade.isMoving() && !springX.isMoving() && !springY.isMoving();
+}
+
+QPointF SlideNotificationAnimation::offset() const
+{
+    return QPointF(springX.position(), springY.position());
+}
+
+qreal SlideNotificationAnimation::opacity() const
+{
+    return fade.position();
 }
 
 std::unique_ptr<SlideNotificationAnimation> SlideNotificationAnimation::intro(EffectWindow *window)
 {
     auto animation = std::make_unique<SlideNotificationAnimation>(window);
-    animation->timeline.setDuration(Effect::animationTime(200ms));
-    animation->timeline.setEasingCurve(cubicBezier(QPointF(0, 1), QPointF(0, 1)));
-    animation->initialOffset = slideOffset(window);
-    animation->finalOffset = QPointF(0, 0);
-    animation->initialOpacity = 0.0;
-    animation->finalOpacity = 1.0;
+    const QPointF entry = slideOffset(window);
+    animation->slideTarget = entry;
+    animation->springX = makeSpring();
+    animation->springY = makeSpring();
+    animation->springX.setPosition(entry.x()); // spring in from the slid-away offset to 0
+    animation->springY.setPosition(entry.y());
+    animation->fade = makeFadeSpring();
+    animation->fade.setPosition(0.0); // fade in from transparent to opaque
+    animation->fade.setAnchor(1.0);
     return animation;
 }
 
 std::unique_ptr<SlideNotificationAnimation> SlideNotificationAnimation::outro(EffectWindow *window)
 {
     auto animation = std::make_unique<SlideNotificationAnimation>(window);
-    animation->timeline.setDuration(Effect::animationTime(200ms));
-    animation->timeline.setEasingCurve(cubicBezier(QPointF(1, 0), QPointF(1, 0)));
-    animation->initialOffset = QPointF(0, 0);
-    animation->finalOffset = slideOffset(window);
-    animation->initialOpacity = 1.0;
-    animation->finalOpacity = 0.0;
+    const QPointF exit = slideOffset(window);
+    animation->slideTarget = exit;
+    animation->springX = makeSpring();
+    animation->springY = makeSpring();
+    animation->springX.setAnchor(exit.x()); // slide away from 0 to the slid-away offset
+    animation->springY.setAnchor(exit.y());
+    animation->fade = makeFadeSpring();
+    animation->fade.setPosition(1.0); // fade out from opaque to transparent
+    animation->fade.setAnchor(0.0);
     return animation;
 }
 
@@ -279,15 +311,15 @@ RectF SlideNotificationAnimation::clipArea() const
 
 RectF SlideNotificationAnimation::dirtyArea() const
 {
-    const RectF start = window->expandedGeometry().translated(initialOffset);
-    const RectF end = window->expandedGeometry().translated(finalOffset);
-    return start.united(end).intersected(clipArea());
+    const RectF current = window->expandedGeometry().translated(offset());
+    const RectF target = window->expandedGeometry().translated(QPointF(springX.anchor(), springY.anchor()));
+    return current.united(target).intersected(clipArea());
 }
 
 void SlideNotificationAnimation::apply(WindowPaintData &data)
 {
-    data += lerp(initialOffset, finalOffset, timeline.progress());
-    data.multiplyOpacity(lerp(initialOpacity, finalOpacity, timeline.progress()));
+    data += offset();
+    data.multiplyOpacity(opacity());
 }
 
 DisplaceNotificationAnimation::DisplaceNotificationAnimation(EffectWindow *window)
@@ -295,44 +327,51 @@ DisplaceNotificationAnimation::DisplaceNotificationAnimation(EffectWindow *windo
 {
 }
 
+QPointF DisplaceNotificationAnimation::position() const
+{
+    return QPointF(springX.position(), springY.position());
+}
+
 RectF DisplaceNotificationAnimation::dirtyArea() const
 {
     const RectF visibleRect = window->expandedGeometry().translated(-window->pos());
-    RectF dirtyArea;
-    for (const QPointF &point : path) {
-        dirtyArea |= visibleRect.translated(point);
-    }
-    return dirtyArea;
+    const RectF current = visibleRect.translated(position());
+    const RectF target = visibleRect.translated(QPointF(springX.anchor(), springY.anchor()));
+    return current.united(target);
 }
 
 void DisplaceNotificationAnimation::moveTo(const QPointF &point)
 {
-    path.append(point);
-    timeline.setDuration(timeline.duration() + Effect::animationTime(150ms));
+    springX.setAnchor(point.x());
+    springY.setAnchor(point.y());
+}
+
+void DisplaceNotificationAnimation::advance(RenderView *view)
+{
+    const std::chrono::milliseconds delta = clock.tick(view);
+    springX.advance(delta);
+    springY.advance(delta);
+}
+
+bool DisplaceNotificationAnimation::done() const
+{
+    return !springX.isMoving() && !springY.isMoving();
 }
 
 void DisplaceNotificationAnimation::apply(WindowPaintData &data)
 {
-    const qreal totalProgress = timeline.progress();
-    const int hopCount = path.size() - 1;
-    const qreal progressPerHop = 1.0 / hopCount;
-    int hop = std::floor(totalProgress / progressPerHop);
-    if (hop >= hopCount) {
-        hop = hopCount - 1;
-    }
-    const qreal hopProgress = (totalProgress - hop * progressPerHop) / progressPerHop;
-
-    const QPointF currentPosition = lerp(path[hop], path[hop + 1], hopProgress);
-    data += currentPosition - window->pos();
+    data += position() - window->pos();
 }
 
 std::unique_ptr<DisplaceNotificationAnimation> DisplaceNotificationAnimation::move(EffectWindow *window, const QPointF &initialPosition, const QPointF &finalPosition)
 {
     auto animation = std::make_unique<DisplaceNotificationAnimation>(window);
-    animation->path.append(initialPosition);
-    animation->path.append(finalPosition);
-    animation->timeline.setDuration(Effect::animationTime(150ms));
-    animation->timeline.setEasingCurve(QEasingCurve::Linear);
+    animation->springX = makeSpring();
+    animation->springY = makeSpring();
+    animation->springX.setPosition(initialPosition.x());
+    animation->springY.setPosition(initialPosition.y());
+    animation->springX.setAnchor(finalPosition.x());
+    animation->springY.setAnchor(finalPosition.y());
     return animation;
 }
 
@@ -351,17 +390,17 @@ NotificationAnimation::~NotificationAnimation()
 
 bool NotificationAnimation::isFinished() const
 {
-    return (!slide || slide->timeline.done())
-        && (!displace || displace->timeline.done());
+    return (!slide || slide->done())
+        && (!displace || displace->done());
 }
 
 void NotificationAnimation::advance(RenderView *view)
 {
     if (slide) {
-        slide->timeline.advance(view);
+        slide->advance(view);
     }
     if (displace) {
-        displace->timeline.advance(view);
+        displace->advance(view);
     }
 }
 
