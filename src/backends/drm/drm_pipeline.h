@@ -115,7 +115,7 @@ public:
         CommitModeset,
     };
     Q_ENUM(CommitMode)
-    static Error commitPipelines(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects = {});
+    static Error commitPipelines(const QList<DrmPipeline *> &pipelines, DrmGpu *gpu, CommitMode mode, const QList<DrmObject *> &unusedObjects = {});
 
 private:
     bool isBufferForDirectScanout() const;
@@ -129,7 +129,7 @@ private:
     Error setLegacyGamma();
     Error applyPendingChangesLegacy();
     bool setCursorLegacy(DrmPipelineLayer *layer);
-    static Error commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects);
+    static Error commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, DrmGpu *gpu, CommitMode mode, const QList<DrmObject *> &unusedObjects);
 
     // atomic modesetting only
     Error prepareAtomicCommit(DrmAtomicCommit *commit, CommitMode mode, const std::shared_ptr<OutputFrame> &frame);
@@ -137,7 +137,7 @@ private:
     Error prepareAtomicPresentation(DrmAtomicCommit *commit, const std::shared_ptr<OutputFrame> &frame);
     Error prepareAtomicPlane(DrmAtomicCommit *commit, DrmPlane *plane, DrmPipelineLayer *layer, const std::shared_ptr<OutputFrame> &frame);
     void prepareAtomicDisable(DrmAtomicCommit *commit);
-    static Error commitPipelinesAtomic(const QList<DrmPipeline *> &pipelines, CommitMode mode, const std::shared_ptr<OutputFrame> &frame, const QList<DrmObject *> &unusedObjects);
+    static Error commitPipelinesAtomic(const QList<DrmPipeline *> &pipelines, DrmGpu *gpu, CommitMode mode, const std::shared_ptr<OutputFrame> &frame, const QList<DrmObject *> &unusedObjects);
 
     DrmOutput *m_output = nullptr;
     DrmConnector *m_connector = nullptr;
