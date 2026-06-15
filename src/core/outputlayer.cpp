@@ -5,6 +5,7 @@
 */
 
 #include "outputlayer.h"
+#include "main.h"
 #include "scene/surfaceitem.h"
 #include "scene/surfaceitem_wayland.h"
 #include "wayland/surface.h"
@@ -75,7 +76,7 @@ Region OutputLayer::deviceRepaints() const
 
 void OutputLayer::scheduleRepaint(Item *item)
 {
-    if (!m_output) {
+    if (!m_output || kwinApp()->isTerminating()) {
         return;
     }
     m_repaintScheduled = true;
@@ -87,7 +88,7 @@ void OutputLayer::scheduleRepaint(Item *item)
 
 void OutputLayer::addDeviceRepaint(const Region &region)
 {
-    if (region.isEmpty() || !m_output) {
+    if (region.isEmpty() || !m_output || kwinApp()->isTerminating()) {
         return;
     }
     m_repaints += region;
