@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <QDBusConnection>
 #include <QDBusContext>
 #include <QDBusServiceWatcher>
 #include <QObject>
@@ -81,6 +82,7 @@ private Q_SLOTS:
 private:
     void uninhibit(const QString &serviceName, uint cookie);
 
+    QDBusConnection m_bus;
     NightLightManager *m_manager;
     QDBusServiceWatcher *m_inhibitorWatcher;
     QMultiHash<QString, uint> m_inhibitors;

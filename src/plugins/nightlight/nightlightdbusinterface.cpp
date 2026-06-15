@@ -17,7 +17,7 @@
 namespace KWin
 {
 
-static void announceChangedProperties(const QVariantMap &properties)
+static void announceChangedProperties(const QDBusConnection &bus, const QVariantMap &properties)
 {
     QDBusMessage message = QDBusMessage::createSignal(
         QStringLiteral("/org/kde/KWin/NightLight"),
@@ -30,83 +30,84 @@ static void announceChangedProperties(const QVariantMap &properties)
         QStringList(), // invalidated_properties
     });
 
-    QDBusConnection::sessionBus().send(message);
+    bus.send(message);
 }
 
 NightLightDBusInterface::NightLightDBusInterface(NightLightManager *parent)
     : QObject(parent)
+    , m_bus(QDBusConnection::connectToBus(QDBusConnection::SessionBus, QStringLiteral("nightlight")))
     , m_manager(parent)
     , m_inhibitorWatcher(new QDBusServiceWatcher(this))
 {
-    m_inhibitorWatcher->setConnection(QDBusConnection::sessionBus());
+    m_inhibitorWatcher->setConnection(m_bus);
     m_inhibitorWatcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
     connect(m_inhibitorWatcher, &QDBusServiceWatcher::serviceUnregistered,
             this, &NightLightDBusInterface::removeInhibitorService);
 
     connect(m_manager, &NightLightManager::inhibitedChanged, this, [this] {
-        announceChangedProperties({
+        announceChangedProperties(m_bus, {
             {QStringLiteral("inhibited"), isInhibited()},
         });
     });
 
     connect(m_manager, &NightLightManager::enabledChanged, this, [this] {
-        announceChangedProperties({
+        announceChangedProperties(m_bus, {
             {QStringLiteral("enabled"), isEnabled()},
         });
     });
 
     connect(m_manager, &NightLightManager::runningChanged, this, [this] {
-        announceChangedProperties({
+        announceChangedProperties(m_bus, {
             {QStringLiteral("running"), isRunning()},
         });
     });
 
     connect(m_manager, &NightLightManager::currentTemperatureChanged, this, [this] {
-        announceChangedProperties({
+        announceChangedProperties(m_bus, {
             {QStringLiteral("currentTemperature"), currentTemperature()},
         });
     });
 
     connect(m_manager, &NightLightManager::targetTemperatureChanged, this, [this] {
-        announceChangedProperties({
+        announceChangedProperties(m_bus, {
             {QStringLiteral("targetTemperature"), targetTemperature()},
         });
     });
 
     connect(m_manager, &NightLightManager::modeChanged, this, [this] {
-        announceChangedProperties({
+        announceChangedProperties(m_bus, {
             {QStringLiteral("mode"), mode()},
         });
     });
 
     connect(m_manager, &NightLightManager::daylightChanged, this, [this] {
-        announceChangedProperties({
+        announceChangedProperties(m_bus, {
             {QStringLiteral("daylight"), daylight()},
         });
     });
 
     connect(m_manager, &NightLightManager::previousTransitionTimingsChanged, this, [this] {
-        announceChangedProperties({
+        announceChangedProperties(m_bus, {
             {QStringLiteral("previousTransitionDateTime"), previousTransitionDateTime()},
             {QStringLiteral("previousTransitionDuration"), previousTransitionDuration()},
         });
     });
 
     connect(m_manager, &NightLightManager::scheduledTransitionTimingsChanged, this, [this] {
-        announceChangedProperties({
+        announceChangedProperties(m_bus, {
             {QStringLiteral("scheduledTransitionDateTime"), scheduledTransitionDateTime()},
             {QStringLiteral("scheduledTransitionDuration"), scheduledTransitionDuration()},
         });
     });
 
     new NightLightAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/NightLight"), this);
-    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.KWin.NightLight"));
+    m_bus.registerObject(QStringLiteral("/org/kde/KWin/NightLight"), this);
+    m_bus.registerService(QStringLiteral("org.kde.KWin.NightLight"));
 }
 
 NightLightDBusInterface::~NightLightDBusInterface()
 {
-    QDBusConnection::sessionBus().unregisterService(QStringLiteral("org.kde.KWin.NightLight"));
+    m_bus.unregisterService(QStringLiteral("org.kde.KWin.NightLight"));
 }
 
 bool NightLightDBusInterface::isInhibited() const
