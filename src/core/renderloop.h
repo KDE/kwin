@@ -91,6 +91,12 @@ public:
      */
     std::chrono::nanoseconds nextPresentationTimestamp() const;
 
+    /**
+     * Returns the deadline the compositing cycle was scheduled to start at.
+     * The returned timestamp is sourced from the monotonic clock.
+     */
+    std::chrono::steady_clock::time_point scheduledWakeupTime() const;
+
     void setPresentationMode(PresentationMode mode);
 
     void setMaxPendingFrameCount(uint32_t maxCount);

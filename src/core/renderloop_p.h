@@ -43,6 +43,7 @@ public:
     std::chrono::nanoseconds lastPresentationTimestamp = std::chrono::nanoseconds::zero();
     std::chrono::nanoseconds nextPresentationTimestamp = std::chrono::nanoseconds::zero();
     std::chrono::nanoseconds lastPresentNotBefore = std::chrono::nanoseconds::zero();
+    std::chrono::nanoseconds nextRenderTimestamp = std::chrono::nanoseconds::zero();
     bool wasTripleBuffering = false;
     int doubleBufferingCounter = 0;
     PreciseTimer compositeTimer;

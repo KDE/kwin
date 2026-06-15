@@ -47,6 +47,7 @@ OutputFrame::OutputFrame(RenderLoop *loop, std::chrono::nanoseconds refreshDurat
     : m_loop(loop)
     , m_refreshDuration(refreshDuration)
     , m_targetPageflipTime(loop->nextPresentationTimestamp())
+    , m_scheduledWakeupTime(loop->scheduledWakeupTime())
     , m_predictedRenderTime(loop->predictedRenderTime())
 {
 }
@@ -152,6 +153,11 @@ void OutputFrame::addRenderTimeQuery(std::unique_ptr<RenderTimeQuery> &&query)
 std::chrono::steady_clock::time_point OutputFrame::targetPageflipTime() const
 {
     return m_targetPageflipTime;
+}
+
+std::chrono::steady_clock::time_point OutputFrame::scheduledWakeupTime() const
+{
+    return m_scheduledWakeupTime;
 }
 
 std::chrono::nanoseconds OutputFrame::refreshDuration() const

@@ -97,6 +97,7 @@ public:
     void addRenderTimeQuery(std::unique_ptr<RenderTimeQuery> &&query);
 
     std::chrono::steady_clock::time_point targetPageflipTime() const;
+    std::chrono::steady_clock::time_point scheduledWakeupTime() const;
     std::chrono::nanoseconds refreshDuration() const;
     std::chrono::nanoseconds predictedRenderTime() const;
 
@@ -116,6 +117,7 @@ private:
     const QPointer<RenderLoop> m_loop;
     const std::chrono::nanoseconds m_refreshDuration;
     const std::chrono::steady_clock::time_point m_targetPageflipTime;
+    const std::chrono::steady_clock::time_point m_scheduledWakeupTime;
     const std::chrono::nanoseconds m_predictedRenderTime;
     struct Feedback
     {
