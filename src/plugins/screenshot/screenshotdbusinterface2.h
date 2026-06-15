@@ -9,6 +9,7 @@
 
 #include "screenshot.h"
 
+#include <QDBusConnection>
 #include <QDBusContext>
 #include <QDBusUnixFileDescriptor>
 #include <QObject>
@@ -64,6 +65,7 @@ private:
     std::optional<pid_t> determineCallerPid() const;
     bool checkPermissions(std::optional<pid_t> pid) const;
 
+    QDBusConnection m_bus;
     ScreenShotManager *m_effect;
 };
 
