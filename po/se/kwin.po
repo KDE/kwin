@@ -4391,6 +4391,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#~ msgid "Indicate that KWin has recently crashed n times"
-#~ msgstr "Muittut ahte KWin dál easka lea riekčanan máŋgii"

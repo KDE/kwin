@@ -4473,6 +4473,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland krasja"
-
-#~ msgid "Indicate that KWin has recently crashed n times"
-#~ msgstr "Viser at KWin nyleg har krasja n gongar"
