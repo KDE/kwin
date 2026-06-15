@@ -184,6 +184,9 @@ WaylandServer::WaylandServer(QObject *parent)
 
 WaylandServer::~WaylandServer()
 {
+    // Delete the outputs while m_display is still alive.
+    qDeleteAll(m_waylandOutputs);
+    m_waylandOutputs.clear();
     s_self = nullptr;
 }
 
