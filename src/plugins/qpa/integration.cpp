@@ -88,13 +88,10 @@ bool Integration::hasCapability(Capability cap) const
     case OpenGL:
     case MultipleWindows:
     case NonFullScreenWindows:
-#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 2)
     case OffscreenSurface:
-#endif
         return true;
     case ThreadedOpenGL:
     case BufferQueueingOpenGL:
-    case RasterGLSurface:
         return false;
     default:
         return QPlatformIntegration::hasCapability(cap);
