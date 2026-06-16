@@ -185,7 +185,7 @@ public:
     {
         const auto nativeState = waylandKeyStatetoKeyboardKeyState(state);
 
-        if (nativeState) {
+        if (nativeState && m_keyboardGrab) {
             Q_EMIT q->key(serial, time, key, *nativeState);
         }
     }
@@ -196,7 +196,9 @@ public:
                                                uint32_t mods_locked,
                                                uint32_t group) override
     {
-        Q_EMIT q->modifiers(serial, mods_depressed, mods_latched, mods_locked, group);
+        if (m_keyboardGrab) {
+            Q_EMIT q->modifiers(serial, mods_depressed, mods_latched, mods_locked, group);
+        }
     }
     void zwp_input_method_context_v1_language(Resource *, uint32_t serial, const QString &language) override
     {

@@ -464,12 +464,10 @@ void TestInputMethodInterface::testGrabkeyboard()
 
     QSignalSpy keyEventSpy(serverContext, &KWin::InputMethodContextV1Interface::key);
     imContext->key(0, 123, 56, 1);
-    QEXPECT_FAIL("", "We should be not get key event if keyboard is not grabbed", Continue);
     QVERIFY(!keyEventSpy.wait(200));
 
     QSignalSpy modifierEventSpy(serverContext, &KWin::InputMethodContextV1Interface::modifiers);
     imContext->modifiers(1234, 0, 0, 0, 0);
-    QEXPECT_FAIL("", "We should be not get modifiers event if keyboard is not grabbed", Continue);
     QVERIFY(!modifierEventSpy.wait(200));
 
     // grab the keyboard
