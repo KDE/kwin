@@ -1916,6 +1916,7 @@ void PointerInputTest::testUnfocusedModifiers()
     x11window->move(QPoint(10, 10));
 
     workspace()->activateWindow(x11window, true);
+    qDebug() << waylandWindow->frameGeometry() << waylandWindow->surface() << x11window->frameGeometry() << x11window->surface();
 
     // Move the pointer over the now unfocused Wayland window
     input()->pointer()->warp(waylandWindow->frameGeometry().center());
