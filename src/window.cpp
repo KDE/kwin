@@ -1511,7 +1511,6 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
 
 RectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
 {
-    const RectF currentMoveResizeGeom = moveResizeGeometry();
     RectF nextMoveResizeGeom = moveResizeGeometry();
 
     const Gravity gravity = interactiveMoveResizeGravity();
