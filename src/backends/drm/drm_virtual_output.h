@@ -30,7 +30,7 @@ public:
 
     bool testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
     bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
-    void applyChanges(const OutputConfiguration &config) override;
+    void applyChanges(const OutputConfiguration &config);
 
     DrmOutputLayer *primaryLayer() const;
     void recreateSurface();

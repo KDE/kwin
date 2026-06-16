@@ -213,6 +213,13 @@ public:
     QSize orientateSize(const QSize &size) const;
 
     virtual void applyChanges(const OutputConfiguration &config);
+    /**
+     * Applies the absolute minimum of required changes on any
+     * output change: UUID and BrightnessDevice.
+     * This should only be used as a fallback for when applying
+     * output configurations through the output backend fails!
+     */
+    virtual void applyFallbackConfig(const OutputConfiguration &config);
 
     SubPixel subPixel() const;
     QString description() const;
@@ -271,7 +278,6 @@ public:
     bool isDdcCiKnownBroken() const;
 
     BrightnessDevice *brightnessDevice() const;
-    virtual void unsetBrightnessDevice();
     bool allowSdrSoftwareBrightness() const;
 
     ColorPowerTradeoff colorPowerTradeoff() const;

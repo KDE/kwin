@@ -633,17 +633,13 @@ void Workspace::updateOutputConfiguration()
         return;
     }
 
-    const bool alreadyHaveEnabledOutputs = std::ranges::any_of(outputs, [](BackendOutput *o) {
-        return o->isEnabled();
-    });
+    const auto previouslyEnabled = outputs | std::views::filter(&BackendOutput::isEnabled) | std::ranges::to<QList>();
+    const bool alreadyHaveEnabledOutputs = !previouslyEnabled.isEmpty();
 
     QList<BackendOutput *> toEnable = outputs;
     OutputConfigurationError error = OutputConfigurationError::None;
     do {
-        auto opt = m_outputConfigStore->queryConfig(toEnable, m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
-        if (!opt) {
-            return;
-        }
+        auto opt = m_outputConfigStore->queryConfig(outputs, m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
         auto &[cfg, type] = *opt;
 
         for (const auto &output : outputs) {
@@ -673,29 +669,32 @@ void Workspace::updateOutputConfiguration()
         case OutputConfigurationError::Unknown:
         case OutputConfigurationError::TooManyEnabledOutputs:
         case OutputConfigurationError::Timeout:
-            if (alreadyHaveEnabledOutputs) {
+            if (alreadyHaveEnabledOutputs && toEnable != previouslyEnabled) {
                 // just keeping the old output configuration is preferable
-                break;
+                toEnable = previouslyEnabled;
+            } else {
+                // remove outputs until *something* works
+                toEnable.removeLast();
             }
-            toEnable.removeLast();
             break;
         case OutputConfigurationError::NotActive:
             // can't do anything, have to wait for a VT switch
             break;
         }
-    } while (error == OutputConfigurationError::TooManyEnabledOutputs && !toEnable.isEmpty() && !alreadyHaveEnabledOutputs);
+    } while (!toEnable.isEmpty() && !alreadyHaveEnabledOutputs);
 
     qCCritical(KWIN_CORE, "Applying output configuration failed!");
-    // Update the output order to a fallback list, to avoid dangling pointers
-    updateOutputOrder();
-    // If applying the output configuration failed, brightness devices weren't assigned either.
-    // To prevent dangling pointers, unset removed brightness brightness devices here
-    const auto devices = waylandServer()->externalBrightness()->devices();
+
+    // UUID and brightness devices must be applied even without an otherwise
+    // valid output configuration, to prevent misbehavior and dangling pointers
+    auto opt = m_outputConfigStore->queryConfig(outputs, m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
+    auto &[cfg, type] = *opt;
     for (BackendOutput *output : outputs) {
-        if (output->brightnessDevice() && !devices.contains(output->brightnessDevice())) {
-            output->unsetBrightnessDevice();
-        }
+        output->applyFallbackConfig(cfg);
     }
+
+    // Update the output order to a fallback list as well
+    updateOutputOrder();
 }
 
 void Workspace::setupWindowConnections(Window *window)

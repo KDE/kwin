@@ -55,6 +55,7 @@ public:
     bool presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
     void setAutoRotateAvailable(bool isAvailable) override;
     void setAutoBrightnessAvailable(bool isAvailable) override;
+    void applyFallbackConfig(const OutputConfiguration &config) override;
 
     DrmLease *lease() const;
     bool addLeaseObjects(QList<uint32_t> &objectList);
@@ -82,7 +83,6 @@ private:
     std::shared_ptr<ColorDescription> createColorDescription(const State &next) const;
     Capabilities computeCapabilities() const;
     void updateInformation();
-    void unsetBrightnessDevice() override;
     void updateBrightness(double newBrightness, double newArtificialHdrHeadroom, double newDimming);
     void maybeScheduleRepaints(const State &next);
     std::optional<uint32_t> decideAutomaticBpcLimit() const;

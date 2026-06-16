@@ -363,6 +363,18 @@ void BackendOutput::applyChanges(const OutputConfiguration &config)
     Q_EMIT changed();
 }
 
+void BackendOutput::applyFallbackConfig(const OutputConfiguration &config)
+{
+    auto props = config.constChangeSet(this);
+    if (!props) {
+        return;
+    }
+    State next = m_state;
+    next.uuid = props->uuid.value_or(m_state.uuid);
+    next.brightnessDevice = props->brightnessDevice.value_or(m_state.brightnessDevice);
+    setState(next);
+}
+
 bool BackendOutput::isEnabled() const
 {
     return m_state.enabled;
@@ -684,13 +696,6 @@ double BackendOutput::artificialHdrHeadroom() const
 BrightnessDevice *BackendOutput::brightnessDevice() const
 {
     return m_state.brightnessDevice;
-}
-
-void BackendOutput::unsetBrightnessDevice()
-{
-    State next;
-    next.brightnessDevice = nullptr;
-    setState(next);
 }
 
 bool BackendOutput::allowSdrSoftwareBrightness() const

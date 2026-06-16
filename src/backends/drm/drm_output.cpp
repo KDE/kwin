@@ -676,10 +676,15 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     Q_EMIT changed();
 }
 
-void DrmOutput::unsetBrightnessDevice()
+void DrmOutput::applyFallbackConfig(const OutputConfiguration &config)
 {
+    auto props = config.constChangeSet(this);
+    if (!props) {
+        return;
+    }
     State next = m_state;
-    next.brightnessDevice = nullptr;
+    next.uuid = props->uuid.value_or(m_state.uuid);
+    next.brightnessDevice = props->brightnessDevice.value_or(m_state.brightnessDevice);
     setState(next);
     updateInformation();
 }
