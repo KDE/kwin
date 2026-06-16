@@ -262,7 +262,6 @@ void TestPlasmaShell::testSkipTaskbar()
     QVERIFY(sps->skipTaskbar());
     // setting to same again should not emit the signal
     ps->setSkipTaskbar(true);
-    QEXPECT_FAIL("", "Should not be emitted if not changed", Continue);
     QVERIFY(!skipTaskbarChangedSpy.wait(100));
     QVERIFY(sps->skipTaskbar());
 
@@ -295,7 +294,6 @@ void TestPlasmaShell::testSkipSwitcher()
     QVERIFY(sps->skipSwitcher());
     // setting to same again should not emit the signal
     ps->setSkipSwitcher(true);
-    QEXPECT_FAIL("", "Should not be emitted if not changed", Continue);
     QVERIFY(!skipSwitcherChangedSpy.wait(100));
     QVERIFY(sps->skipSwitcher());
 
