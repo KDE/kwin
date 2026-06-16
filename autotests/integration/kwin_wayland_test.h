@@ -1462,16 +1462,10 @@ public:
         }
     }
 
-    quint32 nodeId() const
+    uint64_t serial() const
     {
-        Q_ASSERT(m_nodeId.has_value());
-        return *m_nodeId;
-    }
-
-    void zkde_screencast_stream_unstable_v1_created(uint32_t node) override
-    {
-        m_nodeId = node;
-        Q_EMIT created(node);
+        Q_ASSERT(m_serial.has_value());
+        return *m_serial;
     }
 
     void zkde_screencast_stream_unstable_v1_closed() override
@@ -1484,13 +1478,20 @@ public:
         Q_EMIT failed(error);
     }
 
+    void zkde_screencast_stream_unstable_v1_serial(uint32_t object_serial_hi, uint32_t object_serial_low) override
+    {
+        const uint64_t serial = uint64_t(object_serial_hi) << 32 | object_serial_low;
+        m_serial = serial;
+        Q_EMIT created(serial);
+    }
+
 Q_SIGNALS:
-    void created(quint32 nodeid);
+    void created(uint64_t serial);
     void failed(const QString &error);
     void closed();
 
 private:
-    std::optional<uint> m_nodeId;
+    std::optional<uint64_t> m_serial;
 };
 
 class ScreencastingV1 : public QObject, public QtWayland::zkde_screencast_unstable_v1

@@ -109,8 +109,8 @@ std::optional<QImage> ScreencastingTest::oneFrameAndClose(Test::ScreencastingStr
     connect(stream, &Test::ScreencastingStreamV1::closed, qGuiApp, [&pwStream] {
         pwStream.setActive(false);
     });
-    connect(stream, &Test::ScreencastingStreamV1::created, qGuiApp, [&pwStream](quint32 nodeId) {
-        pwStream.createStream(nodeId, 0);
+    connect(stream, &Test::ScreencastingStreamV1::created, qGuiApp, [&pwStream](quint64 serial) {
+        pwStream.createStream(serial, 0);
     });
 
     std::optional<QImage> img;
@@ -193,7 +193,7 @@ void ScreencastingTest::testWindowWithPopupDynamic()
     });
     QSignalSpy createdSpy(stream.get(), &Test::ScreencastingStreamV1::created);
     QVERIFY(createdSpy.wait());
-    pwStream.createStream(createdSpy.first().first().toUInt(), 0);
+    pwStream.createStream(createdSpy.first().first().value<quint64>(), 0);
 
     auto fetchNextImageFrame = [&pwStream](QImage::Format format) {
         QSignalSpy frameSpy(&pwStream, &PipeWireSourceStream::frameReceived);
