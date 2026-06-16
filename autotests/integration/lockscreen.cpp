@@ -96,17 +96,17 @@ public:
     {
     }
 
-    void pointerMotion(PointerMotionEvent *event)
+    void pointerMotion(PointerMotionEvent *event) override
     {
         Q_EMIT inputEvent();
     }
 
-    void pointerButton(PointerButtonEvent *event)
+    void pointerButton(PointerButtonEvent *event) override
     {
         Q_EMIT inputEvent();
     }
 
-    void pointerAxis(PointerAxisEvent *event)
+    void pointerAxis(PointerAxisEvent *event) override
     {
         Q_EMIT inputEvent();
     }
