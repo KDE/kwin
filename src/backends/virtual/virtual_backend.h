@@ -60,6 +60,14 @@ public:
 
     DrmDevice *drmDevice() const;
 
+    /**
+     * The function passed in will be called before output changes are applied,
+     * and any result other than "None" will prevent the config from being applied.
+     * This should only be used by autotests.
+     */
+    void setOutputChangeCheck(const std::function<OutputConfigurationError(const OutputConfiguration &config)> &check);
+    OutputConfigurationError applyOutputChanges(const OutputConfiguration &config) override;
+
 Q_SIGNALS:
     void virtualOutputsSet(bool countChanged);
 
@@ -69,6 +77,7 @@ private:
 
     QList<VirtualOutput *> m_outputs;
     RenderDevice *m_renderDevice = nullptr;
+    std::function<OutputConfigurationError(const OutputConfiguration &config)> m_outputChangeCheck;
 };
 
 } // namespace KWin

@@ -94,8 +94,7 @@ public:
     };
     Source source = Source::System;
 
-private:
-    QMap<BackendOutput *, std::shared_ptr<OutputChangeSet>> m_properties;
+    std::unordered_map<BackendOutput *, std::shared_ptr<OutputChangeSet>> m_properties;
 };
 
 }

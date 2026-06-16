@@ -137,6 +137,22 @@ RenderDevice *VirtualBackend::renderDevice() const
     return m_renderDevice;
 }
 
+void VirtualBackend::setOutputChangeCheck(const std::function<OutputConfigurationError(const OutputConfiguration &config)> &check)
+{
+    m_outputChangeCheck = check;
+}
+
+OutputConfigurationError VirtualBackend::applyOutputChanges(const OutputConfiguration &config)
+{
+    if (m_outputChangeCheck) {
+        auto err = m_outputChangeCheck(config);
+        if (err != OutputConfigurationError::None) {
+            return err;
+        }
+    }
+    return OutputBackend::applyOutputChanges(config);
+}
+
 } // namespace KWin
 
 #include "moc_virtual_backend.cpp"

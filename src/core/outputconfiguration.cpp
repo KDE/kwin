@@ -22,7 +22,8 @@ std::shared_ptr<OutputChangeSet> OutputConfiguration::changeSet(BackendOutput *o
 
 std::shared_ptr<OutputChangeSet> OutputConfiguration::constChangeSet(BackendOutput *output) const
 {
-    return m_properties[output];
+    const auto it = m_properties.find(output);
+    return it == m_properties.end() ? nullptr : it->second;
 }
 
 }

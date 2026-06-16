@@ -150,6 +150,8 @@ private Q_SLOTS:
     void testAutoBrightness();
     void testPerOutputDesktopsOutputToggle();
     void testTemporaryDpmsHotplug();
+
+    void testFailureToApply();
 };
 
 void OutputChangesTest::initTestCase()
@@ -2489,6 +2491,55 @@ void OutputChangesTest::testTemporaryDpmsHotplug()
         },
     });
     QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::Off);
+}
+
+void OutputChangesTest::testFailureToApply()
+{
+    // This test verifies that failing to turn on a hotplugged output
+    // properly falls back to the previous config without causing problems
+    workspace()->outputConfigureStore()->clear();
+
+    auto backend = qobject_cast<VirtualBackend *>(kwinApp()->outputBackend());
+
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = Rect(0, 0, 1280, 1200),
+            .connectorName = QStringLiteral("TEST-1"),
+        },
+    });
+
+    BackendOutput *hotplug = backend->createVirtualOutput("TEST-2", "", QSize(1280, 1200), 1.0);
+    {
+        OutputConfiguration config;
+        auto changeset = config.changeSet(hotplug);
+        changeset->scale = 2.0;
+        changeset->vrrPolicy = VrrPolicy::Always;
+        QCOMPARE(workspace()->applyOutputConfiguration(config), OutputConfigurationError::None);
+    }
+    const QString uuid = hotplug->uuid();
+    backend->removeVirtualOutput(hotplug);
+
+    backend->setOutputChangeCheck([](const OutputConfiguration &config) {
+        for (const auto &[output, changeSet] : config.m_properties) {
+            if (output->name() == "Virtual-TEST-2" && changeSet->enabled.value_or(output->isEnabled())) {
+                return OutputConfigurationError::Unknown;
+            }
+        }
+        return OutputConfigurationError::None;
+    });
+
+    // add the output again, Workspace won't be able to apply the config,
+    // but should still keep the other output settings as they should be
+    hotplug = backend->createVirtualOutput("TEST-2", "", QSize(1280, 1200), 1.0);
+
+    backend->setOutputChangeCheck({});
+
+    QVERIFY(!hotplug->isEnabled());
+    QCOMPARE(hotplug->uuid(), uuid);
+    QCOMPARE(hotplug->scaleSetting(), 2.0);
+    QCOMPARE(hotplug->vrrPolicy(), VrrPolicy::Always);
+
+    backend->removeVirtualOutput(hotplug);
 }
 
 } // namespace KWin
