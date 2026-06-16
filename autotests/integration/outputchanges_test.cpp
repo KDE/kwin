@@ -1982,9 +1982,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
 
     const auto outputBackend = qobject_cast<VirtualBackend *>(kwinApp()->outputBackend());
 
-    QFile file(QFINDTESTDATA("data/same serial number/edid.bin"));
-    file.open(QIODeviceBase::OpenModeFlag::ReadOnly);
-    const auto edid = file.readAll();
+    const auto edid = readEdid(QFINDTESTDATA("data/same serial number/edid.bin"));
 
     // first, libdisplay-info failed to parse the EDID and we don't have an EDID ID
     // note that this uses two displays with the same EDID,

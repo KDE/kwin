@@ -30,7 +30,10 @@ private:
 
 TestFTrace::TestFTrace()
 {
-    m_tempFile.open();
+    if (!m_tempFile.open()) {
+        qWarning() << "Failed to open the test ftrace file";
+    }
+
     qputenv("KWIN_PERF_FTRACE_FILE", m_tempFile.fileName().toLatin1());
 
     KWin::FTraceLogger::create();
