@@ -1888,14 +1888,14 @@ void PointerInputTest::testUnfocusedModifiers()
     QVERIFY(surface != nullptr);
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     QVERIFY(shellSurface != nullptr);
-    Window *waylandWindow = Test::renderAndWaitForShown(surface.get(), QSize(10, 10), Qt::blue);
+    Window *waylandWindow = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
     QVERIFY(waylandWindow);
     waylandWindow->move(QPoint(0, 0));
 
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    const Rect windowGeometry(0, 0, 10, 10);
+    const Rect windowGeometry(0, 0, 100, 100);
     xcb_window_t windowId = xcb_generate_id(c.get());
     xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
@@ -1913,7 +1913,7 @@ void PointerInputTest::testUnfocusedModifiers()
     QVERIFY(windowCreatedSpy.wait());
     X11Window *x11window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(waylandWindow);
-    x11window->move(QPoint(10, 10));
+    x11window->move(QPoint(100, 100));
 
     workspace()->activateWindow(x11window, true);
 
