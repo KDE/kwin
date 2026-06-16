@@ -1003,12 +1003,30 @@ void TabBox::accept(bool closeTabBox)
     }
 }
 
+QList<QKeySequence> TabBox::activationShortcut(TabBoxMode mode) const
+{
+    switch (mode) {
+    case TabBoxWindowsMode:
+        return m_cutWalkThroughWindows;
+    case TabBoxWindowsAlternativeMode:
+        return m_cutWalkThroughWindowsAlternative;
+    case TabBoxCurrentAppWindowsMode:
+        return m_cutWalkThroughCurrentAppWindows;
+    case TabBoxCurrentAppWindowsAlternativeMode:
+        return m_cutWalkThroughCurrentAppWindowsAlternative;
+    }
+    return {};
+}
+
 void TabBox::modifiersReleased()
 {
     if (m_noModifierGrab) {
         return;
     }
-    if (m_tabGrab) {
+    // Close the switcher as soon as the modifier keys that activated it are no
+    // longer held, even if a non-modifier key (e.g. Tab) is still pressed or
+    // the keys are released out of order.
+    if (m_tabGrab && !areModKeysDepressed(activationShortcut(mode()))) {
         accept();
     }
 }
