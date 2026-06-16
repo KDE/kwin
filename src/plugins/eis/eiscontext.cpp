@@ -5,6 +5,9 @@
 */
 
 #include "eiscontext.h"
+
+#include "config-eis.h"
+
 #include "eisbackend.h"
 #include "eisdevice.h"
 #include "libeis_logging.h"
@@ -349,6 +352,12 @@ void EisContext::handleEvents()
         }
         case EIS_EVENT_PONG:
         case EIS_EVENT_SYNC:
+#if EIS_HAVE_16
+        case EIS_EVENT_DEVICE_READY:
+        case EIS_EVENT_TEXT_KEYSYM:
+        case EIS_EVENT_TEXT_UTF8:
+        case EIS_EVENT_SEAT_DEVICE_REQUESTED:
+#endif
             break;
         }
         eis_event_unref(event);
