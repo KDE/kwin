@@ -273,7 +273,7 @@ void InputMethodContextV1Interface::sendContentType(TextInputContentHints hint, 
         contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_hidden_text;
     }
     if (hint.testFlag(TextInputContentHint::SensitiveData)) {
-        contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_lowercase;
+        contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_sensitive_data;
     }
     if (hint.testFlag(TextInputContentHint::Latin)) {
         contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_latin;
@@ -308,6 +308,7 @@ void InputMethodContextV1Interface::sendContentType(TextInputContentHints hint, 
         contentPurpose = QtWaylandServer::zwp_text_input_v1::content_purpose_name;
         break;
     case TextInputContentPurpose::Password:
+    case TextInputContentPurpose::Pin:
         contentPurpose = QtWaylandServer::zwp_text_input_v1::content_purpose_password;
         break;
     case TextInputContentPurpose::Date:

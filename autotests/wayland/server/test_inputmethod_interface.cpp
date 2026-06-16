@@ -534,7 +534,6 @@ void TestInputMethodInterface::testContentHints()
     serverContext->sendContentType(serverHints, KWin::TextInputContentPurpose::Normal);
     QVERIFY(contentTypeChangedSpy.wait());
     QCOMPARE(contentTypeChangedSpy.count(), 1);
-    QEXPECT_FAIL("SensitiveData", "SensitiveData content hint need fixing", Continue);
     QTEST(imContext->contentHints(), "imHint");
 
     // send deactivate and verify server interface resets context
@@ -592,7 +591,6 @@ void TestInputMethodInterface::testContentPurpose()
     serverContext->sendContentType(KWin::TextInputContentHints(KWin::TextInputContentHint::None), serverPurpose);
     QVERIFY(contentTypeChangedSpy.wait());
     QCOMPARE(contentTypeChangedSpy.count(), 1);
-    QEXPECT_FAIL("Pin", "Pin should return content_purpose_password", Continue);
     QTEST(imContext->contentPurpose(), "imPurpose");
 
     // send deactivate and verify server interface resets context
