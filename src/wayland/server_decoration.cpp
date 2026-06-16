@@ -152,6 +152,9 @@ void ServerSideDecorationInterfacePrivate::org_kde_kwin_server_decoration_reques
         qCWarning(KWIN_CORE) << "Invalid mode:" << mode;
         return;
     }
+    if (preferredMode == m) {
+        return;
+    }
     preferredMode = m;
     Q_EMIT q->preferredModeChanged();
 }
