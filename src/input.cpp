@@ -1864,9 +1864,14 @@ public:
 
         if (event->state == KeyboardKeyState::Repeated || event->state == KeyboardKeyState::Pressed) {
             workspace()->tabbox()->keyPress(*event);
-        } else if (event->modifiersRelevantForGlobalShortcuts == Qt::NoModifier) {
+        } else if (event->state == KeyboardKeyState::Released) {
+            // Re-evaluate on every key release so the switcher can close once
+            // the activation modifiers are no longer held, regardless of the
+            // release order.
             workspace()->tabbox()->modifiersReleased();
-            return false;
+            // If the release closed the switcher, let the event propagate to
+            // the rest of the system instead of swallowing it.
+            return workspace()->tabbox()->isGrabbed();
         }
         return true;
     }

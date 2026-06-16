@@ -253,6 +253,7 @@ private:
     void KDEWalkThroughWindows(bool forward);
     void CDEWalkThroughWindows(bool forward);
     void KDEOneStepThroughWindows(bool forward, TabBoxMode mode); // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
+    QList<QKeySequence> activationShortcut(TabBoxMode mode) const; // forward shortcut that activates the given mode
     bool establishTabBoxGrab();
     void removeTabBoxGrab();
     template<typename Slot>
