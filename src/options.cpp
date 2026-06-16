@@ -668,34 +668,31 @@ void Options::loadConfig()
     syncFromKcfgc();
 
     // Electric borders
-    KConfigGroup config(m_settings->config(), QStringLiteral("Windows"));
-    OpTitlebarDblClick = windowOperation(config.readEntry("TitlebarDoubleClickCommand", "Maximize"), true);
-    setOperationMaxButtonLeftClick(windowOperation(config.readEntry("MaximizeButtonLeftClickCommand", "Maximize"), true));
-    setOperationMaxButtonMiddleClick(windowOperation(config.readEntry("MaximizeButtonMiddleClickCommand", "Maximize (vertical only)"), true));
-    setOperationMaxButtonRightClick(windowOperation(config.readEntry("MaximizeButtonRightClickCommand", "Maximize (horizontal only)"), true));
+    OpTitlebarDblClick = windowOperation(m_settings->titlebarDoubleClickCommand(), true);
+    setOperationMaxButtonLeftClick(windowOperation(m_settings->maximizeButtonLeftClickCommand(), true));
+    setOperationMaxButtonMiddleClick(windowOperation(m_settings->maximizeButtonMiddleClickCommand(), true));
+    setOperationMaxButtonRightClick(windowOperation(m_settings->maximizeButtonRightClickCommand(), true));
 
-    // Mouse bindings
-    config = KConfigGroup(m_settings->config(), QStringLiteral("MouseBindings"));
     // TODO: add properties for missing options
-    CmdTitlebarWheel = mouseWheelCommand(config.readEntry("CommandTitlebarWheel", "Nothing"));
-    CmdAllModKey = (config.readEntry("CommandAllKey", "Meta") == QLatin1StringView("Meta")) ? Qt::Key_Meta : Qt::Key_Alt;
-    CmdAllWheel = mouseWheelCommand(config.readEntry("CommandAllWheel", "Nothing"));
-    setCommandActiveTitlebar1(mouseCommand(config.readEntry("CommandActiveTitlebar1", "Raise"), true));
-    setCommandActiveTitlebar2(mouseCommand(config.readEntry("CommandActiveTitlebar2", "Nothing"), true));
-    setCommandActiveTitlebar3(mouseCommand(config.readEntry("CommandActiveTitlebar3", "Operations menu"), true));
-    setCommandInactiveTitlebar1(mouseCommand(config.readEntry("CommandInactiveTitlebar1", "Activate and raise"), true));
-    setCommandInactiveTitlebar2(mouseCommand(config.readEntry("CommandInactiveTitlebar2", "Nothing"), true));
-    setCommandInactiveTitlebar3(mouseCommand(config.readEntry("CommandInactiveTitlebar3", "Operations menu"), true));
-    setCommandWindow1(mouseCommand(config.readEntry("CommandWindow1", "Activate, pass click and raise on release"), false));
-    setCommandWindow2(mouseCommand(config.readEntry("CommandWindow2", "Activate and pass click"), false));
-    setCommandWindow3(mouseCommand(config.readEntry("CommandWindow3", "Activate and pass click"), false));
-    setCommandWindowWheel(mouseCommand(config.readEntry("CommandWindowWheel", "Scroll"), false));
-    setCommandAll1(mouseCommand(config.readEntry("CommandAll1", "Activate, raise and move"), false));
-    setCommandAll2(mouseCommand(config.readEntry("CommandAll2", "Toggle raise and lower"), false));
-    setCommandAll3(mouseCommand(config.readEntry("CommandAll3", "Activate, raise and resize"), false));
+    CmdTitlebarWheel = mouseWheelCommand(m_settings->commandTitlebarWheel());
+    CmdAllModKey = (m_settings->commandAllKey() == QLatin1StringView("Meta")) ? Qt::Key_Meta : Qt::Key_Alt;
+    CmdAllWheel = mouseWheelCommand(m_settings->commandAllWheel());
+    setCommandActiveTitlebar1(mouseCommand(m_settings->commandActiveTitlebar1(), true));
+    setCommandActiveTitlebar2(mouseCommand(m_settings->commandActiveTitlebar2(), true));
+    setCommandActiveTitlebar3(mouseCommand(m_settings->commandActiveTitlebar3(), true));
+    setCommandInactiveTitlebar1(mouseCommand(m_settings->commandInactiveTitlebar1(), true));
+    setCommandInactiveTitlebar2(mouseCommand(m_settings->commandInactiveTitlebar2(), true));
+    setCommandInactiveTitlebar3(mouseCommand(m_settings->commandInactiveTitlebar3(), true));
+    setCommandWindow1(mouseCommand(m_settings->commandWindow1(), false));
+    setCommandWindow2(mouseCommand(m_settings->commandWindow2(), false));
+    setCommandWindow3(mouseCommand(m_settings->commandWindow3(), false));
+    setCommandWindowWheel(mouseCommand(m_settings->commandWindowWheel(), false));
+    setCommandAll1(mouseCommand(m_settings->commandAll1(), false));
+    setCommandAll2(mouseCommand(m_settings->commandAll2(), false));
+    setCommandAll3(mouseCommand(m_settings->commandAll3(), false));
 
     // Compositing
-    config = KConfigGroup(m_settings->config(), QStringLiteral("Compositing"));
+    const KConfigGroup config(m_settings->config(), QStringLiteral("Compositing"));
     CompositingType compositingMode = NoCompositing;
     QString compositingBackend = config.readEntry("Backend", "OpenGL");
     if (compositingBackend == "QPainter") {
