@@ -3139,6 +3139,12 @@ public:
     {
         notifyActivity();
     }
+    void switchEvent(SwitchEvent *event) override
+    {
+        if (event->device->isLidSwitch() && event->state == SwitchState::Off) {
+            notifyActivity();
+        }
+    }
 
 private:
     void notifyActivity()
