@@ -107,9 +107,14 @@ void GenericScriptedConfig::createUi()
     QUiLoader *loader = new QUiLoader(this);
     loader->setLanguageChangeEnabled(true);
     QFile uiFile(uiPath);
+    if (!uiFile.open(QFile::ReadOnly)) {
+        auto errorLabel = new QLabel(i18n("Error loading widget from %1: %2", uiPath, uiFile.errorString()));
+        layout->addWidget(errorLabel);
+        return;
+    }
+
     m_translator->setTranslationDomain(metaData.value("X-KWin-Config-TranslationDomain"));
 
-    uiFile.open(QFile::ReadOnly);
     QWidget *customConfigForm = loader->load(&uiFile, widget());
 
     if (!customConfigForm) {
