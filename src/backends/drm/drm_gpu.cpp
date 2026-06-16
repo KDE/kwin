@@ -1028,7 +1028,7 @@ std::shared_ptr<DrmFramebuffer> DrmGpu::importBuffer(GraphicsBuffer *buffer, Fil
                             attributes->offset.data(),
                             &framebufferId,
                             0);
-        if (ret == EOPNOTSUPP && attributes->planeCount == 1) {
+        if (ret == -EOPNOTSUPP && attributes->planeCount == 1) {
             ret = drmModeAddFB(m_fd,
                                attributes->width,
                                attributes->height,
