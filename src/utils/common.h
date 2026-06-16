@@ -32,6 +32,8 @@ namespace KWin
 
 const QPoint invalidPoint(INT_MIN, INT_MIN);
 
+extern bool loggingEnabled;
+
 enum StrutArea {
     StrutAreaInvalid = 0, // Null
     StrutAreaTop = 1 << 0,

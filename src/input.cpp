@@ -3622,7 +3622,8 @@ void InputDeviceHandler::setFocus(Window *window)
         return;
     }
 
-    qDebug() << "set focus" << window;
+    if (loggingEnabled)
+        qDebug() << "set focus" << window;
 
     Window *oldFocus = m_focus.window;
     if (oldFocus) {
@@ -3652,10 +3653,12 @@ void InputDeviceHandler::updateFocus()
     Window *focus = m_hover.window;
 
     if (m_focus.decoration) {
-        qDebug() << "deco";
+        if (loggingEnabled)
+            qDebug() << "deco";
         focus = nullptr;
     } else if (m_hover.window && !m_hover.window->surface() && !m_hover.window->isInternal()) {
-        qDebug() << "no surface";
+        if (loggingEnabled)
+            qDebug() << "no surface";
         // The surface has not yet been created (special XWayland case).
         // Therefore listen for its creation.
         if (!m_hover.surfaceCreatedConnection) {
@@ -3695,15 +3698,18 @@ void InputDeviceHandler::update()
     // Always set the window at the position of the input device.
     setHover(window);
 
-    qDebug() << "hover:" << window << position();
+    if (loggingEnabled)
+        qDebug() << "hover:" << window << position();
 
     if (focusUpdatesBlocked()) {
-        qDebug() << "focus updates blocked";
+        if (loggingEnabled)
+            qDebug() << "focus updates blocked";
         workspace()->updateFocusMousePosition(position());
         return;
     }
 
-    qDebug() << "update focus";
+    if (loggingEnabled)
+        qDebug() << "update focus";
     updateDecoration();
     updateFocus();
 

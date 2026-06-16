@@ -34,6 +34,8 @@ namespace KWin
 // StrutRect
 //************************************
 
+KWIN_EXPORT bool loggingEnabled = false;
+
 StrutRect::StrutRect(RectF rect, StrutArea area)
     : RectF(rect)
     , m_area(area)

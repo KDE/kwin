@@ -627,7 +627,8 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedWindowImpl 
 
 void PointerInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
 {
-    qDebug() << "focusUpdate" << focusOld << focusNow;
+    if (loggingEnabled)
+        qDebug() << "focusUpdate" << focusOld << focusNow;
     if (focusOld && focusOld->isClient()) {
         focusOld->pointerLeaveEvent();
         breakPointerConstraints(focusOld->surface());

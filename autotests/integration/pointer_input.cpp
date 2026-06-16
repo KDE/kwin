@@ -1880,6 +1880,7 @@ void PointerInputTest::testUnfocusedModifiers()
     // This test verifies that a window under the cursor gets modifier events,
     // even if it isn't focused
 
+    loggingEnabled = true;
     QVERIFY(Test::waylandSeat()->hasKeyboard());
     std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
 
