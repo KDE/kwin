@@ -492,4 +492,3 @@ const DmaBufAttributes *UdmabufGraphicsBuffer::dmabufAttributes() const
 } // namespace KWin
 
 #include "gbmgraphicsbufferallocator.moc"
-#include "moc_gbmgraphicsbufferallocator.cpp"

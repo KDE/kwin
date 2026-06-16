@@ -144,5 +144,4 @@ GraphicsBuffer *ShmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions
 
 } // namespace KWin
 
-#include "moc_shmgraphicsbufferallocator.cpp"
 #include "shmgraphicsbufferallocator.moc"

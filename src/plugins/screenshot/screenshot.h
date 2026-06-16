@@ -37,6 +37,8 @@ class Window;
  */
 class ScreenShotManager : public Plugin
 {
+    Q_OBJECT
+
 public:
     ScreenShotManager();
     ~ScreenShotManager() override;

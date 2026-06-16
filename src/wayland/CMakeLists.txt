@@ -153,7 +153,6 @@ target_sources(kwin PRIVATE
     surface.cpp
     tablet_v2.cpp
     tearingcontrol_v1.cpp
-    textinput.cpp
     textinput_v2.cpp
     textinput_v3.cpp
     touch.cpp
