@@ -690,7 +690,7 @@ void Options::loadConfig()
     setCommandWindow2(mouseCommand(config.readEntry("CommandWindow2", "Activate and pass click"), false));
     setCommandWindow3(mouseCommand(config.readEntry("CommandWindow3", "Activate and pass click"), false));
     setCommandWindowWheel(mouseCommand(config.readEntry("CommandWindowWheel", "Scroll"), false));
-    setCommandAll1(mouseCommand(config.readEntry("CommandAll1", "Move"), false));
+    setCommandAll1(mouseCommand(config.readEntry("CommandAll1", "Activate, raise and move"), false));
     setCommandAll2(mouseCommand(config.readEntry("CommandAll2", "Toggle raise and lower"), false));
     setCommandAll3(mouseCommand(config.readEntry("CommandAll3", "Resize"), false));
 

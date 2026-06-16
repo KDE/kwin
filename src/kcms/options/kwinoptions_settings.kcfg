@@ -297,7 +297,7 @@
     </entry>
 
     <entry key="CommandAll1" type="Enum">
-      <default>Move</default>
+      <default>ActivateRaiseAndMove</default>
       <choices>
           <choice name="Move"></choice>
           <choice name="ActivateRaiseAndMove" value="Activate, raise and move"></choice>

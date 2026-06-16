@@ -46,7 +46,7 @@
             <default>Scroll</default>
         </entry>
         <entry name="CommandAll1" type="String">
-            <default>Move</default>
+            <default>Activate, raise and move</default>
         </entry>
         <entry name="CommandAll2" type="String">
             <default>Toggle raise and lower</default>
