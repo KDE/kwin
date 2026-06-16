@@ -190,9 +190,17 @@ DrmPipeline::Error DrmPipeline::setLegacyGamma()
     QList<uint16_t> red(m_pending.crtc->gammaRampSize());
     QList<uint16_t> green(m_pending.crtc->gammaRampSize());
     QList<uint16_t> blue(m_pending.crtc->gammaRampSize());
+    // some drivers with legacy modesetting implicitly apply the
+    // gamma lut in a "linear" space, assuming that the signal sent
+    // to the display is encoded with the piece-wise sRGB transfer function
+    TransferFunction workaround(TransferFunction::linear, 0, 1);
+    if (gpu()->drmDevice()->isRadeon() || gpu()->drmDevice()->isAmdgpu() || gpu()->drmDevice()->isNouveau()) {
+        workaround = TransferFunction(TransferFunction::sRGB, 0, 1);
+    }
     for (int i = 0; i < m_pending.crtc->gammaRampSize(); i++) {
         const double input = i / double(m_pending.crtc->gammaRampSize() - 1);
         QVector3D output = QVector3D(input, input, input);
+        output = workaround.encodedToNits(output);
         for (const auto &op : m_pending.crtcColorPipeline.ops) {
             if (auto tf = std::get_if<ColorTransferFunction>(&op.operation)) {
                 output = tf->tf.encodedToNits(output);
@@ -205,6 +213,7 @@ DrmPipeline::Error DrmPipeline::setLegacyGamma()
                 return Error::InvalidArguments;
             }
         }
+        output = workaround.nitsToEncoded(output);
         red[i] = std::clamp(output.x(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max();
         green[i] = std::clamp(output.y(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max();
         blue[i] = std::clamp(output.z(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max();

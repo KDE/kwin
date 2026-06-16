@@ -39,9 +39,11 @@ DrmDevice::DrmDevice(const QString &path, dev_t id, FileDescriptor &&fd, gbm_dev
     , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(gbmDevice, id))
     , m_driverName(getDriverName(m_fd))
     , m_isNvidia(m_driverName == "nvidia-drm")
+    , m_isNouveau(m_driverName == "nouveau")
     , m_isI915(m_driverName == "i915")
     , m_isIntelXE(m_driverName == "xe")
     , m_isAmdgpu(m_driverName == "amdgpu")
+    , m_isRadeon(m_driverName == "radeon")
     , m_isVmwgfx(m_driverName == "vmwgfx")
     , m_isVirtualMachine(m_driverName == "virtio_gpu" || m_driverName == "qxl" || m_driverName == "vmwgfx" || m_driverName == "vboxvideo")
 {
@@ -121,6 +123,11 @@ bool DrmDevice::isNvidia() const
     return m_isNvidia;
 }
 
+bool DrmDevice::isNouveau() const
+{
+    return m_isNouveau;
+}
+
 bool DrmDevice::isI915() const
 {
     return m_isI915;
@@ -134,6 +141,11 @@ bool DrmDevice::isIntelXE() const
 bool DrmDevice::isAmdgpu() const
 {
     return m_isAmdgpu;
+}
+
+bool DrmDevice::isRadeon() const
+{
+    return m_isRadeon;
 }
 
 bool DrmDevice::isVmwgfx() const
