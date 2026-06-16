@@ -1945,6 +1945,8 @@ bool Window::mousePressCommandConsumesEvent(Options::MouseCommand command) const
     case Options::MouseClose:
     case Options::MouseResize:
     case Options::MouseUnrestrictedResize:
+    case Options::MouseActivateRaiseAndResize:
+    case Options::MouseActivateRaiseAndUnrestrictedResize:
         return true;
     case Options::MouseActivateRaiseAndPassClick:
     case Options::MouseActivateRaiseOnReleaseAndPassClick:
@@ -2096,6 +2098,12 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
         updateCursor();
         break;
     }
+    case Options::MouseActivateRaiseAndResize:
+    case Options::MouseActivateRaiseAndUnrestrictedResize:
+        workspace()->raiseWindow(this);
+        workspace()->requestFocus(this);
+        workspace()->setActiveOutput(globalPos);
+        // fallthrough
     case Options::MouseResize:
     case Options::MouseUnrestrictedResize: {
         if (!isResizable()) {

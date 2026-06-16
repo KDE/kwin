@@ -301,6 +301,7 @@
       <choices>
           <choice name="Move"></choice>
           <choice name="ActivateRaiseAndMove" value="Activate, raise and move"></choice>
+          <choice name="ActivateRaiseAndResize" value="Activate, raise and resize"></choice>
           <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
           <choice name="Resize"></choice>
           <choice name="Raise"></choice>
@@ -318,6 +319,7 @@
       <choices>
           <choice name="Move"></choice>
           <choice name="ActivateRaiseAndMove" value="Activate, raise and move"></choice>
+          <choice name="ActivateRaiseAndResize" value="Activate, raise and resize"></choice>
           <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
           <choice name="Resize"></choice>
           <choice name="Raise"></choice>
@@ -335,6 +337,7 @@
       <choices>
           <choice name="Move"></choice>
           <choice name="ActivateRaiseAndMove" value="Activate, raise and move"></choice>
+          <choice name="ActivateRaiseAndResize" value="Activate, raise and resize"></choice>
           <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
           <choice name="Resize"></choice>
           <choice name="Raise"></choice>

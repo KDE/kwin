@@ -469,6 +469,8 @@ public:
         MouseActivateRaiseAndUnrestrictedMove,
         MouseResize,
         MouseUnrestrictedResize,
+        MouseActivateRaiseAndResize,
+        MouseActivateRaiseAndUnrestrictedResize,
         MouseMaximize,
         MouseRestore,
         MouseMinimize,

@@ -836,6 +836,9 @@ Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted
     if (lowerName == QLatin1StringView("activate, raise and move")) {
         return restricted ? MouseActivateRaiseAndMove : MouseActivateRaiseAndUnrestrictedMove;
     }
+    if (lowerName == QLatin1StringView("activate, raise and resize")) {
+        return restricted ? MouseActivateRaiseAndResize : MouseActivateRaiseAndUnrestrictedResize;
+    }
     if (lowerName == QLatin1StringView("move")) {
         return restricted ? MouseMove : MouseUnrestrictedMove;
     }
