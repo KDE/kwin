@@ -97,7 +97,7 @@
         "Description[tr]": "Tüm pencereleri simge durumuna küçültmek veya eski hallerine dönmeleri için bir kısayol ekler",
         "Description[uk]": "Додає скорочення мінімізації усіх вікон або скасування такої мінімізації для усіх вікон",
         "Description[vi]": "Thêm một phím tắt để thu nhỏ và khôi phục tất cả các cửa sổ",
-        "Description[zh_CN]": "添加最小化/恢复全部窗口的快捷方式",
+        "Description[zh_CN]": "添加最小化/恢复全部窗口的快捷键",
         "Description[zh_TW]": "新增捷徑來最小化或回復所有視窗",
         "Icon": "preferences-system-windows-script-test",
         "Id": "minimizeall",
