@@ -333,7 +333,7 @@
     </entry>
 
     <entry key="CommandAll3" type="Enum">
-      <default>Resize</default>
+      <default>ActivateRaiseAndResize</default>
       <choices>
           <choice name="Move"></choice>
           <choice name="ActivateRaiseAndMove" value="Activate, raise and move"></choice>

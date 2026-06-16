@@ -52,7 +52,7 @@
             <default>Toggle raise and lower</default>
         </entry>
         <entry name="CommandAll3" type="String">
-            <default>Resize</default>
+            <default>Activate, raise and resize</default>
         </entry>
         <entry name="DoubleClickBorderToMaximize" type="Bool">
             <default>true</default>
