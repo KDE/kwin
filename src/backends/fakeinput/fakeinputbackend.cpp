@@ -307,10 +307,32 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *
         xkb_mod_mask_t formerLocked = xkb_state_serialize_mods(state, XKB_STATE_MODS_LOCKED);
         xkb_layout_index_t formerLayout = xkb_state_serialize_layout(state, XKB_STATE_LAYOUT_EFFECTIVE);
 
-        input()->keyboard()->xkb()->updateModifiers(keyCode->modifiers, 0, 0, 0);
-        sendKey(device, keyCode->keyCode, nativeState);
 
-        input()->keyboard()->xkb()->updateModifiers(formerDepressed, formerLatched, formerLocked, formerLayout);
+        // if the keysym is "F" we need to temporarily depress shift before the F key and most importantly unset it after
+        // however we still want modifiers like pressing control and alt to still work.
+
+        // In addition if a modifier key is received we want that modifier state to persist until released, so don't set/unset modifiers when forwarding
+        static const QSet<xkb_keysym_t> modifierKeySyms = {
+            XKB_KEY_Shift_L,
+            XKB_KEY_Shift_R,
+            XKB_KEY_Control_L,
+            XKB_KEY_Control_R,
+            XKB_KEY_Alt_L,
+            XKB_KEY_Alt_R,
+            XKB_KEY_Meta_L,
+            XKB_KEY_Meta_R,
+            XKB_KEY_Super_L,
+            XKB_KEY_Super_R,
+        };
+
+        const bool isModifier = modifierKeySyms.contains(keySym);
+        if (isModifier) {
+            sendKey(device, keyCode->keyCode, nativeState);
+        } else {
+            input()->keyboard()->xkb()->updateModifiers(formerDepressed | keyCode->modifiers, formerLatched, formerLocked, formerLayout);
+            sendKey(device, keyCode->keyCode, nativeState);
+            input()->keyboard()->xkb()->updateModifiers(formerDepressed, formerLatched, formerLocked, formerLayout);
+        }
         return;
     }
 
