@@ -332,7 +332,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithEGL(GraphicsBuf
 
     m_copyContext->pushFramebuffer(m_currentEglSlot->framebuffer());
     // TODO when possible, use a blit instead of a shader for better performance?
-    ShaderBinder binder(ShaderTrait::MapTexture);
+    ShaderBinder binder(sourceTex->target() == GL_TEXTURE_EXTERNAL_OES ? ShaderTrait::MapExternalTexture : ShaderTrait::MapTexture);
     QMatrix4x4 proj;
     proj.scale(1, -1);
     proj.ortho(QRectF(QPointF(), buffer->size()));
