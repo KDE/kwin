@@ -1913,12 +1913,12 @@ void X11Window::sendSyncRequest()
 
 bool X11Window::wantsInput() const
 {
-    return rules()->checkAcceptFocus(acceptsFocus() || info->supportsProtocol(NET::TakeFocusProtocol));
+    return rules()->checkAcceptFocus(acceptsFocus() || info->supportsProtocol(NET::TakeFocusProtocol)) && isClient();
 }
 
 bool X11Window::acceptsFocus() const
 {
-    return info->input();
+    return info->input() && isClient();
 }
 
 void X11Window::doSetQuickTileMode()
