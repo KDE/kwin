@@ -53,7 +53,7 @@ XwaylandLauncher::~XwaylandLauncher()
 {
 }
 
-void XwaylandLauncher::setListenFDs(const QList<int> &listenFds)
+void XwaylandLauncher::setListenFds(const QList<int> &listenFds)
 {
     m_listenFds = listenFds;
 }

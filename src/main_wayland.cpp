@@ -159,7 +159,7 @@ void ApplicationWayland::performStartup()
 #if KWIN_BUILD_X11
     if (m_startXWayland) {
         m_xwayland = std::make_unique<Xwl::Xwayland>(this);
-        m_xwayland->xwaylandLauncher()->setListenFDs(m_xwaylandListenFds);
+        m_xwayland->xwaylandLauncher()->setListenFds(m_xwaylandListenFds);
         m_xwayland->xwaylandLauncher()->setDisplayName(m_xwaylandDisplay);
         m_xwayland->xwaylandLauncher()->setInitFd(m_xwaylandInitFd);
         m_xwayland->xwaylandLauncher()->setInitDisplayName(m_xwaylandInitDisplay);

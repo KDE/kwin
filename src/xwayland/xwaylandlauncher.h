@@ -46,7 +46,7 @@ public:
      * That external process is responsible for setting up the DISPLAY env with a valid value.
      * Ownership of the file descriptor is not transferrred.
      */
-    void setListenFDs(const QList<int> &listenFds);
+    void setListenFds(const QList<int> &listenFds);
 
     /**
      * Sets the display name used by XWayland (i.e ':0')
