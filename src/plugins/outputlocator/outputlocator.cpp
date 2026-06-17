@@ -67,9 +67,19 @@ void OutputLocatorEffect::show()
     }
 
     const auto screens = effects->screens();
+
+    // Sort screens in the same order as KScreen does
+    QList<LogicalOutput *> sortedScreens = screens;
+    std::sort(sortedScreens.begin(), sortedScreens.end(), [](LogicalOutput *a, LogicalOutput *b) {
+        return QString::compare(a->name(), b->name(), Qt::CaseInsensitive) < 0;
+    });
+
     for (const auto screen : screens) {
+        const int index = sortedScreens.indexOf(screen);
+        const QString number = (index >= 0) ? QString::number(index + 1) : QString();
+
         auto scene = new OffscreenQuickScene();
-        scene->loadFromModule(QStringLiteral("org.kde.kwin.outputlocator"), QStringLiteral("OutputLabel"), {{QStringLiteral("outputName"), outputName(screen)}, {QStringLiteral("resolution"), screen->pixelSize()}, {QStringLiteral("scale"), screen->scale()}});
+        scene->loadFromModule(QStringLiteral("org.kde.kwin.outputlocator"), QStringLiteral("OutputLabel"), {{QStringLiteral("outputName"), outputName(screen)}, {QStringLiteral("number"), number},{QStringLiteral("resolution"), screen->pixelSize()}, {QStringLiteral("scale"), screen->scale()}});
         RectF geometry(0, 0, scene->rootItem()->implicitWidth(), scene->rootItem()->implicitHeight());
         geometry.moveCenter(screen->geometry().center());
         scene->setGeometry(geometry.toRect());
