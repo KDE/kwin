@@ -145,6 +145,8 @@ void TestInputCapture::testInputCapture()
         return;
     }
 
+    QTest::failOnWarning(QRegularExpression("Libeis: 🪲  Bug"));
+
     Test::pointerMotion(mousePos, ++timestamp);
     Test::waylandSync();
     QCOMPARE(keyboard->focusedSurface(), surface.get());
@@ -371,6 +373,8 @@ void TestInputCapture::testModifierHandling()
     if (!capture.setupSuccessfully()) {
         return;
     }
+
+    QTest::failOnWarning(QRegularExpression("Libeis: 🪲  Bug"));
 
     auto ei = ei_new_receiver(nullptr);
     ei_setup_backend_fd(ei, capture.eifd);
