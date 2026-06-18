@@ -1659,15 +1659,19 @@ inline Window::Window(xcb_window_t window, bool destroy)
 }
 
 inline Window::Window(const Rect &geometry, uint32_t mask, const uint32_t *values, xcb_window_t parent)
-    : m_window(doCreate(geometry, XCB_COPY_FROM_PARENT, mask, values, parent))
+    : m_window(XCB_WINDOW_NONE)
     , m_destroy(true)
+    , m_geometry(geometry)
 {
+    m_window = doCreate(geometry, XCB_COPY_FROM_PARENT, mask, values, parent);
 }
 
 inline Window::Window(const Rect &geometry, uint16_t windowClass, uint32_t mask, const uint32_t *values, xcb_window_t parent)
-    : m_window(doCreate(geometry, windowClass, mask, values, parent))
+    : m_window(XCB_WINDOW_NONE)
     , m_destroy(true)
+    , m_geometry(geometry)
 {
+    m_window = doCreate(geometry, windowClass, mask, values, parent);
 }
 
 inline Window::~Window()
