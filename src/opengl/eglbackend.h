@@ -69,6 +69,7 @@ protected:
 
     RenderDevice *m_renderDevice = nullptr;
     std::shared_ptr<EglContext> m_context;
+    std::shared_ptr<EglContext> m_globalShareContext;
     QList<QByteArray> m_clientExtensions;
     QList<LinuxDmaBufV1Feedback::Tranche> m_tranches;
     QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> m_importedBuffers;

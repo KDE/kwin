@@ -30,8 +30,6 @@
 namespace KWin
 {
 
-static std::shared_ptr<EglContext> s_globalShareContext;
-
 EglBackend::EglBackend()
 {
 }
@@ -87,13 +85,10 @@ bool EglBackend::checkGraphicsReset()
 
 bool EglBackend::ensureGlobalShareContext()
 {
-    if (!s_globalShareContext) {
-        s_globalShareContext = EglContext::create(m_renderDevice->eglDisplay(), EGL_NO_CONFIG_KHR, nullptr);
-        connect(Compositor::self(), &Compositor::aboutToDestroy, qApp, []() {
-            s_globalShareContext.reset();
-        });
+    if (!m_globalShareContext) {
+        m_globalShareContext = EglContext::create(m_renderDevice->eglDisplay(), EGL_NO_CONFIG_KHR, nullptr);
     }
-    return s_globalShareContext != nullptr;
+    return m_globalShareContext != nullptr;
 }
 
 void EglBackend::cleanup()
@@ -227,7 +222,7 @@ bool EglBackend::createContext()
     if (!ensureGlobalShareContext()) {
         return false;
     }
-    m_context = m_renderDevice->eglContext(s_globalShareContext.get());
+    m_context = m_renderDevice->eglContext(m_globalShareContext.get());
     return m_context != nullptr;
 }
 
@@ -286,7 +281,7 @@ EglDisplay *EglBackend::eglDisplayObject() const
 
 EglContext *EglBackend::openglShareContext() const
 {
-    return s_globalShareContext.get();
+    return m_globalShareContext.get();
 }
 
 EglContext *EglBackend::openglContext() const
