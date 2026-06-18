@@ -298,6 +298,7 @@ void Compositor::stop()
     }
     m_state = State::Stopping;
     Q_EMIT aboutToToggleCompositing();
+    Q_EMIT aboutToStop();
 
     // Some effects might need access to effect windows when they are about to
     // be destroyed, for example to unreference deleted windows, so we have to

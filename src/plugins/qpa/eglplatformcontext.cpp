@@ -9,6 +9,7 @@
 */
 
 #include "eglplatformcontext.h"
+#include "compositor.h"
 #include "core/outputbackend.h"
 #include "eglhelpers.h"
 #include "internalwindow.h"
@@ -60,7 +61,7 @@ EGLPlatformContext::~EGLPlatformContext()
 
 bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
 {
-    if (!m_eglContext) {
+    if (!isValid()) {
         return false;
     }
     const bool ok = m_eglContext->makeCurrent();
@@ -201,6 +202,7 @@ void EGLPlatformContext::create(const QSurfaceFormat &format, EglContext *shareC
         return;
     }
     updateFormatFromContext();
+    connect(Compositor::self(), &Compositor::aboutToStop, this, &EGLPlatformContext::invalidateContext);
 }
 
 void EGLPlatformContext::updateFormatFromContext()
@@ -262,6 +264,12 @@ EGLDisplay EGLPlatformContext::display() const
 void EGLPlatformContext::invalidateContext()
 {
     m_markedInvalid = true;
+    if (m_eglContext) {
+        m_eglContext->makeCurrent();
+        m_renderTargets.clear();
+        m_zombieRenderTargets.clear();
+        m_eglContext.reset();
+    }
 }
 
 } // namespace QPA

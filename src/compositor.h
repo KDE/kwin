@@ -81,6 +81,7 @@ Q_SIGNALS:
     void compositingToggled(bool active);
     void aboutToDestroy();
     void aboutToToggleCompositing();
+    void aboutToStop();
 
 protected:
     explicit Compositor(QObject *parent = nullptr);

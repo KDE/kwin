@@ -113,7 +113,7 @@ private:
     QRectF paintedRect() const;
     void updateImplicitSize();
     void updateSource();
-    void resetSource();
+    void releaseOpenGlResources();
 
     QUuid m_wId;
     QPointer<Window> m_client;

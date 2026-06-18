@@ -222,10 +222,14 @@ WindowThumbnailItem::WindowThumbnailItem(QQuickItem *parent)
 {
     setFlag(ItemHasContents);
 
-    connect(Compositor::self(), &Compositor::aboutToToggleCompositing,
-            this, &WindowThumbnailItem::resetSource);
-    connect(Compositor::self(), &Compositor::compositingToggled,
-            this, &WindowThumbnailItem::updateSource);
+    // NOTE this can't use the normal GPU reset handling of Qt,
+    // since the source uses KWin's OpenGL context.
+    connect(Compositor::self(), &Compositor::aboutToStop, this, &WindowThumbnailItem::releaseOpenGlResources);
+    connect(Compositor::self(), &Compositor::compositingToggled, this, [this](bool active) {
+        if (active) {
+            updateSource();
+        }
+    });
 }
 
 WindowThumbnailItem::~WindowThumbnailItem()
@@ -253,6 +257,7 @@ void WindowThumbnailItem::invalidateSceneGraph()
 {
     delete m_provider;
     m_provider = nullptr;
+    m_source.reset();
 }
 
 void WindowThumbnailItem::itemChange(QQuickItem::ItemChange change, const QQuickItem::ItemChangeData &value)
@@ -279,9 +284,12 @@ QSGTextureProvider *WindowThumbnailItem::textureProvider() const
     return m_provider;
 }
 
-void WindowThumbnailItem::resetSource()
+void WindowThumbnailItem::releaseOpenGlResources()
 {
     m_source.reset();
+    if (m_provider) {
+        m_provider->setTexture(nullptr);
+    }
 }
 
 void WindowThumbnailItem::updateSource()
