@@ -16,6 +16,7 @@
 #include "input_event_spy.h"
 #include "keyboard_input.h"
 #include "keyboard_layout.h"
+#include "pointer_input.h"
 #include "workspace.h"
 #include "xkb.h"
 
@@ -196,9 +197,6 @@ QDBusObjectPath EisInputCaptureManager::addInputCapture(uint capabilities)
         input()->installInputEventSpy(m_barrierSpy.get());
     }
     auto &capture = m_inputCaptures.emplace_back(std::make_unique<EisInputCapture>(this, dbusService, eisCapabilities));
-    connect(capture.get(), &EisInputCapture::deactivated, this, [this] {
-        deactivate();
-    });
     return QDBusObjectPath(capture->dbusPath());
 }
 
@@ -214,12 +212,15 @@ void EisInputCaptureManager::barrierHit(KWin::EisInputCapture *capture, uint bar
     Cursors::self()->hideCursor();
 }
 
-void EisInputCaptureManager::deactivate()
+void EisInputCaptureManager::deactivate(const std::optional<QPointF> &releasePosition)
 {
     m_activeCapture = nullptr;
     m_inputFilter->clearTouches();
     m_inputFilter->setPendingModifierChange(false);
     input()->uninstallInputEventFilter(m_inputFilter.get());
+    if (releasePosition) {
+        input()->pointer()->warp(*releasePosition);
+    }
     Cursors::self()->showCursor();
 }
 

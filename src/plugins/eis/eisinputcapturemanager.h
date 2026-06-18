@@ -12,6 +12,7 @@
 #include <QDBusObjectPath>
 #include <QDBusUnixFileDescriptor>
 #include <QObject>
+#include <QPointF>
 
 #include <memory>
 
@@ -50,7 +51,7 @@ public:
 
     void barrierHit(EisInputCapture *capture, uint barrier, const QPointF &position);
     EisInputCapture *activeCapture();
-    void deactivate();
+    void deactivate(const std::optional<QPointF> &releasePosition = std::nullopt);
 
 private:
     RamFile m_keymapFile;
