@@ -175,7 +175,7 @@ void AtlasOpenGL::upload(uint spriteId, const QImage &image, const Rect &damage)
             QPainter painter(&padded);
             painter.setCompositionMode(QPainter::CompositionMode_Source);
             painter.setClipRect(inner);
-            painter.translate(padding.left(), padding.right());
+            painter.translate(padding.left(), padding.top());
             painter.translate(-damage.topLeft());
             painter.drawImage(image.rect(), image);
             painter.end();
