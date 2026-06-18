@@ -66,6 +66,13 @@ public:
         QVERIFY2(enableReply.isValid(), QTest::toString(enableReply.error()));
     }
 
+    ~InputCapture()
+    {
+        auto msg = QDBusMessage::createMethodCall(QDBusConnection::sessionBus().baseService(), kwinInputCapturePath, kwinInputCaptureManagerInterface, QStringLiteral("removeInputCapture"));
+        msg << QDBusObjectPath(dbusPath);
+        QDBusConnection::sessionBus().call(msg);
+    }
+
     bool setupSuccessfully() const
     {
         return eifd != 1 && !dbusPath.isEmpty();
