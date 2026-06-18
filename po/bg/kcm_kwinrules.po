@@ -1027,6 +1027,3 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "х"
-
-#~ msgid "Hide from Screencast"
-#~ msgstr "Скриване от предаване на екрана"

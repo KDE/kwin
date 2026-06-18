@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-12 00:45+0000\n"
+"POT-Creation-Date: 2026-06-18 00:45+0000\n"
 "PO-Revision-Date: 2026-03-20 21:54+0100\n"
 "Last-Translator: Rasmus Rosendahl-Kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -1613,12 +1613,12 @@ msgstr "Xaver Hugl"
 msgid "Disable configuration options"
 msgstr "Deaktivér indstillingstilvalg"
 
-#: main_wayland.cpp:318
+#: main_wayland.cpp:319
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Start en rodløs Xwayland-server."
 
-#: main_wayland.cpp:321
+#: main_wayland.cpp:322
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1626,43 +1626,43 @@ msgstr ""
 "Navnet på den Wayland-sokkel der skal lyttes på. Hvis ikke angivet bruges "
 "\"wayland-0\"."
 
-#: main_wayland.cpp:325
+#: main_wayland.cpp:326
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "Den X11-visning der skal bruges i vinduestilstand på platform X11."
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:330
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "Den Wayland-visning der skal bruges i vinduestilstand på platform Wayland."
 
-#: main_wayland.cpp:331
+#: main_wayland.cpp:332
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Rendér til en virtuel framebuffer."
 
-#: main_wayland.cpp:333
+#: main_wayland.cpp:334
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Bredde for vinduestilstand. Standardbredde er 1024."
 
-#: main_wayland.cpp:337
+#: main_wayland.cpp:338
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Højde for vinduestilstand. Standardbredde er 768."
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:343
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
 msgstr ""
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:347
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Skala for vinduestilstand. Standardværdien er 1."
 
-#: main_wayland.cpp:351
+#: main_wayland.cpp:352
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1670,7 +1670,7 @@ msgstr ""
 "Antallet af vinduer der skal åbnes som output i vinduestilstand. "
 "Standardværdien er 1"
 
-#: main_wayland.cpp:356
+#: main_wayland.cpp:357
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1679,7 +1679,7 @@ msgstr ""
 "Wayland-socket, der skal bruges for indkommende forbindelser. Dette kan "
 "kombineres med -- socket for at navngive den"
 
-#: main_wayland.cpp:360
+#: main_wayland.cpp:361
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1688,64 +1688,80 @@ msgstr ""
 "XWayland-socket, der skal bruges for XWaylands indkommende forbindelser. "
 "Dette kan sættes flere gange"
 
-#: main_wayland.cpp:364
+#: main_wayland.cpp:365
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Navnet på xwayland-skærmen der er blevet forudindstillet"
 
-#: main_wayland.cpp:368
+#: main_wayland.cpp:369
+#, fuzzy, kde-format
+#| msgid ""
+#| "XWayland socket to use for Xwayland's incoming connections. This can be "
+#| "set multiple times"
+msgid "XWayland socket to use for Xwayland's init connections"
+msgstr ""
+"XWayland-socket, der skal bruges for XWaylands indkommende forbindelser. "
+"Dette kan sættes flere gange"
+
+#: main_wayland.cpp:373
+#, fuzzy, kde-format
+#| msgid "Name of the xwayland display that has been pre-set up"
+msgid "Name of the xwayland init display that has been pre-set up"
+msgstr "Navnet på xwayland-skærmen der er blevet forudindstillet"
+
+#: main_wayland.cpp:377
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Navnet på xauthority-filen "
 
-#: main_wayland.cpp:372
+#: main_wayland.cpp:381
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr "Afslutter denne instans så den kan genstartes af kwin_wayland_wrapper."
 
-#: main_wayland.cpp:374
+#: main_wayland.cpp:383
 #, kde-format
 msgid "Render through drm node."
 msgstr "Render igennem drm-knude."
 
-#: main_wayland.cpp:375
+#: main_wayland.cpp:384
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 "Uddrag lokalitetsinformation fra locale1 i stedet for brugerens konfiguration"
 
-#: main_wayland.cpp:402
+#: main_wayland.cpp:413
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Inputmetode som KWin starter."
 
-#: main_wayland.cpp:408
+#: main_wayland.cpp:419
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Starter sessionen i låst tilstand."
 
-#: main_wayland.cpp:412
+#: main_wayland.cpp:423
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Starter sessionen uden understøttelse af låseskærm."
 
-#: main_wayland.cpp:417
+#: main_wayland.cpp:428
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Starter sessionen uden understøttelse af globale genveje."
 
-#: main_wayland.cpp:422
+#: main_wayland.cpp:433
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Deaktivér integration med KActivities."
 
-#: main_wayland.cpp:427
+#: main_wayland.cpp:438
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Afslut efter sessionsprogrammet, som startes af KWin, lukkes."
 
-#: main_wayland.cpp:432
+#: main_wayland.cpp:443
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
@@ -4417,7 +4433,7 @@ msgstr "Driveren afviste outputkonfigurationen"
 msgid "The session is not active"
 msgstr "Alt-tasten er nu aktiv."
 
-#: window.cpp:3100
+#: window.cpp:3108
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4471,7 +4487,7 @@ msgstr ""
 "såsom https://paste.kde.org i stedet for at indsætte den i direkte i support-"
 "tråde.\n"
 
-#: xwayland/xwaylandlauncher.cpp:287
+#: xwayland/xwaylandlauncher.cpp:323
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland har brudt ned"

@@ -212,11 +212,3 @@ msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
 msgstr ""
 "Забраняване на „%1“ да контролира показалеца и клавиатурата без запитване"
-
-#~ msgctxt "@info"
-#~ msgid "Changes will take effect the next time you log in."
-#~ msgstr "Промените ви ще влязат в сила при следващото влизане в системата."
-
-#~ msgctxt "@action:button"
-#~ msgid "Log Out Now"
-#~ msgstr "Излизане от сесия сега"

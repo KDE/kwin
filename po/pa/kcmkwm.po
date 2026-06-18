@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-12 00:46+0000\n"
+"POT-Creation-Date: 2026-06-18 00:45+0000\n"
 "PO-Revision-Date: 2013-06-23 13:10-0500\n"
 "Last-Translator: A S Alam <aalam@users.sf.net>\n"
 "Language-Team: Punjabi/Panjabi <punjabi-users@lists.sf.net>\n"
@@ -229,7 +229,7 @@ msgstr "ਝਰੋਖੇ ਦੇ ਸਿਰਲੇਖ ਜਾਂ ਫਰੇਮ ਨੂ�
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:276 actions.ui:351 actions.ui:426
+#: actions.ui:276 actions.ui:356 actions.ui:436
 #, kde-format
 msgid "Move"
 msgstr "ਭੇਜੋ"
@@ -237,10 +237,19 @@ msgstr "ਭੇਜੋ"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:281 actions.ui:356 actions.ui:431
+#: actions.ui:281 actions.ui:361 actions.ui:441
 #, fuzzy, kde-format
 #| msgid "Activate, Raise & Move"
 msgid "Activate, raise and move"
+msgstr "ਸਰਗਰਮ, ਉਭਰਿਆ ਤੇ ਏਧਰ-ਓਧਰ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:286 actions.ui:366 actions.ui:446
+#, fuzzy, kde-format
+#| msgid "Activate, Raise & Move"
+msgid "Activate, raise and resize"
 msgstr "ਸਰਗਰਮ, ਉਭਰਿਆ ਤੇ ਏਧਰ-ਓਧਰ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -252,7 +261,7 @@ msgstr "ਸਰਗਰਮ, ਉਭਰਿਆ ਤੇ ਏਧਰ-ਓਧਰ"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:286 actions.ui:361 actions.ui:436 mouse.ui:242 mouse.ui:299
+#: actions.ui:291 actions.ui:371 actions.ui:451 mouse.ui:242 mouse.ui:299
 #: mouse.ui:347 mouse.ui:404 mouse.ui:452 mouse.ui:509
 #, fuzzy, kde-format
 #| msgid "Toggle Raise & Lower"
@@ -262,7 +271,7 @@ msgstr "ਉਭਾਰਿਆ ਹੇਠਾਂ ਤਬਦੀਲ ਕਰੋ"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:291 actions.ui:366 actions.ui:441
+#: actions.ui:296 actions.ui:376 actions.ui:456
 #, kde-format
 msgid "Resize"
 msgstr "ਮੁੜ-ਆਕਾਰ"
@@ -276,7 +285,7 @@ msgstr "ਮੁੜ-ਆਕਾਰ"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:296 actions.ui:371 actions.ui:446 mouse.ui:232 mouse.ui:289
+#: actions.ui:301 actions.ui:381 actions.ui:461 mouse.ui:232 mouse.ui:289
 #: mouse.ui:337 mouse.ui:394 mouse.ui:442 mouse.ui:499
 #, kde-format
 msgid "Raise"
@@ -293,7 +302,7 @@ msgstr "ਉਭਾਰੋ"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:301 actions.ui:376 actions.ui:451 mouse.ui:63 mouse.ui:237
+#: actions.ui:306 actions.ui:386 actions.ui:466 mouse.ui:63 mouse.ui:237
 #: mouse.ui:294 mouse.ui:342 mouse.ui:399 mouse.ui:447 mouse.ui:504
 #, kde-format
 msgid "Lower"
@@ -310,7 +319,7 @@ msgstr "ਹੇਠਾਂ"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:306 actions.ui:381 actions.ui:456 mouse.ui:58 mouse.ui:247
+#: actions.ui:311 actions.ui:391 actions.ui:471 mouse.ui:58 mouse.ui:247
 #: mouse.ui:304 mouse.ui:352 mouse.ui:409 mouse.ui:457 mouse.ui:514
 #, kde-format
 msgid "Minimize"
@@ -319,7 +328,7 @@ msgstr "ਨਿਊਨਤਮ"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:311 actions.ui:386 actions.ui:461
+#: actions.ui:316 actions.ui:396 actions.ui:476
 #, fuzzy, kde-format
 #| msgid "Decrease Opacity"
 msgid "Decrease opacity"
@@ -328,7 +337,7 @@ msgstr "ਧੁੰਧਲਤਾ ਘਟਾਓ"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:316 actions.ui:391 actions.ui:466
+#: actions.ui:321 actions.ui:401 actions.ui:481
 #, fuzzy, kde-format
 #| msgid "Increase Opacity"
 msgid "Increase opacity"
@@ -343,7 +352,7 @@ msgstr "ਧੁੰਧਲਤਾ ਵਧਾਓ"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:321 actions.ui:396 actions.ui:471 mouse.ui:257 mouse.ui:314
+#: actions.ui:326 actions.ui:406 actions.ui:486 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
 #, fuzzy, kde-format
 #| msgid "&Placement:"
@@ -364,7 +373,7 @@ msgstr "ਸਥਿਤ(&P):"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:326 actions.ui:401 actions.ui:476 actions.ui:526 advanced.ui:108
+#: actions.ui:331 actions.ui:411 actions.ui:491 actions.ui:541 advanced.ui:108
 #: mouse.ui:78 mouse.ui:125 mouse.ui:262 mouse.ui:319 mouse.ui:367 mouse.ui:424
 #: mouse.ui:472 mouse.ui:529
 #, fuzzy, kde-format
@@ -373,14 +382,14 @@ msgid "Do nothing"
 msgstr "ਕੁਝ ਨਹੀਂ"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:334
+#: actions.ui:339
 #, fuzzy, kde-format
 #| msgid "Middle b&utton:"
 msgid "Middle &click:"
 msgstr "ਮੱਧ ਬਟਨ(&u):"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
-#: actions.ui:347
+#: actions.ui:352
 #, fuzzy, kde-format
 #| msgid ""
 #| "Here you can customize mouse click behavior when clicking on the titlebar "
@@ -392,13 +401,13 @@ msgstr "ਝਰੋਖੇ ਦੇ ਸਿਰਲੇਖ ਜਾਂ ਫਰੇਮ ਨੂ�
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:409 mouse.ui:647
+#: actions.ui:419 mouse.ui:647
 #, kde-format
 msgid "Right clic&k:"
 msgstr ""
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:422
+#: actions.ui:432
 #, fuzzy, kde-format
 #| msgid ""
 #| "Here you can customize mouse click behavior when clicking on the titlebar "
@@ -409,14 +418,14 @@ msgid ""
 msgstr "ਝਰੋਖੇ ਦੇ ਸਿਰਲੇਖ ਜਾਂ ਫਰੇਮ ਨੂੰ ਦਬਾਉਣ ਨਾਲ ਤੁਸੀਂ ਮਾਉਸ ਦੇ ਰਵੱਈਆ ਨੂੰ ਸੋਧ ਸਕਦੇ ਹੋ।"
 
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:484
+#: actions.ui:499
 #, fuzzy, kde-format
 #| msgid "M&ouse wheel:"
 msgid "Mo&use wheel:"
 msgstr "ਮਾਊਸ ਪਹੀਆ(&o):"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
-#: actions.ui:497
+#: actions.ui:512
 #, fuzzy, kde-format
 #| msgid ""
 #| "Here you can customize mouse click behavior when clicking on the titlebar "
@@ -428,7 +437,7 @@ msgstr "ਝਰੋਖੇ ਦੇ ਸਿਰਲੇਖ ਜਾਂ ਫਰੇਮ ਨੂ�
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:501 mouse.ui:100
+#: actions.ui:516 mouse.ui:100
 #, fuzzy, kde-format
 #| msgid "Raise/Lower"
 msgid "Raise/lower"
@@ -436,7 +445,7 @@ msgstr "ਉਭਾਰੋ/ਹੇਠਾਂ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:506 mouse.ui:105
+#: actions.ui:521 mouse.ui:105
 #, fuzzy, kde-format
 #| msgid "Maximize/Restore"
 msgid "Maximize/restore"
@@ -444,7 +453,7 @@ msgstr "ਅਧਿਕਤਮ/ਮੁੜ-ਪ੍ਰਾਪਤ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:511 mouse.ui:110
+#: actions.ui:526 mouse.ui:110
 #, fuzzy, kde-format
 #| msgid "Keep Above/Below"
 msgid "Keep above/below"
@@ -452,7 +461,7 @@ msgstr "ਉੱਪਰ ਰੱਖੋ/ਹੇਠਾਂ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:516 mouse.ui:115
+#: actions.ui:531 mouse.ui:115
 #, fuzzy, kde-format
 #| msgid "Move to Previous/Next Desktop"
 msgid "Move to previous/next desktop"
@@ -460,7 +469,7 @@ msgstr "ਅਗਲੇ/ਪਿਛਲੇ ਵੇਹੜੇ 'ਚ ਜਾਓ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:521 mouse.ui:120
+#: actions.ui:536 mouse.ui:120
 #, fuzzy, kde-format
 #| msgid "Change Opacity"
 msgid "Change opacity"

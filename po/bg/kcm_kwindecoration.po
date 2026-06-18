@@ -299,6 +299,3 @@ msgstr "Много огромни рамки на прозорци"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Извънгабаритни  рамки на прозорци"
-
-#~ msgid "Hide from screencast"
-#~ msgstr "Скриване при предаване на екрана"
