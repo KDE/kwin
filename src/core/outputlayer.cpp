@@ -108,6 +108,11 @@ bool OutputLayer::needsRepaint() const
     return m_repaintScheduled || !m_repaints.isEmpty();
 }
 
+bool OutputLayer::earlyScanoutChecks()
+{
+    return false;
+}
+
 bool OutputLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
 {
     return false;
