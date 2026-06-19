@@ -81,6 +81,8 @@ bool EglGbmLayer::preparePresentationTest()
     return m_surface.renderTestBuffer(targetRect().size(), supportedDrmFormats(), drmOutput()->nextState().colorPowerTradeoff, m_requiredAlphaBits) != nullptr;
 }
 
+static const auto s_allowHardwareRotation = environmentVariableBoolValue("KWIN_ENABLE_HW_ROTATION");
+
 bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
 {
     static const bool directScanoutDisabled = environmentVariableBoolValue("KWIN_DRM_NO_DIRECT_SCANOUT").value_or(false);
@@ -118,8 +120,15 @@ bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_
     if (sourceRect() != sourceRect().toRect()) {
         return false;
     }
-    if (offloadTransform() != OutputTransform::Kind::Normal && (!m_plane || !m_plane->supportsTransformation(offloadTransform()))) {
-        return false;
+    if (offloadTransform() != OutputTransform::Kind::Normal) {
+        // hardware rotation is broken on AMD GPUs that don't support modifiers,
+        // see https://gitlab.freedesktop.org/drm/amd/-/work_items/5403
+        if (!s_allowHardwareRotation.value_or(!gpu()->drmDevice()->isAmdgpu() || gpu()->addFB2ModifiersSupported())) {
+            return false;
+        }
+        if (!m_plane || !m_plane->supportsTransformation(offloadTransform())) {
+            return false;
+        }
     }
     m_scanoutBuffer = gpu()->importBuffer(buffer, FileDescriptor{});
     if (m_scanoutBuffer) {
