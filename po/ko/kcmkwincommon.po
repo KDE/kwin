@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-27 00:47+0000\n"
+"POT-Creation-Date: 2026-06-19 00:45+0000\n"
 "PO-Revision-Date: 2026-04-26 21:25+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -99,7 +99,7 @@ msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1이(가) 없음"
 
-#: genericscriptedconfig.cpp:116
+#: genericscriptedconfig.cpp:111 genericscriptedconfig.cpp:121
 #, kde-format
 msgid "Error loading widget from %1: %2"
 msgstr "%1에서 위젯 불러오기 오류: %2"

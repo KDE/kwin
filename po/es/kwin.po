@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-18 00:45+0000\n"
-"PO-Revision-Date: 2026-05-20 20:00+0100\n"
+"POT-Creation-Date: 2026-06-19 00:45+0000\n"
+"PO-Revision-Date: 2026-06-18 17:05+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "First-Translator: Boris Wesslowski <Boris@Wesslowski.com>\n"
-"X-Generator: Lokalize 26.04.1\n"
+"X-Generator: Lokalize 26.04.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -1603,13 +1603,13 @@ msgstr ""
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr ""
-"La pantalla de X11 a usar en el modo de ventanas sobre la plataforma X11."
+"La pantalla de X11 que se usará en el modo de ventanas en la plataforma X11."
 
 #: main_wayland.cpp:330
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
-"La pantalla de Wayland a usar en el modo de ventanas sobre la plataforma "
+"La pantalla de Wayland que se usará en el modo de ventanas en la plataforma "
 "Wayland."
 
 #: main_wayland.cpp:332
@@ -1651,8 +1651,8 @@ msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
-"Conector de Wayland a usar para las conexiones entrantes. Se puede combinar "
-"con «--socket» para darle un nombre al «socket»."
+"Conector de Wayland que se usará para las conexiones entrantes. Se puede "
+"combinar con «--socket» para darle un nombre al conector."
 
 #: main_wayland.cpp:361
 #, kde-format
@@ -1660,29 +1660,25 @@ msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
-"«Socket» de XWayland a usar para las conexiones entrantes de XWayland. Se "
-"puede definir varias veces."
+"Conector de XWayland que se usará para las conexiones entrantes de XWayland. "
+"Se puede definir varias veces."
 
 #: main_wayland.cpp:365
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
-msgstr "Nombre de la pantalla de XWayland que ha sido preconfigurada"
+msgstr "Nombre de la pantalla de XWayland que se ha preconfigurado"
 
 #: main_wayland.cpp:369
-#, fuzzy, kde-format
-#| msgid ""
-#| "XWayland socket to use for Xwayland's incoming connections. This can be "
-#| "set multiple times"
+#, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
 msgstr ""
-"«Socket» de XWayland a usar para las conexiones entrantes de XWayland. Se "
-"puede definir varias veces."
+"Conector de XWayland que se usará para las conexiones de inicialización de "
+"Xwayland"
 
 #: main_wayland.cpp:373
-#, fuzzy, kde-format
-#| msgid "Name of the xwayland display that has been pre-set up"
+#, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
-msgstr "Nombre de la pantalla de XWayland que ha sido preconfigurada"
+msgstr "Nombre de la pantalla de inicio de XWayland que se ha preconfigurado"
 
 #: main_wayland.cpp:377
 #, kde-format
@@ -2652,7 +2648,7 @@ msgstr "Se necesita composición OpenGL para hacer una grabación de la pantalla
 msgid "Failed to create PipeWire stream"
 msgstr "No se ha podido crear la emisión de PipeWire"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:425
+#: plugins/screenshot/screenshotdbusinterface2.cpp:388
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2662,7 +2658,7 @@ msgstr ""
 "«Intro».\n"
 "Pulse «Esc» o haga un clic derecho para cancelar."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:443
+#: plugins/screenshot/screenshotdbusinterface2.cpp:406
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -4404,7 +4400,7 @@ msgstr "El controlador ha rechazado la configuración de salida"
 msgid "The session is not active"
 msgstr "La sesión no está activa"
 
-#: window.cpp:3108
+#: window.cpp:3107
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4462,6 +4458,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ha fallado"
-
-#~ msgid "Indicate that KWin has recently crashed n times"
-#~ msgstr "Indica que KWin ha terminado inesperadamente n veces recientemente"

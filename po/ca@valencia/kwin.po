@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-18 00:45+0000\n"
+"POT-Creation-Date: 2026-06-19 00:45+0000\n"
 "PO-Revision-Date: 2026-05-20 09:34+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -2649,7 +2649,7 @@ msgstr "Es requerix la composició OpenGL per als vídeos de captura de pantalla
 msgid "Failed to create PipeWire stream"
 msgstr "Ha fallat mentre es creava el flux de PipeWire"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:425
+#: plugins/screenshot/screenshotdbusinterface2.cpp:388
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2659,7 +2659,7 @@ msgstr ""
 "retorn.\n"
 "La tecla d'escapada o clic dret per a cancel·lar."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:443
+#: plugins/screenshot/screenshotdbusinterface2.cpp:406
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -4401,7 +4401,7 @@ msgstr "El controlador ha rebutjat la configuració de l'eixida"
 msgid "The session is not active"
 msgstr "La sessió no està activa"
 
-#: window.cpp:3108
+#: window.cpp:3107
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

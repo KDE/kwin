@@ -1,24 +1,24 @@
 # Spanish translations for kcmkwm.po package.
-# Copyright (C) 2001-2025 This file is copyright:
+# Copyright (C) 2001-2026 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
 # SPDX-FileCopyrightText: 2001-2003 Pablo de Vicente <vicente@oan.es>
-# SPDX-FileCopyrightText: 2003, 2007, 2008 Jaime Robles <jaime@kde.org>
-# SPDX-FileCopyrightText: 2003, 2004 Miguel Revilla Rodríguez <yo@miguelrevilla.com>
+# SPDX-FileCopyrightText: 2003, 2007-2008 Jaime Robles <jaime@kde.org>
+# SPDX-FileCopyrightText: 2003-2004 Miguel Revilla Rodríguez <yo@miguelrevilla.com>
 # SPDX-FileCopyrightText: 2004 Pablo de Vicente <p.devicente@wanadoo.es>
 # SPDX-FileCopyrightText: 2005 Juan Manuel Garcia Molina <juanma@superiodico.net>
-# SPDX-FileCopyrightText: 2005, 2006, 2009, 2010, 2012, 2013, 2015, 2019, 2020, 2021, 2022, 2024, 2025 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2005-2006, 2009-2010, 2012-2013, 2015, 2019-2022, 2024-2026 Eloy Cuadra <ecuadra@eloihr.net>
 # SPDX-FileCopyrightText: 2006 Pablo de Vicente <pablo.devicente@gmail.com>
 # SPDX-FileCopyrightText: 2007 Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>
 # SPDX-FileCopyrightText: 2010 Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>
-# SPDX-FileCopyrightText: 2011, 2012 Javier Vinal <fjvinal@gmail.com>
+# SPDX-FileCopyrightText: 2011-2012 Javier Vinal <fjvinal@gmail.com>
 # SPDX-FileCopyrightText: 2013 Rocío Gallego <traducciones@rociogallego.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-18 00:45+0000\n"
-"PO-Revision-Date: 2025-08-02 11:42+0100\n"
+"PO-Revision-Date: 2026-06-18 16:59+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "First-Translator: Boris Wesslowski <Boris@Wesslowski.com>\n"
-"X-Generator: Lokalize 25.04.3\n"
+"X-Generator: Lokalize 26.04.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
@@ -248,10 +248,9 @@ msgstr "Activar, pasar al frente y mover"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
 #: actions.ui:286 actions.ui:366 actions.ui:446
-#, fuzzy, kde-format
-#| msgid "Activate, raise and move"
+#, kde-format
 msgid "Activate, raise and resize"
-msgstr "Activar, pasar al frente y mover"
+msgstr "Activar, pasar al frente y cambiar tamaño"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)

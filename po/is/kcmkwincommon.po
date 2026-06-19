@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-27 00:47+0000\n"
+"POT-Creation-Date: 2026-06-19 00:45+0000\n"
 "PO-Revision-Date: 2026-03-16 12:38+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
@@ -99,7 +99,7 @@ msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 er ekki til"
 
-#: genericscriptedconfig.cpp:116
+#: genericscriptedconfig.cpp:111 genericscriptedconfig.cpp:121
 #, kde-format
 msgid "Error loading widget from %1: %2"
 msgstr "Villa við að hlaða inn viðmótshluta frá %1: %2"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-18 00:45+0000\n"
+"POT-Creation-Date: 2026-06-19 00:45+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1628,18 +1628,14 @@ msgid "Name of the xwayland display that has been pre-set up"
 msgstr "预设置的 xwayland 显示器名称"
 
 #: main_wayland.cpp:369
-#, fuzzy, kde-format
-#| msgid ""
-#| "XWayland socket to use for Xwayland's incoming connections. This can be "
-#| "set multiple times"
+#, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
-msgstr "用于 Xwayland 传入连接的 XWayland 套接字。此套接字可被多次设置"
+msgstr ""
 
 #: main_wayland.cpp:373
-#, fuzzy, kde-format
-#| msgid "Name of the xwayland display that has been pre-set up"
+#, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
-msgstr "预设置的 xwayland 显示器名称"
+msgstr ""
 
 #: main_wayland.cpp:377
 #, kde-format
@@ -2596,7 +2592,7 @@ msgstr "OpenGL 显示特效合成是屏幕录像所必须的"
 msgid "Failed to create PipeWire stream"
 msgstr "创建 PipeWire 流失败"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:425
+#: plugins/screenshot/screenshotdbusinterface2.cpp:388
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2605,7 +2601,7 @@ msgstr ""
 "选取要截图的窗口，点击左键或按回车键截图。\n"
 "按 Esc 键或者点击右键取消。"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:443
+#: plugins/screenshot/screenshotdbusinterface2.cpp:406
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -4329,7 +4325,7 @@ msgstr "驱动程序拒绝了输出配置"
 msgid "The session is not active"
 msgstr "会话不在活动状态"
 
-#: window.cpp:3108
+#: window.cpp:3107
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

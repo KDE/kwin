@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-18 00:45+0000\n"
+"POT-Creation-Date: 2026-06-19 00:45+0000\n"
 "PO-Revision-Date: 2026-02-11 00:16+0000\n"
 "Last-Translator: César A. P. Cláudio <cesarapclaudio@gmail.com>\n"
 "Language-Team: pt\n"
@@ -2676,7 +2676,7 @@ msgstr "Composição OpenGL é necessária para a gravação de ecrã"
 msgid "Failed to create PipeWire stream"
 msgstr "Falha ao criar o fluxo do PipeWire"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:425
+#: plugins/screenshot/screenshotdbusinterface2.cpp:388
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2685,7 +2685,7 @@ msgstr ""
 "Selecione a janela para capturar com clique esquerdo ou Enter.\n"
 "Prima Escape ou clique com o botão direito do rato para cancelar."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:443
+#: plugins/screenshot/screenshotdbusinterface2.cpp:406
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -4432,7 +4432,7 @@ msgstr "O controlador rejeitou a configuração do ecrã"
 msgid "The session is not active"
 msgstr "A tecla Alt está agora ativa."
 
-#: window.cpp:3108
+#: window.cpp:3107
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
