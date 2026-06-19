@@ -802,6 +802,13 @@ uint ScriptedEffect::addFragmentShader(ShaderTrait traits, const QString &fragme
         if (fragment.isEmpty()) {
             fragment = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1StringView("kwin/effects/") + m_effectName + QLatin1StringView("/contents/shaders/") + fragmentShaderFile);
         }
+        // Ensure backwards compatibility with older effects,
+        // which provide shaders for both "core" and legacy.
+        QString coreVersion = fragment;
+        coreVersion.replace(".frag", "_core.frag");
+        if (QFile::exists(coreVersion)) {
+            fragment = coreVersion;
+        }
     }
 
     auto shader = ShaderManager::instance()->generateShaderFromFile(static_cast<KWin::ShaderTraits>(int(traits)), {}, fragment);
