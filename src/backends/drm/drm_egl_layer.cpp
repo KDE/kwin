@@ -81,10 +81,11 @@ bool EglGbmLayer::preparePresentationTest()
     return m_surface.renderTestBuffer(targetRect().size(), supportedDrmFormats(), drmOutput()->nextState().colorPowerTradeoff, m_requiredAlphaBits) != nullptr;
 }
 
-bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
+static const bool s_directScanoutDisabled = environmentVariableBoolValue("KWIN_DRM_NO_DIRECT_SCANOUT").value_or(false);
+
+bool EglGbmLayer::earlyScanoutChecks()
 {
-    static const bool directScanoutDisabled = environmentVariableBoolValue("KWIN_DRM_NO_DIRECT_SCANOUT").value_or(false);
-    if (directScanoutDisabled) {
+    if (s_directScanoutDisabled) {
         return false;
     }
     if (m_type != OutputLayerType::Primary && drmOutput()->shouldDisableNonPrimaryPlanes()) {
@@ -100,15 +101,6 @@ bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_
         // it's likely not worth making this code more complicated to handle those edge cases
         return false;
     }
-    if (buffer->dmabufAttributes()->device != gpu()->drmDevice()->deviceId()
-        && (!gpu()->renderDevice() || buffer->dmabufAttributes()->device != gpu()->renderDevice()->drmDevice()->deviceId())) {
-        // Disallow direct scanout between GPUs, as
-        // - there are some significant driver bugs with direct scanout from other GPUs,
-        //   like https://gitlab.freedesktop.org/drm/amd/-/issues/2075
-        // - with implicit modifiers, direct scanout on secondary GPUs
-        //   is also very unlikely to yield the correct results.
-        return false;
-    }
     if (!m_colorPipeline.isIdentity() && drmOutput()->colorPowerTradeoff() == BackendOutput::ColorPowerTradeoff::PreferAccuracy) {
         return false;
     }
@@ -119,6 +111,20 @@ bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_
         return false;
     }
     if (offloadTransform() != OutputTransform::Kind::Normal && (!m_plane || !m_plane->supportsTransformation(offloadTransform()))) {
+        return false;
+    }
+    return true;
+}
+
+bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
+{
+    if (buffer->dmabufAttributes()->device != gpu()->drmDevice()->deviceId()
+        && (!gpu()->renderDevice() || buffer->dmabufAttributes()->device != gpu()->renderDevice()->drmDevice()->deviceId())) {
+        // Disallow direct scanout between GPUs, as
+        // - there are some significant driver bugs with direct scanout from other GPUs,
+        //   like https://gitlab.freedesktop.org/drm/amd/-/issues/2075
+        // - with implicit modifiers, direct scanout on secondary GPUs
+        //   is also very unlikely to yield the correct results.
         return false;
     }
     m_scanoutBuffer = gpu()->importBuffer(buffer, FileDescriptor{});

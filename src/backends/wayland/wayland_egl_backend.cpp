@@ -113,11 +113,13 @@ bool WaylandEglLayer::doEndFrame(const Region &renderedDeviceRegion, const Regio
     return true;
 }
 
+bool WaylandEglLayer::earlyScanoutChecks()
+{
+    return test();
+}
+
 bool WaylandEglLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
 {
-    if (!test()) {
-        return false;
-    }
     setBuffer(buffer, Region::infinite());
     return true;
 }

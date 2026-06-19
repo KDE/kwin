@@ -35,6 +35,7 @@ public:
     void releaseBuffers() override;
 
 private:
+    bool earlyScanoutChecks() override;
     bool importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame) override;
 
     EglGbmLayerSurface m_surface;

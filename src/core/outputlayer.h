@@ -99,9 +99,12 @@ public:
     bool endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame);
 
     /**
-     * Tries to import the newest buffer of the surface for direct scanout and does some early checks
-     * for whether or not direct scanout *could* be successful
-     * A presentation request on the output must however be used afterwards to find out if it's actually successful!
+     * Do checks if the current configuration of the layer could possibly work.
+     * This can include checking color operations, offload transforms and similar
+     */
+    virtual bool earlyScanoutChecks();
+    /**
+     * Attempts to import the buffer for direct scanout
      */
     virtual bool importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame);
 
