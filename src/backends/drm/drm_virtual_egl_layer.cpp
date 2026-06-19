@@ -15,6 +15,7 @@
 #include "opengl/eglswapchain.h"
 #include "opengl/glrendertimequery.h"
 #include "scene/surfaceitem_wayland.h"
+#include "utils/envvar.h"
 #include "wayland/surface.h"
 
 #include <drm_fourcc.h>
@@ -125,17 +126,13 @@ bool VirtualEglGbmLayer::doesGbmSwapchainFit(EglSwapchain *swapchain) const
     return swapchain && swapchain->size() == m_output->modeSize();
 }
 
+bool VirtualEglGbmLayer::earlyScanoutChecks()
+{
+    return true;
+}
+
 bool VirtualEglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
 {
-    static bool valid;
-    static const bool directScanoutDisabled = qEnvironmentVariableIntValue("KWIN_DRM_NO_DIRECT_SCANOUT", &valid) == 1 && valid;
-    if (directScanoutDisabled) {
-        return false;
-    }
-
-    if (sourceRect() != targetRect() || targetRect().topLeft() != QPointF(0, 0) || targetRect().size() != m_output->modeSize() || targetRect().size() != buffer->size() || offloadTransform() != OutputTransform::Kind::Normal) {
-        return false;
-    }
     m_scanoutBuffer = buffer;
     return true;
 }

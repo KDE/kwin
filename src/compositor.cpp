@@ -373,26 +373,26 @@ static bool prepareDirectScanout(RenderView *view, LogicalOutput *logicalOutput,
     if (!attrs) {
         return false;
     }
-    const bool tearing = frame->presentationMode() == PresentationMode::Async || frame->presentationMode() == PresentationMode::AdaptiveAsync;
-    const auto formats = tearing ? layer->supportedAsyncDrmFormats() : layer->supportedDrmFormats();
-    if (auto it = formats.find(attrs->format); it == formats.end() || !it->contains(attrs->modifier)) {
-        layer->setScanoutCandidate(candidate);
-        candidate->setScanoutHint(layer->scanoutDevice(), formats);
-        return false;
-    }
     layer->setTargetRect(mapItemToOutputDeviceCoordinates(candidate, view, logicalOutput, backendOutput));
     layer->setEnabled(true);
     layer->setSourceRect(candidate->bufferSourceBox());
     layer->setBufferTransform(candidate->bufferTransform());
     layer->setOffloadTransform(candidate->bufferTransform().combine(backendOutput->transform().inverted()));
     layer->setColor(candidate->colorDescription(), candidate->renderingIntent(), ColorPipeline::create(candidate->colorDescription(), backendOutput->layerBlendingColor(), candidate->renderingIntent()));
-    const bool ret = layer->importScanoutBuffer(candidate->buffer(), frame);
-    if (ret) {
-        candidate->resetDamage();
-        // ensure the pixmap is updated when direct scanout ends
-        candidate->destroyTexture();
+    if (!layer->earlyScanoutChecks()) {
+        return false;
     }
-    return ret;
+    const bool tearing = frame->presentationMode() == PresentationMode::Async || frame->presentationMode() == PresentationMode::AdaptiveAsync;
+    const auto formats = tearing ? layer->supportedAsyncDrmFormats() : layer->supportedDrmFormats();
+    if (!formats.containsFormat(attrs->format, attrs->modifier) || !layer->importScanoutBuffer(candidate->buffer(), frame)) {
+        layer->setScanoutCandidate(candidate);
+        candidate->setScanoutHint(layer->scanoutDevice(), formats);
+        return false;
+    }
+    candidate->resetDamage();
+    // ensure the pixmap is updated when direct scanout ends
+    candidate->destroyTexture();
+    return true;
 }
 
 static bool prepareRendering(RenderView *view, LogicalOutput *logicalOutput, BackendOutput *backendOutput, uint32_t requiredAlphaBits)
