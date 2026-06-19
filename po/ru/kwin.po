@@ -6,7 +6,7 @@
 # KDE3 - kwin.pot Russian translationю
 # Copyright (C) 2000 KDE Team.
 #
-# SPDX-FileCopyrightText: 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026 Alexander Yavorsky <kekcuha@gmail.com>
+# SPDX-FileCopyrightText: 2019-2026 Alexander Yavorsky <kekcuha@gmail.com>
 # SPDX-FileCopyrightText: 2018, 2024, 2025 Olesya Gerasimenko <gammaray@basealt.ru>
 # Alex Miller <asm@som.kiev.ua>, 2000.
 # Leonid Kanter <leon@asplinux.ru>, 2004, 2005.
@@ -24,14 +24,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-11 02:35+0000\n"
-"PO-Revision-Date: 2026-04-03 20:24+0200\n"
+"PO-Revision-Date: 2026-06-18 18:07+0200\n"
 "Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.12.3\n"
+"X-Generator: Lokalize 26.04.2\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
@@ -1845,24 +1845,18 @@ msgid "Disable Active Input Capture"
 msgstr "Отключить активный захват ввода"
 
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "Ctrl"
+msgstr "Удалённое управление"
 
 #: plugins/eis/eisprompter.cpp:52
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><application>%1</application> is not responding. Do you want to "
-#| "terminate this application?</para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "<application>%1</application> is asking to control input devices"
 msgstr ""
-"<para>Приложение <application>%1</application> не отвечает. Завершить работу "
-"этого приложения?</para>"
+"Приложение <application>%1</application> запрашивает управление устройствами "
+"ввода"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
@@ -1870,7 +1864,7 @@ msgctxt ""
 "@option:check, %1 is the application name. This option always allow apps "
 "claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "Всегда разрешать приложениям, выдающим себя за %1"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -1881,18 +1875,23 @@ msgid ""
 "revoke this permission later on <application>System Settings</application>’ "
 "“Legacy X11 App Support” page."
 msgstr ""
+"Подлинность устаревших приложений X11 невозможно проверить. Любое "
+"приложение, выдающее себя за <application>%1</application>, сможет управлять "
+"устройствами ввода. Это разрешение можно отозвать позже на странице "
+"«Поддержка устаревших приложений X11» в приложении <application>Параметры "
+"системы</application>."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
 msgctxt "@action:button Allow control of input devices"
 msgid "Allow"
-msgstr ""
+msgstr "Разрешить"
 
 #: plugins/eis/eisprompter.cpp:70
 #, kde-format
 msgctxt "@action:button Deny control of input devices"
 msgid "Deny"
-msgstr ""
+msgstr "Запретить"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -2559,10 +2558,9 @@ msgid "Add Virtual Desktop"
 msgstr "Добавить рабочий стол"
 
 #: plugins/overview/qml/DesktopBar.qml:262
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgid "Virtual Desktop limit reached"
-msgstr "Добавить рабочий стол"
+msgstr "Достигнут предел рабочих столов"
 
 #: plugins/overview/qml/Main.qml:427
 #, kde-format
@@ -3239,18 +3237,15 @@ msgstr "Тип соответствия строки метки окна"
 
 #. i18n: ectx: label, entry (hastransientparent), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
-#, fuzzy, kde-format
-#| msgctxt "@info:placeholder no entries in the task switcher"
-#| msgid "No open windows"
+#, kde-format
 msgid "Has parent window"
-msgstr "Не открыто ни одно окно"
+msgstr "Имеет родительское окно"
 
 #. i18n: ectx: label, entry (hastransientparentmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:82
-#, fuzzy, kde-format
-#| msgid "Set window type to"
+#, kde-format
 msgid "Has parent window match type"
-msgstr "Переключение типа окна"
+msgstr "Тип соответствия для свойства «Имеет родительское окно»"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:89
@@ -3704,17 +3699,15 @@ msgstr "Тип правила назначения разрыва"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:478
-#, fuzzy, kde-format
-#| msgid "Hide from screencast rule type"
+#, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr "Тип правила сокрытия из записи экрана"
+msgstr "Скрыть на снимках экрана и в записях экрана"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
-#, fuzzy, kde-format
-#| msgid "Hide from screencast rule type"
+#, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
-msgstr "Тип правила сокрытия из записи экрана"
+msgstr "Тип правила «Скрыть из снимков экрана и записей экрана»"
 
 # BUGME: should not be translatable --aspotashev
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
@@ -3849,7 +3842,7 @@ msgstr "С&крыть заголовок и границы окна"
 #: useractions.cpp:248
 #, kde-format
 msgid "&Hide from Screenshots and Screen Recordings"
-msgstr ""
+msgstr "&Скрыть из снимков экрана и записей экрана"
 
 #: useractions.cpp:256
 #, kde-format
@@ -4356,7 +4349,7 @@ msgstr "Переключиться на рабочий стол %1"
 #: wayland/outputmanagement_v2.cpp:569
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
-msgstr ""
+msgstr "Уровень abm превышает максимальное значение (4): %1"
 
 #: wayland/outputmanagement_v2.cpp:647
 #, kde-format
@@ -4420,25 +4413,25 @@ msgstr "(не отвечает)"
 #: workspace.cpp:1313
 #, kde-format
 msgid "Built-in Screen"
-msgstr ""
+msgstr "Встроенный экран"
 
 #: workspace.cpp:1326
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1336
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1339
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
-msgstr ""
+msgstr "%1, %2"
 
 # BUGME: please proofread this translation, it's full of worms --aspotashev
 #: workspace.cpp:1808
