@@ -39,7 +39,6 @@ public:
     ~VulkanDevice();
 
     std::shared_ptr<VulkanTexture> importBuffer(GraphicsBuffer *buffer, VkImageUsageFlags usage);
-    std::shared_ptr<VulkanTexture> importDmabuf(const DmaBufAttributes *attributes, VkImageUsageFlags usage);
 
     bool isSoftwareRenderer() const;
     vk::PhysicalDeviceType type() const;
@@ -99,6 +98,7 @@ private:
     void createCommandPool();
     FormatModifierMap queryFormats(VkImageUsageFlags flags) const;
     std::optional<uint32_t> findMemoryType(uint32_t typeBits, vk::MemoryPropertyFlags memoryPropertyFlags) const;
+    std::shared_ptr<VulkanTexture> importDmabuf(const DmaBufAttributes *attributes, VkImageUsageFlags usage);
 
     vk::PhysicalDeviceType m_type;
     vk::raii::PhysicalDevice m_physical;
