@@ -109,7 +109,7 @@ std::shared_ptr<VulkanSwapchainSlot> VulkanSwapchain::acquire()
         return nullptr;
     }
 
-    auto texture = m_device->importDmabuf(buffer->dmabufAttributes(), VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT);
+    auto texture = m_device->importBuffer(buffer, VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT);
     if (!texture) {
         return nullptr;
     }
@@ -148,7 +148,7 @@ std::unique_ptr<VulkanSwapchain> VulkanSwapchain::create(VulkanDevice *device, G
         qCWarning(KWIN_VULKAN) << "Failed to allocate a graphics buffer for a Vulkan swapchain";
         return nullptr;
     }
-    auto texture = device->importDmabuf(buffer->dmabufAttributes(), VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT);
+    auto texture = device->importBuffer(buffer, VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT);
     if (!texture) {
         return nullptr;
     }
