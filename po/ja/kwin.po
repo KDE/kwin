@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2026-03-31 10:49+0900\n"
+"PO-Revision-Date: 2026-06-14 16:22+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
 "Language: ja\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 26.04.1\n"
+"X-Generator: Lokalize 26.04.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1181,7 +1181,7 @@ msgstr "待機する"
 #: input.cpp:2014
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "次の入力にタブレットを移動"
 
 #: input.cpp:2093
 #, kde-format
@@ -2229,35 +2229,27 @@ msgstr "ウィンドウを巡回 (反対回り)"
 
 #: tabbox/tabbox.cpp:523
 msgid "Walk Through Windows Alternative"
-msgstr "ウィンドウを巡回の代替"
+msgstr "ウィンドウを巡回 / サブ"
 
 #: tabbox/tabbox.cpp:524
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr "ウィンドウを巡回 (反対回り) の代替"
+msgstr "ウィンドウを巡回 (反対回り) / サブ"
 
 #: tabbox/tabbox.cpp:525
-#, fuzzy
-#| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application"
-msgstr "ウィンドウを巡回の代替"
+msgstr "現在のアプリのウィンドウを巡回"
 
 #: tabbox/tabbox.cpp:526
-#, fuzzy
-#| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr "ウィンドウを巡回 (反対回り) の代替"
+msgstr "現在のアプリのウィンドウを巡回 (反対回り)"
 
 #: tabbox/tabbox.cpp:527
-#, fuzzy
-#| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr "ウィンドウを巡回の代替"
+msgstr "現在のアプリのウィンドウを巡回 / サブ"
 
 #: tabbox/tabbox.cpp:528
-#, fuzzy
-#| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr "ウィンドウを巡回 (反対回り) の代替"
+msgstr "現在のアプリのウィンドウを巡回 (反対回り) / サブ"
 
 #: tabbox/tabbox.cpp:529
 msgid "Walk Through Desktops"
