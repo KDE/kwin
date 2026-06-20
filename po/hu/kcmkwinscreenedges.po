@@ -3,13 +3,13 @@
 #
 # Kristóf Kiszel <ulysses@kubuntu.org>, 2010, 2012, 2014, 2019.
 # Balázs Úr <urbalazs@gmail.com>, 2014.
-# SPDX-FileCopyrightText: 2021, 2024 Kristof Kiszel <ulysses@fsf.hu>
+# SPDX-FileCopyrightText: 2021, 2024, 2026 Kristof Kiszel <ulysses@fsf.hu>
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-20 00:45+0000\n"
-"PO-Revision-Date: 2024-09-26 14:33+0200\n"
+"PO-Revision-Date: 2026-06-19 22:47+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.08.0\n"
+"X-Generator: Lokalize 26.04.2\n"
 
 #: main.cpp:152 touch.cpp:119
 #, kde-format
@@ -91,15 +91,12 @@ msgstr "Alternatív ablakváltás ki-be kapcsolása"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23
-#, fuzzy, kde-format
-#| msgid ""
-#| "You can trigger an action by pushing the mouse cursor against the "
-#| "corresponding screen edge or corner."
+#, kde-format
 msgid ""
 "You can trigger an action by pushing the mouse pointer against the "
 "corresponding screen edge or corner."
 msgstr ""
-"Egy művelet aktiválásához tolja az egérkurzort a megfelelő képernyőszélhez "
+"Egy művelet aktiválásához tolja az egérmutatót a megfelelő képernyőszélhez "
 "vagy sarokhoz."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
@@ -164,14 +161,11 @@ msgstr "a képernyőnek"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
 #: main.ui:174
-#, fuzzy, kde-format
-#| msgid ""
-#| "Change desktop when the mouse cursor is pushed against the edge of the "
-#| "screen"
+#, kde-format
 msgid ""
 "Change desktop when the mouse pointer is pushed against the edge of the "
 "screen"
-msgstr "Asztalváltás az egérkurzornak a képernyő sarkához húzásával"
+msgstr "Asztalváltás az egérmutatónak a képernyő sarkához húzásával"
 
 #. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
 #: main.ui:177
@@ -200,14 +194,13 @@ msgstr "Mindig bekapcsolva"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
 #: main.ui:206
-#, fuzzy, kde-format
-#| msgid ""
-#| "Amount of time required for the mouse cursor to be pushed against the "
-#| "edge of the screen before the action is triggered"
+#, kde-format
 msgid ""
 "Amount of time required for the mouse pointer to be pushed against the edge "
 "of the screen before the action is triggered"
-msgstr "A művelet aktiválásához szükséges idő"
+msgstr ""
+"Az az időtartam, ameddig az egérmutatót a képernyő széléhez kell nyomni, "
+"mielőtt a művelet elindulna"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
 #: main.ui:209
@@ -244,13 +237,7 @@ msgstr "&Sarokhatár:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
-#, fuzzy, kde-format
-#| msgid ""
-#| "Here you can enable or disable the virtual corner barrier between "
-#| "screens. The barrier prevents the cursor from moving to another screen "
-#| "when it is already touching a screen corner. This makes it easier to "
-#| "trigger user interface elements like maximized windows' close buttons "
-#| "when using multiple screens."
+#, kde-format
 msgid ""
 "Here you can enable or disable the virtual corner barrier between screens. "
 "The barrier prevents the pointer from moving to another screen when it is "
@@ -259,19 +246,17 @@ msgid ""
 "screens."
 msgstr ""
 "Itt engedélyezheti vagy letilthatja a képernyők közötti virtuális "
-"sarokhatárt. A határ megakadályozza, hogy a kurzor egy másik képernyőre "
+"sarokhatárt. A határ megakadályozza, hogy a mutató egy másik képernyőre "
 "mozogjon, amikor már megérintette a képernyő egyik sarkát. Ez megkönnyíti a "
 "felhasználói felület olyan elemeinek aktiválását több képernyők használata "
 "esetén, mint például a maximalizált ablakok bezárógombjai."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Prevents cursors from crossing at screen corners."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents the pointer from crossing at screen corners."
-msgstr "Megakadályozza, hogy a kurzorok áthaladjanak a képernyősarkokon."
+msgstr "Megakadályozza, hogy a mutató áthaladjon a képernyősarkokon."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
@@ -297,13 +282,11 @@ msgstr ""
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Additional distance cursor needs to travel to cross screen edges."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Additional distance the pointer needs to travel to cross screen edges."
 msgstr ""
-"A kurzornak további távolságot kell megtennie, hogy átlépje a "
+"A mutatónak további távolságot kell megtennie, hogy átlépje a "
 "képernyőszéleket."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)

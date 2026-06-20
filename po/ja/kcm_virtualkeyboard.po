@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-07 00:46+0000\n"
-"PO-Revision-Date: 2026-06-01 07:38+0900\n"
+"PO-Revision-Date: 2026-06-14 15:45+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
 "Language: ja\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 26.04.1\n"
+"X-Generator: Lokalize 26.04.2\n"
 
 #: kcmvirtualkeyboard.cpp:84
 #, kde-format
@@ -46,4 +46,4 @@ msgstr "タッチとタブレット"
 #: ui/main.qml:34
 #, kde-format
 msgid "With Touch, Tablet, and Mouse"
-msgstr ""
+msgstr "タッチとタブレットとマウス"

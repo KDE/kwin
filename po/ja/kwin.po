@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-19 00:45+0000\n"
-"PO-Revision-Date: 2026-05-10 14:14+0900\n"
+"PO-Revision-Date: 2026-06-14 16:22+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
 "Language: ja\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 26.04.1\n"
+"X-Generator: Lokalize 26.04.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1850,7 +1850,7 @@ msgstr "フルスクリーンウィンドウ"
 #, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
-msgstr ""
+msgstr "実行中の操作キャプチャを無効化"
 
 #: plugins/eis/eisprompter.cpp:51
 #, fuzzy, kde-format
@@ -2482,19 +2482,19 @@ msgstr "矢印の修飾キー:"
 #, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr ""
+msgstr "Night Light をオフにしました"
 
 #: plugins/nightlight/nightlightmanager.cpp:56
 #, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr ""
+msgstr "Night Light をオンにしました"
 
 #: plugins/nightlight/nightlightmanager.cpp:77
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "Night Light のオン/オフ"
 
 #: plugins/nightlight/nightlightmanager.cpp:393
 #, kde-format
@@ -2816,10 +2816,9 @@ msgstr " %"
 
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:36
 #: plugins/tileseditor/tileseditoreffect.cpp:31
-#, fuzzy, kde-format
-#| msgid "Toggle Tiles Editor"
+#, kde-format
 msgid "Toggle Tiles Editor"
-msgstr "タイルエディタ"
+msgstr "タイルエディタの表示を切り替え"
 
 #: plugins/tileseditor/qml/Main.qml:153
 #, fuzzy, kde-format
@@ -3015,31 +3014,28 @@ msgstr ""
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:41
 #: plugins/windowview/windowvieweffect.cpp:48
-#, fuzzy, kde-format
-#| msgid "Toggle Present Windows (Current desktop)"
+#, kde-format
 msgid "Toggle Present Windows (Current desktop)"
-msgstr "ウィンドウを並べて表示 (現在のデスクトップ)"
+msgstr "ウィンドウ一覧の表示を切り替え (現在のデスクトップ)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:46
 #: plugins/windowview/windowvieweffect.cpp:57
-#, fuzzy, kde-format
-#| msgid "Keep Window on All Desktops"
+#, kde-format
 msgid "Toggle Present Windows (All desktops)"
-msgstr "ウィンドウをすべてのデスクトップに表示"
+msgstr "ウィンドウ一覧の表示を切り替え (全デスクトップ)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:51
 #: plugins/windowview/windowvieweffect.cpp:66
-#, fuzzy, kde-format
-#| msgid "Toggle Present Windows (Window class)"
+#, kde-format
 msgid "Toggle Present Windows (Window class)"
-msgstr "ウィンドウを並べて表示 (ウィンドウのクラス)"
+msgstr "ウィンドウ一覧の表示を切り替え (ウィンドウクラスごと)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
 #: plugins/windowview/windowvieweffect.cpp:75
-#, fuzzy, kde-format
-#| msgid "Toggle Present Windows (Current desktop)"
+#, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr "ウィンドウを並べて表示 (現在のデスクトップ)"
+msgstr ""
+"ウィンドウ一覧の表示を切り替え (現在のデスクトップ&ウィンドウクラスごと)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:22
@@ -3127,37 +3123,34 @@ msgid "More"
 msgstr "強"
 
 #: plugins/zoom/zoom.cpp:83
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Move Zoomed Area to Left"
-msgstr "ウィンドウを一つ左のデスクトップへ"
+msgstr "拡大エリアを左に移動"
 
 #: plugins/zoom/zoom.cpp:89
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Move Zoomed Area to Right"
-msgstr "ウィンドウを一つ右のデスクトップへ"
+msgstr "拡大エリアを右に移動"
 
 #: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area Upwards"
-msgstr ""
+msgstr "拡大エリアを上に移動"
 
 #: plugins/zoom/zoom.cpp:101
 #, kde-format
 msgid "Move Zoomed Area Downwards"
-msgstr ""
+msgstr "拡大エリアを下に移動"
 
 #: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
-msgstr ""
+msgstr "フォーカス中のウィンドウにマウスを移動"
 
 #: plugins/zoom/zoom.cpp:114
-#, fuzzy, kde-format
-#| msgid "Pack Window to the Left"
+#, kde-format
 msgid "Move Mouse to Center"
-msgstr "ウィンドウを左へ寄せる"
+msgstr "中央にマウスを移動"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -3817,35 +3810,27 @@ msgstr "ウィンドウを巡回 (反対回り)"
 
 #: tabbox/tabbox.cpp:320
 msgid "Walk Through Windows Alternative"
-msgstr "ウィンドウを巡回の代替"
+msgstr "ウィンドウを巡回 / サブ"
 
 #: tabbox/tabbox.cpp:321
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr "ウィンドウを巡回 (反対回り) の代替"
+msgstr "ウィンドウを巡回 (反対回り) / サブ"
 
 #: tabbox/tabbox.cpp:322
-#, fuzzy
-#| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application"
-msgstr "ウィンドウを巡回の代替"
+msgstr "現在のアプリのウィンドウを巡回"
 
 #: tabbox/tabbox.cpp:323
-#, fuzzy
-#| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr "ウィンドウを巡回 (反対回り) の代替"
+msgstr "現在のアプリのウィンドウを巡回 (反対回り)"
 
 #: tabbox/tabbox.cpp:324
-#, fuzzy
-#| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr "ウィンドウを巡回の代替"
+msgstr "現在のアプリのウィンドウを巡回 / サブ"
 
 #: tabbox/tabbox.cpp:325
-#, fuzzy
-#| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr "ウィンドウを巡回 (反対回り) の代替"
+msgstr "現在のアプリのウィンドウを巡回 (反対回り) / サブ"
 
 #: tabbox/tabboxhandler.cpp:192
 #, kde-format
@@ -3857,7 +3842,7 @@ msgstr ""
 #: tablet_input.cpp:119
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "次の入力にタブレットを移動"
 
 #: tablet_input.cpp:199
 #, kde-format
@@ -4506,6 +4491,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#~ msgid "Indicate that KWin has recently crashed n times"
-#~ msgstr "KWin が最近 n 回クラッシュしたことを示す"

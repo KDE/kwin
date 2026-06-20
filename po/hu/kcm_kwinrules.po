@@ -1,13 +1,13 @@
 # Kristóf Kiszel <ulysses@kubuntu.org>, 2010, 2012, 2019.
 # Balázs Úr <urbalazs@gmail.com>, 2012, 2013, 2014.
 # Kiszel Kristóf <kiszel.kristof@gmail.com>, 2017, 2021.
-# SPDX-FileCopyrightText: 2021, 2024, 2025 Kristof Kiszel <ulysses@fsf.hu>
+# SPDX-FileCopyrightText: 2021, 2024-2026 Kristof Kiszel <ulysses@fsf.hu>
 msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.1\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-22 00:45+0000\n"
-"PO-Revision-Date: 2025-05-30 22:19+0200\n"
+"PO-Revision-Date: 2026-06-19 22:08+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.04.1\n"
+"X-Generator: Lokalize 26.04.2\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -33,29 +33,25 @@ msgid "Window settings for %1"
 msgstr "%1 ablakbeállításai"
 
 #: optionsmodel.cpp:199 optionsmodel.cpp:204
-#, fuzzy, kde-format
-#| msgid "Unimportant"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Unimportant"
 msgstr "Nem fontos"
 
 #: optionsmodel.cpp:200
-#, fuzzy, kde-format
-#| msgid "Exact match"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Exact match"
-msgstr "Pontos illesztés"
+msgstr "Pontos egyezés"
 
 #: optionsmodel.cpp:201
-#, fuzzy, kde-format
-#| msgid "Substring match"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Substring match"
 msgstr "Részszöveg-illesztés"
 
 #: optionsmodel.cpp:202
-#, fuzzy, kde-format
-#| msgid "Regular expression"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Regular expression"
 msgstr "Reguláris kifejezés"
@@ -64,7 +60,7 @@ msgstr "Reguláris kifejezés"
 #, kde-format
 msgctxt "@item:inlistbox This is a noun"
 msgid "Match"
-msgstr ""
+msgstr "Illeszkedés"
 
 #: optionsmodel.cpp:210
 #, kde-format
@@ -250,10 +246,9 @@ msgid "Window tag"
 msgstr "Ablakcímke"
 
 #: rulesmodel.cpp:447
-#, fuzzy, kde-format
-#| msgid "On main window"
+#, kde-format
 msgid "Has parent window"
-msgstr "A főablakra"
+msgstr "Van szülőablaka"
 
 #: rulesmodel.cpp:453
 #, kde-format
@@ -623,7 +618,7 @@ msgstr "Képtörés engedélyezése"
 #: rulesmodel.cpp:738
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "Elrejtés a képernyőképekből és a képernyőfelvételekből"
 
 #: rulesmodel.cpp:791
 #, kde-format
