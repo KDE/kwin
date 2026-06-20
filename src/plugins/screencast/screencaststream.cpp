@@ -28,6 +28,7 @@
 
 #include <QLoggingCategory>
 #include <QPainter>
+#include <QScopeGuard>
 
 #include <libdrm/drm_fourcc.h>
 #include <spa/buffer/meta.h>
@@ -157,6 +158,9 @@ void ScreenCastStream::newStreamParams()
     struct spa_pod_dynamic_builder pod_builder;
     struct spa_pod_frame f;
     spa_pod_dynamic_builder_init(&pod_builder, nullptr, 0, 1024);
+    const auto cleanup = qScopeGuard([&] {
+        spa_pod_dynamic_builder_clean(&pod_builder);
+    });
 
     QVarLengthArray<const spa_pod *> params;
 
