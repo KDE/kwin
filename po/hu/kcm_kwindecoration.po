@@ -4,13 +4,13 @@
 # Kristóf Kiszel <ulysses@kubuntu.org>, 2010, 2011, 2012, 2014, 2015, 2019.
 # Balázs Úr <urbalazs@gmail.com>, 2012, 2013, 2014.
 # Kiszel Kristóf <kiszel.kristof@gmail.com>, 2017, 2018, 2020, 2021.
-# SPDX-FileCopyrightText: 2021, 2024, 2025 Kristof Kiszel <ulysses@fsf.hu>
+# SPDX-FileCopyrightText: 2021, 2024-2026 Kristof Kiszel <ulysses@fsf.hu>
 msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2025-11-13 21:01+0100\n"
+"PO-Revision-Date: 2026-06-19 22:16+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.08.2\n"
+"X-Generator: Lokalize 26.04.2\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
 #, kde-format
@@ -68,7 +68,7 @@ msgstr "Maradjon más ablakok fölött"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "Elrejtés a képernyőképekből és a képernyőfelvételekből"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -136,13 +136,11 @@ msgid ""
 msgstr "A kért „%1” téma már be van állítva, mint ablakdekorációs téma."
 
 #: kwin-applywindowdecoration.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Successfully applied the cursor theme %1 to your current Plasma session"
+#, kde-format
 msgid ""
 "Successfully applied the pointer theme %1 to your current Plasma session"
 msgstr ""
-"A(z) %1 kurzortéma sikeresen beállítva a jelenlegi Plasma munkamenethez"
+"A(z) %1 mutatótéma sikeresen beállítva a jelenlegi Plasma munkamenethez"
 
 #: kwin-applywindowdecoration.cpp:105
 #, kde-format
@@ -212,6 +210,8 @@ msgstr "Tippek megjelenítése a címsor gombjainál"
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
 msgstr ""
+"Mindig mutassa az „Elrejtés a képernyőképekből és a képernyőfelvételekből” "
+"gombot"
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format
@@ -220,6 +220,8 @@ msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screenshots and screen recordings"
 msgstr ""
+"Ha nincs bejelölve, a gomb csak akkor jelenik meg, ha az ablakot elrejtik a "
+"képernyőképekből és a képernyőfelvételekből"
 
 #: ui/ConfigureTitlebar.qml:86
 #, kde-format
@@ -228,6 +230,8 @@ msgid ""
 "To enable this option, add the \"Hide from Screenshots and Screen Recordings"
 "\" button to the titlebar first"
 msgstr ""
+"A beállítás bekapcsolásához előbb adja hozzá az „Elrejtés a képernyőképekből "
+"és a képernyőfelvételekből” gombot a címsorhoz"
 
 #: ui/main.qml:29
 #, kde-format
