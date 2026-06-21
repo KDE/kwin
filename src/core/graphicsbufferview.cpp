@@ -30,6 +30,10 @@ static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
         return QImage::Format_A2BGR30_Premultiplied;
     case DRM_FORMAT_XBGR2101010:
         return QImage::Format_BGR30;
+    case DRM_FORMAT_XBGR16161616F:
+        return QImage::Format_RGBX16FPx4;
+    case DRM_FORMAT_ABGR16161616F:
+        return QImage::Format_RGBA16FPx4_Premultiplied;
 #endif
     case DRM_FORMAT_ARGB8888:
         return QImage::Format_ARGB32_Premultiplied;
