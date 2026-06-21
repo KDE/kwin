@@ -42,6 +42,12 @@ std::optional<vk::Format> VulkanTexture::qImageToVulkanFormat(QImage::Format for
     case QImage::Format_RGBX64:
     case QImage::Format_RGBA64_Premultiplied:
         return vk::Format::eR16G16B16A16Unorm;
+    case QImage::Format_RGBX16FPx4:
+    case QImage::Format_RGBA16FPx4_Premultiplied:
+        return vk::Format::eR16G16B16A16Sfloat;
+    case QImage::Format_RGBX32FPx4:
+    case QImage::Format_RGBA32FPx4_Premultiplied:
+        return vk::Format::eR32G32B32A32Sfloat;
     default:
         return std::nullopt;
     }
@@ -87,6 +93,10 @@ static QImage::Format vulkanToQImageFormat(vk::Format format)
         return QImage::Format_RGBA8888_Premultiplied;
     case vk::Format::eR16G16B16A16Unorm:
         return QImage::Format_RGBA64_Premultiplied;
+    case vk::Format::eR16G16B16A16Sfloat:
+        return QImage::Format_RGBA16FPx4_Premultiplied;
+    case vk::Format::eR32G32B32A32Sfloat:
+        return QImage::Format_RGBA32FPx4_Premultiplied;
     default:
         return QImage::Format_Invalid;
     }

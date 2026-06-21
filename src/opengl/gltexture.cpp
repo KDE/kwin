@@ -65,6 +65,12 @@ struct
     {GL_RGBA16, GL_RGBA, GL_UNSIGNED_SHORT}, // QImage::Format_RGBA64_Premultiplied
     {GL_R16, GL_RED, GL_UNSIGNED_SHORT}, // QImage::Format_Grayscale16
     {0, 0, 0}, // QImage::Format_BGR888
+    {GL_RGB16F, GL_RGBA, GL_HALF_FLOAT}, // QImage::Format_RGBX16FPx4,
+    {0, 0, 0}, // QImage::Format_RGBA16FPx4
+    {GL_RGBA16F, GL_RGBA, GL_HALF_FLOAT}, // QImage::Format_RGBA16FPx4_Premultiplied
+    {GL_RGB32F, GL_RGBA, GL_FLOAT}, // QImage::Format_RGBX32FPx4,
+    {0, 0, 0}, // QImage::Format_RGBA32FPx4
+    {GL_RGBA32F, GL_RGBA, GL_FLOAT}, // QImage::Format_RGBA32FPx4_Premultiplied
 };
 
 GLTexture::GLTexture(GLenum target)
