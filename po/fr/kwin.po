@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-19 00:45+0000\n"
-"PO-Revision-Date: 2026-05-21 12:02+0200\n"
+"POT-Creation-Date: 2026-06-21 00:46+0000\n"
+"PO-Revision-Date: 2026-06-19 08:28+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -1686,20 +1686,18 @@ msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Nom de l'affichage « XWayland » ayant été préconfiguré"
 
 #: main_wayland.cpp:369
-#, fuzzy, kde-format
-#| msgid ""
-#| "XWayland socket to use for Xwayland's incoming connections. This can be "
-#| "set multiple times"
+#, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
 msgstr ""
-"Le socket « Wayland » à utiliser pour les connexions entrantes de "
-"« XWayland ». Ceci peut être défini plusieurs fois."
+"Le socket « Wayland » à utiliser pour les connexions d'initialisation de "
+"Xwayland."
 
 #: main_wayland.cpp:373
-#, fuzzy, kde-format
-#| msgid "Name of the xwayland display that has been pre-set up"
+#, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
-msgstr "Nom de l'affichage « XWayland » ayant été préconfiguré"
+msgstr ""
+"Nom de l'affichage pour l'initialisation de « XWayland » ayant été "
+"préconfiguré"
 
 #: main_wayland.cpp:377
 #, kde-format
@@ -2669,12 +2667,12 @@ msgstr "Impossible de trouver une sortie"
 msgid "Invalid region"
 msgstr "Région non valable"
 
-#: plugins/screencast/screencaststream.cpp:374
+#: plugins/screencast/screencaststream.cpp:378
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "Un compositeur OpenGL est nécessaire pour la recopie d'écran"
 
-#: plugins/screencast/screencaststream.cpp:382
+#: plugins/screencast/screencaststream.cpp:386
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Impossible de créer un flux « PipeWire »"

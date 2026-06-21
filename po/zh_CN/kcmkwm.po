@@ -230,7 +230,7 @@ msgstr "激活，提升，移动"
 #: actions.ui:286 actions.ui:366 actions.ui:446
 #, kde-format
 msgid "Activate, raise and resize"
-msgstr ""
+msgstr "激活，提升，调整大小"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)

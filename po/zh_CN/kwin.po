@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-19 00:45+0000\n"
+"POT-Creation-Date: 2026-06-21 00:46+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1630,12 +1630,12 @@ msgstr "预设置的 xwayland 显示器名称"
 #: main_wayland.cpp:369
 #, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
-msgstr ""
+msgstr "用于 XWayland 初始化连接的 XWayland 套接字。"
 
 #: main_wayland.cpp:373
 #, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
-msgstr ""
+msgstr "预设置的 xwayland 初始化显示器名称"
 
 #: main_wayland.cpp:377
 #, kde-format
@@ -2582,12 +2582,12 @@ msgstr "无法找到输出"
 msgid "Invalid region"
 msgstr "无效区域"
 
-#: plugins/screencast/screencaststream.cpp:374
+#: plugins/screencast/screencaststream.cpp:378
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "OpenGL 显示特效合成是屏幕录像所必须的"
 
-#: plugins/screencast/screencaststream.cpp:382
+#: plugins/screencast/screencaststream.cpp:386
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "创建 PipeWire 流失败"
