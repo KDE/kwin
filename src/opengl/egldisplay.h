@@ -72,6 +72,7 @@ private:
     QString determineRenderNode() const;
 
     const ::EGLDisplay m_handle;
+    const QList<QByteArray> m_clientExtensions;
     const QList<QByteArray> m_extensions;
     const QString m_renderNode;
     const std::optional<dev_t> m_renderDevNode;
