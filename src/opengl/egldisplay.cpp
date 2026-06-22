@@ -99,6 +99,7 @@ static bool checkSoftwareDevice(::EGLDisplay display)
 
 EglDisplay::EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions, DrmDevice *drmDevice)
     : m_handle(display)
+    , m_clientExtensions(QByteArray(eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS)).split(' '))
     , m_extensions(extensions)
     , m_renderNode(determineRenderNode())
     , m_renderDevNode(devIdForFileName(m_renderNode))
@@ -106,7 +107,7 @@ EglDisplay::EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions
     , m_supportsBufferAge(extensions.contains(QByteArrayLiteral("EGL_EXT_buffer_age")) && qgetenv("KWIN_USE_BUFFER_AGE") != "0")
     , m_supportsNativeFence(extensions.contains(QByteArrayLiteral("EGL_ANDROID_native_fence_sync"))
                             && extensions.contains(QByteArrayLiteral("EGL_KHR_wait_sync")))
-    , m_isSoftwareRenderer(hasExtension("EGL_EXT_device_query") && checkSoftwareDevice(display))
+    , m_isSoftwareRenderer(m_clientExtensions.contains("EGL_EXT_device_query") && checkSoftwareDevice(display))
 {
     m_functions.createImageKHR = reinterpret_cast<PFNEGLCREATEIMAGEKHRPROC>(eglGetProcAddress("eglCreateImageKHR"));
     m_functions.destroyImageKHR = reinterpret_cast<PFNEGLDESTROYIMAGEKHRPROC>(eglGetProcAddress("eglDestroyImageKHR"));
