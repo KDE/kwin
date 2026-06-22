@@ -167,7 +167,7 @@ eis_device *EisInputCapture::absoluteDevice() const
 
 void EisInputCapture::activate(uint id, const QPointF &position)
 {
-    Q_EMIT activated(id, ++m_activationId, position);
+    Q_EMIT activated(++m_activationId, id, position);
     if (m_pointer) {
         eis_device_start_emulating(m_pointer, m_activationId);
     }
