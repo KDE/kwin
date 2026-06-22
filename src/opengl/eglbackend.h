@@ -63,9 +63,7 @@ protected:
     bool createContext();
 
     bool ensureGlobalShareContext();
-    void destroyGlobalShareContext();
     ::EGLContext createContextInternal(::EGLContext sharedContext);
-    void teardown();
 
     RenderDevice *m_renderDevice = nullptr;
     std::shared_ptr<EglContext> m_context;

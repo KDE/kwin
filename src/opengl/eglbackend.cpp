@@ -34,7 +34,6 @@ static std::shared_ptr<EglContext> s_globalShareContext;
 
 EglBackend::EglBackend()
 {
-    connect(Compositor::self(), &Compositor::aboutToDestroy, this, &EglBackend::teardown);
 }
 
 CompositingType EglBackend::compositingType() const
@@ -90,6 +89,14 @@ bool EglBackend::ensureGlobalShareContext()
 {
     if (!s_globalShareContext) {
         s_globalShareContext = EglContext::create(m_renderDevice->eglDisplay(), EGL_NO_CONFIG_KHR, nullptr);
+        connect(Compositor::self(), &Compositor::aboutToDestroy, qApp, []() {
+            EglDisplay *const eglDisplay = kwinApp()->outputBackend()->sceneEglDisplayObject();
+            if (!eglDisplay || !s_globalShareContext) {
+                return;
+            }
+            s_globalShareContext.reset();
+            kwinApp()->outputBackend()->setSceneEglGlobalShareContext(nullptr);
+        });
     }
     if (s_globalShareContext) {
         kwinApp()->outputBackend()->setSceneEglGlobalShareContext(s_globalShareContext.get());
@@ -97,21 +104,6 @@ bool EglBackend::ensureGlobalShareContext()
     } else {
         return false;
     }
-}
-
-void EglBackend::destroyGlobalShareContext()
-{
-    EglDisplay *const eglDisplay = kwinApp()->outputBackend()->sceneEglDisplayObject();
-    if (!eglDisplay || !s_globalShareContext) {
-        return;
-    }
-    s_globalShareContext.reset();
-    kwinApp()->outputBackend()->setSceneEglGlobalShareContext(nullptr);
-}
-
-void EglBackend::teardown()
-{
-    destroyGlobalShareContext();
 }
 
 void EglBackend::cleanup()
