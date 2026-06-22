@@ -242,8 +242,6 @@ KCM.ScrollViewKCM {
                         icon.name: (model.enabled) ? "dialog-ok-apply" : "list-add"
                         onClicked: addProperty();
                         Layout.preferredWidth: implicitWidth
-                        Layout.leftMargin: -Kirigami.Units.smallSpacing
-                        Layout.rightMargin: -Kirigami.Units.smallSpacing
                         Layout.alignment: Qt.AlignVCenter
                     }
                 }
