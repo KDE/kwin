@@ -38,5 +38,5 @@ void main()
                            (diff.r * 0.7) + (diff.b * 1.0));
 
     tex = (tex + vec4(correction, 0.0)) * modulation;
-    gl_FragColor = nitsToDestinationEncoding(tex);
+    fragColor = nitsToDestinationEncoding(tex);
 }

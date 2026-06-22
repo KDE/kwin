@@ -15,5 +15,5 @@ void main()
 
     tex = adjustSaturation(tex);
 
-    gl_FragColor = nitsToDestinationEncoding(tex);
+    fragColor = nitsToDestinationEncoding(tex);
 }
