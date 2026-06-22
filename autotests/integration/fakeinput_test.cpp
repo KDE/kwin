@@ -5,12 +5,14 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
+#include "keyboard_input.h"
 #include "kwin_wayland_test.h"
 
 #include "core/inputdevice.h"
 #include "input.h"
 #include "main.h"
 #include "wayland_server.h"
+#include "xkb.h"
 
 #include <linux/input-event-codes.h>
 #include <xkbcommon/xkbcommon-keysyms.h>
@@ -36,6 +38,7 @@ private Q_SLOTS:
     void testKeyboardKey_data();
     void testKeyboardKey();
     void testKeySym();
+    void testKeySymMultiLayouts();
 
 private:
     InputDevice *m_inputDevice = nullptr;
@@ -53,6 +56,7 @@ void FakeInputTest::initTestCase()
 
 void FakeInputTest::init()
 {
+    QStandardPaths::setTestModeEnabled(true);
     QSignalSpy deviceAddedSpy(input(), &InputRedirection::deviceAdded);
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::FakeInput | Test::AdditionalWaylandInterface::Seat));
 
@@ -358,7 +362,43 @@ void FakeInputTest::testKeySym()
     QVERIFY(modifiersChangedSpy.count() == 2 || modifiersChangedSpy.wait());
     QCOMPARE(keySymReceivedSpy.count(), 2);
     QCOMPARE(modifiersChangedSpy.last().at(0).toUInt(), 0U);
+}
 
+void FakeInputTest::testKeySymMultiLayouts()
+{
+    // character ? exists in both layouts but in different positions
+
+    auto xkb = input()->keyboard()->xkb();
+    KConfigGroup layoutGroup = kwinApp()->kxkbConfig()->group(QStringLiteral("Layout"));
+    layoutGroup.writeEntry("LayoutList", QStringLiteral("ua,us"));
+    layoutGroup.sync();
+    xkb->reconfigure();
+
+    QCOMPARE(xkb->numberOfLayouts(), 2);
+    QVERIFY(xkb->switchToLayout(1)); // switch to US
+
+    auto keyboard = std::make_unique<Test::SimpleKeyboard>();
+    QSignalSpy receivedTextChangedSpy(keyboard.get(), &Test::SimpleKeyboard::receviedTextChanged);
+
+    // as keyboard input is complex, test the client gets the right keys as well as kwin
+    Test::FakeInput *fakeInput = Test::waylandFakeInput();
+    fakeInput->authenticate(QStringLiteral("org.kde.foobar"), QStringLiteral("foobar"));
+    auto sendKey = [fakeInput](uint32_t keySym) {
+        fakeInput->keyboard_keysym(keySym, WL_KEYBOARD_KEY_STATE_PRESSED);
+        fakeInput->keyboard_keysym(keySym, WL_KEYBOARD_KEY_STATE_RELEASED);
+    };
+
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(1280, 1024), Qt::red);
+    QVERIFY(window);
+    QVERIFY(window->isActive());
+    QCOMPARE(window->frameGeometry().size(), QSize(1280, 1024));
+
+    sendKey(XKB_KEY_question);
+
+    receivedTextChangedSpy.wait();
+    QCOMPARE(keyboard->receviedText(), "?");
 }
 
 } // namespace KWin
