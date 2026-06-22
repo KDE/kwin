@@ -393,6 +393,11 @@ int SlidingNotificationsEffect::requestedEffectChainPosition() const
     return 40;
 }
 
+bool SlidingNotificationsEffect::blocksDirectScanout() const
+{
+    return false;
+}
+
 void SlidingNotificationsEffect::prePaintWindow(RenderView *view, EffectWindow *window, WindowPrePaintData &data)
 {
     if (auto it = m_animations.find(window); it != m_animations.end()) {

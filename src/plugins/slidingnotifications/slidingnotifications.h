@@ -82,6 +82,7 @@ public:
 
     bool isActive() const override;
     int requestedEffectChainPosition() const override;
+    bool blocksDirectScanout() const override;
 
     void prePaintWindow(RenderView *view, EffectWindow *window, WindowPrePaintData &data) override;
     void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data) override;
