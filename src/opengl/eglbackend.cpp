@@ -34,7 +34,6 @@ static std::shared_ptr<EglContext> s_globalShareContext;
 
 EglBackend::EglBackend()
 {
-    connect(Compositor::self(), &Compositor::aboutToDestroy, this, &EglBackend::teardown);
 }
 
 CompositingType EglBackend::compositingType() const
@@ -90,13 +89,11 @@ bool EglBackend::ensureGlobalShareContext()
 {
     if (!s_globalShareContext) {
         s_globalShareContext = EglContext::create(m_renderDevice->eglDisplay(), EGL_NO_CONFIG_KHR, nullptr);
+        connect(Compositor::self(), &Compositor::aboutToDestroy, qApp, []() {
+            s_globalShareContext.reset();
+        });
     }
     return s_globalShareContext != nullptr;
-}
-
-void EglBackend::teardown()
-{
-    s_globalShareContext.reset();
 }
 
 void EglBackend::cleanup()
