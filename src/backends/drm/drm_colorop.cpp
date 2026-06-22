@@ -119,7 +119,7 @@ static std::optional<Assignments> findColorPipelineAssignments(DrmAbstractColorO
             if (!next->canBypass()) {
                 return std::nullopt;
             }
-            next = hardwareOp->next();
+            next = next->next();
         }
         // we're done here, the whole pipeline is assigned!
         return Assignments{
