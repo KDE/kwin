@@ -53,7 +53,7 @@ public:
                 // Both current and previous positions are on the barrier but there was an orthogonal delta
                 if (barrier.hitTest(event->position) && barrier.hitTest(previousPos) && ((barrier.orientation == Qt::Vertical && event->delta.x() != 0) || (barrier.orientation == Qt::Horizontal && event->delta.y() != 0))) {
                     qCDebug(KWIN_INPUTCAPTURE) << "Activating input capture, crossing"
-                                               << "barrier(" << barrier.orientation << barrier.position << "[" << barrier.start << "," << barrier.end << "])"
+                                               << "barrier(" << barrier.orientation << barrier.position << "[" << barrier.start << "," << barrier.end << "] barrier id" << barrier.id << ")"
                                                << "at" << event->position << "with" << event->delta;
                     manager->barrierHit(capture.get(), barrier.id, event->position + event->delta);
                     break;
