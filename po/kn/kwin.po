@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-21 00:46+0000\n"
+"POT-Creation-Date: 2026-06-22 00:45+0000\n"
 "PO-Revision-Date: 2011-07-11 12:17+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <kde-l10n-kn@kde.org>\n"
@@ -2574,13 +2574,13 @@ msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr ""
 
-#: plugins/overview/overvieweffect.cpp:150
+#: plugins/overview/overvieweffect.cpp:152
 #, fuzzy, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "ವಿಲೋಮ ಪರಿಣಾಮಗಳನ್ನು ಅಂತರಣಗೊಳಿಸು"
 
-#: plugins/overview/overvieweffect.cpp:156
+#: plugins/overview/overvieweffect.cpp:158
 #, fuzzy, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
@@ -3161,35 +3161,35 @@ msgstr "ಕಡಿಮೆ"
 msgid "More"
 msgstr "ಇನ್ನಷ್ಟು"
 
-#: plugins/zoom/zoom.cpp:83
+#: plugins/zoom/zoom.cpp:89
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಎಡಗಡೆಯ ಕಿಟಕಿ"
 
-#: plugins/zoom/zoom.cpp:89
+#: plugins/zoom/zoom.cpp:96
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಬಲಗಡೆಯ ಕಿಟಕಿ "
 
-#: plugins/zoom/zoom.cpp:95
+#: plugins/zoom/zoom.cpp:105
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:101
+#: plugins/zoom/zoom.cpp:112
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:108
+#: plugins/zoom/zoom.cpp:122
 #, fuzzy, kde-format
 #| msgid "Mouse Emulation"
 msgid "Move Mouse to Focus"
 msgstr "ಮೂಷಕ ಅನುವರ್ತನೆ (ಎಮುಲೇಶನ್)"
 
-#: plugins/zoom/zoom.cpp:114
+#: plugins/zoom/zoom.cpp:128
 #, fuzzy, kde-format
 #| msgid "Move Window to Group"
 msgid "Move Mouse to Center"
@@ -3853,41 +3853,41 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "ಕಿಟಕಿಗಳು"
 
-#: tabbox/tabbox.cpp:318
+#: tabbox/tabbox.cpp:319
 msgid "Walk Through Windows"
 msgstr "ಕಿಟಕಿಗಳನ್ನು ಅವಲೋಕಿಸಿ."
 
-#: tabbox/tabbox.cpp:319
+#: tabbox/tabbox.cpp:320
 msgid "Walk Through Windows (Reverse)"
 msgstr "ಕಿಟಕಿಗಳನ್ನು ಅವಲೋಕಿಸಿ ( ಹಿಮ್ಮುಖ)"
 
-#: tabbox/tabbox.cpp:320
+#: tabbox/tabbox.cpp:321
 msgid "Walk Through Windows Alternative"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ"
 
-#: tabbox/tabbox.cpp:321
+#: tabbox/tabbox.cpp:322
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ (ಹಿಮ್ಮುಖ)"
 
-#: tabbox/tabbox.cpp:322
+#: tabbox/tabbox.cpp:323
 #, fuzzy
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ"
 
-#: tabbox/tabbox.cpp:323
+#: tabbox/tabbox.cpp:324
 #, fuzzy
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ (ಹಿಮ್ಮುಖ)"
 
-#: tabbox/tabbox.cpp:324
+#: tabbox/tabbox.cpp:325
 #, fuzzy
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ"
 
-#: tabbox/tabbox.cpp:325
+#: tabbox/tabbox.cpp:326
 #, fuzzy
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
@@ -4063,385 +4063,385 @@ msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> ಎನ್ನುವುದು %2 ಇಂದ %3 ರಲ್ಲಿ ಬಳಸಲ್ಪಟ್ಟಿದೆ"
 
-#: useractions.cpp:825
+#: useractions.cpp:826
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "Window Menu"
 msgstr "ಕಿಟಕಿಗಳು"
 
-#: useractions.cpp:827
+#: useractions.cpp:828
 #, kde-format
 msgid "Close Window"
 msgstr "ಕಿಟಕಿಯನ್ನು ಮುಚ್ಚು"
 
-#: useractions.cpp:829
+#: useractions.cpp:830
 #, kde-format
 msgid "Maximize Window"
 msgstr "ಕಿಟಕಿಯನ್ನು ಹಿಗ್ಗಿಸು"
 
-#: useractions.cpp:831
+#: useractions.cpp:832
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "ಕಿಟಕಿಯನ್ನು ಅಡ್ಡವಾಗಿ ಹಿಗ್ಗಿಸು"
 
-#: useractions.cpp:833
+#: useractions.cpp:834
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "ಕಿಟಕಿಯನ್ನು ಲಂಬವಾಗಿ ಹಿಗ್ಗಿಸು"
 
-#: useractions.cpp:835
+#: useractions.cpp:836
 #, fuzzy, kde-format
 #| msgid "Resize Window"
 msgid "Restore Window"
 msgstr "ಕಿಟಕಿಯ ಗಾತ್ರಬದಲಿಸು"
 
-#: useractions.cpp:837
+#: useractions.cpp:838
 #, kde-format
 msgid "Minimize Window"
 msgstr "ಕಿಟಕಿಯನ್ನು ಚಿಕ್ಕದಾಗಿಸು"
 
-#: useractions.cpp:839
+#: useractions.cpp:840
 #, kde-format
 msgid "Move Window"
 msgstr "ಕಿಟಕಿಯನ್ನು ಜರುಗಿಸು"
 
-#: useractions.cpp:841
+#: useractions.cpp:842
 #, kde-format
 msgid "Resize Window"
 msgstr "ಕಿಟಕಿಯ ಗಾತ್ರಬದಲಿಸು"
 
-#: useractions.cpp:843
+#: useractions.cpp:844
 #, kde-format
 msgid "Raise Window"
 msgstr "ಕಿಟಕಿಯನ್ನು ಏರಿಸು"
 
-#: useractions.cpp:845
+#: useractions.cpp:846
 #, kde-format
 msgid "Lower Window"
 msgstr "ಕಿಟಕಿಯನ್ನು ಕೆಳಗಿಳಿಸು"
 
-#: useractions.cpp:847
+#: useractions.cpp:850
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "ಕಿಟಕಿಯನ್ನು ಅಂತರಿಸು ಏರಿಸು/ಇಳಿಸು"
 
-#: useractions.cpp:849
+#: useractions.cpp:852
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "ಕಿಟಕಿಯನ್ನು ಪೂರ್ಣತೆರೆಗೆ ವಿಸ್ತರಿಸು."
 
-#: useractions.cpp:851
+#: useractions.cpp:854
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "ಕಿಟಕಿಯ ಅಂಚನ್ನು ಮರೆಮಾಚು."
 
-#: useractions.cpp:853
+#: useractions.cpp:856
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "ಈ ಕಿಟಕಿಯನ್ನು ಇತರರಿಗಿಂತ ಮೇಲೆ ಇಡು."
 
-#: useractions.cpp:855
+#: useractions.cpp:858
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "ಈ ಕಿಟಕಿಯನ್ನು ಇತರರಿಗಿಂತ ಕೆಳಗೆ ಇಡು."
 
-#: useractions.cpp:857
+#: useractions.cpp:860
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "ಸಕ್ರಿಯ ಕಿಟಕಿ ಗಮನ ಬಯಸುತ್ತಿದೆ"
 
-#: useractions.cpp:859
+#: useractions.cpp:862
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "ಕಿಟಕಿ ಶೀಘ್ರಮಾರ್ಗ ಸಿದ್ಧಪಡಿಸು"
 
-#: useractions.cpp:861
+#: useractions.cpp:864
 #, fuzzy, kde-format
 #| msgid "Move Window to Group"
 msgid "Move Window to the Center"
 msgstr "ಕಿಟಕಿಯನ್ನು ಗುಂಪಿಗೆ ಜರುಗಿಸು"
 
-#: useractions.cpp:863
+#: useractions.cpp:866
 #, kde-format
 msgid "Move Window Right"
 msgstr "ಕಿಟಕಿಯನ್ನು ಬಲಕ್ಕೆ ಸರಿಸು"
 
-#: useractions.cpp:865
+#: useractions.cpp:868
 #, kde-format
 msgid "Move Window Left"
 msgstr "ಕಿಟಕಿಯನ್ನು ಎಡಕ್ಕೆ ಸರಿಸು"
 
-#: useractions.cpp:867
+#: useractions.cpp:872
 #, kde-format
 msgid "Move Window Up"
 msgstr "ಕಿಟಕಿಯನ್ನು ಮೇಲಕ್ಕೆ ಸರಿಸು"
 
-#: useractions.cpp:869
+#: useractions.cpp:874
 #, kde-format
 msgid "Move Window Down"
 msgstr "ಕಿಟಕಿಯನ್ನು ಕೆಳಕ್ಕೆ ಸರಿಸು"
 
-#: useractions.cpp:871
+#: useractions.cpp:878
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "ಕಿಟಕಿಯನ್ನು ಲಂಬವಾಗಿ ಹಿಗ್ಗಿಸು"
 
-#: useractions.cpp:873
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
-msgid "Expand Window Vertically"
-msgstr "ಕಿಟಕಿಯನ್ನು ಅಡ್ಡವಾಗಿ ಹಿಗ್ಗಿಸು"
-
-#: useractions.cpp:875
+#: useractions.cpp:880
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "ಒತ್ತಿ ಸೇರಿಸಿದ ಕಿಟಕಿಗಳನ್ನು ಅಡ್ಡಲಾಗಿ ಕುಂದಿಸು"
 
-#: useractions.cpp:877
+#: useractions.cpp:884
+#, fuzzy, kde-format
+#| msgid "Maximize Window Vertically"
+msgid "Expand Window Vertically"
+msgstr "ಕಿಟಕಿಯನ್ನು ಅಡ್ಡವಾಗಿ ಹಿಗ್ಗಿಸು"
+
+#: useractions.cpp:886
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "ಒತ್ತಿ ಸೇರಿಸಿದ ಕಿಟಕಿಗಳನ್ನು ಲಂಬವಾಗಿ ಕುಂದಿಸು"
 
-#: useractions.cpp:879
+#: useractions.cpp:890
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Left"
 msgstr "ಕಿಟಕಿಯನ್ನು ಎಡಕ್ಕೆ ಪ್ಯಾಕ್ ಮಾಡು."
 
-#: useractions.cpp:881
+#: useractions.cpp:892
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Right"
 msgstr "ಕಿಟಕಿಯನ್ನು ಬಲಕ್ಕೆ ಪ್ಯಾಕ್ ಮಾಡು."
 
-#: useractions.cpp:883
+#: useractions.cpp:894
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Top"
 msgstr "ಕಿಟಕಿಯನ್ನು ಎಡಕ್ಕೆ ಪ್ಯಾಕ್ ಮಾಡು."
 
-#: useractions.cpp:885
+#: useractions.cpp:896
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Bottom"
 msgstr "ಕಿಟಕಿಯನ್ನು ಎಡಕ್ಕೆ ಪ್ಯಾಕ್ ಮಾಡು."
 
-#: useractions.cpp:887
+#: useractions.cpp:898
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Top Left"
 msgstr "ಕಿಟಕಿಯನ್ನು ಎಡಕ್ಕೆ ಪ್ಯಾಕ್ ಮಾಡು."
 
-#: useractions.cpp:889
+#: useractions.cpp:900
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "ಕಿಟಕಿಯನ್ನು ಎಡಕ್ಕೆ ಪ್ಯಾಕ್ ಮಾಡು."
 
-#: useractions.cpp:891
+#: useractions.cpp:902
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Top Right"
 msgstr "ಕಿಟಕಿಯನ್ನು ಬಲಕ್ಕೆ ಪ್ಯಾಕ್ ಮಾಡು."
 
-#: useractions.cpp:893
+#: useractions.cpp:904
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "ಕಿಟಕಿಯನ್ನು ಬಲಕ್ಕೆ ಪ್ಯಾಕ್ ಮಾಡು."
 
-#: useractions.cpp:895
+#: useractions.cpp:906
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "ಮೇಲ್ಭಾಗದ ಕಿಟಕಿಗೆ ಬದಲಾಯಿಸು"
 
-#: useractions.cpp:897
+#: useractions.cpp:908
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "ಕೆಳಭಾಗದ ಕಿಟಕಿಗೆ ಬದಲಾಯಿಸು"
 
-#: useractions.cpp:899
+#: useractions.cpp:912
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "ಬಲಭಾಗದ ಕಿಟಕಿಗೆ ಬದಲಾಯಿಸು"
 
-#: useractions.cpp:901
+#: useractions.cpp:914
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "ಎಡಭಾಗದ ಕಿಟಕಿಗೆ ಬದಲಾಯಿಸು"
 
-#: useractions.cpp:903
+#: useractions.cpp:918
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:905
+#: useractions.cpp:920
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:908
+#: useractions.cpp:924
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "ಕಿಟಕಿಯನ್ನು ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳ ಮೇಲೆ ಇಡು."
 
-#: useractions.cpp:911
+#: useractions.cpp:927
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "ಕಿಟಕಿಯನ್ನು ಎಡಕ್ಕೆ ಪ್ಯಾಕ್ ಮಾಡು."
 
-#: useractions.cpp:913
+#: useractions.cpp:929
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "ಕಿಟಕಿಯನ್ನು ಬಲಕ್ಕೆ ಪ್ಯಾಕ್ ಮಾಡು."
 
-#: useractions.cpp:915
+#: useractions.cpp:931
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Custom Quick Tile Window to the Top"
 msgstr "ಕಿಟಕಿಯನ್ನು ಎಡಕ್ಕೆ ಪ್ಯಾಕ್ ಮಾಡು."
 
-#: useractions.cpp:917
+#: useractions.cpp:933
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "ಕಿಟಕಿಯನ್ನು ಎಡಕ್ಕೆ ಪ್ಯಾಕ್ ಮಾಡು."
 
-#: useractions.cpp:928
+#: useractions.cpp:944
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "%1 ನೇ ಗಣಕತೆರೆಗೆ ಕಿಟಕಿ"
 
-#: useractions.cpp:930
+#: useractions.cpp:946
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "ಮುಂದಿನ ಗಣಕತೆರೆಗೆ ಕಿಟಕಿ"
 
-#: useractions.cpp:931
+#: useractions.cpp:947
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "ಹಿಂದಿನ ಗಣಕತೆರೆಗೆ ಕಿಟಕಿ"
 
-#: useractions.cpp:932
+#: useractions.cpp:950
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಬಲಗಡೆಯ ಕಿಟಕಿ "
 
-#: useractions.cpp:934
+#: useractions.cpp:952
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಎಡಗಡೆಯ ಕಿಟಕಿ"
 
-#: useractions.cpp:936
+#: useractions.cpp:956
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಮೇಲಿನ ಕಿಟಕಿ "
 
-#: useractions.cpp:938
+#: useractions.cpp:958
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಕೆಳಗಿನ ಕಿಟಕಿ"
 
-#: useractions.cpp:942
+#: useractions.cpp:963
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgid "Move Window to Screen %1"
 msgstr "%1 ನೇ ತೆರೆಗೆ ಕಿಟಕಿ"
 
-#: useractions.cpp:949
+#: useractions.cpp:970
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "ಮುಂದಿನ ತೆರೆಗೆ ಕಿಟಕಿ"
 
-#: useractions.cpp:951
+#: useractions.cpp:972
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
 msgid "Move Window to Previous Screen"
 msgstr "ಹಿಂದಿನ ಗಣಕತೆರೆಗೆ ಕಿಟಕಿ"
 
-#: useractions.cpp:953
+#: useractions.cpp:976
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಬಲಗಡೆಯ ಕಿಟಕಿ "
 
-#: useractions.cpp:955
+#: useractions.cpp:978
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಎಡಗಡೆಯ ಕಿಟಕಿ"
 
-#: useractions.cpp:957
+#: useractions.cpp:982
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "೨ನೇ ತೆರೆಗೆ ಕಿಟಕಿ"
 
-#: useractions.cpp:959
+#: useractions.cpp:984
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಕೆಳಗಿನ ಕಿಟಕಿ"
 
-#: useractions.cpp:963
+#: useractions.cpp:989
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "%1 ನೇ ತೆರೆಗೆ ಬದಲಾಯಿಸು"
 
-#: useractions.cpp:970
+#: useractions.cpp:996
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "ಮುಂದಿನ ತೆರೆಗೆ ಬದಲಾಯಿಸು"
 
-#: useractions.cpp:971
+#: useractions.cpp:997
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Previous Screen"
 msgstr "ಹಿಂದಿನ ಗಣಕತೆರೆಗೆ ಬದಲಾಯಿಸು"
 
-#: useractions.cpp:972
+#: useractions.cpp:1000
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "ಬಲಭಾಗದ ಕಿಟಕಿಗೆ ಬದಲಾಯಿಸು"
 
-#: useractions.cpp:974
+#: useractions.cpp:1002
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "ಎಡಭಾಗದ ಕಿಟಕಿಗೆ ಬದಲಾಯಿಸು"
 
-#: useractions.cpp:976
+#: useractions.cpp:1006
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Above"
 msgstr "೦ನೇ ತೆರೆಗೆ ಬದಲಾಯಿಸು"
 
-#: useractions.cpp:978
+#: useractions.cpp:1008
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Below"
 msgstr "೦ನೇ ತೆರೆಗೆ ಬದಲಾಯಿಸು"
 
-#: useractions.cpp:981
+#: useractions.cpp:1012
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Peek at Desktop"
 msgstr "ಗಣಕತೆರೆಗೆ(&D)"
 
-#: useractions.cpp:984
+#: useractions.cpp:1015
 #, kde-format
 msgid "Kill Window"
 msgstr "ಕಿಟಕಿಯನ್ನು ಕೊನೆಗಾಣಿಸು (ಕಿಲ್)"
 
-#: useractions.cpp:1049
+#: useractions.cpp:1080
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "ಕಿಟಕಿಯನ್ನು ಸಕ್ರಿಯಗೊಳಿಸು (%1)"
@@ -4466,27 +4466,27 @@ msgstr "ಮುಂದಿನ ಗಣಕತೆರೆಗೆ ಬದಲಾಯಿಸು"
 msgid "Switch to Previous Desktop"
 msgstr "ಹಿಂದಿನ ಗಣಕತೆರೆಗೆ ಬದಲಾಯಿಸು"
 
-#: virtualdesktops.cpp:773
+#: virtualdesktops.cpp:775
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಬಲಗಡೆಗೆ ಬದಲಾಯಿಸು."
 
-#: virtualdesktops.cpp:774
+#: virtualdesktops.cpp:776
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಎಡಗಡೆಗೆ ಬದಲಾಯಿಸು."
 
-#: virtualdesktops.cpp:775
+#: virtualdesktops.cpp:777
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಮೇಲಕ್ಕೆ ಬದಲಾಯಿಸು."
 
-#: virtualdesktops.cpp:776
+#: virtualdesktops.cpp:778
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಕೆಳಕ್ಕೆ ಬದಲಾಯಿಸು."
 
-#: virtualdesktops.cpp:877
+#: virtualdesktops.cpp:882
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "%1ನೇ ಗಣಕತೆರೆಗೆ ಬದಲಾಯಿಸು"
