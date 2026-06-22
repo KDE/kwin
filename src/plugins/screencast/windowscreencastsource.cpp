@@ -49,6 +49,7 @@ WindowScreenCastSource::~WindowScreenCastSource()
 
 void WindowScreenCastSource::add(Window *window)
 {
+    Q_ASSERT(!m_windows.contains(window));
     m_windows.push_back(window);
 
     connect(window, &Window::closed, this, [this, window] {
@@ -67,7 +68,7 @@ void WindowScreenCastSource::add(Window *window)
     }
 
     for (const auto child : window->transients()) {
-        if (child->isPopupWindow()) {
+        if (child->readyForPainting() && child->isPopupWindow()) {
             add(child);
         }
     }
