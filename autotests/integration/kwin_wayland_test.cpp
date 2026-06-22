@@ -118,6 +118,9 @@ WaylandTestApplication::~WaylandTestApplication()
         effects->unloadAllEffects();
     }
     destroyPlugins();
+
+    Compositor::self()->stop();
+
 #if KWIN_BUILD_X11
     m_xwayland.reset();
 #endif

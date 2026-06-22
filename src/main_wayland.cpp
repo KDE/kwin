@@ -118,6 +118,9 @@ ApplicationWayland::~ApplicationWayland()
     if (effects) {
         effects->unloadAllEffects();
     }
+
+    Compositor::self()->stop();
+
 #if KWIN_BUILD_X11
     m_xwayland.reset();
 #endif

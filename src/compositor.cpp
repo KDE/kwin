@@ -305,10 +305,8 @@ void Compositor::stop()
     delete effects;
     effects = nullptr;
 
-    if (Workspace::self()) {
-        disconnect(workspace(), &Workspace::outputsChanged, this, &Compositor::handleOutputsChanged);
-        disconnect(kwinApp()->outputBackend(), &OutputBackend::outputRemoved, this, &Compositor::removeOutput);
-    }
+    disconnect(workspace(), &Workspace::outputsChanged, this, &Compositor::handleOutputsChanged);
+    disconnect(kwinApp()->outputBackend(), &OutputBackend::outputRemoved, this, &Compositor::removeOutput);
 
     if (m_backend->compositingType() == OpenGLCompositing) {
         // some layers need a context current for destruction
