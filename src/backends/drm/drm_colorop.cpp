@@ -114,6 +114,13 @@ static std::optional<Assignments> findColorPipelineAssignments(DrmAbstractColorO
         currentColorOp = &*previousInverseOutputScaling;
         nextOps = ops;
     } else if (ops.empty()) {
+        DrmAbstractColorOp *next = hardwareOp;
+        while (next) {
+            if (!next->canBypass()) {
+                return std::nullopt;
+            }
+            next = next->next();
+        }
         // we're done here, the whole pipeline is assigned!
         return Assignments{
             .nextInverseInputScaling = std::nullopt,
