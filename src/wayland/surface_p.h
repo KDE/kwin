@@ -29,6 +29,7 @@ class ContentTypeV1Interface;
 class TearingControlV1Interface;
 class FractionalScaleV1Interface;
 class FractionalScaleV2;
+class FrogColorManagementSurfaceV1;
 class PresentationTimeFeedback;
 class ColorSurfaceV1;
 class ColorFeedbackSurfaceV1;
@@ -198,6 +199,7 @@ public:
     FractionalScaleV2 *fractionalScaleV2 = nullptr;
     ClientConnection *client = nullptr;
     TearingControlV1Interface *tearing = nullptr;
+    FrogColorManagementSurfaceV1 *frogColorManagement = nullptr;
     ColorSurfaceV1 *colorSurface = nullptr;
     QList<ColorFeedbackSurfaceV1 *> colorFeedbackSurfaces;
     LinuxDrmSyncObjSurfaceV1 *syncObjV1 = nullptr;

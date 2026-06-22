@@ -13,6 +13,7 @@
 #include "display.h"
 #include "fractionalscale_v1_p.h"
 #include "fractionalscale_v2.h"
+#include "frog_colormanagement_v1.h"
 #include "idleinhibit_v1_p.h"
 #include "linux_drm_syncobj_v1.h"
 #include "linuxdmabufv1clientbuffer.h"
@@ -351,7 +352,7 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
 
     // unless a protocol overrides the properties, we need to assume some YUV->RGB conversion
     // matrix and color space to be attached to YUV formats
-    const bool hasColorManagementProtocol = colorSurface != nullptr;
+    const bool hasColorManagementProtocol = colorSurface || frogColorManagement;
     const bool hasColorRepresentation = colorRepresentation != nullptr;
     if (pending->buffer && pending->buffer->dmabufAttributes()) {
         switch (pending->buffer->dmabufAttributes()->format) {
@@ -1213,6 +1214,9 @@ void SurfaceInterface::setPreferredColorDescription(const std::shared_ptr<ColorD
         return;
     }
     d->preferredColorDescription = descr;
+    if (d->frogColorManagement) {
+        d->frogColorManagement->setPreferredColorDescription(descr);
+    }
     for (const auto feedbackSurface : std::as_const(d->colorFeedbackSurfaces)) {
         feedbackSurface->setPreferredColorDescription(descr);
     }
