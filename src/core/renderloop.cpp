@@ -257,9 +257,9 @@ void RenderLoop::scheduleRepaint(Item *item, OutputLayer *outputLayer)
 {
     const bool vrr = d->presentationMode == PresentationMode::AdaptiveSync || d->presentationMode == PresentationMode::AdaptiveAsync;
     const bool tearing = d->presentationMode == PresentationMode::Async || d->presentationMode == PresentationMode::AdaptiveAsync;
-    if ((vrr || tearing) && workspace() && workspace()->activeWindow() && d->output) {
+    if ((vrr || tearing) && (item || outputLayer) && activeWindowControlsVrrRefreshRate() && d->output) {
         SurfaceItem *const surfaceItem = workspace()->activeWindow()->surfaceItem();
-        if ((item || outputLayer) && activeWindowControlsVrrRefreshRate() && item != surfaceItem && !surfaceItem->isAncestorOf(item)) {
+        if (item != surfaceItem && !surfaceItem->isAncestorOf(item)) {
             constexpr std::chrono::milliseconds s_delayVrrTimer = 1'000ms / 30;
             d->delayedVrrTimer.start(s_delayVrrTimer, Qt::PreciseTimer, this);
             return;
@@ -276,6 +276,10 @@ void RenderLoop::scheduleRepaint(Item *item, OutputLayer *outputLayer)
 
 bool RenderLoop::activeWindowControlsVrrRefreshRate() const
 {
+    if (Q_UNLIKELY(!workspace())) {
+        return false;
+    }
+
     Window *const activeWindow = workspace()->activeWindow();
     LogicalOutput *logical = workspace()->findOutput(d->output);
     if (!logical) {
