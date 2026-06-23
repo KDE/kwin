@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-05 00:46+0000\n"
-"PO-Revision-Date: 2024-07-07 14:45+0200\n"
+"PO-Revision-Date: 2026-06-22 19:26+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
 "Language: nn\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.05.1\n"
+"X-Generator: Lokalize 26.07.70\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -32,7 +32,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
-msgstr ""
+msgstr "Lyttar etter tastetrykk:"
 
 #: ui/main.qml:52
 #, kde-format
@@ -47,8 +47,7 @@ msgid "Most secure; global shortcuts will not work in X11 apps"
 msgstr ""
 
 #: ui/main.qml:67
-#, fuzzy, kde-format
-#| msgid "Only Meta, Control, Alt and Shift keys"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
 msgstr "Berre «Meta»-, «Control»-, «Alt»- og «Shift»-tastane"
@@ -80,11 +79,10 @@ msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr ""
 
 #: ui/main.qml:96
-#, fuzzy, kde-format
-#| msgid "Always"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
-msgstr "Alltid"
+msgstr "Godta alltid"
 
 #: ui/main.qml:105
 #, kde-format
@@ -122,7 +120,7 @@ msgstr "Ta òg med museknappar"
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
-msgstr ""
+msgstr "Tillate"
 
 #: ui/main.qml:130
 #, kde-format
@@ -144,13 +142,13 @@ msgctxt ""
 "@option:check Allowed control of pointer and keyboard without asking for "
 "permissions for allowed apps"
 msgid "Allowed apps"
-msgstr ""
+msgstr "Tillatne program"
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
-msgstr ""
+msgstr "Sjå tillatne program …"
 
 #: ui/main.qml:163
 #, kde-format

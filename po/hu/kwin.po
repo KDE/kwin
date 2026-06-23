@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-22 02:45+0000\n"
-"PO-Revision-Date: 2026-05-26 22:37+0200\n"
+"PO-Revision-Date: 2026-06-22 22:12+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 26.04.1\n"
+"X-Generator: Lokalize 26.04.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -46,14 +46,12 @@ msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland kompozitor %1"
 
 #: backends/wayland/wayland_output.cpp:489
-#, fuzzy, kde-format
-#| msgid "- Output disabled"
+#, kde-format
 msgid "- Output disabled"
 msgstr "- Kimenet letiltva"
 
 #: backends/wayland/wayland_output.cpp:491
-#, fuzzy, kde-format
-#| msgid "- Output dimmed"
+#, kde-format
 msgid "- Output dimmed"
 msgstr "- Kimenet halványítva"
 
@@ -4414,10 +4412,9 @@ msgid "The driver rejected the output configuration"
 msgstr "Az illesztőprogram elutasította a kimenetbeállítást"
 
 #: wayland/outputmanagement_v2.cpp:724
-#, fuzzy, kde-format
-#| msgid "The Alt key is now active."
+#, kde-format
 msgid "The session is not active"
-msgstr "Az Alt most aktív."
+msgstr "A munkamenet nem aktív"
 
 #: window.cpp:3094
 #, kde-format
@@ -4428,25 +4425,25 @@ msgstr "(Nem válaszol)"
 #: workspace.cpp:1313
 #, kde-format
 msgid "Built-in Screen"
-msgstr ""
+msgstr "Beépített képernyő"
 
 #: workspace.cpp:1326
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1336
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1339
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
-msgstr ""
+msgstr "%1 %2"
 
 #: workspace.cpp:1808
 #, kde-format

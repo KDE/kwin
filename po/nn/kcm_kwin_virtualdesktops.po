@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-14 00:45+0000\n"
-"PO-Revision-Date: 2026-03-01 11:39+0100\n"
+"PO-Revision-Date: 2026-06-22 19:31+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
 "Language: nn\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 26.03.70\n"
+"X-Generator: Lokalize 26.07.70\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -77,18 +77,16 @@ msgid "Remove"
 msgstr "Fjern"
 
 #: ui/main.qml:119
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Confirm new name"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
-msgstr "Stadfest nytt namn"
+msgstr "Bruk nytt namn"
 
 #: ui/main.qml:132
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
-msgstr ""
+msgstr "Avbryt namneendring"
 
 #: ui/main.qml:179
 #, kde-format
@@ -117,7 +115,7 @@ msgstr "Navigering går rundt"
 #: ui/main.qml:225
 #, kde-format
 msgid "Switch desktops independently for each screen"
-msgstr ""
+msgstr "Byt skrivebord uavhengig for kvar skjerm"
 
 #: ui/main.qml:243
 #, kde-format
