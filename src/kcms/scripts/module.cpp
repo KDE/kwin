@@ -126,10 +126,18 @@ void Module::save()
         QDir root = QFileInfo(info.fileName()).dir();
         root.cdUp();
         KJob *uninstallJob = PackageJob::uninstall(QStringLiteral("KWin/Script"), info.pluginId(), root.absolutePath());
-        connect(uninstallJob, &KJob::result, this, [this, uninstallJob]() {
+        connect(uninstallJob, &KJob::result, this, [this, uninstallJob, info]() {
             if (!uninstallJob->errorString().isEmpty()) {
                 setErrorMessage(i18n("Error when uninstalling KWin Script: %1", uninstallJob->errorString()));
             } else {
+                // Clean up kwinrc
+                KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc", KConfig::SimpleConfig), QStringLiteral("Plugins"));
+                kwinConfig.deleteEntry(info.pluginId() + QStringLiteral("Enabled"));
+                kwinConfig.sync();
+                KConfigGroup scriptGroup(KSharedConfig::openConfig("kwinrc", KConfig::SimpleConfig), QStringLiteral("Script-") + info.pluginId());
+                scriptGroup.deleteGroup();
+                scriptGroup.sync();
+
                 load(); // Make sure to reload the KCM to deleted entries to disappear
             }
         });
