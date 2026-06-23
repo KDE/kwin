@@ -45,13 +45,8 @@ void DrmCommit::setDefunct()
     m_defunct = true;
 }
 
-DrmAtomicCommit::DrmAtomicCommit(DrmGpu *gpu)
+DrmAtomicCommit::DrmAtomicCommit(DrmGpu *gpu, const QList<DrmPipeline *> &pipelines)
     : DrmCommit(gpu)
-{
-}
-
-DrmAtomicCommit::DrmAtomicCommit(const QList<DrmPipeline *> &pipelines)
-    : DrmCommit(pipelines.front()->gpu())
     , m_pipelines(pipelines)
 {
 }

@@ -67,7 +67,7 @@ DrmPipeline::Error DrmPipeline::present(const QList<OutputLayer *> &layersToUpda
     if (gpu()->atomicModeSetting()) {
         // NOTE that this assumes testPresentation has been called before and succeeded
         // only give the actual state update to the commit thread, so that it can potentially reorder the commits
-        auto partialUpdate = std::make_unique<DrmAtomicCommit>(QList<DrmPipeline *>{this});
+        auto partialUpdate = std::make_unique<DrmAtomicCommit>(gpu(), QList{this});
         if (Error err = prepareAtomicPresentation(partialUpdate.get(), frame); err != Error::None) {
             return err;
         }
@@ -112,9 +112,7 @@ DrmPipeline::Error DrmPipeline::commitPipelines(const QList<DrmPipeline *> &pipe
 
 DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *> &pipelines, DrmGpu *gpu, CommitMode mode, const std::shared_ptr<OutputFrame> &frame, const QList<DrmObject *> &unusedObjects)
 {
-    // when the last output is removed, there are no pipelines left to derive
-    // the gpu from, so it's passed in explicitly
-    auto commit = pipelines.isEmpty() ? std::make_unique<DrmAtomicCommit>(gpu) : std::make_unique<DrmAtomicCommit>(pipelines);
+    const auto commit = std::make_unique<DrmAtomicCommit>(gpu, pipelines);
     if (mode == CommitMode::Test) {
         // if there's a modeset pending, the tests on top of that state
         // also have to allow modesets or they'll always fail
@@ -145,7 +143,7 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *>
             if (oldActive && !pipeline->activePending()) {
                 return false;
             }
-            auto commit = std::make_unique<DrmAtomicCommit>(QVector<DrmPipeline *>{pipeline});
+            auto commit = std::make_unique<DrmAtomicCommit>(pipeline->gpu(), QList{pipeline});
             return pipeline->prepareAtomicCommit(commit.get(), CommitMode::TestAllowModeset, frame) == Error::None && commit->test();
         });
         for (DrmPipeline *pipeline : pipelines) {
@@ -493,7 +491,7 @@ bool DrmPipeline::presentAsync(OutputLayer *layer, std::optional<std::chrono::na
             return false;
         }
         // only give the actual state update to the commit thread, so that it can potentially reorder the commits
-        auto partialUpdate = std::make_unique<DrmAtomicCommit>(QList<DrmPipeline *>{this});
+        auto partialUpdate = std::make_unique<DrmAtomicCommit>(gpu(), QList{this});
         prepareAtomicPlane(partialUpdate.get(), drmLayer->plane(), drmLayer, nullptr);
         partialUpdate->setAllowedVrrDelay(allowedVrrDelay);
         m_commitThread->addCommit(std::move(partialUpdate));
