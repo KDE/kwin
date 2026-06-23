@@ -509,7 +509,7 @@ DrmPipeline::Error DrmGpu::testPipelines()
             }
         }
     }
-    return DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::TestAllowModeset, unusedModesetObjects());
+    return DrmPipeline::commitPipelines(m_pipelines, this, DrmPipeline::CommitMode::TestAllowModeset, unusedModesetObjects());
 }
 
 DrmOutput *DrmGpu::findOutput(quint32 connector)
@@ -610,6 +610,10 @@ void DrmGpu::removeOutput(DrmOutput *output)
     output->unref();
     // force a modeset to make sure unused objects are cleaned up
     m_forceModeset = true;
+    if (m_pipelines.isEmpty()) {
+        // with no pipelines left, no presentation will trigger the modeset
+        maybeModeset(nullptr, nullptr);
+    }
 }
 
 DrmBackend *DrmGpu::platform() const
@@ -838,11 +842,17 @@ void DrmGpu::doModeset()
     }
     if (pipelines.empty()) {
         m_pendingModesetFrames.clear();
+        if (m_forceModeset) {
+            // when the last output is removed, there's no pipeline commit left
+            // to disable the now unused objects with. Disable them explicitly,
+            // otherwise the kernel keeps scanning out to a disconnected connector
+            DrmPipeline::commitPipelines(pipelines, this, DrmPipeline::CommitMode::CommitModeset, unusedModesetObjects());
+        }
         m_forceModeset = false;
         return;
     }
     m_inModeset = true;
-    const DrmPipeline::Error err = DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset, unusedModesetObjects());
+    const DrmPipeline::Error err = DrmPipeline::commitPipelines(pipelines, this, DrmPipeline::CommitMode::CommitModeset, unusedModesetObjects());
     for (DrmPipeline *pipeline : std::as_const(pipelines)) {
         if (pipeline->modesetPresentPending()) {
             pipeline->resetModesetPresentPending();
