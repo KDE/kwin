@@ -8,6 +8,7 @@
 #include "core/backendoutput.h"
 #include "core/drmdevice.h"
 #include "core/renderbackend.h"
+#include "texture.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/subcompositor.h"
 #include "wayland/surface.h"
@@ -223,6 +224,9 @@ void SurfaceItemWayland::handlePresentationModeHintChanged()
 void SurfaceItemWayland::handleReleasePointChanged()
 {
     m_bufferReleasePoint = m_surface->bufferReleasePoint();
+    if (m_texture) {
+        m_texture->setReleasePoint(m_bufferReleasePoint);
+    }
 }
 
 void SurfaceItemWayland::handleAlphaMultiplierChanged()

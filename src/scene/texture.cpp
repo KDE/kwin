@@ -33,4 +33,9 @@ std::shared_ptr<SyncReleasePoint> Texture::releasePoint() const
     return m_releasePoint;
 }
 
+void Texture::setReleasePoint(const std::shared_ptr<SyncReleasePoint> &releasePoint)
+{
+    m_releasePoint = releasePoint;
+}
+
 } // namespace KWin
