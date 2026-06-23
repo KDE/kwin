@@ -199,6 +199,11 @@ UdevDevice::~UdevDevice()
     udev_device_unref(m_device);
 }
 
+QByteArrayView UdevDevice::sysName() const
+{
+    return udev_device_get_sysname(m_device);
+}
+
 QString UdevDevice::devNode() const
 {
     return QString::fromUtf8(udev_device_get_devnode(m_device));

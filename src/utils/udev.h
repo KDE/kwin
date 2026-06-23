@@ -30,6 +30,7 @@ public:
     UdevDevice(udev_device *device);
     ~UdevDevice();
 
+    QByteArrayView sysName() const;
     QString devNode() const;
     dev_t devNum() const;
     const char *property(const char *key);

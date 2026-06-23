@@ -190,14 +190,16 @@ void GpuManager::scanForRenderDevices()
 void GpuManager::handleUdevEvent()
 {
     while (auto udevDevice = m_udevMonitor->getDevice()) {
-        if (udevDevice->devNode().contains(DRM_PRIMARY_MINOR_NAME)) {
+        int devNum = -1;
+        const bool isPrimaryNode = sscanf(udevDevice->sysName().data(), DRM_PRIMARY_MINOR_NAME "%d", &devNum) == 1;
+        if (isPrimaryNode) {
             if (udevDevice->action() == QLatin1StringView("add") || udevDevice->action() == QLatin1StringView("remove")) {
                 updateCompatibilityMap();
             }
             continue;
         }
-        if (!udevDevice->devNode().contains(DRM_RENDER_MINOR_NAME)) {
-            // not a render node, should be ignored
+        const bool isRenderNode = sscanf(udevDevice->sysName().data(), DRM_RENDER_MINOR_NAME "%d", &devNum) == 1;
+        if (!isRenderNode) {
             continue;
         }
         const auto renderDevIt = std::ranges::find_if(m_renderDevices, [&udevDevice](const auto &device) {
