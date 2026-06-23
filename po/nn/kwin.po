@@ -10,14 +10,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-22 00:45+0000\n"
-"PO-Revision-Date: 2024-09-22 16:22+0200\n"
+"PO-Revision-Date: 2026-06-22 19:25+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
 "Language: nn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.11.70\n"
+"X-Generator: Lokalize 26.07.70\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
@@ -84,17 +84,17 @@ msgstr ""
 #: core/iccprofile.cpp:396
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "Klarte ikkje opna ICC-profilen «%1»"
 
 #: core/iccprofile.cpp:398
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr ""
+msgstr "ICC-profilen «%1» finst ikkje"
 
 #: core/iccprofile.cpp:402
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "ICC-profilen «%1» er ikkje brukbar for skjermar"
 
 #: core/iccprofile.cpp:405
 #, kde-format
@@ -105,17 +105,17 @@ msgstr ""
 #: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
-msgstr ""
+msgstr "ICC-profilen «%1» er øydelagd – inn- eller utfargerommet er ikkje RGB"
 
 #: core/iccprofile.cpp:421
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "ICC-profilen «%1» er øydelagd – han manglar kvitpunkt"
 
 #: core/iccprofile.cpp:424
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "ICC-profilen «%1» er øydelagd – kvitpunktet er ugyldig"
 
 #: core/iccprofile.cpp:437
 #, kde-format
@@ -1091,9 +1091,9 @@ msgstr "Last inn"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
-#, fuzzy, kde-format
+#, kde-format
 msgid "Debug Console"
-msgstr "Avslutt feilsøkingskonsoll"
+msgstr "Feilsøkingskonsoll"
 
 #. i18n: ectx: attribute (title), widget (QWidget, windows)
 #: debug_console.ui:30
@@ -1103,11 +1103,10 @@ msgstr "Vindauge"
 
 #. i18n: ectx: property (text), widget (QPushButton, pickWindowButton)
 #: debug_console.ui:43
-#, fuzzy, kde-format
-#| msgid "Filter windows…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Pick Window…"
-msgstr "Filtrer vindauge …"
+msgstr "Vel vindauge …"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:54
@@ -1282,7 +1281,7 @@ msgstr "tid"
 #: helpers/dialoghelper/dialoghelper.cpp:46
 #, kde-format
 msgid "The message to show (fullscreen, noborder)"
-msgstr ""
+msgstr "Melding som skal visast (fullskjerm, utan kantlinje)"
 
 #: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:146
 #, kde-format
@@ -1296,13 +1295,7 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "Det er ikkje meininga at du skal starta dette hjelpeverktøyet direkte."
 
 #: helpers/dialoghelper/dialoghelper.cpp:79
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1311,17 +1304,11 @@ msgid ""
 msgstr ""
 "Du har valt å visa eit vindauge i fullskjerm.\n"
 "Dersom programmet sjølv ikkje har nokon måte å slå av fullskjerms­modusen, "
-"vil du ikkje kunna gå tilbake ved å bruka musa. Du må i staden bruka menyen "
-"for vindaugs­operasjonar, ved hjelp av snøggtasten «%1»."
+"vil du ikkje kunna gå tilbake ved å bruka musa. Du må i staden bruka "
+"snøggtasten «%1»."
 
 #: helpers/dialoghelper/dialoghelper.cpp:85
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1330,17 +1317,11 @@ msgid ""
 msgstr ""
 "Du har valt å visa eit vindauge i fullskjerm.\n"
 "Dersom programmet sjølv ikkje har nokon måte å slå av fullskjerms­modusen, "
-"vil du ikkje kunna gå tilbake ved å bruka musa. Du må i staden bruka menyen "
-"for vindaugs­operasjonar, ved hjelp av snøggtasten «%1»."
+"vil du ikkje kunna gå tilbake ved å bruka musa. Du må i staden bruka vindaugs­"
+"menyen, ved hjelp av snøggtasten «%1»."
 
 #: helpers/dialoghelper/dialoghelper.cpp:93
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1348,23 +1329,16 @@ msgid ""
 msgstr ""
 "Du har valt å visa eit vindauge i fullskjerm.\n"
 "Dersom programmet sjølv ikkje har nokon måte å slå av fullskjerms­modusen, "
-"vil du ikkje kunna gå tilbake ved å bruka musa. Du må i staden bruka menyen "
-"for vindaugs­operasjonar, ved hjelp av snøggtasten «%1»."
+"vil du ikkje kunna gå tilbake ved å bruka musa."
 
 #: helpers/dialoghelper/dialoghelper.cpp:98
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
-msgstr "Fullskjerm"
+msgstr "Angra fullskjerm"
 
 #: helpers/dialoghelper/dialoghelper.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -1372,16 +1346,10 @@ msgid ""
 msgstr ""
 "Du har valt å visa vindauget utan kantlinje.\n"
 "Når kantlinja er gøymd, vil du ikkje kunna visa ho att ved å bruka musa. Du "
-"må i staden bruka menyen for vindaugs­operasjonar, ved hjelp av "
-"snøggtasten «%1»."
+"må i staden bruka snøggtasten «%1»."
 
 #: helpers/dialoghelper/dialoghelper.cpp:106
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -1390,36 +1358,28 @@ msgid ""
 msgstr ""
 "Du har valt å visa vindauget utan kantlinje.\n"
 "Når kantlinja er gøymd, vil du ikkje kunna visa ho att ved å bruka musa. Du "
-"må i staden bruka menyen for vindaugs­operasjonar, ved hjelp av "
-"snøggtasten «%1»."
+"må i staden bruka vindaugs­menyen, ved hjelp av snøggtasten «%1»."
 
 #: helpers/dialoghelper/dialoghelper.cpp:112
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse."
 msgstr ""
 "Du har valt å visa vindauget utan kantlinje.\n"
-"Når kantlinja er gøymd, vil du ikkje kunna visa ho att ved å bruka musa. Du "
-"må i staden bruka menyen for vindaugs­operasjonar, ved hjelp av "
-"snøggtasten «%1»."
+"Når kantlinja er gøymd, vil du ikkje kunna visa ho att ved å bruka musa."
 
 #: helpers/dialoghelper/dialoghelper.cpp:116
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
-msgstr ""
+msgstr "Gjenopprett kantlinje"
 
 #: helpers/dialoghelper/dialoghelper.cpp:133
 #, kde-format
 msgid "Do not show again"
-msgstr ""
+msgstr "Ikkje vis igjen"
 
 #: helpers/killer/killdialog.cpp:37
 #, fuzzy, kde-kuit-format
@@ -1456,11 +1416,9 @@ msgstr ""
 "</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
-#, fuzzy, kde-format
-#| msgctxt "@action:button Terminate app"
-#| msgid "&Terminate %1"
+#, kde-format
 msgid "Terminating %1…"
-msgstr "&Avslutt %1"
+msgstr "Tvangsavsluttar %1 %1"
 
 #: helpers/killer/killdialog.cpp:69
 #, kde-format
@@ -1497,7 +1455,7 @@ msgstr "Svarar ikkje"
 #: helpers/killer/killdialog.ui:53
 #, kde-format
 msgid "&Details"
-msgstr ""
+msgstr "&Detaljar"
 
 #: helpers/killer/killer.cpp:134
 #, kde-format
@@ -1806,10 +1764,9 @@ msgstr "Støystyrke:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelSaturation)
 #: plugins/blur/blur_config.ui:128
-#, fuzzy, kde-format
-#| msgid "Duration:"
+#, kde-format
 msgid "Saturation:"
-msgstr "Lengd:"
+msgstr "Fargemetting:"
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
@@ -1877,12 +1834,10 @@ msgid "Disable Active Input Capture"
 msgstr "Slå av KActivities-integrasjon."
 
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "Ctrl"
+msgstr "Fjernstyring"
 
 #: plugins/eis/eisprompter.cpp:52
 #, kde-kuit-format
@@ -1912,13 +1867,13 @@ msgstr ""
 #, kde-format
 msgctxt "@action:button Allow control of input devices"
 msgid "Allow"
-msgstr ""
+msgstr "Tillat"
 
 #: plugins/eis/eisprompter.cpp:70
 #, kde-format
 msgctxt "@action:button Deny control of input devices"
 msgid "Deny"
-msgstr ""
+msgstr "Avvis"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -2027,17 +1982,15 @@ msgstr[1] "%1 sekund"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Hide cursor on inactivity:"
+#, kde-format
 msgid "Hide pointer on inactivity:"
 msgstr "Gøym peikaren ved inaktivitet:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
-#, fuzzy, kde-format
-#| msgid "Hide cursor on typing"
+#, kde-format
 msgid "Hide pointer on typing"
-msgstr "Gøym musepeikaren ved skriving"
+msgstr "Gøym peikaren ved skriving"
 
 #: plugins/invert/invert.cpp:44
 #, kde-format
@@ -2581,10 +2534,9 @@ msgid "Add Virtual Desktop"
 msgstr "Legg til virtuelt skrivebord"
 
 #: plugins/overview/qml/DesktopBar.qml:262
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgid "Virtual Desktop limit reached"
-msgstr "Legg til virtuelt skrivebord"
+msgstr "Nådde grense på virtuelle skrivebord"
 
 #: plugins/overview/qml/Main.qml:427
 #, kde-format
@@ -2942,10 +2894,9 @@ msgstr "Menyar:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ExcludeFullScreen)
 #: plugins/translucency/package/contents/ui/config.ui:201
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#, kde-format
 msgid "Exclude fullscreen windows"
-msgstr "Fullskjermsvindauge"
+msgstr "Utelat fullskjermsvindauge"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:217
@@ -3190,7 +3141,7 @@ msgstr "Slett regelen (for bruk i importar)"
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "This rule is enabled"
-msgstr ""
+msgstr "Regelen er slått på"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:24
@@ -3248,25 +3199,21 @@ msgstr "Samsvarsmetode for maskin-/vertsnamn"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "Vindaugshandsamar"
+msgstr "Vindaugsmerkelapp"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
-#, fuzzy, kde-format
-#| msgid "Window title string match type"
+#, kde-format
 msgid "Window tag string match type"
-msgstr "Samsvarsmetode for vindaugstittel"
+msgstr "Samsvarsmetode for vindaugsmerkelapp"
 
 #. i18n: ectx: label, entry (hastransientparent), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
-#, fuzzy, kde-format
-#| msgctxt "@info:placeholder no entries in the task switcher"
-#| msgid "No open windows"
+#, kde-format
 msgid "Has parent window"
-msgstr "Ingen opne vindauge"
+msgstr "Har foreldervindauge"
 
 #. i18n: ectx: label, entry (hastransientparentmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:82
@@ -3764,18 +3711,17 @@ msgid "Log Out Anyway"
 msgstr "Logg ut likevel"
 
 #: sm.cpp:468
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
 "Desse programma vart ikkje lukka:\n"
-"%1"
+"%1Loggar likevel ut om 2 minutt."
 
 #: tabbox/clientmodel.cpp:58
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
 msgstr "Kikk på skrivebordet"
@@ -3870,7 +3816,7 @@ msgstr "&Inga tittellinje og ramme"
 #: useractions.cpp:248
 #, kde-format
 msgid "&Hide from Screenshots and Screen Recordings"
-msgstr ""
+msgstr "&Gøym frå skrivebord og skjermopptak"
 
 #: useractions.cpp:256
 #, kde-format
@@ -3980,10 +3926,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> er brukt av %2 i %3"
 
 #: useractions.cpp:826
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window Menu"
-msgstr "Vindaugsrolle"
+msgstr "Vindaugsmeny"
 
 #: useractions.cpp:828
 #, kde-format
@@ -4006,10 +3951,9 @@ msgid "Maximize Window Horizontally"
 msgstr "Maksimer vindauget vassrett"
 
 #: useractions.cpp:836
-#, fuzzy, kde-format
-#| msgid "Resize Window"
+#, kde-format
 msgid "Restore Window"
-msgstr "Endra storleiken på vindauget"
+msgstr "Gjenopprett vindauge"
 
 #: useractions.cpp:838
 #, kde-format
@@ -4394,7 +4338,7 @@ msgstr ""
 #: wayland/outputmanagement_v2.cpp:675
 #, kde-format
 msgid "%1 cannot mirror itself"
-msgstr ""
+msgstr "%1 kan ikkje spegla seg sjølv"
 
 #: wayland/outputmanagement_v2.cpp:682
 #, kde-format
@@ -4427,10 +4371,9 @@ msgid "The driver rejected the output configuration"
 msgstr ""
 
 #: wayland/outputmanagement_v2.cpp:724
-#, fuzzy, kde-format
-#| msgid "The Alt key is now active."
+#, kde-format
 msgid "The session is not active"
-msgstr "«Alt»-tasten er no slått på"
+msgstr "Økta er ikkje aktive"
 
 #: window.cpp:3107
 #, kde-format
@@ -4441,25 +4384,25 @@ msgstr "(Svarar ikkje)"
 #: workspace.cpp:1310
 #, kde-format
 msgid "Built-in Screen"
-msgstr ""
+msgstr "Innebygd skjerm"
 
 #: workspace.cpp:1323
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1333
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1336
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
-msgstr ""
+msgstr "%1 %2"
 
 #: workspace.cpp:1805
 #, kde-format

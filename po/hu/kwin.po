@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 26.04.1\n"
+"X-Generator: Lokalize 26.04.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -46,14 +46,12 @@ msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland kompozitor %1"
 
 #: backends/wayland/wayland_output.cpp:489
-#, fuzzy, kde-format
-#| msgid "- Output disabled"
+#, kde-format
 msgid "- Output disabled"
 msgstr "- Kimenet letiltva"
 
 #: backends/wayland/wayland_output.cpp:491
-#, fuzzy, kde-format
-#| msgid "- Output dimmed"
+#, kde-format
 msgid "- Output dimmed"
 msgstr "- Kimenet halványítva"
 
@@ -4433,10 +4431,9 @@ msgid "The driver rejected the output configuration"
 msgstr "Az illesztőprogram elutasította a kimenetbeállítást"
 
 #: wayland/outputmanagement_v2.cpp:724
-#, fuzzy, kde-format
-#| msgid "The Alt key is now active."
+#, kde-format
 msgid "The session is not active"
-msgstr "Az Alt most aktív."
+msgstr "A munkamenet nem aktív"
 
 #: window.cpp:3107
 #, kde-format
@@ -4447,25 +4444,25 @@ msgstr "(Nem válaszol)"
 #: workspace.cpp:1310
 #, kde-format
 msgid "Built-in Screen"
-msgstr ""
+msgstr "Beépített képernyő"
 
 #: workspace.cpp:1323
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1333
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1336
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
-msgstr ""
+msgstr "%1 %2"
 
 #: workspace.cpp:1805
 #, kde-format
