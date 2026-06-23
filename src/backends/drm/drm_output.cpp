@@ -239,7 +239,7 @@ BackendOutput::Capabilities DrmOutput::computeCapabilities() const
             capabilities |= Capability::AutomaticBrightness;
         }
     }
-    if (m_connector->edid()->isValid() && m_connector->edid()->defaultColorimetry().has_value()) {
+    if (m_connector->edid()->isValid() && m_connector->edid()->nativeColorimetry().has_value()) {
         capabilities |= Capability::BuiltInColorProfile;
     }
     if (m_state.detectedDdcCi) {
@@ -490,8 +490,8 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
         }
         break;
     case ColorProfileSource::EDID:
-        if (m_information.edid.isValid() && m_information.edid.defaultColorimetry()) {
-            nativeColorimetry = *m_information.edid.defaultColorimetry();
+        if (m_information.edid.isValid() && m_information.edid.nativeColorimetry()) {
+            nativeColorimetry = *m_information.edid.nativeColorimetry();
         }
         if (effectiveWcg) {
             containerColorimetry = Colorimetry::BT2020;
