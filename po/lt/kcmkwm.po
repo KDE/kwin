@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-18 00:45+0000\n"
-"PO-Revision-Date: 2025-12-29 21:32+0200\n"
+"PO-Revision-Date: 2026-06-24 02:04+0300\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:20
@@ -239,10 +239,9 @@ msgstr "Aktyvuoti, iškelti į pirmą planą ir perkelti"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
 #: actions.ui:286 actions.ui:366 actions.ui:446
-#, fuzzy, kde-format
-#| msgid "Activate, raise and move"
+#, kde-format
 msgid "Activate, raise and resize"
-msgstr "Aktyvuoti, iškelti į pirmą planą ir perkelti"
+msgstr "Aktyvuoti, iškelti į pirmą planą ir keisti dydį"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
