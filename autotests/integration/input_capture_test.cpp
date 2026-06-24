@@ -303,6 +303,9 @@ void TestInputCapture::testInputCapture()
         ei_event_unref(event);
     }
 
+    // We receive a warp from the release
+    QVERIFY(motionSpy.wait());
+
     Test::pointerMotion({2, 2}, ++timestamp);
     Test::pointerButtonPressed(BTN_LEFT, ++timestamp);
     Test::pointerButtonReleased(BTN_LEFT, ++timestamp);
