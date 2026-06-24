@@ -1,13 +1,13 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# SPDX-FileCopyrightText: 2024, 2025 Kristof Kiszel <ulysses@fsf.hu>
+# SPDX-FileCopyrightText: 2024-2026 Kristof Kiszel <ulysses@fsf.hu>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-05 00:46+0000\n"
-"PO-Revision-Date: 2025-05-30 22:23+0200\n"
+"PO-Revision-Date: 2026-06-23 23:19+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.04.1\n"
+"X-Generator: Lokalize 26.04.2\n"
 
 #: ui/main.qml:28
 #, kde-kuit-format
@@ -26,31 +26,36 @@ msgid ""
 "time.<nl/><nl/>If you use any of these apps, you can choose your preferred "
 "balance of security and compatibility here."
 msgstr ""
+"A globális gyorsbillentyűket és egyéb funkciókat használó, a háttérben futó "
+"régi X11-es alkalmazásoknak folyamatosan figyelniük kell a "
+"billentyűleütéseket.<nl/><nl/>Ha ilyen alkalmazásokat használ, itt "
+"kiválaszthatja a biztonság és a kompatibilitás közötti kívánt egyensúlyt."
 
 #: ui/main.qml:49
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
-msgstr ""
+msgstr "Billentyűleütések figyelése:"
 
 #: ui/main.qml:52
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
-msgstr ""
+msgstr "Tiltott"
 
 #: ui/main.qml:61
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
 msgstr ""
+"A legbiztonságosabb; a globális gyorsbillentyűk nem működnek az X11-es "
+"alkalmazásokban"
 
 #: ui/main.qml:67
-#, fuzzy, kde-format
-#| msgid "Only Meta, Control, Alt and Shift keys"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
-msgstr "Csak Meta, Control, Alt és Shift billentyűk"
+msgstr "Csak a Meta, Control, Alt és Shift billentyűk"
 
 #: ui/main.qml:76
 #, kde-format
@@ -59,32 +64,32 @@ msgid ""
 "High security; push-to-talk and other modifier-only global shortcuts will "
 "work in X11 apps"
 msgstr ""
+"Magas biztonság; a beszédgomb és az egyéb, kizárólag módosító billentyűkkel "
+"használható globális gyorsbillentyűk működnek az X11-es alkalmazásokban"
 
 #: ui/main.qml:81
-#, fuzzy, kde-format
-#| msgid ""
-#| "As above, plus any key typed while the Control, Alt, or Meta keys are "
-#| "pressed"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
 "As above, plus any key pressed while the Control, Alt, or Meta key is also "
 "pressed"
 msgstr ""
 "Mint fent, plusz bármely billentyű, amelyet a Control, Alt vagy Meta "
-"billentyűk lenyomva tartása közben gépeltek be"
+"billentyűk lenyomva tartása közben nyomnak meg"
 
 #: ui/main.qml:90
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr ""
+"Közepes biztonság; az összes globális gyorsbillentyű működni fog az X11-es "
+"alkalmazásokban"
 
 #: ui/main.qml:96
-#, fuzzy, kde-format
-#| msgid "Always"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
-msgstr "Mindig"
+msgstr "Mindig engedélyezett"
 
 #: ui/main.qml:105
 #, kde-format
@@ -93,36 +98,33 @@ msgid ""
 "Least secure; all X11 apps will be able to see any text you type into any "
 "application"
 msgstr ""
+"Legkevésbé biztonságos; minden X11-es alkalmazás láthatja a bármelyik "
+"alkalmazásba beírt szöveget"
 
 #: ui/main.qml:111
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will reduce system security and permit "
 "malicious software to steal passwords and spy on the text that you type. "
 "Make sure you understand and accept this risk."
 msgstr ""
-"Ne feledje, hogy ennek a beállításnak a használata lecsökkenti a rendszer "
-"biztonságát az X11 munkamenet szintjére azzal, hogy lehetővé teszi "
-"rosszindulatú szoftvereknek jelszavak ellopását vagy a begépelt szöveg utáni "
-"kémkedést. Győzödjön meg róla, hogy megértette és elfogadja ezt a kockázatot."
+"Ne feledje, hogy ennek a beállításnak a használata csökkenti a rendszer "
+"biztonságát, és lehetővé teszi a rosszindulatú szoftverek számára, hogy "
+"jelszavakat lopjanak el és kémkedjenek a beírt szöveg után. Győződjön meg "
+"róla, hogy megértette és elfogadja ezt a kockázatot."
 
 #: ui/main.qml:118
-#, fuzzy, kde-format
-#| msgid "Additionally include mouse buttons"
+#, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
-msgstr "Továbbá egérgombok"
+msgstr "Egérgombok figyelése:"
 
 #: ui/main.qml:121
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
-msgstr ""
+msgstr "Engedélyezett"
 
 #: ui/main.qml:130
 #, kde-format
@@ -131,6 +133,8 @@ msgid ""
 "Moderate security; global shortcuts involving mouse buttons will work in X11 "
 "apps"
 msgstr ""
+"Közepes biztonság; az egérgombokkal végrehajtható globális gyorsbillentyűk "
+"működnek az X11-es alkalmazásokban"
 
 #: ui/main.qml:141
 #, kde-format
@@ -144,13 +148,13 @@ msgctxt ""
 "@option:check Allowed control of pointer and keyboard without asking for "
 "permissions for allowed apps"
 msgid "Allowed apps"
-msgstr ""
+msgstr "Engedélyezett alkalmazások"
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
-msgstr ""
+msgstr "Engedélyezett alkalmazások megtekintése…"
 
 #: ui/main.qml:163
 #, kde-format
@@ -160,13 +164,13 @@ msgid ""
 "will be able to take control of the computer, because XWayland-using apps’ "
 "identities can’t be verified"
 msgstr ""
+"Közepes biztonság; az XWaylandet használó alkalmazások, amelyek azt "
+"állítják, hogy szerepelnek ezen a listán, átvehetik az irányítást a "
+"számítógép felett, mivel az XWaylandet használó alkalmazások azonosságát nem "
+"lehet ellenőrizni"
 
 #: ui/main.qml:169
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check Allow control of pointer and keyboard without asking for "
-#| "permission"
-#| msgid "Allow without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
 "permission"
@@ -178,39 +182,37 @@ msgstr "Engedélyezés jogosultságkérés nélkül"
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr ""
+"Legkevésbé biztonságos; minden X11-es alkalmazás átveheti az irányítást a "
+"számítógép felett"
 
 #: ui/main.qml:181
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will drastically reduce system security and "
 "permit malicious software to take complete control of your pointer and "
 "keyboard. Make sure you understand and accept this risk."
 msgstr ""
-"Ne feledje, hogy ennek a beállításnak a használata lecsökkenti a rendszer "
-"biztonságát az X11 munkamenet szintjére azzal, hogy lehetővé teszi "
-"rosszindulatú szoftvereknek jelszavak ellopását vagy a begépelt szöveg utáni "
-"kémkedést. Győzödjön meg róla, hogy megértette és elfogadja ezt a kockázatot."
+"Ne feledje, hogy ennek a beállításnak a használata jelentősen csökkenti a "
+"rendszer biztonságát, és lehetővé teszi a rosszindulatú szoftverek számára, "
+"hogy teljes mértékben átvegyék az irányítást a mutató és a billentyűzet "
+"felett. Győződjön meg róla, hogy megértette és elfogadja ezt a kockázatot."
 
 #: ui/main.qml:189
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Control of pointer and keyboard:"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
 "button"
 msgid "Applications allowed to control the pointer and keyboard"
-msgstr "Mutató és billentyűzet vezérlése:"
+msgstr "A mutató és a billentyűzet vezérlésére jogosult alkalmazások"
 
 #: ui/main.qml:209
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
 msgstr ""
+"Ne engedje, hogy a(z) %1 engedélykérés nélkül irányítsa a mutatót és a "
+"billentyűzetet"
 
 #~ msgctxt "@info"
 #~ msgid "Changes will take effect the next time you log in."
