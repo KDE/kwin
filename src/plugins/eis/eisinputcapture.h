@@ -53,7 +53,7 @@ Q_SIGNALS:
 private:
     void handleEvents();
     void createDevice();
-    void deactivate();
+    void deactivate(const std::optional<QPointF> &releasePosition);
 
     EisInputCaptureManager *m_manager;
     QList<EisInputCaptureBarrier> m_barriers;

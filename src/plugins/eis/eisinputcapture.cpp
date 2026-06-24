@@ -13,7 +13,6 @@
 #include "input.h"
 #include "input_event.h"
 #include "input_event_spy.h"
-#include "pointer_input.h"
 #include "workspace.h"
 
 #include <QDBusConnection>
@@ -177,8 +176,9 @@ void EisInputCapture::activate(const QPointF &position)
     }
 }
 
-void EisInputCapture::deactivate()
+void EisInputCapture::deactivate(const std::optional<QPointF> &releasePosition)
 {
+    m_manager->deactivate(releasePosition);
     Q_EMIT deactivated(m_activationId);
     if (m_pointer) {
         eis_device_stop_emulating(m_pointer);
@@ -207,7 +207,7 @@ void EisInputCapture::enable(const QList<QPair<QPoint, QPoint>> &barriers)
 void EisInputCapture::disable()
 {
     if (m_manager->activeCapture() == this) {
-        deactivate();
+        deactivate(std::nullopt);
     }
     m_barriers.clear();
     Q_EMIT disabled();
@@ -218,10 +218,7 @@ void EisInputCapture::release(const QPointF &cursorPosition, bool applyPosition)
     if (m_manager->activeCapture() != this) {
         return;
     }
-    if (applyPosition) {
-        input()->pointer()->warp(cursorPosition);
-    }
-    deactivate();
+    deactivate(applyPosition ? cursorPosition : std::optional<QPointF>{});
 }
 
 QDBusUnixFileDescriptor EisInputCapture::connectToEIS()
