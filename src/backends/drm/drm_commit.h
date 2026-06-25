@@ -16,6 +16,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "core/backendoutput.h"
 #include "core/renderloop.h"
 #include "drm_pointer.h"
 #include "drm_property.h"
@@ -43,6 +44,8 @@ public:
     virtual void pageFlipped(std::chrono::nanoseconds timestamp) = 0;
     void setDefunct();
 
+    static std::expected<void, OutputError> errnoToError();
+
 protected:
     DrmCommit(DrmGpu *gpu);
 
@@ -67,10 +70,10 @@ public:
     void setVrr(DrmCrtc *crtc, bool vrr);
     void setPresentationMode(PresentationMode mode);
 
-    bool test();
-    bool testAllowModeset();
-    bool commit();
-    bool commitModeset();
+    std::expected<void, OutputError> test();
+    std::expected<void, OutputError> testAllowModeset();
+    std::expected<void, OutputError> commit();
+    std::expected<void, OutputError> commitModeset();
 
     void pageFlipped(std::chrono::nanoseconds timestamp) override;
 
@@ -89,7 +92,7 @@ public:
     bool isTearing() const;
 
 private:
-    bool doCommit(uint32_t flags);
+    std::expected<void, OutputError> doCommit(uint32_t flags);
 
     const QList<DrmPipeline *> m_pipelines;
     std::optional<std::chrono::steady_clock::time_point> m_targetPageflipTime;

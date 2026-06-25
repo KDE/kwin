@@ -140,9 +140,9 @@ std::expected<void, OutputError> DrmPipeline::commitPipelinesAtomic(const QList<
     }
     switch (mode) {
     case CommitMode::TestAllowModeset: {
-        if (!commit->testAllowModeset()) {
-            qCDebug(KWIN_DRM) << "Atomic modeset test failed!" << strerror(errno);
-            return errnoToError();
+        const auto ret = commit->testAllowModeset();
+        if (!ret) {
+            return ret;
         }
         const bool withoutModeset = std::ranges::all_of(pipelines, [&frame](DrmPipeline *pipeline) {
             // always require a modeset for turning off displays, it makes other logic easier to follow
@@ -164,8 +164,9 @@ std::expected<void, OutputError> DrmPipeline::commitPipelinesAtomic(const QList<
         // and already was disabled before, to work around some quirks in old userspace.
         // Instead of using DRM_MODE_PAGE_FLIP_EVENT | DRM_MODE_ATOMIC_NONBLOCK, do the modeset in a blocking
         // fashion without page flip events and trigger the pageflip notification directly
-        if (!commit->commitModeset()) {
-            return errnoToError();
+        const auto ret = commit->commitModeset();
+        if (!ret) {
+            return ret;
         }
         for (const auto pipeline : pipelines) {
             pipeline->m_next.needsModeset = pipeline->m_pending.needsModeset = false;
@@ -174,10 +175,7 @@ std::expected<void, OutputError> DrmPipeline::commitPipelinesAtomic(const QList<
         return {};
     }
     case CommitMode::Test: {
-        if (!commit->test()) {
-            return errnoToError();
-        }
-        return {};
+        return commit->test();
     }
     default:
         Q_UNREACHABLE();
@@ -488,32 +486,6 @@ uint32_t DrmPipeline::calculateUnderscan()
         m_pending.overscan = 128 / aspectRatio;
     }
     return hborder;
-}
-
-std::expected<void, OutputError> DrmPipeline::errnoToError()
-{
-    switch (errno) {
-    case EINVAL:
-        return std::unexpected(OutputError{
-            .code = OutputErrorCode::Other,
-            .message = QStringLiteral("EINVAL"),
-        });
-    case EBUSY:
-        return std::unexpected(OutputError{
-            .code = OutputErrorCode::InvalidApiUsage,
-            .message = QStringLiteral("EBUSY"),
-        });
-    case EACCES:
-        return std::unexpected(OutputError{
-            .code = OutputErrorCode::NoPermission,
-            .message = QStringLiteral("EACCESS"),
-        });
-    default:
-        return std::unexpected(OutputError{
-            .code = OutputErrorCode::Other,
-            .message = QString::fromLatin1(strerror(errno)),
-        });
-    }
 }
 
 std::expected<void, OutputError> DrmPipeline::presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay)

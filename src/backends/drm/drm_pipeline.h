@@ -107,7 +107,6 @@ public:
 private:
     bool isBufferForDirectScanout() const;
     uint32_t calculateUnderscan();
-    static std::expected<void, OutputError> errnoToError();
     std::shared_ptr<DrmBlob> createHdrMetadata(TransferFunction::Type transferFunction) const;
 
     // legacy only
