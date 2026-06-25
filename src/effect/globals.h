@@ -410,6 +410,59 @@ enum class OutputConfigurationError {
     NotActive,
 };
 
+enum class OutputErrorCode {
+    /**
+     * The error doesn't fall into the other categories
+     */
+    Other,
+    /**
+     * An implementation error in the compositor itself
+     */
+    InvalidApiUsage,
+    /**
+     * Applying this configuration isn't possible without
+     * triggering a modeset
+     */
+    NeedsModeset,
+    /**
+     * The async presentation mode is not possible at the moment
+     * (but it may work with a simplified configuration or in the next frame)
+     */
+    AsyncFlipFailure,
+    /**
+     * The kernel reported a permission error
+     */
+    NoPermission,
+    /**
+     * The compositor requested more outputs to be enabled on
+     * a specific GPU than what the hardware supports
+     */
+    NotEnoughCrtcs,
+    /**
+     * Any hardware limitation that doesn't fall into the other categories.
+     */
+    OtherHardwareLimitation,
+    /**
+     * Couldn't match a requested color pipeline
+     */
+    ColorPipeline,
+    /**
+     * Requested scaling or cropping beyond what the hardware supports,
+     */
+    Scaling,
+    /**
+     * No valid configuration could be found in the specified time
+     */
+    Timeout,
+};
+Q_ENUM_NS(OutputErrorCode);
+
+struct OutputError
+{
+    OutputErrorCode code;
+    QString message;
+};
+
 } // namespace
 
 Q_DECLARE_METATYPE(std::chrono::nanoseconds)

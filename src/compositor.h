@@ -9,9 +9,10 @@
 */
 #pragma once
 
+#include "core/backendoutput.h"
+#include "core/region.h"
 #include "effect/globals.h"
 #include "kwin_export.h"
-#include "core/region.h"
 
 #include <QHash>
 #include <QObject>
@@ -24,7 +25,6 @@ namespace KWin
 class ColorDescription;
 class GLTexture;
 class LogicalOutput;
-class BackendOutput;
 class RenderBackend;
 class OutputLayer;
 class RenderLoop;
@@ -116,13 +116,14 @@ protected:
         Ideal,
         Fallback,
     };
-    std::pair<QList<LayerData>, bool> setupLayers(SceneView *primaryView, LogicalOutput *logicalOutput,
-                                                  BackendOutput *backendOutput,
-                                                  const QList<OutputLayer *> &outputLayers,
-                                                  const std::unordered_map<OutputLayer *, Item *> &assignments,
-                                                  const std::shared_ptr<OutputFrame> &frame,
-                                                  SetupType type,
-                                                  std::unordered_set<OutputLayer *> &toUpdate);
+    std::pair<QList<Compositor::LayerData>, std::expected<void, OutputError>> setupLayers(SceneView *primaryView,
+                                                                                          LogicalOutput *logicalOutput,
+                                                                                          BackendOutput *backendOutput,
+                                                                                          const QList<OutputLayer *> &outputLayers,
+                                                                                          const std::unordered_map<OutputLayer *, Item *> &assignments,
+                                                                                          const std::shared_ptr<OutputFrame> &frame,
+                                                                                          SetupType type,
+                                                                                          std::unordered_set<OutputLayer *> &toUpdate);
 
     CompositingType m_selectedCompositor = NoCompositing;
 

@@ -13,14 +13,16 @@ FakeBackendOutput::FakeBackendOutput()
     setMode(QSize(1024, 720), 60000);
 }
 
-bool FakeBackendOutput::testPresentation(const std::shared_ptr<KWin::OutputFrame> &frame)
+std::expected<void, KWin::OutputError> FakeBackendOutput::testPresentation(const std::shared_ptr<KWin::OutputFrame> &frame)
 {
-    return false;
+    qFatal("The fake output should not be presented to");
+    return {};
 }
 
-bool FakeBackendOutput::present(const QList<KWin::OutputLayer *> &layersToUpdate, const std::shared_ptr<KWin::OutputFrame> &frame)
+std::expected<void, KWin::OutputError> FakeBackendOutput::present(const QList<KWin::OutputLayer *> &layersToUpdate, const std::shared_ptr<KWin::OutputFrame> &frame)
 {
-    return false;
+    qFatal("The fake output should not be presented to");
+    return {};
 }
 
 KWin::RenderLoop *FakeBackendOutput::renderLoop() const

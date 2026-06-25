@@ -258,15 +258,18 @@ const wl_callback_listener WaylandOutput::s_frameCallbackListener{
     .done = &WaylandOutput::handleFrame,
 };
 
-bool WaylandOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
+std::expected<void, OutputError> WaylandOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
 {
     auto cursorLayers = Compositor::self()->backend()->compatibleOutputLayers(this) | std::views::filter([](OutputLayer *layer) {
         return layer->type() == OutputLayerType::CursorOnly;
     });
     if (m_hasPointerLock && std::ranges::any_of(cursorLayers, &OutputLayer::isEnabled)) {
-        return false;
+        return std::unexpected(OutputError{
+            .code = OutputErrorCode::Other,
+            .message = QStringLiteral("Pointer lock forces a software cursor"),
+        });
     }
-    return true;
+    return {};
 }
 
 WaylandOutput::FrameData::FrameData(const std::shared_ptr<OutputFrame> &frame, struct wp_presentation_feedback *presentationFeedback, struct wl_callback *frameCallback)
@@ -294,14 +297,17 @@ WaylandOutput::FrameData::~FrameData()
     }
 }
 
-bool WaylandOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
+std::expected<void, OutputError> WaylandOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
     auto cursorLayers = layersToUpdate | std::views::filter([](OutputLayer *layer) {
         return layer->type() == OutputLayerType::CursorOnly;
     });
     if (!cursorLayers.empty()) {
         if (m_hasPointerLock && cursorLayers.front()->isEnabled()) {
-            return false;
+            return std::unexpected(OutputError{
+                .code = OutputErrorCode::Other,
+                .message = QStringLiteral("Pointer lock forces a software cursor"),
+            });
         }
         m_cursor->setEnabled(cursorLayers.front()->isEnabled());
         // TODO also move the actual cursor image update here too...
@@ -333,7 +339,7 @@ bool WaylandOutput::present(const QList<OutputLayer *> &layersToUpdate, const st
     wl_callback_add_listener(frameData.frameCallback, &s_frameCallbackListener, this);
     m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
     m_frames.push_back(std::move(frameData));
-    return true;
+    return {};
 }
 
 void WaylandOutput::frameDiscarded()
@@ -418,10 +424,17 @@ RenderLoop *WaylandOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
-bool WaylandOutput::presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay)
+std::expected<void, OutputError> WaylandOutput::presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay)
 {
     // the host compositor moves the cursor, there's nothing to do
-    return layer->type() == OutputLayerType::CursorOnly;
+    if (layer->type() == OutputLayerType::CursorOnly) {
+        return {};
+    } else {
+        return std::unexpected(OutputError{
+            .code = OutputErrorCode::Other,
+            .message = QStringLiteral("Async presentation isn't implemented for non-cursor planes yet"),
+        });
+    }
 }
 
 void WaylandOutput::init(const QSize &pixelSize, qreal scale, bool fullscreen)

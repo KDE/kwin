@@ -10,6 +10,8 @@
 
 #include "output.h"
 
+#include <expected>
+
 class QJsonArray;
 
 namespace KWin
@@ -292,9 +294,9 @@ public:
     virtual void setAutoRotateAvailable(bool isAvailable);
     virtual void setAutoBrightnessAvailable(bool isAvailable);
 
-    virtual bool presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay);
-    virtual bool testPresentation(const std::shared_ptr<OutputFrame> &frame) = 0;
-    virtual bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) = 0;
+    virtual std::expected<void, OutputError> presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay);
+    virtual std::expected<void, OutputError> testPresentation(const std::shared_ptr<OutputFrame> &frame) = 0;
+    virtual std::expected<void, OutputError> present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) = 0;
     virtual void repairPresentation();
 
     /**

@@ -526,13 +526,14 @@ static std::optional<std::unordered_map<OutputLayer *, Item *>> assignLayers(Ren
     return std::nullopt;
 }
 
-std::pair<QList<Compositor::LayerData>, bool> Compositor::setupLayers(SceneView *sceneView, LogicalOutput *logicalOutput,
-                                                                      BackendOutput *backendOutput,
-                                                                      const QList<OutputLayer *> &outputLayers,
-                                                                      const std::unordered_map<OutputLayer *, Item *> &assignments,
-                                                                      const std::shared_ptr<OutputFrame> &frame,
-                                                                      SetupType type,
-                                                                      std::unordered_set<OutputLayer *> &toUpdate)
+std::pair<QList<Compositor::LayerData>, std::expected<void, OutputError>> Compositor::setupLayers(SceneView *sceneView,
+                                                                                                  LogicalOutput *logicalOutput,
+                                                                                                  BackendOutput *backendOutput,
+                                                                                                  const QList<OutputLayer *> &outputLayers,
+                                                                                                  const std::unordered_map<OutputLayer *, Item *> &assignments,
+                                                                                                  const std::shared_ptr<OutputFrame> &frame,
+                                                                                                  SetupType type,
+                                                                                                  std::unordered_set<OutputLayer *> &toUpdate)
 {
     QList<OutputLayer *> unusedOutputLayers = outputLayers;
     QList<LayerData> layers;
@@ -636,7 +637,10 @@ std::pair<QList<Compositor::LayerData>, bool> Compositor::setupLayers(SceneView 
         } else if (!layer.directScanoutOnly && prepareRendering(layer.view, logicalOutput, backendOutput, layer.requiredAlphaBits)) {
             layer.directScanout = false;
         } else {
-            return std::make_pair(layers, false);
+            return std::make_pair(layers, std::unexpected(OutputError{
+                                              .code = OutputErrorCode::Other,
+                                              .message = QStringLiteral("preparing layers failed"),
+                                          }));
         }
     }
     return std::make_pair(layers, backendOutput->testPresentation(frame));
@@ -788,7 +792,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
     }
 
-    const auto renderLayers = [&]() {
+    const auto renderLayers = [&]() -> std::expected<void, OutputError> {
         for (auto &layer : layers) {
             if (!layer.view->layer()->needsRepaint()) {
                 continue;
@@ -798,13 +802,19 @@ void Compositor::composite(RenderLoop *renderLoop)
             layer.surfaceDamage |= layer.view->layer()->deviceRepaints();
             layer.view->layer()->resetRepaints();
             if (layer.view->layer()->isEnabled() && !layer.directScanout) {
-                result &= renderLayer(layer.view, logicalOutput, output, frame, layer.surfaceDamage);
-                if (!result) {
-                    qCWarning(KWIN_CORE, "Rendering a layer failed!");
-                    break;
+                if (!renderLayer(layer.view, logicalOutput, output, frame, layer.surfaceDamage)) {
+                    return std::unexpected(OutputError{
+                        .code = OutputErrorCode::Other,
+                        .message = QStringLiteral("Rendering a layer failed"),
+                    });
                 }
             }
         }
+        return {};
+    };
+    const auto present = [&]() {
+        // TODO make Output::present take a set instead of a list
+        return output->present(toUpdate | std::ranges::to<QList>(), frame);
     };
 
     // now actually render the layers that need rendering
@@ -817,7 +827,7 @@ void Compositor::composite(RenderLoop *renderLoop)
 
         // Note that effects may schedule repaints while rendering
         renderLoop->newFramePrepared();
-        renderLayers();
+        result = renderLayers();
     } else {
         renderLoop->newFramePrepared();
     }
@@ -826,12 +836,11 @@ void Compositor::composite(RenderLoop *renderLoop)
     // but the drm backend, where that's necessary, tracks that time itself
     totalTimeQuery->end();
     frame->addRenderTimeQuery(std::move(totalTimeQuery));
-    // TODO make Output::present take a set instead of a list
-    if (result && !output->present(toUpdate | std::ranges::to<QList>(), frame)) {
+    result = result.and_then(present);
+    if (!result) {
         // legacy modesetting can't do (useful) presentation tests
         // and even with atomic modesetting, drivers are buggy and atomic tests
         // sometimes have false positives
-        result = false;
 
         // same fallbacks as above:
         // first, fall back to composited primary + hardware cursor, if that's not already done
@@ -842,10 +851,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             idealLayerAssignments = assignLayers(primaryView, scenePlusCursor, allowedOutputLayers);
             std::tie(layers, result) = setupLayers(primaryView, logicalOutput, output, allowedOutputLayers, *idealLayerAssignments,
                                                    frame, SetupType::Fallback, toUpdate);
-            if (result) {
-                renderLayers();
-                result = output->present(toUpdate | std::ranges::to<QList>(), frame);
-            }
+            result = result.and_then(renderLayers).and_then(present);
         }
 
         // if this still doesn't work, fall back to primary only
@@ -854,10 +860,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             idealLayerAssignments = assignLayers(primaryView, sceneOnly, allowedOutputLayers);
             std::tie(layers, result) = setupLayers(primaryView, logicalOutput, output, allowedOutputLayers, *idealLayerAssignments,
                                                    frame, SetupType::Fallback, toUpdate);
-            if (result) {
-                renderLayers();
-                result = output->present(toUpdate | std::ranges::to<QList>(), frame);
-            }
+            result = result.and_then(renderLayers).and_then(present);
             if (result && !fallback1) {
                 // Disabling the cursor layer helped... so disable it permanently,
                 // to prevent constantly attempting to render the hardware cursor again.
@@ -875,7 +878,8 @@ void Compositor::composite(RenderLoop *renderLoop)
 
     // the layers have to stay valid until after postPaint, so this needs to happen after it
     if (!result) {
-        qCWarning(KWIN_CORE, "Failed to find a working output layer configuration! Enabled layers:");
+        qCWarning(KWIN_CORE, "Failed to find a working output layer configuration: %s", qPrintable(result.error().message));
+        qCWarning(KWIN_CORE, "Enabled layers:");
         for (const auto &layer : layers) {
             if (!layer.view->layer()->isEnabled()) {
                 continue;

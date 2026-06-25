@@ -42,14 +42,16 @@ RenderLoop *PlaceholderOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
-bool PlaceholderOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
+std::expected<void, OutputError> PlaceholderOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
 {
-    return false;
+    qFatal("This output is not supposed to be presented to");
+    return {};
 }
 
-bool PlaceholderOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
+std::expected<void, OutputError> PlaceholderOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
-    return false;
+    qFatal("This output is not supposed to be presented to");
+    return {};
 }
 
 } // namespace KWin

@@ -407,18 +407,18 @@ OutputConfigurationError DrmBackend::applyOutputChanges(const OutputConfiguratio
                 }
             }
         }
-        const auto error = gpu->testPendingConfiguration();
-        if (error != DrmPipeline::Error::None) {
+        const auto ret = gpu->testPendingConfiguration();
+        if (!ret) {
             for (DrmOutput *output : std::as_const(toBeEnabled)) {
                 output->revertQueuedChanges();
             }
             for (DrmOutput *output : std::as_const(toBeDisabled)) {
                 output->revertQueuedChanges();
             }
-            if (error == DrmPipeline::Error::NotEnoughCrtcs) {
+            if (ret.error().code == OutputErrorCode::NotEnoughCrtcs) {
                 // TODO make this more specific, this is per GPU!
                 return OutputConfigurationError::TooManyEnabledOutputs;
-            } else if (error == DrmPipeline::Error::Timeout) {
+            } else if (ret.error().code == OutputErrorCode::Timeout) {
                 return OutputConfigurationError::Timeout;
             } else {
                 return OutputConfigurationError::Unknown;

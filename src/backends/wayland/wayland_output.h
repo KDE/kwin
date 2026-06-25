@@ -89,7 +89,7 @@ public:
     ~WaylandOutput() override;
 
     RenderLoop *renderLoop() const override;
-    bool presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
+    std::expected<void, OutputError> presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
 
     void init(const QSize &pixelSize, qreal scale, bool fullscreen);
 
@@ -100,8 +100,8 @@ public:
 
     void lockPointer(KWayland::Client::Pointer *pointer, bool lock);
 
-    bool testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
-    bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
+    std::expected<void, OutputError> testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
+    std::expected<void, OutputError> present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
 
     void frameDiscarded();
     void framePresented(std::chrono::nanoseconds timestamp, uint32_t refreshRate);
