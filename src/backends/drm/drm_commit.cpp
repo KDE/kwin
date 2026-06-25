@@ -14,6 +14,7 @@
 #include "drm_crtc.h"
 #include "drm_gpu.h"
 #include "drm_object.h"
+#include "drm_output.h"
 #include "drm_property.h"
 
 #include <QCoreApplication>
@@ -234,9 +235,26 @@ std::expected<void, OutputError> DrmAtomicCommit::doCommit(uint32_t flags)
     if (it != s_errorCodeMap.end()) {
         err = it->second;
     }
+
+    // FIXME this method may be called from the commit thread, this is *not* safe atm! Options:
+    // - make DrmGpu lock all commit threads when modifying its lists (should be pretty easy)
+    // - return a different struct with object ids, and convert to OutputError in DrmPipeline
+    const auto pipelines = m_gpu->pipelines();
+    QList<BackendOutput *> outputs;
+
+    // FIXME who allocates and frees the memory of this list?
+    for (uint32_t obj : std::span(reinterpret_cast<uint32_t *>(error.failure_objs_ptr), error.count_objs)) {
+        const auto it = std::ranges::find(pipelines, obj, [](DrmPipeline *pipeline) {
+            return pipeline->connector()->id();
+        });
+        if (it != pipelines.end()) {
+            outputs.push_back((*it)->output());
+        }
+    }
     return std::unexpected(OutputError{
         .code = err,
         .message = QString::fromLatin1(error.failure_string),
+        .outputs = outputs,
     });
 }
 

@@ -474,10 +474,17 @@ enum class OutputErrorCode {
 };
 Q_ENUM_NS(OutputErrorCode);
 
+class BackendOutput;
+
 struct OutputError
 {
     OutputErrorCode code;
     QString message;
+    /**
+     * Potentially contains the list of affected outputs
+     * in the case of the ConnectorBandwidth error
+     */
+    QList<BackendOutput *> outputs;
 };
 
 } // namespace
