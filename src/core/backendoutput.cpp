@@ -758,9 +758,12 @@ std::optional<uint32_t> BackendOutput::minVrrRefreshRateHz() const
     return m_information.minVrrRefreshRateHz;
 }
 
-bool BackendOutput::presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay)
+std::expected<void, OutputError> BackendOutput::presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay)
 {
-    return false;
+    return std::unexpected(OutputError{
+        .code = OutputErrorCode::Other,
+        .message = QStringLiteral("Async presentation isn't implemented"),
+    });
 }
 
 void BackendOutput::repairPresentation()

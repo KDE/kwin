@@ -364,10 +364,13 @@ void DrmGpu::removeOutputs()
     }
 }
 
-DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs, std::chrono::steady_clock::time_point deadline)
+std::expected<void, OutputError> DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs, std::chrono::steady_clock::time_point deadline)
 {
     if (std::chrono::steady_clock::now() > deadline) {
-        return DrmPipeline::Error::Timeout;
+        return std::unexpected(OutputError{
+            .code = OutputErrorCode::Timeout,
+            .message = QStringLiteral("Checking CRTC assignments timed out"),
+        });
     }
     if (connectors.isEmpty()) {
         const auto result = testPipelines();
@@ -386,10 +389,13 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
         return checkCrtcAssignment(connectors, crtcs, deadline);
     }
     if (crtcs.isEmpty()) {
-        // we have no crtc left to drive this connector
-        return DrmPipeline::Error::NotEnoughCrtcs;
+        return std::unexpected(OutputError{
+            .code = OutputErrorCode::NotEnoughCrtcs,
+            .message = QStringLiteral("More outputs are enabled than there are CRTCs"),
+        });
     }
     DrmCrtc *currentCrtc = nullptr;
+    std::expected<void, OutputError> ret;
     if (m_atomicModeSetting) {
         // try the crtc that this connector is already connected to first
         const uint32_t id = connector->crtcId.value();
@@ -401,9 +407,12 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
             auto crtcsLeft = crtcs;
             crtcsLeft.removeOne(currentCrtc);
             pipeline->setCrtc(currentCrtc);
-            DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcsLeft, deadline);
-            if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending || err == DrmPipeline::Error::Timeout) {
-                return err;
+            ret = checkCrtcAssignment(connectors, crtcsLeft, deadline);
+            if (ret
+                || ret.error().code == OutputErrorCode::NoPermission
+                || ret.error().code == OutputErrorCode::InvalidApiUsage
+                || ret.error().code == OutputErrorCode::Timeout) {
+                return ret;
             }
         }
     }
@@ -412,20 +421,23 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
             auto crtcsLeft = crtcs;
             crtcsLeft.removeOne(crtc);
             pipeline->setCrtc(crtc);
-            DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcsLeft, deadline);
-            if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending || err == DrmPipeline::Error::Timeout) {
-                return err;
+            ret = checkCrtcAssignment(connectors, crtcsLeft, deadline);
+            if (ret
+                || ret.error().code == OutputErrorCode::NoPermission
+                || ret.error().code == OutputErrorCode::InvalidApiUsage
+                || ret.error().code == OutputErrorCode::Timeout) {
+                return ret;
             }
         }
     }
-    return DrmPipeline::Error::InvalidArguments;
+    return ret;
 }
 
 static const std::chrono::milliseconds s_checkCrtcTimeout = environmentVariableIntValue("KWIN_DRM_PENDING_CONFIG_TIMEOUT").transform([](int value) {
     return std::chrono::milliseconds(value);
 }).value_or(3s);
 
-DrmPipeline::Error DrmGpu::testPendingConfiguration()
+std::expected<void, OutputError> DrmGpu::testPendingConfiguration()
 {
     QList<DrmConnector *> connectors;
     QList<DrmCrtc *> crtcs;
@@ -453,9 +465,12 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
         });
     }
     m_forceLowBandwidthMode = false;
-    auto err = checkCrtcAssignment(connectors, crtcs, std::chrono::steady_clock::now() + s_checkCrtcTimeout);
-    if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
-        return err;
+    auto ret = checkCrtcAssignment(connectors, crtcs, std::chrono::steady_clock::now() + s_checkCrtcTimeout);
+    if (ret
+        || ret.error().code == OutputErrorCode::NoPermission
+        || ret.error().code == OutputErrorCode::InvalidApiUsage
+        || ret.error().code == OutputErrorCode::Timeout) {
+        return ret;
     }
     const bool hasPreferAccuracy = std::ranges::any_of(m_drmOutputs, [](const auto &output) {
         return output->colorPowerTradeoff() == BackendOutput::ColorPowerTradeoff::PreferAccuracy;
@@ -464,9 +479,9 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
         // We currently don't have any information about why the output config
         // got rejected; one possibility is missing memory bandwidth.
         m_forceLowBandwidthMode = true;
-        err = checkCrtcAssignment(connectors, crtcs, std::chrono::steady_clock::now() + s_checkCrtcTimeout);
+        ret = checkCrtcAssignment(connectors, crtcs, std::chrono::steady_clock::now() + s_checkCrtcTimeout);
     }
-    return err;
+    return ret;
 }
 
 void DrmGpu::releaseUnusedBuffers()
@@ -493,11 +508,11 @@ void DrmGpu::releaseUnusedBuffers()
     }
 }
 
-DrmPipeline::Error DrmGpu::testPipelines()
+std::expected<void, OutputError> DrmGpu::testPipelines()
 {
     if (m_pipelines.empty()) {
         // nothing to do
-        return DrmPipeline::Error::None;
+        return {};
     }
     assignOutputLayers();
     for (DrmPipeline *pipeline : m_pipelines) {
@@ -514,7 +529,10 @@ DrmPipeline::Error DrmGpu::testPipelines()
                 layer->setEnabled(true);
                 // ensure we have suitable buffers for the test
                 if (!layer->preparePresentationTest()) {
-                    return DrmPipeline::Error::InvalidArguments;
+                    return std::unexpected(OutputError{
+                        .code = OutputErrorCode::Other,
+                        .message = QStringLiteral("Preparing test buffer failed"),
+                    });
                 }
             } else {
                 layer->setEnabled(false);
@@ -674,7 +692,9 @@ std::unique_ptr<DrmLease> DrmGpu::leaseOutputs(const QList<DrmOutput *> &outputs
         output->pipeline()->setEnable(true);
         output->pipeline()->setActive(false);
     }
-    if (testPendingConfiguration() != DrmPipeline::Error::None) {
+    auto ret = testPendingConfiguration();
+    if (!ret) {
+        qCWarning(KWIN_DRM, "Output configuration for a drm lease failed: %s", qPrintable(ret.error().message));
         return nullptr;
     }
 
@@ -845,29 +865,31 @@ void DrmGpu::doModeset()
             // when the last output is removed, there's no pipeline commit left
             // to disable the now unused objects with. Disable them explicitly,
             // otherwise the kernel keeps scanning out to a disconnected connector
-            DrmPipeline::commitPipelines(pipelines, this, DrmPipeline::CommitMode::CommitModeset, unusedModesetObjects());
+            auto ret = DrmPipeline::commitPipelines(pipelines, this, DrmPipeline::CommitMode::CommitModeset, unusedModesetObjects());
+            if (!ret) {
+                qCWarning(KWIN_DRM, "Failed to disable unused drm resources: %s", qPrintable(ret.error().message));
+            }
         }
         m_forceModeset = false;
         return;
     }
     m_inModeset = true;
-    const DrmPipeline::Error err = DrmPipeline::commitPipelines(pipelines, this, DrmPipeline::CommitMode::CommitModeset, unusedModesetObjects());
+    auto ret = DrmPipeline::commitPipelines(pipelines, this, DrmPipeline::CommitMode::CommitModeset, unusedModesetObjects());
     for (DrmPipeline *pipeline : std::as_const(pipelines)) {
         if (pipeline->modesetPresentPending()) {
             pipeline->resetModesetPresentPending();
         }
     }
     m_forceModeset = false;
-    if (err == DrmPipeline::Error::None) {
+    if (ret) {
         for (const auto &[pipeline, frame] : m_pendingModesetFrames) {
             frame->presented(std::chrono::steady_clock::now().time_since_epoch(), PresentationMode::VSync);
         }
     } else {
-        if (err != DrmPipeline::Error::FramePending) {
-            QTimer::singleShot(0, m_platform, [backend = m_platform]() {
-                backend->updateOutputs();
-            });
-        }
+        qCCritical(KWIN_DRM, "Modeset failed: %s", qPrintable(ret.error().message));
+        QTimer::singleShot(0, m_platform, [backend = m_platform]() {
+            backend->updateOutputs();
+        });
     }
     m_pendingModesetFrames.clear();
     m_inModeset = false;

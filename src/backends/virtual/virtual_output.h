@@ -27,8 +27,8 @@ public:
     explicit VirtualOutput(VirtualBackend *parent, bool internal, const QSize &physicalSizeInMM, OutputTransform panelOrientation, const QByteArray &edid, std::optional<QByteArray> edidIdentifierOverride, const std::optional<QString> &connectorName, const std::optional<QByteArray> &mstPath);
     ~VirtualOutput() override;
 
-    bool testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
-    bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
+    std::expected<void, OutputError> testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
+    std::expected<void, OutputError> present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
 
     void init(const QSize &pixelSize, qreal scale, const QList<OutputModeline> &modes);
 
