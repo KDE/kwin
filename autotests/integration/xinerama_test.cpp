@@ -52,13 +52,13 @@ void XineramaTest::indexToOutput()
     OutputConfiguration config;
     config.changeSet(outputs[0]->backendOutput())->priority = 0;
     config.changeSet(outputs[1]->backendOutput())->priority = 1;
-    QCOMPARE(workspace()->applyOutputConfiguration(config), OutputConfigurationError::None);
+    QVERIFY(workspace()->applyOutputConfiguration(config));
     QCOMPARE(workspace()->xineramaIndexToOutput(0), outputs.at(0));
     QCOMPARE(workspace()->xineramaIndexToOutput(1), outputs.at(1));
 
     config.changeSet(outputs[0]->backendOutput())->priority = 1;
     config.changeSet(outputs[1]->backendOutput())->priority = 0;
-    QCOMPARE(workspace()->applyOutputConfiguration(config), OutputConfigurationError::None);
+    QVERIFY(workspace()->applyOutputConfiguration(config));
     QCOMPARE(workspace()->xineramaIndexToOutput(0), outputs.at(1));
     QCOMPARE(workspace()->xineramaIndexToOutput(1), outputs.at(0));
 }

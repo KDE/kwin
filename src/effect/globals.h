@@ -406,14 +406,6 @@ enum WindowTypeMask {
 };
 Q_DECLARE_FLAGS(WindowTypes, WindowTypeMask)
 
-enum class OutputConfigurationError {
-    None,
-    Unknown,
-    TooManyEnabledOutputs,
-    Timeout,
-    NotActive,
-};
-
 /**
  * The DecorationPolicy enum indicates how the decoration mode is determined.
  */
@@ -480,6 +472,10 @@ enum class OutputErrorCode {
      * No valid configuration could be found in the specified time
      */
     Timeout,
+    /**
+     * Configuration failed because the session is not active
+     */
+    NotActive,
 };
 Q_ENUM_NS(OutputErrorCode);
 
