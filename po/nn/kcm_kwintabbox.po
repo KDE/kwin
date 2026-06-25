@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-14 00:45+0000\n"
-"PO-Revision-Date: 2026-06-22 19:27+0200\n"
+"PO-Revision-Date: 2026-06-24 20:27+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
 "Language: nn\n"
@@ -22,17 +22,17 @@ msgstr ""
 #: layoutpreview.cpp:28
 #, kde-format
 msgid "Launch an interactive preview for a tabbox switcher"
-msgstr ""
+msgstr "Start interaktiv førehandsvising for faneboks-bytar"
 
 #: layoutpreview.cpp:29
 #, kde-format
 msgid "Path to the Window Switcher QML main file"
-msgstr ""
+msgstr "Adresse til QML-hovudfil for vindaugsbytar"
 
 #: layoutpreview.cpp:30
 #, kde-format
 msgid "Show also a thumbnail for the desktop"
-msgstr ""
+msgstr "Vis òg miniatyrbilete for skrivebordet"
 
 #: layoutpreview.cpp:159
 #, kde-format
@@ -100,10 +100,9 @@ msgstr "Innhald"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" entry"
+#, kde-format
 msgid "Include \"Peek at Desktop\" entry"
-msgstr "Ta med oppføring for «Vis skrivebordet»"
+msgstr "Ta med oppføring for «Kikk på skrivebordet»"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
@@ -280,7 +279,7 @@ msgstr "Vis valt vindauge"
 #: main.ui:644
 #, kde-format
 msgid "Enable the window list effect"
-msgstr ""
+msgstr "Slå på vindaugsliste-effekten"
 
 #. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
 #: main.ui:678
@@ -294,7 +293,7 @@ msgstr ""
 #: main.ui:701
 #, kde-format
 msgid "The time in milliseconds to wait before showing the task switcher."
-msgstr ""
+msgstr "Tid i millisekund å venta før vising av oppgåvebytaren."
 
 #. i18n: ectx: property (text), widget (QLabel, label_DelayTime)
 #: main.ui:704
@@ -312,7 +311,7 @@ msgstr " ms"
 #: main.ui:735
 #, kde-format
 msgid "Delay before the window list appears"
-msgstr ""
+msgstr "Tid før vindaugslista skal visast"
 
 #. i18n: ectx: property (text), widget (QLabel, label_showScreen)
 #: main.ui:742
@@ -324,14 +323,13 @@ msgstr "Vis på skjermen:"
 #: main.ui:758
 #, kde-format
 msgid "Select which screen the task switcher should be displayed on."
-msgstr ""
+msgstr "Vel kva skjerm oppgåvebytaren skal visast på."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, showScreenCombo)
 #: main.ui:762
-#, fuzzy, kde-format
-#| msgid "All other screens"
+#, kde-format
 msgid "Active screen"
-msgstr "Alle andre skjermar"
+msgstr "Gjeldande skjerm"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, showScreenCombo)
 #: main.ui:767

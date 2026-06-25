@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-05 00:46+0000\n"
-"PO-Revision-Date: 2026-06-22 19:26+0200\n"
+"PO-Revision-Date: 2026-06-24 20:29+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
 "Language: nn\n"
@@ -38,13 +38,13 @@ msgstr "Lyttar etter tastetrykk:"
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
-msgstr ""
+msgstr "Forbode"
 
 #: ui/main.qml:61
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
-msgstr ""
+msgstr "Sikrast – globale snarvegar fungerer ikkje X11-program"
 
 #: ui/main.qml:67
 #, kde-format
@@ -93,28 +93,22 @@ msgid ""
 msgstr ""
 
 #: ui/main.qml:111
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will reduce system security and permit "
 "malicious software to steal passwords and spy on the text that you type. "
 "Make sure you understand and accept this risk."
 msgstr ""
-"Merk at du med denne innstillinga reduserer tryggleiks­nivået til systemet "
-"ned til tryggleiks­nivået til X11-økta, og du tillèt potensielt vondsinna "
-"programvare å stela passord og spionera på teksten du skriv. Sjå til at du "
-"er klar over denne risikoen, og godtek han."
+"Merk at du med denne innstillinga reduserer tryggleiks­nivået til systemet og "
+"tillèt potensielt vondsinna programvare å stela passord og spionera på "
+"teksten du skriv. Sjå til at du er klar over denne risikoen, og godtek han."
 
 #: ui/main.qml:118
-#, fuzzy, kde-format
-#| msgid "Additionally include mouse buttons"
+#, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
-msgstr "Ta òg med museknappar"
+msgstr "Lytting etter museklikk:"
 
 #: ui/main.qml:121
 #, kde-format
@@ -165,7 +159,7 @@ msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
-msgstr ""
+msgstr "Tillat utan å be om løyve"
 
 #: ui/main.qml:174
 #, kde-format
