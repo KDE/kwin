@@ -20,6 +20,29 @@
 #include <QThread>
 #include <set>
 
+#ifndef DRM_MODE_ATOMIC_FAILURE_STRING_LEN
+#define DRM_MODE_ATOMIC_FAILURE_STRING_LEN 128
+struct drm_mode_atomic_err_code
+{
+    __u64 failure_code;
+    __u64 failure_objs_ptr;
+    __u64 reserved;
+    __u32 count_objs;
+    char failure_string[DRM_MODE_ATOMIC_FAILURE_STRING_LEN];
+};
+enum drm_mode_atomic_failure_codes {
+    DRM_MODE_ATOMIC_UNSPECIFIED_ERROR,
+    DRM_MODE_ATOMIC_INVALID_API_USAGE,
+    DRM_MODE_ATOMIC_NEED_FULL_MODESET,
+    DRM_MODE_ATOMIC_ASYNC_PROP_CHANGED,
+    DRM_MODE_ATOMIC_SCANOUT_BW,
+    DRM_MODE_ATTOMIC_CONNECTOR_BW,
+    DRM_MODE_ATTOMIC_PIPE_BW,
+    DRM_MODE_ATOMIC_MEMORY_DOMAIN,
+    DRM_MODE_ATOMIC_SPEC_VIOLOATION,
+};
+#endif
+
 using namespace std::chrono_literals;
 
 namespace KWin
@@ -152,6 +175,18 @@ std::expected<void, OutputError> DrmAtomicCommit::commitModeset()
     return doCommit(DRM_MODE_ATOMIC_ALLOW_MODESET);
 }
 
+static const std::map<uint64_t, OutputErrorCode> s_errorCodeMap = {
+    std::make_pair(DRM_MODE_ATOMIC_UNSPECIFIED_ERROR, OutputErrorCode::Other),
+    std::make_pair(DRM_MODE_ATOMIC_INVALID_API_USAGE, OutputErrorCode::InvalidApiUsage),
+    std::make_pair(DRM_MODE_ATOMIC_NEED_FULL_MODESET, OutputErrorCode::NeedsModeset),
+    std::make_pair(DRM_MODE_ATOMIC_ASYNC_PROP_CHANGED, OutputErrorCode::AsyncFlipFailure),
+    std::make_pair(DRM_MODE_ATOMIC_SCANOUT_BW, OutputErrorCode::ScanoutBandwidth),
+    std::make_pair(DRM_MODE_ATTOMIC_CONNECTOR_BW, OutputErrorCode::ConnectorBandwidth),
+    std::make_pair(DRM_MODE_ATTOMIC_PIPE_BW, OutputErrorCode::PipeBandwidth),
+    std::make_pair(DRM_MODE_ATOMIC_MEMORY_DOMAIN, OutputErrorCode::MemoryDomain),
+    std::make_pair(DRM_MODE_ATOMIC_SPEC_VIOLOATION, OutputErrorCode::OtherHardwareLimitation),
+};
+
 std::expected<void, OutputError> DrmAtomicCommit::doCommit(uint32_t flags)
 {
     std::vector<uint32_t> objects;
@@ -184,10 +219,25 @@ std::expected<void, OutputError> DrmAtomicCommit::doCommit(uint32_t flags)
         .reserved = 0,
         .user_data = reinterpret_cast<uint64_t>(this),
     };
+    drm_mode_atomic_err_code error{};
+    if (m_gpu->commitFeedbackSupported()) {
+        commitData.reserved = reinterpret_cast<uint64_t>(&error);
+    }
     if (drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_ATOMIC, &commitData) == 0) {
         return {};
     }
-    return errnoToError();
+    if (!m_gpu->commitFeedbackSupported()) {
+        return errnoToError();
+    }
+    OutputErrorCode err = OutputErrorCode::Other;
+    const auto it = s_errorCodeMap.find(error.failure_code);
+    if (it != s_errorCodeMap.end()) {
+        err = it->second;
+    }
+    return std::unexpected(OutputError{
+        .code = err,
+        .message = QString::fromLatin1(error.failure_string),
+    });
 }
 
 void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp)

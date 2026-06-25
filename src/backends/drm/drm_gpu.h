@@ -93,6 +93,7 @@ public:
     bool asyncPageflipSupported() const;
     bool colorPipelineSupported() const;
     bool sharpnessSupported() const;
+    bool commitFeedbackSupported() const;
     std::optional<Version> nvidiaDriverVersion() const;
     DrmBackend *platform() const;
     /**
@@ -163,6 +164,7 @@ private:
     bool m_forceLowBandwidthMode = false;
     bool m_forceImplicitModifiers = false;
     bool m_sharpnessSupported = false;
+    bool m_commitFeedbackSupported = false;
     clockid_t m_presentationClock;
     RenderDevice *m_renderDevice = nullptr;
     RenderDevice *m_kmsRenderDevice = nullptr;
