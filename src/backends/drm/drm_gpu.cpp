@@ -48,6 +48,9 @@
 #ifndef DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP
 #define DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP 0x15
 #endif
+#ifndef DRM_CAP_ATOMIC_ERROR_REPORTING
+#define DRM_CAP_ATOMIC_ERROR_REPORTING 0x16
+#endif
 #ifndef DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE
 #define DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE 7
 #endif
@@ -112,6 +115,8 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     } else {
         m_asyncPageflipSupported = drmGetCap(fd, DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP, &capability) == 0 && capability == 1;
     }
+
+    m_commitFeedbackSupported = drmGetCap(fd, DRM_CAP_ATOMIC_ERROR_REPORTING, &capability) == 0 && capability == 1;
 
     m_delayedModesetTimer.setInterval(0);
     m_delayedModesetTimer.setSingleShot(true);
@@ -774,6 +779,11 @@ bool DrmGpu::sharpnessSupported() const
 bool DrmGpu::colorPipelineSupported() const
 {
     return m_colorPipelineSupported;
+}
+
+bool DrmGpu::commitFeedbackSupported() const
+{
+    return m_commitFeedbackSupported;
 }
 
 std::optional<Version> DrmGpu::nvidiaDriverVersion() const
