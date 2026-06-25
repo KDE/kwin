@@ -177,7 +177,10 @@ Workspace::Workspace()
         Q_EMIT dpmsStateChanged(animationTime);
         // applyOutputConfiguration sets the correct value
         OutputConfiguration cfg;
-        applyOutputConfiguration(cfg);
+        const auto result = applyOutputConfiguration(cfg);
+        if (!result) {
+            qCWarning(KWIN_CORE, "Setting DPMS mode to \"TurningOff\" failed: %s", qPrintable(result.error().message));
+        }
     });
 
     initShortcuts();
@@ -237,7 +240,10 @@ void Workspace::init()
             return;
         }
         auto &[config, type] = *opt;
-        applyOutputConfiguration(config);
+        const auto result = applyOutputConfiguration(config);
+        if (!result) {
+            qCWarning(KWIN_CORE, "Applying sensor changes failed: %s", qPrintable(result.error().message));
+        }
     };
     connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, applySensorChanges);
     connect(kwinApp()->tabletModeManager(), &TabletModeManager::tabletModeChanged, this, applySensorChanges);
@@ -261,7 +267,10 @@ void Workspace::init()
                 change->brightnessReason = BackendOutput::BrightnessReason::AutomaticBrightness;
             }
         }
-        applyOutputConfiguration(config);
+        const auto result = applyOutputConfiguration(config);
+        if (!result) {
+            qCWarning(KWIN_CORE, "Applying light sensor changes failed: %s", qPrintable(result.error().message));
+        }
     };
 
     // constant brightness adjustments can be rather annoying and be perceived as flicker, so
@@ -569,12 +578,14 @@ void Workspace::requestDpmsState(DpmsState state)
 
     // the config can be empty, it gets adjusted in applyOutputConfiguration
     OutputConfiguration cfg;
+    const auto result = applyOutputConfiguration(cfg);
+    if (!result) {
+        qCWarning(KWIN_CORE, "Setting dpms mode to %s failed: %s", m_dpms == DpmsState::On ? "On" : "AboutToTurnOff", qPrintable(result.error().message));
+    }
     if (m_dpms == DpmsState::On) {
-        applyOutputConfiguration(cfg);
         m_dpmsFilter.reset();
         m_dpmsTimer.stop();
     } else {
-        applyOutputConfiguration(cfg);
         m_dpmsFilter = std::make_unique<DpmsInputEventFilter>();
         input()->installInputEventFilter(m_dpmsFilter.get());
         m_dpmsTimer.start(animationTime);
