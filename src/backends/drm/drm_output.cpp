@@ -116,15 +116,21 @@ bool DrmOutput::shouldDisableNonPrimaryPlanes() const
     return m_desiredPresentationMode == PresentationMode::Async || m_desiredPresentationMode == PresentationMode::AdaptiveAsync;
 }
 
-bool DrmOutput::presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay)
+std::expected<void, OutputError> DrmOutput::presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay)
 {
     if (!m_pipeline) {
         // this can happen when the output gets hot-unplugged
         // FIXME fix output lifetimes so that this doesn't happen anymore...
-        return false;
+        return std::unexpected(OutputError{
+            .code = OutputErrorCode::InvalidApiUsage,
+            .message = QStringLiteral("FIXME"),
+        });
     }
     if (m_pipeline->gpu()->atomicModeSetting() && shouldDisableNonPrimaryPlanes() && layer->isEnabled()) {
-        return false;
+        return std::unexpected(OutputError{
+            .code = OutputErrorCode::AsyncFlipFailure,
+            .message = QStringLiteral("Can't use non-primary planes with tearing"),
+        });
     }
     return m_pipeline->presentAsync(layer, allowedVrrDelay);
 }
@@ -277,7 +283,7 @@ void DrmOutput::updateInformation()
     setInformation(nextInfo);
 }
 
-bool DrmOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
+std::expected<void, OutputError> DrmOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
 {
     m_desiredPresentationMode = frame->presentationMode();
     const auto layers = m_pipeline->layers();
@@ -288,11 +294,14 @@ bool DrmOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
         // modesets should be done with only the primary plane
         // as additional planes may mean we can't power all outputs
         if (nonPrimaryEnabled) {
-            return false;
+            return std::unexpected(OutputError{
+                .code = OutputErrorCode::NeedsModeset,
+                .message = QStringLiteral("Modesets should only be done with the primary plane"),
+            });
         }
         // the atomic test for the modeset has already been done before
         // so testing again isn't super useful
-        return true;
+        return {};
     }
     m_pipeline->setPresentationMode(frame->presentationMode());
     if (nonPrimaryEnabled) {
@@ -303,42 +312,41 @@ bool DrmOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
             m_pipeline->setPresentationMode(PresentationMode::VSync);
         }
     }
-    DrmPipeline::Error err = m_pipeline->testPresent(frame);
-    if (err != DrmPipeline::Error::None && frame->presentationMode() == PresentationMode::AdaptiveAsync) {
+    auto ret = m_pipeline->testPresent(frame);
+    if (!ret && frame->presentationMode() == PresentationMode::AdaptiveAsync) {
         // tearing can fail in various circumstances, but vrr shouldn't
         m_pipeline->setPresentationMode(PresentationMode::AdaptiveSync);
-        err = m_pipeline->testPresent(frame);
+        ret = m_pipeline->testPresent(frame);
     }
-    if (err != DrmPipeline::Error::None && frame->presentationMode() != PresentationMode::VSync) {
+    if (!ret && frame->presentationMode() != PresentationMode::VSync) {
         // retry with the most basic presentation mode
         m_pipeline->setPresentationMode(PresentationMode::VSync);
-        err = m_pipeline->testPresent(frame);
+        ret = m_pipeline->testPresent(frame);
     }
-    return err == DrmPipeline::Error::None;
+    return ret;
 }
 
-bool DrmOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
+std::expected<void, OutputError> DrmOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
     m_desiredPresentationMode = frame->presentationMode();
     const bool needsModeset = m_gpu->needsModeset();
-    bool success;
+    std::expected<void, OutputError> ret;
     if (needsModeset) {
         m_pipeline->setPresentationMode(PresentationMode::VSync);
         m_pipeline->setContentType(DrmConnector::DrmContentType::Graphics);
         m_pipeline->maybeModeset(frame);
-        success = true;
     } else {
         // the presentation mode of the pipeline is already set in testPresentation
-        success = m_pipeline->present(layersToUpdate, frame) == DrmPipeline::Error::None;
+        ret = m_pipeline->present(layersToUpdate, frame);
     }
     m_renderLoop->setPresentationMode(m_pipeline->presentationMode());
-    if (!success) {
-        return false;
+    if (!ret) {
+        return ret;
     }
     updateBrightness(frame->brightness().value_or(m_state.currentBrightness.value_or(m_state.brightnessSetting)),
                      frame->artificialHdrHeadroom().value_or(m_state.artificialHdrHeadroom),
                      frame->dimmingFactor().value_or(m_state.currentDimming));
-    return true;
+    return ret;
 }
 
 void DrmOutput::repairPresentation()
@@ -792,7 +800,7 @@ void DrmOutput::tryKmsColorOffloading(State &next)
         }
     }
     m_pipeline->setCrtcColorPipeline(colorPipeline);
-    if (DrmPipeline::commitPipelines({m_pipeline}, m_gpu, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
+    if (DrmPipeline::commitPipelines({m_pipeline}, m_gpu, DrmPipeline::CommitMode::Test)) {
         m_pipeline->applyPendingChanges();
         next.layerBlendingColor = next.blendingColor;
         m_needsShadowBuffer = false;
@@ -805,7 +813,7 @@ void DrmOutput::tryKmsColorOffloading(State &next)
         ColorPipeline simplerPipeline(ValueRange{0, 1}, ColorspaceType::NonLinearRGB);
         simplerPipeline.addMatrix(next.blendingColor->toOther(*encoding, RenderingIntent::AbsoluteColorimetricNoAdaptation), colorPipeline.currentOutputRange(), ColorspaceType::NonLinearRGB);
         m_pipeline->setCrtcColorPipeline(simplerPipeline);
-        if (DrmPipeline::commitPipelines({m_pipeline}, m_gpu, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
+        if (DrmPipeline::commitPipelines({m_pipeline}, m_gpu, DrmPipeline::CommitMode::Test)) {
             m_pipeline->applyPendingChanges();
             next.layerBlendingColor = next.blendingColor;
             m_needsShadowBuffer = false;

@@ -111,7 +111,7 @@ public:
     bool updateOutputs();
     void removeOutputs();
 
-    DrmPipeline::Error testPendingConfiguration();
+    std::expected<void, OutputError> testPendingConfiguration();
     void releaseUnusedBuffers();
     bool needsModeset() const;
     void maybeModeset(DrmPipeline *pipeline, const std::shared_ptr<OutputFrame> &frame);
@@ -147,8 +147,8 @@ private:
     void setRenderDevice(RenderDevice *device);
     void updateRenderDevice();
 
-    DrmPipeline::Error checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs, std::chrono::steady_clock::time_point deadline);
-    DrmPipeline::Error testPipelines();
+    std::expected<void, OutputError> checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs, std::chrono::steady_clock::time_point deadline);
+    std::expected<void, OutputError> testPipelines();
     QList<DrmObject *> unusedModesetObjects() const;
     void assignOutputLayers();
 
