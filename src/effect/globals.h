@@ -457,6 +457,27 @@ enum class OutputErrorCode {
      */
     NotEnoughCrtcs,
     /**
+     * The requested configuration requires more scanout bandwidth
+     * than the hardware can provide
+     */
+    ScanoutBandwidth,
+    /**
+     * The requested mode requires more bandwidth on a connector
+     * than the GPU, cable or display can provide
+     */
+    ConnectorBandwidth,
+    /**
+     * eh, same as scanout bandwidth?
+     */
+    PipeBandwidth,
+    /**
+     * A buffer in the configuration can't be used for scanout because
+     * it's allocated in the wrong memory domain. This could mean it's
+     * not allocated with GBM_BO_USE_SCANOUT, or it's in system memory
+     * and we attempt scanout on a dedicated GPU
+     */
+    MemoryDomain,
+    /**
      * Any hardware limitation that doesn't fall into the other categories.
      */
     OtherHardwareLimitation,
