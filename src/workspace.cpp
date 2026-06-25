@@ -177,7 +177,10 @@ Workspace::Workspace()
         Q_EMIT dpmsStateChanged(animationTime);
         // applyOutputConfiguration sets the correct value
         OutputConfiguration cfg;
-        (void)applyOutputConfiguration(cfg);
+        const auto result = applyOutputConfiguration(cfg);
+        if (!result) {
+            qCWarning(KWIN_CORE, "Setting DPMS mode to \"TurningOff\" failed: %s", qPrintable(result.error().message));
+        }
     });
 
     initShortcuts();
@@ -237,7 +240,10 @@ void Workspace::init()
             return;
         }
         auto &[config, type] = *opt;
-        (void)applyOutputConfiguration(config);
+        const auto result = applyOutputConfiguration(config);
+        if (!result) {
+            qCWarning(KWIN_CORE, "Applying sensor changes failed: %s", qPrintable(result.error().message));
+        }
     };
     connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, applySensorChanges);
     connect(kwinApp()->tabletModeManager(), &TabletModeManager::tabletModeChanged, this, applySensorChanges);
@@ -263,8 +269,12 @@ void Workspace::init()
                 outsideDeadzone = outsideDeadzone || std::fabs(output->brightnessSetting() / *change->brightness - 1) > s_autoBrightnessDeadzone;
             }
         }
-        if (outsideDeadzone) {
-            (void)applyOutputConfiguration(config);
+        if (!outsideDeadzone) {
+            return;
+        }
+        const auto result = applyOutputConfiguration(config);
+        if (!result) {
+            qCWarning(KWIN_CORE, "Applying light sensor changes failed: %s", qPrintable(result.error().message));
         }
     };
 
@@ -575,13 +585,15 @@ void Workspace::requestDpmsState(DpmsState state)
 
     // the config can be empty, it gets adjusted in applyOutputConfiguration
     OutputConfiguration cfg;
+    const auto result = applyOutputConfiguration(cfg);
+    if (!result) {
+        qCWarning(KWIN_CORE, "Setting dpms mode to %s failed: %s", m_dpms == DpmsState::On ? "On" : "AboutToTurnOff", qPrintable(result.error().message));
+    }
     if (m_dpms == DpmsState::On) {
-        (void)applyOutputConfiguration(cfg);
         m_dpmsFilter.reset();
         m_dpmsTimer.stop();
         m_sleepInhibitor.reset();
     } else {
-        (void)applyOutputConfiguration(cfg);
         m_dpmsFilter = std::make_unique<DpmsInputEventFilter>();
         input()->installInputEventFilter(m_dpmsFilter.get());
         m_dpmsTimer.start(animationTime);
