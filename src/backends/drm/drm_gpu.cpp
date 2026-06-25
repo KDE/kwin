@@ -415,7 +415,9 @@ std::expected<void, OutputError> DrmGpu::checkCrtcAssignment(QList<DrmConnector 
             if (ret
                 || ret.error().code == OutputErrorCode::NoPermission
                 || ret.error().code == OutputErrorCode::InvalidApiUsage
-                || ret.error().code == OutputErrorCode::Timeout) {
+                || ret.error().code == OutputErrorCode::Timeout
+                || ret.error().code == OutputErrorCode::ConnectorBandwidth
+                || ret.error().code == OutputErrorCode::ScanoutBandwidth) {
                 return ret;
             }
         }
@@ -429,7 +431,9 @@ std::expected<void, OutputError> DrmGpu::checkCrtcAssignment(QList<DrmConnector 
             if (ret
                 || ret.error().code == OutputErrorCode::NoPermission
                 || ret.error().code == OutputErrorCode::InvalidApiUsage
-                || ret.error().code == OutputErrorCode::Timeout) {
+                || ret.error().code == OutputErrorCode::Timeout
+                || ret.error().code == OutputErrorCode::ConnectorBandwidth
+                || ret.error().code == OutputErrorCode::ScanoutBandwidth) {
                 return ret;
             }
         }
