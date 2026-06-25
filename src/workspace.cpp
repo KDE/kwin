@@ -687,15 +687,19 @@ void Workspace::updateOutputConfiguration()
             // can't do anything, have to wait for a VT switch
             break;
         case OutputErrorCode::ScanoutBandwidth:
-        case OutputErrorCode::ConnectorBandwidth:
-            if (toEnable.size() == 1) {
+        case OutputErrorCode::ConnectorBandwidth: {
+            QList<BackendOutput *> affectedOutputs = toEnable;
+            if (result.error().code == OutputErrorCode::ConnectorBandwidth) {
+                affectedOutputs = result.error().outputs;
+            }
+            if (affectedOutputs.size() == 1) {
                 // we must reduce resolution and refresh rate
                 const auto bandwidthEstimation = [](const OutputModeline &mode) {
                     return mode.size().width() * mode.size().height() * mode.refreshRate();
                 };
 
-                auto modes = toEnable[0]->modes() | std::views::transform(&OutputMode::modeline) | std::ranges::to<QList>();
-                const auto change = cfg.changeSet(toEnable[0]);
+                auto modes = affectedOutputs[0]->modes() | std::views::transform(&OutputMode::modeline) | std::ranges::to<QList>();
+                const auto change = cfg.changeSet(affectedOutputs[0]);
                 const auto original = change->currentMode;
                 if (original) {
                     erase_if(modes, [&](const OutputModeline &mode) {
@@ -711,10 +715,12 @@ void Workspace::updateOutputConfiguration()
                     result = applyOutputConfiguration(cfg);
                     if (result) {
                         return;
+                    } else if (result.error().code != OutputErrorCode::ScanoutBandwidth && result.error().code != OutputErrorCode::ConnectorBandwidth) {
+                        break;
                     }
                 }
-                break;
             }
+        }
             [[fallthrough]];
         default:
             if (alreadyHaveEnabledOutputs) {
