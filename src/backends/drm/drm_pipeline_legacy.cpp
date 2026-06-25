@@ -57,7 +57,7 @@ std::expected<void, OutputError> DrmPipeline::presentLegacy(const QList<OutputLa
     auto commit = std::make_unique<DrmLegacyCommit>(this, buffer, frame);
     if (!commit->doPageflip(m_pending.presentationMode)) {
         qCDebug(KWIN_DRM) << "Page flip failed:" << strerror(errno);
-        return errnoToError();
+        return DrmCommit::errnoToError();
     }
     m_commitThread->setPendingCommit(std::move(commit));
     return {};
@@ -90,7 +90,7 @@ std::expected<void, OutputError> DrmPipeline::legacyModeset()
     auto commit = std::make_unique<DrmLegacyCommit>(this, buffer, nullptr);
     if (!commit->doModeset(m_connector, m_pending.mode.get())) {
         qCWarning(KWIN_DRM) << "Modeset failed!" << strerror(errno);
-        return errnoToError();
+        return DrmCommit::errnoToError();
     }
     return {};
 }
@@ -146,7 +146,7 @@ std::expected<void, OutputError> DrmPipeline::applyPendingChangesLegacy()
         const bool shouldEnableVrr = m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync;
         if (m_pending.crtc->vrrEnabled.isValid() && !m_pending.crtc->vrrEnabled.setPropertyLegacy(shouldEnableVrr)) {
             qCWarning(KWIN_DRM) << "Setting vrr failed!" << strerror(errno);
-            return errnoToError();
+            return DrmCommit::errnoToError();
         }
         if (m_connector->broadcastRGB.isValid()) {
             m_connector->broadcastRGB.setEnumLegacy(DrmConnector::rgbRangeToBroadcastRgb(m_pending.rgbRange));
@@ -206,7 +206,7 @@ std::expected<void, OutputError> DrmPipeline::applyPendingChangesLegacy()
     }
     if (!m_connector->dpms.setPropertyLegacy(activePending() ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF)) {
         qCWarning(KWIN_DRM) << "Setting legacy dpms failed!" << strerror(errno);
-        return errnoToError();
+        return DrmCommit::errnoToError();
     }
     return {};
 }
@@ -249,7 +249,7 @@ std::expected<void, OutputError> DrmPipeline::setLegacyGamma()
     }
     if (drmModeCrtcSetGamma(gpu()->fd(), m_pending.crtc->id(), m_pending.crtc->gammaRampSize(), red.data(), green.data(), blue.data()) != 0) {
         qCWarning(KWIN_DRM) << "Setting gamma failed!" << strerror(errno);
-        return errnoToError();
+        return DrmCommit::errnoToError();
     }
     m_currentLegacyGamma = m_pending.crtcColorPipeline;
     return {};
@@ -263,7 +263,7 @@ std::expected<void, OutputError> DrmPipeline::setCursorLegacy(DrmPipelineLayer *
         const DmaBufAttributes *attributes = bo->buffer()->dmabufAttributes();
         if (drmPrimeFDToHandle(gpu()->fd(), attributes->fd[0].get(), &handle) != 0) {
             qCWarning(KWIN_DRM) << "drmPrimeFDToHandle() failed";
-            return errnoToError();
+            return DrmCommit::errnoToError();
         }
     }
 
@@ -284,7 +284,7 @@ std::expected<void, OutputError> DrmPipeline::setCursorLegacy(DrmPipelineLayer *
         drmCloseBufferHandle(gpu()->fd(), handle);
     }
     if (ret != 0) {
-        return errnoToError();
+        return DrmCommit::errnoToError();
     }
     return {};
 }

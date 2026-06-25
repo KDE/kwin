@@ -45,6 +45,32 @@ void DrmCommit::setDefunct()
     m_defunct = true;
 }
 
+std::expected<void, OutputError> DrmCommit::errnoToError()
+{
+    switch (errno) {
+    case EINVAL:
+        return std::unexpected(OutputError{
+            .code = OutputErrorCode::Other,
+            .message = QStringLiteral("EINVAL"),
+        });
+    case EBUSY:
+        return std::unexpected(OutputError{
+            .code = OutputErrorCode::InvalidApiUsage,
+            .message = QStringLiteral("EBUSY"),
+        });
+    case EACCES:
+        return std::unexpected(OutputError{
+            .code = OutputErrorCode::NoPermission,
+            .message = QStringLiteral("EACCESS"),
+        });
+    default:
+        return std::unexpected(OutputError{
+            .code = OutputErrorCode::Other,
+            .message = QString::fromLatin1(strerror(errno)),
+        });
+    }
+}
+
 DrmAtomicCommit::DrmAtomicCommit(DrmGpu *gpu, const QList<DrmPipeline *> &pipelines)
     : DrmCommit(gpu)
     , m_pipelines(pipelines)
@@ -97,7 +123,7 @@ void DrmAtomicCommit::setPresentationMode(PresentationMode mode)
     m_mode = mode;
 }
 
-bool DrmAtomicCommit::test()
+std::expected<void, OutputError> DrmAtomicCommit::test()
 {
     uint32_t flags = DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_NONBLOCK;
     if (isTearing()) {
@@ -106,12 +132,12 @@ bool DrmAtomicCommit::test()
     return doCommit(flags);
 }
 
-bool DrmAtomicCommit::testAllowModeset()
+std::expected<void, OutputError> DrmAtomicCommit::testAllowModeset()
 {
     return doCommit(DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_ALLOW_MODESET);
 }
 
-bool DrmAtomicCommit::commit()
+std::expected<void, OutputError> DrmAtomicCommit::commit()
 {
     uint32_t flags = DRM_MODE_ATOMIC_NONBLOCK | DRM_MODE_PAGE_FLIP_EVENT;
     if (isTearing()) {
@@ -120,13 +146,13 @@ bool DrmAtomicCommit::commit()
     return doCommit(flags);
 }
 
-bool DrmAtomicCommit::commitModeset()
+std::expected<void, OutputError> DrmAtomicCommit::commitModeset()
 {
     m_modeset = true;
     return doCommit(DRM_MODE_ATOMIC_ALLOW_MODESET);
 }
 
-bool DrmAtomicCommit::doCommit(uint32_t flags)
+std::expected<void, OutputError> DrmAtomicCommit::doCommit(uint32_t flags)
 {
     std::vector<uint32_t> objects;
     std::vector<uint32_t> propertyCounts;
@@ -163,12 +189,15 @@ bool DrmAtomicCommit::doCommit(uint32_t flags)
         lock = m_gpu->lockPendingCommits();
     }
     const bool success = drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_ATOMIC, &commitData) == 0;
-    if (success && (flags & DRM_MODE_PAGE_FLIP_EVENT)) {
+    if (!success) {
+        return errnoToError();
+    }
+    if (flags & DRM_MODE_PAGE_FLIP_EVENT) {
         for (const DrmPipeline *pipeline : m_pipelines) {
             m_gpu->registerPendingCommit(lock, pipeline->crtc()->id(), this);
         }
     }
-    return success;
+    return {};
 }
 
 void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp)
