@@ -151,7 +151,7 @@ void DrmCommitThread::submit()
 {
     DrmAtomicCommit *commit = m_commits.front().get();
     const auto vrr = commit->isVrr();
-    const bool success = commit->commit();
+    const auto success = commit->commit();
     if (success) {
         m_vrr = vrr.value_or(m_vrr);
         m_tearing = commit->isTearing();
@@ -196,7 +196,7 @@ void DrmCommitThread::submit()
             m_commitsToDelete.push_back(std::move(commit));
         }
         m_commits.clear();
-        qCWarning(KWIN_DRM) << "atomic commit failed:" << strerror(errno);
+        qCWarning(KWIN_DRM, "Atomic commit failed: %s", qPrintable(success.error().message));
     }
     QMetaObject::invokeMethod(this, &DrmCommitThread::clearDroppedCommits, Qt::ConnectionType::QueuedConnection);
 }
