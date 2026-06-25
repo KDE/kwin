@@ -43,16 +43,16 @@ VirtualOutput::~VirtualOutput()
 {
 }
 
-bool VirtualOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
+std::expected<void, OutputError> VirtualOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
 {
-    return true;
+    return {};
 }
 
-bool VirtualOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
+std::expected<void, OutputError> VirtualOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
     m_frame = frame;
     m_vsyncMonitor->arm();
-    return true;
+    return {};
 }
 
 void VirtualOutput::init(const QSize &pixelSize, qreal scale, const QList<OutputModeline> &modes)

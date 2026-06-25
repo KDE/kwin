@@ -49,16 +49,16 @@ DrmVirtualOutput::~DrmVirtualOutput()
 {
 }
 
-bool DrmVirtualOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
+std::expected<void, OutputError> DrmVirtualOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
 {
-    return true;
+    return {};
 }
 
-bool DrmVirtualOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
+std::expected<void, OutputError> DrmVirtualOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
     m_frame = frame;
     m_vsyncMonitor->arm();
-    return true;
+    return {};
 }
 
 void DrmVirtualOutput::vblank(std::chrono::nanoseconds timestamp)

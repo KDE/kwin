@@ -16,9 +16,9 @@
 #include <chrono>
 #include <xf86drmMode.h>
 
+#include "core/backendoutput.h"
 #include "core/colorpipeline.h"
 #include "core/colorspace.h"
-#include "core/output.h"
 #include "core/renderloop_p.h"
 #include "drm_blob.h"
 #include "drm_connector.h"
@@ -41,25 +41,12 @@ public:
     DrmPipeline(DrmConnector *conn);
     ~DrmPipeline();
 
-    enum class Error {
-        None,
-        OutofMemory,
-        InvalidArguments,
-        NoPermission,
-        FramePending,
-        TestBufferFailed,
-        NotEnoughCrtcs,
-        Timeout,
-        Unknown,
-    };
-    Q_ENUM(Error)
-
     /**
      * tests the pending commit first and commits it if the test passes
      * if the test fails, there is a guarantee for no lasting changes
      */
-    Error present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame);
-    Error testPresent(const std::shared_ptr<OutputFrame> &frame);
+    std::expected<void, OutputError> present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame);
+    std::expected<void, OutputError> testPresent(const std::shared_ptr<OutputFrame> &frame);
     void maybeModeset(const std::shared_ptr<OutputFrame> &frame);
     void forceLegacyModeset();
 
@@ -67,7 +54,7 @@ public:
     void applyPendingChanges();
     void revertPendingChanges();
 
-    bool presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay);
+    std::expected<void, OutputError> presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay);
 
     DrmConnector *connector() const;
     DrmGpu *gpu() const;
@@ -115,29 +102,29 @@ public:
         CommitModeset,
     };
     Q_ENUM(CommitMode)
-    static Error commitPipelines(const QList<DrmPipeline *> &pipelines, DrmGpu *gpu, CommitMode mode, const QList<DrmObject *> &unusedObjects = {});
+    static std::expected<void, OutputError> commitPipelines(const QList<DrmPipeline *> &pipelines, DrmGpu *gpu, CommitMode mode, const QList<DrmObject *> &unusedObjects = {});
 
 private:
     bool isBufferForDirectScanout() const;
     uint32_t calculateUnderscan();
-    static Error errnoToError();
+    static std::expected<void, OutputError> errnoToError();
     std::shared_ptr<DrmBlob> createHdrMetadata(TransferFunction::Type transferFunction) const;
 
     // legacy only
-    Error presentLegacy(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame);
-    Error legacyModeset();
-    Error setLegacyGamma();
-    Error applyPendingChangesLegacy();
-    bool setCursorLegacy(DrmPipelineLayer *layer);
-    static Error commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, DrmGpu *gpu, CommitMode mode, const QList<DrmObject *> &unusedObjects);
+    std::expected<void, OutputError> presentLegacy(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame);
+    std::expected<void, OutputError> legacyModeset();
+    std::expected<void, OutputError> setLegacyGamma();
+    std::expected<void, OutputError> applyPendingChangesLegacy();
+    std::expected<void, OutputError> setCursorLegacy(DrmPipelineLayer *layer);
+    static std::expected<void, OutputError> commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, DrmGpu *gpu, CommitMode mode, const QList<DrmObject *> &unusedObjects);
 
     // atomic modesetting only
-    Error prepareAtomicCommit(DrmAtomicCommit *commit, CommitMode mode, const std::shared_ptr<OutputFrame> &frame);
-    bool prepareAtomicModeset(DrmAtomicCommit *commit);
-    Error prepareAtomicPresentation(DrmAtomicCommit *commit, const std::shared_ptr<OutputFrame> &frame);
-    Error prepareAtomicPlane(DrmAtomicCommit *commit, DrmPlane *plane, DrmPipelineLayer *layer, const std::shared_ptr<OutputFrame> &frame);
+    std::expected<void, OutputError> prepareAtomicCommit(DrmAtomicCommit *commit, CommitMode mode, const std::shared_ptr<OutputFrame> &frame);
+    std::expected<void, OutputError> prepareAtomicModeset(DrmAtomicCommit *commit);
+    std::expected<void, OutputError> prepareAtomicPresentation(DrmAtomicCommit *commit, const std::shared_ptr<OutputFrame> &frame);
+    std::expected<void, OutputError> prepareAtomicPlane(DrmAtomicCommit *commit, DrmPlane *plane, DrmPipelineLayer *layer, const std::shared_ptr<OutputFrame> &frame);
     void prepareAtomicDisable(DrmAtomicCommit *commit);
-    static Error commitPipelinesAtomic(const QList<DrmPipeline *> &pipelines, DrmGpu *gpu, CommitMode mode, const std::shared_ptr<OutputFrame> &frame, const QList<DrmObject *> &unusedObjects);
+    static std::expected<void, OutputError> commitPipelinesAtomic(const QList<DrmPipeline *> &pipelines, DrmGpu *gpu, CommitMode mode, const std::shared_ptr<OutputFrame> &frame, const QList<DrmObject *> &unusedObjects);
 
     DrmOutput *m_output = nullptr;
     DrmConnector *m_connector = nullptr;

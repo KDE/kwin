@@ -102,7 +102,7 @@ public:
      */
     QPointF mapFromGlobal(const QPointF &pos) const;
 
-    bool presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
+    std::expected<void, OutputError> presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
 
     Region exposedArea() const;
     void addExposedArea(const Rect &rect);
@@ -112,8 +112,8 @@ public:
     void handlePresentIdleNotify(xcb_present_idle_notify_event_t *event);
 
     void setPrimaryBuffer(GraphicsBuffer *buffer);
-    bool testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
-    bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
+    std::expected<void, OutputError> testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
+    std::expected<void, OutputError> present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
 
     void setOutputLayers(std::vector<std::unique_ptr<OutputLayer>> &&layers);
     QList<OutputLayer *> outputLayers() const;

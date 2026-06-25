@@ -42,8 +42,8 @@ public:
     DrmConnector *connector() const;
     DrmPipeline *pipeline() const;
 
-    bool testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
-    bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
+    std::expected<void, OutputError> testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
+    std::expected<void, OutputError> present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
     void repairPresentation() override;
     bool recommendsOverlayUse() const override;
 
@@ -52,7 +52,7 @@ public:
     void revertQueuedChanges();
 
     bool shouldDisableNonPrimaryPlanes() const;
-    bool presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
+    std::expected<void, OutputError> presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
     void setAutoRotateAvailable(bool isAvailable) override;
     void setAutoBrightnessAvailable(bool isAvailable) override;
 
