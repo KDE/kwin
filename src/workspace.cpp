@@ -685,11 +685,43 @@ void Workspace::updateOutputConfiguration()
         case OutputErrorCode::NotActive:
             // can't do anything, have to wait for a VT switch
             break;
+        case OutputErrorCode::ScanoutBandwidth:
+        case OutputErrorCode::ConnectorBandwidth:
+            if (toEnable.size() == 1) {
+                // we must reduce resolution and refresh rate
+                const auto bandwidthEstimation = [](const OutputModeline &mode) {
+                    return mode.size().width() * mode.size().height() * mode.refreshRate();
+                };
+
+                auto modes = toEnable[0]->modes() | std::views::transform(&OutputMode::modeline) | std::ranges::to<QList>();
+                const auto change = cfg.changeSet(toEnable[0]);
+                const auto original = change->currentMode;
+                if (original) {
+                    erase_if(modes, [&](const OutputModeline &mode) {
+                        return bandwidthEstimation(mode) > bandwidthEstimation(*original);
+                    });
+                }
+                std::ranges::sort(modes, [&](const OutputModeline &left, const OutputModeline &right) {
+                    return bandwidthEstimation(left) < bandwidthEstimation(right);
+                });
+                for (const OutputModeline &mode : modes) {
+                    change->currentMode = mode;
+                    change->desiredMode = mode;
+                    result = applyOutputConfiguration(cfg);
+                    if (result) {
+                        return;
+                    }
+                }
+                break;
+            }
+            [[fallthrough]];
         default:
             if (alreadyHaveEnabledOutputs) {
                 // just keeping the old output configuration is preferable
                 break;
             }
+            // TODO for the connector bandwidth case,
+            // disable relevant relevant MST outputs first
             toEnable.removeLast();
             break;
         }
