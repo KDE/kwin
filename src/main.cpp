@@ -45,6 +45,7 @@
 
 // KDE
 #include <KAboutData>
+#include <KGlobalAccel>
 #include <KLocalizedString>
 // Qt
 #include <QCommandLineParser>
@@ -89,6 +90,9 @@ Application::Application(int &argc, char **argv)
     qRegisterMetaType<KWin::SurfaceInterface *>("KWin::SurfaceInterface *");
     qRegisterMetaType<KSharedConfigPtr>();
     qRegisterMetaType<std::chrono::nanoseconds>();
+
+    // We'll unblock once we are registered as org.kde.kwin only. Nested instances do not get to register global shortcuts!
+    KGlobalAccel::self()->setBlockExports(true);
 }
 
 void Application::setConfigLock(bool lock)

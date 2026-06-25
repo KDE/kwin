@@ -44,7 +44,7 @@ DBusInterface::DBusInterface(QObject *parent)
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject(QStringLiteral("/KWin"), this);
-    dbus.registerService(m_serviceName);
+    m_registered = dbus.registerService(m_serviceName);
     dbus.connect(QString(), QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"),
                  Workspace::self(), SLOT(slotReloadConfig()));
 
@@ -59,6 +59,11 @@ DBusInterface::~DBusInterface()
 bool DBusInterface::showingDesktop() const
 {
     return workspace()->showingDesktop();
+}
+
+[[nodiscard]] bool DBusInterface::isRegistered() const
+{
+    return m_registered;
 }
 
 void DBusInterface::reconfigure()

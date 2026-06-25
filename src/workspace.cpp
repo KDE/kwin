@@ -78,6 +78,7 @@
 #endif
 #include <KConfig>
 #include <KConfigGroup>
+#include <KGlobalAccel>
 #include <KLocalizedString>
 #include <QCryptographicHash>
 #include <QDBusConnection>
@@ -164,7 +165,10 @@ Workspace::Workspace()
     m_decorationBridge->init();
     connect(this, &Workspace::configChanged, m_decorationBridge.get(), &Decoration::DecorationBridge::reconfigure);
 
-    new DBusInterface(this);
+    auto dbusInterface = new DBusInterface(this);
+    if (dbusInterface->isRegistered()) {
+        KGlobalAccel::self()->setBlockExports(false);
+    }
     m_outline = std::make_unique<Outline>();
 
     m_dpmsTimer.setSingleShot(true);

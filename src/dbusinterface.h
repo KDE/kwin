@@ -48,6 +48,7 @@ public:
 public: // PROPERTIES
     Q_PROPERTY(bool showingDesktop READ showingDesktop NOTIFY showingDesktopChanged)
     bool showingDesktop() const;
+    [[nodiscard]] bool isRegistered() const;
 
 public Q_SLOTS: // METHODS
     int currentDesktop();
@@ -97,6 +98,7 @@ private Q_SLOTS:
 private:
     QString m_serviceName;
     QDBusMessage m_replyQueryWindowInfo;
+    bool m_registered = false;
 };
 
 class CompositorDBusInterface : public QObject
