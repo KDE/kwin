@@ -344,7 +344,7 @@ void DrmTest::initTestCase()
     for (BackendOutput *output : allOutputs | std::views::drop(1)) {
         cfg.changeSet(output)->enabled = false;
     }
-    QCOMPARE(workspace()->applyOutputConfiguration(cfg), OutputConfigurationError::None);
+    QVERIFY(workspace()->applyOutputConfiguration(cfg));
 
     const auto state = DrmOutputState::read(allOutputs.front());
     QVERIFY(state.has_value());
@@ -376,7 +376,7 @@ void DrmTest::testModesets()
     for (const auto &mode : output->modes()) {
         OutputConfiguration cfg;
         cfg.changeSet(output)->currentMode = mode->modeline();
-        QCOMPARE(workspace()->applyOutputConfiguration(cfg), OutputConfigurationError::None);
+        QVERIFY(workspace()->applyOutputConfiguration(cfg));
         QVERIFY(window.presentWait());
 
         const auto state = DrmOutputState::read(output);
@@ -510,7 +510,7 @@ void DrmTest::testDirectScanout()
     {
         OutputConfiguration cfg;
         cfg.changeSet(output)->scaleSetting = outputScale;
-        QCOMPARE(workspace()->applyOutputConfiguration(cfg), OutputConfigurationError::None);
+        QVERIFY(workspace()->applyOutputConfiguration(cfg));
     }
 
     const auto layers = Compositor::self()->backend()->compatibleOutputLayers(output);
@@ -605,7 +605,7 @@ void DrmTest::testOverlay()
         OutputConfiguration cfg;
         cfg.changeSet(output)->scaleSetting = scale;
         cfg.changeSet(output)->pos = QPoint(51, 51);
-        QCOMPARE(workspace()->applyOutputConfiguration(cfg), OutputConfigurationError::None);
+        QVERIFY(workspace()->applyOutputConfiguration(cfg));
     }
 
     DmabufWindow window;

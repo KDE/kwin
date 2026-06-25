@@ -708,21 +708,21 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
     }
 
     config.source = OutputConfiguration::Source::User;
-    switch (workspace()->applyOutputConfiguration(config)) {
-    case OutputConfigurationError::None:
+    const auto result = workspace()->applyOutputConfiguration(config);
+    if (result) {
         send_applied();
-        break;
-    case OutputConfigurationError::Unknown:
-    case OutputConfigurationError::TooManyEnabledOutputs:
-        // NOTE that the error message is technically not accurate for timeouts, but
-        // in practice, it too is always caused by the driver rejecting the configuration.
-    case OutputConfigurationError::Timeout:
-        // TODO provide a more accurate error reason once the driver actually gives us anything
-        sendFailure(resource, i18n("The driver rejected the output configuration"));
-        break;
-    case OutputConfigurationError::NotActive:
+        return;
+    }
+    switch (result.error().code) {
+    case OutputErrorCode::NotActive:
         sendFailure(resource, i18n("The session is not active"));
-        break;
+        return;
+    case OutputErrorCode::NotEnoughCrtcs:
+        sendFailure(resource, i18n("More displays are enabled than are supported by the graphics card."));
+        return;
+    default:
+        sendFailure(resource, i18n("The driver rejected the output configuration: %s", qPrintable(result.error().message)));
+        return;
     }
 }
 
