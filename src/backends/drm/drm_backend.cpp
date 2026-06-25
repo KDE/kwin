@@ -319,8 +319,14 @@ size_t DrmBackend::gpuCount() const
     return m_gpus.size();
 }
 
-OutputConfigurationError DrmBackend::applyOutputChanges(const OutputConfiguration &config)
+std::expected<void, OutputError> DrmBackend::applyOutputChanges(const OutputConfiguration &config)
 {
+    if (!std::ranges::all_of(m_gpus, &DrmGpu::isActive)) {
+        return std::unexpected(OutputError{
+            .code = OutputErrorCode::NotActive,
+            .message = QStringLiteral("The current VT is not active"),
+        });
+    }
     QList<DrmOutput *> toBeEnabled;
     QList<DrmOutput *> toBeDisabled;
     for (const auto &gpu : m_gpus) {
@@ -330,9 +336,6 @@ OutputConfigurationError DrmBackend::applyOutputChanges(const OutputConfiguratio
                 continue;
             }
             if (const auto changeset = config.constChangeSet(output)) {
-                if (!gpu->isActive()) {
-                    return OutputConfigurationError::NotActive;
-                }
                 output->queueChanges(changeset);
                 if (changeset->enabled.value_or(output->isEnabled())) {
                     toBeEnabled << output;
@@ -349,14 +352,7 @@ OutputConfigurationError DrmBackend::applyOutputChanges(const OutputConfiguratio
             for (DrmOutput *output : std::as_const(toBeDisabled)) {
                 output->revertQueuedChanges();
             }
-            if (ret.error().code == OutputErrorCode::NotEnoughCrtcs) {
-                // TODO make this more specific, this is per GPU!
-                return OutputConfigurationError::TooManyEnabledOutputs;
-            } else if (ret.error().code == OutputErrorCode::Timeout) {
-                return OutputConfigurationError::Timeout;
-            } else {
-                return OutputConfigurationError::Unknown;
-            }
+            return ret;
         }
     }
     // first, apply changes to drm outputs.
@@ -378,7 +374,7 @@ OutputConfigurationError DrmBackend::applyOutputChanges(const OutputConfiguratio
     for (DrmVirtualOutput *output : std::as_const(m_virtualOutputs)) {
         output->applyChanges(config);
     }
-    return OutputConfigurationError::None;
+    return {};
 }
 
 void DrmBackend::setRenderBackend(DrmRenderBackend *backend)
