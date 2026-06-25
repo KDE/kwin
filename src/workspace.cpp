@@ -177,7 +177,7 @@ Workspace::Workspace()
         Q_EMIT dpmsStateChanged(animationTime);
         // applyOutputConfiguration sets the correct value
         OutputConfiguration cfg;
-        applyOutputConfiguration(cfg);
+        (void)applyOutputConfiguration(cfg);
     });
 
     initShortcuts();
@@ -237,7 +237,7 @@ void Workspace::init()
             return;
         }
         auto &[config, type] = *opt;
-        applyOutputConfiguration(config);
+        (void)applyOutputConfiguration(config);
     };
     connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, applySensorChanges);
     connect(kwinApp()->tabletModeManager(), &TabletModeManager::tabletModeChanged, this, applySensorChanges);
@@ -264,7 +264,7 @@ void Workspace::init()
             }
         }
         if (outsideDeadzone) {
-            applyOutputConfiguration(config);
+            (void)applyOutputConfiguration(config);
         }
     };
 
@@ -502,7 +502,7 @@ Workspace::~Workspace()
     _self = nullptr;
 }
 
-OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration &config)
+std::expected<void, OutputError> Workspace::applyOutputConfiguration(OutputConfiguration &config)
 {
     assignBrightnessDevices(config);
     const auto backendOutputs = kwinApp()->outputBackend()->outputs();
@@ -525,7 +525,10 @@ OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration
     // if the configuration contains a diabled output, but the output is not disable-able, abort
     for (BackendOutput *output : backendOutputs) {
         if (config.changeSet(output)->enabled == false && !(output->capabilities() & BackendOutput::Capability::Disable)) {
-            return OutputConfigurationError::Unknown;
+            return std::unexpected(OutputError{
+                .code = OutputErrorCode::InvalidApiUsage,
+                .message = QStringLiteral("Attempted to disable an output that doesn't have the capability"),
+            });
         }
     }
 
@@ -537,9 +540,9 @@ OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration
             config.changeSet(output)->dpmsMode = BackendOutput::DpmsMode::On;
         }
     }
-    auto error = kwinApp()->outputBackend()->applyOutputChanges(config);
-    if (error != OutputConfigurationError::None) {
-        return error;
+    auto result = kwinApp()->outputBackend()->applyOutputChanges(config);
+    if (!result) {
+        return result;
     }
     updateOutputs();
     m_outputConfigStore->storeConfig(backendOutputs, m_lidSwitchTracker->isLidClosed());
@@ -552,7 +555,7 @@ OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration
         output->backendOutput()->renderLoop()->scheduleRepaint();
     }
 
-    return OutputConfigurationError::None;
+    return {};
 }
 
 void Workspace::requestDpmsState(DpmsState state)
@@ -573,12 +576,12 @@ void Workspace::requestDpmsState(DpmsState state)
     // the config can be empty, it gets adjusted in applyOutputConfiguration
     OutputConfiguration cfg;
     if (m_dpms == DpmsState::On) {
-        applyOutputConfiguration(cfg);
+        (void)applyOutputConfiguration(cfg);
         m_dpmsFilter.reset();
         m_dpmsTimer.stop();
         m_sleepInhibitor.reset();
     } else {
-        applyOutputConfiguration(cfg);
+        (void)applyOutputConfiguration(cfg);
         m_dpmsFilter = std::make_unique<DpmsInputEventFilter>();
         input()->installInputEventFilter(m_dpmsFilter.get());
         m_dpmsTimer.start(animationTime);
@@ -642,7 +645,7 @@ void Workspace::updateOutputConfiguration()
     });
 
     QList<BackendOutput *> toEnable = outputs;
-    OutputConfigurationError error = OutputConfigurationError::None;
+    std::expected<void, OutputError> result;
     do {
         auto opt = m_outputConfigStore->queryConfig(toEnable, m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
         if (!opt) {
@@ -656,9 +659,8 @@ void Workspace::updateOutputConfiguration()
             }
         }
 
-        error = applyOutputConfiguration(cfg);
-        switch (error) {
-        case OutputConfigurationError::None:
+        result = applyOutputConfiguration(cfg);
+        if (result) {
             if (type == OutputConfigurationStore::ConfigType::Generated) {
                 const bool hasInternal = std::any_of(outputs.begin(), outputs.end(), [](BackendOutput *o) {
                     return o->isInternal();
@@ -674,22 +676,17 @@ void Workspace::updateOutputConfiguration()
                 }
             }
             return;
-        case OutputConfigurationError::Unknown:
-        case OutputConfigurationError::TooManyEnabledOutputs:
-        case OutputConfigurationError::Timeout:
+        }
+        if (result.error().code != OutputErrorCode::NotActive) {
             if (alreadyHaveEnabledOutputs) {
                 // just keeping the old output configuration is preferable
                 break;
             }
             toEnable.removeLast();
-            break;
-        case OutputConfigurationError::NotActive:
-            // can't do anything, have to wait for a VT switch
-            break;
         }
-    } while (error != OutputConfigurationError::NotActive && !toEnable.isEmpty() && !alreadyHaveEnabledOutputs);
+    } while (result.error().code != OutputErrorCode::NotActive && !toEnable.isEmpty() && !alreadyHaveEnabledOutputs);
 
-    qCCritical(KWIN_CORE, "Applying output configuration failed!");
+    qCCritical(KWIN_CORE, "Applying output configuration failed: %s", qPrintable(result.error().message));
     // Update the output order to a fallback list, to avoid dangling pointers
     updateOutputOrder();
     // If applying the output configuration failed, brightness devices weren't assigned either.

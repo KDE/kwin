@@ -2937,7 +2937,7 @@ void TestXdgShellWindow::testRemoveActiveOutputBeforeInitialCommit()
         auto changeSet = config.changeSet(outputs[1]->backendOutput());
         changeSet->enabled = false;
     }
-    workspace()->applyOutputConfiguration(config);
+    QVERIFY(workspace()->applyOutputConfiguration(config));
 
     // Commit the initial state.
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -2985,7 +2985,7 @@ void TestXdgShellWindow::testRemoveActiveOutputBeforeMap()
         auto changeSet = config.changeSet(outputs[1]->backendOutput());
         changeSet->enabled = false;
     }
-    workspace()->applyOutputConfiguration(config);
+    QVERIFY(workspace()->applyOutputConfiguration(config));
 
     // Map the window.
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(0, 0));

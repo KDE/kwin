@@ -370,7 +370,7 @@ void TestXdgSession::restoreOffscreenPosition()
             auto changeSet = configuration.changeSet(outputs[1]->backendOutput());
             changeSet->enabled = false;
         }
-        workspace()->applyOutputConfiguration(configuration);
+        QVERIFY(workspace()->applyOutputConfiguration(configuration));
     },
         .restore = [outputs](Window *window) {
         QCOMPARE(window->pos(), QPointF(0, 0));

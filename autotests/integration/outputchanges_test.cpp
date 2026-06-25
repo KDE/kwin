@@ -212,7 +212,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsDisabled()
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->enabled = false;
     }
-    workspace()->applyOutputConfiguration(config);
+    QVERIFY(workspace()->applyOutputConfiguration(config));
 
     // The window will be sent to the second output, which is at (0, 0).
     QCOMPARE(window->frameGeometry(), RectF(0 + 42, 0 + 67, 100, 50));
@@ -243,7 +243,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterAnotherOutputIsDisabled()
         changeSet->pos = QPoint(0, 0);
         changeSet->enabled = true;
     }
-    workspace()->applyOutputConfiguration(config);
+    QVERIFY(workspace()->applyOutputConfiguration(config));
 
     QCOMPARE(workspace()->outputs().front()->geometry(), Rect(0, 0, 1280, 1024));
 
@@ -275,7 +275,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved()
         OutputConfiguration config;
         config.changeSet(outputs[0])->pos = QPoint(1280 + 20, 1024 + 20);
         config.changeSet(outputs[1])->pos = QPoint(0, 0);
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // Move the window to some predefined position so the test is more robust.
@@ -295,7 +295,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved()
     {
         OutputConfiguration config;
         config.changeSet(outputs[0])->pos = QPoint(1280 + 0, 1024 + 40);
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // The position of the window relative to its output should remain the same.
@@ -328,7 +328,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputsAreSwappedLeftToRigh
         auto changeSet2 = config.changeSet(outputs[1]);
         changeSet2->pos = QPoint(0, 0);
     }
-    workspace()->applyOutputConfiguration(config);
+    QVERIFY(workspace()->applyOutputConfiguration(config));
 
     // The window should be still on its original output.
     QCOMPARE(window->output()->backendOutput(), outputs[0]);
@@ -361,7 +361,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputsAreSwappedRightToLef
         auto changeSet2 = config.changeSet(outputs[1]);
         changeSet2->pos = QPoint(0, 0);
     }
-    workspace()->applyOutputConfiguration(config);
+    QVERIFY(workspace()->applyOutputConfiguration(config));
 
     // The window should be still on its original output.
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
@@ -391,7 +391,7 @@ void OutputChangesTest::testWindowRestoredAfterEnablingOutput()
         auto changeSet = config1.changeSet(outputs[1]);
         changeSet->enabled = false;
     }
-    workspace()->applyOutputConfiguration(config1);
+    QVERIFY(workspace()->applyOutputConfiguration(config1));
 
     // The window will be moved to the left monitor.
     QCOMPARE(window->output()->backendOutput(), outputs[0]);
@@ -403,7 +403,7 @@ void OutputChangesTest::testWindowRestoredAfterEnablingOutput()
         auto changeSet = config2.changeSet(outputs[1]);
         changeSet->enabled = true;
     }
-    workspace()->applyOutputConfiguration(config2);
+    QVERIFY(workspace()->applyOutputConfiguration(config2));
 
     // The window will be moved back to the right monitor.
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
@@ -434,7 +434,7 @@ void OutputChangesTest::testWindowNotRestoredAfterMovingWindowAndEnablingOutput(
         auto changeSet = config1.changeSet(outputs[1]);
         changeSet->enabled = false;
     }
-    workspace()->applyOutputConfiguration(config1);
+    QVERIFY(workspace()->applyOutputConfiguration(config1));
 
     // The window will be moved to the left monitor.
     QCOMPARE(window->output()->backendOutput(), outputs[0]);
@@ -453,7 +453,7 @@ void OutputChangesTest::testWindowNotRestoredAfterMovingWindowAndEnablingOutput(
         auto changeSet = config2.changeSet(outputs[1]);
         changeSet->enabled = true;
     }
-    workspace()->applyOutputConfiguration(config2);
+    QVERIFY(workspace()->applyOutputConfiguration(config2));
 
     // The window is still on the left monitor because user manually moved it.
     QCOMPARE(window->output()->backendOutput(), outputs[0]);
@@ -500,7 +500,7 @@ void OutputChangesTest::testMaximizedWindowRestoredAfterEnablingOutput()
         auto changeSet = config1.changeSet(outputs[1]);
         changeSet->enabled = false;
     }
-    workspace()->applyOutputConfiguration(config1);
+    QVERIFY(workspace()->applyOutputConfiguration(config1));
 
     // The window will be moved to the left monitor, the geometry restore will be updated too.
     QCOMPARE(window->frameGeometry(), RectF(0, 0, 1280, 1024));
@@ -516,7 +516,7 @@ void OutputChangesTest::testMaximizedWindowRestoredAfterEnablingOutput()
         auto changeSet = config2.changeSet(outputs[1]);
         changeSet->enabled = true;
     }
-    workspace()->applyOutputConfiguration(config2);
+    QVERIFY(workspace()->applyOutputConfiguration(config2));
 
     // The window will be moved back to the right monitor, the geometry restore will be updated too.
     QCOMPARE(window->frameGeometry(), RectF(1280, 0, 1280, 1024));
@@ -567,7 +567,7 @@ void OutputChangesTest::testFullScreenWindowRestoredAfterEnablingOutput()
         auto changeSet = config1.changeSet(outputs[1]);
         changeSet->enabled = false;
     }
-    workspace()->applyOutputConfiguration(config1);
+    QVERIFY(workspace()->applyOutputConfiguration(config1));
 
     // The window will be moved to the left monitor, the geometry restore will be updated too.
     QCOMPARE(window->frameGeometry(), RectF(0, 0, 1280, 1024));
@@ -583,7 +583,7 @@ void OutputChangesTest::testFullScreenWindowRestoredAfterEnablingOutput()
         auto changeSet = config2.changeSet(outputs[1]);
         changeSet->enabled = true;
     }
-    workspace()->applyOutputConfiguration(config2);
+    QVERIFY(workspace()->applyOutputConfiguration(config2));
 
     // The window will be moved back to the right monitor, the geometry restore will be updated too.
     QCOMPARE(window->frameGeometry(), RectF(1280, 0, 1280, 1024));
@@ -638,7 +638,7 @@ void OutputChangesTest::testQuickTiledWindowRestoredAfterEnablingOutput()
         changeSet->enabled = false;
     }
 
-    workspace()->applyOutputConfiguration(config1);
+    QVERIFY(workspace()->applyOutputConfiguration(config1));
 
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(1280 / 2, 1024));
@@ -657,7 +657,7 @@ void OutputChangesTest::testQuickTiledWindowRestoredAfterEnablingOutput()
         auto changeSet = config2.changeSet(outputs[1]);
         changeSet->enabled = true;
     }
-    workspace()->applyOutputConfiguration(config2);
+    QVERIFY(workspace()->applyOutputConfiguration(config2));
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(1280 / 2, 1024), Qt::blue);
@@ -684,7 +684,7 @@ void OutputChangesTest::testQuickTileUntileWindowRestoredAfterEnablingOutput()
         OutputConfiguration config;
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->enabled = false;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // Create a window.
@@ -708,7 +708,7 @@ void OutputChangesTest::testQuickTileUntileWindowRestoredAfterEnablingOutput()
         OutputConfiguration config;
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->enabled = true;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // Move the window to the second output and tile it to the right.
@@ -733,7 +733,7 @@ void OutputChangesTest::testQuickTileUntileWindowRestoredAfterEnablingOutput()
         OutputConfiguration config;
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->enabled = false;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // the window should now be untiled, and put back in its original position
@@ -750,7 +750,7 @@ void OutputChangesTest::testQuickTileUntileWindowRestoredAfterEnablingOutput()
         OutputConfiguration config;
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->enabled = true;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // the window should now be put back into the tile on the second output
@@ -790,7 +790,7 @@ void OutputChangesTest::testCustomTiledWindowRestoredAfterEnablingOutput()
         OutputConfiguration config;
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->enabled = false;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // Create a window.
@@ -811,7 +811,7 @@ void OutputChangesTest::testCustomTiledWindowRestoredAfterEnablingOutput()
         OutputConfiguration config;
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->enabled = true;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     QFETCH(size_t, tileIndex);
@@ -841,7 +841,7 @@ void OutputChangesTest::testCustomTiledWindowRestoredAfterEnablingOutput()
         OutputConfiguration config;
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->enabled = false;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // The window will be moved to the left monitor, and the original geometry restored
@@ -862,7 +862,7 @@ void OutputChangesTest::testCustomTiledWindowRestoredAfterEnablingOutput()
         OutputConfiguration config;
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->enabled = true;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // The window will be moved back to the right monitor, and put in the correct tile
@@ -905,7 +905,7 @@ void OutputChangesTest::testWindowRestoredAfterChangingScale()
         auto changeSet = config1.changeSet(output);
         changeSet->scaleSetting = 2;
     }
-    workspace()->applyOutputConfiguration(config1);
+    QVERIFY(workspace()->applyOutputConfiguration(config1));
 
     // The window will be moved to still be in the monitor
     QCOMPARE(window->pos(), QPointF(logicalOutput->geometry().width() - window->width(), logicalOutput->geometry().height() - window->height()));
@@ -917,7 +917,7 @@ void OutputChangesTest::testWindowRestoredAfterChangingScale()
         auto changeSet = config2.changeSet(output);
         changeSet->scaleSetting = 1;
     }
-    workspace()->applyOutputConfiguration(config2);
+    QVERIFY(workspace()->applyOutputConfiguration(config2));
 
     // The window will be moved back to where it was before
     QCOMPARE(window->pos(), originalPosition);
@@ -946,7 +946,7 @@ void OutputChangesTest::testMaximizeStateRestoredAfterEnablingOutput()
         OutputConfiguration config;
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->enabled = false;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // Create a window.
@@ -967,7 +967,7 @@ void OutputChangesTest::testMaximizeStateRestoredAfterEnablingOutput()
         OutputConfiguration config;
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->enabled = true;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // Move the window to the right monitor and make it maximized.
@@ -990,7 +990,7 @@ void OutputChangesTest::testMaximizeStateRestoredAfterEnablingOutput()
         OutputConfiguration config;
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->enabled = false;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // The window will be moved to its prior position on the left monitor and unmaximized
@@ -1010,7 +1010,7 @@ void OutputChangesTest::testMaximizeStateRestoredAfterEnablingOutput()
         OutputConfiguration config;
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->enabled = true;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // The window will be moved back to the right monitor, maximized and the geometry restore will be updated
@@ -1038,7 +1038,7 @@ void OutputChangesTest::testInvalidGeometryRestoreAfterEnablingOutput()
         OutputConfiguration config;
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->enabled = false;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // Create a window.
@@ -1063,7 +1063,7 @@ void OutputChangesTest::testInvalidGeometryRestoreAfterEnablingOutput()
         OutputConfiguration config;
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->enabled = true;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // Move the window to the right monitor
@@ -1083,7 +1083,7 @@ void OutputChangesTest::testInvalidGeometryRestoreAfterEnablingOutput()
         OutputConfiguration config;
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->enabled = false;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
@@ -1104,7 +1104,7 @@ void OutputChangesTest::testInvalidGeometryRestoreAfterEnablingOutput()
         OutputConfiguration config;
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->enabled = true;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // The window will be moved back to the right monitor, maximized and the geometry restore will be updated
@@ -1188,7 +1188,7 @@ void OutputChangesTest::testMaximizedWindowDoesntDisappear()
         changeSet0->pos = QPoint(0, 0);
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->enabled = false;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // The window should be moved to the left output
@@ -1287,7 +1287,7 @@ void OutputChangesTest::testXwaylandScaleChange()
         OutputConfiguration config;
         config.changeSet(outputs[0])->scaleSetting = 2;
         config.changeSet(outputs[1])->scaleSetting = 1;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
     QCOMPARE(kwinApp()->xwaylandScale(), 2);
 
@@ -1300,7 +1300,7 @@ void OutputChangesTest::testXwaylandScaleChange()
     {
         OutputConfiguration config;
         config.changeSet(outputs[0])->enabled = false;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // the window should still have logical size of 100, 200
@@ -1311,7 +1311,7 @@ void OutputChangesTest::testXwaylandScaleChange()
     {
         OutputConfiguration config;
         config.changeSet(outputs[0])->enabled = true;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // the window should be back in its original geometry
@@ -1638,7 +1638,7 @@ void OutputChangesTest::testGeneratePartialConfigs()
             .pos = QPoint(500, 0),
             .priority = 0,
         };
-        QCOMPARE(workspace()->applyOutputConfiguration(config), OutputConfigurationError::None);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // now add another output
@@ -1917,7 +1917,7 @@ void OutputChangesTest::testSettingRestoration()
         auto cfg = configurationStore->queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
         QVERIFY(cfg.has_value());
         auto [config, type] = *cfg;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
         for (const auto output : outputs) {
             outputPositions.push_back(config.constChangeSet(output)->pos);
         }
@@ -2026,7 +2026,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
         auto cfg = configurationStore->queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
         QVERIFY(cfg.has_value());
         auto [config, type] = *cfg;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
         QCOMPARE(config.constChangeSet(outputs[0])->desiredMode->size(), QSize(1280, 1024));
     }
     {
@@ -2035,7 +2035,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
         const auto changeSet = config.changeSet(outputs[0]);
         changeSet->currentMode = outputs[0]->modes()[1]->modeline();
         changeSet->desiredMode = OutputModeline(QSize(640, 480), 60000);
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
     {
         // verify that querying the config also shows the changed mode
@@ -2044,7 +2044,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
         QVERIFY(cfg.has_value());
         auto [config, type] = *cfg;
         QCOMPARE(type, OutputConfigurationStore::ConfigType::Preexisting);
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
         QCOMPARE(config.constChangeSet(outputs[0])->desiredMode->size(), QSize(640, 480));
     }
 
@@ -2119,7 +2119,7 @@ void OutputChangesTest::testSettingRestoration_replacedMode()
         const auto changeSet = config.changeSet(output);
         changeSet->currentMode = output->modes()[1]->modeline();
         changeSet->desiredMode = OutputModeline(QSize(1280, 1024), 60000);
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     // now, mark the mode as "removed". Its replacement is already in the mode list
@@ -2128,7 +2128,7 @@ void OutputChangesTest::testSettingRestoration_replacedMode()
     const auto opt = configurationStore->queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
     QVERIFY(opt.has_value());
     auto [config, type] = *opt;
-    workspace()->applyOutputConfiguration(config);
+    QVERIFY(workspace()->applyOutputConfiguration(config));
 
     // the preferred mode size and refresh rate should be the same,
     // and the third mode should be selected
@@ -2157,7 +2157,7 @@ void OutputChangesTest::testCursorRestoration()
     OutputConfiguration config;
     config.changeSet(outputs[0])->pos = QPoint(1691, 1440);
     config.changeSet(outputs[1])->pos = QPoint(0, 0);
-    QCOMPARE(workspace()->applyOutputConfiguration(config), OutputConfigurationError::None);
+    QVERIFY(workspace()->applyOutputConfiguration(config));
 
     input()->pointer()->warp(outputs[0]->position() + QPoint(1500, 1000));
 
@@ -2242,7 +2242,7 @@ void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput()
     {
         OutputConfiguration config;
         config.changeSet(external)->enabled = false;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     if (tileMode != QuickTileFlag::None) {
@@ -2266,7 +2266,7 @@ void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput()
     {
         OutputConfiguration config;
         config.changeSet(external)->enabled = true;
-        workspace()->applyOutputConfiguration(config);
+        QVERIFY(workspace()->applyOutputConfiguration(config));
     }
 
     if (tileMode != QuickTileFlag::None) {
@@ -2319,7 +2319,7 @@ void OutputChangesTest::testMirroring()
     {
         OutputConfiguration cfg;
         cfg.changeSet(external)->replicationSource = internal->uuid();
-        QCOMPARE(workspace()->applyOutputConfiguration(cfg), OutputConfigurationError::None);
+        QVERIFY(workspace()->applyOutputConfiguration(cfg));
     }
 
     QCOMPARE(workspace()->outputs().size(), 1);
@@ -2434,7 +2434,7 @@ void OutputChangesTest::testPerOutputDesktopsOutputToggle()
         auto changeSet = config1.changeSet(outputs[1]);
         changeSet->enabled = false;
     }
-    workspace()->applyOutputConfiguration(config1);
+    QVERIFY(workspace()->applyOutputConfiguration(config1));
 
     // The window will be moved to the left monitor.
     QCOMPARE(window.m_window->output()->backendOutput(), outputs[0]);
@@ -2447,7 +2447,7 @@ void OutputChangesTest::testPerOutputDesktopsOutputToggle()
         auto changeSet = config2.changeSet(outputs[1]);
         changeSet->enabled = true;
     }
-    workspace()->applyOutputConfiguration(config2);
+    QVERIFY(workspace()->applyOutputConfiguration(config2));
 
     // The window will be moved back to the right monitor.
     QCOMPARE(window.m_window->output()->backendOutput(), outputs[1]);

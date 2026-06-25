@@ -334,7 +334,10 @@ void Test::setOutputConfig(const QList<OutputInfo> &infos)
             .scaleSetting = info.scale,
         };
     }
-    workspace()->applyOutputConfiguration(config);
+    const auto result = workspace()->applyOutputConfiguration(config);
+    if (!result) {
+        qWarning() << "Applying output configuration failed!" << result.error().message;
+    }
 }
 
 Test::SimpleKeyboard::SimpleKeyboard(QObject *parent)

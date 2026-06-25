@@ -463,7 +463,7 @@ void LayerShellV1WindowTest::testPlacementAreaAfterOutputLayoutChange()
         auto changeSet = config1.changeSet(backendOutput);
         changeSet->pos = logicalOutput->geometry().topLeft() + QPoint(0, 100);
     }
-    workspace()->applyOutputConfiguration(config1);
+    QVERIFY(workspace()->applyOutputConfiguration(config1));
     QCOMPARE(workspace()->clientArea(PlacementArea, window), logicalOutput->geometry().adjusted(0, 0, 0, -50));
 
     // Move the output back to its original position.
@@ -472,7 +472,7 @@ void LayerShellV1WindowTest::testPlacementAreaAfterOutputLayoutChange()
         auto changeSet = config2.changeSet(backendOutput);
         changeSet->pos = logicalOutput->geometry().topLeft() - QPoint(0, 100);
     }
-    workspace()->applyOutputConfiguration(config2);
+    QVERIFY(workspace()->applyOutputConfiguration(config2));
     QCOMPARE(workspace()->clientArea(PlacementArea, window), logicalOutput->geometry().adjusted(0, 0, 0, -50));
 
     // Destroy the window.
