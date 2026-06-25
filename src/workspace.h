@@ -26,6 +26,7 @@
 #include <QStringList>
 #include <QTimer>
 // std
+#include <expected>
 #include <functional>
 #include <memory>
 
@@ -433,7 +434,7 @@ public:
      * Apply the requested output configuration. Note that you must use this function
      * instead of Platform::applyOutputChanges().
      */
-    OutputConfigurationError applyOutputConfiguration(OutputConfiguration &config);
+    std::expected<void, OutputError> applyOutputConfiguration(OutputConfiguration &config);
     void updateXwaylandScale();
 
     void setActivationToken(const QString &token, UInt32Serial serial, const QString &appId);
