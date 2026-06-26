@@ -869,18 +869,18 @@ std::optional<DrmAbstractColorOp::Scaling> DrmMultiplier::inputScaling(const Col
 std::optional<DrmAbstractColorOp::Scaling> DrmMultiplier::outputScaling(const ColorOp &op) const
 {
     if (const auto mat = std::get_if<ColorMatrix>(&op.operation)) {
-        const float scaling = commonScaling(mat->mat);
-        QMatrix4x4 remaining = mat->mat;
-        remaining.scale(1.0 / scaling);
+        const double scaling = 1.0 / op.input.max;
+        QMatrix4x4 adjusted = mat->mat;
+        adjusted.scale(1.0 / scaling);
         return Scaling{
             .scaling = ColorMultiplier(scaling),
             .inverse = ColorOp{
                 .input = op.input * scaling,
                 .inputSpace = op.inputSpace,
-                .operation = ColorMatrix(remaining),
+                .operation = ColorMatrix(adjusted),
                 .output = op.output,
                 .outputSpace = op.outputSpace,
-            },
+            }
         };
     }
     return std::nullopt;
