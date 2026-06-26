@@ -845,12 +845,10 @@ std::optional<DrmAbstractColorOp::Priority> DrmMultiplier::colorOpPreference(con
 void DrmMultiplier::program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations)
 {
     double factor = 1;
-    // only the first op matters, output scaling should be ignored
-    const auto &op = operations.front();
-    if (const auto mult = std::get_if<ColorMultiplier>(&op)) {
-        factor = mult->factors.x();
-    } else if (const auto mat = std::get_if<ColorMatrix>(&op)) {
-        factor = commonScaling(mat->mat);
+    for (const auto &op : operations) {
+        if (auto mult = std::get_if<ColorMultiplier>(&op)) {
+            factor *= mult->factors.x();
+        }
     }
     commit->addProperty(*m_value, doubleToFixed(factor));
     if (m_bypass) {
@@ -874,18 +872,16 @@ std::optional<DrmAbstractColorOp::Scaling> DrmMultiplier::outputScaling(const Co
         const float scaling = commonScaling(mat->mat);
         QMatrix4x4 remaining = mat->mat;
         remaining.scale(1.0 / scaling);
-        if (!isFuzzyIdentity(remaining)) {
-            return Scaling{
-                .scaling = ColorMatrix(remaining.inverted()),
-                .inverse = ColorOp{
-                    .input = op.output * (1.0 / scaling),
-                    .inputSpace = op.inputSpace,
-                    .operation = ColorMatrix(remaining),
-                    .output = op.output,
-                    .outputSpace = op.outputSpace,
-                },
-            };
-        }
+        return Scaling{
+            .scaling = ColorMultiplier(scaling),
+            .inverse = ColorOp{
+                .input = op.input * scaling,
+                .inputSpace = op.inputSpace,
+                .operation = ColorMatrix(remaining),
+                .output = op.output,
+                .outputSpace = op.outputSpace,
+            },
+        };
     }
     return std::nullopt;
 }
