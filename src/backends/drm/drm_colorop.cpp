@@ -866,12 +866,10 @@ std::optional<DrmAbstractColorOp::Priority> DrmMultiplier::colorOpPreference(con
 void DrmMultiplier::program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations)
 {
     double factor = 1;
-    // only the first op matters, output scaling should be ignored
-    const auto &op = operations.front();
-    if (const auto mult = std::get_if<ColorMultiplier>(&op)) {
-        factor = mult->factors.x();
-    } else if (const auto mat = std::get_if<ColorMatrix>(&op)) {
-        factor = commonScaling(mat->mat);
+    for (const auto &op : operations) {
+        if (auto mult = std::get_if<ColorMultiplier>(&op)) {
+            factor *= mult->factors.x();
+        }
     }
     commit->addProperty(*m_value, doubleToFixed(factor));
     if (m_bypass) {
@@ -892,21 +890,19 @@ std::optional<DrmAbstractColorOp::Scaling> DrmMultiplier::inputScaling(const Col
 std::optional<DrmAbstractColorOp::Scaling> DrmMultiplier::outputScaling(const ColorOp &op) const
 {
     if (const auto mat = std::get_if<ColorMatrix>(&op.operation)) {
-        const float scaling = commonScaling(mat->mat);
-        QMatrix4x4 remaining = mat->mat;
-        remaining.scale(1.0 / scaling);
-        if (!isFuzzyIdentity(remaining)) {
-            return Scaling{
-                .scaling = ColorMultiplier(scaling),
-                .inverse = ColorOp{
-                    .input = op.input * scaling,
-                    .inputSpace = op.inputSpace,
-                    .operation = ColorMatrix(remaining),
-                    .output = op.output,
-                    .outputSpace = op.outputSpace,
-                },
-            };
-        }
+        const double scaling = 1.0 / op.input.max;
+        QMatrix4x4 adjusted = mat->mat;
+        adjusted.scale(1.0 / scaling);
+        return Scaling{
+            .scaling = ColorMultiplier(scaling),
+            .inverse = ColorOp{
+                .input = op.input * scaling,
+                .inputSpace = op.inputSpace,
+                .operation = ColorMatrix(adjusted),
+                .output = op.output,
+                .outputSpace = op.outputSpace,
+            }
+        };
     }
     return std::nullopt;
 }
