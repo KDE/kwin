@@ -1011,12 +1011,13 @@ std::optional<DrmAbstractColorOp::Scaling> DrmNamed1DLut::outputScaling(const Co
         invMat.translate(tf->tf.minLuminance, tf->tf.minLuminance, tf->tf.minLuminance);
         invMat.scale(tf->tf.maxLuminance - tf->tf.minLuminance);
         invMat.scale(1.0 / transferFunctionScale);
+        const QMatrix4x4 mat = invMat.inverted();
         return Scaling{
-            .scaling = ColorMatrix(invMat.inverted()),
+            .scaling = ColorMatrix(mat),
             .inverse = ColorOp{
                 .input = ValueRange{
-                    .min = evaluateMat(invMat, op.output.min),
-                    .max = evaluateMat(invMat, op.output.max),
+                    .min = evaluateMat(mat, op.output.min),
+                    .max = evaluateMat(mat, op.output.max),
                 },
                 // not linear, not normal nonlinear either though
                 .inputSpace = ColorspaceType::AnyNonRGB,
