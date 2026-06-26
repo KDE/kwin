@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-25 00:45+0000\n"
-"PO-Revision-Date: 2026-05-21 22:21+0900\n"
+"PO-Revision-Date: 2026-06-25 23:58+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -1642,18 +1642,14 @@ msgid "Name of the xwayland display that has been pre-set up"
 msgstr "已經先設定好的 xwayland 顯示的名稱"
 
 #: main_wayland.cpp:372
-#, fuzzy, kde-format
-#| msgid ""
-#| "XWayland socket to use for Xwayland's incoming connections. This can be "
-#| "set multiple times"
+#, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
-msgstr "Xwayland 接收到的連線所使用的 socket。這可以被重複設定"
+msgstr "Xwayland 的初始化連線所使用的 socket"
 
 #: main_wayland.cpp:376
-#, fuzzy, kde-format
-#| msgid "Name of the xwayland display that has been pre-set up"
+#, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
-msgstr "已經先設定好的 xwayland 顯示的名稱"
+msgstr "已經先設定好的 xwayland 初始顯示的名稱"
 
 #: main_wayland.cpp:380
 #, kde-format
