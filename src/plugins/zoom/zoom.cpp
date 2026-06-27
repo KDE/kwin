@@ -537,8 +537,8 @@ void ZoomEffect::slotMouseChanged(const QPointF &pos, const QPointF &old)
     if (m_zoom == 1.0) {
         return;
     }
-    m_cursorPoint = pos.toPoint();
     if (pos != old) {
+        m_cursorPoint = pos.toPoint();
         m_lastMouseEvent = QTime::currentTime();
         effects->addRepaintFull();
     }
