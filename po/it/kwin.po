@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-25 00:45+0000\n"
-"PO-Revision-Date: 2026-05-23 07:57+0200\n"
+"PO-Revision-Date: 2026-06-18 16:52+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 26.04.1\n"
+"X-Generator: Lokalize 26.04.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1665,20 +1665,18 @@ msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Nome del display XWayland che è stato pre-impostato"
 
 #: main_wayland.cpp:372
-#, fuzzy, kde-format
-#| msgid ""
-#| "XWayland socket to use for Xwayland's incoming connections. This can be "
-#| "set multiple times"
+#, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
 msgstr ""
-"Socket di XWayland da utilizzare per le connessioni in entrata di Xwayland. "
-"Può essere impostato più volte."
+"Socket XWayland da utilizzare per le connessioni di inizializzazione di "
+"XWayland."
 
 #: main_wayland.cpp:376
-#, fuzzy, kde-format
-#| msgid "Name of the xwayland display that has been pre-set up"
+#, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
-msgstr "Nome del display XWayland che è stato pre-impostato"
+msgstr ""
+"Nome della visualizzazione di inizializzazione xwayland che è stata "
+"preconfigurata"
 
 #: main_wayland.cpp:380
 #, kde-format
