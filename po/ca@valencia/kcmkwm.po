@@ -28,7 +28,7 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "SPDX-FileCopyrightText: 2019 Empar Montoro Martín,Sebastià Pla i Sanz"
+msgstr "Empar Montoro Martín,Sebastià Pla i Sanz"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
@@ -980,7 +980,7 @@ msgstr "Mòdul de configuració del comportament de les finestres"
 #: main.cpp:103
 #, kde-format
 msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr "(c) 1997 - 2002 autors de KWin i KControl"
+msgstr "(c) 1997 – 2002 autors de KWin i KControl"
 
 #: main.cpp:105
 #, kde-format

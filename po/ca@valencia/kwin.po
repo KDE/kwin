@@ -78,12 +78,12 @@ msgstr "No està disponible el GLX/OpenGL."
 #: debug_console.cpp:79 debug_console.cpp:84
 #, kde-format
 msgid "Timestamp"
-msgstr "Marca horària"
+msgstr "Marca de temps"
 
 #: debug_console.cpp:89 debug_console.cpp:94
 #, kde-format
 msgid "Timestamp (µsec)"
-msgstr "Marca horària (µseg)"
+msgstr "Marca de temps (µseg)"
 
 #: debug_console.cpp:101
 #, kde-format
