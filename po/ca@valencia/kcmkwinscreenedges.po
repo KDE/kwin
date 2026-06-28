@@ -60,17 +60,17 @@ msgstr "Presenta les finestres"
 #: main.cpp:162 touch.cpp:129
 #, kde-format
 msgid "%1 - All Desktops"
-msgstr "%1 - Tots els escriptoris"
+msgstr "%1 – Tots els escriptoris"
 
 #: main.cpp:163 touch.cpp:130
 #, kde-format
 msgid "%1 - Current Desktop"
-msgstr "%1 - Escriptori actual"
+msgstr "%1 – Escriptori actual"
 
 #: main.cpp:164 touch.cpp:131
 #, kde-format
 msgid "%1 - Current Application"
-msgstr "%1 - Aplicació actual"
+msgstr "%1 – Aplicació actual"
 
 #: main.cpp:166 touch.cpp:133
 #, kde-format
@@ -263,7 +263,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents the pointer from crossing at screen corners."
-msgstr "Evita que el punter creui els cantons de la pantalla."
+msgstr "Evita que el punter creue els cantons de la pantalla."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
