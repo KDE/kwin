@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-25 00:45+0000\n"
-"PO-Revision-Date: 2026-06-24 20:40+0200\n"
+"PO-Revision-Date: 2026-06-27 11:52+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
 "Language: nn\n"
@@ -101,6 +101,7 @@ msgstr "ICC-profilen «%1» er ikkje brukbar for skjermar"
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
+"ICC-profilen «%1» har eit ikkje-støtta samankoplingsrom – berre XYZ er støtta"
 
 #: core/iccprofile.cpp:408
 #, kde-format
@@ -122,37 +123,42 @@ msgstr "ICC-profilen «%1» er øydelagd – kvitpunktet er ugyldig"
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
+"ICC-profilen «%1» er øydelagd – klarte ikkje tolka matrisa for kromatisk "
+"tilpassing"
 
 #: core/iccprofile.cpp:442
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
+"ICC-profilen «%1» er øydelagd – klarte ikkje invertera matrisa for kromatisk "
+"tilpassing"
 
 #: core/iccprofile.cpp:455
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "ICC-profilen «%1» er øydelagd – han manglar primærfargar"
 
 #: core/iccprofile.cpp:470
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
+"ICC-profilen «%1» er øydelagd – kan ikkje rekna ut primærfargane i profilen"
 
 #: core/iccprofile.cpp:479
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr ""
+msgstr "ICC-profilen «%1» er øydelagd – primærfargane er ugyldige"
 
 #: core/iccprofile.cpp:495
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr ""
+msgstr "ICC-profilen «%1» med berre BToD-merkelappar er ikkje støtta"
 
 #: core/iccprofile.cpp:533
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "Fargeprofilen manglar TRC-merkelappar"
 
 #: core/iccprofile.cpp:540
 #, kde-format
@@ -427,12 +433,12 @@ msgid "Delta"
 msgstr "Delta"
 
 #: debug_console.cpp:251
-#, fuzzy, kde-format
+#, kde-format
 msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr "Delta x"
+msgstr "Delta (V120)"
 
 #: debug_console.cpp:266
 #, kde-format
@@ -651,9 +657,7 @@ msgid "Hold start"
 msgstr ""
 
 #: debug_console.cpp:473
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgctxt "Number of fingers in this hold gesture"
 msgid "Finger count"
 msgstr "Fingertal"
@@ -715,24 +719,24 @@ msgid "State"
 msgstr "Tilstand"
 
 #: debug_console.cpp:539
-#, fuzzy, kde-format
+#, kde-format
 msgid "Tablet Tool Proximity"
-msgstr "Teikneplate-verktøy"
+msgstr "Teikneplateverktøy-nærleik"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "Proximity"
-msgstr ""
+msgstr "Nærleik"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "Inn"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "Ut"
 
 #: debug_console.cpp:544 debug_console.cpp:562 debug_console.cpp:582
 #: debug_console.cpp:632 debug_console.cpp:649
@@ -751,15 +755,14 @@ msgid "Rotation"
 msgstr "Dreiing"
 
 #: debug_console.cpp:549 debug_console.cpp:568
-#, fuzzy, kde-format
-#| msgid "Distance:"
+#, kde-format
 msgid "Distance"
-msgstr "Avstand:"
+msgstr "Avstand"
 
 #: debug_console.cpp:558
-#, fuzzy, kde-format
+#, kde-format
 msgid "Tablet Tool Axis"
-msgstr "Teikneplate-verktøy"
+msgstr "Akse for teikneplateverktøy"
 
 #: debug_console.cpp:567 debug_console.cpp:587
 #, kde-format
@@ -767,24 +770,24 @@ msgid "Pressure"
 msgstr "Trykk"
 
 #: debug_console.cpp:577
-#, fuzzy, kde-format
+#, kde-format
 msgid "Tablet Tool Tip"
-msgstr "Teikneplate-verktøy"
+msgstr "Teikneplate-pennespiss"
 
 #: debug_console.cpp:581
-#, fuzzy, kde-format
+#, kde-format
 msgid "Tip"
-msgstr "Oppe"
+msgstr "Pennespiss"
 
 #: debug_console.cpp:581
-#, fuzzy, kde-format
+#, kde-format
 msgid "Down"
-msgstr "Gå ned"
+msgstr "Ned"
 
 #: debug_console.cpp:581
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "Opp"
 
 #: debug_console.cpp:588
 #, fuzzy, kde-format
@@ -821,12 +824,12 @@ msgstr "Teikneplateflate-knapp"
 #: debug_console.cpp:616 debug_console.cpp:634 debug_console.cpp:651
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "Gruppe"
 
 #: debug_console.cpp:617 debug_console.cpp:635 debug_console.cpp:652
 #, kde-format
 msgid "Mode"
-msgstr ""
+msgstr "Modus"
 
 #: debug_console.cpp:618
 #, kde-format
@@ -860,9 +863,7 @@ msgid "Tablet Pad Dial"
 msgstr "Teikneplate-ring"
 
 #: debug_console.cpp:666
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
 msgstr "Delta"
 
@@ -1382,11 +1383,7 @@ msgid "Do not show again"
 msgstr "Ikkje vis igjen"
 
 #: helpers/killer/killdialog.cpp:37
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
@@ -1394,16 +1391,13 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Om du tvangsavsluttar programmet, vert også "
-"alle undervindauge til programmet lukka. Eventuelle ulagra data vil gå tapt."
-"</emphasis></para>"
+"<para><application>%1</application> svarar ikkje. Ønskjer du å "
+"tvangsavslutta programmet?</para><para><emphasis strong='true'>Om du "
+"tvangsavsluttar programmet, vert også alle vindauga til programmet lukka. "
+"Eventuelle ulagra data vil gå tapt.</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:41
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
@@ -1411,9 +1405,10 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Om du tvangsavsluttar programmet, vert også "
-"alle undervindauge til programmet lukka. Eventuelle ulagra data vil gå tapt."
-"</emphasis></para>"
+"<para>«%1» til <application>%2</application> svarar ikkje. Ønskjer du å "
+"tvangsavslutta programmet?</para><para><emphasis strong='true'>Om du "
+"tvangsavsluttar programmet, vert også alle vindauga til programmet lukka. "
+"Eventuelle ulagra data vil gå tapt.</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
 #, kde-format

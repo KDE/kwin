@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-06-24 20:25+0200\n"
+"PO-Revision-Date: 2026-06-27 11:38+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
 "Language: nn\n"
@@ -69,7 +69,7 @@ msgstr "Hald over andre vindauge"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr "Gøym frå skrivebord og skjermopptak"
+msgstr "Gøym frå skjermbilde og skjermopptak"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -202,7 +202,7 @@ msgstr "Vis hjelpebobler til knappar på tittellinja"
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
-msgstr ""
+msgstr "Vis alltid «Gøym frå skjermbilde og skjermopptak»-knapp"
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format
@@ -211,6 +211,8 @@ msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screenshots and screen recordings"
 msgstr ""
+"Når det ikkje er kryssa av her, vert knappen berre vist viss vindauget er "
+"gøymd frå skjermbilete og skjermopptak."
 
 #: ui/ConfigureTitlebar.qml:86
 #, kde-format
@@ -219,6 +221,8 @@ msgid ""
 "To enable this option, add the \"Hide from Screenshots and Screen Recordings"
 "\" button to the titlebar first"
 msgstr ""
+"For å kunna slå på dette valet, legg først knappen «Gøym frå skjermbilde og "
+"skjermopptak» til tittellinja."
 
 #: ui/main.qml:29
 #, kde-format

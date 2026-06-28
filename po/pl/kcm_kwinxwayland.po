@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-05 00:46+0000\n"
-"PO-Revision-Date: 2026-05-16 13:13+0200\n"
+"PO-Revision-Date: 2026-06-27 12:31+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
 "Language: pl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 26.04.0\n"
+"X-Generator: Lokalize 26.04.2\n"
 
 #: ui/main.qml:28
 #, kde-kuit-format
@@ -154,7 +154,7 @@ msgstr "Dozwolone aplikacje"
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
-msgstr ""
+msgstr "Obejrzyj dozwolone aplikacje…"
 
 #: ui/main.qml:163
 #, kde-format
@@ -164,6 +164,9 @@ msgid ""
 "will be able to take control of the computer, because XWayland-using apps’ "
 "identities can’t be verified"
 msgstr ""
+"Umiarkowane bezpieczeństwo; aplikacje korzystające z XWayland twierdzące, że "
+"są czymś na liście, będą mogły przejąć sterowanie komputerem, bo tożsamości "
+"aplikacji używających XWayland nie można potwierdzić"
 
 #: ui/main.qml:169
 #, kde-format
@@ -195,14 +198,12 @@ msgstr ""
 "takie ryzyko."
 
 #: ui/main.qml:189
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Control of pointer and keyboard:"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
 "button"
 msgid "Applications allowed to control the pointer and keyboard"
-msgstr "Sterowanie wskaźnikiem i klawiaturą:"
+msgstr "Aplikacje, którym wolno sterować wskaźnikiem i klawiaturą"
 
 #: ui/main.qml:209
 #, kde-format
