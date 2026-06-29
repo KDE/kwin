@@ -3549,7 +3549,10 @@ void X11Window::moveResizeInternal(const RectF &rect, MoveResizeMode mode)
     if (oldOutput != m_output) {
         Q_EMIT outputChanged(oldOutput);
     }
-    updateShapeRegion();
+
+    if (oldBufferGeometry.size() != bufferGeometry.size()) {
+        updateShapeRegion();
+    }
 }
 
 void X11Window::configure(const Rect &nativeGeometry)
@@ -3967,28 +3970,32 @@ RegionF X11Window::shapeRegion() const
 
 void X11Window::updateShapeRegion()
 {
-    const RectF bufferGeometry = this->bufferGeometry();
+    const RectF bufferRect(0, 0, m_bufferGeometry.width(), m_bufferGeometry.height());
     const auto previousRegion = m_shapeRegion;
     if (Xcb::Extensions::self()->hasShape(window())) {
         auto cookie = xcb_shape_get_rectangles_unchecked(kwinApp()->x11Connection(), window(), XCB_SHAPE_SK_BOUNDING);
         UniqueCPtr<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(kwinApp()->x11Connection(), cookie, nullptr));
         if (reply) {
-            m_shapeRegion = RegionF{};
-            const xcb_rectangle_t *rects = xcb_shape_get_rectangles_rectangles(reply.get());
-            const int rectCount = xcb_shape_get_rectangles_rectangles_length(reply.get());
-            for (int i = 0; i < rectCount; ++i) {
-                RectF region = Xcb::fromXNative(Rect(rects[i].x, rects[i].y, rects[i].width, rects[i].height));
-                // make sure the shape is sane (X is async, maybe even XShape is broken)
-                region = region.intersected(RectF(QPointF(0, 0), bufferGeometry.size()));
+            // The shape rectangles are sorted in the Y-X lexicographical order. It should be okay
+            // to pass them as is to the Region or RegionF without running the union algorithm.
+            const std::span shapeRects(xcb_shape_get_rectangles_rectangles(reply.get()),
+                                       xcb_shape_get_rectangles_rectangles_length(reply.get()));
 
-                m_shapeRegion += region;
+            QList<RectF> rects;
+            rects.reserve(shapeRects.size());
+            for (const auto &rect : shapeRects) {
+                rects.append(Xcb::fromXNative(Rect(rect.x, rect.y, rect.width, rect.height)));
             }
+
+            // The shape region should be clipped because the X shape and the buffer geometry are async.
+            m_shapeRegion = RegionF::fromSortedRects(rects).intersected(bufferRect);
         } else {
-            m_shapeRegion = {RectF(0, 0, bufferGeometry.width(), bufferGeometry.height())};
+            m_shapeRegion = bufferRect;
         }
     } else {
-        m_shapeRegion = {RectF(0, 0, bufferGeometry.width(), bufferGeometry.height())};
+        m_shapeRegion = bufferRect;
     }
+
     if (m_shapeRegion != previousRegion) {
         Q_EMIT shapeChanged();
     }
