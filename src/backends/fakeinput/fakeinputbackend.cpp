@@ -279,7 +279,7 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_key(Resource *res
     sendKey(device, key, nativeState);
 }
 
-void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *resource, uint32_t keySym, uint32_t state)
+void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *resource, uint32_t keySym, uint32_t pressedState)
 {
     FakeInputDevice *device = findDevice(resource);
     if (!device->isAuthenticated()) {
@@ -287,7 +287,7 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *
     }
 
     KeyboardKeyState nativeState;
-    switch (state) {
+    switch (pressedState) {
     case WL_KEYBOARD_KEY_STATE_PRESSED:
         nativeState = KeyboardKeyState::Pressed;
         break;
@@ -299,15 +299,14 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *
     }
 
     std::optional<Xkb::KeyCode> keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(keySym);
+    // grab the current modifier state, cache it, send our key with our own modifiers at a known state, then reset back
+    xkb_state *state = input()->keyboard()->xkb()->state();
+    xkb_mod_mask_t formerDepressed = xkb_state_serialize_mods(state, XKB_STATE_MODS_DEPRESSED);
+    xkb_mod_mask_t formerLatched = xkb_state_serialize_mods(state, XKB_STATE_MODS_LATCHED);
+    xkb_mod_mask_t formerLocked = xkb_state_serialize_mods(state, XKB_STATE_MODS_LOCKED);
+    xkb_layout_index_t formerLayout = xkb_state_serialize_layout(state, XKB_STATE_LAYOUT_EFFECTIVE);
+
     if (keyCode) {
-        // grab the current modifier state, cache it, send our key with our own modifiers at a known state, then reset back
-        xkb_state *state = input()->keyboard()->xkb()->state();
-        xkb_mod_mask_t formerDepressed = xkb_state_serialize_mods(state, XKB_STATE_MODS_DEPRESSED);
-        xkb_mod_mask_t formerLatched = xkb_state_serialize_mods(state, XKB_STATE_MODS_LATCHED);
-        xkb_mod_mask_t formerLocked = xkb_state_serialize_mods(state, XKB_STATE_MODS_LOCKED);
-        xkb_layout_index_t formerLayout = xkb_state_serialize_layout(state, XKB_STATE_LAYOUT_EFFECTIVE);
-
-
         // if the keysym is "F" we need to temporarily depress shift before the F key and most importantly unset it after
         // however we still want modifiers like pressing control and alt to still work.
 
@@ -352,6 +351,7 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *
         }
         // reset keyboard back
         input()->keyboard()->xkb()->reconfigure();
+        input()->keyboard()->xkb()->updateModifiers(formerDepressed, formerLatched, formerLocked, formerLayout);
     }
 }
 
