@@ -21,8 +21,6 @@ class EglDisplay;
 namespace QPA
 {
 
-bool isOpenGLES();
-
 EGLConfig configFromFormat(EglDisplay *display, const QSurfaceFormat &surfaceFormat, EGLint surfaceType = 0);
 QSurfaceFormat formatFromConfig(EglDisplay *display, EGLConfig config);
 

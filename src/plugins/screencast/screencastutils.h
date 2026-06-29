@@ -47,7 +47,7 @@ static void doGrabTexture(GLTexture *texture, QImage *target)
 
     const auto context = EglContext::currentContext();
     const QSize size = texture->size();
-    const bool invertNeeded = context->isOpenGLES() ^ (texture->contentTransform() != OutputTransform::FlipY);
+    const bool invertNeeded = texture->contentTransform() == OutputTransform::FlipY;
     const bool invertNeededAndSupported = invertNeeded && context->supportsPackInvert();
     GLboolean prev;
     if (invertNeededAndSupported) {
@@ -56,16 +56,10 @@ static void doGrabTexture(GLTexture *texture, QImage *target)
     }
 
     texture->bind();
-    // BUG: The nvidia driver fails to glGetTexImage
-    // Drop driver() == DriverNVidia some time after that's fixed
-    if (context->isOpenGLES() || context->glPlatform()->driver() == Driver_NVidia) {
-        GLFramebuffer fbo(texture);
-        GLFramebuffer::pushFramebuffer(&fbo);
-        context->glReadnPixels(0, 0, size.width(), size.height(), closestGLType(target->format()), GL_UNSIGNED_BYTE, target->sizeInBytes(), target->bits());
-        GLFramebuffer::popFramebuffer();
-    } else {
-        context->glGetnTexImage(texture->target(), 0, closestGLType(target->format()), GL_UNSIGNED_BYTE, target->sizeInBytes(), target->bits());
-    }
+    GLFramebuffer fbo(texture);
+    GLFramebuffer::pushFramebuffer(&fbo);
+    context->glReadnPixels(0, 0, size.width(), size.height(), closestGLType(target->format()), GL_UNSIGNED_BYTE, target->sizeInBytes(), target->bits());
+    GLFramebuffer::popFramebuffer();
 
     if (invertNeededAndSupported) {
         if (!prev) {

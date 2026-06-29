@@ -91,7 +91,6 @@ std::unique_ptr<GLShader> ShaderManager::generateCustomShader(ShaderTraits trait
 
     shader->bindAttributeLocation("position", VA_Position);
     shader->bindAttributeLocation("texcoord", VA_TexCoord);
-    shader->bindFragDataLocation("fragColor", 0);
 
     if (!shader->link()) {
         return nullptr;
@@ -181,11 +180,6 @@ void ShaderManager::popShader()
     }
 }
 
-void ShaderManager::bindFragDataLocations(GLShader *shader)
-{
-    shader->bindFragDataLocation("fragColor", 0);
-}
-
 void ShaderManager::bindAttributeLocations(GLShader *shader) const
 {
     shader->bindAttributeLocation("vertex", VA_Position);
@@ -200,7 +194,6 @@ std::unique_ptr<GLShader> ShaderManager::loadShaderFromCode(const QByteArray &ve
     }
 
     bindAttributeLocations(shader.get());
-    bindFragDataLocations(shader.get());
 
     if (!shader->link()) {
         return nullptr;

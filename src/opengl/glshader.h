@@ -31,7 +31,6 @@ public:
     ~GLShader();
 
     void bindAttributeLocation(const char *name, int index);
-    void bindFragDataLocation(const char *name, int index);
 
     bool link();
 

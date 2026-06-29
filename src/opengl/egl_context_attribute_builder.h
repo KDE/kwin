@@ -13,12 +13,6 @@
 namespace KWin
 {
 
-class KWIN_EXPORT EglContextAttributeBuilder : public AbstractOpenGLContextAttributeBuilder
-{
-public:
-    std::vector<int> build() const override;
-};
-
 class KWIN_EXPORT EglOpenGLESContextAttributeBuilder : public AbstractOpenGLContextAttributeBuilder
 {
 public:

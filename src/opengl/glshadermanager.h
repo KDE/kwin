@@ -148,7 +148,6 @@ public:
     static ShaderManager *instance();
 
 private:
-    void bindFragDataLocations(GLShader *shader);
     void bindAttributeLocations(GLShader *shader) const;
 
     QByteArray generateVertexSource(ShaderTraits traits) const;

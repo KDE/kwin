@@ -18,9 +18,7 @@
 
 using namespace KWin;
 
-GenericSceneOpenGLTest::GenericSceneOpenGLTest(const QByteArray &envVariable)
-    : QObject()
-    , m_envVariable(envVariable)
+GenericSceneOpenGLTest::GenericSceneOpenGLTest()
 {
 }
 
@@ -55,7 +53,7 @@ void GenericSceneOpenGLTest::initTestCase()
 
     qputenv("XCURSOR_THEME", QByteArrayLiteral("breeze_cursors"));
     qputenv("XCURSOR_SIZE", QByteArrayLiteral("24"));
-    qputenv("KWIN_COMPOSE", m_envVariable);
+    qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2ES"));
 
     kwinApp()->start();
     Test::setOutputConfig({

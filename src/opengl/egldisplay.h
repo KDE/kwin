@@ -59,7 +59,6 @@ public:
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer);
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size);
 
-    static bool shouldUseOpenGLES();
     static std::unique_ptr<EglDisplay> create(::EGLDisplay display, DrmDevice *drmDevice);
 
 private:

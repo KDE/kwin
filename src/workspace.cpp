@@ -1952,11 +1952,7 @@ QString Workspace::supportInformation() const
         case OpenGLCompositing: {
             const auto context = kwinApp()->scene()->openglContext();
             GLPlatform *platform = context->glPlatform();
-            if (context->isOpenGLES()) {
-                support.append(QStringLiteral("Compositing Type: OpenGL ES 2.0\n"));
-            } else {
-                support.append(QStringLiteral("Compositing Type: OpenGL\n"));
-            }
+            support.append(QStringLiteral("Compositing Type: OpenGL ES\n"));
             support.append(QStringLiteral("OpenGL vendor string: ") + QString::fromUtf8(platform->glVendorString()) + QStringLiteral("\n"));
             support.append(QStringLiteral("OpenGL renderer string: ") + QString::fromUtf8(platform->glRendererString()) + QStringLiteral("\n"));
             support.append(QStringLiteral("OpenGL version string: ") + QString::fromUtf8(platform->glVersionString()) + QStringLiteral("\n"));

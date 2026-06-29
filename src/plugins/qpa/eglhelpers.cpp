@@ -21,15 +21,6 @@ namespace KWin
 namespace QPA
 {
 
-bool isOpenGLES()
-{
-    if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
-        return true;
-    }
-
-    return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
-}
-
 EGLConfig configFromFormat(EglDisplay *display, const QSurfaceFormat &surfaceFormat, EGLint surfaceType)
 {
     // std::max as these values are initialized to -1 by default.
@@ -40,8 +31,6 @@ EGLConfig configFromFormat(EglDisplay *display, const QSurfaceFormat &surfaceFor
     const EGLint depthSize = std::max(surfaceFormat.depthBufferSize(), 0);
     const EGLint stencilSize = std::max(surfaceFormat.stencilBufferSize(), 0);
 
-    const EGLint renderableType = isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT;
-
     // Not setting samples as QtQuick doesn't need it.
     const QList<EGLint> attributes{
         EGL_SURFACE_TYPE, surfaceType,
@@ -51,7 +40,7 @@ EGLConfig configFromFormat(EglDisplay *display, const QSurfaceFormat &surfaceFor
         EGL_ALPHA_SIZE, alphaSize,
         EGL_DEPTH_SIZE, depthSize,
         EGL_STENCIL_SIZE, stencilSize,
-        EGL_RENDERABLE_TYPE, renderableType,
+        EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
         EGL_NONE};
 
     EGLint configCount;
@@ -116,7 +105,7 @@ QSurfaceFormat formatFromConfig(EglDisplay *display, EGLConfig config)
     format.setStencilBufferSize(stencilSize);
     format.setDepthBufferSize(depthSize);
     format.setSamples(sampleCount);
-    format.setRenderableType(isOpenGLES() ? QSurfaceFormat::OpenGLES : QSurfaceFormat::OpenGL);
+    format.setRenderableType(QSurfaceFormat::OpenGLES);
     format.setStereo(false);
 
     return format;

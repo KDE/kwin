@@ -59,7 +59,6 @@ public:
     Version glslVersion() const;
     QByteArrayView vendor() const;
     QByteArrayView renderer() const;
-    bool isOpenGLES() const;
     bool hasOpenglExtension(QByteArrayView name) const;
     bool isSoftwareRenderer() const;
     bool supportsTimerQueries() const;
@@ -129,7 +128,6 @@ private:
     const Version m_glslVersion;
     const QByteArrayView m_vendor;
     const QByteArrayView m_renderer;
-    const bool m_isOpenglES;
     const QSet<QByteArray> m_extensions;
     const bool m_supportsTimerQueries;
     const bool m_supportsTextureStorage;

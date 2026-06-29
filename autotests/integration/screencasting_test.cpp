@@ -44,7 +44,7 @@ class ScreencastingTest : public GenericSceneOpenGLTest
 
 public:
     ScreencastingTest()
-        : GenericSceneOpenGLTest(QByteArrayLiteral("O2"))
+        : GenericSceneOpenGLTest()
     {
         auto wrap = [this](const QString &process, const QStringList &arguments = {}) {
             // Make sure PipeWire is running. If it's already running it will just exit

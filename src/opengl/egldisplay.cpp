@@ -26,14 +26,6 @@
 namespace KWin
 {
 
-bool EglDisplay::shouldUseOpenGLES()
-{
-    if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
-        return true;
-    }
-    return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
-}
-
 std::unique_ptr<EglDisplay> EglDisplay::create(::EGLDisplay display, DrmDevice *drmDevice)
 {
     if (!display) {
@@ -54,7 +46,7 @@ std::unique_ptr<EglDisplay> EglDisplay::create(::EGLDisplay display, DrmDevice *
         return nullptr;
     }
     qCDebug(KWIN_OPENGL) << "Egl Initialize succeeded";
-    if (eglBindAPI(shouldUseOpenGLES() ? EGL_OPENGL_ES_API : EGL_OPENGL_API) == EGL_FALSE) {
+    if (eglBindAPI(EGL_OPENGL_ES_API) == EGL_FALSE) {
         qCCritical(KWIN_OPENGL) << "bind OpenGL API failed";
         return nullptr;
     }

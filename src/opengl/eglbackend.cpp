@@ -212,11 +212,6 @@ bool EglBackend::hasClientExtension(const QByteArray &ext) const
     return m_clientExtensions.contains(ext);
 }
 
-bool EglBackend::isOpenGLES() const
-{
-    return EglDisplay::shouldUseOpenGLES();
-}
-
 bool EglBackend::createContext()
 {
     if (!ensureGlobalShareContext()) {

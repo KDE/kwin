@@ -184,11 +184,6 @@ GLuint EGLPlatformContext::defaultFramebufferObject(QPlatformSurface *surface) c
 
 void EGLPlatformContext::create(const QSurfaceFormat &format, EglContext *shareContext)
 {
-    if (!eglBindAPI(isOpenGLES() ? EGL_OPENGL_ES_API : EGL_OPENGL_API)) {
-        qCWarning(KWIN_QPA) << "eglBindAPI failed:" << getEglErrorString();
-        return;
-    }
-
     m_config = configFromFormat(m_eglDisplay, format);
     if (m_config == EGL_NO_CONFIG_KHR) {
         qCWarning(KWIN_QPA) << "Could not find suitable EGLConfig for" << format;

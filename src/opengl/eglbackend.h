@@ -61,7 +61,6 @@ protected:
     bool initClientExtensions();
     void initWayland();
     bool hasClientExtension(const QByteArray &ext) const;
-    bool isOpenGLES() const;
     bool createContext();
 
     bool ensureGlobalShareContext();

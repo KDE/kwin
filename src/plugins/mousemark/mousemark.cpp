@@ -191,14 +191,7 @@ void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const Render
     if (marks.isEmpty() && drawings.isEmpty()) {
         return;
     }
-    if (const auto context = effects->openglContext()) {
-        if (!context->isOpenGLES()) {
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-            glEnable(GL_LINE_SMOOTH);
-            glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-        }
+    if (effects->openglContext()) {
         glLineWidth(width);
         GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
         vbo->reset();
@@ -229,10 +222,6 @@ void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const Render
             }
         }
         glLineWidth(1.0);
-        if (!context->isOpenGLES()) {
-            glDisable(GL_LINE_SMOOTH);
-            glDisable(GL_BLEND);
-        }
     } else if (effects->compositingType() == QPainterCompositing) {
         QPainter *painter = effects->scenePainter();
         painter->save();
