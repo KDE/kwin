@@ -23,7 +23,9 @@
 
 #include <chrono>
 #include <epoxy/egl.h>
+#include <mutex>
 #include <sys/types.h>
+#include <unordered_map>
 
 namespace KWin
 {
@@ -127,6 +129,9 @@ public:
 
     void addDefunctCommit(std::unique_ptr<DrmCommit> &&commit);
 
+    std::unique_lock<std::mutex> lockPendingCommits();
+    void registerPendingCommit(std::unique_lock<std::mutex> &lock, uint32_t crtcId, DrmCommit *commit);
+
 Q_SIGNALS:
     void activeChanged(bool active);
     void outputAdded(BackendOutput *output);
@@ -167,6 +172,10 @@ private:
     RenderDevice *m_kmsRenderDevice = nullptr;
     DrmBackend *const m_platform;
     std::optional<Version> m_nvidiaDriverVersion;
+
+    // declared before every member that can own a DrmCommit, so it outlives them
+    std::unordered_map<uint32_t, DrmCommit *> m_pendingCommits;
+    std::mutex m_pendingCommitsMutex;
 
     std::vector<std::unique_ptr<DrmPlane>> m_planes;
     std::vector<std::unique_ptr<DrmCrtc>> m_crtcs;
