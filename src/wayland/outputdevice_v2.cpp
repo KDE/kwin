@@ -430,6 +430,10 @@ OutputDeviceV2Interface::~OutputDeviceV2Interface()
 
 void OutputDeviceV2Interface::scheduleDone()
 {
+    if (d->m_uuid.isEmpty()) {
+        // This output isn't ready yet
+        return;
+    }
     d->m_doneTimer.start();
 }
 
@@ -494,7 +498,9 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendHdrIccProfilePath(resource);
     sendHdrColorProfileSource(resource);
     sendAbmLevel(resource);
-    sendDone(resource);
+    if (!m_uuid.isEmpty()) {
+        sendDone(resource);
+    }
 }
 
 wl_resource *OutputDeviceV2InterfacePrivate::sendNewMode(Resource *resource, OutputDeviceModeV2Interface *mode)
