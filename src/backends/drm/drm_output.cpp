@@ -876,7 +876,7 @@ Colorimetry DrmOutput::wireColor(const State &next) const
     if (next.wideColorGamut && (capabilities() & Capability::WideColorGamut)) {
         return Colorimetry::BT2020;
     } else {
-        return Colorimetry::BT709;
+        return next.originalColorDescription->containerColorimetry();
     }
 }
 
