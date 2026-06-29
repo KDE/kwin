@@ -431,6 +431,7 @@ QList<Item *> WorkspaceScene::layerCandidates(ssize_t maxTotalCount) const
         if (item == cursorItem()) {
             if (s_forceSoftwareCursor) {
                 needsCompositedScene = true;
+                occupied |= mapToDevice(painted_delegate, item, item->boundingRect()) & painted_delegate->deviceRect();
                 continue;
             }
             // for the time being, prioritize the cursor above all else,
