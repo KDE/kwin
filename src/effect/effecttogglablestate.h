@@ -70,6 +70,15 @@ public:
         return m_status;
     }
 
+    /**
+     * Sets threshold after which it "snaps into" active (or in-active) state after being released.
+     */
+    void setThreshold(qreal threshold);
+    qreal threshold() const
+    {
+        return m_threshold;
+    }
+
 Q_SIGNALS:
     void inProgressChanged();
     void partialActivationFactorChanged();
@@ -95,6 +104,7 @@ private:
     Status m_status = Status::Inactive;
     bool m_inProgress = false;
     qreal m_partialActivationFactor = 0;
+    qreal m_threshold = 0.5;
 
     friend class EffectTogglableGesture;
     friend class EffectTogglableTouchBorder;

@@ -112,8 +112,9 @@ FocusScope {
 
         // If we are in between a state but no gesture is going on, we snap to
         // the closest state
-        if (overviewVal >= 0.5) return "overview";
-        if (gridVal >= 0.5) return "grid";
+        if (overviewVal >= effect.gestureThreshold) return "overview";
+        if (gridVal >= effect.gestureThreshold) return "grid";
+
         return "initial";
     }
     transitions: Transition {

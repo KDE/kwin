@@ -208,6 +208,10 @@ void OverviewEffect::reconfigure(ReconfigureFlags)
 
     m_border->setBorders(OverviewConfig::touchBorderActivate());
     m_gridBorder->setBorders(OverviewConfig::gridTouchBorderActivate());
+
+    m_overviewState->setThreshold(gestureThreshold());
+    m_transitionState->setThreshold(gestureThreshold());
+    m_gridState->setThreshold(gestureThreshold());
 }
 
 int OverviewEffect::animationDuration() const
@@ -279,6 +283,11 @@ bool OverviewEffect::ignoreMinimized() const
 bool OverviewEffect::organizedGrid() const
 {
     return OverviewConfig::organizedGrid();
+}
+
+qreal OverviewEffect::gestureThreshold() const
+{
+    return 0.10;
 }
 
 int OverviewEffect::requestedEffectChainPosition() const

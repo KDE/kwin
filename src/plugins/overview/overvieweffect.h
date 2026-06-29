@@ -21,6 +21,7 @@ class OverviewEffect : public QuickSceneEffect
     Q_PROPERTY(bool ignoreMinimized READ ignoreMinimized NOTIFY ignoreMinimizedChanged)
     Q_PROPERTY(bool filterWindows READ filterWindows NOTIFY filterWindowsChanged)
     Q_PROPERTY(bool organizedGrid READ organizedGrid NOTIFY organizedGridChanged)
+    Q_PROPERTY(int gestureThreshold READ gestureThreshold CONSTANT)
     Q_PROPERTY(qreal overviewPartialActivationFactor READ overviewPartialActivationFactor NOTIFY overviewPartialActivationFactorChanged)
     // More efficient from a property binding pov rather than checking if partialActivationFactor is strictly between 0 and 1
     Q_PROPERTY(bool overviewGestureInProgress READ overviewGestureInProgress NOTIFY overviewGestureInProgressChanged)
@@ -36,6 +37,7 @@ public:
 
     bool ignoreMinimized() const;
     bool organizedGrid() const;
+    qreal gestureThreshold() const;
 
     bool filterWindows() const;
     void setFilterWindows(bool filterWindows);

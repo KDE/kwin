@@ -18,7 +18,7 @@ EffectTogglableState::EffectTogglableState(Effect *effect)
 {
     connect(m_activateAction.get(), &QAction::triggered, this, [this]() {
         if (m_status == Status::Activating) {
-            if (m_partialActivationFactor > 0.5) {
+            if (m_partialActivationFactor > m_threshold) {
                 activate();
                 Q_EMIT activated();
             } else {
@@ -29,7 +29,7 @@ EffectTogglableState::EffectTogglableState(Effect *effect)
     });
     connect(m_deactivateAction.get(), &QAction::triggered, this, [this]() {
         if (m_status == Status::Deactivating) {
-            if (m_partialActivationFactor < 0.5) {
+            if (m_partialActivationFactor < 1.0 - m_threshold) {
                 deactivate();
                 Q_EMIT deactivated();
             } else {
@@ -89,6 +89,11 @@ void EffectTogglableState::setStatus(Status status)
         m_status = status;
         Q_EMIT statusChanged(status);
     }
+}
+
+void EffectTogglableState::setThreshold(qreal threshold)
+{
+    m_threshold = std::clamp(threshold, 0.01, 0.99);
 }
 
 void EffectTogglableState::partialActivate(qreal factor)
