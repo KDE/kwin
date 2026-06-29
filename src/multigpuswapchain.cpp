@@ -66,6 +66,8 @@ static std::optional<DrmFormat> chooseFormat(uint32_t inputFormat, const FormatM
     return ret;
 }
 
+static const auto s_forceLinear = environmentVariableBoolValue("KWIN_VULKAN_FORCE_LINEAR_DST");
+
 std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::create(RenderDevice *copyDevice, DrmDevice *targetDevice, uint32_t format, uint64_t modifier, const QSize &size, const FormatModifierMap &importFormats)
 {
     if (copyDevice->isInReset()) {
@@ -73,8 +75,11 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::create(RenderDevice *copyD
         return nullptr;
     }
     if (copyDevice->vulkanDevice() && copyDevice->vulkanDevice()->supportedFormats().containsFormat(format, modifier)) {
-        const auto fmt = chooseFormat(format, copyDevice->vulkanDevice()->supportedFormats(), importFormats);
+        auto fmt = chooseFormat(format, copyDevice->vulkanDevice()->supportedFormats(), importFormats);
         if (fmt) {
+            if (s_forceLinear.value_or(targetDevice->isAmdgpu()) && fmt->modifiers.contains(DRM_FORMAT_MOD_LINEAR)) {
+                fmt->modifiers = {DRM_FORMAT_MOD_LINEAR};
+            }
             auto swapchain = VulkanSwapchain::create(copyDevice->vulkanDevice(), targetDevice->allocator(), size, fmt->format, fmt->modifiers);
             if (swapchain) {
                 return std::make_unique<MultiGpuSwapchain>(copyDevice, targetDevice, std::move(swapchain));
