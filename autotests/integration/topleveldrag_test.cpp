@@ -1,5 +1,5 @@
 /*
-    SPDX-FileCopyrightText: 2025 David Redondo <kde@david-redondo>
+    SPDX-FileCopyrightText: 2025 David Redondo <kde@david-redondo.de>
 
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
