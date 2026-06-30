@@ -43,6 +43,7 @@
 #include "qwayland-primary-selection-unstable-v1.h"
 #include "qwayland-security-context-v1.h"
 #include "qwayland-tablet-v2.h"
+#include "qwayland-tearing-control-v1.h"
 #include "qwayland-text-input-unstable-v3.h"
 #include "qwayland-wayland.h"
 #include "qwayland-wlr-layer-shell-unstable-v1.h"
@@ -828,6 +829,7 @@ enum class AdditionalWaylandInterface : uint64_t {
     ColorRepresentation = 1ull << 32,
     Viewporter = 1ull << 33,
     AlphaModifierV1 = 1ull << 34,
+    TearingControlV1 = 1ull << 35,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -1056,6 +1058,20 @@ public:
     ~AlphaModifierSurfaceV1() override;
 };
 
+class TearingControlManagerV1 : public QtWayland::wp_tearing_control_manager_v1
+{
+public:
+    explicit TearingControlManagerV1(::wl_registry *registry, uint32_t id, int version);
+    ~TearingControlManagerV1() override;
+};
+
+class TearingControlV1 : public QtWayland::wp_tearing_control_v1
+{
+public:
+    explicit TearingControlV1(::wp_tearing_control_v1 *object);
+    ~TearingControlV1() override;
+};
+
 class WlKeyboard;
 class WlPointer;
 class WlTouch;
@@ -1207,6 +1223,7 @@ struct Connection
     std::unique_ptr<ColorRepresentationV1> colorRepresentation;
     std::unique_ptr<WaylandClient::Viewporter> viewporter;
     std::unique_ptr<AlphaModifierV1> alphaModifier;
+    std::unique_ptr<TearingControlManagerV1> tearingControl;
     // TODO port everything away from KWayland::Client::Seat
     std::unique_ptr<WlSeat> kwinSeat;
 };
@@ -1289,6 +1306,7 @@ WaylandClient::LinuxDmabufV1 *linuxDmabuf();
 ColorRepresentationV1 *colorRepresentation();
 WaylandClient::Viewporter *viewporter();
 AlphaModifierV1 *alphaModifier();
+TearingControlManagerV1 *tearingControl();
 
 bool waitForWaylandSurface(Window *window);
 

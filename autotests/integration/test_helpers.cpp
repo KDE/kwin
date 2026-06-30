@@ -596,6 +596,9 @@ std::unique_ptr<Connection> Connection::setup(int socket, AdditionalWaylandInter
         if (flags & AdditionalWaylandInterface::AlphaModifierV1 && interface == wp_alpha_modifier_v1_interface.name) {
             c->alphaModifier = std::make_unique<AlphaModifierV1>(*c->registry, name, version);
         }
+        if (flags & AdditionalWaylandInterface::TearingControlV1 && interface == wp_tearing_control_manager_v1_interface.name) {
+            c->tearingControl = std::make_unique<TearingControlManagerV1>(*c->registry, name, version);
+        }
         if (flags.testFlag(AdditionalWaylandInterface::Seat) && interface == wl_seat_interface.name) {
             c->kwinSeat = std::make_unique<WlSeat>(*c->registry, name, version);
         }
@@ -747,6 +750,7 @@ Connection::~Connection()
     colorRepresentation.reset();
     viewporter.reset();
     alphaModifier.reset();
+    tearingControl.reset();
     kwinSeat.reset();
 
     delete queue; // Must be destroyed last
@@ -970,6 +974,11 @@ AlphaModifierV1 *alphaModifier()
 WaylandClient::Viewporter *viewporter()
 {
     return s_waylandConnection->viewporter.get();
+}
+
+TearingControlManagerV1 *tearingControl()
+{
+    return s_waylandConnection->tearingControl.get();
 }
 
 bool waitForWaylandSurface(Window *window)
@@ -2016,12 +2025,32 @@ AlphaModifierV1::~AlphaModifierV1()
     destroy();
 }
 
+TearingControlManagerV1::TearingControlManagerV1(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::wp_tearing_control_manager_v1(registry, id, version)
+{
+}
+
+TearingControlManagerV1::~TearingControlManagerV1()
+{
+    destroy();
+}
+
 AlphaModifierSurfaceV1::AlphaModifierSurfaceV1(::wp_alpha_modifier_surface_v1 *object)
     : QtWayland::wp_alpha_modifier_surface_v1(object)
 {
 }
 
 AlphaModifierSurfaceV1::~AlphaModifierSurfaceV1()
+{
+    destroy();
+}
+
+TearingControlV1::TearingControlV1(::wp_tearing_control_v1 *object)
+    : QtWayland::wp_tearing_control_v1(object)
+{
+}
+
+TearingControlV1::~TearingControlV1()
 {
     destroy();
 }
