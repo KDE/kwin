@@ -245,12 +245,16 @@ bool TabBoxHandlerImpl::noModifierGrab() const
  *********************************************************/
 
 TabBox::TabBox()
-    : m_displayRefcount(0)
+    : QObject()
+    , InputEventFilter(InputFilterOrder::TabBox)
+    , m_displayRefcount(0)
     , m_tabGrab(false)
     , m_noModifierGrab(false)
     , m_forcedGlobalMouseGrab(false)
     , m_ready(false)
 {
+    input()->installInputEventFilter(this);
+
     m_isShown = false;
     m_defaultConfig = TabBoxConfig();
     m_defaultConfig.setClientDesktopMode(TabBoxConfig::OnlyCurrentDesktopClients);
@@ -610,8 +614,32 @@ void TabBox::delayedShow()
     m_delayedShowTimer.start(m_delayShowTime);
 }
 
+bool TabBox::keyboardKey(KeyboardKeyEvent *event)
+{
+    if (!isGrabbed()) {
+        return false;
+    }
+
+    if (event->state == KeyboardKeyState::Repeated || event->state == KeyboardKeyState::Pressed) {
+        keyPress(*event);
+    } else if (event->state == KeyboardKeyState::Released) {
+        // Re-evaluate on every key release so the switcher can close once
+        // the activation modifiers are no longer held, regardless of the
+        // release order.
+        modifiersReleased();
+        // If the release closed the switcher, let the event propagate to
+        // the rest of the system instead of swallowing it.
+        return isGrabbed();
+    }
+    return true;
+}
+
 bool TabBox::pointerMotion(PointerMotionEvent *event)
 {
+    if (!isGrabbed()) {
+        return false;
+    }
+
     if (!m_isShown && isDisplayed()) {
         // tabbox has been replaced, check effects
         if (effects && effects->pointerMotion(event)) {
@@ -629,6 +657,10 @@ bool TabBox::pointerMotion(PointerMotionEvent *event)
 
 bool TabBox::pointerButton(PointerButtonEvent *event)
 {
+    if (!isGrabbed()) {
+        return false;
+    }
+
     if (!m_isShown && isDisplayed()) {
         // tabbox has been replaced, check effects
         if (effects && effects->pointerButton(event)) {
@@ -647,6 +679,10 @@ bool TabBox::pointerButton(PointerButtonEvent *event)
 
 bool TabBox::pointerAxis(PointerAxisEvent *event)
 {
+    if (!isGrabbed()) {
+        return false;
+    }
+
     if (!m_isShown && isDisplayed()) {
         // tabbox has been replaced, check effects
         if (effects && effects->pointerAxis(event)) {

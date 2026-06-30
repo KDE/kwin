@@ -11,6 +11,7 @@
 
 #pragma once
 
+#include "input.h"
 #include "input_event.h"
 #include "tabbox/tabboxhandler.h"
 
@@ -72,7 +73,7 @@ private:
     TabBox *m_tabBox;
 };
 
-class KWIN_EXPORT TabBox : public QObject
+class KWIN_EXPORT TabBox : public QObject, public InputEventFilter
 {
     Q_OBJECT
 
@@ -180,10 +181,6 @@ public:
         return m_isShown;
     }
 
-    bool pointerMotion(PointerMotionEvent *event);
-    bool pointerButton(PointerButtonEvent *event);
-    bool pointerAxis(PointerAxisEvent *event);
-
     bool handleWheelEvent(QWheelEvent *event);
     void grabbedKeyEvent(QKeyEvent *event);
 
@@ -245,6 +242,11 @@ private:
     };
 
 private:
+    bool pointerMotion(PointerMotionEvent *event) override;
+    bool pointerButton(PointerButtonEvent *event) override;
+    bool keyboardKey(KeyboardKeyEvent *event) override;
+    bool pointerAxis(PointerAxisEvent *event) override;
+
     explicit TabBox(QObject *parent);
     void loadConfig(const KConfigGroup &config, TabBoxConfig &tabBoxConfig);
     void watchWindow(Window *window);

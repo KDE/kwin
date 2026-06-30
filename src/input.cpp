@@ -1823,57 +1823,6 @@ private:
     MouseWheelAccumulator m_accumulator;
 };
 
-#if KWIN_BUILD_TABBOX
-class TabBoxInputFilter : public InputEventFilter
-{
-public:
-    TabBoxInputFilter()
-        : InputEventFilter(InputFilterOrder::TabBox)
-    {
-    }
-    bool pointerMotion(PointerMotionEvent *event) override
-    {
-        if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
-            return false;
-        }
-        return workspace()->tabbox()->pointerMotion(event);
-    }
-    bool pointerButton(PointerButtonEvent *event) override
-    {
-        if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
-            return false;
-        }
-        return workspace()->tabbox()->pointerButton(event);
-    }
-    bool keyboardKey(KeyboardKeyEvent *event) override
-    {
-        if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
-            return false;
-        }
-
-        if (event->state == KeyboardKeyState::Repeated || event->state == KeyboardKeyState::Pressed) {
-            workspace()->tabbox()->keyPress(*event);
-        } else if (event->state == KeyboardKeyState::Released) {
-            // Re-evaluate on every key release so the switcher can close once
-            // the activation modifiers are no longer held, regardless of the
-            // release order.
-            workspace()->tabbox()->modifiersReleased();
-            // If the release closed the switcher, let the event propagate to
-            // the rest of the system instead of swallowing it.
-            return workspace()->tabbox()->isGrabbed();
-        }
-        return true;
-    }
-    bool pointerAxis(PointerAxisEvent *event) override
-    {
-        if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
-            return false;
-        }
-        return workspace()->tabbox()->pointerAxis(event);
-    }
-};
-#endif
-
 /**
  * This filter implements window actions. If the event should not be passed to the
  * current window it will filter out the event
@@ -3087,10 +3036,6 @@ void InputRedirection::setupInputFilters()
     m_windowSelector = std::make_unique<WindowSelectorFilter>();
     installInputEventFilter(m_windowSelector.get());
 
-#if KWIN_BUILD_TABBOX
-    m_tabboxFilter = std::make_unique<TabBoxInputFilter>();
-    installInputEventFilter(m_tabboxFilter.get());
-#endif
 #if KWIN_BUILD_GLOBALSHORTCUTS
     if (kwinApp()->supportsGlobalShortcuts()) {
         m_globalShortcutFilter = std::make_unique<GlobalShortcutFilter>();
