@@ -65,13 +65,12 @@ WindowThumbnailSource::~WindowThumbnailSource()
     if (!m_offscreenTexture) {
         return;
     }
-    if (!QOpenGLContext::currentContext()) {
-        kwinApp()->scene()->openglContext()->makeCurrent();
-    }
+    const bool hasContext = QOpenGLContext::currentContext()
+        || kwinApp()->scene()->openglContext()->makeCurrent();
     m_offscreenTarget.reset();
     m_offscreenTexture.reset();
 
-    if (m_acquireFence) {
+    if (m_acquireFence && hasContext) {
         glDeleteSync(m_acquireFence);
         m_acquireFence = 0;
     }

@@ -29,7 +29,7 @@ AtlasOpenGL::~AtlasOpenGL()
 {
     // FIXME: It should not be attached to the workspace scene.
     if (WorkspaceScene *scene = kwinApp()->scene()) {
-        scene->openglContext()->makeCurrent();
+        (void)scene->openglContext()->makeCurrent();
     }
 }
 

@@ -114,7 +114,7 @@ EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext conte
 
 EglContext::~EglContext()
 {
-    makeCurrent();
+    (void)makeCurrent();
     m_shaderManager.reset();
     m_streamingBuffer.reset();
     m_indexBuffer.reset();

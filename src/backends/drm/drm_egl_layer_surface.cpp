@@ -64,7 +64,7 @@ EglGbmLayerSurface::Surface::~Surface()
 {
     importSwapchain.reset();
     if (context) {
-        context->makeCurrent();
+        (void)context->makeCurrent();
     }
 }
 

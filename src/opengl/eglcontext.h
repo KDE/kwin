@@ -41,7 +41,7 @@ public:
     EglContext(EglDisplay *display, EGLConfig config, ::EGLContext context, EglContext *shareContext);
     ~EglContext();
 
-    bool makeCurrent();
+    [[nodiscard]] bool makeCurrent();
     bool makeCurrent(EGLSurface surface);
     void doneCurrent() const;
     std::shared_ptr<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes) const;

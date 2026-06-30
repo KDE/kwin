@@ -86,7 +86,7 @@ void OffscreenEffect::unredirect(EffectWindow *window)
     }
 
     if (!EglContext::currentContext()) {
-        effects->openglContext()->makeCurrent();
+        (void)effects->openglContext()->makeCurrent();
     }
 
     d->windows.erase(it);
@@ -415,7 +415,7 @@ void CrossFadeEffect::unredirect(EffectWindow *window)
     }
 
     if (!EglContext::currentContext()) {
-        effects->openglContext()->makeCurrent();
+        (void)effects->openglContext()->makeCurrent();
     }
 
     d->windows.erase(it);
