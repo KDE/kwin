@@ -1,9 +1,5 @@
 #version 140
 
-#if GL_OES_standard_derivatives && TRAIT_ROUNDED_CORNERS && TRAIT_BORDER
-#extension GL_OES_standard_derivatives : enable
-#endif
-
 #if TRAIT_MAP_TEXTURE || TRAIT_MAP_MULTI_PLANE_TEXTURE
 uniform sampler2D sampler;
 in vec2 texcoord0;

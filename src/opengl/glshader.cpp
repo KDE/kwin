@@ -93,19 +93,26 @@ std::optional<QByteArray> GLShader::preprocess(const QByteArray &src, GLenum sha
                 ret.append("#version 140\n");
             }
         }
+        if (context->isOpenGLES() && !coreShader) {
+            ret.append("#extension GL_OES_standard_derivatives : enable\n");
+        }
         if (context->isOpenGLES()) {
             ret.append("precision highp float;\n");
-            ret.append("precision highp sampler2D;\n");
-            ret.append("precision highp sampler3D;\n");
+            if (coreShader) {
+                ret.append("precision highp sampler2D;\n");
+                ret.append("precision highp sampler3D;\n");
+            } else {
+                // in OpenGL ES 2.0, it's not possible to specify
+                // default precision for samplers
+                ret.append("#define sampler2D highp sampler2D\n");
+                ret.append("#define sampler3D highp sampler3D\n");
+            }
         }
         if (!coreShader) {
             // without a version statement, OpenGL assumes GLSL 1.10,
             // which doesn't support the texture functions natively
             ret.append("vec4 texture(in sampler2D sampler, in vec2 coordinates) {\n");
             ret.append("    return texture2D(sampler, coordinates);\n");
-            ret.append("}\n");
-            ret.append("vec4 texture(in sampler3D sampler, in vec3 coordinates) {\n");
-            ret.append("    return texture3D(sampler, coordinates);\n");
             ret.append("}\n");
         }
     }
