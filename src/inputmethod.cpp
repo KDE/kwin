@@ -56,7 +56,11 @@ namespace KWin
 {
 
 InputMethod::InputMethod()
+    : QObject()
+    , InputEventFilter(InputFilterOrder::InputMethod)
 {
+    input()->installInputEventFilter(this);
+
     m_internalContext = new InternalInputMethodContext(this);
 
     auto group = kwinApp()->config()->group(QStringLiteral("Wayland"));
@@ -81,6 +85,36 @@ InputMethod::InputMethod()
 InputMethod::~InputMethod()
 {
     stopInputMethod();
+}
+
+bool InputMethod::pointerButton(PointerButtonEvent *event)
+{
+    if (event->state != PointerButtonState::Pressed) {
+        return false;
+    }
+
+    // Clicking on an on-screen keyboard shouldn't flush; only commit on the target window.
+    if (input()->pointer()->focus() != activeWindow()) {
+        return false;
+    }
+
+    commitPendingText();
+    return false;
+}
+
+bool InputMethod::touchDown(TouchDownEvent *event)
+{
+    if (input()->findToplevel(event->pos) != activeWindow()) {
+        return false;
+    }
+
+    commitPendingText();
+    return false;
+}
+
+bool InputMethod::keyboardKey(KeyboardKeyEvent *event)
+{
+    return passToInputMethod(event);
 }
 
 void InputMethod::init()
@@ -216,6 +250,22 @@ void InputMethod::forwardKeyToEffects(KWin::KeyboardKeyState state, int keyCode,
                     xkb->toString(keySym));
     waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
     effects->grabbedKeyboardEvent(&event);
+}
+
+bool InputMethod::passToInputMethod(KeyboardKeyEvent *event)
+{
+    static QStringList s_deviceSkipsInputMethods = qEnvironmentVariable("KWIN_DEVICE_SKIPS_INPUT_METHOD").split(',');
+    if (event->device && s_deviceSkipsInputMethods.contains(event->device->name())) {
+        return false;
+    }
+    if (auto keyboardGrab = this->keyboardGrab()) {
+        const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp);
+        keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), std::chrono::duration_cast<std::chrono::milliseconds>(timestamp).count(), event->nativeScanCode, event->state);
+        return true;
+    }
+
+    commitPendingText();
+    return false;
 }
 
 void InputMethod::commitPendingText()

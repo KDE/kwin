@@ -251,21 +251,10 @@ bool InputEventFilter::tabletPadDialEvent(TabletPadDialEvent *event)
 
 bool InputEventFilter::passToInputMethod(KeyboardKeyEvent *event)
 {
-    static QStringList s_deviceSkipsInputMethods = qEnvironmentVariable("KWIN_DEVICE_SKIPS_INPUT_METHOD").split(',');
-    if (!kwinApp()->inputMethod()) {
-        return false;
+    if (auto inputMethod = kwinApp()->inputMethod()) {
+        return inputMethod->passToInputMethod(event);
     }
-    if (event->device && s_deviceSkipsInputMethods.contains(event->device->name())) {
-        return false;
-    }
-    if (auto keyboardGrab = kwinApp()->inputMethod()->keyboardGrab()) {
-        const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp);
-        keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), std::chrono::duration_cast<std::chrono::milliseconds>(timestamp).count(), event->nativeScanCode, event->state);
-        return true;
-    } else {
-        kwinApp()->inputMethod()->commitPendingText();
-        return false;
-    }
+    return false;
 }
 
 class VirtualTerminalFilter : public InputEventFilter
@@ -2043,53 +2032,6 @@ private:
     MouseWheelAccumulator m_accumulator;
 };
 
-class InputMethodEventFilter : public InputEventFilter
-{
-public:
-    InputMethodEventFilter()
-        : InputEventFilter(InputFilterOrder::InputMethod)
-    {
-    }
-
-    bool pointerButton(PointerButtonEvent *event) override
-    {
-        auto inputMethod = kwinApp()->inputMethod();
-        if (!inputMethod) {
-            return false;
-        }
-        if (event->state != PointerButtonState::Pressed) {
-            return false;
-        }
-
-        // clicking on an on screen keyboard shouldn't flush, check we're clicking on our target window
-        if (input()->pointer()->focus() != inputMethod->activeWindow()) {
-            return false;
-        }
-
-        inputMethod->commitPendingText();
-        return false;
-    }
-
-    bool touchDown(TouchDownEvent *event) override
-    {
-        auto inputMethod = kwinApp()->inputMethod();
-        if (!inputMethod) {
-            return false;
-        }
-        if (input()->findToplevel(event->pos) != inputMethod->activeWindow()) {
-            return false;
-        }
-
-        inputMethod->commitPendingText();
-        return false;
-    }
-
-    bool keyboardKey(KeyboardKeyEvent *event) override
-    {
-        return passToInputMethod(event);
-    }
-};
-
 /**
  * The remaining default input filter which forwards events to other windows
  */
@@ -3210,9 +3152,6 @@ void InputRedirection::setupInputFilters()
 
     m_internalWindowFilter = std::make_unique<InternalWindowEventFilter>();
     installInputEventFilter(m_internalWindowFilter.get());
-
-    m_inputKeyboardFilter = std::make_unique<InputMethodEventFilter>();
-    installInputEventFilter(m_inputKeyboardFilter.get());
 
     m_forwardFilter = std::make_unique<ForwardInputFilter>();
     installInputEventFilter(m_forwardFilter.get());

@@ -8,6 +8,7 @@
 */
 #pragma once
 
+#include "input.h"
 #include "input_event.h"
 #include "wayland/textinput_v2.h"
 
@@ -32,7 +33,7 @@ class InternalInputMethodContext;
  * This class implements the zwp_input_method_unstable_v1, which is currently used to provide
  * the Virtual Keyboard using supported input method client (maliit-keyboard e.g.)
  **/
-class KWIN_EXPORT InputMethod : public QObject
+class KWIN_EXPORT InputMethod : public QObject, public InputEventFilter
 {
     Q_OBJECT
 
@@ -85,8 +86,7 @@ public:
      * This is for injecting text input directly from sources other than the input method.
      */
     void sendText(const QString &text);
-
-    void commitPendingText();
+    bool passToInputMethod(KeyboardKeyEvent *event);
 
     // for use by the QPA
     InternalInputMethodContext *internalContext() const
@@ -125,8 +125,13 @@ private Q_SLOTS:
     void modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group);
 
 private:
+    bool pointerButton(PointerButtonEvent *event) override;
+    bool touchDown(TouchDownEvent *event) override;
+    bool keyboardKey(KeyboardKeyEvent *event) override;
+
     void updateInputPanelState();
     void adoptInputMethodContext();
+    void commitPendingText();
     void commitString(quint32 serial, const QString &text);
     void keysymReceived(quint32 serial, quint32 time, quint32 sym, KeyboardKeyState state, quint32 modifiers);
     void deleteSurroundingText(int32_t index, uint32_t length);

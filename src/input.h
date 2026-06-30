@@ -321,7 +321,6 @@ private:
     std::unique_ptr<InputEventFilter> m_decorationFilter;
     std::unique_ptr<InputEventFilter> m_windowActionFilter;
     std::unique_ptr<InputEventFilter> m_internalWindowFilter;
-    std::unique_ptr<InputEventFilter> m_inputKeyboardFilter;
     std::unique_ptr<InputEventFilter> m_forwardFilter;
 
     std::unique_ptr<InputEventSpy> m_hideCursorSpy;
