@@ -1120,8 +1120,10 @@ QRectF Device::defaultInputArea() const
 QString Device::serializeMatrix(const QMatrix4x4 &matrix)
 {
     QString result;
+    float data[16];
+    matrix.copyDataTo(data);
     for (int i = 0; i < 16; i++) {
-        result.append(QString::number(matrix.constData()[i]));
+        result.append(QString::number(data[i]));
         if (i != 15) {
             result.append(QLatin1Char(','));
         }
