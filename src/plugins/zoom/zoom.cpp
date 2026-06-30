@@ -102,19 +102,6 @@ ZoomEffect::ZoomEffect()
     KGlobalAccel::self()->setGlobalShortcut(a, QList<QKeySequence>());
     connect(a, &QAction::triggered, this, &ZoomEffect::moveZoomDown);
 
-    // TODO: these two actions don't belong into the effect. They need to be moved into KWin core
-    a = new QAction(this);
-    a->setObjectName(QStringLiteral("MoveMouseToFocus"));
-    a->setText(i18n("Move Mouse to Focus"));
-    KGlobalAccel::self()->setGlobalShortcut(a, QKeySequence(Qt::META | Qt::Key_F5));
-    connect(a, &QAction::triggered, this, &ZoomEffect::moveMouseToFocus);
-
-    a = new QAction(this);
-    a->setObjectName(QStringLiteral("MoveMouseToCenter"));
-    a->setText(i18n("Move Mouse to Center"));
-    KGlobalAccel::self()->setGlobalShortcut(a, QKeySequence(Qt::META | Qt::Key_F6));
-    connect(a, &QAction::triggered, this, &ZoomEffect::moveMouseToCenter);
-
     m_timeline.setDuration(350);
     m_timeline.setFrameRange(0, 100);
     connect(&m_timeline, &QTimeLine::frameChanged, this, &ZoomEffect::timelineFrameChanged);
@@ -500,22 +487,6 @@ void ZoomEffect::moveZoomUp()
 void ZoomEffect::moveZoomDown()
 {
     moveZoom(0, 1);
-}
-
-void ZoomEffect::moveMouseToFocus()
-{
-    const auto window = effects->activeWindow();
-    if (!window) {
-        return;
-    }
-    const auto center = window->frameGeometry().center();
-    QCursor::setPos(center.x(), center.y());
-}
-
-void ZoomEffect::moveMouseToCenter()
-{
-    const Rect r = effects->activeScreen()->geometry();
-    QCursor::setPos(r.horizontalCenter(), r.verticalCenter());
 }
 
 void ZoomEffect::slotMouseChanged(const QPointF &pos, const QPointF &old)

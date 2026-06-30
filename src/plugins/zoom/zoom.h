@@ -66,8 +66,6 @@ private Q_SLOTS:
     void moveZoomRight();
     void moveZoomUp();
     void moveZoomDown();
-    void moveMouseToFocus();
-    void moveMouseToCenter();
     void timelineFrameChanged(int frame);
     void moveFocus(const QPointF &point);
     void slotMouseChanged(const QPointF &pos, const QPointF &old);
