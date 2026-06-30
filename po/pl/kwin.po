@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1739850 $
+# Version: $Revision: 1740218 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011-2026 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-25 00:45+0000\n"
+"POT-Creation-Date: 2026-06-30 00:45+0000\n"
 "PO-Revision-Date: 2026-05-09 16:01+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -80,7 +80,7 @@ msgstr "Naciśnij prawy przycisk Ctrl, aby przechwycić wprowadzanie"
 msgid "KDE Wayland Compositor"
 msgstr "Kompozytor KDE Wayland"
 
-#: compositor.cpp:650
+#: compositor.cpp:651
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Wczytano efekty pulpitu na nowo po wyłączeniu grafiki"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-25 00:45+0000\n"
+"POT-Creation-Date: 2026-06-30 00:45+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -73,7 +73,7 @@ msgstr "इनपुट् ग्रहीतुं right control key नुद�
 msgid "KDE Wayland Compositor"
 msgstr "केडीई वेलैण्ड रचनाकार"
 
-#: compositor.cpp:650
+#: compositor.cpp:651
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "ग्राफिक्स् रीसेट् इत्यस्य कारणेन डेस्कटॉप् प्रभावाः पुनः आरब्धाः"
