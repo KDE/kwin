@@ -429,10 +429,13 @@ void X11Window::configureNotifyEvent(xcb_configure_notify_event_t *e)
         m_frameGeometry = newgeom;
         m_bufferGeometry = newgeom;
         checkOutput();
-        updateShapeRegion();
         Q_EMIT bufferGeometryChanged(old);
         Q_EMIT clientGeometryChanged(old);
         Q_EMIT frameGeometryChanged(old);
+
+        if (old.size() != newgeom.size()) {
+            updateShapeRegion();
+        }
     }
 }
 
