@@ -14,7 +14,6 @@
 #include "opengl/egldisplay.h"
 #include "output.h"
 #include "outputconfiguration.h"
-#include "qpainter/qpainterbackend.h"
 
 namespace KWin
 {
@@ -34,11 +33,6 @@ std::unique_ptr<InputBackend> OutputBackend::createInputBackend()
 }
 
 std::unique_ptr<EglBackend> OutputBackend::createOpenGLBackend()
-{
-    return nullptr;
-}
-
-std::unique_ptr<QPainterBackend> OutputBackend::createQPainterBackend()
 {
     return nullptr;
 }

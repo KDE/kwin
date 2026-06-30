@@ -2002,11 +2002,9 @@ QString Workspace::supportInformation() const
             break;
         }
         case QPainterCompositing:
-            support.append("Compositing Type: QPainter\n");
-            break;
         case NoCompositing:
         default:
-            support.append(QStringLiteral("Something is really broken, neither OpenGL nor QPainter is used"));
+            support.append(QStringLiteral("Something is really broken, no supported compositing type is used"));
         }
         support.append(QStringLiteral("\nLoaded Effects:\n"));
         support.append(QStringLiteral("---------------\n"));

@@ -18,7 +18,6 @@ namespace KWin
 
 class EglBackend;
 class GLTexture;
-class QPainterBackend;
 class Texture;
 class Window;
 

@@ -475,15 +475,6 @@ public:
      */
     bool isOpenGLCompositing() const;
     EglContext *openglContext() const;
-    /**
-     * @brief Provides access to the QPainter which is rendering to the back buffer.
-     *
-     * Only relevant for CompositingType QPainterCompositing. For all other compositing types
-     * @c null is returned.
-     *
-     * @return QPainter* The Scene's QPainter or @c null.
-     */
-    QPainter *scenePainter();
     void reconfigure();
 
 #if KWIN_BUILD_X11

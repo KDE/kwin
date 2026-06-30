@@ -143,7 +143,6 @@ private:
     void repaint();
 
     void drawCircleGl(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r);
-    void drawCircleQPainter(const QColor &color, float cx, float cy, float r);
     void paintScreenSetupGl(const RenderTarget &renderTarget, const QMatrix4x4 &projectionMatrix);
     void paintScreenFinishGl();
 

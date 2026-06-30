@@ -20,7 +20,6 @@
 #include "drm_logging.h"
 #include "drm_output.h"
 #include "drm_pipeline.h"
-#include "drm_qpainter_backend.h"
 #include "drm_render_backend.h"
 #include "drm_virtual_output.h"
 #include "utils/envvar.h"
@@ -318,11 +317,6 @@ std::unique_ptr<InputBackend> DrmBackend::createInputBackend()
     return std::make_unique<LibinputBackend>(m_session);
 }
 
-std::unique_ptr<QPainterBackend> DrmBackend::createQPainterBackend()
-{
-    return std::make_unique<DrmQPainterBackend>(this);
-}
-
 std::unique_ptr<EglBackend> DrmBackend::createOpenGLBackend()
 {
     return std::make_unique<EglGbmBackend>(this);
@@ -330,7 +324,7 @@ std::unique_ptr<EglBackend> DrmBackend::createOpenGLBackend()
 
 QList<CompositingType> DrmBackend::supportedCompositors() const
 {
-    return QList<CompositingType>{OpenGLCompositing, QPainterCompositing};
+    return QList<CompositingType>{OpenGLCompositing};
 }
 
 QString DrmBackend::supportInformation() const

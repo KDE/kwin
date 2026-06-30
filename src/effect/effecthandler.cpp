@@ -63,7 +63,6 @@
 #include <QFontMetrics>
 #include <QMatrix4x4>
 #include <QMouseEvent>
-#include <QPainter>
 #include <QPixmap>
 #include <QTimeLine>
 #include <QVariant>
@@ -1139,11 +1138,6 @@ void EffectsHandler::registerRealtimeTouchBorder(ElectricBorder border, QAction 
 void EffectsHandler::unregisterTouchBorder(ElectricBorder border, QAction *action)
 {
     workspace()->screenEdges()->unreserveTouch(border, action);
-}
-
-QPainter *EffectsHandler::scenePainter()
-{
-    return m_scene->renderer()->painter();
 }
 
 void EffectsHandler::toggleEffect(const QString &name)

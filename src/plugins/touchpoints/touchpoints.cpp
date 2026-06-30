@@ -19,8 +19,6 @@
 #include <KConfigGroup>
 #include <KGlobalAccel>
 
-#include <QPainter>
-
 #include <cmath>
 
 namespace KWin
@@ -180,8 +178,6 @@ void TouchPointsEffect::drawCircle(const RenderViewport &viewport, const QColor 
 {
     if (effects->isOpenGLCompositing()) {
         drawCircleGl(viewport, color, cx, cy, r);
-    } else if (effects->compositingType() == QPainterCompositing) {
-        drawCircleQPainter(color, cx, cy, r);
     }
 }
 
@@ -212,15 +208,6 @@ void TouchPointsEffect::drawCircleGl(const RenderViewport &viewport, const QColo
     }
     vbo->setVertices(verts);
     vbo->render(GL_LINE_LOOP);
-}
-
-void TouchPointsEffect::drawCircleQPainter(const QColor &color, float cx, float cy, float r)
-{
-    QPainter *painter = effects->scenePainter();
-    painter->save();
-    painter->setPen(color);
-    painter->drawArc(cx - r, cy - r, r * 2, r * 2, 0, 5760);
-    painter->restore();
 }
 
 void TouchPointsEffect::paintScreenSetupGl(const RenderTarget &renderTarget, const QMatrix4x4 &projectionMatrix)

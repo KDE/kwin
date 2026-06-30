@@ -53,7 +53,6 @@ void GenericSceneOpenGLTest::initTestCase()
 
     qputenv("XCURSOR_THEME", QByteArrayLiteral("breeze_cursors"));
     qputenv("XCURSOR_SIZE", QByteArrayLiteral("24"));
-    qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2ES"));
 
     kwinApp()->start();
     Test::setOutputConfig({

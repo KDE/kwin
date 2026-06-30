@@ -23,8 +23,6 @@
 #include <KLocalizedString>
 #include <QAction>
 
-#include <QPainter>
-
 #include <cmath>
 
 namespace KWin
@@ -222,29 +220,6 @@ void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const Render
             }
         }
         glLineWidth(1.0);
-    } else if (effects->compositingType() == QPainterCompositing) {
-        QPainter *painter = effects->scenePainter();
-        painter->save();
-        QPen pen(color);
-        pen.setWidth(width);
-        painter->setPen(pen);
-        for (const Mark &mark : std::as_const(marks)) {
-            drawMark(painter, mark);
-        }
-        for (const Mark &drawing : std::as_const(drawings)) {
-            drawMark(painter, drawing);
-        }
-        painter->restore();
-    }
-}
-
-void MouseMarkEffect::drawMark(QPainter *painter, const Mark &mark)
-{
-    if (mark.count() <= 1) {
-        return;
-    }
-    for (int i = 0; i < mark.count() - 1; ++i) {
-        painter->drawLine(mark[i], mark[i + 1]);
     }
 }
 

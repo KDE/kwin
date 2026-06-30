@@ -55,7 +55,6 @@ void DontCrashReinitializeCompositorTest::initTestCase()
     config->sync();
     kwinApp()->setConfig(config);
 
-    qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
     qputenv("KWIN_EFFECTS_FORCE_ANIMATIONS", QByteArrayLiteral("1"));
 
     kwinApp()->start();

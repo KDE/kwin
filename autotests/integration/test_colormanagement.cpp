@@ -101,8 +101,6 @@ private Q_SLOTS:
 
 void ColorManagementTest::initTestCase()
 {
-    qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
-
     QVERIFY(waylandServer()->init(qAppName()));
     kwinApp()->start();
     Test::setOutputConfig({

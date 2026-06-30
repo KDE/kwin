@@ -42,7 +42,6 @@
 #include <KLocalizedString>
 
 #include <QHoverEvent>
-#include <QPainter>
 #include <QWindow>
 
 #include <linux/input.h>

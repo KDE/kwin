@@ -13,7 +13,6 @@
 #include <QDBusConnectionInterface>
 #include <QDBusServiceWatcher>
 #include <QFile>
-#include <QPainter>
 #include <QSize>
 #include <QStandardPaths>
 #include <QStyle>

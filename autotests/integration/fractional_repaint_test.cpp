@@ -34,8 +34,6 @@ void FractionalRepaintTest::initTestCase()
         return;
     }
 
-    qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
-
     qRegisterMetaType<Window *>();
 
     QVERIFY(waylandServer()->init(qAppName()));

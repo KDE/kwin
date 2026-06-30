@@ -18,7 +18,6 @@
 #include "wayland_egl_backend.h"
 #include "wayland_logging.h"
 #include "wayland_output.h"
-#include "wayland_qpainter_backend.h"
 
 #include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/pointer.h>
@@ -510,11 +509,6 @@ std::unique_ptr<EglBackend> WaylandBackend::createOpenGLBackend()
     return std::make_unique<WaylandEglBackend>(this);
 }
 
-std::unique_ptr<QPainterBackend> WaylandBackend::createQPainterBackend()
-{
-    return std::make_unique<WaylandQPainterBackend>(this);
-}
-
 WaylandOutput *WaylandBackend::findOutput(KWayland::Client::Surface *nativeSurface) const
 {
     for (WaylandOutput *output : m_outputs) {
@@ -590,7 +584,6 @@ QList<CompositingType> WaylandBackend::supportedCompositors() const
     if (m_display->linuxDmabuf() && m_renderDevice) {
         ret.append(OpenGLCompositing);
     }
-    ret.append(QPainterCompositing);
     return ret;
 }
 

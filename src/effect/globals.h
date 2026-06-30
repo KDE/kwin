@@ -34,6 +34,10 @@ KWIN_EXPORT Q_NAMESPACE
          * use EffectsHandler::isOpenGLCompositing().
          */
         OpenGLCompositing = 1,
+        /**
+         * Deprecated, but needs to be kept around for backwards compat with
+         * user configs
+         */
         QPainterCompositing = 1 << 2,
     };
 

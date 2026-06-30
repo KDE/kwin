@@ -24,7 +24,6 @@ namespace KWin
 class LogicalOutput;
 class InputBackend;
 class EglBackend;
-class QPainterBackend;
 class OutputConfiguration;
 class EglDisplay;
 class Session;
@@ -41,7 +40,6 @@ public:
     virtual bool initialize() = 0;
     virtual std::unique_ptr<InputBackend> createInputBackend();
     virtual std::unique_ptr<EglBackend> createOpenGLBackend();
-    virtual std::unique_ptr<QPainterBackend> createQPainterBackend();
 
     /**
      * The CompositingTypes supported by the Platform.

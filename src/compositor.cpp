@@ -25,11 +25,9 @@
 #include "ftrace.h"
 #include "opengl/eglbackend.h"
 #include "opengl/glplatform.h"
-#include "qpainter/qpainterbackend.h"
 #include "renderloopdrivenqanimationdriver.h"
 #include "scene/cursoritem.h"
 #include "scene/itemrenderer_opengl.h"
-#include "scene/itemrenderer_qpainter.h"
 #include "scene/surfaceitem.h"
 #include "scene/surfaceitem_wayland.h"
 #include "scene/workspacescene.h"
@@ -176,17 +174,6 @@ bool Compositor::attemptOpenGLCompositing()
     return true;
 }
 
-bool Compositor::attemptQPainterCompositing()
-{
-    std::unique_ptr<QPainterBackend> backend(kwinApp()->outputBackend()->createQPainterBackend());
-    if (!backend || backend->isFailed()) {
-        return false;
-    }
-    m_backend = std::move(backend);
-    qCDebug(KWIN_CORE) << "QPainter compositing has been successfully initialized";
-    return true;
-}
-
 void Compositor::createRenderer()
 {
     // If compositing has been restarted, try to use the last used compositing type.
@@ -215,8 +202,7 @@ void Compositor::createRenderer()
             stop = attemptOpenGLCompositing();
             break;
         case QPainterCompositing:
-            qCDebug(KWIN_CORE) << "Attempting to load the QPainter scene";
-            stop = attemptQPainterCompositing();
+            stop = true;
             break;
         case NoCompositing:
             qCDebug(KWIN_CORE) << "Starting without compositing...";
@@ -275,8 +261,6 @@ void Compositor::start()
 
     if (const auto eglBackend = qobject_cast<EglBackend *>(m_backend.get())) {
         kwinApp()->scene()->attachRenderer(std::make_unique<ItemRendererOpenGL>(eglBackend->eglDisplayObject()));
-    } else {
-        kwinApp()->scene()->attachRenderer(std::make_unique<ItemRendererQPainter>());
     }
 
     handleOutputsChanged();

@@ -46,8 +46,6 @@ void DontCrashAuroraeDestroyDecoTest::initTestCase()
     config->sync();
     kwinApp()->setConfig(config);
 
-    // this test needs to enforce OpenGL compositing to get into the crashy condition
-    qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
     kwinApp()->start();
     Test::setOutputConfig({
         Rect(0, 0, 1280, 1024),

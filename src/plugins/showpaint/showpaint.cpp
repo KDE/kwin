@@ -17,7 +17,6 @@
 #include "opengl/glutils.h"
 
 #include <QAction>
-#include <QPainter>
 
 namespace KWin
 {
@@ -39,8 +38,6 @@ void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const Render
     effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
     if (effects->isOpenGLCompositing()) {
         paintGL(renderTarget, viewport, deviceRegion);
-    } else if (effects->compositingType() == QPainterCompositing) {
-        paintQPainter(viewport, deviceRegion);
     }
     if (++m_colorIndex == s_colors.count()) {
         m_colorIndex = 0;
@@ -73,15 +70,6 @@ void ShowPaintEffect::paintGL(const RenderTarget &renderTarget, const RenderView
     vbo->setVertices(verts);
     vbo->render(GL_TRIANGLES);
     glDisable(GL_BLEND);
-}
-
-void ShowPaintEffect::paintQPainter(const RenderViewport &viewport, const Region &deviceRegion)
-{
-    QColor color = s_colors[m_colorIndex];
-    color.setAlphaF(s_alpha);
-    for (const Rect &deviceRect : deviceRegion.rects()) {
-        effects->scenePainter()->fillRect(viewport.mapFromDeviceCoordinates(deviceRect), color);
-    }
 }
 
 } // namespace KWin

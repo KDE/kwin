@@ -13,7 +13,6 @@
 #include "core/renderdevice.h"
 #include "virtual_egl_backend.h"
 #include "virtual_output.h"
-#include "virtual_qpainter_backend.h"
 
 #include <fcntl.h>
 #include <gbm.h>
@@ -50,18 +49,12 @@ QList<CompositingType> VirtualBackend::supportedCompositors() const
     if (m_renderDevice) {
         compositingTypes.append(OpenGLCompositing);
     }
-    compositingTypes.append(QPainterCompositing);
     return compositingTypes;
 }
 
 DrmDevice *VirtualBackend::drmDevice() const
 {
     return m_renderDevice ? m_renderDevice->drmDevice() : nullptr;
-}
-
-std::unique_ptr<QPainterBackend> VirtualBackend::createQPainterBackend()
-{
-    return std::make_unique<VirtualQPainterBackend>(this);
 }
 
 std::unique_ptr<EglBackend> VirtualBackend::createOpenGLBackend()

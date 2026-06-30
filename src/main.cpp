@@ -517,22 +517,6 @@ static PlatformCursorImage grabCursorOpenGL(WorkspaceScene *scene)
     return PlatformCursorImage(image, cursor->hotspot());
 }
 
-static PlatformCursorImage grabCursorSoftware(WorkspaceScene *scene)
-{
-    Cursor *cursor = Cursors::self()->currentCursor();
-    LogicalOutput *output = workspace()->outputAt(cursor->pos());
-
-    QImage image((cursor->geometry().size() * output->scale()).toSize(), QImage::Format_ARGB32_Premultiplied);
-    RenderTarget renderTarget(&image);
-
-    SceneView sceneView(scene, output, nullptr, nullptr);
-    ItemTreeView cursorView(&sceneView, scene->cursorItem(), output, nullptr, nullptr);
-    cursorView.paint(renderTarget, QPoint(), Region::infinite());
-
-    image.setDevicePixelRatio(output->scale());
-    return PlatformCursorImage(image, cursor->hotspot());
-}
-
 PlatformCursorImage Application::cursorImage() const
 {
     Cursor *cursor = Cursors::self()->currentCursor();
@@ -545,14 +529,7 @@ PlatformCursorImage Application::cursorImage() const
     }
 
     // The cursor content is provided by a client, grab the contents of the cursor scene.
-    switch (effects->compositingType()) {
-    case OpenGLCompositing:
-        return grabCursorOpenGL(m_scene.get());
-    case QPainterCompositing:
-        return grabCursorSoftware(m_scene.get());
-    default:
-        Q_UNREACHABLE();
-    }
+    return grabCursorOpenGL(m_scene.get());
 }
 
 void Application::startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName)

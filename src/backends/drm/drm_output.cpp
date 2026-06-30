@@ -28,7 +28,6 @@
 // Qt
 #include <QCryptographicHash>
 #include <QMatrix4x4>
-#include <QPainter>
 // c++
 #include <cerrno>
 // drm

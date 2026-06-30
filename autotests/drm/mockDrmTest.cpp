@@ -25,7 +25,6 @@
 #include "drm_pipeline.h"
 #include "drm_plane.h"
 #include "drm_pointer.h"
-#include "qpainter/qpainterbackend.h"
 #include "wayland/clientconnection.h"
 #include "wayland/display.h"
 #include "wayland/drmlease_v1.h"
@@ -40,7 +39,6 @@ using namespace KWin;
 
 Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtWarningMsg)
 Q_LOGGING_CATEGORY(KWIN_OPENGL, "kwin_scene_opengl", QtWarningMsg)
-Q_LOGGING_CATEGORY(KWIN_QPAINTER, "kwin_scene_qpainter", QtWarningMsg)
 Q_LOGGING_CATEGORY(KWIN_VIRTUALKEYBOARD, "kwin_virtualkeyboard", QtWarningMsg)
 
 static std::unique_ptr<MockGpu> findPrimaryDevice(int crtcCount)
@@ -171,7 +169,7 @@ void DrmTest::testOutputDetection()
 
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
-    const auto renderBackend = backend->createQPainterBackend();
+    const auto renderBackend = backend->createOpenGLBackend();
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
     QVERIFY(gpu->updateOutputs());
 
@@ -218,7 +216,7 @@ void DrmTest::testZeroModesHandling()
 
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
-    const auto renderBackend = backend->createQPainterBackend();
+    const auto renderBackend = backend->createOpenGLBackend();
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
 
     // connector with zero modes should be ignored
@@ -370,7 +368,7 @@ void DrmTest::testModeGeneration()
 
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
-    const auto renderBackend = backend->createQPainterBackend();
+    const auto renderBackend = backend->createOpenGLBackend();
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
 
     QFETCH(Mode, nativeMode);
@@ -419,7 +417,7 @@ void DrmTest::testConnectorLifetime()
 
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
-    const auto renderBackend = backend->createQPainterBackend();
+    const auto renderBackend = backend->createOpenGLBackend();
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
 
     QVERIFY(gpu->updateOutputs());
@@ -458,7 +456,7 @@ void DrmTest::testModeset()
 
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
-    const auto renderBackend = backend->createQPainterBackend();
+    const auto renderBackend = backend->createOpenGLBackend();
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
 
     QVERIFY(gpu->updateOutputs());
@@ -486,7 +484,7 @@ void DrmTest::testVrrChange()
 
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
-    const auto renderBackend = backend->createQPainterBackend();
+    const auto renderBackend = backend->createOpenGLBackend();
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
 
     QVERIFY(gpu->updateOutputs());
@@ -510,7 +508,7 @@ void DrmTest::testLeaseDisconnectReconnect()
 
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
-    const auto renderBackend = backend->createQPainterBackend();
+    const auto renderBackend = backend->createOpenGLBackend();
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
 
     QVERIFY(gpu->updateOutputs());
@@ -582,7 +580,7 @@ void DrmTest::testLeaseAvailableAfterMasterToggleAndClientExit()
 
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
-    const auto renderBackend = backend->createQPainterBackend();
+    const auto renderBackend = backend->createOpenGLBackend();
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
 
     QVERIFY(gpu->updateOutputs());
@@ -648,7 +646,7 @@ void DrmTest::testLeaseAvailableWhenClientExitsBeforeQueuedReoffer()
 
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
-    const auto renderBackend = backend->createQPainterBackend();
+    const auto renderBackend = backend->createOpenGLBackend();
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
 
     QVERIFY(gpu->updateOutputs());

@@ -25,8 +25,6 @@
 #include <KConfigGroup>
 #include <KGlobalAccel>
 
-#include <QPainter>
-
 #include <cmath>
 
 namespace KWin
@@ -252,11 +250,7 @@ bool MouseClickEffect::isActive() const
 
 void MouseClickEffect::drawCircle(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r)
 {
-    if (effects->isOpenGLCompositing()) {
-        drawCircleGl(viewport, color, cx, cy, r);
-    } else if (effects->compositingType() == QPainterCompositing) {
-        drawCircleQPainter(color, cx, cy, r);
-    }
+    drawCircleGl(viewport, color, cx, cy, r);
 }
 
 void MouseClickEffect::drawCircleGl(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r)
@@ -286,15 +280,6 @@ void MouseClickEffect::drawCircleGl(const RenderViewport &viewport, const QColor
     vbo->setVertices(verts);
     ShaderManager::instance()->getBoundShader()->setUniform(GLShader::ColorUniform::Color, color);
     vbo->render(GL_LINE_LOOP);
-}
-
-void MouseClickEffect::drawCircleQPainter(const QColor &color, float cx, float cy, float r)
-{
-    QPainter *painter = effects->scenePainter();
-    painter->save();
-    painter->setPen(color);
-    painter->drawArc(cx - r, cy - r, r * 2, r * 2, 0, 5760);
-    painter->restore();
 }
 
 void MouseClickEffect::paintScreenSetupGl(const RenderTarget &renderTarget, const QMatrix4x4 &projectionMatrix)

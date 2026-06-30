@@ -25,7 +25,6 @@ public:
 
 private:
     void paintGL(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion);
-    void paintQPainter(const RenderViewport &viewport, const Region &deviceRegion);
 
     int m_colorIndex = 0;
 };

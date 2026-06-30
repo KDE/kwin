@@ -40,7 +40,6 @@ public:
     ~DrmBackend() override;
 
     std::unique_ptr<InputBackend> createInputBackend() override;
-    std::unique_ptr<QPainterBackend> createQPainterBackend() override;
     std::unique_ptr<EglBackend> createOpenGLBackend() override;
 
     bool initialize() override;

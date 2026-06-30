@@ -1105,7 +1105,7 @@ void PointerInputTest::testCursorImage()
     auto cursorSurface = Test::createSurface();
     QVERIFY(cursorSurface);
     QSignalSpy cursorRenderedSpy(cursorSurface.get(), &KWayland::Client::Surface::frameRendered);
-    QImage red = QImage(QSize(10, 10), QImage::Format_ARGB32_Premultiplied);
+    QImage red = QImage(QSize(10, 10), QImage::Format_RGBA8888_Premultiplied);
     red.fill(Qt::red);
     cursorSurface->attachBuffer(Test::waylandShmPool()->createBuffer(red));
     cursorSurface->damage(QRect(0, 0, 10, 10));
@@ -1121,7 +1121,7 @@ void PointerInputTest::testCursorImage()
     QCOMPARE(kwinApp()->cursorImage().image(), red);
 
     // change the buffer
-    QImage blue = QImage(QSize(10, 10), QImage::Format_ARGB32_Premultiplied);
+    QImage blue = QImage(QSize(10, 10), QImage::Format_RGBA8888_Premultiplied);
     blue.fill(Qt::blue);
     auto b = Test::waylandShmPool()->createBuffer(blue);
     cursorSurface->attachBuffer(b);
@@ -1734,7 +1734,7 @@ void PointerInputTest::testResizeCursor()
     Test::pointerButtonReleased(BTN_RIGHT, timestamp++);
     QVERIFY(!window->isInteractiveResize());
 
-    QCOMPARE(kwinApp()->cursorImage().image(), arrowCursor.image());
+    QCOMPARE(kwinApp()->cursorImage().image(), arrowCursor.image().convertedTo(QImage::Format_RGBA8888_Premultiplied));
     QCOMPARE(kwinApp()->cursorImage().hotSpot(), arrowCursor.hotSpot());
 }
 
@@ -1801,7 +1801,7 @@ void PointerInputTest::testMoveCursor()
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(!window->isInteractiveMove());
 
-    QCOMPARE(kwinApp()->cursorImage().image(), arrowCursor.image());
+    QCOMPARE(kwinApp()->cursorImage().image(), arrowCursor.image().convertedTo(QImage::Format_RGBA8888_Premultiplied));
     QCOMPARE(kwinApp()->cursorImage().hotSpot(), arrowCursor.hotSpot());
 }
 

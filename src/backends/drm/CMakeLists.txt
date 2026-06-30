@@ -20,8 +20,6 @@ target_sources(kwin PRIVATE
     drm_pipeline_legacy.cpp
     drm_plane.cpp
     drm_property.cpp
-    drm_qpainter_backend.cpp
-    drm_qpainter_layer.cpp
     drm_virtual_egl_layer.cpp
     drm_virtual_output.cpp
 )
