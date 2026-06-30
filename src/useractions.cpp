@@ -1014,6 +1014,9 @@ void Workspace::initShortcuts()
 
     initShortcut("Kill Window", i18n("Kill Window"), Qt::META | Qt::CTRL | Qt::Key_Escape, &Workspace::slotKillWindow, true);
 
+    initShortcut(QStringLiteral("MoveMouseToFocus"), i18n("Move Mouse to Focus"), QKeySequence(Qt::META | Qt::Key_F5), &Workspace::slotMouseToFocus, false);
+    initShortcut(QStringLiteral("MoveMouseToCenter"), i18n("Move Mouse to Center"), QKeySequence(Qt::META | Qt::Key_F6), &Workspace::slotMouseToCenter, false);
+
 #if KWIN_BUILD_TABBOX
     m_tabbox->initShortcuts();
 #endif
@@ -1707,6 +1710,18 @@ void Workspace::slotWindowResize()
     if (USABLE_ACTIVE_WINDOW) {
         performWindowOperation(m_activeWindow, Options::UnrestrictedResizeOp);
     }
+}
+
+void Workspace::slotMouseToFocus()
+{
+    if (USABLE_ACTIVE_WINDOW) {
+        input()->pointer()->warp(m_activeWindow->frameGeometry().center());
+    }
+}
+
+void Workspace::slotMouseToCenter()
+{
+    input()->pointer()->warp(m_activeOutput->geometryF().center());
 }
 
 #undef USABLE_ACTIVE_WINDOW
