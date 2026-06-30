@@ -52,7 +52,7 @@ EGLPlatformContext::~EGLPlatformContext()
         return;
     }
     if (!m_renderTargets.empty() || !m_zombieRenderTargets.empty()) {
-        m_eglContext->makeCurrent();
+        (void)m_eglContext->makeCurrent();
         m_renderTargets.clear();
         m_zombieRenderTargets.clear();
     }
@@ -205,8 +205,6 @@ void EGLPlatformContext::create(const QSurfaceFormat &format, EglContext *shareC
 
 void EGLPlatformContext::updateFormatFromContext()
 {
-    m_eglContext->makeCurrent();
-
     const char *version = reinterpret_cast<const char *>(glGetString(GL_VERSION));
     int major, minor;
     if (parseOpenGLVersion(version, major, minor)) {

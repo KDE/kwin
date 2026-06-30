@@ -90,7 +90,7 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::create(RenderDevice *copyD
         // creating the copy context will make it current
         const auto restoreContext = qScopeGuard([ctx = EglContext::currentContext()]() {
             if (ctx) {
-                ctx->makeCurrent();
+                (void)ctx->makeCurrent();
             }
         });
         const auto context = copyDevice->eglContext();
@@ -308,7 +308,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithEGL(GraphicsBuf
         if (previousContext) {
             // TODO make the calling code responsible for this?
             // If this makeCurrent fails, things might crash :/
-            previousContext->makeCurrent();
+            (void)previousContext->makeCurrent();
         }
     });
     if (!m_copyContext || m_copyContext->isFailed() || !m_copyContext->makeCurrent()) {
@@ -375,10 +375,10 @@ void MultiGpuSwapchain::deleteResources()
     if (m_copyContext) {
         const auto restoreContext = qScopeGuard([ctx = EglContext::currentContext()]() {
             if (ctx) {
-                ctx->makeCurrent();
+                (void)ctx->makeCurrent();
             }
         });
-        m_copyContext->makeCurrent();
+        (void)m_copyContext->makeCurrent();
         m_currentEglSlot.reset();
         m_eglSwapchain.reset();
         m_copyContext.reset();

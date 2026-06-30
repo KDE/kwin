@@ -39,7 +39,7 @@ GLRenderTimeQuery::~GLRenderTimeQuery()
     }
     glDeleteQueries(1, &m_gpuProbe.query);
     if (previousContext && previousContext != context.get()) {
-        previousContext->makeCurrent();
+        (void)previousContext->makeCurrent();
     }
 }
 
@@ -76,7 +76,7 @@ std::optional<RenderTimeSpan> GLRenderTimeQuery::query()
         glGetQueryObjecti64v(m_gpuProbe.query, GL_QUERY_RESULT, &end);
         m_gpuProbe.end = std::chrono::nanoseconds(end);
         if (previousContext && previousContext != context.get()) {
-            previousContext->makeCurrent();
+            (void)previousContext->makeCurrent();
         }
     }
 

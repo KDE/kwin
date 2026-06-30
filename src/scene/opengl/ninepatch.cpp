@@ -124,7 +124,7 @@ NinePatchOpenGL::NinePatchOpenGL(std::unique_ptr<GLTexture> &&texture)
 NinePatchOpenGL::~NinePatchOpenGL()
 {
     // FIXME: It should not be attached to the workspace scene.
-    kwinApp()->scene()->openglContext()->makeCurrent();
+    (void)kwinApp()->scene()->openglContext()->makeCurrent();
 }
 
 GLTexture *NinePatchOpenGL::texture() const
