@@ -24,6 +24,7 @@
 #include "cursor.h"
 #include "effect/effecthandler.h"
 #include "gestures.h"
+#include "input_event.h"
 #include "main.h"
 #include "pointer_input.h"
 #include "screenedgegestures.h"
@@ -736,7 +737,9 @@ LogicalOutput *Edge::output() const
  *********************************************************/
 
 ScreenEdges::ScreenEdges()
-    : m_desktopSwitching(false)
+    : QObject()
+    , InputEventFilter(InputFilterOrder::ScreenEdge)
+    , m_desktopSwitching(false)
     , m_desktopSwitchingMovingClients(false)
     , m_timeThreshold(0)
     , m_reactivateThreshold(0)
@@ -754,6 +757,10 @@ ScreenEdges::ScreenEdges()
     , m_touchTarget(8)
     , m_gestureRecognizer(std::make_unique<ScreenEdgeGestureRecognizer>())
 {
+    if (kwinApp()->supportsGlobalShortcuts()) {
+        input()->installInputEventFilter(this);
+    }
+
     connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) {
         if (group.name() == QLatin1StringView("ScreenEdges") && names.contains(QByteArrayLiteral("TouchTarget"))) {
             const int newTouchTarget = group.readEntry("TouchTarget", 8);
@@ -767,6 +774,33 @@ ScreenEdges::ScreenEdges()
 
 ScreenEdges::~ScreenEdges()
 {
+}
+
+bool ScreenEdges::pointerMotion(PointerMotionEvent *event)
+{
+    handlePointerMotion(event->position, event->timestamp);
+    return false;
+}
+
+bool ScreenEdges::touchDown(TouchDownEvent *event)
+{
+    return gestureRecognizer()->touchDown(event->id, event->pos);
+}
+
+bool ScreenEdges::touchMotion(TouchMotionEvent *event)
+{
+    return gestureRecognizer()->touchMotion(event->id, event->pos);
+}
+
+bool ScreenEdges::touchUp(TouchUpEvent *event)
+{
+    return gestureRecognizer()->touchUp(event->id);
+}
+
+bool ScreenEdges::touchCancel()
+{
+    gestureRecognizer()->touchCancel();
+    return false;
 }
 
 void ScreenEdges::init()

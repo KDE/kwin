@@ -1874,38 +1874,6 @@ public:
 };
 #endif
 
-class ScreenEdgeInputFilter : public InputEventFilter
-{
-public:
-    ScreenEdgeInputFilter()
-        : InputEventFilter(InputFilterOrder::ScreenEdge)
-    {
-    }
-    bool pointerMotion(PointerMotionEvent *event) override
-    {
-        workspace()->screenEdges()->handlePointerMotion(event->position, event->timestamp);
-        // always forward
-        return false;
-    }
-    bool touchDown(TouchDownEvent *event) override
-    {
-        return workspace()->screenEdges()->gestureRecognizer()->touchDown(event->id, event->pos);
-    }
-    bool touchMotion(TouchMotionEvent *event) override
-    {
-        return workspace()->screenEdges()->gestureRecognizer()->touchMotion(event->id, event->pos);
-    }
-    bool touchUp(TouchUpEvent *event) override
-    {
-        return workspace()->screenEdges()->gestureRecognizer()->touchUp(event->id);
-    }
-    bool touchCancel() override
-    {
-        workspace()->screenEdges()->gestureRecognizer()->touchCancel();
-        return false;
-    }
-};
-
 /**
  * This filter implements window actions. If the event should not be passed to the
  * current window it will filter out the event
@@ -3112,11 +3080,6 @@ void InputRedirection::setupInputFilters()
     m_lockscreenFilter = std::make_unique<LockScreenFilter>();
     installInputEventFilter(m_lockscreenFilter.get());
 #endif
-
-    if (kwinApp()->supportsGlobalShortcuts()) {
-        m_screenEdgeFilter = std::make_unique<ScreenEdgeInputFilter>();
-        installInputEventFilter(m_screenEdgeFilter.get());
-    }
 
     m_dragAndDropFilter = std::make_unique<DragAndDropInputFilter>();
     installInputEventFilter(m_dragAndDropFilter.get());

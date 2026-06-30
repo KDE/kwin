@@ -20,6 +20,7 @@
 // KWin
 #include "core/rect.h"
 #include "effect/globals.h"
+#include "input.h"
 // KDE includes
 #include <KConfigWatcher>
 #include <KSharedConfig>
@@ -199,7 +200,7 @@ private:
  *
  * @todo change way how Effects/Scripts can reserve an edge and are notified.
  */
-class KWIN_EXPORT ScreenEdges : public QObject
+class KWIN_EXPORT ScreenEdges : public QObject, public InputEventFilter
 {
     Q_OBJECT
     Q_PROPERTY(bool desktopSwitching READ isDesktopSwitching)
@@ -358,6 +359,12 @@ Q_SIGNALS:
     void approaching(ElectricBorder border, qreal factor, const Rect &geometry);
 
 private:
+    bool pointerMotion(PointerMotionEvent *event) override;
+    bool touchDown(TouchDownEvent *event) override;
+    bool touchMotion(TouchMotionEvent *event) override;
+    bool touchUp(TouchUpEvent *event) override;
+    bool touchCancel() override;
+
     enum {
         ElectricDisabled = 0,
         ElectricMoveOnly = 1,

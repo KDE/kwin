@@ -312,7 +312,6 @@ private:
 #if KWIN_BUILD_SCREENLOCKER
     std::unique_ptr<InputEventFilter> m_lockscreenFilter;
 #endif
-    std::unique_ptr<InputEventFilter> m_screenEdgeFilter;
     std::unique_ptr<InputEventFilter> m_tabboxFilter;
     std::unique_ptr<InputEventFilter> m_globalShortcutFilter;
     std::unique_ptr<InputEventFilter> m_effectsFilter;
