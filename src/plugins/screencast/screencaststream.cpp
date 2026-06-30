@@ -610,7 +610,10 @@ void ScreenCastStream::record(Contents contents)
     }
 
     EglContext *context = backend->openglContext();
-    context->makeCurrent();
+    if (!context->makeCurrent()) {
+        pw_stream_return_buffer(m_pwStream, pwBuffer);
+        return;
+    }
 
     spa_meta_sync_timeline *synctmeta = nullptr;
 

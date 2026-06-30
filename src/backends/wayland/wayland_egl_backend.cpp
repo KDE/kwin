@@ -146,7 +146,7 @@ WaylandEglCursorLayer::WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBa
 
 WaylandEglCursorLayer::~WaylandEglCursorLayer()
 {
-    m_backend->openglContext()->makeCurrent();
+    (void)m_backend->openglContext()->makeCurrent();
 }
 
 std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::doBeginFrame()

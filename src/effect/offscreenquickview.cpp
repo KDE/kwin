@@ -386,7 +386,7 @@ void OffscreenQuickView::update(OutputFrame *frame)
         }
         d->m_glcontext->doneCurrent();
         if (previousContext) {
-            previousContext->makeCurrent();
+            (void)previousContext->makeCurrent();
         }
     }
     d->m_item->scheduleRepaint(d->m_item->rect());

@@ -32,12 +32,14 @@ VirtualEglLayer::VirtualEglLayer(BackendOutput *output, VirtualEglBackend *backe
 
 VirtualEglLayer::~VirtualEglLayer()
 {
-    m_backend->openglContext()->makeCurrent();
+    (void)m_backend->openglContext()->makeCurrent();
 }
 
 std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::doBeginFrame()
 {
-    m_backend->openglContext()->makeCurrent();
+    if (!m_backend->openglContext()->makeCurrent()) {
+        return std::nullopt;
+    }
 
     const QSize nativeSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
@@ -149,7 +151,6 @@ bool VirtualEglBackend::init()
 
 void VirtualEglBackend::addOutput(BackendOutput *output)
 {
-    openglContext()->makeCurrent();
     static_cast<VirtualOutput *>(output)->setOutputLayer(std::make_unique<VirtualEglLayer>(output, this));
 }
 

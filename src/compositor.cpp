@@ -311,7 +311,7 @@ void Compositor::stop()
 
     if (m_backend->compositingType() == OpenGLCompositing) {
         // some layers need a context current for destruction
-        static_cast<EglBackend *>(m_backend.get())->openglContext()->makeCurrent();
+        (void)static_cast<EglBackend *>(m_backend.get())->openglContext()->makeCurrent();
     }
 
     const auto loops = m_primaryViews | std::views::transform([](const auto &pair) {

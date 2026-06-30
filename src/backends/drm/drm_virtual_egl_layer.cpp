@@ -142,7 +142,7 @@ bool VirtualEglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::
 
 void VirtualEglGbmLayer::releaseBuffers()
 {
-    m_eglBackend->openglContext()->makeCurrent();
+    (void)m_eglBackend->openglContext()->makeCurrent();
     m_gbmSwapchain.reset();
     m_oldGbmSwapchain.reset();
     m_currentSlot.reset();

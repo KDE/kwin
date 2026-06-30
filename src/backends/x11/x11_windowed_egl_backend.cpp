@@ -100,7 +100,7 @@ X11WindowedEglCursorLayer::X11WindowedEglCursorLayer(X11WindowedEglBackend *back
 
 X11WindowedEglCursorLayer::~X11WindowedEglCursorLayer()
 {
-    m_backend->openglContext()->makeCurrent();
+    (void)m_backend->openglContext()->makeCurrent();
     m_framebuffer.reset();
     m_texture.reset();
 }
