@@ -17,6 +17,7 @@
 #include "main.h"
 #include "opengl/eglbackend.h"
 #include "opengl/eglnativefence.h"
+#include "opengl/glframebuffer.h"
 #include "opengl/glplatform.h"
 #include "opengl/gltexture.h"
 #include "pipewirecore.h"
@@ -900,6 +901,22 @@ std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(
 
     const DmaBufAttributes *attrs = buffer->dmabufAttributes();
     if (!attrs) {
+        return std::nullopt;
+    }
+
+    // Also test if we can actually create the framebuffer,
+    // since this may fail on some drivers with some modifiers
+    // (namely Nvidia with the implicit modifier)
+    if (!backend->openglContext()->makeCurrent()) {
+        return std::nullopt;
+    }
+
+    auto texture = backend->importDmaBufAsTexture(*attrs);
+    if (!texture) {
+        return std::nullopt;
+    }
+    auto framebuffer = std::make_unique<GLFramebuffer>(texture.get());
+    if (!framebuffer->valid()) {
         return std::nullopt;
     }
 
