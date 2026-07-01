@@ -41,12 +41,8 @@ Q_LOGGING_CATEGORY(KWIN_STARTUPFEEDBACK, "kwin_effect_startupfeedback", QtWarnin
 namespace KWin
 {
 
-// number of key frames for bouncing animation
-static const int BOUNCE_FRAMES = 20;
-// duration between two key frames in msec
-static const int BOUNCE_FRAME_DURATION = 30;
 // duration of one bounce animation
-static const int BOUNCE_DURATION = BOUNCE_FRAME_DURATION * BOUNCE_FRAMES;
+static const int BOUNCE_DURATION = 500;
 // number of key frames for blinking animation
 static const int BLINKING_FRAMES = 5;
 // duration between two key frames in msec
@@ -54,12 +50,6 @@ static const int BLINKING_FRAME_DURATION = 100;
 // duration of one blinking animation
 static const int BLINKING_DURATION = BLINKING_FRAME_DURATION * BLINKING_FRAMES;
 // const int color_to_pixmap[] = { 0, 1, 2, 3, 2, 1 };
-static const int FRAME_TO_BOUNCE_YOFFSET[] = {
-    -5, -1, 2, 5, 8, 10, 12, 13, 15, 15, 15, 15, 14, 12, 10, 8, 5, 2, -1, -5};
-static const QSize BOUNCE_SIZES[] = {
-    QSize(16, 16), QSize(14, 18), QSize(12, 20), QSize(18, 14), QSize(20, 12)};
-static const int FRAME_TO_BOUNCE_TEXTURE[] = {
-    0, 0, 0, 1, 2, 2, 1, 0, 3, 4, 4, 3, 0, 1, 2, 2, 1, 0, 0, 0};
 static const int FRAME_TO_BLINKING_COLOR[] = {
     0, 1, 2, 3, 2, 1};
 static const QColor BLINKING_COLORS[] = {
@@ -161,10 +151,12 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data)
         switch (m_type) {
         case BouncingFeedback: {
             m_progress = (m_progress + time) % BOUNCE_DURATION;
-            m_frame = qRound((qreal)m_progress / (qreal)BOUNCE_FRAME_DURATION) % BOUNCE_FRAMES;
-            QSize bounceSize = BOUNCE_SIZES[FRAME_TO_BOUNCE_TEXTURE[m_frame]];
+            const qreal progressRatio = qreal(m_progress) / BOUNCE_DURATION;
+            const qreal squeeze = std::pow(std::cos((progressRatio - 0.25) * M_PI), 2) * 24 - 12;
+            const QSize bounceSize = QSize(64 + squeeze, 64 - squeeze);
             QTransform transform;
-            transform.scale(bounceSize.width() / 16.0, bounceSize.height() / 16.0);
+            transform.scale(bounceSize.width() / 64.0, bounceSize.height() / 64.0);
+            transform.translate(-bounceSize.width() / 16.0, -bounceSize.height() / 16.0);
             m_item->setTransform(transform);
         } break;
         case BlinkingFeedback: {
@@ -315,10 +307,8 @@ QPoint StartupFeedbackEffect::feedbackOffset() const
     int yOffset = 0;
     switch (m_type) {
     case BouncingFeedback: {
-        yOffset = FRAME_TO_BOUNCE_YOFFSET[m_frame] * m_bounceSizesRatio;
-        QSize adjustedSize = BOUNCE_SIZES[FRAME_TO_BOUNCE_TEXTURE[m_frame]] * m_bounceSizesRatio;
-        xDiff += (20 * m_bounceSizesRatio - adjustedSize.width()) / 2;
-        yOffset += (20 * m_bounceSizesRatio - adjustedSize.height()) / 2;
+        const qreal progressRatio = qreal(m_progress) / BOUNCE_DURATION;
+        yOffset = std::sin((progressRatio + 1) * M_PI) * 24 + 8;
     } break;
     case BlinkingFeedback: // fall through
     case PassiveFeedback:
