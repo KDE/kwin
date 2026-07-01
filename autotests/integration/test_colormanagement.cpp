@@ -32,8 +32,6 @@
 #include "qwayland-color-management-v1.h"
 #include "wayland-linux-dmabuf-v1-client-protocol.h"
 
-using namespace std::chrono_literals;
-
 namespace KWin
 {
 
@@ -434,7 +432,7 @@ void ColorManagementTest::testSetImageDescription()
     QFETCH(bool, protocolError);
     if (protocolError) {
         QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
-        QVERIFY(error.wait(50ms));
+        QVERIFY(error.wait());
         return;
     }
 
@@ -460,7 +458,7 @@ void ColorManagementTest::testSetImageDescription()
     QFETCH(std::optional<std::shared_ptr<ColorDescription>>, expectedResult);
     if (shouldSucceed) {
         QSignalSpy ready(&imageDescr, &ImageDescription::ready);
-        QVERIFY(ready.wait(50ms));
+        QVERIFY(ready.wait());
 
         cmSurf->set_image_description(imageDescr.object(), waylandRenderIntent);
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -472,12 +470,12 @@ void ColorManagementTest::testSetImageDescription()
         QCOMPARE(window->surface()->renderingIntent(), renderingIntent);
     } else {
         QSignalSpy fail(&imageDescr, &ImageDescription::failed);
-        QVERIFY(fail.wait(50ms));
+        QVERIFY(fail.wait());
 
         // trying to use a failed image description should cause an error
         QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
         cmSurf->set_image_description(imageDescr.object(), waylandRenderIntent);
-        QVERIFY(error.wait(50ms));
+        QVERIFY(error.wait());
     }
     if (buffer) {
         wl_buffer_destroy(buffer);
@@ -490,7 +488,7 @@ void ColorManagementTest::testUnsupportedPrimaries()
     creator.set_primaries_named(-1);
     wp_image_description_creator_params_v1_create(creator.object());
     QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
-    QVERIFY(error.wait(50ms));
+    QVERIFY(error.wait());
 }
 
 void ColorManagementTest::testNoPrimaries()
@@ -499,7 +497,7 @@ void ColorManagementTest::testNoPrimaries()
     creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_EXT_LINEAR);
     wp_image_description_creator_params_v1_create(creator.object());
     QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
-    QVERIFY(error.wait(50ms));
+    QVERIFY(error.wait());
 }
 
 void ColorManagementTest::testNoTf()
@@ -508,7 +506,7 @@ void ColorManagementTest::testNoTf()
     creator.set_primaries_named(WP_COLOR_MANAGER_V1_PRIMARIES_CIE1931_XYZ);
     wp_image_description_creator_params_v1_create(creator.object());
     QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
-    QVERIFY(error.wait(50ms));
+    QVERIFY(error.wait());
 }
 
 void ColorManagementTest::testRenderIntentOnly()
@@ -527,7 +525,7 @@ void ColorManagementTest::testRenderIntentOnly()
     ImageDescription imageDescr = createImageDescription(cmSurf.get(), *color);
 
     QSignalSpy ready(&imageDescr, &ImageDescription::ready);
-    QVERIFY(ready.wait(50ms));
+    QVERIFY(ready.wait());
 
     cmSurf->set_image_description(imageDescr.object(), WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -555,13 +553,13 @@ void ColorManagementTest::testInertError()
     ImageDescription imageDescr = createImageDescription(cmSurf.get(), *ColorDescription::sRGB);
 
     QSignalSpy ready(&imageDescr, &ImageDescription::ready);
-    QVERIFY(ready.wait(50ms));
+    QVERIFY(ready.wait());
 
     surface.reset();
     cmSurf->set_image_description(imageDescr.object(), WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL);
 
     QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
-    QVERIFY(error.wait(50ms));
+    QVERIFY(error.wait());
 }
 
 } // namespace KWin
