@@ -112,16 +112,11 @@ protected:
         Region surfaceDamage;
         uint32_t requiredAlphaBits;
     };
-    enum class SetupType {
-        Ideal,
-        Fallback,
-    };
     std::pair<QList<LayerData>, bool> setupLayers(SceneView *primaryView, LogicalOutput *logicalOutput,
                                                   BackendOutput *backendOutput,
                                                   const QList<OutputLayer *> &outputLayers,
                                                   const std::unordered_map<OutputLayer *, Item *> &assignments,
                                                   const std::shared_ptr<OutputFrame> &frame,
-                                                  SetupType type,
                                                   std::unordered_set<OutputLayer *> &toUpdate);
 
     CompositingType m_selectedCompositor = NoCompositing;

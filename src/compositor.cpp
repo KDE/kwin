@@ -516,7 +516,6 @@ std::pair<QList<Compositor::LayerData>, bool> Compositor::setupLayers(SceneView 
                                                                       const QList<OutputLayer *> &outputLayers,
                                                                       const std::unordered_map<OutputLayer *, Item *> &assignments,
                                                                       const std::shared_ptr<OutputFrame> &frame,
-                                                                      SetupType type,
                                                                       std::unordered_set<OutputLayer *> &toUpdate)
 {
     QList<OutputLayer *> unusedOutputLayers = outputLayers;
@@ -616,7 +615,7 @@ std::pair<QList<Compositor::LayerData>, bool> Compositor::setupLayers(SceneView 
 
     // import buffers and prepare rendering
     for (auto &layer : layers) {
-        if (layer.directScanout && type != SetupType::Fallback && !prepareDirectScanout(layer.view, logicalOutput, backendOutput, frame)) {
+        if (layer.directScanout && !prepareDirectScanout(layer.view, logicalOutput, backendOutput, frame)) {
             return std::make_pair(layers, false);
         }
     }
@@ -750,8 +749,8 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     std::unordered_set<OutputLayer *> toUpdate;
-    auto [layers, result] = setupLayers(primaryView, logicalOutput, output, allowedOutputLayers, *idealLayerAssignments,
-                                        frame, SetupType::Ideal, toUpdate);
+    auto [layers, result] = setupLayers(primaryView, logicalOutput, output, allowedOutputLayers,
+                                        *idealLayerAssignments, frame, toUpdate);
 
     // test and downgrade the configuration until the test is successful
     if (!result) {
@@ -761,16 +760,16 @@ void Compositor::composite(RenderLoop *renderLoop)
         });
         if (!fallback1) {
             idealLayerAssignments = assignLayers(primaryView, scenePlusCursor, allowedOutputLayers);
-            std::tie(layers, result) = setupLayers(primaryView, logicalOutput, output, allowedOutputLayers, *idealLayerAssignments,
-                                                   frame, SetupType::Fallback, toUpdate);
+            std::tie(layers, result) = setupLayers(primaryView, logicalOutput, output, allowedOutputLayers,
+                                                   *idealLayerAssignments, frame, toUpdate);
         }
 
         // if this still doesn't work, fall back to primary only
         const bool fallback2 = layers.size() == 1 && layers.front().view == primaryView;
         if (!result && !fallback2) {
             idealLayerAssignments = assignLayers(primaryView, sceneOnly, allowedOutputLayers);
-            std::tie(layers, result) = setupLayers(primaryView, logicalOutput, output, allowedOutputLayers, *idealLayerAssignments,
-                                                   frame, SetupType::Fallback, toUpdate);
+            std::tie(layers, result) = setupLayers(primaryView, logicalOutput, output, allowedOutputLayers,
+                                                   *idealLayerAssignments, frame, toUpdate);
         }
     }
 
@@ -826,8 +825,8 @@ void Compositor::composite(RenderLoop *renderLoop)
         });
         if (!fallback1) {
             idealLayerAssignments = assignLayers(primaryView, scenePlusCursor, allowedOutputLayers);
-            std::tie(layers, result) = setupLayers(primaryView, logicalOutput, output, allowedOutputLayers, *idealLayerAssignments,
-                                                   frame, SetupType::Fallback, toUpdate);
+            std::tie(layers, result) = setupLayers(primaryView, logicalOutput, output, allowedOutputLayers,
+                                                   *idealLayerAssignments, frame, toUpdate);
             if (result) {
                 renderLayers();
                 result = output->present(toUpdate | std::ranges::to<QList>(), frame);
@@ -838,8 +837,8 @@ void Compositor::composite(RenderLoop *renderLoop)
         const bool fallback2 = layers.size() == 1 && layers.front().view == primaryView;
         if (!result && !fallback2) {
             idealLayerAssignments = assignLayers(primaryView, sceneOnly, allowedOutputLayers);
-            std::tie(layers, result) = setupLayers(primaryView, logicalOutput, output, allowedOutputLayers, *idealLayerAssignments,
-                                                   frame, SetupType::Fallback, toUpdate);
+            std::tie(layers, result) = setupLayers(primaryView, logicalOutput, output, allowedOutputLayers,
+                                                   *idealLayerAssignments, frame, toUpdate);
             if (result) {
                 renderLayers();
                 result = output->present(toUpdate | std::ranges::to<QList>(), frame);
