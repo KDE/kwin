@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-26 02:42+0000\n"
+"POT-Creation-Date: 2026-07-01 02:43+0000\n"
 "PO-Revision-Date: 2009-12-15 22:22+0100\n"
 "Last-Translator: Mark Kwidzińśczi <mark@linuxcsb.org>\n"
 "Language-Team: Kaszëbsczi <i18n-csb@linuxcsb.org>\n"
@@ -3185,18 +3185,6 @@ msgstr ""
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:108
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
-msgid "Move Mouse to Focus"
-msgstr "Emùlacëjô mëszë"
-
-#: plugins/zoom/zoom.cpp:114
-#, fuzzy, kde-format
-#| msgid "Move window to group"
-msgid "Move Mouse to Center"
-msgstr "Przeniesë òkno do karna"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4444,7 +4432,19 @@ msgstr "Na &pùlt"
 msgid "Kill Window"
 msgstr "Rëmôj òkno"
 
-#: useractions.cpp:1049
+#: useractions.cpp:986
+#, fuzzy, kde-format
+#| msgid "Mouse Emulation"
+msgid "Move Mouse to Focus"
+msgstr "Emùlacëjô mëszë"
+
+#: useractions.cpp:987
+#, fuzzy, kde-format
+#| msgid "Move window to group"
+msgid "Move Mouse to Center"
+msgstr "Przeniesë òkno do karna"
+
+#: useractions.cpp:1052
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktiwùjë òkno (%1)"

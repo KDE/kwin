@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-26 02:42+0000\n"
+"POT-Creation-Date: 2026-07-01 02:43+0000\n"
 "PO-Revision-Date: 2009-01-16 16:49+0530\n"
 "Last-Translator: Amitakhya Phukan <অমিতাক্ষ ফুকন>\n"
 "Language-Team: Assamese <fedora-trans-as@redhat.com>\n"
@@ -3083,18 +3083,6 @@ msgstr ""
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:108
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
-msgid "Move Mouse to Focus"
-msgstr "মাউছ এমুলেছন"
-
-#: plugins/zoom/zoom.cpp:114
-#, fuzzy, kde-format
-#| msgid "Move Window"
-msgid "Move Mouse to Center"
-msgstr "সংযোগক্ষেত্ৰ স্থানান্তৰণ"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4350,7 +4338,19 @@ msgstr "চিহ্নিত ডেষ্কট'পলৈ স্থানান
 msgid "Kill Window"
 msgstr "সংযোগক্ষেত্ৰ Kill কৰক"
 
-#: useractions.cpp:1049
+#: useractions.cpp:986
+#, fuzzy, kde-format
+#| msgid "Mouse Emulation"
+msgid "Move Mouse to Focus"
+msgstr "মাউছ এমুলেছন"
+
+#: useractions.cpp:987
+#, fuzzy, kde-format
+#| msgid "Move Window"
+msgid "Move Mouse to Center"
+msgstr "সংযোগক্ষেত্ৰ স্থানান্তৰণ"
+
+#: useractions.cpp:1052
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "সংযোগক্ষেত্ৰ সক্ৰিয় কৰক (%1)"

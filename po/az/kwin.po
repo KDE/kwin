@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-26 02:42+0000\n"
+"POT-Creation-Date: 2026-07-01 02:43+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -3230,18 +3230,6 @@ msgstr "Böyümüş sahəni yuxarı hərəkət etdirmək"
 msgid "Move Zoomed Area Downwards"
 msgstr "Böyümüş sahəni aşağı hərəkət etdirmək"
 
-#: plugins/zoom/zoom.cpp:108
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
-msgid "Move Mouse to Focus"
-msgstr "Siçan Düymələri Yoxdur"
-
-#: plugins/zoom/zoom.cpp:114
-#, fuzzy, kde-format
-#| msgid "Move Window to the Center"
-msgid "Move Mouse to Center"
-msgstr "Pəncərəni küncə köçürün"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4438,7 +4426,19 @@ msgstr "İş masasına nəzər salın"
 msgid "Kill Window"
 msgstr "Pəncərəni Ləğv etmək"
 
-#: useractions.cpp:1049
+#: useractions.cpp:986
+#, fuzzy, kde-format
+#| msgid "No Mouse Buttons"
+msgid "Move Mouse to Focus"
+msgstr "Siçan Düymələri Yoxdur"
+
+#: useractions.cpp:987
+#, fuzzy, kde-format
+#| msgid "Move Window to the Center"
+msgid "Move Mouse to Center"
+msgstr "Pəncərəni küncə köçürün"
+
+#: useractions.cpp:1052
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktiv pəncərə (%1)"

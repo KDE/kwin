@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-26 02:42+0000\n"
+"POT-Creation-Date: 2026-07-01 02:43+0000\n"
 "PO-Revision-Date: 2026-06-14 16:22+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
@@ -3129,16 +3129,6 @@ msgstr "拡大エリアを上に移動"
 msgid "Move Zoomed Area Downwards"
 msgstr "拡大エリアを下に移動"
 
-#: plugins/zoom/zoom.cpp:108
-#, kde-format
-msgid "Move Mouse to Focus"
-msgstr "フォーカス中のウィンドウにマウスを移動"
-
-#: plugins/zoom/zoom.cpp:114
-#, kde-format
-msgid "Move Mouse to Center"
-msgstr "中央にマウスを移動"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4325,7 +4315,17 @@ msgstr "デスクトップをプレビュー"
 msgid "Kill Window"
 msgstr "ウィンドウを強制終了"
 
-#: useractions.cpp:1049
+#: useractions.cpp:986
+#, kde-format
+msgid "Move Mouse to Focus"
+msgstr "フォーカス中のウィンドウにマウスを移動"
+
+#: useractions.cpp:987
+#, kde-format
+msgid "Move Mouse to Center"
+msgstr "中央にマウスを移動"
+
+#: useractions.cpp:1052
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "ウィンドウをアクティブに (%1)"

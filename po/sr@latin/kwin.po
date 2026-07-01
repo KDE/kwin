@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-26 02:42+0000\n"
+"POT-Creation-Date: 2026-07-01 02:43+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -3419,19 +3419,6 @@ msgstr "Pomeri zonu uveličanja nagore"
 msgid "Move Zoomed Area Downwards"
 msgstr "Pomeri zonu uveličanja nadole"
 
-# >> @item
-#: plugins/zoom/zoom.cpp:108
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
-msgid "Move Mouse to Focus"
-msgstr "nema dugmadi miša"
-
-#: plugins/zoom/zoom.cpp:114
-#, fuzzy, kde-format
-#| msgid "Pack Window to the Left"
-msgid "Move Mouse to Center"
-msgstr "Spakuj prozor ulevo"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4668,7 +4655,20 @@ msgstr "Premesti na &površ"
 msgid "Kill Window"
 msgstr "Ubij prozor"
 
-#: useractions.cpp:1049
+# >> @item
+#: useractions.cpp:986
+#, fuzzy, kde-format
+#| msgid "No Mouse Buttons"
+msgid "Move Mouse to Focus"
+msgstr "nema dugmadi miša"
+
+#: useractions.cpp:987
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Left"
+msgid "Move Mouse to Center"
+msgstr "Spakuj prozor ulevo"
+
+#: useractions.cpp:1052
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktiviraj prozor (%1)"

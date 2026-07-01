@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-26 02:42+0000\n"
+"POT-Creation-Date: 2026-07-01 02:43+0000\n"
 "PO-Revision-Date: 2026-06-24 02:09+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -3092,16 +3092,6 @@ msgstr "Perkelti didintą sritį į viršų"
 msgid "Move Zoomed Area Downwards"
 msgstr "Perkelti didintą sritį į apačią"
 
-#: plugins/zoom/zoom.cpp:108
-#, kde-format
-msgid "Move Mouse to Focus"
-msgstr "Perkelti pelę į fokusavimą"
-
-#: plugins/zoom/zoom.cpp:114
-#, kde-format
-msgid "Move Mouse to Center"
-msgstr "Perkelti pelę į centrą"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4264,7 +4254,17 @@ msgstr "Žvilgsnis į darbalaukį"
 msgid "Kill Window"
 msgstr "Nutraukti lango darbą"
 
-#: useractions.cpp:1049
+#: useractions.cpp:986
+#, kde-format
+msgid "Move Mouse to Focus"
+msgstr "Perkelti pelę į fokusavimą"
+
+#: useractions.cpp:987
+#, kde-format
+msgid "Move Mouse to Center"
+msgstr "Perkelti pelę į centrą"
+
+#: useractions.cpp:1052
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktyvuoti langą (%1)"

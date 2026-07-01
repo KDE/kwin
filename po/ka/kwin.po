@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-26 02:42+0000\n"
+"POT-Creation-Date: 2026-07-01 02:43+0000\n"
 "PO-Revision-Date: 2026-05-24 06:49+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -3074,16 +3074,6 @@ msgstr "გადიდებული ადგილის მაღლა ა
 msgid "Move Zoomed Area Downwards"
 msgstr "გადიდებული ადგილის დაბლა ჩამოწევა"
 
-#: plugins/zoom/zoom.cpp:108
-#, kde-format
-msgid "Move Mouse to Focus"
-msgstr "თაგუნას ფოკუსზე გადატანა"
-
-#: plugins/zoom/zoom.cpp:114
-#, kde-format
-msgid "Move Mouse to Center"
-msgstr "თაგუნას ცენტრში მიტანა"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4245,7 +4235,17 @@ msgstr "სამუშაო მაგიდაზე გაჭვრეტა"
 msgid "Kill Window"
 msgstr "ფანჯრის ნაძალადევი დაღუპვა"
 
-#: useractions.cpp:1049
+#: useractions.cpp:986
+#, kde-format
+msgid "Move Mouse to Focus"
+msgstr "თაგუნას ფოკუსზე გადატანა"
+
+#: useractions.cpp:987
+#, kde-format
+msgid "Move Mouse to Center"
+msgstr "თაგუნას ცენტრში მიტანა"
+
+#: useractions.cpp:1052
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "ფანჯრის გააქტიურება (%1)"

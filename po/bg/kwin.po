@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-26 02:42+0000\n"
+"POT-Creation-Date: 2026-07-01 02:43+0000\n"
 "PO-Revision-Date: 2026-05-28 18:25+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -3071,16 +3071,6 @@ msgstr "Преместване на увеличената област наго
 msgid "Move Zoomed Area Downwards"
 msgstr "Преместване на намалената зона надолу"
 
-#: plugins/zoom/zoom.cpp:108
-#, kde-format
-msgid "Move Mouse to Focus"
-msgstr "Преместване на мишката във фокуса"
-
-#: plugins/zoom/zoom.cpp:114
-#, kde-format
-msgid "Move Mouse to Center"
-msgstr "Преместване на мишката в центъра"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4243,7 +4233,17 @@ msgstr "Поглед върху работния плот"
 msgid "Kill Window"
 msgstr "Принудително затваряне на прозорец"
 
-#: useractions.cpp:1049
+#: useractions.cpp:986
+#, kde-format
+msgid "Move Mouse to Focus"
+msgstr "Преместване на мишката във фокуса"
+
+#: useractions.cpp:987
+#, kde-format
+msgid "Move Mouse to Center"
+msgstr "Преместване на мишката в центъра"
+
+#: useractions.cpp:1052
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Активиране на прозорец (%1)"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-26 02:42+0000\n"
+"POT-Creation-Date: 2026-07-01 02:43+0000\n"
 "PO-Revision-Date: 2013-02-24 11:33+0530\n"
 "Last-Translator: Chetan Khona <chetan@kompkin.com>\n"
 "Language-Team: Marathi <kde-i18n-doc@kde.org>\n"
@@ -3110,17 +3110,6 @@ msgstr ""
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:108
-#, kde-format
-msgid "Move Mouse to Focus"
-msgstr "माऊस लक्ष्यावर हलवा"
-
-#: plugins/zoom/zoom.cpp:114
-#, fuzzy, kde-format
-#| msgid "Pack Window to the Left"
-msgid "Move Mouse to Center"
-msgstr "चौकट डावीकडे ठेवा"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4359,7 +4348,18 @@ msgstr "डेस्कटॉप वर जा (&D)"
 msgid "Kill Window"
 msgstr "चौकट बंद करा"
 
-#: useractions.cpp:1049
+#: useractions.cpp:986
+#, kde-format
+msgid "Move Mouse to Focus"
+msgstr "माऊस लक्ष्यावर हलवा"
+
+#: useractions.cpp:987
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Left"
+msgid "Move Mouse to Center"
+msgstr "चौकट डावीकडे ठेवा"
+
+#: useractions.cpp:1052
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "(%1) ही चौकट सक्रिय करा"

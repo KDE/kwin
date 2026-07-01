@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-26 02:42+0000\n"
+"POT-Creation-Date: 2026-07-01 02:43+0000\n"
 "PO-Revision-Date: 2026-05-26 22:25+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -3046,16 +3046,6 @@ msgstr "크기 조정된 영역을 위로 이동"
 msgid "Move Zoomed Area Downwards"
 msgstr "크기 조정된 영역을 아래로 이동"
 
-#: plugins/zoom/zoom.cpp:108
-#, kde-format
-msgid "Move Mouse to Focus"
-msgstr "마우스를 포커스로 이동"
-
-#: plugins/zoom/zoom.cpp:114
-#, kde-format
-msgid "Move Mouse to Center"
-msgstr "마우스를 가운데로 이동"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4217,7 +4207,17 @@ msgstr "바탕 화면 멀리 보기"
 msgid "Kill Window"
 msgstr "창 강제 종료"
 
-#: useractions.cpp:1049
+#: useractions.cpp:986
+#, kde-format
+msgid "Move Mouse to Focus"
+msgstr "마우스를 포커스로 이동"
+
+#: useractions.cpp:987
+#, kde-format
+msgid "Move Mouse to Center"
+msgstr "마우스를 가운데로 이동"
+
+#: useractions.cpp:1052
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "창 활성화(%1)"
