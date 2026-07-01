@@ -111,8 +111,17 @@ bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_
         //   is also very unlikely to yield the correct results.
         return false;
     }
-    if (!m_colorPipeline.isIdentity() && drmOutput()->colorPowerTradeoff() == BackendOutput::ColorPowerTradeoff::PreferAccuracy) {
-        return false;
+    if (!m_colorPipeline.isIdentity()) {
+        if (!m_plane || drmOutput()->colorPowerTradeoff() == BackendOutput::ColorPowerTradeoff::PreferAccuracy) {
+            return false;
+        }
+        const auto pipelines = m_plane->colorPipelines();
+        const bool match = std::ranges::any_of(pipelines, [this](DrmColorOp *colorop) {
+            return colorop->colorOp()->matchPipeline(gpu(), m_colorPipeline);
+        });
+        if (!match) {
+            return false;
+        }
     }
     // kernel documentation says that
     // "Devices that don’t support subpixel plane coordinates can ignore the fractional part."

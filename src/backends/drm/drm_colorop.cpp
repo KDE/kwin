@@ -232,10 +232,6 @@ static std::optional<Assignments> findColorPipelineAssignments(DrmAbstractColorO
 
 bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipeline &pipeline)
 {
-    if (m_cachedPipeline && *m_cachedPipeline == pipeline) {
-        commit->merge(m_cache.get());
-        return true;
-    }
     if (pipeline.isIdentity() && s_disableAmdgpuWorkaround.value_or(!commit->gpu()->drmDevice()->isAmdgpu())) {
         // Applying this config is very simple and cheap, so do it directly
         // and avoid invalidating the cache
@@ -244,6 +240,25 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
             currentOp->bypass(commit);
             currentOp = currentOp->next();
         }
+        return true;
+    }
+    if (m_cachedPipeline && *m_cachedPipeline == pipeline) {
+        commit->merge(m_cache.get());
+        return true;
+    }
+    if (!matchPipeline(commit->gpu(), pipeline)) {
+        return false;
+    }
+    commit->merge(m_cache.get());
+    return true;
+}
+
+bool DrmAbstractColorOp::matchPipeline(DrmGpu *gpu, const ColorPipeline &pipeline)
+{
+    if (pipeline.isIdentity()) {
+        return true;
+    }
+    if (m_cachedPipeline && *m_cachedPipeline == pipeline) {
         return true;
     }
     if (m_cachedPipelineFail && *m_cachedPipelineFail == pipeline) {
@@ -258,7 +273,7 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
     }
 
     // now actually program the properties
-    m_cache = std::make_unique<DrmAtomicCommit>(commit->gpu());
+    m_cache = std::make_unique<DrmAtomicCommit>(gpu);
     DrmAbstractColorOp *currentOp = this;
     while (currentOp) {
         const auto it = ret->assignments.find(currentOp);
@@ -270,7 +285,6 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
         }
         currentOp = currentOp->next();
     }
-    commit->merge(m_cache.get());
     m_cachedPipeline = pipeline;
     return true;
 }
