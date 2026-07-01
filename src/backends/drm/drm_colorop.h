@@ -45,6 +45,7 @@ public:
      * Attempts to match the color pipeline to this chain of hardware operations
      */
     bool matchPipeline(DrmAtomicCommit *commit, const ColorPipeline &pipeline);
+    bool matchPipeline(DrmGpu *gpu, const ColorPipeline &pipeline);
 
     virtual std::optional<Priority> colorOpPreference(const ColorOp::Operation &op) = 0;
     /**
