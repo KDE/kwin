@@ -19,5 +19,19 @@ public:
     }
 };
 
+#ifdef MESA_GLES_VERSION_OVERRIDE
+// this ensures the env var is set before the test application gets constructed
+// and thus before the GpuManager is initialized
+class EnvVarSetter
+{
+public:
+    EnvVarSetter(const char *name, const char *value)
+    {
+        setenv(name, value, true);
+    }
+};
+EnvVarSetter set("MESA_GLES_VERSION_OVERRIDE", MESA_GLES_VERSION_OVERRIDE);
+#endif
+
 WAYLANDTEST_MAIN(SceneOpenGLESTest)
 #include "scene_opengl_test.moc"
