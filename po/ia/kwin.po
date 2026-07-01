@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-30 00:45+0000\n"
+"POT-Creation-Date: 2026-07-01 00:47+0000\n"
 "PO-Revision-Date: 2026-05-22 12:12+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -3105,16 +3105,6 @@ msgstr "Move area sub zoom in alto"
 msgid "Move Zoomed Area Downwards"
 msgstr "Move area sub zoom a basso"
 
-#: plugins/zoom/zoom.cpp:122
-#, kde-format
-msgid "Move Mouse to Focus"
-msgstr "Move mus pro focalisar"
-
-#: plugins/zoom/zoom.cpp:128
-#, kde-format
-msgid "Move Mouse to Center"
-msgstr "Move mus pro centrar"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4278,7 +4268,17 @@ msgstr "Reguarda a Scriptorio"
 msgid "Kill Window"
 msgstr "Occide  fenestra"
 
-#: useractions.cpp:1080
+#: useractions.cpp:1017
+#, kde-format
+msgid "Move Mouse to Focus"
+msgstr "Move mus pro focalisar"
+
+#: useractions.cpp:1018
+#, kde-format
+msgid "Move Mouse to Center"
+msgstr "Move mus pro centrar"
+
+#: useractions.cpp:1083
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Activa fenestra (%1)"

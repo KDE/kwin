@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-30 00:45+0000\n"
+"POT-Creation-Date: 2026-07-01 00:47+0000\n"
 "PO-Revision-Date: 2008-12-27 14:55+0200\n"
 "Last-Translator: Ihar Hrachyshka <ihar.hrachyshka@gmail.com>\n"
 "Language-Team: Belarusian Latin <i18n@mova.org>\n"
@@ -3167,18 +3167,6 @@ msgstr ""
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:122
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
-msgid "Move Mouse to Focus"
-msgstr "Emulacyja myšy"
-
-#: plugins/zoom/zoom.cpp:128
-#, fuzzy, kde-format
-#| msgid "Move Window"
-msgid "Move Mouse to Center"
-msgstr "Pierasuń akno"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4435,7 +4423,19 @@ msgstr "Na &stoł"
 msgid "Kill Window"
 msgstr "Zabi akno"
 
-#: useractions.cpp:1080
+#: useractions.cpp:1017
+#, fuzzy, kde-format
+#| msgid "Mouse Emulation"
+msgid "Move Mouse to Focus"
+msgstr "Emulacyja myšy"
+
+#: useractions.cpp:1018
+#, fuzzy, kde-format
+#| msgid "Move Window"
+msgid "Move Mouse to Center"
+msgstr "Pierasuń akno"
+
+#: useractions.cpp:1083
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Uklučy akno (%1)"

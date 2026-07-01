@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-30 00:45+0000\n"
+"POT-Creation-Date: 2026-07-01 00:47+0000\n"
 "PO-Revision-Date: 2026-05-10 16:23+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -3099,16 +3099,6 @@ msgstr "உருப்பெருக்கப்பட்ட பரப்ப�
 msgid "Move Zoomed Area Downwards"
 msgstr "உருப்பெருக்கப்பட்ட பரப்பளவை கீழே நகர்த்து"
 
-#: plugins/zoom/zoom.cpp:122
-#, kde-format
-msgid "Move Mouse to Focus"
-msgstr "குவியத்திற்கு சுட்டியை நகர்த்து"
-
-#: plugins/zoom/zoom.cpp:128
-#, kde-format
-msgid "Move Mouse to Center"
-msgstr "மையத்திற்கு சுட்டியை நகர்த்து"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4278,7 +4268,17 @@ msgstr "பணிமேடையைக் காட்டு"
 msgid "Kill Window"
 msgstr "சாளரத்தை கட்டாயமாக மூடு"
 
-#: useractions.cpp:1080
+#: useractions.cpp:1017
+#, kde-format
+msgid "Move Mouse to Focus"
+msgstr "குவியத்திற்கு சுட்டியை நகர்த்து"
+
+#: useractions.cpp:1018
+#, kde-format
+msgid "Move Mouse to Center"
+msgstr "மையத்திற்கு சுட்டியை நகர்த்து"
+
+#: useractions.cpp:1083
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "சாளரத்தை செயல்படுத்து (%1)"

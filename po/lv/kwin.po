@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-30 00:45+0000\n"
+"POT-Creation-Date: 2026-07-01 00:47+0000\n"
 "PO-Revision-Date: 2026-02-06 14:38+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -3129,16 +3129,6 @@ msgstr "Pārvietot pietuvināto apgabalu augšup"
 msgid "Move Zoomed Area Downwards"
 msgstr "Pārvietot pietuvināto apgabalu lejup"
 
-#: plugins/zoom/zoom.cpp:122
-#, kde-format
-msgid "Move Mouse to Focus"
-msgstr "Pārvietot peli uz fokusu"
-
-#: plugins/zoom/zoom.cpp:128
-#, kde-format
-msgid "Move Mouse to Center"
-msgstr "Pārvietot peli uz centru"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4306,7 +4296,17 @@ msgstr "Palūkoties uz darbvirsmu"
 msgid "Kill Window"
 msgstr "Nobeigt logu"
 
-#: useractions.cpp:1080
+#: useractions.cpp:1017
+#, kde-format
+msgid "Move Mouse to Focus"
+msgstr "Pārvietot peli uz fokusu"
+
+#: useractions.cpp:1018
+#, kde-format
+msgid "Move Mouse to Center"
+msgstr "Pārvietot peli uz centru"
+
+#: useractions.cpp:1083
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktivizēt logu (%1)"

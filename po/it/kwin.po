@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-30 00:45+0000\n"
+"POT-Creation-Date: 2026-07-01 00:47+0000\n"
 "PO-Revision-Date: 2026-06-18 16:52+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -3120,16 +3120,6 @@ msgstr "Sposta l'area ingrandita in alto"
 msgid "Move Zoomed Area Downwards"
 msgstr "Sposta l'area ingrandita in basso"
 
-#: plugins/zoom/zoom.cpp:122
-#, kde-format
-msgid "Move Mouse to Focus"
-msgstr "Sposta il mouse sul fuoco"
-
-#: plugins/zoom/zoom.cpp:128
-#, kde-format
-msgid "Move Mouse to Center"
-msgstr "Sposta il mouse al centro"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4297,7 +4287,17 @@ msgstr "Dai un'occhiata al desktop"
 msgid "Kill Window"
 msgstr "Termina la finestra"
 
-#: useractions.cpp:1080
+#: useractions.cpp:1017
+#, kde-format
+msgid "Move Mouse to Focus"
+msgstr "Sposta il mouse sul fuoco"
+
+#: useractions.cpp:1018
+#, kde-format
+msgid "Move Mouse to Center"
+msgstr "Sposta il mouse al centro"
+
+#: useractions.cpp:1083
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Attiva finestra (%1)"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-30 00:45+0000\n"
+"POT-Creation-Date: 2026-07-01 00:47+0000\n"
 "PO-Revision-Date: 2002-10-26 11:38SAST\n"
 "Last-Translator: Lwandle Mgidlana <lwandle@translate.org.za>\n"
 "Language-Team: Xhosa <xhosa@translate.org.za>\n"
@@ -3056,17 +3056,6 @@ msgstr ""
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:122
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
-msgid "Move Mouse to Focus"
-msgstr "Ukulinganisa kwe Mouse"
-
-#: plugins/zoom/zoom.cpp:128
-#, fuzzy, kde-format
-msgid "Move Mouse to Center"
-msgstr "Windows"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4268,7 +4257,18 @@ msgstr "&Kwi Desktop"
 msgid "Kill Window"
 msgstr "Bulala Window"
 
-#: useractions.cpp:1080
+#: useractions.cpp:1017
+#, fuzzy, kde-format
+#| msgid "Mouse Emulation"
+msgid "Move Mouse to Focus"
+msgstr "Ukulinganisa kwe Mouse"
+
+#: useractions.cpp:1018
+#, fuzzy, kde-format
+msgid "Move Mouse to Center"
+msgstr "Windows"
+
+#: useractions.cpp:1083
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr ""

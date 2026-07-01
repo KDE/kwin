@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1740218 2026-06-30 01:27:35Z scripty $
+# $Id: kwin.po 1740279 2026-07-01 01:30:01Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-30 00:45+0000\n"
+"POT-Creation-Date: 2026-07-01 00:47+0000\n"
 "PO-Revision-Date: 2026-06-18 07:01+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -3105,16 +3105,6 @@ msgstr "Premakni povečano območje navzgor"
 msgid "Move Zoomed Area Downwards"
 msgstr "Premakni povečano območje navzdol"
 
-#: plugins/zoom/zoom.cpp:122
-#, kde-format
-msgid "Move Mouse to Focus"
-msgstr "Pomakni miško v osredotočenje"
-
-#: plugins/zoom/zoom.cpp:128
-#, kde-format
-msgid "Move Mouse to Center"
-msgstr "Premakni miško v sredino"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4276,7 +4266,17 @@ msgstr "Pokukaj na namizje"
 msgid "Kill Window"
 msgstr "Uniči okno"
 
-#: useractions.cpp:1080
+#: useractions.cpp:1017
+#, kde-format
+msgid "Move Mouse to Focus"
+msgstr "Pomakni miško v osredotočenje"
+
+#: useractions.cpp:1018
+#, kde-format
+msgid "Move Mouse to Center"
+msgstr "Premakni miško v sredino"
+
+#: useractions.cpp:1083
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Omogoči okno (%1)"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-30 00:45+0000\n"
+"POT-Creation-Date: 2026-07-01 00:47+0000\n"
 "PO-Revision-Date: 2023-02-20 11:15+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -3247,18 +3247,6 @@ msgstr "Di chuyển vùng được thu phóng lên trên"
 msgid "Move Zoomed Area Downwards"
 msgstr "Di chuyển vùng được thu phóng xuống dưới"
 
-#: plugins/zoom/zoom.cpp:122
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
-msgid "Move Mouse to Focus"
-msgstr "Không có nút chuột nào"
-
-#: plugins/zoom/zoom.cpp:128
-#, fuzzy, kde-format
-#| msgid "Move Window to the Center"
-msgid "Move Mouse to Center"
-msgstr "Di chuyển cửa sổ vào tâm"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4437,7 +4425,19 @@ msgstr "Ngó qua bàn làm việc"
 msgid "Kill Window"
 msgstr "Diệt cửa sổ"
 
-#: useractions.cpp:1080
+#: useractions.cpp:1017
+#, fuzzy, kde-format
+#| msgid "No Mouse Buttons"
+msgid "Move Mouse to Focus"
+msgstr "Không có nút chuột nào"
+
+#: useractions.cpp:1018
+#, fuzzy, kde-format
+#| msgid "Move Window to the Center"
+msgid "Move Mouse to Center"
+msgstr "Di chuyển cửa sổ vào tâm"
+
+#: useractions.cpp:1083
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Kích hoạt cửa sổ (%1)"

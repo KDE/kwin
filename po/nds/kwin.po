@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-30 00:45+0000\n"
+"POT-Creation-Date: 2026-07-01 00:47+0000\n"
 "PO-Revision-Date: 2014-08-21 16:21+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -3225,18 +3225,6 @@ msgstr "Grötter maakt Rebeet na baven verschuven"
 msgid "Move Zoomed Area Downwards"
 msgstr "Grötter maakt Rebeet na nerrn verschuven"
 
-#: plugins/zoom/zoom.cpp:122
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
-msgid "Move Mouse to Focus"
-msgstr "Muus-Emuleren"
-
-#: plugins/zoom/zoom.cpp:128
-#, fuzzy, kde-format
-#| msgid "Move Window to Group"
-msgid "Move Mouse to Center"
-msgstr "Finster na Koppel verschuven"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4474,7 +4462,19 @@ msgstr "Na Schrie&fdisch verschuven"
 msgid "Kill Window"
 msgstr "Finster afscheten"
 
-#: useractions.cpp:1080
+#: useractions.cpp:1017
+#, fuzzy, kde-format
+#| msgid "Mouse Emulation"
+msgid "Move Mouse to Focus"
+msgstr "Muus-Emuleren"
+
+#: useractions.cpp:1018
+#, fuzzy, kde-format
+#| msgid "Move Window to Group"
+msgid "Move Mouse to Center"
+msgstr "Finster na Koppel verschuven"
+
+#: useractions.cpp:1083
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Finster anmaken (%1)"

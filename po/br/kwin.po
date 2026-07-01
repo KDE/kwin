@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-30 00:45+0000\n"
+"POT-Creation-Date: 2026-07-01 00:47+0000\n"
 "PO-Revision-Date: 2004-07-08 17:18+0200\n"
 "Last-Translator: Thierry Vignaud <tvignaud.com>\n"
 "Language-Team: Brezhoneg <Suav.Icb.fr>\n"
@@ -3088,17 +3088,6 @@ msgstr ""
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:122
-#, kde-format
-msgid "Move Mouse to Focus"
-msgstr ""
-
-#: plugins/zoom/zoom.cpp:128
-#, fuzzy, kde-format
-#| msgid "Move Window"
-msgid "Move Mouse to Center"
-msgstr "Fiñval ar prenestr"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4355,7 +4344,18 @@ msgstr "D'ar &burev"
 msgid "Kill Window"
 msgstr "Lazhañ ar prenestr"
 
-#: useractions.cpp:1080
+#: useractions.cpp:1017
+#, kde-format
+msgid "Move Mouse to Focus"
+msgstr ""
+
+#: useractions.cpp:1018
+#, fuzzy, kde-format
+#| msgid "Move Window"
+msgid "Move Mouse to Center"
+msgstr "Fiñval ar prenestr"
+
+#: useractions.cpp:1083
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr ""

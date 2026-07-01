@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-30 00:45+0000\n"
+"POT-Creation-Date: 2026-07-01 00:47+0000\n"
 "PO-Revision-Date: 2014-10-20 20:21+0000\n"
 "Last-Translator: Lejla Agic <lagic1@etf.unsa.ba>\n"
 "Language-Team: bosanski <bs@li.org>\n"
@@ -3207,17 +3207,6 @@ msgstr "Pomjeri uvećano područje gore"
 msgid "Move Zoomed Area Downwards"
 msgstr "Pomjeri uvećano područje dolje"
 
-#: plugins/zoom/zoom.cpp:122
-#, kde-format
-msgid "Move Mouse to Focus"
-msgstr "Pomjeri miša u fokus"
-
-#: plugins/zoom/zoom.cpp:128
-#, fuzzy, kde-format
-#| msgid "Pack Window to the Left"
-msgid "Move Mouse to Center"
-msgstr "Spakuj prozor ulijevo"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4454,7 +4443,18 @@ msgstr "Pomjeri na ra&dnu površinu"
 msgid "Kill Window"
 msgstr "Ubij prozor"
 
-#: useractions.cpp:1080
+#: useractions.cpp:1017
+#, kde-format
+msgid "Move Mouse to Focus"
+msgstr "Pomjeri miša u fokus"
+
+#: useractions.cpp:1018
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Left"
+msgid "Move Mouse to Center"
+msgstr "Spakuj prozor ulijevo"
+
+#: useractions.cpp:1083
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktiviraj prozor (%1)"

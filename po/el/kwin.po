@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-30 00:45+0000\n"
+"POT-Creation-Date: 2026-07-01 00:47+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -3208,18 +3208,6 @@ msgstr "Μετακίνηση εστιασμένης περιοχής προς τ
 msgid "Move Zoomed Area Downwards"
 msgstr "Μετακίνηση εστιασμένης περιοχής προς τα κάτω"
 
-#: plugins/zoom/zoom.cpp:122
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
-msgid "Move Mouse to Focus"
-msgstr "Χωρίς κουμπιά ποντικιού"
-
-#: plugins/zoom/zoom.cpp:128
-#, fuzzy, kde-format
-#| msgid "Move Window to Group"
-msgid "Move Mouse to Center"
-msgstr "Μετακίνηση παραθύρου στην ομάδα"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4428,7 +4416,19 @@ msgstr "Στην επι&φάνεια εργασίας"
 msgid "Kill Window"
 msgstr "Σκότωμα παραθύρου"
 
-#: useractions.cpp:1080
+#: useractions.cpp:1017
+#, fuzzy, kde-format
+#| msgid "No Mouse Buttons"
+msgid "Move Mouse to Focus"
+msgstr "Χωρίς κουμπιά ποντικιού"
+
+#: useractions.cpp:1018
+#, fuzzy, kde-format
+#| msgid "Move Window to Group"
+msgid "Move Mouse to Center"
+msgstr "Μετακίνηση παραθύρου στην ομάδα"
+
+#: useractions.cpp:1083
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Ενεργοποίηση παραθύρου (%1)"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-30 00:45+0000\n"
+"POT-Creation-Date: 2026-07-01 00:47+0000\n"
 "PO-Revision-Date: 2010-09-24 21:47+0530\n"
 "Last-Translator: Rajesh Ranjan <rajesh672@gmail.com>\n"
 "Language-Team: Maithili <bhashaghar@googlegroups.com>\n"
@@ -3169,18 +3169,6 @@ msgstr ""
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:122
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
-msgid "Move Mouse to Focus"
-msgstr "माउस एमुलेशन"
-
-#: plugins/zoom/zoom.cpp:128
-#, fuzzy, kde-format
-#| msgid "Move Window"
-msgid "Move Mouse to Center"
-msgstr "विंडो हटाबू"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4437,7 +4425,19 @@ msgstr "डेस्कटाप पर (&D)"
 msgid "Kill Window"
 msgstr "विंडो खत्म करू"
 
-#: useractions.cpp:1080
+#: useractions.cpp:1017
+#, fuzzy, kde-format
+#| msgid "Mouse Emulation"
+msgid "Move Mouse to Focus"
+msgstr "माउस एमुलेशन"
+
+#: useractions.cpp:1018
+#, fuzzy, kde-format
+#| msgid "Move Window"
+msgid "Move Mouse to Center"
+msgstr "विंडो हटाबू"
+
+#: useractions.cpp:1083
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr ""

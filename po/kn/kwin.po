@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-30 00:45+0000\n"
+"POT-Creation-Date: 2026-07-01 00:47+0000\n"
 "PO-Revision-Date: 2011-07-11 12:17+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <kde-l10n-kn@kde.org>\n"
@@ -3183,18 +3183,6 @@ msgstr ""
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:122
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
-msgid "Move Mouse to Focus"
-msgstr "ಮೂಷಕ ಅನುವರ್ತನೆ (ಎಮುಲೇಶನ್)"
-
-#: plugins/zoom/zoom.cpp:128
-#, fuzzy, kde-format
-#| msgid "Move Window to Group"
-msgid "Move Mouse to Center"
-msgstr "ಕಿಟಕಿಯನ್ನು ಗುಂಪಿಗೆ ಜರುಗಿಸು"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4441,7 +4429,19 @@ msgstr "ಗಣಕತೆರೆಗೆ(&D)"
 msgid "Kill Window"
 msgstr "ಕಿಟಕಿಯನ್ನು ಕೊನೆಗಾಣಿಸು (ಕಿಲ್)"
 
-#: useractions.cpp:1080
+#: useractions.cpp:1017
+#, fuzzy, kde-format
+#| msgid "Mouse Emulation"
+msgid "Move Mouse to Focus"
+msgstr "ಮೂಷಕ ಅನುವರ್ತನೆ (ಎಮುಲೇಶನ್)"
+
+#: useractions.cpp:1018
+#, fuzzy, kde-format
+#| msgid "Move Window to Group"
+msgid "Move Mouse to Center"
+msgstr "ಕಿಟಕಿಯನ್ನು ಗುಂಪಿಗೆ ಜರುಗಿಸು"
+
+#: useractions.cpp:1083
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "ಕಿಟಕಿಯನ್ನು ಸಕ್ರಿಯಗೊಳಿಸು (%1)"

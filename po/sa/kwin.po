@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-30 00:45+0000\n"
+"POT-Creation-Date: 2026-07-01 00:47+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -3138,16 +3138,6 @@ msgstr "जूम कृतक्षेत्रं ऊर्ध्वं चा
 msgid "Move Zoomed Area Downwards"
 msgstr "जूम कृतक्षेत्रं अधः गच्छन्तु"
 
-#: plugins/zoom/zoom.cpp:122
-#, kde-format
-msgid "Move Mouse to Focus"
-msgstr "मूषकं फोकस प्रति चालयन्तु"
-
-#: plugins/zoom/zoom.cpp:128
-#, kde-format
-msgid "Move Mouse to Center"
-msgstr "मूषकं केन्द्रं प्रति स्थानान्तरयन्तु"
-
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
@@ -4319,7 +4309,17 @@ msgstr "डेस्कटॉप् इत्यत्र दृष्टिप�
 msgid "Kill Window"
 msgstr "किल विण्डो"
 
-#: useractions.cpp:1080
+#: useractions.cpp:1017
+#, kde-format
+msgid "Move Mouse to Focus"
+msgstr "मूषकं फोकस प्रति चालयन्तु"
+
+#: useractions.cpp:1018
+#, kde-format
+msgid "Move Mouse to Center"
+msgstr "मूषकं केन्द्रं प्रति स्थानान्तरयन्तु"
+
+#: useractions.cpp:1083
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "विण्डो सक्रियं कुर्वन्तु (%1) ."
