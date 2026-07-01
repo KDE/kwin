@@ -26,6 +26,7 @@
 
 #include <xkbcommon/xkbcommon.h>
 
+#include "qwayland-alpha-modifier-v1.h"
 #include "qwayland-color-management-v1.h"
 #include "qwayland-color-representation-v1.h"
 #include "qwayland-cursor-shape-v1.h"
@@ -826,6 +827,7 @@ enum class AdditionalWaylandInterface : uint64_t {
     LinuxDmabuf = 1ull << 31,
     ColorRepresentation = 1ull << 32,
     Viewporter = 1ull << 33,
+    AlphaModifierV1 = 1ull << 34,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -1040,6 +1042,20 @@ public:
     ~ColorRepresentationSurfaceV1() override;
 };
 
+class AlphaModifierV1 : public QtWayland::wp_alpha_modifier_v1
+{
+public:
+    explicit AlphaModifierV1(::wl_registry *registry, uint32_t id, int version);
+    ~AlphaModifierV1() override;
+};
+
+class AlphaModifierSurfaceV1 : public QtWayland::wp_alpha_modifier_surface_v1
+{
+public:
+    explicit AlphaModifierSurfaceV1(::wp_alpha_modifier_surface_v1 *object);
+    ~AlphaModifierSurfaceV1() override;
+};
+
 class WlKeyboard;
 class WlPointer;
 class WlTouch;
@@ -1189,6 +1205,7 @@ struct Connection
     std::unique_ptr<WaylandClient::LinuxDmabufV1> linuxDmabuf;
     std::unique_ptr<ColorRepresentationV1> colorRepresentation;
     std::unique_ptr<WaylandClient::Viewporter> viewporter;
+    std::unique_ptr<AlphaModifierV1> alphaModifier;
     // TODO port everything away from KWayland::Client::Seat
     std::unique_ptr<WlSeat> kwinSeat;
 };
@@ -1269,6 +1286,7 @@ XdgToplevelDragManagerV1 *toplevelDragManager();
 WaylandClient::LinuxDmabufV1 *linuxDmabuf();
 ColorRepresentationV1 *colorRepresentation();
 WaylandClient::Viewporter *viewporter();
+AlphaModifierV1 *alphaModifier();
 
 bool waitForWaylandSurface(Window *window);
 

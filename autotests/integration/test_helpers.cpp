@@ -579,6 +579,9 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
         if (flags & AdditionalWaylandInterface::Viewporter && interface == wp_viewporter_interface.name) {
             c->viewporter = std::make_unique<WaylandClient::Viewporter>(*c->registry, name, 1u);
         }
+        if (flags & AdditionalWaylandInterface::AlphaModifierV1 && interface == wp_alpha_modifier_v1_interface.name) {
+            c->alphaModifier = std::make_unique<AlphaModifierV1>(*c->registry, name, version);
+        }
         if (flags.testFlag(AdditionalWaylandInterface::Seat) && interface == wl_seat_interface.name) {
             c->kwinSeat = std::make_unique<WlSeat>(*c->registry, name, version);
         }
@@ -729,6 +732,7 @@ Connection::~Connection()
     linuxDmabuf.reset();
     colorRepresentation.reset();
     viewporter.reset();
+    alphaModifier.reset();
     kwinSeat.reset();
 
     delete queue; // Must be destroyed last
@@ -942,6 +946,11 @@ WaylandClient::LinuxDmabufV1 *linuxDmabuf()
 ColorRepresentationV1 *colorRepresentation()
 {
     return s_waylandConnection->colorRepresentation.get();
+}
+
+AlphaModifierV1 *alphaModifier()
+{
+    return s_waylandConnection->alphaModifier.get();
 }
 
 WaylandClient::Viewporter *viewporter()
@@ -1988,6 +1997,26 @@ ColorRepresentationSurfaceV1::ColorRepresentationSurfaceV1(::wp_color_representa
 }
 
 ColorRepresentationSurfaceV1::~ColorRepresentationSurfaceV1()
+{
+    destroy();
+}
+
+AlphaModifierV1::AlphaModifierV1(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::wp_alpha_modifier_v1(registry, id, version)
+{
+}
+
+AlphaModifierV1::~AlphaModifierV1()
+{
+    destroy();
+}
+
+AlphaModifierSurfaceV1::AlphaModifierSurfaceV1(::wp_alpha_modifier_surface_v1 *object)
+    : QtWayland::wp_alpha_modifier_surface_v1(object)
+{
+}
+
+AlphaModifierSurfaceV1::~AlphaModifierSurfaceV1()
 {
     destroy();
 }
