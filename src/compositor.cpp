@@ -616,11 +616,12 @@ std::pair<QList<Compositor::LayerData>, bool> Compositor::setupLayers(SceneView 
 
     // import buffers and prepare rendering
     for (auto &layer : layers) {
-        if (type != SetupType::Fallback && prepareDirectScanout(layer.view, logicalOutput, backendOutput, frame)) {
-            layer.directScanout = true;
-        } else if (!layer.directScanoutOnly && prepareRendering(layer.view, logicalOutput, backendOutput, layer.requiredAlphaBits)) {
-            layer.directScanout = false;
-        } else {
+        if (layer.directScanout && type != SetupType::Fallback && !prepareDirectScanout(layer.view, logicalOutput, backendOutput, frame)) {
+            return std::make_pair(layers, false);
+        }
+    }
+    for (auto &layer : layers) {
+        if (!layer.directScanout && !prepareRendering(layer.view, logicalOutput, backendOutput, layer.requiredAlphaBits)) {
             return std::make_pair(layers, false);
         }
     }
