@@ -30,10 +30,10 @@ void AlphaModifierManagerV1::wp_alpha_modifier_v1_get_surface(Resource *resource
     SurfaceInterface *surf = SurfaceInterface::get(surface);
     SurfaceInterfacePrivate *priv = SurfaceInterfacePrivate::get(surf);
     if (priv->alphaModifier) {
-        wl_resource_post_error(surface, error_already_constructed, "wl_surface already has an alpha modifier surface");
+        wl_resource_post_error(resource->handle, error_already_constructed, "wl_surface already has an alpha modifier surface");
         return;
     }
-    new AlphaModifierSurfaceV1(resource->client(), id, resource->version(), surf);
+    priv->alphaModifier = new AlphaModifierSurfaceV1(resource->client(), id, resource->version(), surf);
 }
 
 AlphaModifierSurfaceV1::AlphaModifierSurfaceV1(wl_client *client, uint32_t id, uint32_t version, SurfaceInterface *surface)
@@ -46,6 +46,7 @@ AlphaModifierSurfaceV1::~AlphaModifierSurfaceV1()
 {
     if (m_surface) {
         const auto priv = SurfaceInterfacePrivate::get(m_surface);
+        priv->alphaModifier = nullptr;
         priv->pending->alphaMultiplier = 1;
         priv->pending->committed |= SurfaceState::Field::AlphaMultiplier;
     }

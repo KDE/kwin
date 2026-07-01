@@ -19,6 +19,7 @@ qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
         ${WaylandProtocols_DATADIR}/stable/tablet/tablet-v2.xml
         ${WaylandProtocols_DATADIR}/stable/viewporter/viewporter.xml
         ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
+        ${WaylandProtocols_DATADIR}/staging/alpha-modifier/alpha-modifier-v1.xml
         ${WaylandProtocols_DATADIR}/staging/color-management/color-management-v1.xml
         ${WaylandProtocols_DATADIR}/staging/color-representation/color-representation-v1.xml
         ${WaylandProtocols_DATADIR}/staging/cursor-shape/cursor-shape-v1.xml
@@ -157,6 +158,7 @@ integrationTest(NAME testStickyKeys SRCS sticky_keys_test.cpp)
 integrationTest(NAME testWorkspace SRCS workspace_test.cpp)
 integrationTest(NAME testMouseActions SRCS mouseactions_test.cpp LIBS)
 integrationTest(NAME testColorManagement SRCS test_colormanagement.cpp)
+integrationTest(NAME testAlphaModifier SRCS alpha_modifier_test.cpp)
 integrationTest(NAME testKeyboardInput SRCS keyboard_input_test.cpp)
 integrationTest(NAME testFifo SRCS test_fifo.cpp PROPERTIES RUN_SERIAL TRUE)
 integrationTest(NAME testMouseKeys SRCS mouse_keys_test.cpp)
