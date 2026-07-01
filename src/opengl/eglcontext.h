@@ -156,7 +156,6 @@ private:
     std::unique_ptr<GLVertexBuffer> m_streamingBuffer;
     std::unique_ptr<IndexBuffer> m_indexBuffer;
     QStack<GLFramebuffer *> m_fbos;
-    uint32_t m_vao = 0;
     bool m_failed = false;
 };
 

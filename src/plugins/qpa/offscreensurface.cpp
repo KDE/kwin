@@ -9,7 +9,6 @@
 
 #include "offscreensurface.h"
 #include "core/outputbackend.h"
-#include "eglhelpers.h"
 #include "opengl/egldisplay.h"
 
 #include <QOffscreenSurface>

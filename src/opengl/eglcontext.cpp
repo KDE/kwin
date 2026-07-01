@@ -138,6 +138,11 @@ bool EglContext::makeCurrent(EGLSurface surface)
         Q_ASSERT(m_handle != EGL_NO_CONTEXT);
         Q_ASSERT(eglGetCurrentContext() == m_handle);
         s_currentContext = this;
+        if (auto fbo = currentFramebuffer()) {
+            // this is necessary because Qt may change the current framebuffer
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo->handle());
+            glViewport(0, 0, fbo->size().width(), fbo->size().height());
+        }
     } else {
         // QOpenGLContext::doneCurrent unset the context, we need to mirror that here!
         s_currentContext = nullptr;

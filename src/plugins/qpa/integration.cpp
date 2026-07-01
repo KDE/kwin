@@ -157,11 +157,11 @@ QStringList Integration::themeNames() const
 QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext *context) const
 {
     EglBackend *egl = qobject_cast<EglBackend *>(Compositor::self()->backend());
-    if (!egl || !egl->openglShareContext()) {
+    if (!egl) {
         qCWarning(KWIN_QPA) << "Attempting to create a QOpenGLContext before the scene is initialized";
         return nullptr;
     }
-    return new EGLPlatformContext(context, egl->openglShareContext());
+    return new EGLPlatformContext(egl->openglContextRef());
 }
 
 QPlatformAccessibility *Integration::accessibility() const
