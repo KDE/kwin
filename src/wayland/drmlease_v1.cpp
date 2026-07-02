@@ -86,7 +86,7 @@ DrmLeaseDeviceV1Interface::~DrmLeaseDeviceV1Interface()
     }
 }
 
-void DrmLeaseDeviceV1Interface::addOutput(DrmAbstractOutput *output)
+void DrmLeaseDeviceV1Interface::addOutput(BackendOutput *output)
 {
     DrmOutput *drmOutput = qobject_cast<DrmOutput *>(output);
     if (!drmOutput || !drmOutput->isNonDesktop()) {
@@ -99,7 +99,7 @@ void DrmLeaseDeviceV1Interface::addOutput(DrmAbstractOutput *output)
     }
 }
 
-void DrmLeaseDeviceV1Interface::removeOutput(DrmAbstractOutput *output)
+void DrmLeaseDeviceV1Interface::removeOutput(BackendOutput *output)
 {
     const auto it = m_connectors.find(output);
     if (it != m_connectors.end()) {
@@ -221,7 +221,7 @@ void DrmLeaseDeviceV1Interface::offerConnector(DrmLeaseConnectorV1Interface *con
     }
 }
 
-DrmLeaseConnectorV1Interface *DrmLeaseDeviceV1Interface::connectorForOutput(DrmAbstractOutput *output) const
+DrmLeaseConnectorV1Interface *DrmLeaseDeviceV1Interface::connectorForOutput(BackendOutput *output) const
 {
     const auto it = m_connectors.find(output);
     return it != m_connectors.end() ? it->second.get() : nullptr;

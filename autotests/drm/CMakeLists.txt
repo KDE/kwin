@@ -1,6 +1,5 @@
 set(mockDRM_SRCS
     mock_drm.cpp
-    ../../src/backends/drm/drm_abstract_output.cpp
     ../../src/backends/drm/drm_backend.cpp
     ../../src/backends/drm/drm_blob.cpp
     ../../src/backends/drm/drm_buffer.cpp

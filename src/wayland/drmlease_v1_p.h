@@ -33,8 +33,8 @@ public:
     explicit DrmLeaseDeviceV1Interface(Display *display, DrmGpu *gpu);
     ~DrmLeaseDeviceV1Interface();
 
-    void addOutput(DrmAbstractOutput *output);
-    void removeOutput(DrmAbstractOutput *output);
+    void addOutput(BackendOutput *output);
+    void removeOutput(BackendOutput *output);
     void onGpuActiveChanged(bool active);
     void done();
     void remove();
@@ -43,7 +43,7 @@ public:
     void addLease(DrmLeaseV1Interface *lease);
     void removeLease(DrmLeaseV1Interface *lease);
     void offerConnector(DrmLeaseConnectorV1Interface *connector);
-    DrmLeaseConnectorV1Interface *connectorForOutput(DrmAbstractOutput *output) const;
+    DrmLeaseConnectorV1Interface *connectorForOutput(BackendOutput *output) const;
     void offerAvailableConnectors();
 
     bool hasDrmMaster() const;
@@ -60,7 +60,7 @@ private:
 
     DrmGpu *const m_gpu;
     bool m_hasDrmMaster = true;
-    std::map<DrmAbstractOutput *, std::unique_ptr<DrmLeaseConnectorV1Interface>> m_connectors;
+    std::map<BackendOutput *, std::unique_ptr<DrmLeaseConnectorV1Interface>> m_connectors;
     QQueue<wl_resource *> m_pendingFds;
     QList<DrmLeaseRequestV1Interface *> m_leaseRequests;
     QList<DrmLeaseV1Interface *> m_leases;

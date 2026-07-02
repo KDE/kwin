@@ -35,7 +35,6 @@ class DrmConnector;
 class DrmPlane;
 class DrmBackend;
 class EglGbmBackend;
-class DrmAbstractOutput;
 class DrmRenderBackend;
 class DrmVirtualOutput;
 class EglDisplay;
@@ -130,8 +129,8 @@ public:
 
 Q_SIGNALS:
     void activeChanged(bool active);
-    void outputAdded(DrmAbstractOutput *output);
-    void outputRemoved(DrmAbstractOutput *output);
+    void outputAdded(BackendOutput *output);
+    void outputRemoved(BackendOutput *output);
     void renderDeviceChanged();
 
 private:
