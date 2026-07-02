@@ -34,8 +34,6 @@ DrmAbstractColorOp *DrmAbstractColorOp::next() const
     return m_next;
 }
 
-static const auto s_disableAmdgpuWorkaround = environmentVariableBoolValue("KWIN_DRM_DISABLE_AMD_GAMMA_WORKAROUND");
-
 bool DrmAbstractColorOp::canBypass() const
 {
     return m_features & Feature::Bypass;
@@ -232,7 +230,7 @@ static std::optional<Assignments> findColorPipelineAssignments(DrmAbstractColorO
 
 bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipeline &pipeline)
 {
-    if (pipeline.isIdentity() && s_disableAmdgpuWorkaround.value_or(!commit->gpu()->drmDevice()->isAmdgpu())) {
+    if (pipeline.isIdentity()) {
         // Applying this config is very simple and cheap, so do it directly
         // and avoid invalidating the cache
         DrmAbstractColorOp *currentOp = this;
@@ -255,7 +253,7 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
 
 bool DrmAbstractColorOp::matchPipeline(DrmGpu *gpu, const ColorPipeline &pipeline)
 {
-    if (pipeline.isIdentity() && s_disableAmdgpuWorkaround.value_or(!gpu->drmDevice()->isAmdgpu())) {
+    if (pipeline.isIdentity()) {
         return true;
     }
     if (m_cachedPipeline && *m_cachedPipeline == pipeline) {
