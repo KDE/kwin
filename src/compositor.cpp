@@ -89,9 +89,19 @@ Compositor::Compositor(QObject *workspace)
     FTraceLogger::create();
 
     connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, [this](RenderDevice *device) {
-        if (m_renderDevice == device) {
-            qCFatal(KWIN_CORE, "Primary GPU was removed!");
+        if (m_renderDevice != device) {
+            return;
         }
+        if (GpuManager::self()->renderDevices().empty()) {
+            qCFatal(KWIN_CORE, "All GPUs were removed!");
+            return;
+        }
+        qCWarning(KWIN_CORE, "Primary GPU %s was removed", qPrintable(m_renderDevice->drmDevice()->path()));
+        stop();
+        m_renderDevice = nullptr;
+        // this will choose a new render device
+        start();
+        qCWarning(KWIN_CORE, "Switched primary GPU to %s", qPrintable(m_renderDevice->drmDevice()->path()));
     });
 }
 
