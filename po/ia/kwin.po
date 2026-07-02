@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-01 02:43+0000\n"
-"PO-Revision-Date: 2026-05-22 11:54+0200\n"
+"POT-Creation-Date: 2026-07-02 02:40+0000\n"
+"PO-Revision-Date: 2026-07-01 16:51+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -1645,7 +1645,7 @@ msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
-"Socket XWayland a usr per connexiones de Wwayland in arrivata. Isto poter "
+"Socket XWayland a usar per connexiones de Xwayland in arrivata. Isto pote "
 "esser assignate multiple vices"
 
 #: main_wayland.cpp:370
@@ -2609,12 +2609,12 @@ msgstr "Non poteva trovar sortita"
 msgid "Invalid region"
 msgstr "Region invalide"
 
-#: plugins/screencast/screencaststream.cpp:376
+#: plugins/screencast/screencaststream.cpp:377
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "Compositor de OpenGL es requirite per screencasting"
 
-#: plugins/screencast/screencaststream.cpp:384
+#: plugins/screencast/screencaststream.cpp:385
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Falleva a crear fluxo (stream) de PipeWire"

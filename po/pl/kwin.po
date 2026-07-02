@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1740283 $
+# Version: $Revision: 1740380 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011-2026 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-01 02:43+0000\n"
+"POT-Creation-Date: 2026-07-02 02:40+0000\n"
 "PO-Revision-Date: 2026-05-09 16:01+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -2621,12 +2621,12 @@ msgstr "Nie można znaleźć wyjścia"
 msgid "Invalid region"
 msgstr "Nieprawidłowy obszar"
 
-#: plugins/screencast/screencaststream.cpp:376
+#: plugins/screencast/screencaststream.cpp:377
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "Do nagrywania ekranu wymagane jest komponowanie OpenGL"
 
-#: plugins/screencast/screencaststream.cpp:384
+#: plugins/screencast/screencaststream.cpp:385
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Nie udało się utworzyć strumienia PipeWire"
