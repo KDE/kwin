@@ -193,6 +193,14 @@ bool DpmsInputEventFilter::tabletPadDialEvent(TabletPadDialEvent *event)
     return true;
 }
 
+bool DpmsInputEventFilter::switchEvent(SwitchEvent *event)
+{
+    if (event->device->isLidSwitch() && event->state == SwitchState::Off) {
+        notify();
+    }
+    return false;
+}
+
 void DpmsInputEventFilter::notify()
 {
     workspace()->requestDpmsState(Workspace::DpmsState::On);
