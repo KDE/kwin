@@ -42,6 +42,7 @@ public:
     bool tabletPadStripEvent(TabletPadStripEvent *event) override;
     bool tabletPadRingEvent(TabletPadRingEvent *event) override;
     bool tabletPadDialEvent(TabletPadDialEvent *event) override;
+    bool switchEvent(SwitchEvent *event) override;
 
 private Q_SLOTS:
     void updateProximitySensor();
