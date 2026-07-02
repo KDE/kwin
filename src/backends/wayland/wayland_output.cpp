@@ -120,7 +120,6 @@ const wp_fractional_scale_v1_listener WaylandOutput::s_fractionalScaleListener{
 
 WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
     : BackendOutput()
-    , m_renderLoop(std::make_unique<RenderLoop>(this))
     , m_surface(backend->display()->compositor()->createSurface())
     , m_xdgShellSurface(backend->display()->xdgShell()->createSurface(m_surface.get()))
     , m_backend(backend)
@@ -411,11 +410,6 @@ WaylandCursor *WaylandOutput::cursor() const
 WaylandBackend *WaylandOutput::backend() const
 {
     return m_backend;
-}
-
-RenderLoop *WaylandOutput::renderLoop() const
-{
-    return m_renderLoop.get();
 }
 
 bool WaylandOutput::presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay)

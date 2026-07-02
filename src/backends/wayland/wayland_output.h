@@ -88,7 +88,6 @@ public:
     WaylandOutput(const QString &name, WaylandBackend *backend);
     ~WaylandOutput() override;
 
-    RenderLoop *renderLoop() const override;
     bool presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
 
     void init(const QSize &pixelSize, qreal scale, bool fullscreen);
@@ -124,7 +123,6 @@ private:
     static void handleFrame(void *data, wl_callback *callback, uint32_t time);
 
     std::vector<std::unique_ptr<OutputLayer>> m_layers;
-    std::unique_ptr<RenderLoop> m_renderLoop;
     std::unique_ptr<KWayland::Client::Surface> m_surface;
     std::unique_ptr<KWayland::Client::XdgShellSurface> m_xdgShellSurface;
     std::unique_ptr<KWayland::Client::LockedPointer> m_pointerLock;

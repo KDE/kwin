@@ -22,7 +22,6 @@ namespace KWin
 VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal, const QSize &physicalSizeInMM, OutputTransform panelOrientation, const QByteArray &edid, std::optional<QByteArray> edidIdentifierOverride, const std::optional<QString> &connectorName, const std::optional<QByteArray> &mstPath)
     : BackendOutput()
     , m_backend(parent)
-    , m_renderLoop(std::make_unique<RenderLoop>(this))
     , m_vsyncMonitor(SoftwareVsyncMonitor::create())
 {
     connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &VirtualOutput::vblank);
@@ -42,11 +41,6 @@ VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal, const QSize 
 
 VirtualOutput::~VirtualOutput()
 {
-}
-
-RenderLoop *VirtualOutput::renderLoop() const
-{
-    return m_renderLoop.get();
 }
 
 bool VirtualOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)

@@ -205,6 +205,7 @@ std::optional<AutoBrightnessCurve> AutoBrightnessCurve::fromArray(const QJsonArr
 }
 
 BackendOutput::BackendOutput()
+    : m_renderLoop(std::make_unique<RenderLoop>(this))
 {
 }
 
@@ -832,6 +833,11 @@ QList<OutputModeline> BackendOutput::customModes() const
 uint32_t BackendOutput::abmLevel() const
 {
     return m_state.abmLevel;
+}
+
+RenderLoop *BackendOutput::renderLoop() const
+{
+    return m_renderLoop.get();
 }
 
 } // namespace KWin

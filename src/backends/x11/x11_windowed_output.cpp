@@ -138,7 +138,6 @@ void X11WindowedCursor::update(const QImage &image, const QPointF &hotspot)
 
 X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
     : BackendOutput()
-    , m_renderLoop(std::make_unique<RenderLoop>(this))
     , m_backend(backend)
 {
     m_window = xcb_generate_id(m_backend->connection());
@@ -173,11 +172,6 @@ void X11WindowedOutput::addExposedArea(const Rect &rect)
 void X11WindowedOutput::clearExposedArea()
 {
     m_exposedArea = Region();
-}
-
-RenderLoop *X11WindowedOutput::renderLoop() const
-{
-    return m_renderLoop.get();
 }
 
 X11WindowedBackend *X11WindowedOutput::backend() const

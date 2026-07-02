@@ -23,11 +23,6 @@ bool FakeBackendOutput::present(const QList<KWin::OutputLayer *> &layersToUpdate
     return false;
 }
 
-KWin::RenderLoop *FakeBackendOutput::renderLoop() const
-{
-    return nullptr;
-}
-
 void FakeBackendOutput::setMode(QSize size, uint32_t refreshRate)
 {
     auto mode = std::make_shared<KWin::OutputMode>(KWin::OutputModeline(size, refreshRate));
