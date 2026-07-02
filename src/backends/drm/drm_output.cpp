@@ -44,7 +44,6 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn, DrmPipeline *pip
     : m_gpu(conn->gpu())
     , m_pipeline(pipeline)
     , m_connector(conn)
-    , m_renderLoop(std::make_unique<RenderLoop>(this))
 {
     m_pipeline->setOutput(this);
     if (m_gpu->atomicModeSetting() && !s_disableTripleBuffering.value_or(false)) {
@@ -887,11 +886,6 @@ TransferFunction::Type DrmOutput::wireTransfer(const State &next) const
     } else {
         return TransferFunction::Type::gamma22;
     }
-}
-
-RenderLoop *DrmOutput::renderLoop() const
-{
-    return m_renderLoop.get();
 }
 
 }

@@ -27,7 +27,6 @@ public:
     explicit VirtualOutput(VirtualBackend *parent, bool internal, const QSize &physicalSizeInMM, OutputTransform panelOrientation, const QByteArray &edid, std::optional<QByteArray> edidIdentifierOverride, const std::optional<QString> &connectorName, const std::optional<QByteArray> &mstPath);
     ~VirtualOutput() override;
 
-    RenderLoop *renderLoop() const override;
     bool testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
     bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
 
@@ -45,7 +44,6 @@ private:
 
     std::unique_ptr<OutputLayer> m_layer;
     VirtualBackend *m_backend;
-    std::unique_ptr<RenderLoop> m_renderLoop;
     std::unique_ptr<SoftwareVsyncMonitor> m_vsyncMonitor;
     int m_gammaSize = 200;
     bool m_gammaResult = true;

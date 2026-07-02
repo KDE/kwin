@@ -81,8 +81,6 @@ public:
     explicit X11WindowedOutput(X11WindowedBackend *backend);
     ~X11WindowedOutput() override;
 
-    RenderLoop *renderLoop() const override;
-
     void init(const QSize &pixelSize, qreal scale, bool fullscreen);
     void resize(const QSize &pixelSize);
 
@@ -131,7 +129,6 @@ private:
     xcb_present_event_t m_presentEvent = XCB_NONE;
     xcb_pixmap_t m_pendingBuffer = XCB_PIXMAP_NONE;
     std::unique_ptr<NETWinInfo> m_winInfo;
-    std::unique_ptr<RenderLoop> m_renderLoop;
     std::unique_ptr<X11WindowedCursor> m_cursor;
     std::unordered_map<GraphicsBuffer *, std::unique_ptr<X11WindowedBuffer>> m_buffers;
     QPoint m_hostPosition;

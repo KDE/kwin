@@ -21,10 +21,6 @@ public:
 
     bool testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
     bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
-    RenderLoop *renderLoop() const override;
-
-private:
-    std::unique_ptr<RenderLoop> m_renderLoop;
 };
 
 } // namespace KWin
