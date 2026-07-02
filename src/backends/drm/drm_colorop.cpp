@@ -255,7 +255,7 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
 
 bool DrmAbstractColorOp::matchPipeline(DrmGpu *gpu, const ColorPipeline &pipeline)
 {
-    if (pipeline.isIdentity()) {
+    if (pipeline.isIdentity() && s_disableAmdgpuWorkaround.value_or(!gpu->drmDevice()->isAmdgpu())) {
         return true;
     }
     if (m_cachedPipeline && *m_cachedPipeline == pipeline) {
