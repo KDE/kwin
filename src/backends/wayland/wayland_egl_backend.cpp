@@ -216,8 +216,9 @@ void WaylandEglCursorLayer::releaseBuffers()
     m_swapchain.reset();
 }
 
-WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
-    : m_backend(b)
+WaylandEglBackend::WaylandEglBackend(WaylandBackend *b, RenderDevice *device)
+    : EglBackend(device)
+    , m_backend(b)
 {
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandEglBackend::createOutputLayers);
 
@@ -254,19 +255,9 @@ void WaylandEglBackend::createOutputLayers(BackendOutput *output)
     waylandOutput->setOutputLayers(std::move(layers));
 }
 
-bool WaylandEglBackend::initializeEgl()
-{
-    if (!initClientExtensions()) {
-        return false;
-    }
-    Q_ASSERT(m_backend->renderDevice());
-    setRenderDevice(m_backend->renderDevice());
-    return true;
-}
-
 bool WaylandEglBackend::init()
 {
-    if (!initializeEgl()) {
+    if (!initClientExtensions()) {
         qCWarning(KWIN_WAYLAND_BACKEND, "Could not initialize egl");
         return false;
     }

@@ -8,9 +8,6 @@
 */
 #include "virtual_backend.h"
 
-#include "core/drmdevice.h"
-#include "core/gpumanager.h"
-#include "core/renderdevice.h"
 #include "virtual_egl_backend.h"
 #include "virtual_output.h"
 
@@ -25,10 +22,6 @@ namespace KWin
 VirtualBackend::VirtualBackend(QObject *parent)
     : OutputBackend(parent)
 {
-    const auto &devices = GpuManager::self()->renderDevices();
-    if (!devices.empty()) {
-        m_renderDevice = devices.front().get();
-    }
 }
 
 VirtualBackend::~VirtualBackend()
@@ -45,16 +38,12 @@ bool VirtualBackend::initialize()
 
 QList<CompositingType> VirtualBackend::supportedCompositors() const
 {
-    QList<CompositingType> compositingTypes;
-    if (m_renderDevice) {
-        compositingTypes.append(OpenGLCompositing);
-    }
-    return compositingTypes;
+    return {OpenGLCompositing};
 }
 
-std::unique_ptr<EglBackend> VirtualBackend::createOpenGLBackend()
+std::unique_ptr<EglBackend> VirtualBackend::createOpenGLBackend(RenderDevice *renderDevice)
 {
-    return std::make_unique<VirtualEglBackend>(this);
+    return std::make_unique<VirtualEglBackend>(this, renderDevice);
 }
 
 BackendOutput *VirtualBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, qreal scale)
@@ -118,11 +107,6 @@ void VirtualBackend::setVirtualOutputs(const QList<OutputInfo> &infos)
     }
 
     Q_EMIT outputsQueried();
-}
-
-RenderDevice *VirtualBackend::renderDevice() const
-{
-    return m_renderDevice;
 }
 
 } // namespace KWin

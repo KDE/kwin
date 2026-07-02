@@ -34,6 +34,8 @@ class KWIN_EXPORT EglBackend : public RenderBackend
     Q_OBJECT
 
 public:
+    explicit EglBackend(RenderDevice *device);
+
     virtual bool init() = 0;
     CompositingType compositingType() const override final;
     bool checkGraphicsReset() override final;
@@ -54,10 +56,7 @@ public:
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size);
 
 protected:
-    EglBackend();
-
     void cleanup();
-    void setRenderDevice(RenderDevice *device);
     bool initClientExtensions();
     void initWayland();
     bool hasClientExtension(const QByteArray &ext) const;

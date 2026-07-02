@@ -88,8 +88,9 @@ GLTexture *VirtualEglLayer::texture() const
     return m_current ? m_current->texture().get() : nullptr;
 }
 
-VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)
-    : m_backend(b)
+VirtualEglBackend::VirtualEglBackend(VirtualBackend *b, RenderDevice *renderDevice)
+    : EglBackend(renderDevice)
+    , m_backend(b)
 {
 }
 
@@ -107,19 +108,9 @@ VirtualBackend *VirtualEglBackend::backend() const
     return m_backend;
 }
 
-bool VirtualEglBackend::initializeEgl()
-{
-    if (!initClientExtensions()) {
-        return false;
-    }
-    Q_ASSERT(m_backend->renderDevice());
-    setRenderDevice(m_backend->renderDevice());
-    return true;
-}
-
 bool VirtualEglBackend::init()
 {
-    if (!initializeEgl()) {
+    if (!initClientExtensions()) {
         qCWarning(KWIN_VIRTUAL, "Could not initialize egl");
         return false;
     }

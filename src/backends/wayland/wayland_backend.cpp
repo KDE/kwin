@@ -504,9 +504,9 @@ std::unique_ptr<InputBackend> WaylandBackend::createInputBackend()
     return std::make_unique<WaylandInputBackend>(this);
 }
 
-std::unique_ptr<EglBackend> WaylandBackend::createOpenGLBackend()
+std::unique_ptr<EglBackend> WaylandBackend::createOpenGLBackend(RenderDevice *device)
 {
-    return std::make_unique<WaylandEglBackend>(this);
+    return std::make_unique<WaylandEglBackend>(this, device);
 }
 
 WaylandOutput *WaylandBackend::findOutput(KWayland::Client::Surface *nativeSurface) const

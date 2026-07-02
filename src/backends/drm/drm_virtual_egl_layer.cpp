@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_virtual_egl_layer.h"
+#include "core/renderdevice.h"
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
@@ -106,13 +107,13 @@ std::shared_ptr<EglSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
             const auto modifiers = it.value();
 
             if (allowModifiers && !modifiers.empty()) {
-                if (auto swapchain = EglSwapchain::create(m_eglBackend->gpu()->drmDevice()->allocator(), m_eglBackend->openglContext(), size, format, modifiers, false)) {
+                if (auto swapchain = EglSwapchain::create(m_eglBackend->renderDevice()->allocator(), m_eglBackend->openglContext(), size, format, modifiers, false)) {
                     return swapchain;
                 }
             }
 
             static const ModifierList implicitModifier{DRM_FORMAT_MOD_INVALID};
-            if (auto swapchain = EglSwapchain::create(m_eglBackend->gpu()->drmDevice()->allocator(), m_eglBackend->openglContext(), size, format, implicitModifier, false)) {
+            if (auto swapchain = EglSwapchain::create(m_eglBackend->renderDevice()->allocator(), m_eglBackend->openglContext(), size, format, implicitModifier, false)) {
                 return swapchain;
             }
         }

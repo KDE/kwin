@@ -95,7 +95,7 @@ class WaylandEglBackend : public EglBackend
     Q_OBJECT
 
 public:
-    WaylandEglBackend(WaylandBackend *b);
+    WaylandEglBackend(WaylandBackend *b, RenderDevice *device);
     ~WaylandEglBackend() override;
 
     WaylandBackend *backend() const;
@@ -104,7 +104,6 @@ public:
     QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) override;
 
 private:
-    bool initializeEgl();
     bool initRenderingContext();
     void createOutputLayers(BackendOutput *output);
 

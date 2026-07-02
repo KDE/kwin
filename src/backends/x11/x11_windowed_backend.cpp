@@ -691,9 +691,9 @@ X11WindowedInputDevice *X11WindowedBackend::touchDevice() const
     return m_touchDevice.get();
 }
 
-std::unique_ptr<EglBackend> X11WindowedBackend::createOpenGLBackend()
+std::unique_ptr<EglBackend> X11WindowedBackend::createOpenGLBackend(RenderDevice *device)
 {
-    return std::make_unique<X11WindowedEglBackend>(this);
+    return std::make_unique<X11WindowedEglBackend>(this, device);
 }
 
 std::unique_ptr<InputBackend> X11WindowedBackend::createInputBackend()
