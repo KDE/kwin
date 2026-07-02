@@ -725,7 +725,7 @@ FocusScope {
                         opacity: 1 - downGestureProgress
                         onDownGestureTriggered: window.closeWindow()
                         TapHandler {
-                            acceptedPointerTypes: PointerDevice.Generic | PointerDevice.Pen
+                            acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
                             acceptedButtons: Qt.MiddleButton | Qt.RightButton
                             onTapped: (eventPoint, button) => {
                                 if (button === Qt.MiddleButton) {
