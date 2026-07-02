@@ -39,7 +39,7 @@ class EglGbmBackend : public EglBackend, public DrmRenderBackend
     Q_OBJECT
 
 public:
-    EglGbmBackend(DrmBackend *drmBackend);
+    EglGbmBackend(DrmBackend *drmBackend, RenderDevice *device);
     ~EglGbmBackend() override;
 
     QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) override;
@@ -49,14 +49,8 @@ public:
     std::unique_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmGpu *gpu, DrmPlane::TypeIndex type) override;
     std::unique_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
 
-    DrmGpu *gpu() const;
-
 private:
-    bool initializeEgl();
-
     DrmBackend *m_backend;
-
-    friend class EglGbmTexture;
 };
 
 } // namespace

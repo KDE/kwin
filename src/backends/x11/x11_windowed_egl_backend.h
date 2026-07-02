@@ -69,7 +69,7 @@ class X11WindowedEglBackend : public EglBackend
     Q_OBJECT
 
 public:
-    explicit X11WindowedEglBackend(X11WindowedBackend *backend);
+    explicit X11WindowedEglBackend(X11WindowedBackend *backend, RenderDevice *device);
     ~X11WindowedEglBackend() override;
 
     X11WindowedBackend *backend() const;
@@ -79,8 +79,6 @@ public:
     QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) override;
 
 private:
-    bool initializeEgl();
-
     X11WindowedBackend *m_backend;
 };
 

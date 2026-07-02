@@ -30,7 +30,8 @@
 namespace KWin
 {
 
-EglBackend::EglBackend()
+EglBackend::EglBackend(RenderDevice *device)
+    : m_renderDevice(device)
 {
 }
 
@@ -94,11 +95,6 @@ bool EglBackend::ensureGlobalShareContext()
 void EglBackend::cleanup()
 {
     m_context.reset();
-}
-
-void EglBackend::setRenderDevice(RenderDevice *device)
-{
-    m_renderDevice = device;
 }
 
 void EglBackend::initWayland()

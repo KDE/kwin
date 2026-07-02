@@ -37,6 +37,7 @@ class ItemView;
 class RenderLoopDrivenQAnimationDriver;
 class RenderView;
 class Item;
+class RenderDevice;
 
 class KWIN_EXPORT Compositor : public QObject
 {
@@ -128,6 +129,7 @@ protected:
     std::unordered_set<RenderLoop *> m_brokenCursors;
     std::optional<bool> m_allowOverlaysEnv;
     RenderLoopDrivenQAnimationDriver *m_renderLoopDrivenAnimationDriver;
+    RenderDevice *m_renderDevice = nullptr;
 };
 
 } // namespace KWin

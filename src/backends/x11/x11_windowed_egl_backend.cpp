@@ -152,8 +152,9 @@ void X11WindowedEglCursorLayer::releaseBuffers()
 {
 }
 
-X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend)
-    : m_backend(backend)
+X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend, RenderDevice *device)
+    : EglBackend(device)
+    , m_backend(backend)
 {
 }
 
@@ -171,21 +172,11 @@ X11WindowedBackend *X11WindowedEglBackend::backend() const
     return m_backend;
 }
 
-bool X11WindowedEglBackend::initializeEgl()
-{
-    if (!initClientExtensions()) {
-        return false;
-    }
-    Q_ASSERT(m_backend->renderDevice());
-    setRenderDevice(m_backend->renderDevice());
-    return true;
-}
-
 bool X11WindowedEglBackend::init()
 {
     qputenv("EGL_PLATFORM", "x11");
 
-    if (!initializeEgl()) {
+    if (!initClientExtensions()) {
         qCWarning(KWIN_X11WINDOWED, "Could not initialize egl");
         return false;
     }

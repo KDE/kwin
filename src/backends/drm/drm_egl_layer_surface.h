@@ -38,6 +38,7 @@ class GlLookUpTable;
 class IccProfile;
 class IccShader;
 class MultiGpuSwapchain;
+class RenderDevice;
 
 class EglGbmLayerSurface : public QObject
 {
@@ -113,7 +114,7 @@ private:
     bool doesSurfaceFit(Surface *surface, const QSize &size, const FormatModifierMap &formats, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const;
     std::unique_ptr<Surface> createSurface(const QSize &size, const FormatModifierMap &formats, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const;
     std::unique_ptr<Surface> createSurface(const QSize &size, uint32_t format, const ModifierList &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const;
-    std::shared_ptr<EglSwapchain> createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const ModifierList &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget) const;
+    std::shared_ptr<EglSwapchain> createGbmSwapchain(RenderDevice *device, EglContext *context, const QSize &size, uint32_t format, const ModifierList &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget) const;
 
     std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface *surface) const;
     std::shared_ptr<DrmFramebuffer> importBuffer(Surface *surface, EglSwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const;

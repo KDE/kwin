@@ -12,7 +12,9 @@
 
 #include "core/backendoutput.h"
 #include "core/brightnessdevice.h"
+#include "core/drm_formats.h"
 #include "core/drmdevice.h"
+#include "core/gpumanager.h"
 #include "core/graphicsbufferview.h"
 #include "core/outputbackend.h"
 #include "core/outputlayer.h"
@@ -39,8 +41,6 @@
 #include "window.h"
 #include "workspace.h"
 
-#include "core/drm_formats.h"
-
 #include <KCrash>
 #if KWIN_BUILD_NOTIFICATIONS
 #include <KLocalizedString>
@@ -50,6 +50,7 @@
 #include <QQuickWindow>
 #include <optional>
 #include <ranges>
+#include <sys/stat.h>
 
 namespace KWin
 {
@@ -86,6 +87,12 @@ Compositor::Compositor(QObject *workspace)
     });
 
     FTraceLogger::create();
+
+    connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, [this](RenderDevice *device) {
+        if (m_renderDevice == device) {
+            qCFatal(KWIN_CORE, "Primary GPU was removed!");
+        }
+    });
 }
 
 Compositor::~Compositor()
@@ -141,9 +148,99 @@ static QVariantHash collectCrashInformation(const EglBackend *backend)
     return gpuInformation;
 }
 
+static QList<QByteArray> splitPathList(const QByteArray &input, const char delimiter)
+{
+    QList<QByteArray> ret;
+    QByteArray tmp;
+    for (int i = 0; i < input.size(); i++) {
+        if (input[i] == delimiter) {
+            if (i > 0 && input[i - 1] == '\\') {
+                tmp[tmp.size() - 1] = delimiter;
+            } else if (!tmp.isEmpty()) {
+                ret.append(tmp);
+                tmp = QByteArray();
+            }
+        } else {
+            tmp.append(input[i]);
+        }
+    }
+    if (!tmp.isEmpty()) {
+        ret.append(tmp);
+    }
+    return ret;
+}
+
+const auto s_drmDevicesEnv = splitPathList(qgetenv("KWIN_DRM_DEVICES"), ':');
+
+static RenderDevice *selectRenderDevice()
+{
+    for (const QByteArray &path : s_drmDevicesEnv) {
+        struct stat buf;
+        if (stat(path.data(), &buf) == -1) {
+            qCWarning(KWIN_CORE) << "Failed to fstat drm fd" << path;
+            continue;
+        }
+        RenderDevice *device = GpuManager::self()->compatibleRenderDevice(buf.st_rdev);
+        if (device) {
+            return device;
+        }
+    }
+    if (!s_drmDevicesEnv.isEmpty()) {
+        return nullptr;
+    }
+
+    const auto &devices = GpuManager::self()->renderDevices();
+    if (devices.empty()) {
+        return nullptr;
+    }
+    const auto filterOutputs = [](RenderDevice *device) {
+        return kwinApp()->outputBackend()->outputs()
+            | std::views::filter([device](BackendOutput *output) {
+            return output->scanoutDevice()
+                && GpuManager::self()->compatibleRenderDevice(&*output->scanoutDevice()) == device;
+        })
+            | std::ranges::to<QList>();
+    };
+    std::unordered_map<RenderDevice *, QList<BackendOutput *>> outputs;
+    for (const auto &device : devices) {
+        outputs[device.get()] = filterOutputs(device.get());
+    }
+
+    return std::ranges::min_element(devices, [&outputs](const auto &gpu1, const auto &gpu2) {
+        const bool software1 = gpu1->eglDisplay()->isSoftwareRenderer();
+        const bool software2 = gpu2->eglDisplay()->isSoftwareRenderer();
+        if (software1 != software2) {
+            // avoid needing to do software rendering with the primary GPU
+            return !software1;
+        }
+
+        const auto &outputs1 = outputs[gpu1.get()];
+        const auto &outputs2 = outputs[gpu2.get()];
+        const size_t internalOutputs1 = std::ranges::count_if(outputs1, &BackendOutput::isInternal);
+        const size_t internalOutputs2 = std::ranges::count_if(outputs2, &BackendOutput::isInternal);
+        if (internalOutputs1 != internalOutputs2) {
+            return internalOutputs1 > internalOutputs2;
+        }
+        const size_t desktopOutputs1 = std::ranges::count_if(outputs1, std::not_fn(&BackendOutput::isNonDesktop));
+        const size_t desktopOutputs2 = std::ranges::count_if(outputs2, std::not_fn(&BackendOutput::isNonDesktop));
+        if (desktopOutputs1 != desktopOutputs2) {
+            return desktopOutputs1 > desktopOutputs2;
+        }
+        return outputs1.size() > outputs2.size();
+    })->get();
+}
+
 bool Compositor::attemptOpenGLCompositing()
 {
-    std::unique_ptr<EglBackend> backend = kwinApp()->outputBackend()->createOpenGLBackend();
+    if (!m_renderDevice) {
+        m_renderDevice = selectRenderDevice();
+        if (!m_renderDevice) {
+            qCWarning(KWIN_CORE, "Found no render device!");
+            return false;
+        }
+        qCDebug(KWIN_CORE, "Chose %s as the primary GPU", qPrintable(m_renderDevice->drmDevice()->path()));
+    }
+    std::unique_ptr<EglBackend> backend = kwinApp()->outputBackend()->createOpenGLBackend(m_renderDevice);
     if (!backend->init()) {
         return false;
     }

@@ -57,7 +57,7 @@ class VirtualEglBackend : public EglBackend
     Q_OBJECT
 
 public:
-    VirtualEglBackend(VirtualBackend *b);
+    VirtualEglBackend(VirtualBackend *b, RenderDevice *renderDevice);
     ~VirtualEglBackend() override;
 
     QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) override;
@@ -66,8 +66,6 @@ public:
     VirtualBackend *backend() const;
 
 private:
-    bool initializeEgl();
-
     void addOutput(BackendOutput *output);
 
     VirtualBackend *m_backend;
