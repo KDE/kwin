@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "drm_abstract_output.h"
+#include "core/backendoutput.h"
 #include "drm_object.h"
 #include "drm_plane.h"
 #include "utils/filedescriptor.h"
@@ -32,7 +32,7 @@ class DumbSwapchain;
 class DrmLease;
 class OutputChangeSet;
 
-class KWIN_EXPORT DrmOutput : public DrmAbstractOutput
+class KWIN_EXPORT DrmOutput : public BackendOutput
 {
     Q_OBJECT
 
@@ -46,6 +46,7 @@ public:
     bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
     void repairPresentation() override;
     bool recommendsOverlayUse() const override;
+    RenderLoop *renderLoop() const override;
 
     bool queueChanges(const std::shared_ptr<OutputChangeSet> &properties);
     void applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &properties);
@@ -92,6 +93,7 @@ private:
     DrmGpu *const m_gpu;
     DrmPipeline *m_pipeline;
     const std::shared_ptr<DrmConnector> m_connector;
+    std::unique_ptr<RenderLoop> m_renderLoop;
 
     DrmLease *m_lease = nullptr;
 

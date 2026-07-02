@@ -275,13 +275,13 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
     return gpu;
 }
 
-void DrmBackend::addOutput(DrmAbstractOutput *o)
+void DrmBackend::addOutput(BackendOutput *o)
 {
     m_outputs.append(o);
     Q_EMIT outputAdded(o);
 }
 
-void DrmBackend::removeOutput(DrmAbstractOutput *o)
+void DrmBackend::removeOutput(BackendOutput *o)
 {
     m_outputs.removeOne(o);
     Q_EMIT outputRemoved(o);

@@ -21,7 +21,6 @@ namespace KWin
 
 struct DmaBufAttributes;
 class BackendOutput;
-class DrmAbstractOutput;
 class DrmOutput;
 class DumbSwapchain;
 class DrmBackend;

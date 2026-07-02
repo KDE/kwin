@@ -10,7 +10,6 @@
 // kwin
 #include "core/renderdevice.h"
 #include "core/syncobjtimeline.h"
-#include "drm_abstract_output.h"
 #include "drm_backend.h"
 #include "drm_egl_layer.h"
 #include "drm_gpu.h"
