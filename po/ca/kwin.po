@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-02 02:40+0000\n"
+"POT-Creation-Date: 2026-07-03 02:44+0000\n"
 "PO-Revision-Date: 2026-05-20 09:34+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -76,7 +76,7 @@ msgstr "Premeu la tecla de control dret per a agafar l'entrada"
 msgid "KDE Wayland Compositor"
 msgstr "Compositor del Wayland de KDE"
 
-#: compositor.cpp:656
+#: compositor.cpp:657
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -4439,36 +4439,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "L'Xwayland ha fallat"
-
-#~ msgid "Hide from screencast"
-#~ msgstr "Oculta dels vídeos de captura de pantalla"
-
-#~ msgid "&Hide from Screencast"
-#~ msgstr "&Oculta dels vídeos de captura de pantalla"
-
-#~ msgctxt "@label"
-#~ msgid "Compositing"
-#~ msgstr "Composició"
-
-#~ msgctxt "@label"
-#~ msgid "Unknown"
-#~ msgstr "Desconegut"
-
-#~ msgid "Position of output %s is negative, that is not supported"
-#~ msgstr "La posició de la sortida %s és negativa. Això no està implementat"
-
-#~ msgid "Buttons"
-#~ msgstr "Botons"
-
-#~ msgid "The provided output order doesn't contain all outputs"
-#~ msgstr "L'ordre de sortida proporcionat no conté totes les sortides"
-
-#~ msgid "The provided output order is invalid"
-#~ msgstr "L'ordre de sortida proporcionada no és vàlid"
-
-#~ msgid "Saturation strength:"
-#~ msgstr "Intensitat de la saturació:"
-
-#~ msgctxt "Special entry in alt+tab list for minimizing all windows"
-#~ msgid "Show Desktop"
-#~ msgstr "Mostra l'escriptori"

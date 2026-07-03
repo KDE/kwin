@@ -49,6 +49,3 @@ msgstr "Amb tàctil i tauleta"
 #, kde-format
 msgid "With Touch, Tablet, and Mouse"
 msgstr "Amb tàctil, tauleta i ratolí"
-
-#~ msgid "This module lets you choose the virtual keyboard to use."
-#~ msgstr "Aquest mòdul permet triar el teclat virtual a usar."

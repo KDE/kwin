@@ -307,6 +307,3 @@ msgstr "Vores molt enormes de finestres"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Vores fora de mida de finestres"
-
-#~ msgid "Hide from screencast"
-#~ msgstr "Oculta dels vídeos de captura de pantalla"
