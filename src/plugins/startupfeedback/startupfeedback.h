@@ -72,7 +72,7 @@ private:
 
     void start(const Startup &startup);
     void stop();
-    QPoint feedbackOffset() const;
+    QPointF feedbackOffset() const;
     QSize feedbackIconSize() const;
 
     qreal m_bounceSizesRatio;
