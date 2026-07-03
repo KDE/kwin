@@ -20,6 +20,7 @@
 #include "pluginmanager.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "wayland/display.h"
 
 #include <KWayland/Client/seat.h>
 
@@ -104,6 +105,10 @@ WaylandTestApplication::WaylandTestApplication(int &argc, char **argv, bool runO
     }
     m_waylandServer.reset(WaylandServer::create());
     setProcessStartupEnvironment(QProcessEnvironment::systemEnvironment());
+
+    // Kwin uses QAbstractEventDispatcher::aboutToBlock to flush calls
+    // QTRY_COMPARE dispatches events manually but only calls awake and not aboutToBlock, so we have a new hook just for tests
+    connect(eventDispatcher(), &QAbstractEventDispatcher::awake, m_waylandServer->display(), &Display::flush);
 }
 
 WaylandTestApplication::~WaylandTestApplication()
