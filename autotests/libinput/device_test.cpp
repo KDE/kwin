@@ -2428,12 +2428,17 @@ void TestLibinputDevice::testOrientation_data()
 
 void TestLibinputDevice::testOrientation()
 {
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup inputConfig(config, QStringLiteral("Test"));
+
     libinput_device device;
     device.supportsCalibrationMatrix = true;
     device.defaultCalibrationMatrix = std::array<float, 6>{{1.0, 2.0, 3.0, 4.0, 5.0, 6.0}};
     QFETCH(bool, defaultIsIdentity);
     device.defaultCalibrationMatrixIsIdentity = defaultIsIdentity;
     Device d(&device);
+    d.setConfig(inputConfig);
+    d.loadConfiguration();
     QFETCH(Qt::ScreenOrientation, orientation);
     d.setOrientation(orientation);
     QTEST(device.calibrationMatrix[0], "m11");
@@ -2446,11 +2451,16 @@ void TestLibinputDevice::testOrientation()
 
 void TestLibinputDevice::testCalibrationWithDefault()
 {
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup inputConfig(config, QStringLiteral("Test"));
+
     libinput_device device;
     device.supportsCalibrationMatrix = true;
     device.defaultCalibrationMatrix = std::array<float, 6>{{2.0, 3.0, 0.0, 4.0, 5.0, 0.0}};
     device.defaultCalibrationMatrixIsIdentity = false;
     Device d(&device);
+    d.setConfig(inputConfig);
+    d.loadConfiguration();
     d.setOrientation(Qt::PortraitOrientation);
     QCOMPARE(device.calibrationMatrix[0], 3.0f);
     QCOMPARE(device.calibrationMatrix[1], -2.0f);

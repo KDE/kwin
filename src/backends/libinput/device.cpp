@@ -390,7 +390,6 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_enabled(m_supportsDisableEvents ? (libinput_device_config_send_events_get_mode(m_device) & LIBINPUT_CONFIG_SEND_EVENTS_DISABLED) == 0 : true)
     , m_disableEventsOnExternalMouseEnabledByDefault(m_supportsDisableEventsOnExternalMouse && (libinput_device_config_send_events_get_default_mode(m_device) & LIBINPUT_CONFIG_SEND_EVENTS_DISABLED_ON_EXTERNAL_MOUSE))
     , m_disableEventsOnExternalMouse(m_supportsDisableEventsOnExternalMouse && (libinput_device_config_send_events_get_mode(m_device) & LIBINPUT_CONFIG_SEND_EVENTS_DISABLED_ON_EXTERNAL_MOUSE))
-    , m_config()
     , m_defaultCalibrationMatrix(getMatrix(m_device, &libinput_device_config_calibration_get_default_matrix))
     , m_calibrationMatrix(getMatrix(m_device, &libinput_device_config_calibration_get_matrix))
     , m_pressureCurve(deserializePressureCurve(defaultPressureCurve()))
@@ -424,27 +423,6 @@ Device::Device(libinput_device *device, QObject *parent)
 
     if (m_keyboard) {
         m_alphaNumericKeyboard = checkAlphaNumericKeyboard(m_device);
-    }
-
-    if (m_supportsCalibrationMatrix && m_calibrationMatrix != m_defaultCalibrationMatrix) {
-        float matrix[]{m_defaultCalibrationMatrix(0, 0),
-                       m_defaultCalibrationMatrix(0, 1),
-                       m_defaultCalibrationMatrix(0, 2),
-                       m_defaultCalibrationMatrix(1, 0),
-                       m_defaultCalibrationMatrix(1, 1),
-                       m_defaultCalibrationMatrix(1, 2)};
-        libinput_device_config_calibration_set_matrix(m_device, matrix);
-        m_calibrationMatrix = m_defaultCalibrationMatrix;
-    }
-
-    if (supportsInputArea() && m_inputArea != defaultInputArea()) {
-        const libinput_config_area_rectangle rect{
-            .x1 = m_inputArea.topLeft().x(),
-            .y1 = m_inputArea.topLeft().y(),
-            .x2 = m_inputArea.bottomRight().x(),
-            .y2 = m_inputArea.bottomRight().y(),
-        };
-        libinput_device_config_area_set_rectangle(m_device, &rect);
     }
 
     libinput_device_group *group = libinput_device_get_device_group(device);
