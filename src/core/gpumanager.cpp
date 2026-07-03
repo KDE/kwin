@@ -147,7 +147,7 @@ RenderDevice *GpuManager::findCompatibleRenderDevice(drmDevicePtr device) const
             return !left->eglDisplay()->isSoftwareRenderer();
         }
         // if possible, we want Vulkan support as well
-        if (left->vulkanDevice() != right->vulkanDevice()) {
+        if (bool(left->vulkanDevice()) != bool(right->vulkanDevice())) {
             return bool(left->vulkanDevice());
         }
         // (also with hardware acceleration)
