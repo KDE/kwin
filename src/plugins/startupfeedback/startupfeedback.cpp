@@ -31,6 +31,7 @@
 #include "effect/effecthandler.h"
 #include "scene/imageitem.h"
 #include "scene/workspacescene.h"
+#include "workspace.h"
 
 // based on StartupId in KRunner by Lubos Lunak
 // SPDX-FileCopyrightText: 2001 Lubos Lunak <l.lunak@kde.org>
@@ -290,33 +291,54 @@ QSize StartupFeedbackEffect::feedbackIconSize() const
     return QSize(20, 20) * m_bounceSizesRatio;
 }
 
-QPoint StartupFeedbackEffect::feedbackOffset() const
+QPointF StartupFeedbackEffect::feedbackOffset() const
 {
-    int xDiff;
+    int offset;
     if (m_cursorSize <= 16) {
-        xDiff = 8 + 7;
+        offset = 8 + 7;
     } else if (m_cursorSize <= 32) {
-        xDiff = 16 + 7;
+        offset = 16 + 7;
     } else if (m_cursorSize <= 48) {
-        xDiff = 24 + 7;
+        offset = 24 + 7;
     } else {
-        xDiff = 32 + 7;
+        offset = 32 + 7;
     }
-    int yDiff = xDiff;
-    int yOffset = 0;
-    switch (m_type) {
-    case BouncingFeedback: {
+
+    QPointF offsetPoint = QPoint(offset, offset);
+
+    // Bound the effect within output with quarter-offset margins
+    const QPointF cursorPoint = cursorPos();
+    const QSize size = feedbackIconSize();
+
+    const RectF outputGeometry = workspace()->outputAt(cursorPoint)->geometryF();
+    const RectF feedbackRect = RectF(cursorPoint.x() + offset, cursorPoint.y() + offset, size.width(), size.height());
+    const qreal margin = offset / 4.0;
+
+    if (feedbackRect.right() > outputGeometry.right() - margin) {
+        offsetPoint.setX(offsetPoint.x() + (outputGeometry.right() - margin - feedbackRect.right()));
+    }
+
+    if (feedbackRect.bottom() > outputGeometry.bottom() - margin) {
+        offsetPoint.setY(offsetPoint.y() + (outputGeometry.bottom() - margin - feedbackRect.bottom()));
+    }
+
+    if (feedbackRect.left() < outputGeometry.left() + margin) {
+        offsetPoint.setX(offsetPoint.x() + (outputGeometry.left() + margin - feedbackRect.left()));
+    }
+
+    if (feedbackRect.top() < outputGeometry.top() + margin) {
+        offsetPoint.setY(offsetPoint.y() + (outputGeometry.top() + margin - feedbackRect.top()));
+    }
+
+    // Add bounce
+    int yBounceOffset = 0;
+    if (m_type == BouncingFeedback) {
         const qreal progressRatio = qreal(m_progress) / BOUNCE_DURATION;
-        yOffset = std::sin((progressRatio + 1) * M_PI) * 24 + 8;
-    } break;
-    case BlinkingFeedback: // fall through
-    case PassiveFeedback:
-        break;
-    default:
-        // nothing
-        break;
+        yBounceOffset = std::sin((progressRatio + 1) * M_PI) * 24 + 8;
     }
-    return QPoint(xDiff, yDiff + yOffset);
+
+    offsetPoint.setY(offsetPoint.y() + yBounceOffset);
+    return offsetPoint;
 }
 
 bool StartupFeedbackEffect::isActive() const
