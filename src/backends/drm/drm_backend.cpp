@@ -135,11 +135,6 @@ bool DrmBackend::initialize()
         }
     }
 
-    if (m_gpus.empty()) {
-        qCWarning(KWIN_DRM) << "No suitable DRM devices have been found";
-        return false;
-    }
-
     // setup udevMonitor
     if (m_udevMonitor) {
         m_udevMonitor->filterSubsystemDevType("drm");
