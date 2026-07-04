@@ -192,7 +192,10 @@ void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp)
         frame->presented(timestamp, m_mode);
     }
     m_frames.clear();
-    for (const auto pipeline : std::as_const(m_pipelines)) {
+    // Iterate a copy: pageFlipped() can reset DrmCommitThread::m_committed, which
+    // destroys this commit - and with it m_pipelines - mid-loop.
+    const auto pipelines = m_pipelines;
+    for (const auto pipeline : pipelines) {
         pipeline->pageFlipped(timestamp);
     }
 }
