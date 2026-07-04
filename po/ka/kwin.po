@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-02 00:46+0000\n"
+"POT-Creation-Date: 2026-07-04 00:45+0000\n"
 "PO-Revision-Date: 2026-06-18 05:31+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -70,7 +70,7 @@ msgstr "შეყვანის ჩასაჭერად მარჯვე�
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland კომპოზიტორი"
 
-#: compositor.cpp:635
+#: compositor.cpp:638
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "სამუშაო მაგიდის ეფექტები დარესტარტდა გრაფიკის გადატვირთვის გამო"

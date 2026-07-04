@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1740376 2026-07-02 01:28:05Z scripty $
+# $Id: kwin.po 1740532 2026-07-04 01:27:42Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-02 00:46+0000\n"
+"POT-Creation-Date: 2026-07-04 00:45+0000\n"
 "PO-Revision-Date: 2026-06-18 07:01+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -85,7 +85,7 @@ msgstr "Pritisnite puščico desno da zgrabite vhod"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Compositor"
 
-#: compositor.cpp:635
+#: compositor.cpp:638
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
