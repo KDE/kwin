@@ -10,14 +10,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-04 00:45+0000\n"
-"PO-Revision-Date: 2026-06-27 11:52+0200\n"
+"PO-Revision-Date: 2026-07-04 11:18+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
 "Language: nn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 26.07.70\n"
+"X-Generator: Lokalize 26.04.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
@@ -163,7 +163,7 @@ msgstr "Fargeprofilen manglar TRC-merkelappar"
 #: core/iccprofile.cpp:540
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr ""
+msgstr "Klarte ikkje invertera tonekurvene til ICC-profilen «%1»"
 
 #: debug_console.cpp:86
 #, kde-format
@@ -654,7 +654,7 @@ msgstr "Draging avbroten"
 #, kde-format
 msgctxt "A hold gesture is started"
 msgid "Hold start"
-msgstr ""
+msgstr "Hald start"
 
 #: debug_console.cpp:473
 #, kde-format
@@ -666,15 +666,13 @@ msgstr "Fingertal"
 #, kde-format
 msgctxt "A hold gesture ended"
 msgid "Hold end"
-msgstr ""
+msgstr "Hald slutt"
 
 #: debug_console.cpp:496
-#, fuzzy, kde-format
-#| msgctxt "A pinch gesture got cancelled"
-#| msgid "Pinch cancelled"
+#, kde-format
 msgctxt "A hold gesture got cancelled"
 msgid "Hold cancelled"
-msgstr "Kniping avbroten"
+msgstr "Hald avbroten"
 
 #: debug_console.cpp:508
 #, kde-format
@@ -790,15 +788,14 @@ msgid "Up"
 msgstr "Opp"
 
 #: debug_console.cpp:588
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Slider Position"
-msgstr "Plassering"
+msgstr "Glidebrytar-posisjon"
 
 #: debug_console.cpp:597
 #, kde-format
 msgid "Tablet Tool Button"
-msgstr "Teikneplateverktøy-knapp"
+msgstr "Teikneplate-verktøyknapp"
 
 #: debug_console.cpp:599 debug_console.cpp:614
 #, kde-format
@@ -834,7 +831,7 @@ msgstr "Modus"
 #: debug_console.cpp:618
 #, kde-format
 msgid "Is Mode Switch"
-msgstr ""
+msgstr "Er modus-byte"
 
 #: debug_console.cpp:629
 #, kde-format
@@ -857,10 +854,9 @@ msgid "Tablet Pad Ring"
 msgstr "Teikneplate-ring"
 
 #: debug_console.cpp:663
-#, fuzzy, kde-format
-#| msgid "Tablet Pad Ring"
+#, kde-format
 msgid "Tablet Pad Dial"
-msgstr "Teikneplate-ring"
+msgstr "Teikneplate-dreieknapp"
 
 #: debug_console.cpp:666
 #, kde-format
@@ -1656,20 +1652,14 @@ msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Namn på XWayland-skjerm som er sett opp på førehand"
 
 #: main_wayland.cpp:372
-#, fuzzy, kde-format
-#| msgid ""
-#| "XWayland socket to use for Xwayland's incoming connections. This can be "
-#| "set multiple times"
+#, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
-msgstr ""
-"Wayland-socket som skal brukast for innkommande tilkoplingar til XWayland. "
-"Kan oppgjevast fleire gongar."
+msgstr "Wayland-socket som skal brukast for init-tilkoplingar til XWayland"
 
 #: main_wayland.cpp:376
-#, fuzzy, kde-format
-#| msgid "Name of the xwayland display that has been pre-set up"
+#, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
-msgstr "Namn på XWayland-skjerm som er sett opp på førehand"
+msgstr "Namn på XWayland-init-skjerm som er sett opp på førehand"
 
 #: main_wayland.cpp:380
 #, kde-format
@@ -3631,7 +3621,7 @@ msgstr "Lag"
 #: rulesettings.kcfg:455
 #, kde-format
 msgid "Layer rule type"
-msgstr "Lag-regeltype"
+msgstr "Regeltype for lag"
 
 #. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:460
@@ -3643,7 +3633,7 @@ msgstr "AdaptiveSync"
 #: rulesettings.kcfg:464
 #, kde-format
 msgid "AdaptiveSync rule type"
-msgstr "AdaptiveSync-regeltype"
+msgstr "Regeltype for AdaptiveSync"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:469
@@ -3655,21 +3645,19 @@ msgstr "Tillat skjermriving"
 #: rulesettings.kcfg:473
 #, kde-format
 msgid "Tearing rule type"
-msgstr "Skjermrivings-regeltype"
+msgstr "Regeltype for skjermriving"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:478
-#, fuzzy, kde-format
-#| msgid "Fullscreen rule type"
+#, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr "Regeltype for fullskjermsvising"
+msgstr "Gøym frå skjermbiletlagring og skjermopptak"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
-#, fuzzy, kde-format
-#| msgid "Fullscreen rule type"
+#, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
-msgstr "Regeltype for fullskjermsvising"
+msgstr "Regeltype for gøyming frå skjermbiletlagring og skjermopptak"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

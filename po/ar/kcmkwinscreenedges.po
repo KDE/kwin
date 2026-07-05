@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-20 00:45+0000\n"
-"PO-Revision-Date: 2026-03-23 22:28+0400\n"
+"PO-Revision-Date: 2026-07-04 21:42+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -107,7 +107,7 @@ msgstr "&كبّر:"
 #: main.ui:77
 #, kde-format
 msgid "Windows dragged to top edge"
-msgstr "النوافذ المسحوبة إلى الحافة العليا"
+msgstr "النوافذ المسحوبة إلى الحافة العُليا"
 
 #. i18n: ectx: property (text), widget (QLabel, quickTileLabel)
 #: main.ui:84
@@ -131,7 +131,7 @@ msgstr "السّلوك:"
 #: main.ui:108
 #, kde-format
 msgid "Remain active when windows are fullscreen"
-msgstr "ابق نشط عندما تكون النوافذ ملء الشاشة"
+msgstr "ابقِ نشط عندما تكون النوافذ ملء الشاشة"
 
 #. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
 #: main.ui:115

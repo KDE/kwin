@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-05 00:46+0000\n"
-"PO-Revision-Date: 2026-07-02 21:02+0200\n"
+"PO-Revision-Date: 2026-07-04 10:52+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
 "Language: nn\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 26.07.70\n"
+"X-Generator: Lokalize 26.04.3\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -27,12 +27,16 @@ msgid ""
 "time.<nl/><nl/>If you use any of these apps, you can choose your preferred "
 "balance of security and compatibility here."
 msgstr ""
+"Eldre X11-program med globale snøggtastar og andre funksjonar du brukar mens "
+"programma køyrer i bakgrunnen, må kunna lytta til tastetrykk heile tida.<nl/"
+"><nl/>Viss du brukar nokon av desse programma, kan du her velja føretrekt "
+"balanse mellom tryggleik og  kompatibilitet."
 
 #: ui/main.qml:49
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
-msgstr "Lyttar etter tastetrykk:"
+msgstr "Lytting etter tastetrykk:"
 
 #: ui/main.qml:52
 #, kde-format
@@ -44,7 +48,7 @@ msgstr "Forbode"
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
-msgstr "Sikrast – globale snarvegar fungerer ikkje X11-program"
+msgstr "Sikrast – globale snøggtastar fungerer ikkje X11-program"
 
 #: ui/main.qml:67
 #, kde-format
@@ -59,12 +63,11 @@ msgid ""
 "High security; push-to-talk and other modifier-only global shortcuts will "
 "work in X11 apps"
 msgstr ""
+"Høg tryggleik – «trykk for å tala» og andre snøggtastar som berre brukar "
+"valtastar, vil fungera i X11-program"
 
 #: ui/main.qml:81
-#, fuzzy, kde-format
-#| msgid ""
-#| "As above, plus any key typed while the Control, Alt, or Meta keys are "
-#| "pressed"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
 "As above, plus any key pressed while the Control, Alt, or Meta key is also "
@@ -76,7 +79,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
-msgstr ""
+msgstr "Moderat tryggleik – alle globale snøggtastar vil fungera i X11-program"
 
 #: ui/main.qml:96
 #, kde-format
@@ -90,7 +93,7 @@ msgctxt "@info:usagetip"
 msgid ""
 "Least secure; all X11 apps will be able to see any text you type into any "
 "application"
-msgstr ""
+msgstr "Minst trygt – alle X11-program kan sjå alt du skriv i alle program"
 
 #: ui/main.qml:111
 #, kde-format
@@ -102,7 +105,8 @@ msgid ""
 msgstr ""
 "Merk at du med denne innstillinga reduserer tryggleiks­nivået til systemet og "
 "tillèt potensielt vondsinna programvare å stela passord og spionera på "
-"teksten du skriv. Sjå til at du er klar over denne risikoen, og godtek han."
+"teksten du skriv. Ver trygg på at du er klar over denne risikoen og godtek "
+"han."
 
 #: ui/main.qml:118
 #, kde-format
@@ -123,12 +127,14 @@ msgid ""
 "Moderate security; global shortcuts involving mouse buttons will work in X11 "
 "apps"
 msgstr ""
+"Moderat tryggleik – alle globale snarvegar som brukar museknappar, vil "
+"fungera i X11-program"
 
 #: ui/main.qml:141
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
-msgstr ""
+msgstr "Styring av musepeikar og tastatur:"
 
 #: ui/main.qml:146
 #, kde-format
@@ -152,6 +158,9 @@ msgid ""
 "will be able to take control of the computer, because XWayland-using apps’ "
 "identities can’t be verified"
 msgstr ""
+"Moderat tryggleik – program som brukar XWayland og hevdar dei er eitt av dei "
+"på denne lista, kan overta kontrollen over datamaskina, då det ikkje er "
+"mogleg å stadfesta identiteten til slike program"
 
 #: ui/main.qml:169
 #, kde-format
@@ -166,23 +175,20 @@ msgstr "Tillat utan å be om løyve"
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr ""
+"Lågast tryggleik – alle X11-program kan overta kontrollen over datamaskina"
 
 #: ui/main.qml:181
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will drastically reduce system security and "
 "permit malicious software to take complete control of your pointer and "
 "keyboard. Make sure you understand and accept this risk."
 msgstr ""
-"Merk at du med denne innstillinga reduserer tryggleiks­nivået til systemet "
-"ned til tryggleiks­nivået til X11-økta, og du tillèt potensielt vondsinna "
-"programvare å stela passord og spionera på teksten du skriv. Sjå til at du "
-"er klar over denne risikoen, og godtek han."
+"Merk at du med denne innstillinga drastisk reduserer tryggleiks­nivået til "
+"systemet og tillèt potensielt vondsinna programvare å fullstendig overta "
+"kontrollen over datamaskina. Ver trygg på at du er klar over denne risikoen "
+"og godtek han."
 
 #: ui/main.qml:189
 #, kde-format
@@ -190,11 +196,10 @@ msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
 "button"
 msgid "Applications allowed to control the pointer and keyboard"
-msgstr ""
+msgstr "Program som har løyve til å styra musepeikaren og tastaturet"
 
 #: ui/main.qml:209
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
-msgstr ""
-"Ikkje lat %1 styra musepeikaren eller tastatur utan å be om løyve først"
+msgstr "Ikkje la %1 styra musepeikaren eller tastatur utan å be om løyve først"
