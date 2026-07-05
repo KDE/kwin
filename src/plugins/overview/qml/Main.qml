@@ -21,8 +21,8 @@ FocusScope {
     id: container
     focus: true
 
-    readonly property QtObject effect: KWinComponents.SceneView.effect
-    readonly property QtObject targetScreen: KWinComponents.SceneView.screen
+    readonly property KWinComponents.QuickSceneEffect effect: KWinComponents.SceneView.effect
+    readonly property KWinComponents.Output targetScreen: KWinComponents.SceneView.screen
 
     readonly property bool lightBackground: Math.max(Kirigami.Theme.backgroundColor.r,
                                                      Kirigami.Theme.backgroundColor.g,
@@ -472,7 +472,7 @@ FocusScope {
                 }
 
 
-                required property QtObject desktop
+                required property KWinComponents.VirtualDesktop desktop
                 required property int index
                 readonly property bool current: currentDesktop === desktop
                 readonly property bool nearCurrent: Math.abs(deltaColumn) <= 1 && Math.abs(deltaRow) <= 1

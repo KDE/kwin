@@ -114,7 +114,8 @@ enum class DecorationMode {
 class KWIN_EXPORT Window : public QObject
 {
     Q_OBJECT
-    QML_ANONYMOUS
+    QML_ELEMENT
+    QML_UNCREATABLE("")
 
     /**
      * This property holds the rectangle that the pixmap or buffer of this Window

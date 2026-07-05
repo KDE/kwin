@@ -36,7 +36,7 @@ class KWIN_EXPORT Tile : public QObject
     Q_PROPERTY(qreal padding READ padding WRITE setPadding NOTIFY paddingChanged)
     Q_PROPERTY(QSizeF minimumSize READ minimumSize WRITE setMinimumSize NOTIFY minimumSizeChanged)
     Q_PROPERTY(int positionInLayout READ row NOTIFY rowChanged)
-    Q_PROPERTY(Tile *parent READ parentTile CONSTANT)
+    Q_PROPERTY(KWin::Tile *parent READ parentTile CONSTANT)
     Q_PROPERTY(QList<KWin::Tile *> tiles READ childTiles NOTIFY childTilesChanged)
     Q_PROPERTY(QList<KWin::Window *> windows READ windows NOTIFY windowsChanged)
     Q_PROPERTY(bool isLayout READ isLayout NOTIFY isLayoutChanged)
@@ -161,8 +161,8 @@ Q_SIGNALS:
     void rowChanged(int row);
     void isLayoutChanged(bool isLayout);
     void childTilesChanged();
-    void windowAdded(Window *window);
-    void windowRemoved(Window *window);
+    void windowAdded(KWin::Window *window);
+    void windowRemoved(KWin::Window *window);
     void windowsChanged();
 
 protected:

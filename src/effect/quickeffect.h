@@ -167,6 +167,8 @@ private:
 class KWIN_EXPORT QuickSceneEffect : public Effect
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_UNCREATABLE("")
 
     /*!
      * \qmlproperty SceneView QuickSceneEffect::activeView

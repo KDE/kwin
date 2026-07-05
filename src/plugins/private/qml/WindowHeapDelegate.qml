@@ -19,9 +19,9 @@ import org.kde.ksvg as KSvg
 ExpoCell {
     id: thumb
 
-    required property QtObject window
+    required property KWinComponents.Window window
     required property int index
-    required property Item windowHeap
+    required property WindowHeap windowHeap
 
     readonly property bool selected: windowHeap.selectedIndex === index
     property bool gestureInProgress: effect.gestureInProgress
