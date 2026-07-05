@@ -1,20 +1,20 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# SPDX-FileCopyrightText: 2009, 2010, 2011, 2012, 2018, 2021, 2022, 2024, 2025 Stefan Asserhäll <stefan.asserhall@gmail.com>
+# SPDX-FileCopyrightText: 2009-2012, 2018, 2021-2022, 2024-2026 Stefan Asserhäll <stefan.asserhall@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-14 00:45+0000\n"
-"PO-Revision-Date: 2025-09-26 13:47+0200\n"
+"PO-Revision-Date: 2026-07-04 09:25+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.08.0\n"
+"X-Generator: Lokalize 26.04.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: layoutpreview.cpp:28
@@ -276,7 +276,7 @@ msgstr "Visa valt fönster"
 #: main.ui:644
 #, kde-format
 msgid "Enable the window list effect"
-msgstr ""
+msgstr "Aktivera fönsterlisteffekten"
 
 #. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
 #: main.ui:678
@@ -288,51 +288,49 @@ msgstr "Effekt att ersätta listfönstret med när skrivbordseffekter är aktiva
 #: main.ui:701
 #, kde-format
 msgid "The time in milliseconds to wait before showing the task switcher."
-msgstr ""
+msgstr "Väntetiden i millisekunder innan aktivitetsbyte visas."
 
 #. i18n: ectx: property (text), widget (QLabel, label_DelayTime)
 #: main.ui:704
 #, kde-format
 msgid "Delay:"
-msgstr ""
+msgstr "Fördröjning:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:720
 #, kde-format
 msgid " ms"
-msgstr ""
+msgstr " ms"
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:735
 #, kde-format
 msgid "Delay before the window list appears"
-msgstr ""
+msgstr "Fördröjning innan fönsterlistan visas"
 
 #. i18n: ectx: property (text), widget (QLabel, label_showScreen)
 #: main.ui:742
 #, kde-format
 msgid "Show on screen:"
-msgstr ""
+msgstr "Visa på skärm:"
 
 #. i18n: ectx: property (toolTip), widget (QComboBox, showScreenCombo)
 #: main.ui:758
 #, kde-format
 msgid "Select which screen the task switcher should be displayed on."
-msgstr ""
+msgstr "Välj vilken skärm som aktivitetsbyte ska visas på."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, showScreenCombo)
 #: main.ui:762
-#, fuzzy, kde-format
-#| msgid "All other screens"
+#, kde-format
 msgid "Active screen"
-msgstr "Alla andra skärmar"
+msgstr "Aktiv skärm"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, showScreenCombo)
 #: main.ui:767
-#, fuzzy, kde-format
-#| msgid "Current screen"
+#, kde-format
 msgid "Primary screen"
-msgstr "Nuvarande skärm"
+msgstr "Huvudskärm"
 
 #: shortcutsettings.cpp:131
 #, kde-format

@@ -1,13 +1,13 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2026 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# Stefan Asserhäll <stefan.asserhall@gmail.com>, 2021.
+# SPDX-FileCopyrightText: 2021, 2026 Stefan Asserhäll <stefan.asserhall@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-07 02:48+0000\n"
-"PO-Revision-Date: 2021-04-27 08:11+0200\n"
+"PO-Revision-Date: 2026-07-04 09:20+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 20.08.1\n"
+"X-Generator: Lokalize 26.04.2\n"
 
 #: kcmvirtualkeyboard.cpp:84
 #, kde-format
@@ -28,26 +28,25 @@ msgid "Do not use any virtual keyboard"
 msgstr "Använd inte något virtuellt tangentbord"
 
 #: ui/main.qml:24
-#, fuzzy, kde-format
-#| msgid "Choose Virtual Keyboard"
+#, kde-format
 msgctxt "Selector label"
 msgid "Show Virtual Keyboard:"
-msgstr "Välj virtuellt tangentbord"
+msgstr "Visa virtuellt tangentbord:"
 
 #: ui/main.qml:32
 #, kde-format
 msgid "Never"
-msgstr ""
+msgstr "Aldrig"
 
 #: ui/main.qml:33
 #, kde-format
 msgid "With Touch and Tablet"
-msgstr ""
+msgstr "Med pekskärm och ritplatta"
 
 #: ui/main.qml:34
 #, kde-format
 msgid "With Touch, Tablet, and Mouse"
-msgstr ""
+msgstr "Med pekskärm, ritplatta och mus"
 
 #~ msgid "This module lets you choose the virtual keyboard to use."
 #~ msgstr ""

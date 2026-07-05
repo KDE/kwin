@@ -5,21 +5,21 @@
 # Anders Widell <d95-awi@nada.kth.se>, 1999.
 # Per Lindström <pelinstr@algonet.se>, 2000.
 # Mattias Newzella <newzella@linux.nu>, 2000,2001,2003.
-# SPDX-FileCopyrightText: 2004, 2005, 2007, 2008, 2009, 2010, 2024, 2025, 2026 Stefan Asserhäll <stefan.asserhall@gmail.com>
+# SPDX-FileCopyrightText: 2004-2005, 2007-2010, 2024-2026 Stefan Asserhäll <stefan.asserhall@gmail.com>
 # Stefan Asserhall <stefan.asserhall@gmail.com>, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-03 02:44+0000\n"
-"PO-Revision-Date: 2026-01-23 20:54+0100\n"
+"PO-Revision-Date: 2026-07-04 11:34+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.12.1\n"
+"X-Generator: Lokalize 26.04.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -158,10 +158,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "Färgprofilen saknar TRC-taggar"
 
 #: core/iccprofile.cpp:540
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "Misslyckades öppna ICC-profil \"%1\""
+msgstr "Kunde inte invertera tonkurvor för ICC-profil \"%1\""
 
 #: debug_console.cpp:86
 #, kde-format
@@ -1269,7 +1268,7 @@ msgstr "tid"
 #: helpers/dialoghelper/dialoghelper.cpp:46
 #, kde-format
 msgid "The message to show (fullscreen, noborder)"
-msgstr ""
+msgstr "Meddelande att visa (fullskärm, ingen kant)"
 
 #: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:146
 #, kde-format
@@ -1283,12 +1282,7 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "Det är inte meningen att det här hjälpverktyget ska anropas direkt."
 
 #: helpers/dialoghelper/dialoghelper.cpp:79
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window menu instead, activated using the %1 keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1298,7 +1292,7 @@ msgstr ""
 "Du har valt att visa ett fönster med fullskärmsläge.\n"
 "Om programmet själv inte har ett alternativ för att stänga av "
 "fullskärmsläge, kommer du inte kunna stänga av det med musen. Använd "
-"fönstermenyn istället, som aktiveras med snabbtangenten %1."
+"istället snabbtangenten %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:85
 #, kde-format
@@ -1314,12 +1308,7 @@ msgstr ""
 "fönstermenyn istället, som aktiveras med snabbtangenten %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:93
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window menu instead, activated using the %1 keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1327,31 +1316,24 @@ msgid ""
 msgstr ""
 "Du har valt att visa ett fönster med fullskärmsläge.\n"
 "Om programmet själv inte har ett alternativ för att stänga av "
-"fullskärmsläge, kommer du inte kunna stänga av det med musen. Använd "
-"fönstermenyn istället, som aktiveras med snabbtangenten %1."
+"fullskärmsläge, kommer du inte kunna stänga av det med musen."
 
 #: helpers/dialoghelper/dialoghelper.cpp:98
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
-msgstr "Fullskärm"
+msgstr "Ångra fullskärm"
 
 #: helpers/dialoghelper/dialoghelper.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse: use the %1 keyboard shortcut instead."
 msgstr ""
 "Du har valt att visa ett fönster utan ram.\n"
-"Utan ramen kan du inte aktivera den igen med musen. Använd fönstermenyn "
-"istället, som aktiveras med snabbtangenten %1."
+"Utan ramen kan du inte aktivera den igen med musen. Använd istället "
+"snabbtangenten %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:106
 #, kde-format
@@ -1366,32 +1348,25 @@ msgstr ""
 "istället, som aktiveras med snabbtangenten %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:112
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse."
 msgstr ""
 "Du har valt att visa ett fönster utan ram.\n"
-"Utan ramen kan du inte aktivera den igen med musen. Använd fönstermenyn "
-"istället, som aktiveras med snabbtangenten %1."
+"Utan ramen kan du inte aktivera den igen med musen."
 
 #: helpers/dialoghelper/dialoghelper.cpp:116
-#, fuzzy, kde-format
-#| msgid "&No Border"
+#, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
-msgstr "Uta&n kant"
+msgstr "Återställ kant"
 
 #: helpers/dialoghelper/dialoghelper.cpp:133
 #, kde-format
 msgid "Do not show again"
-msgstr ""
+msgstr "Visa inte igen"
 
 #: helpers/killer/killdialog.cpp:37
 #, kde-kuit-format
@@ -1421,11 +1396,9 @@ msgstr ""
 "emphasis></para>>"
 
 #: helpers/killer/killdialog.cpp:66
-#, fuzzy, kde-format
-#| msgctxt "@action:button Terminate app"
-#| msgid "&Terminate %1"
+#, kde-format
 msgid "Terminating %1…"
-msgstr "Avbry&t %1"
+msgstr "Avbryter %1…"
 
 #: helpers/killer/killdialog.cpp:69
 #, kde-format
@@ -1462,7 +1435,7 @@ msgstr "Svarar inte"
 #: helpers/killer/killdialog.ui:53
 #, kde-format
 msgid "&Details"
-msgstr ""
+msgstr "&Detaljinformation"
 
 #: helpers/killer/killer.cpp:134
 #, kde-format
@@ -1830,24 +1803,16 @@ msgid "Disable Active Input Capture"
 msgstr "Inaktivera aktiv inmatningshämtning"
 
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "Control"
+msgstr "Fjärrkontroll"
 
 #: plugins/eis/eisprompter.cpp:52
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><application>%1</application> is not responding. Do you want to "
-#| "terminate this application?</para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "<application>%1</application> is asking to control input devices"
-msgstr ""
-"<para><application>%1</application> svarar inte. Vill du avsluta programmet?"
-"</para>"
+msgstr "<application>%1</application> begär att styra inmatningsenheter"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
@@ -1855,7 +1820,7 @@ msgctxt ""
 "@option:check, %1 is the application name. This option always allow apps "
 "claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "Tillåt alltid program som påstår sig vara %1"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -1866,18 +1831,22 @@ msgid ""
 "revoke this permission later on <application>System Settings</application>’ "
 "“Legacy X11 App Support” page."
 msgstr ""
+"Identiteter för äldre X11-program kan inte verifieras. Alla program som "
+"påstår sig vara <application>%1</application> kommer att kunna styra "
+"inmatningsenheter. Behörighet kan senare återkallas på sidan \"Stöd för "
+"äldre X11-program\" i <application>Systeminställningar</application>."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
 msgctxt "@action:button Allow control of input devices"
 msgid "Allow"
-msgstr ""
+msgstr "Tillåt"
 
 #: plugins/eis/eisprompter.cpp:70
 #, kde-format
 msgctxt "@action:button Deny control of input devices"
 msgid "Deny"
-msgstr ""
+msgstr "Neka"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -1986,17 +1955,15 @@ msgstr[1] "%1 sekunder"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Hide cursor on inactivity:"
+#, kde-format
 msgid "Hide pointer on inactivity:"
-msgstr "Dölj markören vid inaktivitet:"
+msgstr "Dölj pekare vid inaktivitet:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
-#, fuzzy, kde-format
-#| msgid "Hide cursor on typing"
+#, kde-format
 msgid "Hide pointer on typing"
-msgstr "Dölj markören när du skriver"
+msgstr "Dölj pekare när du skriver"
 
 #: plugins/invert/invert.cpp:44
 #, kde-format
@@ -2538,10 +2505,9 @@ msgid "Add Virtual Desktop"
 msgstr "Lägg till virtuellt skrivbord"
 
 #: plugins/overview/qml/DesktopBar.qml:262
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgid "Virtual Desktop limit reached"
-msgstr "Lägg till virtuellt skrivbord"
+msgstr "Virtuellt skrivbordsgräns uppnådd"
 
 #: plugins/overview/qml/Main.qml:427
 #, kde-format
@@ -2903,10 +2869,9 @@ msgstr "Menyer:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ExcludeFullScreen)
 #: plugins/translucency/package/contents/ui/config.ui:201
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#, kde-format
 msgid "Exclude fullscreen windows"
-msgstr "Fullskärmsfönster"
+msgstr "Undanta fullskärmsfönster"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:217
@@ -3211,18 +3176,15 @@ msgstr "Fönsteretikett strängmatchningstyp"
 
 #. i18n: ectx: label, entry (hastransientparent), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
-#, fuzzy, kde-format
-#| msgctxt "@info:placeholder no entries in the task switcher"
-#| msgid "No open windows"
+#, kde-format
 msgid "Has parent window"
-msgstr "Inga öppna fönster"
+msgstr "Har överliggande fönster"
 
 #. i18n: ectx: label, entry (hastransientparentmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:82
-#, fuzzy, kde-format
-#| msgid "Set window type to"
+#, kde-format
 msgid "Has parent window match type"
-msgstr "Ställ in fönstertyp till"
+msgstr "Har överliggande fönster matchningstyp"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:89
@@ -3676,17 +3638,15 @@ msgstr "Regeltyp för rivning"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:478
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr "&Dölj från skärmsändning"
+msgstr "Dölj från skärmbilder och skärminspelningar"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
-msgstr "&Dölj från skärmsändning"
+msgstr "Dölj från skärmbilder och skärminspelningar regeltyp"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3820,7 +3780,7 @@ msgstr "Ingen &namnlist och ram"
 #: useractions.cpp:248
 #, kde-format
 msgid "&Hide from Screenshots and Screen Recordings"
-msgstr ""
+msgstr "&Dölj från skärmbilder och skärminspelningar"
 
 #: useractions.cpp:256
 #, kde-format
@@ -3955,10 +3915,9 @@ msgid "Maximize Window Horizontally"
 msgstr "Maximera fönster horisontellt"
 
 #: useractions.cpp:835
-#, fuzzy, kde-format
-#| msgid "Resize Window"
+#, kde-format
 msgid "Restore Window"
-msgstr "Ändra storlek på fönster"
+msgstr "Återställ fönster"
 
 #: useractions.cpp:837
 #, kde-format
@@ -4338,7 +4297,7 @@ msgstr "Byt till skrivbord %1"
 #: wayland/outputmanagement_v2.cpp:569
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
-msgstr ""
+msgstr "abm-nivå är större än den maximala (4): %1"
 
 #: wayland/outputmanagement_v2.cpp:647
 #, kde-format
@@ -4353,7 +4312,7 @@ msgstr "Inaktivering av alla utgångar med inställningsändringar tillåts inte
 #: wayland/outputmanagement_v2.cpp:675
 #, kde-format
 msgid "%1 cannot mirror itself"
-msgstr ""
+msgstr "%1 kan inte spegla sig själv"
 
 #: wayland/outputmanagement_v2.cpp:682
 #, kde-format
@@ -4366,22 +4325,19 @@ msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "Kan inte lägga till eget läge med en uppdateringsfrekvens noll Hz"
 
 #: wayland/outputmanagement_v2.cpp:697
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
-msgstr "Positionen för utdata %s är alldeles för stor (%d, %d)"
+msgstr "Positionen för utdata %1 är alldeles för negativ (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:700
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
-msgstr "Positionen för utdata %s är alldeles för stor (%d, %d)"
+msgstr "Positionen för aktiverad utdata %1 är negativ (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:704
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
-msgstr "Positionen för utdata %s är alldeles för stor (%d, %d)"
+msgstr "Positionen för utdata %1 är alldeles för stor (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:721
 #, kde-format
@@ -4389,10 +4345,9 @@ msgid "The driver rejected the output configuration"
 msgstr "Drivrutinen förkastade utgångsinställningen"
 
 #: wayland/outputmanagement_v2.cpp:724
-#, fuzzy, kde-format
-#| msgid "The Alt key is now active."
+#, kde-format
 msgid "The session is not active"
-msgstr "Alt-tangenten är nu aktiv."
+msgstr "Sessionen är nu aktiv"
 
 #: window.cpp:3094
 #, kde-format
@@ -4403,25 +4358,25 @@ msgstr "(svarar inte)"
 #: workspace.cpp:1313
 #, kde-format
 msgid "Built-in Screen"
-msgstr ""
+msgstr "Inbyggd bildskärm"
 
 #: workspace.cpp:1326
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1336
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1339
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
-msgstr ""
+msgstr "%1 %2"
 
 #: workspace.cpp:1808
 #, kde-format
