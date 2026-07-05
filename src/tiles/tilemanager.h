@@ -36,6 +36,8 @@ class TileModel;
 class KWIN_EXPORT TileManager : public QObject
 {
     Q_OBJECT
+    QML_ANONYMOUS
+
     Q_PROPERTY(KWin::Tile *rootTile READ rootTile NOTIFY rootTileChanged)
     Q_PROPERTY(TileModel *model READ model NOTIFY modelChanged)
 

@@ -16,6 +16,7 @@
 #include <QPoint>
 #include <QPointer>
 #include <QSize>
+#include <qqmlregistration.h>
 
 // KDE includes
 #include <KConfig>
@@ -43,6 +44,7 @@ class PlasmaVirtualDesktopManagementInterface;
 class KWIN_EXPORT VirtualDesktop : public QObject
 {
     Q_OBJECT
+    QML_ANONYMOUS
 
     /*!
      * \qmlproperty string VirtualDesktop::id

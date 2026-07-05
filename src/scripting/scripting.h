@@ -363,7 +363,6 @@ private Q_SLOTS:
     void slotScriptsQueried();
 
 private:
-    void init();
     LoadScriptList queryScriptsToLoad();
     static Scripting *s_self;
     QQmlEngine *m_qmlEngine;

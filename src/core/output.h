@@ -22,6 +22,7 @@
 #include <QSize>
 #include <QString>
 #include <QUuid>
+#include <qqmlregistration.h>
 
 class TestXdgOutput;
 class TestWaylandOutput;
@@ -192,6 +193,7 @@ struct CustomModeDefinition
 class KWIN_EXPORT LogicalOutput : public QObject
 {
     Q_OBJECT
+    QML_ANONYMOUS
 
     /*!
      * \qmlproperty Rect LogicalOutput::geometry

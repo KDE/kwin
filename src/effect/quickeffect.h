@@ -43,6 +43,9 @@ class VirtualDesktop;
 class KWIN_EXPORT QuickSceneView : public OffscreenQuickView
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(SceneView)
+    QML_UNCREATABLE("")
+    QML_ATTACHED(QuickSceneView)
 
     /*!
      * \qmlattachedproperty QuickSceneEffect SceneView::effect
@@ -360,5 +363,3 @@ private:
 };
 
 } // namespace KWin
-
-QML_DECLARE_TYPEINFO(KWin::QuickSceneView, QML_HAS_ATTACHED_PROPERTIES)

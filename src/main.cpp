@@ -236,7 +236,7 @@ void Application::createGpuManager()
 
 void Application::createOptions()
 {
-    options = new Options;
+    options = new Options(nullptr);
 }
 
 void Application::createPlugins()

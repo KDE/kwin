@@ -16,6 +16,7 @@
 #include <QRect>
 #include <QSize>
 #include <QStringList>
+#include <qqmlregistration.h>
 
 namespace KWin
 {
@@ -647,6 +648,8 @@ public:
 class DeclarativeScriptWorkspaceWrapper : public WorkspaceWrapper
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(Workspace)
+    QML_SINGLETON
 
     Q_PROPERTY(QQmlListProperty<KWin::Window> windows READ windows)
 

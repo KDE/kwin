@@ -10,6 +10,7 @@
 
 #include <QObject>
 #include <QRect>
+#include <qqmlregistration.h>
 
 class QAbstractItemModel;
 
@@ -21,6 +22,8 @@ namespace TabBox
 class SwitcherItem : public QObject
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(TabBoxSwitcher)
+
     Q_PROPERTY(QAbstractItemModel *model READ model NOTIFY modelChanged)
     Q_PROPERTY(QRect screenGeometry READ screenGeometry NOTIFY screenGeometryChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)

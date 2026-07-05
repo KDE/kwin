@@ -11,6 +11,7 @@
 #include <QAbstractListModel>
 #include <QPointer>
 #include <QSortFilterProxyModel>
+#include <qqmlregistration.h>
 
 #include <optional>
 
@@ -39,6 +40,7 @@ class LogicalOutput;
 class WindowModel : public QAbstractListModel
 {
     Q_OBJECT
+    QML_ELEMENT
 
 public:
     enum Roles {
@@ -73,6 +75,7 @@ private:
 class WindowFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
+    QML_ELEMENT
 
     /*!
      * \qmlproperty WindowModel WindowFilterModel::windowModel
