@@ -10,6 +10,7 @@
 
 #include "effect/globals.h"
 #include <QObject>
+#include <qqmlregistration.h>
 
 class QAction;
 
@@ -37,6 +38,8 @@ namespace KWin
 class ScreenEdgeHandler : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+
     /*!
      * \qmlproperty bool ScreenEdgeHandler::enabled
      *

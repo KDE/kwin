@@ -21,6 +21,7 @@
 #include "settings.h"
 #include "workspace.h"
 #include <QOpenGLContext>
+#include <QQmlEngine>
 
 #endif // KCMRULES
 
@@ -98,6 +99,12 @@ Options::Options(QObject *parent)
 
 Options::~Options()
 {
+}
+
+Options *Options::create(QQmlEngine *, QJSEngine *)
+{
+    QQmlEngine::setObjectOwnership(options, QQmlEngine::CppOwnership);
+    return options;
 }
 
 void Options::setFocusPolicy(FocusPolicy focusPolicy)

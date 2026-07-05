@@ -70,6 +70,8 @@ private:
 class WindowThumbnailItem : public QQuickItem
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(WindowThumbnail)
+
     /*!
      * \qmlproperty QUuid WindowThumbnail::wId
      */

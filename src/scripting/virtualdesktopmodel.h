@@ -7,6 +7,7 @@
 #pragma once
 
 #include <QAbstractListModel>
+#include <qqmlregistration.h>
 
 namespace KWin
 {
@@ -28,6 +29,7 @@ class VirtualDesktop;
 class VirtualDesktopModel : public QAbstractListModel
 {
     Q_OBJECT
+    QML_ELEMENT
     Q_PROPERTY(int maximum READ maximum CONSTANT)
 
 public:

@@ -7,6 +7,7 @@
 #pragma once
 
 #include <QQmlParserStatus>
+#include <qqmlregistration.h>
 
 class QAction;
 
@@ -34,6 +35,7 @@ class SwipeGesture;
 class SwipeGestureHandler : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
+    QML_ELEMENT
     Q_INTERFACES(QQmlParserStatus)
 
     /*!
@@ -165,6 +167,7 @@ private:
 class PinchGestureHandler : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
+    QML_ELEMENT
     Q_INTERFACES(QQmlParserStatus)
 
     /*!

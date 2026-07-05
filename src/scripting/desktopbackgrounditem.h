@@ -25,6 +25,8 @@ class VirtualDesktop;
 class DesktopBackgroundItem : public WindowThumbnailItem
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(DesktopBackground)
+
     /*!
      * \qmlproperty string DesktopBackground::outputName
      *

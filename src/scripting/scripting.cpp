@@ -678,45 +678,9 @@ KWin::Scripting::Scripting(QObject *parent)
 
     m_qmlEngine->setProperty("_kirigamiTheme", QStringLiteral("KirigamiPlasmaStyle"));
     m_qmlEngine->rootContext()->setContextObject(new KLocalizedQmlContext(m_qmlEngine));
-    init();
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Scripting"), this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
     connect(Workspace::self(), &Workspace::configChanged, this, &Scripting::start);
     connect(Workspace::self(), &Workspace::workspaceInitialized, this, &Scripting::start);
-}
-
-void KWin::Scripting::init()
-{
-    qRegisterMetaType<QList<KWin::LogicalOutput *>>();
-    qRegisterMetaType<QList<KWin::Window *>>();
-    qRegisterMetaType<QList<KWin::VirtualDesktop *>>();
-
-    qmlRegisterType<DesktopBackgroundItem>("org.kde.kwin", 3, 0, "DesktopBackground");
-    qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 3, 0, "WindowThumbnail");
-    qmlRegisterType<DBusCall>("org.kde.kwin", 3, 0, "DBusCall");
-    qmlRegisterType<ScreenEdgeHandler>("org.kde.kwin", 3, 0, "ScreenEdgeHandler");
-    qmlRegisterType<ShortcutHandler>("org.kde.kwin", 3, 0, "ShortcutHandler");
-    qmlRegisterType<SwipeGestureHandler>("org.kde.kwin", 3, 0, "SwipeGestureHandler");
-    qmlRegisterType<PinchGestureHandler>("org.kde.kwin", 3, 0, "PinchGestureHandler");
-    qmlRegisterType<WindowModel>("org.kde.kwin", 3, 0, "WindowModel");
-    qmlRegisterType<WindowFilterModel>("org.kde.kwin", 3, 0, "WindowFilterModel");
-    qmlRegisterType<VirtualDesktopModel>("org.kde.kwin", 3, 0, "VirtualDesktopModel");
-    qmlRegisterUncreatableType<KWin::QuickSceneView>("org.kde.kwin", 3, 0, "SceneView", QStringLiteral("Can't instantiate an object of type SceneView"));
-    qmlRegisterType<ScriptedQuickSceneEffect>("org.kde.kwin", 3, 0, "SceneEffect");
-
-    qmlRegisterSingletonType<DeclarativeScriptWorkspaceWrapper>("org.kde.kwin", 3, 0, "Workspace", [](QQmlEngine *qmlEngine, QJSEngine *jsEngine) {
-        return new DeclarativeScriptWorkspaceWrapper();
-    });
-    qmlRegisterSingletonInstance("org.kde.kwin", 3, 0, "Options", options);
-
-    qmlRegisterAnonymousType<KConfigPropertyMap>("org.kde.kwin", 3);
-    qmlRegisterAnonymousType<KWin::LogicalOutput>("org.kde.kwin", 3);
-    qmlRegisterAnonymousType<KWin::Window>("org.kde.kwin", 3);
-    qmlRegisterAnonymousType<KWin::VirtualDesktop>("org.kde.kwin", 3);
-    qmlRegisterAnonymousType<QAbstractItemModel>("org.kde.kwin", 3);
-    qmlRegisterAnonymousType<KWin::TileManager>("org.kde.kwin", 3);
-    // TODO: call the qml types as the C++ types?
-    qmlRegisterUncreatableType<KWin::CustomTile>("org.kde.kwin", 3, 0, "CustomTile", QStringLiteral("Cannot create objects of type Tile"));
-    qmlRegisterUncreatableType<KWin::Tile>("org.kde.kwin", 3, 0, "Tile", QStringLiteral("Cannot create objects of type AbstractTile"));
 }
 
 void KWin::Scripting::start()

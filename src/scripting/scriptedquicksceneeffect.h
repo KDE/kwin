@@ -46,6 +46,8 @@ namespace KWin
 class ScriptedQuickSceneEffect : public QuickSceneEffect
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(SceneEffect)
+
     /*!
      * \qmlproperty list<QtObject> SceneEffect::data
      * \qmldefault

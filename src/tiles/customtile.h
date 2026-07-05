@@ -20,6 +20,8 @@ namespace KWin
 class KWIN_EXPORT CustomTile : public Tile
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_UNCREATABLE("")
     Q_PROPERTY(KWin::Tile::LayoutDirection layoutDirection READ layoutDirection WRITE setLayoutDirection NOTIFY layoutDirectionChanged)
 
 public:

@@ -16,6 +16,11 @@
 
 #include <KConfigWatcher>
 
+#include <qqmlregistration.h>
+
+class QQmlEngine;
+class QJSEngine;
+
 namespace KWin
 {
 
@@ -68,6 +73,9 @@ class Settings;
 class KWIN_EXPORT Options : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
+
     Q_ENUM(XwaylandCrashPolicy)
     Q_ENUM(PlacementPolicy)
     Q_PROPERTY(FocusPolicy focusPolicy READ focusPolicy WRITE setFocusPolicy NOTIFY focusPolicyChanged)
@@ -191,8 +199,10 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(bool overlayVirtualKeyboardOnWindows READ overlayVirtualKeyboardOnWindows WRITE setOverlayVirtualKeyboardOnWindows NOTIFY overlayVirtualKeyboardOnWindowsChanged)
 
 public:
-    explicit Options(QObject *parent = nullptr);
+    explicit Options(QObject *parent);
     ~Options() override;
+
+    static Options *create(QQmlEngine *, QJSEngine *);
 
     void updateSettings();
 

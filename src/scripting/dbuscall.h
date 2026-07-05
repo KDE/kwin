@@ -11,6 +11,7 @@
 #include <QObject>
 #include <QString>
 #include <QVariant>
+#include <qqmlregistration.h>
 
 namespace KWin
 {
@@ -67,6 +68,7 @@ namespace KWin
 class DBusCall : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
 
     /*!
      * \qmlproperty string DBusCall::service

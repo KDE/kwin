@@ -32,6 +32,8 @@ class Window;
 class KWIN_EXPORT Tile : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_UNCREATABLE("")
 
     /*!
      * \qmlproperty RectF Tile::relativeGeometry
