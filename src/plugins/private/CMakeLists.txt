@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-ecm_add_qml_module(effectsplugin URI "org.kde.kwin.private.effects")
+ecm_add_qml_module(effectsplugin URI "org.kde.kwin.private.effects" VERSION 1.0 GENERATE_PLUGIN_SOURCE)
 
 ecm_target_qml_sources(effectsplugin
     SOURCES
@@ -13,7 +13,6 @@ ecm_target_qml_sources(effectsplugin
 target_sources(effectsplugin PRIVATE
     expoarea.cpp
     expolayout.cpp
-    plugin.cpp
 )
 
 target_link_libraries(effectsplugin PRIVATE

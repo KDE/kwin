@@ -39,6 +39,8 @@ struct LayeredPacking;
 class ExpoLayout : public QQuickItem
 {
     Q_OBJECT
+    QML_ELEMENT
+
     // Place windows in rows or columns.
     Q_PROPERTY(PlacementMode placementMode READ placementMode WRITE setPlacementMode NOTIFY placementModeChanged)
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
@@ -189,6 +191,8 @@ private:
 class ExpoCell : public QQuickItem
 {
     Q_OBJECT
+    QML_ELEMENT
+
     Q_PROPERTY(ExpoLayout *layout READ layout WRITE setLayout NOTIFY layoutChanged)
     Q_PROPERTY(QQuickItem *contentItem READ contentItem WRITE setContentItem NOTIFY contentItemChanged)
     Q_PROPERTY(qreal partialActivationFactor READ partialActivationFactor WRITE setPartialActivationFactor NOTIFY partialActivationFactorChanged)
