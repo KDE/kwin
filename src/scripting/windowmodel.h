@@ -80,7 +80,7 @@ class WindowFilterModel : public QSortFilterProxyModel
     /*!
      * \qmlproperty WindowModel WindowFilterModel::windowModel
      */
-    Q_PROPERTY(WindowModel *windowModel READ windowModel WRITE setWindowModel NOTIFY windowModelChanged)
+    Q_PROPERTY(KWin::WindowModel *windowModel READ windowModel WRITE setWindowModel NOTIFY windowModelChanged)
 
     /*!
      * \qmlproperty string WindowFilterModel::activity
