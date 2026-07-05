@@ -92,7 +92,7 @@ target_sources(kwin PRIVATE
     colormanagement_v1.cpp
     colorrepresentation_v1.cpp
     commit_timing_v1.cpp
-    compositor.cpp
+    compositor_interface.cpp
     contenttype_v1.cpp
     cursorshape_v1.cpp
     datacontroldevice_v1.cpp
@@ -123,7 +123,7 @@ target_sources(kwin PRIVATE
     linux_drm_syncobj_v1.cpp
     linuxdmabufv1clientbuffer.cpp
     lockscreen_overlay_v1.cpp
-    output.cpp
+    output_interface.cpp
     output_order_v1.cpp
     outputdevice_v2.cpp
     outputmanagement_v2.cpp
@@ -147,7 +147,7 @@ target_sources(kwin PRIVATE
     securitycontext_v1.cpp
     server_decoration.cpp
     server_decoration_palette.cpp
-    shadow.cpp
+    shadow_interface.cpp
     shmclientbuffer.cpp
     singlepixelbuffer.cpp
     slide.cpp
@@ -159,7 +159,7 @@ target_sources(kwin PRIVATE
     textinput_v3.cpp
     touch.cpp
     transaction.cpp
-    viewporter.cpp
+    viewporter_interface.cpp
     xdgactivation_v1.cpp
     xdgdecoration_v1.cpp
     xdgdialog_v1.cpp
