@@ -10,8 +10,8 @@ import org.kde.kwin as KWinComponents
 Item {
     id: desktopView
 
-    required property QtObject windowModel
-    required property QtObject desktop
+    required property KWinComponents.WindowModel windowModel
+    required property KWinComponents.VirtualDesktop desktop
 
     Repeater {
         model: KWinComponents.WindowFilterModel {

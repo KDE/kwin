@@ -14,7 +14,7 @@ import org.kde.kirigami as Kirigami
 Rectangle {
     id: handle
 
-    required property QtObject tile
+    required property KWinComponents.Tile tile
 
     required property int corner
 

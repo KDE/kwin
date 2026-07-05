@@ -241,7 +241,8 @@ private:
 class KWIN_EXPORT LogicalOutput : public QObject
 {
     Q_OBJECT
-    QML_ANONYMOUS
+    QML_NAMED_ELEMENT(Output)
+    QML_UNCREATABLE("")
 
     /*!
      * \qmlproperty Rect LogicalOutput::geometry

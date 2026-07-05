@@ -12,7 +12,7 @@ import org.kde.kirigami as Kirigami
 Rectangle {
     id: handle
 
-    required property QtObject tile
+    required property KWinComponents.Tile tile
 
     required property int edge
     readonly property int orientation: edge === Qt.LeftEdge || edge === Qt.RightEdge ? Qt.Horizontal : Qt.Vertical

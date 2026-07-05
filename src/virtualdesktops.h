@@ -44,7 +44,8 @@ class PlasmaVirtualDesktopManagementInterface;
 class KWIN_EXPORT VirtualDesktop : public QObject
 {
     Q_OBJECT
-    QML_ANONYMOUS
+    QML_ELEMENT
+    QML_UNCREATABLE("")
 
     /*!
      * \qmlproperty string VirtualDesktop::id

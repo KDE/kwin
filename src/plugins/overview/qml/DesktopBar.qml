@@ -24,7 +24,7 @@ Item {
     readonly property int desktopCount: desktopRepeater.count
 
     property bool verticalDesktopBar
-    property QtObject windowModel
+    property KWinComponents.WindowModel windowModel
     property alias desktopModel: desktopRepeater.model
     property QtObject selectedDesktop: null
     property var heap
@@ -56,7 +56,7 @@ Item {
                     height: bar.columnHeight
                     spacing: Kirigami.Units.smallSpacing
 
-                    required property QtObject desktop
+                    required property KWinComponents.VirtualDesktop desktop
                     required property int index
 
                     Keys.onEnterPressed: activate();
