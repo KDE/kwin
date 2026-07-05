@@ -70,338 +70,464 @@ class DecorationPalette;
 
 using ElectricBorderMode = std::variant<QuickTileMode, MaximizeMode>;
 
-/**
+/*!
  * The PlacementCommand type specifies how a window should be placed in the workspace when it's shown.
  */
 using PlacementCommand = std::variant<QPointF, RectF, MaximizeMode>;
 
-/**
+/*!
  * The DecorationPolicy enum indicates how the decoration mode is determined.
  */
 enum class DecorationPolicy {
-    /**
+    /*!
      * Force no decoration.
      */
     None,
-    /**
+    /*!
      * Follow the preferred decoration mode of the client.
      */
     PreferredByClient,
-    /**
+    /*!
      * Force the server side decoration mode.
      */
     Server,
 };
 
-/**
+/*!
  * The DecorationMode enum specifies who draws the window decoration, if at all.
  */
 enum class DecorationMode {
-    /**
+    /*!
      * No decoration.
      */
     None,
-    /**
+    /*!
      * The window decoration is drawn by the client.
      */
     Client,
-    /**
+    /*!
      * The window decoration is drawn by the compositor.
      */
     Server,
 };
 
+/*!
+ * \qmluncreatabletype Window
+ * \inqmlmodule org.kde.kwin
+ *
+ */
 class KWIN_EXPORT Window : public QObject
 {
     Q_OBJECT
 
-    /**
+    /*!
+     * \qmlproperty RectF Window::bufferGeometry
+     *
      * This property holds the rectangle that the pixmap or buffer of this Window
      * occupies on the screen. This rectangle includes invisible portions of the
      * window, e.g. client-side drop shadows, etc.
      */
     Q_PROPERTY(KWin::RectF bufferGeometry READ bufferGeometry NOTIFY bufferGeometryChanged)
 
-    /**
+    /*!
+     * \qmlproperty RectF Window::clientGeometry
+     *
      * The geometry of the Window without frame borders.
      */
     Q_PROPERTY(KWin::RectF clientGeometry READ clientGeometry NOTIFY clientGeometryChanged)
 
-    /**
+    /*!
+     * \qmlproperty point Window::pos
+     *
      * This property holds the position of the Window's frame geometry.
      */
     Q_PROPERTY(QPointF pos READ pos)
 
-    /**
+    /*!
+     * \qmlproperty size Window::size
+     *
      * This property holds the size of the Window's frame geometry.
      */
     Q_PROPERTY(QSizeF size READ size)
 
-    /**
+    /*!
+     * \qmlproperty real Window::x
+     *
      * This property holds the x position of the Window's frame geometry.
      */
     Q_PROPERTY(qreal x READ x NOTIFY frameGeometryChanged)
 
-    /**
+    /*!
+     * \qmlproperty real Window::y
+     *
      * This property holds the y position of the Window's frame geometry.
      */
     Q_PROPERTY(qreal y READ y NOTIFY frameGeometryChanged)
 
-    /**
+    /*!
+     * \qmlproperty real Window::width
+     *
      * This property holds the width of the Window's frame geometry.
      */
     Q_PROPERTY(qreal width READ width NOTIFY frameGeometryChanged)
 
-    /**
+    /*!
+     * \qmlproperty real Window::height
+     *
      * This property holds the height of the Window's frame geometry.
      */
     Q_PROPERTY(qreal height READ height NOTIFY frameGeometryChanged)
 
+    /*!
+     * \qmlproperty real Window::opacity
+     */
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
 
-    /**
+    /*!
+     * \qmlproperty LogicalOutput Window::output
+     *
      * The output where the window center is on
      */
     Q_PROPERTY(KWin::LogicalOutput *output READ output NOTIFY outputChanged)
 
+    /*!
+     * \qmlproperty RectF Window::rect
+     */
     Q_PROPERTY(KWin::RectF rect READ rect)
+
+    /*!
+     * \qmlproperty string Window::resourceName
+     */
     Q_PROPERTY(QString resourceName READ resourceName NOTIFY windowClassChanged)
+
+    /*!
+     * \qmlproperty string Window::resourceClass
+     */
     Q_PROPERTY(QString resourceClass READ resourceClass NOTIFY windowClassChanged)
+
+    /*!
+     * \qmlproperty string Window::windowRole
+     */
     Q_PROPERTY(QString windowRole READ windowRole NOTIFY windowRoleChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::desktopWindow
+     *
      * Returns whether the window is a desktop background window (the one with wallpaper).
      * See _NET_WM_WINDOW_TYPE_DESKTOP at https://specifications.freedesktop.org/wm-spec .
      */
     Q_PROPERTY(bool desktopWindow READ isDesktop CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::dock
+     *
      * Returns whether the window is a dock (i.e. a panel).
      * See _NET_WM_WINDOW_TYPE_DOCK at https://specifications.freedesktop.org/wm-spec .
      */
     Q_PROPERTY(bool dock READ isDock CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::toolbar
+     *
      * Returns whether the window is a standalone (detached) toolbar window.
      * See _NET_WM_WINDOW_TYPE_TOOLBAR at https://specifications.freedesktop.org/wm-spec .
      */
     Q_PROPERTY(bool toolbar READ isToolbar CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::menu
+     *
      * Returns whether the window is a torn-off menu.
      * See _NET_WM_WINDOW_TYPE_MENU at https://specifications.freedesktop.org/wm-spec .
      */
     Q_PROPERTY(bool menu READ isMenu CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::normalWindow
+     *
      * Returns whether the window is a "normal" window, i.e. an application or any other window
      * for which none of the specialized window types fit.
      * See _NET_WM_WINDOW_TYPE_NORMAL at https://specifications.freedesktop.org/wm-spec .
      */
     Q_PROPERTY(bool normalWindow READ isNormalWindow CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::dialog
+     *
      * Returns whether the window is a dialog window.
      * See _NET_WM_WINDOW_TYPE_DIALOG at https://specifications.freedesktop.org/wm-spec .
      */
     Q_PROPERTY(bool dialog READ isDialog CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::splash
+     *
      * Returns whether the window is a splashscreen. Note that many (especially older) applications
      * do not support marking their splash windows with this type.
      * See _NET_WM_WINDOW_TYPE_SPLASH at https://specifications.freedesktop.org/wm-spec .
      */
     Q_PROPERTY(bool splash READ isSplash CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::utility
+     *
      * Returns whether the window is a utility window, such as a tool window.
      * See _NET_WM_WINDOW_TYPE_UTILITY at https://specifications.freedesktop.org/wm-spec .
      */
     Q_PROPERTY(bool utility READ isUtility CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::dropdownMenu
+     *
      * Returns whether the window is a dropdown menu (i.e. a popup directly or indirectly open
      * from the application's menubar).
      * See _NET_WM_WINDOW_TYPE_DROPDOWN_MENU at https://specifications.freedesktop.org/wm-spec .
      */
     Q_PROPERTY(bool dropdownMenu READ isDropdownMenu CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::popupMenu
+     *
      * Returns whether the window is a popup menu (that is not a torn-off or dropdown menu).
      * See _NET_WM_WINDOW_TYPE_POPUP_MENU at https://specifications.freedesktop.org/wm-spec .
      */
     Q_PROPERTY(bool popupMenu READ isPopupMenu CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::tooltip
+     *
      * Returns whether the window is a tooltip.
      * See _NET_WM_WINDOW_TYPE_TOOLTIP at https://specifications.freedesktop.org/wm-spec .
      */
     Q_PROPERTY(bool tooltip READ isTooltip CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::notification
+     *
      * Returns whether the window is a window with a notification.
      * See _NET_WM_WINDOW_TYPE_NOTIFICATION at https://specifications.freedesktop.org/wm-spec .
      */
     Q_PROPERTY(bool notification READ isNotification CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::criticalNotification
+     *
      * Returns whether the window is a window with a critical notification.
      */
     Q_PROPERTY(bool criticalNotification READ isCriticalNotification CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::appletPopup
+     *
      * Returns whether the window is an applet popup.
      */
     Q_PROPERTY(bool appletPopup READ isAppletPopup CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::onScreenDisplay
+     *
      * Returns whether the window is an On Screen Display.
      */
     Q_PROPERTY(bool onScreenDisplay READ isOnScreenDisplay CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::comboBox
+     *
      * Returns whether the window is a combobox popup.
      * See _NET_WM_WINDOW_TYPE_COMBO at https://specifications.freedesktop.org/wm-spec .
      */
     Q_PROPERTY(bool comboBox READ isComboBox CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::dndIcon
+     *
      * Returns whether the window is a Drag&Drop icon.
      * See _NET_WM_WINDOW_TYPE_DND at https://specifications.freedesktop.org/wm-spec .
      */
     Q_PROPERTY(bool dndIcon READ isDNDIcon CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty enumeration Window::windowType
+     *
      * Returns the NETWM window type.
      * See https://specifications.freedesktop.org/wm-spec .
      */
     Q_PROPERTY(WindowType windowType READ windowType CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::managed
+     *
      * Whether this Window is managed by KWin (it has control over its placement and other
      * aspects, as opposed to override-redirect windows that are entirely handled by the application).
      */
     Q_PROPERTY(bool managed READ isClient CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::deleted
+     *
      * Whether this Window represents an already deleted window and only kept for the compositor for animations.
      */
     Q_PROPERTY(bool deleted READ isDeleted CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::skipsCloseAnimation
+     *
      * Whether the window does not want to be animated on window close.
      * There are legit reasons for this like a screenshot application which does not want its
      * window being captured.
      */
     Q_PROPERTY(bool skipsCloseAnimation READ skipsCloseAnimation WRITE setSkipCloseAnimation NOTIFY skipCloseAnimationChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::popupWindow
+     *
      * Whether the window is a popup.
      */
     Q_PROPERTY(bool popupWindow READ isPopupWindow)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::outline
+     *
      * Whether this Window represents the outline.
      *
-     * @note It's always @c false if compositing is turned off.
+     * \note It's always \c false if compositing is turned off.
      */
     Q_PROPERTY(bool outline READ isOutline)
 
-    /**
+    /*!
+     * \qmlproperty uuid Window::internalId
+     *
      * This property holds a UUID to uniquely identify this Window.
      */
     Q_PROPERTY(QUuid internalId READ internalId CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty int Window::pid
+     *
      * The pid of the process owning this window.
      *
-     * @since 5.20
+     * \since 5.20
      */
     Q_PROPERTY(int pid READ pid CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty int Window::stackingOrder
+     *
      * The position of this window within Workspace's window stack.
      */
     Q_PROPERTY(int stackingOrder READ stackingOrder NOTIFY stackingOrderChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::fullScreen
+     *
      * Whether this Window is fullScreen. A Window might either be fullScreen due to the _NET_WM property
      * or through a legacy support hack. The fullScreen state can only be changed if the Window does not
      * use the legacy hack. To be sure whether the state changed, connect to the notify signal.
      */
     Q_PROPERTY(bool fullScreen READ isFullScreen WRITE setFullScreen NOTIFY fullScreenChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::fullScreenable
+     *
      * Whether the Window can be set to fullScreen. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      */
     Q_PROPERTY(bool fullScreenable READ isFullScreenable)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::active
+     *
      * Whether this Window is active or not. Use Workspace::activateWindow() to activate a Window.
-     * @see Workspace::activateWindow
+     * \sa Workspace::activateWindow
      */
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
 
-    /**
+    /*!
+     * \qmlproperty list<VirtualDesktop> Window::desktops
+     *
      * The virtual desktops this client is on. If it's on all desktops, the list is empty.
      */
     Q_PROPERTY(QList<KWin::VirtualDesktop *> desktops READ desktops WRITE setDesktops NOTIFY desktopsChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::onAllDesktops
+     *
      * Whether the Window is on all desktops. That is desktop is -1.
      */
     Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops WRITE setOnAllDesktops NOTIFY desktopsChanged)
 
-    /**
+    /*!
+     * \qmlproperty list<string> Window::activities
+     *
      * The activities this client is on. If it's on all activities the property is empty.
      */
     Q_PROPERTY(QStringList activities READ activities WRITE setOnActivities NOTIFY activitiesChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::skipTaskbar
+     *
      * Indicates that the window should not be included on a taskbar.
      */
     Q_PROPERTY(bool skipTaskbar READ skipTaskbar WRITE setSkipTaskbar NOTIFY skipTaskbarChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::skipPager
+     *
      * Indicates that the window should not be included on a Pager.
      */
     Q_PROPERTY(bool skipPager READ skipPager WRITE setSkipPager NOTIFY skipPagerChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::skipSwitcher
+     *
      * Whether the Window should be excluded from window switching effects.
      */
     Q_PROPERTY(bool skipSwitcher READ skipSwitcher WRITE setSkipSwitcher NOTIFY skipSwitcherChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::closeable
+     *
      * Whether the window can be closed by the user.
      */
     Q_PROPERTY(bool closeable READ isCloseable NOTIFY closeableChanged)
 
+    /*!
+     * \qmlproperty icon Window::icon
+     */
     Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::keepAbove
+     *
      * Whether the Window is set to be kept above other windows.
      */
     Q_PROPERTY(bool keepAbove READ keepAbove WRITE setKeepAbove NOTIFY keepAboveChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::keepBelow
+     *
      * Whether the Window is set to be kept below other windows.
      */
     Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::minimizable
+     *
      * Whether the Window can be minimized. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      */
     Q_PROPERTY(bool minimizable READ isMinimizable)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::minimized
+     *
      * Whether the Window is minimized.
      */
     Q_PROPERTY(bool minimized READ isMinimized WRITE setMinimized NOTIFY minimizedChanged)
 
-    /**
+    /*!
+     * \qmlproperty RectF Window::iconGeometry
+     *
      * The optional geometry representing the minimized Window in e.g a taskbar.
      * See _NET_WM_ICON_GEOMETRY at https://specifications.freedesktop.org/wm-spec .
      * The value is evaluated each time the getter is called.
@@ -409,7 +535,9 @@ class KWIN_EXPORT Window : public QObject
      */
     Q_PROPERTY(KWin::RectF iconGeometry READ iconGeometry)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::specialWindow
+     *
      * Returns whether the window is any of special windows types (desktop, dock, splash, ...),
      * i.e. window types that usually don't have a window frame and the user does not use window
      * management (moving, raising,...) on them.
@@ -418,7 +546,9 @@ class KWIN_EXPORT Window : public QObject
      */
     Q_PROPERTY(bool specialWindow READ isSpecialWindow)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::demandsAttention
+     *
      * Whether window state _NET_WM_STATE_DEMANDS_ATTENTION is set. This state indicates that some
      * action in or with the window happened. For example, it may be set by the Window Manager if
      * the window requested activation but the Window Manager refused it, or the application may set
@@ -428,74 +558,100 @@ class KWIN_EXPORT Window : public QObject
      */
     Q_PROPERTY(bool demandsAttention READ isDemandingAttention WRITE demandAttention NOTIFY demandsAttentionChanged)
 
-    /**
+    /*!
+     * \qmlproperty string Window::caption
+     *
      * The Caption of the Window. Read from WM_NAME property together with a suffix for hostname and shortcut.
-     * To read only the caption as provided by WM_NAME, use @c captionNormal.
+     * To read only the caption as provided by WM_NAME, use \c captionNormal.
      */
     Q_PROPERTY(QString caption READ caption NOTIFY captionChanged)
 
-    /**
+    /*!
+     * \qmlproperty string Window::captionNormal
+     *
      * The Caption of the Window. Read from WM_NAME property.
      */
     Q_PROPERTY(QString captionNormal READ captionNormal NOTIFY captionNormalChanged)
 
-    /**
+    /*!
+     * \qmlproperty size Window::minSize
+     *
      * Minimum size as specified in WM_NORMAL_HINTS
      */
     Q_PROPERTY(QSizeF minSize READ minSize)
 
-    /**
+    /*!
+     * \qmlproperty size Window::maxSize
+     *
      * Maximum size as specified in WM_NORMAL_HINTS
      */
     Q_PROPERTY(QSizeF maxSize READ maxSize)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::wantsInput
+     *
      * Whether the Window can accept keyboard focus.
      * The value is evaluated each time the getter is called.
      * Because of that no changed signal is provided.
      */
     Q_PROPERTY(bool wantsInput READ wantsInput)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::transient
+     *
      * Whether the Window is a transient Window to another Window.
-     * @see transientFor
+     * \sa transientFor
      */
     Q_PROPERTY(bool transient READ isTransient NOTIFY transientChanged)
 
-    /**
+    /*!
+     * \qmlproperty Window Window::transientFor
+     *
      * The Window to which this Window is a transient if any.
      */
     Q_PROPERTY(KWin::Window *transientFor READ transientFor NOTIFY transientChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::modal
+     *
      * Whether the Window represents a modal window.
      */
     Q_PROPERTY(bool modal READ isModal NOTIFY modalChanged)
 
-    /**
+    /*!
+     * \qmlproperty RectF Window::frameGeometry
+     *
      * The geometry of this Window. Be aware that depending on resize mode the frameGeometryChanged
      * signal might be emitted at each resize step or only at the end of the resize operation.
      */
     Q_PROPERTY(KWin::RectF frameGeometry READ frameGeometry WRITE moveResize NOTIFY frameGeometryChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::move
+     *
      * Whether the Window is currently being moved by the user.
      * Notify signal is emitted when the Window starts or ends move/resize mode.
      */
     Q_PROPERTY(bool move READ isInteractiveMove NOTIFY moveResizedChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::resize
+     *
      * Whether the Window is currently being resized by the user.
      * Notify signal is emitted when the Window starts or ends move/resize mode.
      */
     Q_PROPERTY(bool resize READ isInteractiveResize NOTIFY moveResizedChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::decorationHasAlpha
+     *
      * Whether the decoration is currently using an alpha channel.
      */
     Q_PROPERTY(bool decorationHasAlpha READ decorationHasAlpha)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::noBorder
+     *
      * Whether the window has a decoration or not.
      * This property is not allowed to be set by applications themselves.
      * The decision whether a window has a border or not belongs to the window manager.
@@ -503,49 +659,64 @@ class KWIN_EXPORT Window : public QObject
      */
     Q_PROPERTY(bool noBorder READ noBorder WRITE setNoBorder NOTIFY decorationPolicyChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::providesContextHelp
+     *
      * Whether the Window provides context help. Mostly needed by decorations to decide whether to
      * show the help button or not.
      */
     Q_PROPERTY(bool providesContextHelp READ providesContextHelp CONSTANT)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::maximizable
+     *
      * Whether the Window can be maximized both horizontally and vertically.
      * The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      */
     Q_PROPERTY(bool maximizable READ isMaximizable)
 
-    /**
+    /*!
+     * \qmlproperty enumeration Window::maximizeMode
+     * \qmlenumeratorsfrom KWin::MaximizeMode
+     *
      * Whether the window is maximized horizontally, vertically or fully.
      * This is read only, in order to maximize from a script use
      * the setMaximize function
-     * @see setMaximize
+     * \sa setMaximize
      */
     Q_PROPERTY(KWin::MaximizeMode maximizeMode READ maximizeMode NOTIFY maximizedChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::moveable
+     *
      * Whether the Window is moveable. Even if it is not moveable, it might be possible to move
      * it to another screen. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
-     * @see moveableAcrossScreens
+     * \sa moveableAcrossScreens
      */
     Q_PROPERTY(bool moveable READ isMovable)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::moveableAcrossScreens
+     *
      * Whether the Window can be moved to another screen. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
-     * @see moveable
+     * \sa moveable
      */
     Q_PROPERTY(bool moveableAcrossScreens READ isMovableAcrossScreens)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::resizeable
+     *
      * Whether the Window can be resized. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      */
     Q_PROPERTY(bool resizeable READ isResizable)
 
-    /**
+    /*!
+     * \qmlproperty string Window::desktopFileName
+     *
      * The desktop file name of the application this Window belongs to.
      *
      * This is either the base name without full path and without file extension of the
@@ -556,17 +727,23 @@ class KWIN_EXPORT Window : public QObject
      */
     Q_PROPERTY(QString desktopFileName READ desktopFileName NOTIFY desktopFileNameChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::hasApplicationMenu
+     *
      * Whether an application menu is available for this Window
      */
     Q_PROPERTY(bool hasApplicationMenu READ hasApplicationMenu NOTIFY hasApplicationMenuChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::applicationMenuActive
+     *
      * Whether the application menu for this Window is currently opened
      */
     Q_PROPERTY(bool applicationMenuActive READ applicationMenuActive NOTIFY applicationMenuActiveChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::unresponsive
+     *
      * Whether this window is unresponsive.
      *
      * When an application failed to react on a ping request in time, it is
@@ -574,45 +751,63 @@ class KWIN_EXPORT Window : public QObject
      */
     Q_PROPERTY(bool unresponsive READ unresponsive NOTIFY unresponsiveChanged)
 
-    /**
+    /*!
+     * \qmlproperty string Window::colorScheme
+     *
      * The color scheme set on this window
      * Absolute file path, or name of palette in the user's config directory following KColorSchemes format.
      * An empty string indicates the default palette from kdeglobals is used.
-     * @note This indicates the colour scheme requested, which might differ from the theme applied if the colorScheme cannot be found
+     * \note This indicates the colour scheme requested, which might differ from the theme applied if the colorScheme cannot be found
      */
     Q_PROPERTY(QString colorScheme READ colorScheme NOTIFY colorSchemeChanged)
 
+    /*!
+     * \qmlproperty enumeration Window::layer
+     *
+     */
     Q_PROPERTY(KWin::Layer layer READ layer)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::hidden
+     *
      * Whether this window is hidden. It's usually the case with auto-hide panels.
      */
     Q_PROPERTY(bool hidden READ isHidden NOTIFY hiddenChanged)
 
-    /**
+    /*!
+     * \qmlproperty Tile Window::tile
+     *
      * The Tile this window is associated to, if any
      */
     Q_PROPERTY(KWin::Tile *tile READ requestedTile WRITE setTileCompatibility NOTIFY tileChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::inputMethod
+     *
      * Returns whether this window is an input method window.
      * This is only used for Wayland.
      */
     Q_PROPERTY(bool inputMethod READ isInputMethod)
 
-    /**
+    /*!
+     * \qmlproperty string Window::tag
+     *
      * A client-provided tag of the window.
      * Not necessarily unique, but can be used to identify similar windows
      * across application restarts
      */
     Q_PROPERTY(QString tag READ tag NOTIFY tagChanged)
 
-    /**
+    /*!
+     * \qmlproperty string Window::description
+     *
      * A client-provided description of the window
      */
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool Window::excludeFromCapture
+     *
      * Exclude this window from ScreenCast.
      * It will also be applied for all transient windows recursively.
      */
@@ -624,7 +819,7 @@ public:
     void ref();
     void unref();
 
-    /**
+    /*!
      * Returns the last requested geometry. The returned value indicates the bounding
      * geometry, meaning that the client can commit smaller window geometry if the window
      * is resized.
@@ -635,14 +830,14 @@ public:
      */
     RectF moveResizeGeometry() const;
 
-    /**
+    /*!
      * Returns the output where the last move or resize operation has occurred. The
      * window is expected to land on this output after the move/resize operation completes.
      */
     LogicalOutput *moveResizeOutput() const;
     void setMoveResizeOutput(LogicalOutput *output);
 
-    /**
+    /*!
      * Returns the geometry of the pixmap or buffer attached to this Window.
      *
      * For X11 windows, this method returns server-side geometry of the Window.
@@ -651,16 +846,16 @@ public:
      * occupies on the screen, in global screen coordinates.
      */
     RectF bufferGeometry() const;
-    /**
+    /*!
      * Returns the geometry of the Window, excluding invisible portions, e.g.
      * server-side and client-side drop shadows, etc.
      */
     RectF frameGeometry() const;
-    /**
+    /*!
      * Returns the geometry of the client window, in global screen coordinates.
      */
     RectF clientGeometry() const;
-    /**
+    /*!
      * Returns the extents of the server-side decoration.
      *
      * Note that the returned margins object will have all margins set to 0 if
@@ -685,35 +880,35 @@ public:
     LogicalOutput *output() const;
     void setOutput(LogicalOutput *output);
     QSizeF clientSize() const;
-    /**
+    /*!
      * Returns a rectangle that the window occupies on the screen, including drop-shadows.
      */
     RectF visibleGeometry() const;
 
-    /**
-     * Maps the specified @a point from the global screen coordinates to the frame coordinates.
+    /*!
+     * Maps the specified \a point from the global screen coordinates to the frame coordinates.
      */
     QPointF mapToFrame(const QPointF &point) const;
-    /**
-     * Maps the specified @a point from the global screen coordinates to the surface-local
+    /*!
+     * Maps the specified \a point from the global screen coordinates to the surface-local
      * coordinates of the main surface. For X11 windows, this function maps the specified point
      * from the global screen coordinates to the buffer-local coordinates.
      */
     QPointF mapToLocal(const QPointF &point) const;
     QPointF mapFromLocal(const QPointF &point) const;
 
-    /**
-     * Calculates the matching client position for the given frame position @p point.
+    /*!
+     * Calculates the matching client position for the given frame position \a point.
      */
     virtual QPointF framePosToClientPos(const QPointF &point) const;
     virtual QPointF nextFramePosToClientPos(const QPointF &point) const;
-    /**
-     * Calculates the matching frame position for the given client position @p point.
+    /*!
+     * Calculates the matching frame position for the given client position \a point.
      */
     virtual QPointF clientPosToFramePos(const QPointF &point) const;
     virtual QPointF nextClientPosToFramePos(const QPointF &point) const;
-    /**
-     * Calculates the matching client size for the given frame size @p size.
+    /*!
+     * Calculates the matching client size for the given frame size \a size.
      *
      * Notice that size constraints won't be applied.
      *
@@ -721,8 +916,8 @@ public:
      */
     virtual QSizeF frameSizeToClientSize(const QSizeF &size) const;
     virtual QSizeF nextFrameSizeToClientSize(const QSizeF &size) const;
-    /**
-     * Calculates the matching frame size for the given client size @p size.
+    /*!
+     * Calculates the matching frame size for the given client size \a size.
      *
      * Notice that size constraints won't be applied.
      *
@@ -730,22 +925,22 @@ public:
      */
     virtual QSizeF clientSizeToFrameSize(const QSizeF &size) const;
     virtual QSizeF nextClientSizeToFrameSize(const QSizeF &size) const;
-    /**
-     * Calculates the matching client rect for the given frame rect @p rect.
+    /*!
+     * Calculates the matching client rect for the given frame rect \a rect.
      *
      * Notice that size constraints won't be applied.
      */
     RectF frameRectToClientRect(const RectF &rect) const;
     RectF nextFrameRectToClientRect(const RectF &rect) const;
-    /**
-     * Calculates the matching frame rect for the given client rect @p rect.
+    /*!
+     * Calculates the matching frame rect for the given client rect \a rect.
      *
      * Notice that size constraints won't be applied.
      */
     RectF clientRectToFrameRect(const RectF &rect) const;
     RectF nextClientRectToFrameRect(const RectF &rect) const;
 
-    /**
+    /*!
      * How to resize the window in order to obey constraints (mainly aspect ratios).
      */
     enum SizeMode {
@@ -758,29 +953,29 @@ public:
     virtual QSizeF constrainClientSize(const QSizeF &size, SizeMode mode = SizeModeAny) const;
     QSizeF constrainFrameSize(const QSizeF &size, SizeMode mode = SizeModeAny) const;
 
-    /**
-     * Moves the window so that the new topLeft corner of the frame is @p topLeft.
+    /*!
+     * Moves the window so that the new topLeft corner of the frame is \a topLeft.
      */
     void move(const QPointF &topLeft);
 
-    /**
-     * Resizes the window to have a new @p size but stay with the top-left corner in the same position.
+    /*!
+     * Resizes the window to have a new \a size but stay with the top-left corner in the same position.
      */
     void resize(const QSizeF &size);
 
-    /**
-     * Requests a new @p geometry for the window that the implementation will need to adopt
+    /*!
+     * Requests a new \a geometry for the window that the implementation will need to adopt
      * within its possibilities.
      */
     void moveResize(const RectF &geometry);
 
-    /**
-     * Returns @c true if the window has already been placed in the workspace; otherwise returns @c false.
+    /*!
+     * Returns \c true if the window has already been placed in the workspace; otherwise returns \c false.
      */
     bool isPlaced() const;
 
-    /**
-     * Places the window in the workspace as specified by the @a placement command.
+    /*!
+     * Places the window in the workspace as specified by the \a placement command.
      */
     void place(const PlacementCommand &placement);
 
@@ -847,7 +1042,7 @@ public:
     virtual void updateActivities(bool includeTransients);
     void blockActivityUpdates(bool b = true);
 
-    /**
+    /*!
      * Refresh Window's cache of activities
      * Called when activity daemon status changes
      */
@@ -872,16 +1067,16 @@ public:
     SurfaceItem *surfaceItem() const;
     WindowItem *windowItem() const;
 
-    /**
-     * Returns the Shadow associated with this Window or @c null if it has no shadow.
+    /*!
+     * Returns the Shadow associated with this Window or \c null if it has no shadow.
      */
     Shadow *shadow() const;
-    /**
+    /*!
      * Updates the Shadow associated with this Window from X11 Property.
      * Call this method when the Property changes or Compositing is started.
      */
     void updateShadow();
-    /**
+    /*!
      * Whether the Window currently wants the shadow to be rendered.
      */
     bool wantsShadowToBeRendered() const;
@@ -892,17 +1087,17 @@ public:
     SurfaceInterface *surface() const;
     void setSurface(SurfaceInterface *surface);
 
-    /**
-     * @returns Transformation to map from global to window coordinates.
+    /*!
+     * Returns Transformation to map from global to window coordinates.
      */
     QMatrix4x4 inputTransformation() const;
 
-    /**
-     * Returns @c true if the window can accept input at the specified position @a point.
+    /*!
+     * Returns \c true if the window can accept input at the specified position \a point.
      */
     virtual bool hitTest(const QPointF &point) const;
 
-    /**
+    /*!
      * The window has a popup grab. This means that when it got mapped the
      * parent window had an implicit (pointer) grab.
      *
@@ -911,39 +1106,39 @@ public:
      * Once the popup grab ends (e.g. pointer press outside of any Window of
      * the client), the method popupDone should be invoked.
      *
-     * The default implementation returns @c false.
-     * @see popupDone
-     * @since 5.10
+     * The default implementation returns \c false.
+     * \sa popupDone
+     * \since 5.10
      */
     virtual bool hasPopupGrab() const
     {
         return false;
     }
-    /**
+    /*!
      * This method should be invoked for windows with a popup grab when
      * the grab ends.
      *
      * The default implementation does nothing.
-     * @see hasPopupGrab
-     * @since 5.10
+     * \sa hasPopupGrab
+     * \since 5.10
      */
     virtual void popupDone()
     {
     }
 
-    /**
-     * @brief Finds the Window matching the condition expressed in @p func in @p list.
+    /*!
+     * \brief Finds the Window matching the condition expressed in \a func in \a list.
      *
      * The method is templated to operate on either a list of windows or on a list of
      * a subclass type of Window.
-     * @param list The list to search in
-     * @param func The condition function (compare std::find_if)
-     * @return T* The found Window or @c null if there is no matching Window
+     * \a list The list to search in
+     * \a func The condition function (compare std::find_if)
+     * Returns T* The found Window or \c null if there is no matching Window
      */
     template<class T, class U>
     static T *findInList(const QList<T *> &list, std::function<bool(const U *)> func);
 
-    /**
+    /*!
      * A UUID to uniquely identify this Window independent of windowing system.
      */
     QUuid internalId() const
@@ -952,7 +1147,7 @@ public:
     }
 
     int stackingOrder() const;
-    void setStackingOrder(int order); ///< @internal
+    void setStackingOrder(int order);
 
     bool skipSwitcher() const
     {
@@ -986,7 +1181,7 @@ public:
     {
         return m_active;
     }
-    /**
+    /*!
      * Sets the window's active state to \a act.
      *
      * This function does only change the visual appearance of the window,
@@ -1017,22 +1212,22 @@ public:
 
     void cancelAutoRaise();
 
-    /**
-     * @returns The caption consisting of captionNormal and captionSuffix
-     * @see captionNormal
-     * @see captionSuffix
+    /*!
+     * Returns The caption consisting of captionNormal and captionSuffix
+     * \sa captionNormal
+     * \sa captionSuffix
      */
     QString caption() const;
-    /**
-     * @returns The caption as set by the Window without any suffix.
-     * @see caption
-     * @see captionSuffix
+    /*!
+     * Returns The caption as set by the Window without any suffix.
+     * \sa caption
+     * \sa captionSuffix
      */
     virtual QString captionNormal() const = 0;
-    /**
-     * @returns The suffix added to the caption (e.g. shortcut, machine name, etc.)
-     * @see caption
-     * @see captionNormal
+    /*!
+     * Returns The suffix added to the caption (e.g. shortcut, machine name, etc.)
+     * \sa caption
+     * \sa captionNormal
      */
     virtual QString captionSuffix() const = 0;
     virtual bool isPlaceable() const;
@@ -1047,8 +1242,8 @@ public:
     const Window *transientFor() const;
     Window *transientFor();
     void setTransientFor(Window *transientFor);
-    /**
-     * @returns @c true if transient is the transient_for window for this window,
+    /*!
+     * Returns \c true if transient is the transient_for window for this window,
      *  or recursively the transient_for window
      * @todo: remove boolean trap
      */
@@ -1059,7 +1254,7 @@ public:
     void removeTransientFromList(Window *cl);
     virtual QList<Window *> mainWindows() const; // Call once before loop , is not indirect
     QList<Window *> allMainWindows() const; // Call once before loop , is indirect
-    /**
+    /*!
      * Returns true for "special" windows and false for windows which are "normal"
      * (normal=window which has a border, can be moved by the user, can be closed, etc.)
      * true for Desktop, Dock, Splash, Override and TopMenu (and Toolbar??? - for now)
@@ -1101,23 +1296,25 @@ public:
     virtual MaximizeMode maximizeMode() const;
     virtual MaximizeMode requestedMaximizeMode() const;
     virtual void maximize(MaximizeMode mode, const RectF &restore = RectF());
-    /**
-     * Sets the maximization according to @p vertically and @p horizontally.
+    /*!
+     * \qmlmethod void setMaximize(bool vertically, bool horizontally, RectF restore={})
+     *
+     * Sets the maximization according to \a vertically and \a horizontally.
      */
     Q_INVOKABLE void setMaximize(bool vertically, bool horizontally, const RectF &restore = RectF());
 
     QPalette palette();
     const Decoration::DecorationPalette *decorationPalette();
 
-    /**
+    /*!
      * Returns whether the window is resizable or has a fixed size.
      */
     virtual bool isResizable() const = 0;
-    /**
+    /*!
      * Returns whether the window is moveable or has a fixed position.
      */
     virtual bool isMovable() const = 0;
-    /**
+    /*!
      * Returns whether the window can be moved to another screen.
      */
     virtual bool isMovableAcrossScreens() const = 0;
@@ -1168,15 +1365,15 @@ public:
     Layer layer() const;
     void updateLayer();
 
-    /**
-     * Returns @c true if the Client is being interactively moved; otherwise @c false.
+    /*!
+     * Returns \c true if the Client is being interactively moved; otherwise \c false.
      */
     bool isInteractiveMove() const
     {
         return isInteractiveMoveResize() && interactiveMoveResizeGravity() == Gravity::None;
     }
-    /**
-     * Returns @c true if the Client is being interactively resized; otherwise @c false.
+    /*!
+     * Returns \c true if the Client is being interactively resized; otherwise \c false.
      */
     bool isInteractiveResize() const
     {
@@ -1190,7 +1387,7 @@ public:
     {
         return m_interactiveMoveResize.anchor;
     }
-    /**
+    /*!
      * Cursor shape for move/resize mode.
      */
     CursorShape cursor() const
@@ -1200,7 +1397,7 @@ public:
     uint32_t interactiveMoveResizeCount() const;
 
     void updateInteractiveMoveResize(const QPointF &global, Qt::KeyboardModifiers modifiers);
-    /**
+    /*!
      * Ends move resize when all pointer buttons are up again.
      */
     void endInteractiveMoveResize();
@@ -1213,15 +1410,15 @@ public:
     void setModal(bool modal);
     bool isModal() const;
 
-    /**
-     * Determines the mouse command for the given @p button in the current state.
+    /*!
+     * Determines the mouse command for the given \a button in the current state.
      */
     std::optional<Options::MouseCommand> getMousePressCommand(Qt::MouseButton button) const;
     std::optional<Options::MouseCommand> getMouseReleaseCommand(Qt::MouseButton button) const;
     std::optional<Options::MouseCommand> getWheelCommand(Qt::Orientation orientation) const;
     bool mousePressCommandConsumesEvent(Options::MouseCommand command) const;
-    /**
-     * @returns whether or not the command consumes the event that triggered it
+    /*!
+     * Returns whether or not the command consumes the event that triggered it
      */
     bool performMousePressCommand(Options::MouseCommand, const QPointF &globalPos);
     void performMouseReleaseCommand(Options::MouseCommand, const QPointF &globalPos);
@@ -1256,39 +1453,39 @@ public:
     virtual DecorationPolicy decorationPolicy() const;
     virtual void setDecorationPolicy(DecorationPolicy policy);
 
-    /**
+    /*!
      * Returns whether the window provides context help or not. If it does,
      * you should show a help menu item or a help button like '?' and call
      * contextHelp() if this is invoked.
      *
-     * Default implementation returns @c false.
-     * @see showContextHelp;
+     * Default implementation returns \c false.
+     * \sa showContextHelp;
      */
     virtual bool providesContextHelp() const;
 
-    /**
+    /*!
      * Invokes context help on the window. Only works if the window
      * actually provides context help.
      *
      * Default implementation does nothing.
      *
-     * @see providesContextHelp()
+     * \sa providesContextHelp()
      */
     virtual void showContextHelp();
 
-    /**
-     * @returns the geometry of the virtual keyboard
+    /*!
+     * Returns the geometry of the virtual keyboard
      * This geometry is in global coordinates
      */
     RectF virtualKeyboardGeometry() const;
 
-    /**
+    /*!
      * Sets the geometry of the virtual keyboard, The window may resize itself in order to make space for the keyboard
      * This geometry is in global coordinates
      */
     virtual void setVirtualKeyboardGeometry(const RectF &geo);
 
-    /**
+    /*!
      * Restores the Window after it had been hidden due to show on screen edge functionality.
      * The Window also gets raised (e.g. Panel mode windows can cover) and the Window
      * gets informed in a window specific way that it is shown and raised again.
@@ -1300,16 +1497,16 @@ public:
         return m_desktopFileName;
     }
 
-    /**
-     * Helper function to compute the icon out of an application id defined by @p fileName
+    /*!
+     * Helper function to compute the icon out of an application id defined by \a fileName
      *
-     * @returns an icon name that can be used with QIcon::fromTheme()
+     * Returns an icon name that can be used with QIcon::fromTheme()
      */
     static QString iconFromDesktopFile(const QString &fileName);
 
     static QString findDesktopFile(const QString &fileName);
 
-    /**
+    /*!
      * Tries to terminate the process of this Window.
      *
      * Implementing subclasses can perform a windowing system solution for terminating.
@@ -1341,9 +1538,9 @@ public:
         return m_applicationMenuObjectPath;
     }
 
-    /**
+    /*!
      * Request showing the application menu bar
-     * @param actionId The DBus menu ID of the action that should be highlighted, 0 for the root menu
+     * \a actionId The DBus menu ID of the action that should be highlighted, 0 for the root menu
      */
     void showApplicationMenu(int actionId);
 
@@ -1353,8 +1550,8 @@ public:
 
     bool unresponsive() const;
 
-    /**
-     * Default implementation returns @c null.
+    /*!
+     * Default implementation returns \c null.
      * Mostly intended for X11 clients, from EWMH:
      * @verbatim
      * If the WM_TRANSIENT_FOR property is set to None or Root window, the window should be
@@ -1365,20 +1562,20 @@ public:
      * @endverbatim
      */
     virtual bool groupTransient() const;
-    /**
-     * Default implementation returns @c null.
+    /*!
+     * Default implementation returns \c null.
      *
      * Mostly for X11 clients, holds the client group
      */
     virtual const Group *group() const;
-    /**
-     * Default implementation returns @c null.
+    /*!
+     * Default implementation returns \c null.
      *
      * Mostly for X11 clients, holds the client group
      */
     virtual Group *group();
 
-    /**
+    /*!
      * Return window management interface
      */
     PlasmaWindowInterface *windowManagementInterface() const
@@ -1386,8 +1583,8 @@ public:
         return m_windowManagementInterface;
     }
 
-    /**
-     * Sets the last user usage serial of the surface as @p serial
+    /*!
+     * Sets the last user usage serial of the surface as \a serial
      * TODO make the QPA responsible for this, it's only needed
      * for KWindowSystem / for internal windows
      */
@@ -1429,55 +1626,55 @@ Q_SIGNALS:
     void damaged(KWin::Window *window);
     void inputTransformationChanged();
     void closed();
-    /**
+    /*!
      * Emitted whenever the Window's screen changes. This can happen either in consequence to
      * a screen being removed/added or if the Window's geometry changes.
-     * @since 4.11
-     * @param oldOutput The window's previous output.
+     * \since 4.11
+     * \a oldOutput The window's previous output.
      */
     void outputChanged(LogicalOutput *oldOutput);
     void skipCloseAnimationChanged();
-    /**
+    /*!
      * Emitted whenever the window role of the window changes.
-     * @since 5.0
+     * \since 5.0
      */
     void windowRoleChanged();
-    /**
+    /*!
      * Emitted whenever the window class name or resource name of the window changes.
-     * @since 5.0
+     * \since 5.0
      */
     void windowClassChanged();
 
-    /**
+    /*!
      * Emitted whenever the Surface for this Window changes.
      */
     void surfaceChanged();
 
-    /**
+    /*!
      * Emitted whenever the window's shadow changes.
-     * @since 5.15
+     * \since 5.15
      */
     void shadowChanged();
 
-    /**
+    /*!
      * This signal is emitted when the Window's buffer geometry changes.
      */
     void bufferGeometryChanged(const KWin::RectF &oldGeometry);
-    /**
+    /*!
      * This signal is emitted when the Window's frame geometry changes.
      */
     void frameGeometryChanged(const KWin::RectF &oldGeometry);
-    /**
+    /*!
      * This signal is emitted when the Window's client geometry has changed.
      */
     void clientGeometryChanged(const KWin::RectF &oldGeometry);
 
-    /**
+    /*!
      * This signal is emitted when the frame geometry is about to change. The new geometry is not known yet
      */
     void frameGeometryAboutToChange();
 
-    /**
+    /*!
      * This signal is emitted when associated tile has changed, including from and to none
      */
     void tileChanged(KWin::Tile *tile);
@@ -1491,7 +1688,7 @@ Q_SIGNALS:
     void activeChanged();
     void keepAboveChanged(bool);
     void keepBelowChanged(bool);
-    /**
+    /*!
      * Emitted whenever the demands attention state changes.
      */
     void demandsAttentionChanged();
@@ -1548,51 +1745,51 @@ protected:
     bool isMostRecentlyRaised() const;
     void markAsDeleted();
     void markAsPlaced();
-    /**
+    /*!
      * Whether the window accepts focus.
      * The difference to wantsInput is that the implementation should not check rules and return
      * what the window effectively supports.
      */
     virtual bool acceptsFocus() const = 0;
-    /**
+    /*!
      * Called from setActive once the active value got updated, but before the changed signal
      * is emitted.
      *
      * Default implementation does nothing.
      */
     virtual void doSetActive();
-    /**
+    /*!
      * Called from setKeepAbove once the keepBelow value got updated, but before the changed signal
      * is emitted.
      *
      * Default implementation does nothing.
      */
     virtual void doSetKeepAbove();
-    /**
+    /*!
      * Called from setKeepBelow once the keepBelow value got updated, but before the changed signal
      * is emitted.
      *
      * Default implementation does nothing.
      */
     virtual void doSetKeepBelow();
-    /**
+    /*!
      * Called from setDeskop once the desktop value got updated, but before the changed signal
      * is emitted.
      *
      * Default implementation does nothing.
      */
     virtual void doSetDesktop();
-    /**
-     * Called from @ref setOnActivities just after the activity list member has been updated, but before
-     * @ref updateActivities is called.
+    /*!
+     * Called from setOnActivities just after the activity list member has been updated, but before
+     * updateActivities is called.
      *
-     * @param activityList the new list of activities set on that window
+     * \a activityList the new list of activities set on that window
      *
      * Default implementation does nothing
      */
     virtual void doSetOnActivities(const QStringList &activityList);
-    /**
-     * Called from @ref minimize and @ref unminimize once the minimized value got updated, but before the
+    /*!
+     * Called from minimize and unminimize once the minimized value got updated, but before the
      * changed signal is emitted.
      *
      * Default implementation does nothig.
@@ -1654,15 +1851,15 @@ protected:
     };
     virtual void moveResizeInternal(const RectF &rect, MoveResizeMode mode) = 0;
 
-    /**
-     * @returns whether the Window is currently in move resize mode
+    /*!
+     * Returns whether the Window is currently in move resize mode
      */
     bool isInteractiveMoveResize() const
     {
         return m_interactiveMoveResize.enabled;
     }
-    /**
-     * Sets whether the Window is in move resize mode to @p enabled.
+    /*!
+     * Sets whether the Window is in move resize mode to \a enabled.
      */
     void setInteractiveMoveResize(bool enabled)
     {
@@ -1676,21 +1873,21 @@ protected:
     {
         m_interactiveMoveResize.modifiers = modifiers;
     }
-    /**
-     * @returns whether the move resize mode is unrestricted.
+    /*!
+     * Returns whether the move resize mode is unrestricted.
      */
     bool isUnrestrictedInteractiveMoveResize() const
     {
         return m_interactiveMoveResize.unrestricted;
     }
-    /**
-     * Sets whether move resize mode is unrestricted to @p set.
+    /*!
+     * Sets whether move resize mode is unrestricted to \a set.
      */
     void setUnrestrictedInteractiveMoveResize(bool set)
     {
         m_interactiveMoveResize.unrestricted = set;
     }
-    /**
+    /*!
      * Normalized position of the move resize anchor point relative to the top-left window
      * corner when the move resize operation started.
      *
@@ -1722,25 +1919,25 @@ protected:
     {
         m_interactiveMoveResize.buttonDown = down;
     }
-    /**
+    /*!
      * Sets an appropriate cursor shape for the logical mouse position.
      */
     void updateCursor();
     void startDelayedInteractiveMoveResize();
     void stopDelayedInteractiveMoveResize();
     bool startInteractiveMoveResize();
-    /**
+    /*!
      * Called from startMoveResize.
      *
-     * Implementing classes should return @c false if starting move resize should
-     * get aborted. In that case startMoveResize will also return @c false.
+     * Implementing classes should return \c false if starting move resize should
+     * get aborted. In that case startMoveResize will also return \c false.
      *
-     * Base implementation returns @c true.
+     * Base implementation returns \c true.
      */
     virtual bool doStartInteractiveMoveResize();
     virtual void doFinishInteractiveMoveResize();
     void finishInteractiveMoveResize(bool cancel);
-    /**
+    /*!
      * Leaves the move resize mode.
      *
      * Inheriting classes must invoke the base implementation which
@@ -1753,12 +1950,12 @@ protected:
      */
     void checkQuickTilingMaximizationZones(int xroot, int yroot);
     void resetQuickTilingMaximizationZones();
-    /**
+    /*!
      * Whether a sync request is still pending.
-     * Default implementation returns @c false.
+     * Default implementation returns \c false.
      */
     virtual bool isWaitingForInteractiveResizeSync() const;
-    /**
+    /*!
      * Called during handling a resize. Implementing subclasses can use this
      * method to perform windowing system specific syncing.
      */
@@ -1770,7 +1967,7 @@ protected:
 
     virtual QSizeF resizeIncrements() const;
 
-    /**
+    /*!
      * Returns the interactive move resize gravity depending on the Decoration's section
      * under mouse. If no decoration it returns Gravity::None.
      */
@@ -1840,7 +2037,7 @@ protected:
     int m_stackingOrder = 0;
 
     bool m_skipTaskbar = false;
-    /**
+    /*!
      * Unaffected by KWin
      */
     bool m_originalSkipTaskbar = false;
