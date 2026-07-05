@@ -68,7 +68,7 @@ class KWIN_EXPORT Tile : public QObject
     /*!
      * \qmlproperty Tile Tile::parent
      */
-    Q_PROPERTY(Tile *parent READ parentTile CONSTANT)
+    Q_PROPERTY(KWin::Tile *parent READ parentTile CONSTANT)
 
     /*!
      * \qmlproperty list<Tile> Tile::tiles
@@ -181,12 +181,12 @@ public:
     /*!
      * \qmlmethod void Tile::manage(Window window)
      */
-    Q_INVOKABLE bool manage(Window *window);
+    Q_INVOKABLE bool manage(KWin::Window *window);
 
     /*!
      * \qmlmethod void Tile::unmanage(Window window)
      */
-    Q_INVOKABLE bool unmanage(Window *window);
+    Q_INVOKABLE bool unmanage(KWin::Window *window);
     void forget(Window *window);
     QList<KWin::Window *> windows() const;
 
@@ -224,12 +224,12 @@ Q_SIGNALS:
     /*!
      * \qmlsignal windowAdded(Window window)
      */
-    void windowAdded(Window *window);
+    void windowAdded(KWin::Window *window);
 
     /*!
      * \qmlsignal windowRemoved(Window window)
      */
-    void windowRemoved(Window *window);
+    void windowRemoved(KWin::Window *window);
 
 protected:
     void insertChild(int position, Tile *item);

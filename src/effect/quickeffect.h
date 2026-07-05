@@ -54,7 +54,7 @@ class KWIN_EXPORT QuickSceneView : public OffscreenQuickView
     /*!
      * \property KWin::QuickSceneView::effect
      */
-    Q_PROPERTY(QuickSceneEffect *effect READ effect CONSTANT)
+    Q_PROPERTY(KWin::QuickSceneEffect *effect READ effect CONSTANT)
 
     /*!
      * \qmlattachedproperty LogicalOutput SceneView::screen
@@ -63,7 +63,7 @@ class KWIN_EXPORT QuickSceneView : public OffscreenQuickView
     /*!
      * \property KWin::QuickSceneView::screen
      */
-    Q_PROPERTY(LogicalOutput *screen READ screen CONSTANT)
+    Q_PROPERTY(KWin::LogicalOutput *screen READ screen CONSTANT)
 
     /*!
      * \qmlattachedproperty Item SceneView::rootItem
@@ -77,7 +77,7 @@ class KWIN_EXPORT QuickSceneView : public OffscreenQuickView
     /*!
      * \property KWin::QuickSceneView::currentDesktop
      */
-    Q_PROPERTY(VirtualDesktop *currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY currentDesktopChanged)
+    Q_PROPERTY(KWin::VirtualDesktop *currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY currentDesktopChanged)
 
 public:
     /*!
@@ -175,7 +175,7 @@ class KWIN_EXPORT QuickSceneEffect : public Effect
     /*!
      * \property KWin::QuickSceneEffect::activateView
      */
-    Q_PROPERTY(QuickSceneView *activeView READ activeView NOTIFY activeViewChanged)
+    Q_PROPERTY(KWin::QuickSceneView *activeView READ activeView NOTIFY activeViewChanged)
 
     /*!
      * \qmlproperty Component QuickSceneEffect::delegate
@@ -221,7 +221,7 @@ public:
     /*!
      * Returns the scene view on the specified screen
      */
-    Q_INVOKABLE QuickSceneView *viewForScreen(LogicalOutput *screen) const;
+    Q_INVOKABLE KWin::QuickSceneView *viewForScreen(LogicalOutput *screen) const;
 
     /*!
      * \qmlmethod SceneView QuickSceneEffect::viewAt(point pos)
@@ -231,7 +231,7 @@ public:
     /*!
      * Returns the view at the specified \a pos in the global screen coordinates.
      */
-    Q_INVOKABLE QuickSceneView *viewAt(const QPoint &pos) const;
+    Q_INVOKABLE KWin::QuickSceneView *viewAt(const QPoint &pos) const;
 
     /*!
      * \qmlmethod SceneView QuickSceneEffect::getView(Qt.Edge edge)
@@ -259,7 +259,7 @@ public:
      *
      * It will get a focusin event and all the other views will be set as inactive
      */
-    Q_INVOKABLE void activateView(QuickSceneView *view);
+    Q_INVOKABLE void activateView(KWin::QuickSceneView *view);
 
     /*!
      * Returns \c true if view caching is enabled; otherwise returns \c false.
