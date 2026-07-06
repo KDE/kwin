@@ -316,12 +316,12 @@ msgstr "Animasjon ved vindaugslukking"
 #: invert/invert.cpp:42 invert/invert_config.cpp:38
 #, kde-format
 msgid "Toggle Invert Effect"
-msgstr "Slå av/på omsnuingseffekt"
+msgstr "Slå på/av omsnuingseffekt"
 
 #: invert/invert.cpp:49 invert/invert_config.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect on Window"
-msgstr "Slå av/på omsnuingseffekt på vindauge"
+msgstr "Slå på/av omsnuingseffekt på vindauge"
 
 #: invert/invert.cpp:56
 #, kde-format
@@ -706,7 +706,7 @@ msgstr "Glid skrivebordsbakgrunn"
 #: thumbnailaside/thumbnailaside_config.cpp:59
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
-msgstr "Slå av/på minibilete for gjeldande vindauge"
+msgstr "Slå på/av minibilete for gjeldande vindauge"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: thumbnailaside/thumbnailaside_config.ui:23
