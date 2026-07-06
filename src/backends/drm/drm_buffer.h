@@ -31,7 +31,7 @@ public:
     const QPointer<GraphicsBuffer> m_buffer;
 };
 
-class DrmFramebuffer
+class KWIN_EXPORT DrmFramebuffer
 {
 public:
     DrmFramebuffer(const std::shared_ptr<DrmFramebufferData> &data, GraphicsBuffer *buffer, FileDescriptor &&readFence);
