@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-04 00:45+0000\n"
-"PO-Revision-Date: 2026-07-04 11:18+0200\n"
+"PO-Revision-Date: 2026-07-05 11:20+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
 "Language: nn\n"
@@ -1687,7 +1687,7 @@ msgstr "Hent lokale-informasjon frå locale1 og ikkje frå brukaroppsettet"
 #: main_wayland.cpp:416
 #, kde-format
 msgid "Input method that KWin starts."
-msgstr "Inndata-metode som KWin startar."
+msgstr "Skrivemetode som KWin startar."
 
 #: main_wayland.cpp:422
 #, kde-format
@@ -1980,12 +1980,12 @@ msgstr "Gøym peikaren ved skriving"
 #: plugins/invert/invert.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect"
-msgstr "Slå av/på omsnuingseffekt"
+msgstr "Slå på/av omsnuingseffekt"
 
 #: plugins/invert/invert.cpp:51
 #, kde-format
 msgid "Toggle Invert Effect on Window"
-msgstr "Slå av/på omsnuingseffekt på vindauge"
+msgstr "Slå på/av omsnuingseffekt på vindauge"
 
 #: plugins/invert/invert.cpp:57
 #, kde-format
@@ -2731,7 +2731,7 @@ msgstr ""
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:51
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
-msgstr "Slå av/på minibilete for gjeldande vindauge"
+msgstr "Slå på/av minibilete for gjeldande vindauge"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:23

@@ -48,7 +48,7 @@ msgstr "Forbode"
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
-msgstr "Sikrast – globale snøggtastar fungerer ikkje X11-program"
+msgstr "Sikrast – globale snøggtastar fungerer ikkje i X11-program"
 
 #: ui/main.qml:67
 #, kde-format
@@ -159,8 +159,8 @@ msgid ""
 "identities can’t be verified"
 msgstr ""
 "Moderat tryggleik – program som brukar XWayland og hevdar dei er eitt av dei "
-"på denne lista, kan overta kontrollen over datamaskina, då det ikkje er "
-"mogleg å stadfesta identiteten til slike program"
+"som står på denne lista, kan overta kontrollen over datamaskina, då det "
+"ikkje er mogleg å stadfesta identiteten til slike program"
 
 #: ui/main.qml:169
 #, kde-format
