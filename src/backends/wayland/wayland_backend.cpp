@@ -438,10 +438,7 @@ bool WaylandBackend::initialize()
     }
 
     if (WaylandClient::LinuxDmabufV1 *dmabuf = m_display->linuxDmabuf()) {
-        auto device = DrmDevice::open(dmabuf->mainDevice());
-        if (device) {
-            m_renderDevice = GpuManager::self()->compatibleRenderDevice(device.get());
-        }
+        m_renderDevice = GpuManager::self()->compatibleRenderDevice(dmabuf->mainDevice());
     }
 
     createOutputs();

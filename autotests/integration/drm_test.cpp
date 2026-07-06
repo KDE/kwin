@@ -12,6 +12,7 @@
 #include "backends/drm/drm_pointer.h"
 #include "compositor.h"
 #include "core/drmdevice.h"
+#include "core/gpumanager.h"
 #include "core/graphicsbuffer.h"
 #include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
@@ -227,7 +228,7 @@ public:
     explicit DmabufWindow(std::function<void(Test::XdgToplevel *toplevel)> setup = [](Test::XdgToplevel *toplevel) { })
         : m_surface(Test::createSurface())
         , m_shellSurface(Test::createXdgToplevelSurface(m_surface.get(), setup))
-        , m_device(DrmDevice::open(Test::linuxDmabuf()->mainDevice()))
+        , m_device(GpuManager::self()->compatibleRenderDevice(Test::linuxDmabuf()->mainDevice()))
         , m_surfaceFeedback(Test::linuxDmabuf()->getSurfaceFeedback(*m_surface))
     {
         connect(m_surfaceFeedback.get(), &WaylandClient::LinuxDmabufFeedbackV1::changed, this, &DmabufWindow::reactToDmabufFeedback);
@@ -261,7 +262,11 @@ public:
                 if (!tranche.formats.contains(m_buffer->dmabufAttributes()->format)) {
                     continue;
                 }
-                m_buffer = m_device->allocator()->allocate(GraphicsBufferOptions{
+                auto device = GpuManager::self()->compatibleRenderDevice(tranche.device);
+                if (!device) {
+                    continue;
+                }
+                m_buffer = device->allocator()->allocate(GraphicsBufferOptions{
                     .size = m_buffer->size(),
                     .format = m_buffer->dmabufAttributes()->format,
                     .modifiers = tranche.formats[m_buffer->dmabufAttributes()->format],
@@ -291,7 +296,7 @@ public:
 
     std::unique_ptr<KWayland::Client::Surface> m_surface;
     std::unique_ptr<Test::XdgToplevel> m_shellSurface;
-    std::unique_ptr<DrmDevice> m_device;
+    RenderDevice *m_device = nullptr;
     std::unique_ptr<WaylandClient::LinuxDmabufFeedbackV1> m_surfaceFeedback;
     GraphicsBufferRef m_buffer;
     bool m_needsRealloc = false;

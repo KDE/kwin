@@ -40,10 +40,11 @@ public:
     ~LinuxDmabufFeedbackV1();
 
     FormatModifierMap formats() const;
-    QByteArray devicePath() const;
+    dev_t mainDevice() const;
 
     struct Tranche
     {
+        dev_t device;
         FormatModifierMap formats;
         bool scanout = false;
     };
@@ -63,9 +64,7 @@ private:
     static void tranche_flags(void *data, zwp_linux_dmabuf_feedback_v1 *zwp_linux_dmabuf_feedback_v1, uint32_t flags);
 
     zwp_linux_dmabuf_feedback_v1 *const m_feedback;
-    QByteArray m_mainDevice;
     dev_t m_mainDeviceId = 0;
-    dev_t m_trancheDeviceId = 0;
     MemoryMap m_formatTable;
     FormatModifierMap m_formats;
     QList<Tranche> m_tranches;
@@ -80,7 +79,7 @@ public:
     ~LinuxDmabufV1();
 
     zwp_linux_dmabuf_v1 *handle() const;
-    QByteArray mainDevice() const;
+    dev_t mainDevice() const;
     FormatModifierMap formats() const;
     /**
      * NOTE that it's up to the calling client to take care of the
