@@ -166,6 +166,7 @@ private Q_SLOTS:
     void testCalibrationWithDefault();
     void testSwitch_data();
     void testSwitch();
+    void testMatrix();
 };
 
 namespace
@@ -2485,6 +2486,17 @@ void TestLibinputDevice::testSwitch()
     QCOMPARE(d.isTabletModeSwitch(), tablet);
     QCOMPARE(d.property("tabletModeSwitch").toBool(), tablet);
     QCOMPARE(dbusProperty<bool>(d.sysName(), "tabletModeSwitch"), tablet);
+}
+
+void TestLibinputDevice::testMatrix()
+{
+    QMatrix4x4 matrix{
+        -1.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, -1.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f};
+
+    QCOMPARE(Device::deserializeMatrix(Device::serializeMatrix(matrix)), matrix);
 }
 
 QTEST_GUILESS_MAIN(TestLibinputDevice)
