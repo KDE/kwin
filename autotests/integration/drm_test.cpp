@@ -244,6 +244,10 @@ public:
             .software = false,
             .scanout = false,
         });
+        if (!m_buffer) {
+            qWarning("Allocating initial buffer on %s failed! %s", qPrintable(m_device->path()), strerror(errno));
+            return false;
+        }
         auto wlbuffer = Test::linuxDmabuf()->importBuffer(m_buffer.buffer());
         m_surface->attachBuffer(wlbuffer);
         m_surface->damage(QRect(QPoint(0, 0), size));
@@ -266,13 +270,18 @@ public:
                 if (!device) {
                     continue;
                 }
-                m_buffer = device->allocator()->allocate(GraphicsBufferOptions{
+                auto buffer = device->allocator()->allocate(GraphicsBufferOptions{
                     .size = m_buffer->size(),
                     .format = m_buffer->dmabufAttributes()->format,
                     .modifiers = tranche.formats[m_buffer->dmabufAttributes()->format],
                     .software = false,
                     .scanout = tranche.scanout,
                 });
+                if (!buffer) {
+                    qWarning("Allocating buffer on %s failed! %s", qPrintable(device->path()), strerror(errno));
+                    continue;
+                }
+                m_buffer = buffer;
                 auto wlbuffer = Test::linuxDmabuf()->importBuffer(m_buffer.buffer());
                 m_surface->attachBuffer(wlbuffer);
                 m_surface->damage(QRect(QPoint(0, 0), m_buffer->size()));

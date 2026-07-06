@@ -1005,7 +1005,7 @@ std::shared_ptr<DrmFramebuffer> DrmGpu::importBuffer(GraphicsBuffer *buffer, Fil
     });
     for (int i = 0; i < attributes->planeCount; ++i) {
         if (drmPrimeFDToHandle(m_fd, attributes->fd[i].get(), &handles[i]) != 0) {
-            qCWarning(KWIN_DRM) << "drmPrimeFDToHandle() failed";
+            qCWarning(KWIN_DRM, "drmPrimeFDToHandle failed: %s", strerror(errno));
             return nullptr;
         }
     }
