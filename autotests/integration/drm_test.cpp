@@ -288,6 +288,18 @@ void DrmTest::init()
                                          | Test::AdditionalWaylandInterface::Viewporter));
 }
 
+static QByteArray getDriverName(int fd)
+{
+    auto version = drmGetVersion(fd);
+    if (version) {
+        auto ret = QByteArray(version->name, version->name_len);
+        drmFreeVersion(version);
+        return ret;
+    } else {
+        return QByteArray();
+    }
+}
+
 void DrmTest::initTestCase()
 {
     if (!Test::primaryNodeAvailable()) {
@@ -451,9 +463,12 @@ void DrmTest::testDirectScanout_data()
     QTest::addRow("no effective scaling") << 2.0 << QSize(output->pixelSize()) << Rect(QPoint(), output->pixelSize());
 #ifndef FORCE_DRM_LEGACY
     // TODO maybe also test that direct scanout does *not* happen with these cases and legacy modesetting?
-    QTest::addRow("scaled up by 2x") << 2.0 << QSize(output->pixelSize() / 2) << Rect(QPoint(), output->pixelSize() / 2);
-    QTest::addRow("scaled up by 2x + partial source") << 2.0 << output->pixelSize() << Rect(QPoint(output->pixelSize().width() / 4, output->pixelSize().height() / 2), output->pixelSize() / 2);
-    QTest::addRow("scaled down by 2x") << 2.0 << QSize(output->pixelSize() * 2) << Rect(QPoint(), output->pixelSize() * 2);
+    // VKMS doesn't support plane scaling yet
+    if (getDriverName(static_cast<DrmOutput *>(output)->connector()->gpu()->drmDevice()->fileDescriptor()) != "vkms") {
+        QTest::addRow("scaled up by 2x") << 2.0 << QSize(output->pixelSize() / 2) << Rect(QPoint(), output->pixelSize() / 2);
+        QTest::addRow("scaled up by 2x + partial source") << 2.0 << output->pixelSize() << Rect(QPoint(output->pixelSize().width() / 4, output->pixelSize().height() / 2), output->pixelSize() / 2);
+        QTest::addRow("scaled down by 2x") << 2.0 << QSize(output->pixelSize() * 2) << Rect(QPoint(), output->pixelSize() * 2);
+    }
 #endif
 }
 
@@ -537,10 +552,10 @@ void DrmTest::testOverlay_data()
     QTest::addColumn<Rect>("windowGeometry");
     QTest::addColumn<Rect>("planeGeometry");
 
-    QTest::addRow("overlay") << false << 1.0 << Rect(51, 51, 100, 100) << Rect(0, 0, 100, 100);
-    QTest::addRow("underlay") << true << 1.0 << Rect(51, 51, 100, 100) << Rect(0, 0, 100, 100);
-    // this case verifies (among other things) that output position is properly rounded for the plane position
-    QTest::addRow("scaling + overlay") << false << 1.6 << Rect(52, 52, 63, 63) << Rect(1, 1, 101, 101);
+    QTest::addRow("overlay") << false << 1.0 << Rect(0, 0, 100, 100) << Rect(0, 0, 100, 100);
+    QTest::addRow("underlay") << true << 1.0 << Rect(0, 0, 100, 100) << Rect(0, 0, 100, 100);
+    // this case verifies that sizes are rounded correctly for the plane geometry
+    QTest::addRow("scaling + overlay") << false << 1.6 << Rect(52, 52, 63, 63) << Rect(83, 83, 101, 101);
     // TODO also add a test case for occluded == false + SSD with rounded corners?
 }
 
