@@ -103,7 +103,6 @@ struct DrmPlaneState
     uint32_t crtcId;
     Rect destinationRect;
     uint32_t frambufferId;
-    std::array<uint32_t, 4> framebufferGemNames;
 
     static std::optional<DrmPlaneState> read(int fd, uint32_t id);
 };
@@ -119,36 +118,10 @@ std::optional<DrmPlaneState> DrmPlaneState::read(int fd, uint32_t id)
     if (!crtcId || !crtcX || !crtcY || !crtcW || !crtcH || !fbId) {
         return std::nullopt;
     }
-    std::array<uint32_t, 4> framebufferGemNames = {0};
-    if (auto ptr = drmModeGetFB2(fd, fbId->second)) {
-        std::unordered_set<uint32_t> handles;
-        const auto guard = qScopeGuard([&]() {
-            // NOTE that drmModeGetFB2 always creates new handles
-            for (uint32_t handle : handles) {
-                drmCloseBufferHandle(fd, handle);
-            }
-            drmModeFreeFB2(ptr);
-        });
-        for (int i = 0; i < 4; i++) {
-            if (ptr->handles[i] == 0) {
-                break;
-            }
-            handles.insert(ptr->handles[i]);
-            drm_gem_flink flink{
-                .handle = ptr->handles[i],
-                .name = 0,
-            };
-            if (drmIoctl(fd, DRM_IOCTL_GEM_FLINK, &flink) != 0) {
-                return std::nullopt;
-            }
-            framebufferGemNames[i] = flink.name;
-        }
-    }
     return DrmPlaneState{
         .crtcId = uint32_t(crtcId->second),
         .destinationRect = Rect(crtcX->second, crtcY->second, crtcW->second, crtcH->second),
         .frambufferId = uint32_t(fbId->second),
-        .framebufferGemNames = framebufferGemNames,
     };
 }
 
@@ -464,38 +437,25 @@ void DrmTest::testCursorLayer()
 #endif
 }
 
-static std::array<uint32_t, 4> gemNames(int fd, const DmaBufAttributes *attributes)
-{
-    std::array<uint32_t, 4> ret = {0, 0, 0, 0};
-    for (int i = 0; i < attributes->planeCount; i++) {
-        uint32_t handle = 0;
-        if (drmPrimeFDToHandle(fd, attributes->fd[i].get(), &handle) != 0) {
-            return {0};
-        }
-        drm_gem_flink flink{
-            .handle = handle,
-            .name = 0,
-        };
-        if (drmIoctl(fd, DRM_IOCTL_GEM_FLINK, &flink) != 0) {
-            return {0};
-        }
-        ret[i] = flink.name;
-        drmCloseBufferHandle(fd, handle);
-    }
-    return ret;
-}
-
-bool findBufferOnPlane(BackendOutput *output, GraphicsBuffer *buffer)
+static std::optional<DrmPlaneState> findBufferOnPlane(BackendOutput *output, GraphicsBuffer *kwinBuffer)
 {
     const auto state = DrmOutputState::read(output);
     if (!state || !state->crtc.has_value()) {
-        return false;
+        return std::nullopt;
     }
-    const int gpuFd = static_cast<DrmOutput *>(output)->connector()->gpu()->fd();
-    const auto framebufferGemNames = gemNames(gpuFd, buffer->dmabufAttributes());
-    return std::ranges::any_of(state->planes | std::views::values, [&framebufferGemNames](const DrmPlaneState &state) {
-        return state.framebufferGemNames == framebufferGemNames;
+    const auto gpu = static_cast<DrmOutput *>(output)->connector()->gpu();
+    const auto imported = gpu->importBuffer(kwinBuffer, FileDescriptor{});
+    if (!imported) {
+        return std::nullopt;
+    }
+    const auto values = state->planes | std::views::values;
+    const auto it = std::ranges::find_if(values, [&imported](const DrmPlaneState &state) {
+        return state.frambufferId == imported->framebufferId();
     });
+    if (it == values.end()) {
+        return std::nullopt;
+    }
+    return *it;
 }
 
 void DrmTest::testDirectScanout_data()
@@ -561,7 +521,7 @@ void DrmTest::testDirectScanout()
         window.m_surface->damageBuffer(QRect(QPoint(), QSize(100, 100)));
         QVERIFY(window.presentWait());
 
-        if (findBufferOnPlane(output, window.m_buffer.buffer())) {
+        if (findBufferOnPlane(output, window.m_window->surfaceItem()->buffer())) {
             break;
         }
     }
@@ -654,7 +614,7 @@ void DrmTest::testOverlay()
         window.m_surface->damageBuffer(QRect(QPoint(), planeGeometry.size()));
         QVERIFY(window.presentWait());
 
-        if (findBufferOnPlane(output, window.m_buffer.buffer())) {
+        if (findBufferOnPlane(output, window.m_window->surfaceItem()->buffer())) {
             break;
         }
     }
@@ -678,16 +638,11 @@ void DrmTest::testOverlay()
     });
     QVERIFY(sceneIt != enabledPlanes.end());
 
-    const int gpuFd = static_cast<DrmOutput *>(output)->connector()->gpu()->fd();
-    const auto framebufferGemNames = gemNames(gpuFd, window.m_buffer->dmabufAttributes());
-    const auto overlayIt = std::ranges::find_if(enabledPlanes, [&framebufferGemNames](const DrmPlaneState &state) {
-        return state.framebufferGemNames == framebufferGemNames;
-    });
-    QVERIFY(overlayIt != enabledPlanes.end());
-    const auto &overlayPlane = *overlayIt;
-    QCOMPARE(overlayPlane.destinationRect, planeGeometry);
+    const auto overlayState = findBufferOnPlane(output, window.m_window->surfaceItem()->buffer());
+    QVERIFY(overlayState);
+    QCOMPARE(overlayState->destinationRect, planeGeometry);
     // TODO uncomment this once vkms supports the zpos property
-    // QCOMPARE_GE(overlayPlane.zpos, (*sceneIt).zpos);
+    // QCOMPARE_GE(overlayState->zpos, (*sceneIt).zpos);
 }
 
 void DrmTest::testDpms()
