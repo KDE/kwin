@@ -237,7 +237,7 @@ void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, const st
     } else {
         m_shader->setUniform(m_locations.bsize, 0);
         m_shader->setUniform(m_locations.bsampler, 1);
-        glBindTexture(GL_TEXTURE_1D, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     m_shader->setUniform(m_locations.matrix2, m_matrix2);
@@ -250,7 +250,7 @@ void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, const st
     } else {
         m_shader->setUniform(m_locations.msize, 0);
         m_shader->setUniform(m_locations.msampler, 1);
-        glBindTexture(GL_TEXTURE_1D, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     glActiveTexture(GL_TEXTURE3);
@@ -272,7 +272,7 @@ void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, const st
     } else {
         m_shader->setUniform(m_locations.asize, 0);
         m_shader->setUniform(m_locations.asampler, 4);
-        glBindTexture(GL_TEXTURE_1D, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     glActiveTexture(GL_TEXTURE0);
