@@ -30,6 +30,7 @@ class KWIN_EXPORT GpuManager : public QObject
 public:
     static std::unique_ptr<GpuManager> s_self;
     static GpuManager *self();
+    static QStringList splitPathList(const QString &input);
 
     explicit GpuManager();
     ~GpuManager();
@@ -72,6 +73,7 @@ private:
     const std::unique_ptr<Udev> m_udev;
     const std::unique_ptr<UdevMonitor> m_udevMonitor;
     const std::unique_ptr<QSocketNotifier> m_udevNotifier;
+    const std::optional<QStringList> m_explicitRenderNodes;
     std::vector<std::unique_ptr<RenderDevice>> m_renderDevices;
     QHash<dev_t, RenderDevice *> m_compatibleDeviceMap;
 };
