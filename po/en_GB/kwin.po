@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-04 00:45+0000\n"
+"POT-Creation-Date: 2026-07-07 00:44+0000\n"
 "PO-Revision-Date: 2024-10-18 17:18+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -31,30 +31,30 @@ msgstr ""
 "anarchist_tomato@herzeleid.net, dwayne@translate.org.za, steve."
 "allewell@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:480
+#: backends/wayland/wayland_output.cpp:474
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Press right control to ungrab pointer"
 
-#: backends/wayland/wayland_output.cpp:482
+#: backends/wayland/wayland_output.cpp:476
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Press right control key to grab pointer"
 
-#: backends/wayland/wayland_output.cpp:486
+#: backends/wayland/wayland_output.cpp:480
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland Compositor %1"
 
-#: backends/wayland/wayland_output.cpp:489
+#: backends/wayland/wayland_output.cpp:483
 #, fuzzy, kde-format
 #| msgid "- Output disabled"
 msgid "- Output disabled"
 msgstr "- Output disabled"
 
-#: backends/wayland/wayland_output.cpp:491
+#: backends/wayland/wayland_output.cpp:485
 #, fuzzy, kde-format
 #| msgid "- Output dimmed"
 msgid "- Output dimmed"
@@ -75,7 +75,7 @@ msgstr "Press right control key to grab input"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Compositor"
 
-#: compositor.cpp:638
+#: compositor.cpp:736
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Desktop effects were restarted due to a graphics reset"
@@ -2686,12 +2686,12 @@ msgstr "Could not find output"
 msgid "Invalid region"
 msgstr "Invalid region"
 
-#: plugins/screencast/screencaststream.cpp:379
+#: plugins/screencast/screencaststream.cpp:380
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "OpenGL compositing is required for screencasting"
 
-#: plugins/screencast/screencaststream.cpp:387
+#: plugins/screencast/screencaststream.cpp:388
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Failed to create PipeWire stream"
@@ -4344,13 +4344,15 @@ msgstr "Kill Window"
 
 #: useractions.cpp:1017
 #, kde-format
-msgid "Move Mouse to Focus"
-msgstr "Move Mouse to Focus"
+msgctxt "@action"
+msgid "Center Pointer in Focused Window"
+msgstr ""
 
 #: useractions.cpp:1018
 #, kde-format
-msgid "Move Mouse to Center"
-msgstr "Move Mouse to Centre"
+msgctxt "@action"
+msgid "Center Pointer in Screen"
+msgstr ""
 
 #: useractions.cpp:1083
 #, kde-format
@@ -4402,57 +4404,64 @@ msgstr "Switch One Desktop Down"
 msgid "Switch to Desktop %1"
 msgstr "Switch to Desktop %1"
 
-#: wayland/outputmanagement_v2.cpp:569
+#: wayland/outputmanagement_v2.cpp:521
+#, kde-format
+msgid ""
+"Setting custom modes with too old kde-output-management-v2 protocol versions "
+"is unsupported"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:575
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:647
+#: wayland/outputmanagement_v2.cpp:673
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:665
+#: wayland/outputmanagement_v2.cpp:691
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:675
+#: wayland/outputmanagement_v2.cpp:701
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:682
+#: wayland/outputmanagement_v2.cpp:708
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:686
+#: wayland/outputmanagement_v2.cpp:712
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:697
+#: wayland/outputmanagement_v2.cpp:723
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:700
+#: wayland/outputmanagement_v2.cpp:726
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:704
+#: wayland/outputmanagement_v2.cpp:730
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:721
+#: wayland/outputmanagement_v2.cpp:747
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:724
+#: wayland/outputmanagement_v2.cpp:750
 #, fuzzy, kde-format
 #| msgid "The Alt key is now active."
 msgid "The session is not active"
@@ -4515,6 +4524,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland has crashed"
+
+#~ msgid "Move Mouse to Focus"
+#~ msgstr "Move Mouse to Focus"
+
+#~ msgid "Move Mouse to Center"
+#~ msgstr "Move Mouse to Centre"
 
 #~ msgid "Indicate that KWin has recently crashed n times"
 #~ msgstr "Indicate that KWin has recently crashed n times"
