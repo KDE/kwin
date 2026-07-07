@@ -168,9 +168,6 @@ void DrmBackend::handleUdevEvent()
             }
         } else if (device->action() == QLatin1StringView("change")) {
             DrmGpu *gpu = findGpu(device->devNum());
-            if (!gpu) {
-                gpu = addGpu(device->devNode());
-            }
             if (gpu && gpu->isActive()) {
                 qCDebug(KWIN_DRM) << "Received change event for monitored drm device" << gpu->drmDevice()->path();
                 updateOutputs(gpu);
@@ -246,7 +243,7 @@ void DrmBackend::updateOutputs(DrmGpu *onlyUpdate)
 
     for (auto it = m_gpus.begin(); it != m_gpus.end();) {
         DrmGpu *gpu = it->get();
-        if (gpu->isRemoved() || gpu->drmOutputs().isEmpty()) {
+        if (gpu->isRemoved()) {
             qCDebug(KWIN_DRM) << "Removing GPU" << it->get();
             const std::unique_ptr<DrmGpu> keepAlive = std::move(*it);
             it = m_gpus.erase(it);
