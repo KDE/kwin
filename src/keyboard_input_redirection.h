@@ -14,7 +14,6 @@
 #include "core/inputdevice.h"
 
 #include <QObject>
-#include <QSet>
 
 #include <memory>
 
@@ -33,6 +32,8 @@ class KWIN_EXPORT KeyboardInputRedirection : public QObject
 public:
     explicit KeyboardInputRedirection(InputRedirection *input);
     void init();
+    void reconfigure();
+    bool isInitialized() const;
 
     /**
      * Returns the currently active keyboard based on last input.
@@ -47,10 +48,11 @@ public:
     QList<uint32_t> filteredKeys() const;
     void addFilteredKey(uint32_t key);
     QList<uint32_t> unfilteredKeys() const;
+    void setLastKeyboardInputDevice(InputDevice *device, std::chrono::microseconds time);
     void updateKeymap();
     void forwardModifiers();
     Window *pickFocus() const;
-    void trackKeyboard(KeyboardInput *keyboard);
+    void updateActiveKeyboard();
     void update();
 
     /**
@@ -69,11 +71,12 @@ Q_SIGNALS:
     void modifierStateChanged();
 
 private:
-    void updateKeymap(KeyboardInput *keyboard);
-
     InputRedirection *m_input;
+    bool m_inited = false;
     std::shared_ptr<KeyboardInput> m_globalKeyboard;
-    QSet<KeyboardInput *> m_trackedKeyboards;
+    KeyboardInput *m_trackedKeyboard = nullptr;
+    QMetaObject::Connection m_keymapChangedConnection;
+    QMetaObject::Connection m_activeWindowSurfaceChangedConnection;
 };
 
 }

@@ -198,7 +198,6 @@ public:
      * Specifies which was the device that triggered the last input event
      */
     void setLastInputHandler(QObject *device);
-    void setLastKeyboardInputDevice(InputDevice *device, std::chrono::microseconds time);
     QObject *lastInputHandler() const;
 
     void setLastInteractionSerial(uint32_t serial);

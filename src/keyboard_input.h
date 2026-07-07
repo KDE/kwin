@@ -46,8 +46,7 @@ public:
     explicit KeyboardInput(QObject *parent = nullptr);
     ~KeyboardInput() override;
 
-    void init();
-    void reconfigure();
+    bool isInitialized() const;
 
     /**
      * @internal
@@ -74,9 +73,7 @@ Q_SIGNALS:
     void ledsChanged(KWin::LEDs);
 
 private:
-    bool m_inited = false;
     const std::unique_ptr<Xkb> m_xkb;
-    QMetaObject::Connection m_activeWindowSurfaceChangedConnection;
     QList<uint32_t> m_pressedKeys;
     QList<uint32_t> m_filteredKeys;
     A11yKeyboardMonitor m_a11yKeyboardMonitor;

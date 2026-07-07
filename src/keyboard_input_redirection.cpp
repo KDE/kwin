@@ -22,6 +22,11 @@
 #include "window.h"
 #include "workspace.h"
 #include "xkb.h"
+#if KWIN_BUILD_SCREENLOCKER
+#include <KScreenLocker/KsldApp>
+#endif
+
+#include <cmath>
 
 #if KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"
@@ -69,13 +74,61 @@ KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *input)
 {
     waylandServer()->seat()->setHasKeyboard(true);
     m_globalKeyboard.reset(new KeyboardInput(this));
-    trackKeyboard(m_globalKeyboard.get());
+    updateActiveKeyboard();
 }
 
 void KeyboardInputRedirection::init()
 {
+    Q_ASSERT(!m_inited);
+    m_inited = true;
+
     input()->installInputEventSpy(new KeyStateChangedSpy);
     input()->installInputEventSpy(new ModifiersChangedSpy);
+
+    connect(workspace(), &QObject::destroyed, this, [this] {
+        m_inited = false;
+    });
+    connect(waylandServer(), &QObject::destroyed, this, [this] {
+        m_inited = false;
+    });
+    connect(workspace(), &Workspace::windowActivated, this, [this] {
+        disconnect(m_activeWindowSurfaceChangedConnection);
+        if (auto window = workspace()->activeWindow()) {
+            m_activeWindowSurfaceChangedConnection = connect(window, &Window::surfaceChanged, this, &KeyboardInputRedirection::update);
+        } else {
+            m_activeWindowSurfaceChangedConnection = QMetaObject::Connection();
+        }
+        update();
+    });
+#if KWIN_BUILD_SCREENLOCKER
+    if (kwinApp()->supportsLockScreen()) {
+        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &KeyboardInputRedirection::update);
+    }
+#endif
+
+    reconfigure();
+}
+
+void KeyboardInputRedirection::reconfigure()
+{
+    if (!m_inited) {
+        return;
+    }
+
+    if (waylandServer()->seat()->keyboard()) {
+        const auto config = kwinApp()->inputConfig()->group(QStringLiteral("Keyboard"));
+        const int delay = config.readEntry("RepeatDelay", 600);
+        const int rate = std::ceil(config.readEntry("RepeatRate", 25.0));
+        const QString repeatMode = config.readEntry("KeyRepeat", "repeat");
+        const bool enabled = repeatMode == QLatin1StringView("repeat");
+
+        waylandServer()->seat()->keyboard()->setRepeatInfo(enabled ? rate : 0, delay);
+    }
+}
+
+bool KeyboardInputRedirection::isInitialized() const
+{
+    return m_inited;
 }
 
 KeyboardInput *KeyboardInputRedirection::activeKeyboard() const
@@ -122,9 +175,40 @@ QList<uint32_t> KeyboardInputRedirection::unfilteredKeys() const
     return activeKeyboard()->unfilteredKeys();
 }
 
+void KeyboardInputRedirection::setLastKeyboardInputDevice(InputDevice *device, std::chrono::microseconds time)
+{
+    if (!device || !device->keyboard() || device == m_input->m_lastKeyboardInputDevice) {
+        return;
+    }
+
+    KeyboardInput *oldKeyboard = activeKeyboard();
+    m_input->m_lastKeyboardInputDevice = device;
+
+    KeyboardInput *newKeyboard = activeKeyboard();
+
+    if (oldKeyboard->modifiers() != newKeyboard->modifiers()) {
+        Q_EMIT m_input->keyboardModifiersChanged(oldKeyboard->modifiers(), newKeyboard->modifiers());
+    }
+
+    m_input->syncActiveKeyboardState(oldKeyboard, newKeyboard);
+    waylandServer()->seat()->setTimestamp(time);
+    updateActiveKeyboard();
+    forwardModifiers();
+    m_input->updateLeds(newKeyboard->xkb()->leds());
+
+    Q_EMIT layoutChanged();
+    Q_EMIT modifierStateChanged();
+    Q_EMIT ledsChanged(newKeyboard->xkb()->leds());
+}
+
 void KeyboardInputRedirection::updateKeymap()
 {
-    const QByteArray keymap = activeKeyboard()->xkb()->keymapContents();
+    if (!m_inited) {
+        return;
+    }
+    auto *keyboard = activeKeyboard();
+
+    const QByteArray keymap = keyboard->xkb()->keymapContents();
     if (keymap.isEmpty()) {
         return;
     }
@@ -147,7 +231,10 @@ void KeyboardInputRedirection::forwardModifiers()
         return;
     }
 
-    auto keyboard = activeKeyboard();
+    auto *keyboard = activeKeyboard();
+    if (!keyboard) {
+        return;
+    }
 
     const auto &modifierState = keyboard->xkb()->modifierState();
     seat->notifyKeyboardModifiers(modifierState.depressed,
@@ -156,17 +243,22 @@ void KeyboardInputRedirection::forwardModifiers()
                                   keyboard->xkb()->currentLayout());
 }
 
-void KeyboardInputRedirection::trackKeyboard(KeyboardInput *keyboard)
+void KeyboardInputRedirection::updateActiveKeyboard()
 {
-    if (!keyboard || m_trackedKeyboards.contains(keyboard)) {
+    KeyboardInput *keyboard = activeKeyboard();
+    if (m_trackedKeyboard == keyboard) {
         return;
     }
-    m_trackedKeyboards.insert(keyboard);
 
-    connect(keyboard->xkb(), &Xkb::keymapChanged, this, [this, keyboard] {
-        if (activeKeyboard() != keyboard) {
-            return;
-        }
+    disconnect(m_keymapChangedConnection);
+    m_trackedKeyboard = keyboard;
+
+    if (!keyboard) {
+        m_keymapChangedConnection = QMetaObject::Connection();
+        return;
+    }
+
+    m_keymapChangedConnection = connect(keyboard->xkb(), &Xkb::keymapChanged, this, [this] {
         updateKeymap();
         forwardModifiers();
         Q_EMIT layoutChanged();

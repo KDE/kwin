@@ -16,27 +16,13 @@
 #include "keyboard_input_redirection.h"
 #include "keyboard_layout.h"
 #include "keyboard_repeat.h"
-#include "wayland/datadevice.h"
+#include "main.h"
 #include "wayland/display.h"
-#include "wayland/keyboard.h"
-#include "wayland/seat.h"
 #include "wayland_server.h"
 #include "window.h"
-#include "workspace.h"
 #include "xkb.h"
-// screenlocker
-#if KWIN_BUILD_SCREENLOCKER
-#include <KScreenLocker/KsldApp>
-#endif
-#if KWIN_BUILD_TABBOX
-#include "tabbox/tabbox.h"
-#endif
-// Frameworks
-#include <KGlobalAccel>
 // Qt
 #include <QKeyEvent>
-
-#include <cmath>
 
 namespace KWin
 {
@@ -45,10 +31,23 @@ KeyboardInput::KeyboardInput(QObject *parent)
     : QObject(parent)
     , m_xkb(new Xkb(kwinApp()->followLocale1()))
 {
+    const auto config = kwinApp()->kxkbConfig();
+    m_xkb->setNumLockConfig(kwinApp()->inputConfig());
+    m_xkb->setConfig(config);
+
+    m_keyRepeatSpy = std::make_unique<KeyboardRepeat>(m_xkb.get());
+    connect(m_keyRepeatSpy.get(), &KeyboardRepeat::keyRepeat, this,
+            std::bind(&KeyboardInput::processKey, this, std::placeholders::_1, KeyboardKeyState::Repeated, std::placeholders::_2, nullptr));
+
     connect(m_xkb.get(), &Xkb::ledsChanged, this, &KeyboardInput::ledsChanged);
 }
 
 KeyboardInput::~KeyboardInput() = default;
+
+bool KeyboardInput::isInitialized() const
+{
+    return m_keyRepeatSpy != nullptr;
+}
 
 Xkb *KeyboardInput::xkb() const
 {
@@ -91,58 +90,6 @@ void KeyboardInput::addFilteredKey(uint32_t key)
     }
 }
 
-void KeyboardInput::init()
-{
-    Q_ASSERT(!m_inited);
-    m_inited = true;
-    const auto config = kwinApp()->kxkbConfig();
-    m_xkb->setNumLockConfig(kwinApp()->inputConfig());
-    m_xkb->setConfig(config);
-
-    m_keyRepeatSpy = std::make_unique<KeyboardRepeat>(m_xkb.get());
-    connect(m_keyRepeatSpy.get(), &KeyboardRepeat::keyRepeat, this,
-            std::bind(&KeyboardInput::processKey, this, std::placeholders::_1, KeyboardKeyState::Repeated, std::placeholders::_2, nullptr));
-
-    connect(workspace(), &QObject::destroyed, this, [this] {
-        m_inited = false;
-    });
-    connect(waylandServer(), &QObject::destroyed, this, [this] {
-        m_inited = false;
-    });
-    connect(workspace(), &Workspace::windowActivated, this, [this] {
-        disconnect(m_activeWindowSurfaceChangedConnection);
-        if (auto window = workspace()->activeWindow()) {
-            m_activeWindowSurfaceChangedConnection = connect(window, &Window::surfaceChanged, input()->keyboard(), &KeyboardInputRedirection::update);
-        } else {
-            m_activeWindowSurfaceChangedConnection = QMetaObject::Connection();
-        }
-        input()->keyboard()->update();
-    });
-#if KWIN_BUILD_SCREENLOCKER
-    if (kwinApp()->supportsLockScreen()) {
-        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, input()->keyboard(), &KeyboardInputRedirection::update);
-    }
-#endif
-
-    reconfigure();
-}
-
-void KeyboardInput::reconfigure()
-{
-    if (!m_inited) {
-        return;
-    }
-    if (waylandServer()->seat()->keyboard()) {
-        const auto config = kwinApp()->inputConfig()->group(QStringLiteral("Keyboard"));
-        const int delay = config.readEntry("RepeatDelay", 600);
-        const int rate = std::ceil(config.readEntry("RepeatRate", 25.0));
-        const QString repeatMode = config.readEntry("KeyRepeat", "repeat");
-        const bool enabled = repeatMode == QLatin1StringView("repeat");
-
-        waylandServer()->seat()->keyboard()->setRepeatInfo(enabled ? rate : 0, delay);
-    }
-}
-
 static constexpr std::array s_modifierKeys = {
     Qt::Key_Control,
     Qt::Key_Alt,
@@ -157,10 +104,10 @@ static constexpr std::array s_modifierKeys = {
 void KeyboardInput::processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
 {
     if (device) {
-        input()->setLastKeyboardInputDevice(device, time);
+        input()->keyboard()->setLastKeyboardInputDevice(device, time);
     }
     input()->setLastInputHandler(this);
-    if (!m_inited) {
+    if (!m_keyRepeatSpy) {
         return;
     }
 
