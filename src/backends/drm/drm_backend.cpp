@@ -96,16 +96,28 @@ bool DrmBackend::initialize()
 {
     connect(m_session, &Session::devicePaused, this, [this](dev_t deviceId) {
         if (const auto gpu = findGpu(deviceId)) {
-            gpu->setActive(false);
+            gpu->setRemoved();
+            updateOutputs();
         }
     });
     connect(m_session, &Session::deviceResumed, this, [this](dev_t deviceId) {
-        if (const auto gpu = findGpu(deviceId); gpu && !gpu->isActive()) {
-            gpu->setActive(true);
-            // the output list might've changed while the device was inactive
-            // note that this might delete the gpu!
-            updateOutputs(gpu);
+        if (findGpu(deviceId)) {
+            return;
         }
+        drmDevice *device = nullptr;
+        if (drmGetDeviceFromDevId(deviceId, 0, &device) != 0) {
+            qCWarning(KWIN_DRM, "drmGetDeviceFromDevId failed! %s", strerror(errno));
+            return;
+        }
+        if (!(device->available_nodes & (1 << DRM_NODE_PRIMARY))) {
+            drmFreeDevice(&device);
+            return;
+        }
+        const auto gpu = addGpu(device->nodes[DRM_NODE_PRIMARY]);
+        if (gpu) {
+            updateOutputs();
+        }
+        drmFreeDevice(&device);
     });
     connect(m_session, &Session::awoke, this, [this]() {
         // some drivers for old GPUs have problems after suspend, which
@@ -188,7 +200,7 @@ void DrmBackend::handleUdevEvent()
             }
         } else if (device->action() == QLatin1StringView("change")) {
             DrmGpu *gpu = findGpu(device->devNum());
-            if (gpu && gpu->isActive()) {
+            if (gpu) {
                 qCDebug(KWIN_DRM) << "Received change event for monitored drm device" << gpu->drmDevice()->path();
                 updateOutputs(gpu);
             }
@@ -347,9 +359,6 @@ OutputConfigurationError DrmBackend::applyOutputChanges(const OutputConfiguratio
                 continue;
             }
             if (const auto changeset = config.constChangeSet(output)) {
-                if (!gpu->isActive()) {
-                    return OutputConfigurationError::NotActive;
-                }
                 output->queueChanges(changeset);
                 if (changeset->enabled.value_or(output->isEnabled())) {
                     toBeEnabled << output;

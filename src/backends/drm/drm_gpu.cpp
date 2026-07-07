@@ -261,9 +261,6 @@ void DrmGpu::initDrmResources()
 
 bool DrmGpu::updateOutputs()
 {
-    if (!m_isActive) {
-        return false;
-    }
     DrmUniquePtr<drmModeRes> resources(drmModeGetResources(m_fd));
     if (!resources) {
         qCWarning(KWIN_DRM) << "drmModeGetResources failed:" << strerror(errno);
@@ -739,34 +736,6 @@ bool DrmGpu::isRemoved() const
 void DrmGpu::setRemoved()
 {
     m_isRemoved = true;
-}
-
-void DrmGpu::setActive(bool active)
-{
-    if (m_isActive != active) {
-        m_isActive = active;
-        if (active) {
-            for (const DrmOutput *output : std::as_const(m_drmOutputs)) {
-                output->renderLoop()->uninhibit();
-            }
-            for (const DrmOutput *output : std::as_const(m_drmOutputs)) {
-                // force a modeset with legacy, we can't reliably know if one is needed
-                if (!atomicModeSetting()) {
-                    output->pipeline()->forceLegacyModeset();
-                }
-            }
-        } else {
-            for (const DrmOutput *output : std::as_const(m_drmOutputs)) {
-                output->renderLoop()->inhibit();
-            }
-        }
-        Q_EMIT activeChanged(active);
-    }
-}
-
-bool DrmGpu::isActive() const
-{
-    return m_isActive;
 }
 
 bool DrmGpu::needsModeset() const
