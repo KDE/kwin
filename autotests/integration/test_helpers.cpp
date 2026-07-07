@@ -58,9 +58,7 @@
 
 // system
 #include <sys/socket.h>
-#include <sys/types.h>
 #include <unistd.h>
-#include <xf86drm.h>
 
 namespace KWin
 {
@@ -1468,36 +1466,6 @@ bool unlockScreen()
     return true;
 }
 #endif // KWIN_BUILD_LOCKSCREEN
-
-static bool haveDrmNode(int type)
-{
-    const int deviceCount = drmGetDevices2(0, nullptr, 0);
-    if (deviceCount <= 0) {
-        return false;
-    }
-
-    QList<drmDevice *> devices(deviceCount);
-    if (drmGetDevices2(0, devices.data(), devices.size()) < 0) {
-        return false;
-    }
-    auto deviceCleanup = qScopeGuard([&devices]() {
-        drmFreeDevices(devices.data(), devices.size());
-    });
-
-    return std::any_of(devices.constBegin(), devices.constEnd(), [type](drmDevice *device) {
-        return device->available_nodes & (1 << type);
-    });
-}
-
-bool renderNodeAvailable()
-{
-    return haveDrmNode(DRM_NODE_RENDER);
-}
-
-bool primaryNodeAvailable()
-{
-    return haveDrmNode(DRM_NODE_PRIMARY);
-}
 
 #if KWIN_BUILD_X11
 void XcbConnectionDeleter::operator()(xcb_connection_t *pointer)

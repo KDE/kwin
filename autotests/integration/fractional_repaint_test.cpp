@@ -29,11 +29,6 @@ private Q_SLOTS:
 
 void FractionalRepaintTest::initTestCase()
 {
-    if (!Test::renderNodeAvailable()) {
-        QSKIP("no render node available");
-        return;
-    }
-
     qRegisterMetaType<Window *>();
 
     QVERIFY(waylandServer()->init(qAppName()));

@@ -33,10 +33,6 @@ void GenericSceneOpenGLTest::cleanup()
 
 void GenericSceneOpenGLTest::initTestCase()
 {
-    if (!Test::renderNodeAvailable()) {
-        QSKIP("no render node available");
-        return;
-    }
     qRegisterMetaType<KWin::Window *>();
     QVERIFY(waylandServer()->init(qAppName()));
 

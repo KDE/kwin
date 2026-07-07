@@ -121,10 +121,6 @@ bool ScriptedEffectWithDebugSpy::load(const QString &name)
 
 void ScriptedEffectsTest::initTestCase()
 {
-    if (!Test::renderNodeAvailable()) {
-        QSKIP("no render node available");
-        return;
-    }
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Effect *>();
     QVERIFY(waylandServer()->init(qAppName()));

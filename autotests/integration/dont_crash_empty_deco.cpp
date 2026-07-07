@@ -32,10 +32,6 @@ private Q_SLOTS:
 
 void DontCrashEmptyDecorationTest::initTestCase()
 {
-    if (!Test::renderNodeAvailable()) {
-        QSKIP("no render node available");
-        return;
-    }
     qRegisterMetaType<KWin::Window *>();
     QVERIFY(waylandServer()->init(qAppName()));
 
