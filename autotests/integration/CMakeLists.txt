@@ -176,6 +176,8 @@ integrationTest(NAME testDrmLegacy SRCS drm_test.cpp PROPERTIES RESOURCE_LOCK "v
 target_compile_definitions(testDrmLegacy PRIVATE FORCE_DRM_LEGACY=1)
 integrationTest(NAME testDrmNoModifiers SRCS drm_test.cpp PROPERTIES RESOURCE_LOCK "vkms")
 target_compile_definitions(testDrmNoModifiers PRIVATE FORCE_NO_DRM_MODIFIERS=1)
+integrationTest(NAME testDrmNoRenderNodes SRCS drm_test.cpp PROPERTIES RESOURCE_LOCK "vkms")
+target_compile_definitions(testDrmNoRenderNodes PRIVATE FORCE_NO_RENDERNODES=1)
 
 integrationTest(NAME testSelection SRCS selection_test.cpp)
 integrationTest(NAME testToplevelDrag SRCS topleveldrag_test.cpp)

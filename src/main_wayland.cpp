@@ -138,6 +138,7 @@ void ApplicationWayland::performStartup()
 {
     createOptions();
 
+    createGpuManager();
     if (!outputBackend()->initialize()) {
         std::exit(1);
     }
@@ -470,8 +471,6 @@ int main(int argc, char *argv[])
     if (parser.isSet(exitWithSessionOption)) {
         a.setSessionArgument(parser.value(exitWithSessionOption));
     }
-
-    a.createGpuManager();
 
     enum class BackendType {
         Kms,
