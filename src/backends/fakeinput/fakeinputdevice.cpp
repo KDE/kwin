@@ -5,6 +5,7 @@
 */
 
 #include "fakeinputdevice.h"
+#include "keyboard_input.h"
 
 namespace KWin
 {
@@ -15,6 +16,7 @@ FakeInputDevice::FakeInputDevice(QObject *parent)
     : InputDevice(parent)
     , m_name(QStringLiteral("Fake Input Device %1").arg(++s_lastDeviceId))
 {
+    setKeyboard(std::make_shared<KeyboardInput>());
 }
 
 bool FakeInputDevice::isAuthenticated() const

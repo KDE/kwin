@@ -298,7 +298,7 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *
         return;
     }
 
-    std::optional<Xkb::KeyCode> keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(keySym);
+    std::optional<Xkb::KeyCode> keyCode = device->keyboard()->xkb()->keycodeFromKeysym(keySym);
     if (keyCode) {
         // grab the current modifier state, cache it, send our key with our own modifiers at a known state, then reset back
         xkb_state *state = input()->keyboard()->xkb()->state();
@@ -329,9 +329,9 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *
         if (isModifier) {
             sendKey(device, keyCode->keyCode, nativeState);
         } else {
-            input()->keyboard()->xkb()->updateModifiers(formerDepressed | keyCode->modifiers, formerLatched, formerLocked, formerLayout);
+            device->keyboard()->xkb()->updateModifiers(formerDepressed | keyCode->modifiers, formerLatched, formerLocked, formerLayout);
             sendKey(device, keyCode->keyCode, nativeState);
-            input()->keyboard()->xkb()->updateModifiers(formerDepressed, formerLatched, formerLocked, formerLayout);
+            device->keyboard()->xkb()->updateModifiers(formerDepressed, formerLatched, formerLocked, formerLayout);
         }
         return;
     }
@@ -351,7 +351,7 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *
             sendKey(device, key, KeyboardKeyState::Released);
         }
         // reset keyboard back
-        input()->keyboard()->xkb()->reconfigure();
+        device->keyboard()->xkb()->reconfigure();
     }
 }
 
