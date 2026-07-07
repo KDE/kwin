@@ -33,8 +33,6 @@ typedef uint32_t xkb_layout_index_t;
 namespace KWin
 {
 
-class SeatInterface;
-
 class KWIN_EXPORT Xkb : public QObject
 {
     Q_OBJECT
@@ -114,12 +112,6 @@ public:
     QString layoutShortName(int index) const;
     quint32 numberOfLayouts() const;
 
-    /**
-     * Forwards the current modifier state to the Wayland seat
-     */
-    void forwardModifiers();
-
-    void setSeat(SeatInterface *seat);
     QByteArray keymapContents() const;
 
     /**
@@ -160,6 +152,7 @@ public Q_SLOTS:
     void reconfigure();
 
 Q_SIGNALS:
+    void keymapChanged();
     void ledsChanged(const LEDs &leds);
     void modifierStateChanged();
 
@@ -170,7 +163,6 @@ private:
     xkb_keymap *loadKeymapFromLocale1();
     xkb_keymap *createKeymapForKeysym(xkb_keycode_t newKeycode, xkb_keysym_t customSym);
     void updateKeymap(xkb_keymap *keymap);
-    void createKeymapFile();
     void updateModifiers();
     void updateConsumedModifiers(uint32_t key);
     xkb_context *m_context;
@@ -209,8 +201,6 @@ private:
         xkb_mod_index_t latched = 0;
         xkb_mod_index_t locked = 0;
     } m_modifierState;
-
-    QPointer<SeatInterface> m_seat;
     const bool m_followLocale1;
 };
 

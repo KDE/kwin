@@ -53,6 +53,7 @@ public:
     void switchToPreviousLayout();
     void switchToLastUsedLayout();
     void resetLayout();
+    void forwardModifiers();
 
 Q_SIGNALS:
     void layoutChanged(uint index);

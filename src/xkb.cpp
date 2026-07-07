@@ -12,8 +12,6 @@
 #include "utils/c_ptr.h"
 #include "utils/common.h"
 #include "wayland/inputmethod_v1.h"
-#include "wayland/keyboard.h"
-#include "wayland/seat.h"
 // frameworks
 #include <KConfigGroup>
 // Qt
@@ -713,35 +711,15 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
         setLock(m_capsModifier, capsLockIsOn);
     }
 
-    createKeymapFile();
-    forwardModifiers();
+    Q_EMIT keymapChanged();
     if (auto *inputmethod = kwinApp()->inputMethod()) {
         inputmethod->forwardModifiers(InputMethod::Force);
     }
     updateModifiers();
 }
 
-void Xkb::createKeymapFile()
-{
-    const auto currentKeymap = keymapContents();
-    if (currentKeymap.isEmpty()) {
-        return;
-    }
-    m_seat->keyboard()->setKeymap(currentKeymap);
-    auto *inputmethod = kwinApp()->inputMethod();
-    if (!inputmethod) {
-        return;
-    }
-    if (auto *keyboardGrab = inputmethod->keyboardGrab()) {
-        keyboardGrab->sendKeymap(currentKeymap);
-    }
-}
-
 QByteArray Xkb::keymapContents() const
 {
-    if (!m_seat || !m_seat->keyboard()) {
-        return {};
-    }
     // TODO: uninstall keymap on server?
     if (!m_keymap) {
         return {};
@@ -764,7 +742,6 @@ void Xkb::updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t
         return;
     }
     updateModifiers();
-    forwardModifiers();
 }
 
 void Xkb::updateKey(uint32_t key, KeyboardKeyState state)
@@ -851,17 +828,6 @@ void Xkb::updateModifiers()
 
         Q_EMIT modifierStateChanged();
     }
-}
-
-void Xkb::forwardModifiers()
-{
-    if (!m_seat || !m_seat->keyboard()) {
-        return;
-    }
-    m_seat->notifyKeyboardModifiers(m_modifierState.depressed,
-                                    m_modifierState.latched,
-                                    m_modifierState.locked,
-                                    m_currentLayout);
 }
 
 QString Xkb::layoutName(xkb_layout_index_t index) const
@@ -1016,7 +982,6 @@ bool Xkb::switchToLayout(xkb_layout_index_t layout)
     const xkb_mod_mask_t locked = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED));
     xkb_state_update_mask(m_state, depressed, latched, locked, 0, 0, layout);
     updateModifiers();
-    forwardModifiers();
     return true;
 }
 
@@ -1232,11 +1197,6 @@ quint32 Xkb::numberOfLayouts() const
         return 0;
     }
     return xkb_keymap_num_layouts(m_keymap);
-}
-
-void Xkb::setSeat(SeatInterface *seat)
-{
-    m_seat = QPointer<SeatInterface>(seat);
 }
 
 std::optional<Xkb::KeyCode> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)

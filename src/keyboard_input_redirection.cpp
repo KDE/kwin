@@ -13,11 +13,15 @@
 #include "input.h"
 #include "input_event.h"
 #include "input_event_spy.h"
+#include "inputmethod.h"
 #include "keyboard_input.h"
+#include "wayland/inputmethod_v1.h"
+#include "wayland/keyboard.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
+#include "xkb.h"
 
 #if KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"
@@ -65,6 +69,7 @@ KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *input)
 {
     waylandServer()->seat()->setHasKeyboard(true);
     m_globalKeyboard.reset(new KeyboardInput(this));
+    trackKeyboard(m_globalKeyboard.get());
 }
 
 void KeyboardInputRedirection::init()
@@ -115,6 +120,33 @@ void KeyboardInputRedirection::addFilteredKey(uint32_t key)
 QList<uint32_t> KeyboardInputRedirection::unfilteredKeys() const
 {
     return activeKeyboard()->unfilteredKeys();
+}
+
+void KeyboardInputRedirection::updateKeymap()
+{
+    updateKeymap(activeKeyboard());
+}
+
+void KeyboardInputRedirection::forwardModifiers()
+{
+    forwardModifiers(activeKeyboard());
+}
+
+void KeyboardInputRedirection::trackKeyboard(KeyboardInput *keyboard)
+{
+    if (!keyboard || m_trackedKeyboards.contains(keyboard)) {
+        return;
+    }
+    m_trackedKeyboards.insert(keyboard);
+
+    connect(keyboard->xkb(), &Xkb::keymapChanged, this, [this, keyboard] {
+        if (activeKeyboard() != keyboard) {
+            return;
+        }
+        updateKeymap(keyboard);
+        forwardModifiers(keyboard);
+        Q_EMIT layoutChanged();
+    });
 }
 
 Window *KeyboardInputRedirection::pickFocus() const
@@ -170,6 +202,46 @@ void KeyboardInputRedirection::update()
     }
 }
 
+void KeyboardInputRedirection::updateKeymap(KeyboardInput *keyboard)
+{
+    if (!keyboard) {
+        return;
+    }
+
+    const QByteArray keymap = keyboard->xkb()->keymapContents();
+    if (keymap.isEmpty()) {
+        return;
+    }
+
+    if (auto *seatKeyboard = waylandServer()->seat()->keyboard()) {
+        seatKeyboard->setKeymap(keymap);
+    }
+
+    if (auto *inputMethod = kwinApp()->inputMethod()) {
+        if (auto *keyboardGrab = inputMethod->keyboardGrab()) {
+            keyboardGrab->sendKeymap(keymap);
+        }
+    }
+}
+
+void KeyboardInputRedirection::forwardModifiers(KeyboardInput *keyboard)
+{
+    if (!keyboard) {
+        return;
+    }
+
+    auto *seat = waylandServer()->seat();
+    if (!seat || !seat->keyboard()) {
+        return;
+    }
+
+    const auto &modifierState = keyboard->xkb()->modifierState();
+    seat->notifyKeyboardModifiers(modifierState.depressed,
+                                  modifierState.latched,
+                                  modifierState.locked,
+                                  keyboard->xkb()->currentLayout());
+}
+
 std::shared_ptr<KeyboardInput> KeyboardInputRedirection::globalKeyboard() const
 {
     return m_globalKeyboard;
@@ -180,7 +252,9 @@ QSet<KeyboardInput *> KeyboardInputRedirection::keyboards() const
     // QSet as multiple devices may share the same keyboard object
     QSet<KeyboardInput*> keyboards;
     for (auto device : input()->devices()) {
-        keyboards << device->keyboard();
+        if (device->keyboard()) {
+            keyboards << device->keyboard();
+        }
     }
     return keyboards;
 }

@@ -38,6 +38,11 @@ Xkb *KeyboardLayout::xkb() const
     return m_input->keyboard()->activeKeyboard()->xkb();
 }
 
+void KeyboardLayout::forwardModifiers()
+{
+    m_input->keyboard()->forwardModifiers();
+}
+
 static QString translatedLayout(const QString &layout)
 {
     return i18nd("xkeyboard-config", layout.toUtf8().constData());
@@ -77,6 +82,7 @@ void KeyboardLayout::switchToNextLayout()
     Xkb *currentXkb = xkb();
     const quint32 previousLayout = currentXkb->currentLayout();
     currentXkb->switchToNextLayout();
+    forwardModifiers();
     checkLayoutChange(previousLayout);
 }
 
@@ -85,6 +91,7 @@ void KeyboardLayout::switchToPreviousLayout()
     Xkb *currentXkb = xkb();
     const quint32 previousLayout = currentXkb->currentLayout();
     currentXkb->switchToPreviousLayout();
+    forwardModifiers();
     checkLayoutChange(previousLayout);
 }
 
@@ -93,6 +100,7 @@ void KeyboardLayout::switchToLayout(xkb_layout_index_t index)
     Xkb *currentXkb = xkb();
     const quint32 previousLayout = currentXkb->currentLayout();
     currentXkb->switchToLayout(index);
+    forwardModifiers();
     checkLayoutChange(previousLayout);
 }
 
@@ -246,6 +254,7 @@ bool KeyboardLayoutDBusInterface::setLayout(uint index)
     if (!currentXkb->switchToLayout(index)) {
         return false;
     }
+    m_keyboardLayout->forwardModifiers();
     m_keyboardLayout->checkLayoutChange(previousLayout);
     return true;
 }

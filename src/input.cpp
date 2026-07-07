@@ -3051,7 +3051,9 @@ void InputRedirection::setLastKeyboardInputDevice(InputDevice *device, std::chro
 
     syncActiveKeyboardState(oldKeyboard, newKeyboard);
     waylandServer()->seat()->setTimestamp(time);
-    newKeyboard->xkb()->forwardModifiers();
+    keyboard()->trackKeyboard(newKeyboard);
+    keyboard()->updateKeymap();
+    keyboard()->forwardModifiers();
     updateLeds(newKeyboard->xkb()->leds());
 
     Q_EMIT m_keyboard->layoutChanged();
@@ -3279,6 +3281,7 @@ void InputRedirection::updateLeds(LEDs leds)
 void InputRedirection::addInputDevice(InputDevice *device)
 {
     if (device->keyboard()) {
+        m_keyboard->trackKeyboard(device->keyboard());
         connect(device->keyboard(), &KeyboardInput::ledsChanged, this, [this, device](LEDs leds) {
             if (keyboard()->activeKeyboard() == device->keyboard()) {
                 updateLeds(leds);

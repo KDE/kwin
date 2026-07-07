@@ -14,6 +14,7 @@
 #include "core/inputdevice.h"
 
 #include <QObject>
+#include <QSet>
 
 #include <memory>
 
@@ -46,7 +47,10 @@ public:
     QList<uint32_t> filteredKeys() const;
     void addFilteredKey(uint32_t key);
     QList<uint32_t> unfilteredKeys() const;
+    void updateKeymap();
+    void forwardModifiers();
     Window *pickFocus() const;
+    void trackKeyboard(KeyboardInput *keyboard);
     void update();
 
     /**
@@ -65,8 +69,12 @@ Q_SIGNALS:
     void modifierStateChanged();
 
 private:
+    void updateKeymap(KeyboardInput *keyboard);
+    void forwardModifiers(KeyboardInput *keyboard);
+
     InputRedirection *m_input;
     std::shared_ptr<KeyboardInput> m_globalKeyboard;
+    QSet<KeyboardInput *> m_trackedKeyboards;
 };
 
 }

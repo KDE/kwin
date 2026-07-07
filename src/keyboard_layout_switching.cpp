@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "keyboard_layout_switching.h"
+#include "input.h"
 #include "keyboard_layout.h"
 #include "virtualdesktops.h"
 #include "window.h"
@@ -38,6 +39,7 @@ void Policy::setLayout(uint index)
     }
     const uint previousLayout = currentXkb->currentLayout();
     currentXkb->switchToLayout(index);
+    input()->keyboard()->forwardModifiers();
     const uint currentLayout = currentXkb->currentLayout();
     if (previousLayout != currentLayout) {
         Q_EMIT m_layout->layoutChanged(currentLayout);

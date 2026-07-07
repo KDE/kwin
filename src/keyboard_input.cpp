@@ -46,7 +46,6 @@ KeyboardInput::KeyboardInput(QObject *parent)
     , m_xkb(new Xkb(kwinApp()->followLocale1()))
 {
     connect(m_xkb.get(), &Xkb::ledsChanged, this, &KeyboardInput::ledsChanged);
-    m_xkb->setSeat(waylandServer()->seat());
 }
 
 KeyboardInput::~KeyboardInput() = default;
@@ -227,7 +226,7 @@ void KeyboardInput::processKey(uint32_t key, KeyboardKeyState state, std::chrono
     }
 
     if (forwardModifiers) {
-        m_xkb->forwardModifiers();
+        input()->keyboard()->forwardModifiers();
     }
 
     if (event.modifiersRelevantForGlobalShortcuts == Qt::KeyboardModifier::NoModifier && state != KeyboardKeyState::Released) {
