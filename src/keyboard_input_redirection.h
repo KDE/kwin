@@ -70,7 +70,6 @@ Q_SIGNALS:
 
 private:
     void updateKeymap(KeyboardInput *keyboard);
-    void forwardModifiers(KeyboardInput *keyboard);
 
     InputRedirection *m_input;
     std::shared_ptr<KeyboardInput> m_globalKeyboard;

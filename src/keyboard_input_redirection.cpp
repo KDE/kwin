@@ -124,12 +124,36 @@ QList<uint32_t> KeyboardInputRedirection::unfilteredKeys() const
 
 void KeyboardInputRedirection::updateKeymap()
 {
-    updateKeymap(activeKeyboard());
+    const QByteArray keymap = activeKeyboard()->xkb()->keymapContents();
+    if (keymap.isEmpty()) {
+        return;
+    }
+
+    if (auto *seatKeyboard = waylandServer()->seat()->keyboard()) {
+        seatKeyboard->setKeymap(keymap);
+    }
+
+    if (auto *inputMethod = kwinApp()->inputMethod()) {
+        if (auto *keyboardGrab = inputMethod->keyboardGrab()) {
+            keyboardGrab->sendKeymap(keymap);
+        }
+    }
 }
 
 void KeyboardInputRedirection::forwardModifiers()
 {
-    forwardModifiers(activeKeyboard());
+    auto *seat = waylandServer()->seat();
+    if (!seat || !seat->keyboard()) {
+        return;
+    }
+
+    auto keyboard = activeKeyboard();
+
+    const auto &modifierState = keyboard->xkb()->modifierState();
+    seat->notifyKeyboardModifiers(modifierState.depressed,
+                                  modifierState.latched,
+                                  modifierState.locked,
+                                  keyboard->xkb()->currentLayout());
 }
 
 void KeyboardInputRedirection::trackKeyboard(KeyboardInput *keyboard)
@@ -143,8 +167,8 @@ void KeyboardInputRedirection::trackKeyboard(KeyboardInput *keyboard)
         if (activeKeyboard() != keyboard) {
             return;
         }
-        updateKeymap(keyboard);
-        forwardModifiers(keyboard);
+        updateKeymap();
+        forwardModifiers();
         Q_EMIT layoutChanged();
     });
 }
@@ -200,46 +224,6 @@ void KeyboardInputRedirection::update()
     } else {
         seat->setFocusedKeyboardSurface(nullptr);
     }
-}
-
-void KeyboardInputRedirection::updateKeymap(KeyboardInput *keyboard)
-{
-    if (!keyboard) {
-        return;
-    }
-
-    const QByteArray keymap = keyboard->xkb()->keymapContents();
-    if (keymap.isEmpty()) {
-        return;
-    }
-
-    if (auto *seatKeyboard = waylandServer()->seat()->keyboard()) {
-        seatKeyboard->setKeymap(keymap);
-    }
-
-    if (auto *inputMethod = kwinApp()->inputMethod()) {
-        if (auto *keyboardGrab = inputMethod->keyboardGrab()) {
-            keyboardGrab->sendKeymap(keymap);
-        }
-    }
-}
-
-void KeyboardInputRedirection::forwardModifiers(KeyboardInput *keyboard)
-{
-    if (!keyboard) {
-        return;
-    }
-
-    auto *seat = waylandServer()->seat();
-    if (!seat || !seat->keyboard()) {
-        return;
-    }
-
-    const auto &modifierState = keyboard->xkb()->modifierState();
-    seat->notifyKeyboardModifiers(modifierState.depressed,
-                                  modifierState.latched,
-                                  modifierState.locked,
-                                  keyboard->xkb()->currentLayout());
 }
 
 std::shared_ptr<KeyboardInput> KeyboardInputRedirection::globalKeyboard() const
