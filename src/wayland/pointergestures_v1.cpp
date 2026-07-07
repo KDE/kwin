@@ -193,7 +193,7 @@ void PointerPinchGestureV1Interface::sendBegin(quint32 serial, quint32 fingerCou
     focusedClient = focusedSurface->client();
     SeatInterface *seat = pointer->seat();
 
-    const QList<Resource *> pinchResources = resourceMap().values(*focusedClient);
+    const QList<Resource *> pinchResources = resourceMap().values(focusedClient->client());
     for (Resource *pinchResource : pinchResources) {
         send_begin(pinchResource->handle, serial, seat->timestamp().count(), focusedSurface->resource(), fingerCount);
     }
@@ -207,7 +207,7 @@ void PointerPinchGestureV1Interface::sendUpdate(const QPointF &delta, qreal scal
 
     SeatInterface *seat = pointer->seat();
 
-    const QList<Resource *> pinchResources = resourceMap().values(*focusedClient);
+    const QList<Resource *> pinchResources = resourceMap().values(focusedClient->client());
     for (Resource *pinchResource : pinchResources) {
         send_update(pinchResource->handle,
                     seat->timestamp().count(),
@@ -226,7 +226,7 @@ void PointerPinchGestureV1Interface::sendEnd(quint32 serial)
 
     SeatInterface *seat = pointer->seat();
 
-    const QList<Resource *> pinchResources = resourceMap().values(*focusedClient);
+    const QList<Resource *> pinchResources = resourceMap().values(focusedClient->client());
     for (Resource *pinchResource : pinchResources) {
         send_end(pinchResource->handle, serial, seat->timestamp().count(), false);
     }
@@ -243,7 +243,7 @@ void PointerPinchGestureV1Interface::sendCancel(quint32 serial)
 
     SeatInterface *seat = pointer->seat();
 
-    const QList<Resource *> pinchResources = resourceMap().values(*focusedClient);
+    const QList<Resource *> pinchResources = resourceMap().values(focusedClient->client());
     for (Resource *pinchResource : pinchResources) {
         send_end(pinchResource->handle, serial, seat->timestamp().count(), true);
     }
@@ -284,7 +284,7 @@ void PointerHoldGestureV1Interface::sendBegin(quint32 serial, quint32 fingerCoun
     focusedClient = focusedSurface->client();
     SeatInterface *seat = pointer->seat();
 
-    const QList<Resource *> holdResources = resourceMap().values(*focusedClient);
+    const QList<Resource *> holdResources = resourceMap().values(focusedClient->client());
     for (Resource *holdResource : holdResources) {
         send_begin(holdResource->handle, serial, seat->timestamp().count(), focusedSurface->resource(), fingerCount);
     }
@@ -298,7 +298,7 @@ void PointerHoldGestureV1Interface::sendEnd(quint32 serial)
 
     SeatInterface *seat = pointer->seat();
 
-    const QList<Resource *> holdResources = resourceMap().values(*focusedClient);
+    const QList<Resource *> holdResources = resourceMap().values(focusedClient->client());
     for (Resource *holdResource : holdResources) {
         send_end(holdResource->handle, serial, seat->timestamp().count(), false);
     }
@@ -315,7 +315,7 @@ void PointerHoldGestureV1Interface::sendCancel(quint32 serial)
 
     SeatInterface *seat = pointer->seat();
 
-    const QList<Resource *> holdResources = resourceMap().values(*focusedClient);
+    const QList<Resource *> holdResources = resourceMap().values(focusedClient->client());
     for (Resource *holdResource : holdResources) {
         send_end(holdResource->handle, serial, seat->timestamp().count(), true);
     }
