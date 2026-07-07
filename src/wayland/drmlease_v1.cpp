@@ -59,10 +59,8 @@ void DrmLeaseManagerV1::removeGpu(DrmGpu *gpu)
 void DrmLeaseManagerV1::handleOutputsQueried()
 {
     for (const auto device : m_leaseDevices) {
-        if (device->hasDrmMaster()) {
-            device->offerAvailableConnectors();
-            device->done();
-        }
+        device->offerAvailableConnectors();
+        device->done();
     }
 }
 
@@ -76,7 +74,6 @@ DrmLeaseDeviceV1Interface::DrmLeaseDeviceV1Interface(Display *display, DrmGpu *g
     }
     connect(gpu, &DrmGpu::outputAdded, this, &DrmLeaseDeviceV1Interface::addOutput);
     connect(gpu, &DrmGpu::outputRemoved, this, &DrmLeaseDeviceV1Interface::removeOutput);
-    connect(gpu, &DrmGpu::activeChanged, this, &DrmLeaseDeviceV1Interface::onGpuActiveChanged);
 }
 
 DrmLeaseDeviceV1Interface::~DrmLeaseDeviceV1Interface()
@@ -93,10 +90,7 @@ void DrmLeaseDeviceV1Interface::addOutput(BackendOutput *output)
         return;
     }
     m_connectors[drmOutput] = std::make_unique<DrmLeaseConnectorV1Interface>(this, drmOutput);
-
-    if (m_hasDrmMaster) {
-        offerConnector(m_connectors[drmOutput].get());
-    }
+    offerConnector(m_connectors[drmOutput].get());
 }
 
 void DrmLeaseDeviceV1Interface::removeOutput(BackendOutput *output)
@@ -114,44 +108,6 @@ void DrmLeaseDeviceV1Interface::removeOutput(BackendOutput *output)
             }
         }
         m_connectors.erase(it);
-    }
-}
-
-void DrmLeaseDeviceV1Interface::onGpuActiveChanged(bool active)
-{
-    if (!active) {
-        // Withdraw all connectors immediately. Re-offering happens later
-        // in handleOutputsQueried() after updateOutputs() refreshes
-        // connector state on the way back from VT switch.
-        bool changed = false;
-        for (const auto &[output, connector] : m_connectors) {
-            if (!connector->withdrawn()) {
-                connector->withdraw();
-                changed = true;
-            }
-        }
-        if (changed) {
-            done();
-        }
-    }
-    setDrmMaster(active);
-}
-
-void DrmLeaseDeviceV1Interface::setDrmMaster(bool hasDrmMaster)
-{
-    if (hasDrmMaster == m_hasDrmMaster) {
-        return;
-    }
-    m_hasDrmMaster = hasDrmMaster;
-    if (hasDrmMaster) {
-        while (!m_pendingFds.isEmpty()) {
-            FileDescriptor fd = m_gpu->createNonMasterFd();
-            send_drm_fd(m_pendingFds.dequeue(), fd.get());
-        }
-    } else {
-        for (DrmLeaseV1Interface *lease : std::as_const(m_leases)) {
-            lease->revoke();
-        }
     }
 }
 
@@ -196,11 +152,6 @@ void DrmLeaseDeviceV1Interface::addLease(DrmLeaseV1Interface *lease)
 void DrmLeaseDeviceV1Interface::removeLease(DrmLeaseV1Interface *lease)
 {
     m_leases.removeOne(lease);
-}
-
-bool DrmLeaseDeviceV1Interface::hasDrmMaster() const
-{
-    return m_hasDrmMaster;
 }
 
 DrmGpu *DrmLeaseDeviceV1Interface::gpu() const
@@ -265,10 +216,6 @@ void DrmLeaseDeviceV1Interface::wp_drm_lease_device_v1_release(Resource *resourc
 void DrmLeaseDeviceV1Interface::wp_drm_lease_device_v1_bind_resource(Resource *resource)
 {
     if (isGlobalRemoved()) {
-        return;
-    }
-    if (!m_hasDrmMaster) {
-        m_pendingFds << resource->handle;
         return;
     }
     FileDescriptor fd = m_gpu->createNonMasterFd();
@@ -399,10 +346,7 @@ void DrmLeaseRequestV1Interface::wp_drm_lease_request_v1_submit(Resource *resour
     }
     DrmLeaseV1Interface *lease = new DrmLeaseV1Interface(m_device, m_connectors, leaseResource);
     m_device->addLease(lease);
-    if (!m_device->hasDrmMaster()) {
-        qCWarning(KWIN_CORE) << "DrmLease: rejecting lease request without drm master";
-        lease->deny();
-    } else if (m_invalid) {
+    if (m_invalid) {
         qCWarning(KWIN_CORE) << "DrmLease: rejecting lease request with a withdrawn connector";
         lease->deny();
     } else if (m_connectors.isEmpty()) {
