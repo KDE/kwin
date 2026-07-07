@@ -35,7 +35,6 @@ public:
 
     void addOutput(BackendOutput *output);
     void removeOutput(BackendOutput *output);
-    void onGpuActiveChanged(bool active);
     void done();
     void remove();
     void addLeaseRequest(DrmLeaseRequestV1Interface *leaseRequest);
@@ -50,7 +49,6 @@ public:
     DrmGpu *gpu() const;
 
 private:
-    void setDrmMaster(bool hasDrmMaster);
     bool isLeased(DrmLeaseConnectorV1Interface *connector) const;
     void wp_drm_lease_device_v1_create_lease_request(Resource *resource, uint32_t id) override;
     void wp_drm_lease_device_v1_release(Resource *resource) override;
@@ -59,7 +57,6 @@ private:
     void wp_drm_lease_device_v1_destroy_global() override;
 
     DrmGpu *const m_gpu;
-    bool m_hasDrmMaster = true;
     std::map<BackendOutput *, std::unique_ptr<DrmLeaseConnectorV1Interface>> m_connectors;
     QQueue<wl_resource *> m_pendingFds;
     QList<DrmLeaseRequestV1Interface *> m_leaseRequests;
