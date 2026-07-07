@@ -35,7 +35,7 @@ KeyboardLayout::~KeyboardLayout() = default;
 
 Xkb *KeyboardLayout::xkb() const
 {
-    return m_input->xkb();
+    return m_input->keyboard()->activeKeyboard()->xkb();
 }
 
 static QString translatedLayout(const QString &layout)
@@ -126,7 +126,9 @@ void KeyboardLayout::reconfigure()
             m_policy = KeyboardLayoutSwitching::Policy::create(this, m_configGroup, policyKey);
         }
     } else {
-        currentXkb->reconfigure();
+        for (auto keyboard : m_input->keyboard()->keyboards()) {
+            keyboard->xkb()->reconfigure();
+        }
     }
     resetLayout();
 }
