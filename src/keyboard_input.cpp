@@ -18,6 +18,7 @@
 #include "keyboard_repeat.h"
 #include "main.h"
 #include "wayland/display.h"
+#include "wayland/seat.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "xkb.h"
@@ -31,14 +32,6 @@ KeyboardInput::KeyboardInput(QObject *parent)
     : QObject(parent)
     , m_xkb(new Xkb(kwinApp()->followLocale1()))
 {
-    const auto config = kwinApp()->kxkbConfig();
-    m_xkb->setNumLockConfig(kwinApp()->inputConfig());
-    m_xkb->setConfig(config);
-
-    m_keyRepeatSpy = std::make_unique<KeyboardRepeat>(m_xkb.get());
-    connect(m_keyRepeatSpy.get(), &KeyboardRepeat::keyRepeat, this,
-            std::bind(&KeyboardInput::processKey, this, std::placeholders::_1, KeyboardKeyState::Repeated, std::placeholders::_2, nullptr));
-
     connect(m_xkb.get(), &Xkb::ledsChanged, this, &KeyboardInput::ledsChanged);
 }
 
@@ -88,6 +81,22 @@ void KeyboardInput::addFilteredKey(uint32_t key)
     if (!m_filteredKeys.contains(key)) {
         m_filteredKeys.append(key);
     }
+}
+
+void KeyboardInput::init()
+{
+    if (isInitialized()) {
+        return;
+    }
+
+    const auto config = kwinApp()->kxkbConfig();
+    m_xkb->setNumLockConfig(kwinApp()->inputConfig());
+    m_xkb->setConfig(config);
+    m_xkb->reconfigure();
+
+    m_keyRepeatSpy = std::make_unique<KeyboardRepeat>(m_xkb.get());
+    connect(m_keyRepeatSpy.get(), &KeyboardRepeat::keyRepeat, this,
+            std::bind(&KeyboardInput::processKey, this, std::placeholders::_1, KeyboardKeyState::Repeated, std::placeholders::_2, nullptr));
 }
 
 static constexpr std::array s_modifierKeys = {

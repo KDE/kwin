@@ -27,7 +27,6 @@
 #endif
 
 #include <cmath>
-
 #if KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"
 #endif
@@ -74,13 +73,18 @@ KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *input)
 {
     waylandServer()->seat()->setHasKeyboard(true);
     m_globalKeyboard.reset(new KeyboardInput(this));
-    updateActiveKeyboard();
 }
 
 void KeyboardInputRedirection::init()
 {
     Q_ASSERT(!m_inited);
     m_inited = true;
+
+    m_globalKeyboard->init();
+    for (KeyboardInput *keyboard : keyboards()) {
+        keyboard->init();
+    }
+    updateActiveKeyboard();
 
     input()->installInputEventSpy(new KeyStateChangedSpy);
     input()->installInputEventSpy(new ModifiersChangedSpy);

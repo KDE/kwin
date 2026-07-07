@@ -3248,6 +3248,11 @@ void InputRedirection::updateLeds(LEDs leds)
 
 void InputRedirection::addInputDevice(InputDevice *device)
 {
+    KeyboardInput *deviceKeyboard = device->keyboard();
+    if (!deviceKeyboard && device->isKeyboard()) {
+        deviceKeyboard = keyboard()->globalKeyboard().get();
+    }
+
     if (device->keyboard()) {
         connect(device->keyboard(), &KeyboardInput::ledsChanged, this, [this, device](LEDs leds) {
             if (keyboard()->activeKeyboard() == device->keyboard()) {
@@ -3260,7 +3265,12 @@ void InputRedirection::addInputDevice(InputDevice *device)
                 Q_EMIT m_keyboard->modifierStateChanged();
             }
         });
-        connect(device, &InputDevice::keyChanged, device->keyboard(), &KeyboardInput::processKey);
+        if (keyboard()->isInitialized()) {
+            device->keyboard()->init();
+        }
+    }
+    if (deviceKeyboard) {
+        connect(device, &InputDevice::keyChanged, deviceKeyboard, &KeyboardInput::processKey);
     }
 
     connect(device, &InputDevice::pointerMotionAbsolute,

@@ -46,6 +46,7 @@ public:
     explicit KeyboardInput(QObject *parent = nullptr);
     ~KeyboardInput() override;
 
+    void init();
     bool isInitialized() const;
 
     /**
