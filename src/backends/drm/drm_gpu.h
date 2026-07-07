@@ -85,8 +85,6 @@ public:
 
     bool isRemoved() const;
     void setRemoved();
-    void setActive(bool active);
-    bool isActive() const;
 
     bool atomicModeSetting() const;
     bool addFB2ModifiersSupported() const;
@@ -133,7 +131,6 @@ public:
     void registerPendingCommit(std::unique_lock<std::mutex> &lock, uint32_t crtcId, DrmCommit *commit);
 
 Q_SIGNALS:
-    void activeChanged(bool active);
     void outputAdded(BackendOutput *output);
     void outputRemoved(BackendOutput *output);
     void renderDeviceChanged();
@@ -162,7 +159,6 @@ private:
     bool m_asyncPageflipSupported = false;
     bool m_colorPipelineSupported = false;
     bool m_isRemoved = false;
-    bool m_isActive = true;
     bool m_forceModeset = false;
     bool m_forceLowBandwidthMode = false;
     bool m_forceImplicitModifiers = false;
