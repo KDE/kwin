@@ -114,7 +114,7 @@ DrmOutput *DrmPipelineLayer::drmOutput() const
     return static_cast<DrmOutput *>(m_output.get());
 }
 
-static const FormatModifierMap s_legacyFormats = {{DRM_FORMAT_XRGB8888, {DRM_FORMAT_MOD_INVALID}}};
+static const FormatModifierMap s_legacyFormats = {{DRM_FORMAT_XRGB8888, {DRM_FORMAT_MOD_INVALID, DRM_FORMAT_MOD_LINEAR}}};
 static const FormatModifierMap s_legacyCursorFormats = {{DRM_FORMAT_ARGB8888, {DRM_FORMAT_MOD_LINEAR}}};
 
 FormatModifierMap DrmPipelineLayer::supportedDrmFormats() const
