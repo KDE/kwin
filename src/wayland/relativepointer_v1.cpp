@@ -82,15 +82,13 @@ void RelativePointerV1Interface::sendRelativeMotion(const QPointF &delta, const 
     ClientConnection *focusedClient = pointer->focusedSurface()->client();
     const QList<Resource *> pointerResources = resourceMap().values(focusedClient->client());
     for (Resource *pointerResource : pointerResources) {
-        if (pointerResource->client() == focusedClient->client()) {
-            send_relative_motion(pointerResource->handle,
-                                 time.count() >> 32,
-                                 time.count() & 0xffffffff,
-                                 wl_fixed_from_double(scaledDelta.x()),
-                                 wl_fixed_from_double(scaledDelta.y()),
-                                 wl_fixed_from_double(deltaNonAccelerated.x()),
-                                 wl_fixed_from_double(deltaNonAccelerated.y()));
-        }
+        send_relative_motion(pointerResource->handle,
+                             time.count() >> 32,
+                             time.count() & 0xffffffff,
+                             wl_fixed_from_double(scaledDelta.x()),
+                             wl_fixed_from_double(scaledDelta.y()),
+                             wl_fixed_from_double(deltaNonAccelerated.x()),
+                             wl_fixed_from_double(deltaNonAccelerated.y()));
     }
 }
 
