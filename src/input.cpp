@@ -3053,7 +3053,6 @@ void InputRedirection::setLastKeyboardInputDevice(InputDevice *device, std::chro
     waylandServer()->seat()->setTimestamp(time);
     keyboard()->trackKeyboard(newKeyboard);
     keyboard()->updateKeymap();
-    keyboard()->forwardModifiers();
     updateLeds(newKeyboard->xkb()->leds());
 
     Q_EMIT m_keyboard->layoutChanged();
