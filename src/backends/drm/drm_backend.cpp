@@ -76,7 +76,6 @@ DrmBackend::DrmBackend(Session *session, QObject *parent)
     , m_udev(std::make_unique<Udev>())
     , m_udevMonitor(m_udev->createMonitor())
     , m_session(session)
-    , m_explicitGpus(splitPathList(qEnvironmentVariable("KWIN_DRM_DEVICES"), ':'))
 {
 }
 
@@ -94,6 +93,8 @@ QList<BackendOutput *> DrmBackend::outputs() const
 
 bool DrmBackend::initialize()
 {
+    m_explicitGpus = splitPathList(qEnvironmentVariable("KWIN_DRM_DEVICES"), ':');
+
     connect(m_session, &Session::devicePaused, this, [this](dev_t deviceId) {
         if (const auto gpu = findGpu(deviceId)) {
             gpu->setActive(false);
