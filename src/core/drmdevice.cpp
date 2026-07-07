@@ -174,7 +174,7 @@ std::unique_ptr<DrmDevice> DrmDevice::openWithAuthentication(const QString &path
 {
     FileDescriptor fd(::open(path.toLocal8Bit(), O_RDWR | O_CLOEXEC));
     if (!fd.isValid()) {
-        qCWarning(KWIN_CORE) << "Failed to open drm node:" << path;
+        qCWarning(KWIN_CORE, "Failed to open drm node %s: %s", qPrintable(path), strerror(errno));
         return nullptr;
     }
     struct stat buf;
