@@ -1915,6 +1915,12 @@ public:
         workspace()->screenEdges()->gestureRecognizer()->touchCancel();
         return false;
     }
+    bool tabletToolAxisEvent(TabletToolAxisEvent *event) override
+    {
+        workspace()->screenEdges()->handlePointerMotion(event->position, event->timestamp);
+        // always forward
+        return false;
+    }
 };
 
 /**
