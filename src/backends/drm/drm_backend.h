@@ -88,7 +88,7 @@ private:
     Session *m_session;
     QList<DrmAbstractOutput *> m_outputs;
 
-    const QStringList m_explicitGpus;
+    QStringList m_explicitGpus;
     std::vector<std::unique_ptr<DrmGpu>> m_gpus;
     QList<DrmVirtualOutput *> m_virtualOutputs;
     DrmRenderBackend *m_renderBackend = nullptr;

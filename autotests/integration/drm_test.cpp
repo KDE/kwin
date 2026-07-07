@@ -26,6 +26,7 @@
 
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/seat.h>
+#include <fcntl.h>
 #include <ranges>
 #include <xf86drmMode.h>
 
@@ -286,38 +287,6 @@ void DrmTest::init()
                                          | Test::AdditionalWaylandInterface::CursorShapeV1
                                          | Test::AdditionalWaylandInterface::LinuxDmabuf
                                          | Test::AdditionalWaylandInterface::Viewporter));
-}
-
-static QByteArray getDriverName(int fd)
-{
-    auto version = drmGetVersion(fd);
-    if (version) {
-        auto ret = QByteArray(version->name, version->name_len);
-        drmFreeVersion(version);
-        return ret;
-    } else {
-        return QByteArray();
-    }
-}
-
-void DrmTest::initTestCase()
-{
-    if (!Test::primaryNodeAvailable()) {
-        QSKIP("no primary node available");
-        return;
-    }
-
-#ifdef FORCE_DRM_LEGACY
-    qputenv("KWIN_DRM_NO_AMS", "1");
-#endif
-#ifdef FORCE_NO_DRM_MODIFIERS
-    qputenv("KWIN_DRM_USE_MODIFIERS", "0");
-#endif
-    // make sure overlays are allowed
-    qputenv("KWIN_USE_OVERLAYS", "1");
-
-    QVERIFY(waylandServer()->init(s_socketName));
-    kwinApp()->start();
 
     const auto allOutputs = kwinApp()->outputBackend()->outputs();
     QVERIFY(!allOutputs.isEmpty());
@@ -340,6 +309,76 @@ void DrmTest::initTestCase()
         QVERIFY(state.has_value());
         QVERIFY(!state->crtc.has_value());
     }
+}
+
+static QByteArray getDriverName(int fd)
+{
+    auto version = drmGetVersion(fd);
+    if (version) {
+        auto ret = QByteArray(version->name, version->name_len);
+        drmFreeVersion(version);
+        return ret;
+    } else {
+        return QByteArray();
+    }
+}
+
+QByteArray listKmsNodes()
+{
+    QByteArray drmNodes;
+    const int deviceCount = drmGetDevices2(0, nullptr, 0);
+    if (deviceCount <= 0) {
+        return {};
+    }
+
+    QList<drmDevice *> devices(deviceCount);
+    if (drmGetDevices2(0, devices.data(), devices.size()) <= 0) {
+        return {};
+    }
+    auto deviceCleanup = qScopeGuard([&devices]() {
+        drmFreeDevices(devices.data(), devices.size());
+    });
+
+    for (drmDevice *device : devices) {
+        const FileDescriptor dev{::open(device->nodes[DRM_NODE_PRIMARY], O_RDWR | O_CLOEXEC)};
+        if (dev.isValid()) {
+            const auto driverName = getDriverName(dev.get());
+            if (driverName == "virtio_gpu" || driverName == "qxl" || driverName == "vmwgfx" || driverName == "vboxvideo") {
+                qWarning("Skipping broken VM driver %s!", driverName.data());
+                continue;
+            }
+            if (!drmNodes.isEmpty()) {
+                drmNodes += ":";
+            }
+            QByteArray node(device->nodes[DRM_NODE_PRIMARY]);
+            node.replace(":", "\\:");
+            drmNodes += node;
+        }
+    }
+    return drmNodes;
+}
+
+void DrmTest::initTestCase()
+{
+    if (!qEnvironmentVariableIsSet("KWIN_DRM_DEVICES")) {
+        const auto nodes = listKmsNodes();
+        if (nodes.isEmpty()) {
+            QSKIP("No suitable KMS devices found!");
+        }
+        qputenv("KWIN_DRM_DEVICES", nodes);
+    }
+
+#ifdef FORCE_DRM_LEGACY
+    qputenv("KWIN_DRM_NO_AMS", "1");
+#endif
+#ifdef FORCE_NO_DRM_MODIFIERS
+    qputenv("KWIN_DRM_USE_MODIFIERS", "0");
+#endif
+    // make sure overlays are allowed
+    qputenv("KWIN_USE_OVERLAYS", "1");
+
+    QVERIFY(waylandServer()->init(qAppName()));
+    kwinApp()->start();
 }
 
 void DrmTest::cleanup()
