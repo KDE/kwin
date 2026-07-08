@@ -35,6 +35,8 @@ class OffscreenQuickView;
 class PointerAxisEvent;
 class PointerButtonEvent;
 class PointerMotionEvent;
+class TabletToolTipEvent;
+class TabletToolAxisEvent;
 class OutputFrame;
 
 /**

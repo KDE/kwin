@@ -733,6 +733,41 @@ void QuickSceneEffect::pointerAxis(PointerAxisEvent *event)
     }
 }
 
+bool QuickSceneEffect::tabletToolAxis(TabletToolAxisEvent *event)
+{
+    auto mouseEvent = new PointerMotionEvent{
+        .device = event->device,
+        .position = event->position,
+        .delta = {}, // not used
+        .deltaUnaccelerated = {}, // not used
+        .warp = false, // not used
+        .buttons = event->buttons,
+        .modifiers = Qt::NoModifier,
+        .modifiersRelevantForShortcuts = Qt::NoModifier,
+        .timestamp = event->timestamp,
+    };
+    pointerMotion(mouseEvent);
+    return false;
+}
+
+bool QuickSceneEffect::tabletToolTip(TabletToolTipEvent *event)
+{
+    auto mouseEvent = new KWin::PointerButtonEvent{
+        .device = event->device,
+        .position = event->position,
+        .state = event->type == TabletToolTipEvent::Press ? PointerButtonState::Pressed : PointerButtonState::Released,
+        .button = Qt::LeftButton,
+        .nativeButton = 0, // not used
+        .buttons = event->type == TabletToolTipEvent::Press ? Qt::LeftButton : Qt::NoButton,
+        .modifiers = Qt::NoModifier,
+        .modifiersRelevantForShortcuts = Qt::NoModifier,
+        .timestamp = event->timestamp,
+    };
+    pointerButton(mouseEvent);
+
+    return false;
+}
+
 bool QuickSceneEffect::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     for (const auto &[screen, screenView] : d->views) {
