@@ -79,6 +79,7 @@ public:
 
 Q_SIGNALS:
     void ledsChanged(KWin::LEDs);
+    void modifiersStateChanged();
 
 private:
     Window *pickFocus() const;

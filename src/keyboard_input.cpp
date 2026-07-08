@@ -97,6 +97,7 @@ KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
     connect(m_activeDevice.get(), &KeyboardDevice::ledsChanged, this, &KeyboardInputRedirection::ledsChanged);
     connect(m_activeDevice.get(), &KeyboardDevice::keymapChanged, this, &KeyboardInputRedirection::updateKeymap);
     connect(m_activeDevice.get(), &KeyboardDevice::modifierStateChanged, this, &KeyboardInputRedirection::forwardModifiers);
+    connect(m_activeDevice.get(), &KeyboardDevice::modifierStateChanged, this, &KeyboardInputRedirection::modifiersStateChanged);
 }
 
 KeyboardInputRedirection::~KeyboardInputRedirection() = default;

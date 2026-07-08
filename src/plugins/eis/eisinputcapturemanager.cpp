@@ -113,7 +113,7 @@ EisInputCaptureManager::EisInputCaptureManager()
         }
     });
 
-    connect(input()->keyboard()->activeDevice(), &KeyboardDevice::modifierStateChanged, this, [this] {
+    connect(input()->keyboard(), &KeyboardInputRedirection::modifiersStateChanged, this, [this] {
         // This will not handle other sources of modifier changes like changing keyboard
         // layout but should be fine for now as all input is filtered out while a capture
         // is active

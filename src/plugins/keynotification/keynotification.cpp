@@ -29,7 +29,7 @@ KeyNotificationPlugin::KeyNotificationPlugin()
     connect(input()->keyboard(), &KeyboardInputRedirection::ledsChanged, this,
             &KeyNotificationPlugin::ledsChanged);
 
-    connect(input()->keyboard()->activeDevice(), &KeyboardDevice::modifierStateChanged, this, &KeyNotificationPlugin::modifiersChanged);
+    connect(input()->keyboard(), &KeyboardInputRedirection::modifiersStateChanged, this, &KeyNotificationPlugin::modifiersChanged);
 }
 
 void KeyNotificationPlugin::ledsChanged(LEDs leds)
@@ -71,7 +71,7 @@ void KeyNotificationPlugin::ledsChanged(LEDs leds)
 
 void KeyNotificationPlugin::modifiersChanged()
 {
-    Qt::KeyboardModifiers mods = input()->keyboard()->activeDevice()->modifiers();
+    Qt::KeyboardModifiers mods = input()->keyboard()->modifiers();
 
     if (m_enabled) {
         if (!m_currentModifiers.testFlag(Qt::ShiftModifier) && mods.testFlag(Qt::ShiftModifier)) {
@@ -107,7 +107,7 @@ void KeyNotificationPlugin::modifiersChanged()
         }
     }
 
-    m_currentModifiers = input()->keyboard()->activeDevice()->modifiers();
+    m_currentModifiers = input()->keyboard()->modifiers();
 }
 
 void KeyNotificationPlugin::sendNotification(const QString &eventId, const QString &text)

@@ -91,7 +91,7 @@ void EisBackend::initialize()
             context->updateKeymap();
         }
     });
-    connect(input()->keyboard()->activeDevice(), &KeyboardDevice::modifierStateChanged, this, [this] {
+    connect(input()->keyboard(), &KeyboardInputRedirection::modifiersStateChanged, this, [this] {
         const auto &modifierState = input()->keyboard()->activeDevice()->modifierState();
         const uint32_t currentGroup = input()->keyboard()->activeDevice()->currentLayout();
         for (const auto &context : m_contexts) {

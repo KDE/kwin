@@ -73,7 +73,7 @@ KeyStateInterface::KeyStateInterface(Display *display, QObject *parent)
         }
     });
 
-    connect(input()->keyboard()->activeDevice(), &KeyboardDevice::modifierStateChanged, this, [this]() {
+    connect(input()->keyboard(), &KeyboardInputRedirection::modifiersStateChanged, this, [this]() {
         const auto resources = d->resourceMap();
         for (auto resource : resources) {
             d->org_kde_kwin_keystate_fetchStates(resource);
