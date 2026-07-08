@@ -1004,8 +1004,7 @@ void PointerInputRedirection::updateAfterScreenChange()
     }
 
     m_lastOutputWasPlaceholder = output->isPlaceholder();
-    // TODO: better way to get timestamps
-    processMotionAbsolute(output->geometry().center(), waylandServer()->seat()->timestamp());
+    warp(output->geometry().center());
 }
 
 QPointF PointerInputRedirection::position() const
