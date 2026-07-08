@@ -1520,9 +1520,9 @@ RectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
 
     // these two points limit the geometry rectangle, i.e. if bottomleft resizing is done,
     // the bottomleft corner should be at is at (topleft.x(), bottomright().y())
-    RectF orig = initialInteractiveMoveResizeGeometry();
-    QPointF topleft = global - QPointF(interactiveMoveOffset().x() * orig.width(), interactiveMoveOffset().y() * orig.height());
-    QPointF bottomright = global + QPointF((1.0 - interactiveMoveOffset().x()) * orig.width(), (1.0 - interactiveMoveOffset().y()) * orig.height());
+    const RectF orig = initialInteractiveMoveResizeGeometry();
+    const QPointF topleft = global - QPointF(interactiveMoveOffset().x() * orig.width(), interactiveMoveOffset().y() * orig.height());
+    const QPointF bottomright = global + QPointF((1.0 - interactiveMoveOffset().x()) * orig.width(), (1.0 - interactiveMoveOffset().y()) * orig.height());
 
     switch (gravity) {
     case Gravity::TopLeft:
