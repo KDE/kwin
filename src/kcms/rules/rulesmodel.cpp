@@ -712,11 +712,6 @@ void RulesModel::populateRuleList()
                          i18n("Desktop file name"), i18n("Appearance & Fixes"),
                          QIcon::fromTheme("application-x-desktop")));
 
-    addRule(new RuleItem(QLatin1StringView("blockcompositing"),
-                         RulePolicy::ForceRule, RuleItem::Boolean,
-                         i18n("Block compositing"), i18n("Appearance & Fixes"),
-                         QIcon::fromTheme("composite-track-on")));
-
     auto layer = addRule(new RuleItem(QLatin1StringView("layer"),
                                       RulePolicy::ForceRule, RuleItem::Option,
                                       i18n("Layer"), i18n("Appearance & Fixes"),

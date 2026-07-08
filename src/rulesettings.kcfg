@@ -322,15 +322,6 @@
       <default code="true">Rules::UnusedForceRule</default>
     </entry>
 
-    <entry name="blockcompositing" type="Bool">
-      <label>Block Compositing</label>
-      <default>false</default>
-    </entry>
-    <entry name="blockcompositingrule" type="Int">
-      <label>Block Compositing rule type</label>
-      <default code="true">Rules::UnusedForceRule</default>
-    </entry>
-
     <entry name="fsplevel" type="Int">
       <label>Focus stealing prevention</label>
       <default>0</default>
@@ -368,32 +359,6 @@
     </entry>
     <entry name="closeablerule" type="Int">
       <label>Closeable rule type</label>
-      <default code="true">Rules::UnusedForceRule</default>
-    </entry>
-
-    <entry name="autogroup" type="Bool">
-      <label>Autogroup with identical</label>
-      <default>false</default>
-    </entry>
-    <entry name="autogrouprule" type="Int">
-      <label>Autogroup with identical rule type</label>
-      <default code="true">Rules::UnusedForceRule</default>
-    </entry>
-
-    <entry name="autogroupfg" type="Bool">
-      <label>Autogroup in foreground</label>
-      <default>true</default>
-    </entry>
-    <entry name="autogroupfgrule" type="Int">
-      <label>Autogroup in foreground rule type</label>
-      <default code="true">Rules::UnusedForceRule</default>
-    </entry>
-
-    <entry name="autogroupid" type="String">
-      <label>Autogroup by ID</label>
-    </entry>
-    <entry name="autogroupidrule" type="Int">
-      <label>Autogroup by ID rule type</label>
       <default code="true">Rules::UnusedForceRule</default>
     </entry>
 

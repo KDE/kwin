@@ -68,14 +68,10 @@ Rules::Rules()
     , fullscreenrule(UnusedSetRule)
     , noborderrule(UnusedSetRule)
     , decocolorrule(UnusedForceRule)
-    , blockcompositingrule(UnusedForceRule)
     , fsplevelrule(UnusedForceRule)
     , fpplevelrule(UnusedForceRule)
     , acceptfocusrule(UnusedForceRule)
     , closeablerule(UnusedForceRule)
-    , autogrouprule(UnusedForceRule)
-    , autogroupfgrule(UnusedForceRule)
-    , autogroupidrule(UnusedForceRule)
     , strictgeometryrule(UnusedForceRule)
     , shortcutrule(UnusedSetRule)
     , disableglobalshortcutsrule(UnusedForceRule)
@@ -156,14 +152,10 @@ void Rules::readFromSettings(const RuleSettings *settings)
         decocolorrule = UnusedForceRule;
     }
 
-    READ_FORCE_RULE(blockcompositing, );
     READ_FORCE_RULE(fsplevel, FocusStealingPreventionLevel);
     READ_FORCE_RULE(fpplevel, FocusStealingPreventionLevel);
     READ_FORCE_RULE(acceptfocus, );
     READ_FORCE_RULE(closeable, );
-    READ_FORCE_RULE(autogroup, );
-    READ_FORCE_RULE(autogroupfg, );
-    READ_FORCE_RULE(autogroupid, );
     READ_FORCE_RULE(strictgeometry, );
     READ_SET_RULE(shortcut);
     READ_FORCE_RULE(disableglobalshortcuts, );
@@ -249,7 +241,6 @@ void Rules::write(RuleSettings *settings) const
         }
     };
     WRITE_FORCE_RULE(decocolor, Decocolor, colorToString);
-    WRITE_FORCE_RULE(blockcompositing, Blockcompositing, );
     const auto focusStealingLevelToInt = [](FocusStealingPreventionLevel fsp) {
         return int(fsp);
     };
@@ -257,9 +248,6 @@ void Rules::write(RuleSettings *settings) const
     WRITE_FORCE_RULE(fpplevel, Fpplevel, focusStealingLevelToInt);
     WRITE_FORCE_RULE(acceptfocus, Acceptfocus, );
     WRITE_FORCE_RULE(closeable, Closeable, );
-    WRITE_FORCE_RULE(autogroup, Autogroup, );
-    WRITE_FORCE_RULE(autogroupfg, Autogroupfg, );
-    WRITE_FORCE_RULE(autogroupid, Autogroupid, );
     WRITE_FORCE_RULE(strictgeometry, Strictgeometry, );
     WRITE_SET_RULE(shortcut, Shortcut, );
     WRITE_FORCE_RULE(disableglobalshortcuts, Disableglobalshortcuts, );
@@ -297,14 +285,10 @@ bool Rules::isEmpty() const
         && fullscreenrule == UnusedSetRule
         && noborderrule == UnusedSetRule
         && decocolorrule == UnusedForceRule
-        && blockcompositingrule == UnusedForceRule
         && fsplevelrule == UnusedForceRule
         && fpplevelrule == UnusedForceRule
         && acceptfocusrule == UnusedForceRule
         && closeablerule == UnusedForceRule
-        && autogrouprule == UnusedForceRule
-        && autogroupfgrule == UnusedForceRule
-        && autogroupidrule == UnusedForceRule
         && strictgeometryrule == UnusedForceRule
         && shortcutrule == UnusedSetRule
         && disableglobalshortcutsrule == UnusedForceRule
@@ -727,14 +711,10 @@ APPLY_RULE(below, KeepBelow, bool)
 APPLY_RULE(fullscreen, FullScreen, bool)
 APPLY_RULE(noborder, NoBorder, bool)
 APPLY_FORCE_RULE(decocolor, DecoColor, QString)
-APPLY_FORCE_RULE(blockcompositing, BlockCompositing, bool)
 APPLY_FORCE_RULE(fsplevel, FSP, FocusStealingPreventionLevel)
 APPLY_FORCE_RULE(fpplevel, FPP, FocusStealingPreventionLevel)
 APPLY_FORCE_RULE(acceptfocus, AcceptFocus, bool)
 APPLY_FORCE_RULE(closeable, Closeable, bool)
-APPLY_FORCE_RULE(autogroup, Autogrouping, bool)
-APPLY_FORCE_RULE(autogroupfg, AutogroupInForeground, bool)
-APPLY_FORCE_RULE(autogroupid, AutogroupById, QString)
 APPLY_FORCE_RULE(strictgeometry, StrictGeometry, bool)
 APPLY_RULE(shortcut, Shortcut, QString)
 APPLY_FORCE_RULE(disableglobalshortcuts, DisableGlobalShortcuts, bool)
@@ -786,14 +766,10 @@ bool Rules::discardUsed(bool withdrawn)
     DISCARD_USED_SET_RULE(fullscreen);
     DISCARD_USED_SET_RULE(noborder);
     DISCARD_USED_FORCE_RULE(decocolor);
-    DISCARD_USED_FORCE_RULE(blockcompositing);
     DISCARD_USED_FORCE_RULE(fsplevel);
     DISCARD_USED_FORCE_RULE(fpplevel);
     DISCARD_USED_FORCE_RULE(acceptfocus);
     DISCARD_USED_FORCE_RULE(closeable);
-    DISCARD_USED_FORCE_RULE(autogroup);
-    DISCARD_USED_FORCE_RULE(autogroupfg);
-    DISCARD_USED_FORCE_RULE(autogroupid);
     DISCARD_USED_FORCE_RULE(strictgeometry);
     DISCARD_USED_SET_RULE(shortcut);
     DISCARD_USED_FORCE_RULE(disableglobalshortcuts);
@@ -948,14 +924,10 @@ CHECK_RULE(KeepBelow, bool)
 CHECK_RULE(FullScreen, bool)
 CHECK_RULE(NoBorder, bool)
 CHECK_FORCE_RULE(DecoColor, QString)
-CHECK_FORCE_RULE(BlockCompositing, bool)
 CHECK_FORCE_RULE(FSP, FocusStealingPreventionLevel)
 CHECK_FORCE_RULE(FPP, FocusStealingPreventionLevel)
 CHECK_FORCE_RULE(AcceptFocus, bool)
 CHECK_FORCE_RULE(Closeable, bool)
-CHECK_FORCE_RULE(Autogrouping, bool)
-CHECK_FORCE_RULE(AutogroupInForeground, bool)
-CHECK_FORCE_RULE(AutogroupById, QString)
 CHECK_FORCE_RULE(StrictGeometry, bool)
 CHECK_RULE(Shortcut, QString)
 CHECK_FORCE_RULE(DisableGlobalShortcuts, bool)
