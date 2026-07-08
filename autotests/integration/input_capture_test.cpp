@@ -157,6 +157,46 @@ void TestInputCapture::testInputCapture()
     QSocketNotifier eiNotifier(ei_get_fd(ei), QSocketNotifier::Read);
     QSignalSpy eiReadableSpy(&eiNotifier, &QSocketNotifier::activated);
 
+    const auto drainEi = [&]() {
+        auto ping = ei_new_ping(ei);
+        auto _ = qScopeGuard([ping]() {
+            ei_ping_unref(ping);
+        });
+
+        ei_ping(ping);
+
+        int eventCount = 0;
+        QAction fence;
+        QObject::connect(&eiNotifier, &QSocketNotifier::activated, &fence, [&]() {
+            ei_dispatch(ei);
+
+            while (auto event = ei_get_event(ei)) {
+                ++eventCount;
+
+                bool quit = false;
+                if (ei_event_get_type(event) == EI_EVENT_PONG) {
+                    if (ei_event_pong_get_ping(event) == ping) {
+                        quit = true;
+                    }
+                }
+
+                ei_event_unref(event);
+
+                if (quit) {
+                    fence.trigger();
+                    break;
+                }
+            }
+        });
+
+        QSignalSpy spy(&fence, &QAction::triggered);
+        if (!spy.wait()) {
+            return -1;
+        }
+
+        return eventCount - 1; // -1 because of the pong event
+    };
+
     int numDevices = 0;
     while (numDevices != 3 && eiReadableSpy.wait()) {
         ei_dispatch(ei);
@@ -292,19 +332,13 @@ void TestInputCapture::testInputCapture()
     msg << QVariant::fromValue(QPointF(1, 1)) << true;
     QDBusReply<void> releaseReply = QDBusConnection::sessionBus().call(msg);
     QVERIFY2(releaseReply.isValid(), QTest::toString(releaseReply.error()));
-
     QCOMPARE(input()->globalPointer(), QPoint(1, 1));
-
-    QVERIFY(eiReadableSpy.wait());
-    eiReadableSpy.clear();
-    ei_dispatch(ei);
-    // Throw away the disconnection events
-    while (auto event = ei_get_event(ei)) {
-        ei_event_unref(event);
-    }
 
     // We receive a warp from the release
     QVERIFY(motionSpy.wait());
+
+    // Drain EI events so we can compare that no new EI events are sent later.
+    drainEi();
 
     Test::pointerMotion({2, 2}, ++timestamp);
     Test::pointerButtonPressed(BTN_LEFT, ++timestamp);
@@ -317,10 +351,7 @@ void TestInputCapture::testInputCapture()
     QVERIFY(axisSpy.count());
     QVERIFY(keySpy.count());
 
-    if (!eiReadableSpy.empty()) {
-        ei_dispatch(ei);
-        QVERIFY(!ei_peek_event(ei));
-    }
+    QCOMPARE(drainEi(), 0);
 
     msg = QDBusMessage::createMethodCall(QDBusConnection::sessionBus().baseService(), kwinInputCapturePath, kwinInputCaptureManagerInterface, QStringLiteral("removeInputCapture"));
     msg << QDBusObjectPath(capture.dbusPath);
