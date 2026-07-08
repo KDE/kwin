@@ -158,9 +158,9 @@ void EisDevice::sendKey(uint32_t keyCode, KeyboardKeyState state)
 
 void EisDevice::sendKeySym(xkb_keysym_t keySym, KeyboardKeyState keyState)
 {
-    std::optional<Xkb::KeyCode> keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(keySym);
+    std::optional<KeyboardDevice::KeyCode> keyCode = input()->keyboard()->activeDevice()->keycodeFromKeysym(keySym);
     // grab the current modifier state, cache it, send our key with our own modifiers at a known state, then reset back
-    xkb_state *state = input()->keyboard()->xkb()->state();
+    xkb_state *state = input()->keyboard()->activeDevice()->state();
     xkb_mod_mask_t formerDepressed = xkb_state_serialize_mods(state, XKB_STATE_MODS_DEPRESSED);
     xkb_mod_mask_t formerLatched = xkb_state_serialize_mods(state, XKB_STATE_MODS_LATCHED);
     xkb_mod_mask_t formerLocked = xkb_state_serialize_mods(state, XKB_STATE_MODS_LOCKED);
@@ -187,9 +187,9 @@ void EisDevice::sendKeySym(xkb_keysym_t keySym, KeyboardKeyState keyState)
         if (isModifier) {
             sendKey(keyCode->keyCode, keyState);
         } else {
-            input()->keyboard()->xkb()->updateModifiers(formerDepressed | keyCode->modifiers, formerLatched, formerLocked, formerLayout);
+            input()->keyboard()->activeDevice()->updateModifiers(formerDepressed | keyCode->modifiers, formerLatched, formerLocked, formerLayout);
             sendKey(keyCode->keyCode, keyState);
-            input()->keyboard()->xkb()->updateModifiers(formerDepressed, formerLatched, formerLocked, formerLayout);
+            input()->keyboard()->activeDevice()->updateModifiers(formerDepressed, formerLatched, formerLocked, formerLayout);
         }
         return;
     }
@@ -199,7 +199,7 @@ void EisDevice::sendKeySym(xkb_keysym_t keySym, KeyboardKeyState keyState)
     // for now send a fake release with every press and ignore other releases. We can make the keymap resetting more lazy if it's an issue IRL
     if (keyState == KeyboardKeyState::Pressed) {
         static const uint unmappedKeyCode = 247;
-        bool keymapUpdated = input()->keyboard()->xkb()->updateToKeymapForKeySym(unmappedKeyCode, keySym);
+        bool keymapUpdated = input()->keyboard()->activeDevice()->updateToKeymapForKeySym(unmappedKeyCode, keySym);
         if (!keymapUpdated) {
             return;
         }
@@ -209,8 +209,8 @@ void EisDevice::sendKeySym(xkb_keysym_t keySym, KeyboardKeyState keyState)
             sendKey(key, KeyboardKeyState::Released);
         }
         // reset keyboard back
-        input()->keyboard()->xkb()->reconfigure();
-        input()->keyboard()->xkb()->updateModifiers(formerDepressed, formerLatched, formerLocked, formerLayout);
+        input()->keyboard()->activeDevice()->reconfigure();
+        input()->keyboard()->activeDevice()->updateModifiers(formerDepressed, formerLatched, formerLocked, formerLayout);
     }
 }
 

@@ -6,8 +6,8 @@
 
 #include "stickykeys.h"
 #include "effect/effecthandler.h"
+#include "keyboard_device.h"
 #include "keyboard_input.h"
-#include "xkb.h"
 
 #include <QTimer>
 
@@ -47,21 +47,21 @@ StickyKeysFilter::StickyKeysFilter()
     }
 }
 
-KWin::Xkb::Modifier keyToModifier(Qt::Key key)
+KWin::KeyboardDevice::Modifier keyToModifier(Qt::Key key)
 {
     if (key == Qt::Key_Shift) {
-        return KWin::Xkb::Shift;
+        return KWin::KeyboardDevice::Shift;
     } else if (key == Qt::Key_Alt) {
-        return KWin::Xkb::Mod1;
+        return KWin::KeyboardDevice::Mod1;
     } else if (key == Qt::Key_Control) {
-        return KWin::Xkb::Control;
+        return KWin::KeyboardDevice::Control;
     } else if (key == Qt::Key_AltGr) {
-        return KWin::Xkb::Mod5;
+        return KWin::KeyboardDevice::Mod5;
     } else if (key == Qt::Key_Meta) {
-        return KWin::Xkb::Mod4;
+        return KWin::KeyboardDevice::Mod4;
     }
 
-    return KWin::Xkb::NoModifier;
+    return KWin::KeyboardDevice::NoModifier;
 }
 
 void StickyKeysFilter::loadConfig(const KConfigGroup &group)
@@ -79,7 +79,7 @@ void StickyKeysFilter::loadConfig(const KConfigGroup &group)
         for (auto it = m_keyStates.keyValueBegin(); it != m_keyStates.keyValueEnd(); ++it) {
             if (it->second == KeyState::Locked) {
                 it->second = KeyState::None;
-                KWin::input()->keyboard()->xkb()->setModifierLocked(keyToModifier(static_cast<Qt::Key>(it->first)), false);
+                KWin::input()->keyboard()->activeDevice()->setModifierLocked(keyToModifier(static_cast<Qt::Key>(it->first)), false);
                 changed = true;
             }
         }
@@ -92,14 +92,14 @@ void StickyKeysFilter::loadConfig(const KConfigGroup &group)
         for (auto it = m_keyStates.keyValueBegin(); it != m_keyStates.keyValueEnd(); ++it) {
             if (it->second != KeyState::None) {
                 it->second = KeyState::None;
-                KWin::input()->keyboard()->xkb()->setModifierLatched(keyToModifier(static_cast<Qt::Key>(it->first)), false);
+                KWin::input()->keyboard()->activeDevice()->setModifierLatched(keyToModifier(static_cast<Qt::Key>(it->first)), false);
                 changed = true;
             }
         }
     }
     if (changed) {
-        KWin::input()->keyboard()->xkb()->forwardModifiers();
-        Q_EMIT KWin::input()->keyboard()->xkb()->modifierStateChanged();
+        KWin::input()->keyboard()->activeDevice()->forwardModifiers();
+        Q_EMIT KWin::input()->keyboard()->activeDevice()->modifierStateChanged();
     }
 }
 
@@ -128,14 +128,14 @@ bool StickyKeysFilter::keyboardKey(KWin::KeyboardKeyEvent *event)
                 // An unlatched modifier was pressed, latch it
                 if (keyState.value() == None) {
                     keyState.value() = Latched;
-                    KWin::input()->keyboard()->xkb()->setModifierLatched(keyToModifier(static_cast<Qt::Key>(event->key)), true);
+                    KWin::input()->keyboard()->activeDevice()->setModifierLatched(keyToModifier(static_cast<Qt::Key>(event->key)), true);
                     changed = true;
                 }
                 // A latched modifier was pressed, lock it
                 else if (keyState.value() == Latched && m_lockKeys) {
                     keyState.value() = Locked;
-                    KWin::input()->keyboard()->xkb()->setModifierLatched(keyToModifier(static_cast<Qt::Key>(event->key)), false);
-                    KWin::input()->keyboard()->xkb()->setModifierLocked(keyToModifier(static_cast<Qt::Key>(event->key)), true);
+                    KWin::input()->keyboard()->activeDevice()->setModifierLatched(keyToModifier(static_cast<Qt::Key>(event->key)), false);
+                    KWin::input()->keyboard()->activeDevice()->setModifierLocked(keyToModifier(static_cast<Qt::Key>(event->key)), true);
                     changed = true;
 
                     if (m_showNotificationForLockedKeys) {
@@ -157,7 +157,7 @@ bool StickyKeysFilter::keyboardKey(KWin::KeyboardKeyEvent *event)
                 // A locked modifier was pressed, unlock it
                 else if (keyState.value() == Locked && m_lockKeys) {
                     keyState.value() = None;
-                    KWin::input()->keyboard()->xkb()->setModifierLocked(keyToModifier(static_cast<Qt::Key>(event->key)), false);
+                    KWin::input()->keyboard()->activeDevice()->setModifierLocked(keyToModifier(static_cast<Qt::Key>(event->key)), false);
                     changed = true;
                 }
             }
@@ -176,12 +176,12 @@ bool StickyKeysFilter::keyboardKey(KWin::KeyboardKeyEvent *event)
 
             it->second = KeyState::None;
 
-            KWin::input()->keyboard()->xkb()->setModifierLatched(keyToModifier(static_cast<Qt::Key>(it->first)), false);
+            KWin::input()->keyboard()->activeDevice()->setModifierLatched(keyToModifier(static_cast<Qt::Key>(it->first)), false);
             changed = true;
         }
     }
     if (changed) {
-        Q_EMIT KWin::input()->keyboard()->xkb()->modifierStateChanged();
+        Q_EMIT KWin::input()->keyboard()->activeDevice()->modifierStateChanged();
     }
 
     return false;
@@ -191,8 +191,8 @@ void StickyKeysFilter::disableStickyKeys()
 {
     for (auto it = m_keyStates.keyValueBegin(); it != m_keyStates.keyValueEnd(); ++it) {
         it->second = KeyState::None;
-        KWin::input()->keyboard()->xkb()->setModifierLatched(keyToModifier(static_cast<Qt::Key>(it->first)), false);
-        KWin::input()->keyboard()->xkb()->setModifierLocked(keyToModifier(static_cast<Qt::Key>(it->first)), false);
+        KWin::input()->keyboard()->activeDevice()->setModifierLatched(keyToModifier(static_cast<Qt::Key>(it->first)), false);
+        KWin::input()->keyboard()->activeDevice()->setModifierLocked(keyToModifier(static_cast<Qt::Key>(it->first)), false);
     }
 
     KWin::input()->uninstallInputEventFilter(this);
@@ -209,12 +209,12 @@ bool StickyKeysFilter::pointerButton(KWin::PointerButtonEvent *event)
 
             it->second = KeyState::None;
 
-            KWin::input()->keyboard()->xkb()->setModifierLatched(keyToModifier(static_cast<Qt::Key>(it->first)), false);
+            KWin::input()->keyboard()->activeDevice()->setModifierLatched(keyToModifier(static_cast<Qt::Key>(it->first)), false);
 
             // We need to delay the modifier update until the client received the mouse event, otherwise
             // the updated modifiers arrive before the mouse event and e.g. Ctrl+Click won't work
             QTimer::singleShot(0, this, [] {
-                KWin::input()->keyboard()->xkb()->forwardModifiers();
+                KWin::input()->keyboard()->activeDevice()->forwardModifiers();
             });
         }
     }

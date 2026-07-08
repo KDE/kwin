@@ -36,7 +36,7 @@ class InputDevice;
 class InputRedirection;
 class KeyboardLayout;
 class ModifiersChangedSpy;
-class Xkb;
+class KeyboardDevice;
 class KeyboardRepeat;
 class KeyStateChangedSpy;
 
@@ -58,7 +58,7 @@ public:
      */
     void processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device = nullptr);
 
-    Xkb *xkb() const;
+    KeyboardDevice *activeDevice() const;
     Qt::KeyboardModifiers modifiers() const;
     Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const;
     KeyboardLayout *keyboardLayout() const;
@@ -83,7 +83,7 @@ private:
 
     InputRedirection *m_input;
     bool m_inited = false;
-    const std::unique_ptr<Xkb> m_xkb;
+    const std::unique_ptr<KeyboardDevice> m_activeDevice;
     QMetaObject::Connection m_activeWindowSurfaceChangedConnection;
     std::unique_ptr<KeyStateChangedSpy> m_keyStateChangedSpy;
     std::unique_ptr<ModifiersChangedSpy> m_modifiersChangedSpy;

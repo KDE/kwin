@@ -12,6 +12,7 @@
 #include "effect/effecthandler.h"
 #include "input_event.h"
 #include "internalwindow.h"
+#include "keyboard_device.h"
 #include "keyboard_input.h"
 #include "main.h"
 #include "opengl/eglbackend.h"
@@ -34,7 +35,6 @@
 #include "wayland_server.h"
 #include "waylandwindow.h"
 #include "workspace.h"
-#include "xkb.h"
 #include <cerrno>
 #if KWIN_BUILD_X11
 #include "x11window.h"
@@ -810,7 +810,7 @@ QString stateActiveComponents(xkb_state *state, const T &count, std::function<in
 
 void DebugConsole::updateKeyboardTab()
 {
-    auto xkb = input()->keyboard()->xkb();
+    auto xkb = input()->keyboard()->activeDevice();
     xkb_keymap *map = xkb->keymap();
     xkb_state *state = xkb->state();
     m_ui->layoutsLabel->setText(keymapComponentToString<xkb_layout_index_t>(map, xkb_keymap_num_layouts(map), &xkb_keymap_layout_get_name));

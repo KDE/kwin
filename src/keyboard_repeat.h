@@ -17,14 +17,14 @@ class QTimer;
 namespace KWin
 {
 
-class Xkb;
+class KeyboardDevice;
 
 class KeyboardRepeat : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit KeyboardRepeat(Xkb *xkb);
+    explicit KeyboardRepeat(KeyboardDevice *xkb);
     ~KeyboardRepeat() override;
 
     void keyboardKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time);
@@ -35,7 +35,7 @@ Q_SIGNALS:
 private:
     void handleKeyRepeat();
     QTimer *m_timer;
-    Xkb *m_xkb;
+    KeyboardDevice *m_xkb;
     std::chrono::microseconds m_time;
     quint32 m_key = 0;
 };

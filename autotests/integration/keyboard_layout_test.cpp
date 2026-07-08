@@ -8,13 +8,13 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "keyboard_device.h"
 #include "keyboard_input.h"
 #include "keyboard_layout.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include "xkb.h"
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -164,7 +164,7 @@ void KeyboardLayoutTest::testReconfigure()
     // verifies that we can change the keymap
 
     // default should be a keymap with only us layout
-    auto xkb = input()->keyboard()->xkb();
+    auto device = input()->keyboard()->activeDevice();
     QCOMPARE(xkb->numberOfLayouts(), 1u);
     QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
     QCOMPARE(xkb->numberOfLayouts(), 1);
@@ -276,7 +276,7 @@ void KeyboardLayoutTest::testPerLayoutShortcut()
     delete a;
 
     // now we should have three layouts
-    auto xkb = input()->keyboard()->xkb();
+    auto xkb = input()->keyboard()->activeDevice();
     reconfigureLayouts();
     QCOMPARE(xkb->numberOfLayouts(), 3u);
     // default layout is English
@@ -310,7 +310,7 @@ void KeyboardLayoutTest::testVirtualDesktopPolicy()
     layoutGroup.sync();
 
     reconfigureLayouts();
-    auto xkb = input()->keyboard()->xkb();
+    auto xkb = input()->keyboard()->activeDevice();
     QCOMPARE(xkb->numberOfLayouts(), 3u);
     QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
 
@@ -377,7 +377,7 @@ void KeyboardLayoutTest::testVirtualDesktopPolicyWithPerOutputDesktops()
     layoutGroup.sync();
 
     reconfigureLayouts();
-    auto xkb = input()->keyboard()->xkb();
+    auto xkb = input()->keyboard()->activeDevice();
     QCOMPARE(xkb->numberOfLayouts(), 3u);
     QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
 
@@ -436,7 +436,7 @@ void KeyboardLayoutTest::testWindowPolicy()
     layoutGroup.writeEntry("SwitchMode", QStringLiteral("Window"), KConfig::Notify);
     layoutGroup.sync();
     reconfigureLayouts();
-    auto xkb = input()->keyboard()->xkb();
+    auto xkb = input()->keyboard()->activeDevice();
     QCOMPARE(xkb->numberOfLayouts(), 3u);
     QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
 
@@ -482,7 +482,7 @@ void KeyboardLayoutTest::testApplicationPolicy()
     layoutGroup.writeEntry("SwitchMode", QStringLiteral("WinClass"), KConfig::Notify);
     layoutGroup.sync();
     reconfigureLayouts();
-    auto xkb = input()->keyboard()->xkb();
+    auto xkb = input()->keyboard()->activeDevice();
     QCOMPARE(xkb->numberOfLayouts(), 3u);
     QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
 
@@ -541,7 +541,7 @@ void KeyboardLayoutTest::testNumLock()
     layoutGroup.sync();
     reconfigureLayouts();
 
-    auto xkb = input()->keyboard()->xkb();
+    auto xkb = input()->keyboard()->activeDevice();
     QCOMPARE(xkb->numberOfLayouts(), 1u);
     QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
 

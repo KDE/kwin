@@ -10,8 +10,8 @@
 #include "emulatedinputdevice.h"
 #include "gamecontroller_logging.h"
 #include "inputmethod.h"
+#include "keyboard_device.h"
 #include "main.h"
-#include "xkb.h"
 
 #include <QKeySequence>
 
@@ -302,7 +302,7 @@ bool EmulatedInputDevice::sendKeySequence(const QKeySequence &keys, KeyboardKeyS
         return true;
     }
 
-    QList<xkb_keysym_t> syms = KWin::Xkb::keysymsFromQtKey(keys[0]);
+    QList<xkb_keysym_t> syms = KWin::KeyboardDevice::keysymsFromQtKey(keys[0]);
 
     // Use keysyms from the keypad if and only if KeypadModifier is set
     syms.erase(std::remove_if(syms.begin(), syms.end(), [keys](int sym) {
@@ -320,9 +320,9 @@ bool EmulatedInputDevice::sendKeySequence(const QKeySequence &keys, KeyboardKeyS
         return false;
     }
     // KKeyServer returns upper case syms, lower it to not confuse modifiers handling
-    std::optional<KWin::Xkb::KeyCode> code;
+    std::optional<KWin::KeyboardDevice::KeyCode> code;
     for (int sym : syms) {
-        code = KWin::input()->keyboard()->xkb()->keycodeFromKeysym(sym);
+        code = KWin::input()->keyboard()->activeDevice()->keycodeFromKeysym(sym);
         if (code) {
             // started to cause errors all of a sudden
             // keyCode = code->first;

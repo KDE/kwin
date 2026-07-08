@@ -13,11 +13,11 @@
 
 #include "core/output.h"
 #include "input.h"
+#include "keyboard_device.h"
 #include "keyboard_input.h"
 #include "keyboard_layout.h"
 #include "main_wayland.h"
 #include "workspace.h"
-#include "xkb.h"
 
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -76,12 +76,12 @@ EisBackend::~EisBackend()
 
 void EisBackend::initialize()
 {
-    const QByteArray keyMap = input()->keyboard()->xkb()->keymapContents();
+    const QByteArray keyMap = input()->keyboard()->activeDevice()->keymapContents();
     if (!keyMap.isEmpty()) {
         m_keymapFile = RamFile("eis keymap", keyMap.data(), keyMap.size(), RamFile::Flag::SealWrite);
     }
     connect(input()->keyboard()->keyboardLayout(), &KeyboardLayout::layoutsReconfigured, this, [this] {
-        const QByteArray keyMap = input()->keyboard()->xkb()->keymapContents();
+        const QByteArray keyMap = input()->keyboard()->activeDevice()->keymapContents();
         if (!keyMap.isEmpty()) {
             m_keymapFile = RamFile("eis keymap", keyMap.data(), keyMap.size(), RamFile::Flag::SealWrite);
         } else {
@@ -91,9 +91,9 @@ void EisBackend::initialize()
             context->updateKeymap();
         }
     });
-    connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this] {
-        const auto &modifierState = input()->keyboard()->xkb()->modifierState();
-        const uint32_t currentGroup = input()->keyboard()->xkb()->currentLayout();
+    connect(input()->keyboard()->activeDevice(), &KeyboardDevice::modifierStateChanged, this, [this] {
+        const auto &modifierState = input()->keyboard()->activeDevice()->modifierState();
+        const uint32_t currentGroup = input()->keyboard()->activeDevice()->currentLayout();
         for (const auto &context : m_contexts) {
             context->forwardModifiers(modifierState.depressed, modifierState.latched, modifierState.locked, currentGroup);
         }

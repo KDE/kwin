@@ -35,7 +35,7 @@ namespace KWin
 
 class SeatInterface;
 
-class KWIN_EXPORT Xkb : public QObject
+class KWIN_EXPORT KeyboardDevice : public QObject
 {
     Q_OBJECT
 
@@ -54,8 +54,8 @@ public:
     Q_ENUM(Modifier)
     Q_DECLARE_FLAGS(Modifiers, Modifier)
 
-    Xkb(bool followLocale1 = false);
-    ~Xkb() override;
+    KeyboardDevice(bool followLocale1 = false);
+    ~KeyboardDevice() override;
     void setConfig(const KSharedConfigPtr &config);
     void setNumLockConfig(const KSharedConfigPtr &config);
 
@@ -78,8 +78,8 @@ public:
     void switchToPreviousLayout();
     bool switchToLayout(xkb_layout_index_t layout);
 
-    void setModifierLatched(KWin::Xkb::Modifier mod, bool latched);
-    void setModifierLocked(KWin::Xkb::Modifier mod, bool locked);
+    void setModifierLatched(KWin::KeyboardDevice::Modifier mod, bool latched);
+    void setModifierLocked(KWin::KeyboardDevice::Modifier mod, bool locked);
 
     Modifiers depressedModifiers() const;
     Modifiers latchedModifiers() const;
@@ -142,7 +142,7 @@ public:
 
     /**
      *  Create a temporary keymap with one custom keysym bound to a given keycode.
-     *  The underlying keymap used by Xkb is unchanged
+     *  The underlying keymap used by KeyboardDevice is unchanged
      */
     QByteArray keymapContentsForKeysym(xkb_keycode_t newKeycode,
                                        xkb_keysym_t customSym);
@@ -214,11 +214,11 @@ private:
     const bool m_followLocale1;
 };
 
-inline Qt::KeyboardModifiers Xkb::modifiers() const
+inline Qt::KeyboardModifiers KeyboardDevice::modifiers() const
 {
     return m_modifiers;
 }
 
 }
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Xkb::Modifiers)
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::KeyboardDevice::Modifiers)

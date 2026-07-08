@@ -20,6 +20,7 @@
 
 #include "atoms.h"
 #include "core/backendoutput.h"
+#include "keyboard_device.h"
 #include "keyboard_input.h"
 #include "main_wayland.h"
 #include "utils/common.h"
@@ -29,7 +30,6 @@
 #include "waylandwindow.h"
 #include "workspace.h"
 #include "x11eventfilter.h"
-#include "xkb.h"
 #include "xwayland_logging.h"
 
 #include <wayland/keyboard.h>
@@ -274,7 +274,7 @@ public:
             m_pressedKeys.insert(event->nativeScanCode);
         }
 
-        auto xkb = input()->keyboard()->xkb();
+        auto xkb = input()->keyboard()->activeDevice();
 
         keyboard->sendKey(event->nativeScanCode, event->state, xwaylandClient, event->serial);
 

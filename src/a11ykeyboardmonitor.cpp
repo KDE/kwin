@@ -5,11 +5,11 @@
 */
 
 #include "a11ykeyboardmonitor.h"
+#include "keyboard_device.h"
 #include "keyboard_input.h"
 #include "wayland/keyboard.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
-#include "xkb.h"
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
@@ -40,14 +40,14 @@ A11yKeyboardMonitor::A11yKeyboardMonitor()
 
 bool A11yKeyboardMonitor::processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time)
 {
-    if (!input()->keyboard()->xkb()->state()) {
+    if (!input()->keyboard()->activeDevice()->state()) {
         return false;
     }
 
-    const auto mods = xkb_state_serialize_mods(input()->keyboard()->xkb()->state(), xkb_state_component(XKB_STATE_MODS_EFFECTIVE));
+    const auto mods = xkb_state_serialize_mods(input()->keyboard()->activeDevice()->state(), xkb_state_component(XKB_STATE_MODS_EFFECTIVE));
 
-    const auto keysym = input()->keyboard()->xkb()->toKeysym(key);
-    const auto text = input()->keyboard()->xkb()->toString(keysym);
+    const auto keysym = input()->keyboard()->activeDevice()->toKeysym(key);
+    const auto text = input()->keyboard()->activeDevice()->toString(keysym);
     const quint32 unicode = text.isEmpty() ? 0 : text.at(0).unicode();
     const bool released = state == KeyboardKeyState::Released;
     const auto keycode = key + 8;

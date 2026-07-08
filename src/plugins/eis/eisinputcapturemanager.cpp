@@ -14,11 +14,11 @@
 #include "cursor.h"
 #include "input_event.h"
 #include "input_event_spy.h"
+#include "keyboard_device.h"
 #include "keyboard_input.h"
 #include "keyboard_layout.h"
 #include "pointer_input.h"
 #include "workspace.h"
-#include "xkb.h"
 
 #include <KGlobalAccel>
 #include <KLocalizedString>
@@ -100,12 +100,12 @@ EisInputCaptureManager::EisInputCaptureManager()
     qDBusRegisterMetaType<std::tuple<uint, QPoint, QPoint>>();
     qDBusRegisterMetaType<QList<std::tuple<uint, QPoint, QPoint>>>();
 
-    const auto keymap = input()->keyboard()->xkb()->keymapContents();
+    const auto keymap = input()->keyboard()->activeDevice()->keymapContents();
     if (!keymap.isEmpty()) {
         m_keymapFile = RamFile("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);
     }
     connect(input()->keyboard()->keyboardLayout(), &KeyboardLayout::layoutChanged, this, [this] {
-        const auto keymap = input()->keyboard()->xkb()->keymapContents();
+        const auto keymap = input()->keyboard()->activeDevice()->keymapContents();
         if (!keymap.isEmpty()) {
             m_keymapFile = RamFile("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);
         } else {
@@ -113,7 +113,7 @@ EisInputCaptureManager::EisInputCaptureManager()
         }
     });
 
-    connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this] {
+    connect(input()->keyboard()->activeDevice(), &KeyboardDevice::modifierStateChanged, this, [this] {
         // This will not handle other sources of modifier changes like changing keyboard
         // layout but should be fine for now as all input is filtered out while a capture
         // is active

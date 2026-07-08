@@ -8,7 +8,7 @@
 #pragma once
 
 #include "core/inputdevice.h"
-#include "xkb.h"
+#include "keyboard_device.h"
 
 #include <memory>
 

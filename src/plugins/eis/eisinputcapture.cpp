@@ -13,9 +13,9 @@
 #include "input.h"
 #include "input_event.h"
 #include "input_event_spy.h"
+#include "keyboard_device.h"
 #include "keyboard_input.h"
 #include "workspace.h"
-#include "xkb.h"
 
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -172,8 +172,8 @@ void EisInputCapture::activate(uint id, const QPointF &position)
     }
     if (m_keyboard) {
         eis_device_start_emulating(m_keyboard, m_activationId);
-        const auto modifierState = input()->keyboard()->xkb()->modifierState();
-        eis_device_keyboard_send_xkb_modifiers(m_keyboard, modifierState.depressed, modifierState.latched, modifierState.locked, input()->keyboard()->xkb()->currentLayout());
+        const auto modifierState = input()->keyboard()->activeDevice()->modifierState();
+        eis_device_keyboard_send_xkb_modifiers(m_keyboard, modifierState.depressed, modifierState.latched, modifierState.locked, input()->keyboard()->activeDevice()->currentLayout());
     }
     if (m_absoluteDevice) {
         eis_device_start_emulating(m_absoluteDevice, m_activationId);

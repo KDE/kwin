@@ -239,7 +239,7 @@ target_sources(kwin PRIVATE
     xdgactivationv1.cpp
     xdgshellintegration.cpp
     xdgshellwindow.cpp
-    xkb.cpp
+    keyboard_device.cpp
     xxpipv1integration.cpp
     xxpipv1window.cpp
 )
@@ -545,7 +545,7 @@ install(FILES
     xdgactivationv1.h
     xdgshellintegration.h
     xdgshellwindow.h
-    xkb.h
+    keyboard_device.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin COMPONENT Devel)
 
 install(FILES

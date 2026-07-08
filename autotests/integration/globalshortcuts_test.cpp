@@ -10,6 +10,7 @@
 
 #include "input.h"
 #include "internalwindow.h"
+#include "keyboard_device.h"
 #include "keyboard_input.h"
 #include "pointer_input.h"
 #include "useractions.h"
@@ -18,7 +19,6 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include "xkb.h"
 
 #include <KWayland/Client/surface.h>
 
@@ -81,7 +81,7 @@ void GlobalShortcutsTest::init()
     workspace()->setActiveOutput(QPoint(640, 512));
     KWin::input()->pointer()->warp(QPoint(640, 512));
 
-    auto xkb = input()->keyboard()->xkb();
+    auto xkb = input()->keyboard()->activeDevice();
     xkb->switchToLayout(0);
 }
 
@@ -121,7 +121,7 @@ void GlobalShortcutsTest::testNonLatinLayout_data()
 void GlobalShortcutsTest::testNonLatinLayout()
 {
     // Shortcuts on non-Latin layouts should still work, see BUG 375518
-    auto xkb = input()->keyboard()->xkb();
+    auto xkb = input()->keyboard()->activeDevice();
     xkb->switchToLayout(1);
     QCOMPARE(xkb->layoutName(), QStringLiteral("Russian"));
 

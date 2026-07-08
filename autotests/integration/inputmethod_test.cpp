@@ -11,6 +11,7 @@
 #include "core/output.h"
 #include "inputmethod.h"
 #include "inputpanelv1window.h"
+#include "keyboard_device.h"
 #include "keyboard_input.h"
 #include "main.h"
 #include "pointer_input.h"
@@ -24,7 +25,6 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include "xkb.h"
 
 #include <QDBusConnection>
 #include <QDBusMessage>

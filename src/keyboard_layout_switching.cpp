@@ -7,11 +7,11 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "keyboard_layout_switching.h"
+#include "keyboard_device.h"
 #include "keyboard_layout.h"
 #include "virtualdesktops.h"
 #include "window.h"
 #include "workspace.h"
-#include "xkb.h"
 
 namespace KWin
 {
@@ -19,7 +19,7 @@ namespace KWin
 namespace KeyboardLayoutSwitching
 {
 
-Policy::Policy(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config)
+Policy::Policy(KeyboardDevice *xkb, KeyboardLayout *layout, const KConfigGroup &config)
     : QObject(layout)
     , m_config(config)
     , m_xkb(xkb)
@@ -41,7 +41,7 @@ void Policy::setLayout(uint index)
     }
 }
 
-std::unique_ptr<Policy> Policy::create(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config, const QString &policy)
+std::unique_ptr<Policy> Policy::create(KeyboardDevice *xkb, KeyboardLayout *layout, const KConfigGroup &config, const QString &policy)
 {
     if (policy.toLower() == QLatin1StringView("desktop")) {
         return std::make_unique<VirtualDesktopPolicy>(xkb, layout, config);
@@ -74,7 +74,7 @@ const QString GlobalPolicy::defaultLayoutEntryKey() const
     return QLatin1StringView(defaultLayoutEntryKeyPrefix) % name();
 }
 
-GlobalPolicy::GlobalPolicy(Xkb *xkb, KeyboardLayout *_layout, const KConfigGroup &config)
+GlobalPolicy::GlobalPolicy(KeyboardDevice *xkb, KeyboardLayout *_layout, const KConfigGroup &config)
     : Policy(xkb, _layout, config)
 {
     connect(workspace()->sessionManager(), &SessionManager::prepareSessionSaveRequested, this, [this, xkb](const QString &name) {
@@ -93,7 +93,7 @@ GlobalPolicy::GlobalPolicy(Xkb *xkb, KeyboardLayout *_layout, const KConfigGroup
 
 GlobalPolicy::~GlobalPolicy() = default;
 
-VirtualDesktopPolicy::VirtualDesktopPolicy(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config)
+VirtualDesktopPolicy::VirtualDesktopPolicy(KeyboardDevice *xkb, KeyboardLayout *layout, const KConfigGroup &config)
     : Policy(xkb, layout, config)
 {
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged,
@@ -179,7 +179,7 @@ void VirtualDesktopPolicy::layoutChanged(uint index)
     }
 }
 
-WindowPolicy::WindowPolicy(KWin::Xkb *xkb, KWin::KeyboardLayout *layout)
+WindowPolicy::WindowPolicy(KWin::KeyboardDevice *xkb, KWin::KeyboardLayout *layout)
     : Policy(xkb, layout)
 {
     connect(workspace(), &Workspace::windowActivated, this, [this](Window *window) {
@@ -228,7 +228,7 @@ void WindowPolicy::layoutChanged(uint index)
     }
 }
 
-ApplicationPolicy::ApplicationPolicy(KWin::Xkb *xkb, KWin::KeyboardLayout *layout, const KConfigGroup &config)
+ApplicationPolicy::ApplicationPolicy(KWin::KeyboardDevice *xkb, KWin::KeyboardLayout *layout, const KConfigGroup &config)
     : Policy(xkb, layout, config)
 {
     connect(workspace(), &Workspace::windowActivated, this, &ApplicationPolicy::windowActivated);

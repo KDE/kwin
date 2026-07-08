@@ -6,8 +6,8 @@
 
 #include "keynotification.h"
 #include "effect/effecthandler.h"
+#include "keyboard_device.h"
 #include "keyboard_input.h"
-#include "xkb.h"
 
 #include <KLocalizedString>
 #include <KNotification>
@@ -29,7 +29,7 @@ KeyNotificationPlugin::KeyNotificationPlugin()
     connect(input()->keyboard(), &KeyboardInputRedirection::ledsChanged, this,
             &KeyNotificationPlugin::ledsChanged);
 
-    connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, &KeyNotificationPlugin::modifiersChanged);
+    connect(input()->keyboard()->activeDevice(), &KeyboardDevice::modifierStateChanged, this, &KeyNotificationPlugin::modifiersChanged);
 }
 
 void KeyNotificationPlugin::ledsChanged(LEDs leds)
@@ -71,7 +71,7 @@ void KeyNotificationPlugin::ledsChanged(LEDs leds)
 
 void KeyNotificationPlugin::modifiersChanged()
 {
-    Qt::KeyboardModifiers mods = input()->keyboard()->xkb()->modifiers();
+    Qt::KeyboardModifiers mods = input()->keyboard()->activeDevice()->modifiers();
 
     if (m_enabled) {
         if (!m_currentModifiers.testFlag(Qt::ShiftModifier) && mods.testFlag(Qt::ShiftModifier)) {
@@ -107,7 +107,7 @@ void KeyNotificationPlugin::modifiersChanged()
         }
     }
 
-    m_currentModifiers = input()->keyboard()->xkb()->modifiers();
+    m_currentModifiers = input()->keyboard()->activeDevice()->modifiers();
 }
 
 void KeyNotificationPlugin::sendNotification(const QString &eventId, const QString &text)

@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "xkb.h"
+#include "keyboard_device.h"
 
 #include <QTest>
 #include <xkbcommon/xkbcommon-keysyms.h>
@@ -495,7 +495,7 @@ void XkbTest::testToQtKey_data()
 
 void XkbTest::testToQtKey()
 {
-    Xkb xkb;
+    KeyboardDevice xkb;
     QFETCH(xkb_keysym_t, keySym);
     QTEST(xkb.toQtKey(keySym), "qt");
 }
@@ -512,7 +512,7 @@ void XkbTest::testFromQtKey_data()
 
 void XkbTest::testFromQtKey()
 {
-    Xkb xkb;
+    KeyboardDevice xkb;
     QFETCH(xkb_keysym_t, keySym);
     QFETCH(QKeyCombination, keyQt);
     QList<xkb_keysym_t> keys = xkb.keysymsFromQtKey(keyQt);

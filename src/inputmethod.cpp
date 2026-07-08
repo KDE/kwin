@@ -24,6 +24,7 @@
 #endif
 
 #include "internalinputmethodcontext.h"
+#include "keyboard_device.h"
 #include "pointer_input.h"
 #include "tablet_input.h"
 #include "touch_input.h"
@@ -33,7 +34,6 @@
 #include "wayland/seat.h"
 #include "wayland/surface.h"
 #include "wayland/textinput_v3.h"
-#include "xkb.h"
 
 // For v1 preedit styling enums
 #include "qwayland-server-text-input-unstable-v1.h"
@@ -129,7 +129,7 @@ void InputMethod::init()
     connect(m_internalContext, &InternalInputMethodContext::showInputPanelRequested, this, &InputMethod::show);
     connect(m_internalContext, &InternalInputMethodContext::hideInputPanelRequested, this, &InputMethod::hide);
 
-    connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this]() {
+    connect(input()->keyboard()->activeDevice(), &KeyboardDevice::modifierStateChanged, this, [this]() {
         m_hasPendingModifiers = true;
     });
 }
@@ -205,7 +205,7 @@ void InputMethod::forwardKeyToEffects(KWin::KeyboardKeyState state, int keyCode,
     if (!input()->keyboard()) {
         return;
     }
-    auto xkb = input()->keyboard()->xkb();
+    auto xkb = input()->keyboard()->activeDevice();
 
     QKeyEvent event(state == KWin::KeyboardKeyState::Released ? QEvent::KeyRelease : QEvent::KeyPress,
                     xkb->toQtKey(keySym, keyCode, Qt::KeyboardModifiers()),
@@ -490,15 +490,15 @@ void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, Keyb
     }
 
     if (effects && effects->hasKeyboardGrab()) {
-        std::optional<Xkb::KeyCode> keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(sym);
-        forwardKeyToEffects(state, keyCode.value_or(Xkb::KeyCode{}).keyCode, sym);
+        std::optional<KeyboardDevice::KeyCode> keyCode = input()->keyboard()->activeDevice()->keycodeFromKeysym(sym);
+        forwardKeyToEffects(state, keyCode.value_or(KeyboardDevice::KeyCode{}).keyCode, sym);
         return;
     }
 
     if (state == KeyboardKeyState::Pressed) {
         forwardKeySym(sym);
         // reset any modifiers to the actual state
-        input()->keyboard()->xkb()->forwardModifiers();
+        input()->keyboard()->activeDevice()->forwardModifiers();
     }
 }
 
@@ -527,7 +527,7 @@ void InputMethod::commitString(quint32 serial, const QString &text)
         // So instead, try to convert what we get from the input method into
         // keycodes and send those as fake input to the client.
 
-        const QList<xkb_keysym_t> keySyms = Xkb::textToKeySyms(text);
+        const QList<xkb_keysym_t> keySyms = KeyboardDevice::textToKeySyms(text);
 
         // First, send all the extracted keys as pressed keys to the client.
         for (const xkb_keysym_t &keySym : keySyms) {
@@ -535,26 +535,26 @@ void InputMethod::commitString(quint32 serial, const QString &text)
         }
 
         // reset any modifiers to the actual state
-        input()->keyboard()->xkb()->forwardModifiers();
+        input()->keyboard()->activeDevice()->forwardModifiers();
     }
 }
 
 void InputMethod::forwardKeySym(int keySym)
 {
-    std::optional<Xkb::KeyCode> keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(keySym);
+    std::optional<KeyboardDevice::KeyCode> keyCode = input()->keyboard()->activeDevice()->keycodeFromKeysym(keySym);
     if (!keyCode) {
         qCWarning(KWIN_VIRTUALKEYBOARD) << "Could not map keysym " << keySym << "to keycode. Trying custom keymap";
         static const uint unmappedKeyCode = 247;
-        auto temporaryKeymap = input()->keyboard()->xkb()->keymapContentsForKeysym(unmappedKeyCode, keySym);
+        auto temporaryKeymap = input()->keyboard()->activeDevice()->keymapContentsForKeysym(unmappedKeyCode, keySym);
         if (temporaryKeymap.isEmpty()) {
             return;
         }
         waylandServer()->seat()->keyboard()->setKeymap(temporaryKeymap);
         waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Pressed, waylandServer()->display()->nextSerial());
         waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Released, waylandServer()->display()->nextSerial());
-        waylandServer()->seat()->keyboard()->setKeymap(input()->keyboard()->xkb()->keymapContents());
+        waylandServer()->seat()->keyboard()->setKeymap(input()->keyboard()->activeDevice()->keymapContents());
     } else {
-        waylandServer()->seat()->notifyKeyboardModifiers(keyCode->modifiers, 0, 0, input()->keyboard()->xkb()->currentLayout());
+        waylandServer()->seat()->notifyKeyboardModifiers(keyCode->modifiers, 0, 0, input()->keyboard()->activeDevice()->currentLayout());
         waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Pressed, waylandServer()->display()->nextSerial());
         waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Released, waylandServer()->display()->nextSerial());
     }
@@ -722,7 +722,7 @@ void InputMethod::key(quint32 /*serial*/, quint32 time, quint32 keyCode, Keyboar
         return;
     }
     if (effects && effects->hasKeyboardGrab()) {
-        Xkb *xkb = input()->keyboard()->xkb();
+        KeyboardDevice *xkb = input()->keyboard()->activeDevice();
         const xkb_keysym_t keySym = xkb->toKeysym(keyCode);
         forwardKeyToEffects(state, keyCode, keySym);
         return;
@@ -735,7 +735,7 @@ void InputMethod::key(quint32 /*serial*/, quint32 time, quint32 keyCode, Keyboar
 
 void InputMethod::modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group)
 {
-    auto xkb = input()->keyboard()->xkb();
+    auto xkb = input()->keyboard()->activeDevice();
     xkb->updateModifiers(mods_depressed, mods_latched, mods_locked, group);
     // explicitly forward as previous updates may have been filtered
     xkb->forwardModifiers();
@@ -748,7 +748,7 @@ void InputMethod::forwardModifiers(ForwardModifiersForce force)
     if (!sendModifiers) {
         return;
     }
-    auto xkb = input()->keyboard()->xkb();
+    auto xkb = input()->keyboard()->activeDevice();
     if (m_keyboardGrab) {
         m_keyboardGrab->sendModifiers(waylandServer()->display()->nextSerial(),
                                       xkb->modifierState().depressed,
@@ -920,7 +920,7 @@ InputMethodGrabV1 *InputMethod::keyboardGrab()
 
 void InputMethod::installKeyboardGrab(InputMethodGrabV1 *keyboardGrab)
 {
-    auto xkb = input()->keyboard()->xkb();
+    auto xkb = input()->keyboard()->activeDevice();
     m_keyboardGrab = keyboardGrab;
     // Send repeat info based on the current focused client's keyboard version.
     if (const auto keyboard = waylandServer()->seat()->keyboard()) {

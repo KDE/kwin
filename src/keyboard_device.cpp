@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "xkb.h"
+#include "keyboard_device.h"
 #include "dbusproperties_interface.h"
 #include "inputmethod.h"
 #include "utils/c_ptr.h"
@@ -445,7 +445,7 @@ constexpr xkb_context_flags KWIN_XKB_CONTEXT_FLAGS = XKB_CONTEXT_NO_SECURE_GETEN
 constexpr xkb_context_flags KWIN_XKB_CONTEXT_FLAGS = XKB_CONTEXT_NO_FLAGS;
 #endif
 
-Xkb::Xkb(bool followLocale1)
+KeyboardDevice::KeyboardDevice(bool followLocale1)
     : m_context(xkb_context_new(KWIN_XKB_CONTEXT_FLAGS))
     , m_keymap(nullptr)
     , m_state(nullptr)
@@ -503,7 +503,7 @@ Xkb::Xkb(bool followLocale1)
     }
 }
 
-Xkb::~Xkb()
+KeyboardDevice::~KeyboardDevice()
 {
     xkb_compose_state_unref(m_compose.state);
     xkb_compose_table_unref(m_compose.table);
@@ -512,17 +512,17 @@ Xkb::~Xkb()
     xkb_context_unref(m_context);
 }
 
-void Xkb::setConfig(const KSharedConfigPtr &config)
+void KeyboardDevice::setConfig(const KSharedConfigPtr &config)
 {
     m_configGroup = config->group(QStringLiteral("Layout"));
 }
 
-void Xkb::setNumLockConfig(const KSharedConfigPtr &config)
+void KeyboardDevice::setNumLockConfig(const KSharedConfigPtr &config)
 {
     m_numLockConfig = config;
 }
 
-void Xkb::reconfigure()
+void KeyboardDevice::reconfigure()
 {
     if (!m_context) {
         return;
@@ -557,7 +557,7 @@ static bool stringIsEmptyOrNull(const char *str)
  * As kwin_wayland may have the CAP_SET_NICE capability, it returns nullptr
  * so we need to do it ourselves (see xkb_context_sanitize_rule_names).
  **/
-void Xkb::applyEnvironmentRules(xkb_rule_names &ruleNames)
+void KeyboardDevice::applyEnvironmentRules(xkb_rule_names &ruleNames)
 {
     if (stringIsEmptyOrNull(ruleNames.rules)) {
         ruleNames.rules = getenv("XKB_DEFAULT_RULES");
@@ -577,7 +577,7 @@ void Xkb::applyEnvironmentRules(xkb_rule_names &ruleNames)
     }
 }
 
-xkb_keymap *Xkb::loadKeymapFromConfig()
+xkb_keymap *KeyboardDevice::loadKeymapFromConfig()
 {
     // load config
     if (!m_configGroup.isValid()) {
@@ -607,7 +607,7 @@ xkb_keymap *Xkb::loadKeymapFromConfig()
     return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
 }
 
-xkb_keymap *Xkb::loadDefaultKeymap()
+xkb_keymap *KeyboardDevice::loadDefaultKeymap()
 {
     xkb_rule_names ruleNames = {};
     applyEnvironmentRules(ruleNames);
@@ -615,7 +615,7 @@ xkb_keymap *Xkb::loadDefaultKeymap()
     return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
 }
 
-xkb_keymap *Xkb::loadKeymapFromLocale1()
+xkb_keymap *KeyboardDevice::loadKeymapFromLocale1()
 {
     OrgFreedesktopDBusPropertiesInterface locale1Properties(s_locale1Interface, "/org/freedesktop/locale1", QDBusConnection::systemBus(), this);
     const QVariantMap properties = locale1Properties.GetAll(s_locale1Interface);
@@ -640,7 +640,7 @@ xkb_keymap *Xkb::loadKeymapFromLocale1()
     return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
 }
 
-void Xkb::updateKeymap(xkb_keymap *keymap)
+void KeyboardDevice::updateKeymap(xkb_keymap *keymap)
 {
     Q_ASSERT(keymap);
     xkb_state *state = xkb_state_new(keymap);
@@ -721,7 +721,7 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
     updateModifiers();
 }
 
-void Xkb::createKeymapFile()
+void KeyboardDevice::createKeymapFile()
 {
     const auto currentKeymap = keymapContents();
     if (currentKeymap.isEmpty()) {
@@ -737,7 +737,7 @@ void Xkb::createKeymapFile()
     }
 }
 
-QByteArray Xkb::keymapContents() const
+QByteArray KeyboardDevice::keymapContents() const
 {
     if (!m_seat || !m_seat->keyboard()) {
         return {};
@@ -754,7 +754,7 @@ QByteArray Xkb::keymapContents() const
     return keymapString.get();
 }
 
-void Xkb::updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
+void KeyboardDevice::updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
 {
     if (!m_keymap || !m_state) {
         return;
@@ -767,7 +767,7 @@ void Xkb::updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t
     forwardModifiers();
 }
 
-void Xkb::updateKey(uint32_t key, KeyboardKeyState state)
+void KeyboardDevice::updateKey(uint32_t key, KeyboardKeyState state)
 {
     if (!m_keymap || !m_state) {
         return;
@@ -796,7 +796,7 @@ void Xkb::updateKey(uint32_t key, KeyboardKeyState state)
     updateConsumedModifiers(key);
 }
 
-void Xkb::updateModifiers()
+void KeyboardDevice::updateModifiers()
 {
     Qt::KeyboardModifiers mods = Qt::NoModifier;
     if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
@@ -853,7 +853,7 @@ void Xkb::updateModifiers()
     }
 }
 
-void Xkb::forwardModifiers()
+void KeyboardDevice::forwardModifiers()
 {
     if (!m_seat || !m_seat->keyboard()) {
         return;
@@ -864,7 +864,7 @@ void Xkb::forwardModifiers()
                                     m_currentLayout);
 }
 
-QString Xkb::layoutName(xkb_layout_index_t index) const
+QString KeyboardDevice::layoutName(xkb_layout_index_t index) const
 {
     if (!m_keymap) {
         return QString{};
@@ -872,17 +872,17 @@ QString Xkb::layoutName(xkb_layout_index_t index) const
     return QString::fromLocal8Bit(xkb_keymap_layout_get_name(m_keymap, index));
 }
 
-QString Xkb::layoutName() const
+QString KeyboardDevice::layoutName() const
 {
     return layoutName(m_currentLayout);
 }
 
-QString Xkb::layoutShortName(int index) const
+QString KeyboardDevice::layoutShortName(int index) const
 {
     return m_layoutList.value(index);
 }
 
-void Xkb::updateConsumedModifiers(uint32_t key)
+void KeyboardDevice::updateConsumedModifiers(uint32_t key)
 {
     Qt::KeyboardModifiers mods = Qt::NoModifier;
     if (xkb_state_mod_index_is_consumed2(m_state, key + EVDEV_OFFSET, m_shiftModifier, XKB_CONSUMED_MODE_GTK) == 1) {
@@ -900,7 +900,7 @@ void Xkb::updateConsumedModifiers(uint32_t key)
     m_consumedModifiers = mods;
 }
 
-Qt::KeyboardModifiers Xkb::modifiersRelevantForGlobalShortcuts(uint32_t scanCode) const
+Qt::KeyboardModifiers KeyboardDevice::modifiersRelevantForGlobalShortcuts(uint32_t scanCode) const
 {
     if (!m_state) {
         return Qt::NoModifier;
@@ -936,7 +936,7 @@ Qt::KeyboardModifiers Xkb::modifiersRelevantForGlobalShortcuts(uint32_t scanCode
     return mods & ~consumedMods;
 }
 
-xkb_keysym_t Xkb::toKeysym(uint32_t key)
+xkb_keysym_t KeyboardDevice::toKeysym(uint32_t key)
 {
     if (!m_state) {
         return XKB_KEY_NoSymbol;
@@ -951,7 +951,7 @@ xkb_keysym_t Xkb::toKeysym(uint32_t key)
     return ret;
 }
 
-QString Xkb::toString(xkb_keysym_t keysym)
+QString KeyboardDevice::toString(xkb_keysym_t keysym)
 {
     if (!m_state || keysym == XKB_KEY_NoSymbol) {
         return QString();
@@ -964,7 +964,7 @@ QString Xkb::toString(xkb_keysym_t keysym)
     return QString::fromUtf8(byteArray.constData());
 }
 
-Qt::Key Xkb::toQtKey(xkb_keysym_t keySym,
+Qt::Key KeyboardDevice::toQtKey(xkb_keysym_t keySym,
                      uint32_t scanCode,
                      Qt::KeyboardModifiers modifiers) const
 {
@@ -979,7 +979,7 @@ Qt::Key Xkb::toQtKey(xkb_keysym_t keySym,
     return qtKey;
 }
 
-bool Xkb::shouldKeyRepeat(quint32 key) const
+bool KeyboardDevice::shouldKeyRepeat(quint32 key) const
 {
     if (!m_keymap) {
         return false;
@@ -987,7 +987,7 @@ bool Xkb::shouldKeyRepeat(quint32 key) const
     return xkb_keymap_key_repeats(m_keymap, key + EVDEV_OFFSET) != 0;
 }
 
-void Xkb::switchToNextLayout()
+void KeyboardDevice::switchToNextLayout()
 {
     if (!m_keymap || !m_state) {
         return;
@@ -997,7 +997,7 @@ void Xkb::switchToNextLayout()
     switchToLayout(nextLayout);
 }
 
-void Xkb::switchToPreviousLayout()
+void KeyboardDevice::switchToPreviousLayout()
 {
     if (!m_keymap || !m_state) {
         return;
@@ -1006,7 +1006,7 @@ void Xkb::switchToPreviousLayout()
     switchToLayout(previousLayout);
 }
 
-bool Xkb::switchToLayout(xkb_layout_index_t layout)
+bool KeyboardDevice::switchToLayout(xkb_layout_index_t layout)
 {
     if (!m_keymap || !m_state || layout >= numberOfLayouts()) {
         return false;
@@ -1020,7 +1020,7 @@ bool Xkb::switchToLayout(xkb_layout_index_t layout)
     return true;
 }
 
-void Xkb::setModifierLatched(KWin::Xkb::Modifier mod, bool latched)
+void KeyboardDevice::setModifierLatched(KWin::KeyboardDevice::Modifier mod, bool latched)
 {
     if (!m_keymap || !m_state) {
         return;
@@ -1075,12 +1075,12 @@ void Xkb::setModifierLatched(KWin::Xkb::Modifier mod, bool latched)
     }
 }
 
-Xkb::Modifiers Xkb::depressedModifiers() const
+KeyboardDevice::Modifiers KeyboardDevice::depressedModifiers() const
 {
     if (!m_keymap || !m_state) {
         return NoModifier;
     }
-    Xkb::Modifiers result;
+    KeyboardDevice::Modifiers result;
 
     if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_DEPRESSED) == 1) {
         result |= Modifier::Mod1;
@@ -1107,12 +1107,12 @@ Xkb::Modifiers Xkb::depressedModifiers() const
     return result;
 }
 
-Xkb::Modifiers Xkb::latchedModifiers() const
+KeyboardDevice::Modifiers KeyboardDevice::latchedModifiers() const
 {
     if (!m_keymap || !m_state) {
         return NoModifier;
     }
-    Xkb::Modifiers result;
+    KeyboardDevice::Modifiers result;
 
     if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_LATCHED) == 1) {
         result |= Modifier::Mod1;
@@ -1139,12 +1139,12 @@ Xkb::Modifiers Xkb::latchedModifiers() const
     return result;
 }
 
-Xkb::Modifiers Xkb::lockedModifiers() const
+KeyboardDevice::Modifiers KeyboardDevice::lockedModifiers() const
 {
     if (!m_keymap || !m_state) {
         return NoModifier;
     }
-    Xkb::Modifiers result;
+    KeyboardDevice::Modifiers result;
 
     if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_LOCKED) == 1) {
         result |= Modifier::Mod1;
@@ -1171,7 +1171,7 @@ Xkb::Modifiers Xkb::lockedModifiers() const
     return result;
 }
 
-void Xkb::setModifierLocked(KWin::Xkb::Modifier mod, bool locked)
+void KeyboardDevice::setModifierLocked(KWin::KeyboardDevice::Modifier mod, bool locked)
 {
     if (!m_keymap || !m_state) {
         return;
@@ -1226,7 +1226,7 @@ void Xkb::setModifierLocked(KWin::Xkb::Modifier mod, bool locked)
     }
 }
 
-quint32 Xkb::numberOfLayouts() const
+quint32 KeyboardDevice::numberOfLayouts() const
 {
     if (!m_keymap) {
         return 0;
@@ -1234,12 +1234,12 @@ quint32 Xkb::numberOfLayouts() const
     return xkb_keymap_num_layouts(m_keymap);
 }
 
-void Xkb::setSeat(SeatInterface *seat)
+void KeyboardDevice::setSeat(SeatInterface *seat)
 {
     m_seat = QPointer<SeatInterface>(seat);
 }
 
-std::optional<Xkb::KeyCode> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)
+std::optional<KeyboardDevice::KeyCode> KeyboardDevice::keycodeFromKeysym(xkb_keysym_t keysym)
 {
     if (!m_keymap || !m_state) {
         return {};
@@ -1261,7 +1261,7 @@ std::optional<Xkb::KeyCode> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)
                     if (nMasks > 0) {
                         modifiers = masks[0];
                     }
-                    return Xkb::KeyCode({keycode - EVDEV_OFFSET, currentLevel, modifiers});
+                    return KeyboardDevice::KeyCode({keycode - EVDEV_OFFSET, currentLevel, modifiers});
                 }
             }
         }
@@ -1269,7 +1269,7 @@ std::optional<Xkb::KeyCode> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)
     return {};
 }
 
-QList<xkb_keysym_t> Xkb::keysymsFromQtKey(QKeyCombination keyQt)
+QList<xkb_keysym_t> KeyboardDevice::keysymsFromQtKey(QKeyCombination keyQt)
 {
     const int symQt = keyQt.key();
     QList<xkb_keysym_t> syms;
@@ -1319,7 +1319,7 @@ QList<xkb_keysym_t> Xkb::keysymsFromQtKey(QKeyCombination keyQt)
     return syms;
 }
 
-QByteArray Xkb::keymapContentsForKeysym(xkb_keycode_t newKeycode, xkb_keysym_t customSym)
+QByteArray KeyboardDevice::keymapContentsForKeysym(xkb_keycode_t newKeycode, xkb_keysym_t customSym)
 {
     auto keymap = createKeymapForKeysym(newKeycode, customSym);
     if (!keymap) {
@@ -1332,7 +1332,7 @@ QByteArray Xkb::keymapContentsForKeysym(xkb_keycode_t newKeycode, xkb_keysym_t c
     return keymapString.get();
 }
 
-bool Xkb::updateToKeymapForKeySym(xkb_keycode_t newKeycode, xkb_keysym_t customSym)
+bool KeyboardDevice::updateToKeymapForKeySym(xkb_keycode_t newKeycode, xkb_keysym_t customSym)
 {
     auto keymap = createKeymapForKeysym(newKeycode, customSym);
     if (!keymap) {
@@ -1342,7 +1342,7 @@ bool Xkb::updateToKeymapForKeySym(xkb_keycode_t newKeycode, xkb_keysym_t customS
     return true;
 }
 
-xkb_keymap *Xkb::createKeymapForKeysym(xkb_keycode_t newKeycode,
+xkb_keymap *KeyboardDevice::createKeymapForKeysym(xkb_keycode_t newKeycode,
                                        xkb_keysym_t customSym)
 {
     char symName[64];
@@ -1381,7 +1381,7 @@ xkb_keymap *Xkb::createKeymapForKeysym(xkb_keycode_t newKeycode,
     return newMap;
 }
 
-QList<xkb_keysym_t> Xkb::textToKeySyms(const QString &inputString)
+QList<xkb_keysym_t> KeyboardDevice::textToKeySyms(const QString &inputString)
 {
     QList<xkb_keysym_t> result;
 
@@ -1408,4 +1408,4 @@ QList<xkb_keysym_t> Xkb::textToKeySyms(const QString &inputString)
 
 }
 
-#include "moc_xkb.cpp"
+#include "moc_keyboard_device.cpp"

@@ -25,7 +25,7 @@ class QDBusArgument;
 namespace KWin
 {
 
-class Xkb;
+class KeyboardDevice;
 class KeyboardLayoutDBusInterface;
 
 namespace KeyboardLayoutSwitching
@@ -40,7 +40,7 @@ class KWIN_EXPORT KeyboardLayout : public QObject, public InputEventSpy
     Q_OBJECT
 
 public:
-    explicit KeyboardLayout(Xkb *xkb, const KSharedConfigPtr &config);
+    explicit KeyboardLayout(KeyboardDevice *xkb, const KSharedConfigPtr &config);
 
     ~KeyboardLayout() override;
 
@@ -64,7 +64,7 @@ private:
     void switchToLayout(xkb_layout_index_t index);
     void loadShortcuts();
     void reconfigure();
-    Xkb *m_xkb;
+    KeyboardDevice *m_xkb;
     xkb_layout_index_t m_layout = 0;
     KConfigWatcher::Ptr m_configWatcher;
     KConfigGroup m_configGroup;
@@ -80,7 +80,7 @@ class KeyboardLayoutDBusInterface : public QObject
     Q_CLASSINFO("D-Bus Interface", "org.kde.KeyboardLayouts")
 
 public:
-    explicit KeyboardLayoutDBusInterface(Xkb *xkb, const KConfigGroup &configGroup, KeyboardLayout *parent);
+    explicit KeyboardLayoutDBusInterface(KeyboardDevice *xkb, const KConfigGroup &configGroup, KeyboardLayout *parent);
     ~KeyboardLayoutDBusInterface() override;
 
     struct LayoutNames
@@ -102,7 +102,7 @@ Q_SIGNALS:
     void layoutListChanged();
 
 private:
-    Xkb *m_xkb;
+    KeyboardDevice *m_xkb;
     const KConfigGroup &m_configGroup;
     KeyboardLayout *m_keyboardLayout;
 };

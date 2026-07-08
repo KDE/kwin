@@ -10,8 +10,8 @@
 #include "eisinputcapturemanager.h"
 
 #include "input_event.h"
+#include "keyboard_device.h"
 #include "keyboard_input.h"
-#include "xkb.h"
 
 #include <libeis.h>
 
@@ -110,8 +110,8 @@ bool EisInputCaptureFilter::keyboardKey(KeyboardKeyEvent *event)
         eis_device_keyboard_key(keyboard, event->nativeScanCode, event->state != KeyboardKeyState::Released);
         eis_device_frame(keyboard, std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
         if (m_hasPendingModifierChange) {
-            const auto modifierState = input()->keyboard()->xkb()->modifierState();
-            eis_device_keyboard_send_xkb_modifiers(keyboard, modifierState.depressed, modifierState.latched, modifierState.locked, input()->keyboard()->xkb()->currentLayout());
+            const auto modifierState = input()->keyboard()->activeDevice()->modifierState();
+            eis_device_keyboard_send_xkb_modifiers(keyboard, modifierState.depressed, modifierState.latched, modifierState.locked, input()->keyboard()->activeDevice()->currentLayout());
         }
     }
     return true;

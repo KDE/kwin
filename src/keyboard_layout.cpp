@@ -8,9 +8,9 @@
 */
 #include "keyboard_layout.h"
 #include "input_event.h"
+#include "keyboard_device.h"
 #include "keyboard_input.h"
 #include "keyboard_layout_switching.h"
-#include "xkb.h"
 
 #include <KGlobalAccel>
 #include <KLocalizedString>
@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-KeyboardLayout::KeyboardLayout(Xkb *xkb, const KSharedConfigPtr &config)
+KeyboardLayout::KeyboardLayout(KeyboardDevice *xkb, const KSharedConfigPtr &config)
     : QObject()
     , m_xkb(xkb)
     , m_configWatcher(KConfigWatcher::create(config))
@@ -185,7 +185,7 @@ void KeyboardLayout::notifyLayoutChange()
 static const QString s_keyboardService = QStringLiteral("org.kde.keyboard");
 static const QString s_keyboardObject = QStringLiteral("/Layouts");
 
-KeyboardLayoutDBusInterface::KeyboardLayoutDBusInterface(Xkb *xkb, const KConfigGroup &configGroup, KeyboardLayout *parent)
+KeyboardLayoutDBusInterface::KeyboardLayoutDBusInterface(KeyboardDevice *xkb, const KConfigGroup &configGroup, KeyboardLayout *parent)
     : QObject(parent)
     , m_xkb(xkb)
     , m_configGroup(configGroup)

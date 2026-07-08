@@ -41,6 +41,7 @@
 #include "cursor.h"
 #include "cursorsource.h"
 #include "internalwindow.h"
+#include "keyboard_device.h"
 #include "popup_input_filter.h"
 #include "screenedge.h"
 #include "screenedgegestures.h"
@@ -53,7 +54,6 @@
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xdgactivationv1.h"
-#include "xkb.h"
 #include "xwayland/xwayland_interface.h"
 
 #include <KDecoration3/Decoration>
@@ -2989,7 +2989,7 @@ void InputRedirection::setupWorkspace()
     m_touch->init();
     m_tablet->init();
 
-    updateLeds(m_keyboard->xkb()->leds());
+    updateLeds(m_keyboard->activeDevice()->leds());
     connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, this, &InputRedirection::updateLeds);
 
     setupInputFilters();

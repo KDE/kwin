@@ -13,6 +13,7 @@
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "inputmethod.h"
+#include "keyboard_device.h"
 #include "keyboard_layout.h"
 #include "keyboard_repeat.h"
 #include "wayland/datadevice.h"
@@ -22,7 +23,6 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include "xkb.h"
 // screenlocker
 #if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
@@ -91,27 +91,27 @@ private:
 KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
     : QObject(parent)
     , m_input(parent)
-    , m_xkb(new Xkb(kwinApp()->followLocale1()))
+    , m_activeDevice(new KeyboardDevice(kwinApp()->followLocale1()))
 {
-    connect(m_xkb.get(), &Xkb::ledsChanged, this, &KeyboardInputRedirection::ledsChanged);
-    m_xkb->setSeat(waylandServer()->seat());
+    connect(m_activeDevice.get(), &KeyboardDevice::ledsChanged, this, &KeyboardInputRedirection::ledsChanged);
+    m_activeDevice->setSeat(waylandServer()->seat());
 }
 
 KeyboardInputRedirection::~KeyboardInputRedirection() = default;
 
-Xkb *KeyboardInputRedirection::xkb() const
+KeyboardDevice *KeyboardInputRedirection::activeDevice() const
 {
-    return m_xkb.get();
+    return m_activeDevice.get();
 }
 
 Qt::KeyboardModifiers KeyboardInputRedirection::modifiers() const
 {
-    return m_xkb->modifiers();
+    return m_activeDevice->modifiers();
 }
 
 Qt::KeyboardModifiers KeyboardInputRedirection::modifiersRelevantForGlobalShortcuts() const
 {
-    return m_xkb->modifiersRelevantForGlobalShortcuts();
+    return m_activeDevice->modifiersRelevantForGlobalShortcuts();
 }
 
 KeyboardLayout *KeyboardInputRedirection::keyboardLayout() const
@@ -150,8 +150,8 @@ void KeyboardInputRedirection::init()
     Q_ASSERT(!m_inited);
     m_inited = true;
     const auto config = kwinApp()->kxkbConfig();
-    m_xkb->setNumLockConfig(kwinApp()->inputConfig());
-    m_xkb->setConfig(config);
+    m_activeDevice->setNumLockConfig(kwinApp()->inputConfig());
+    m_activeDevice->setConfig(config);
 
     waylandServer()->seat()->setHasKeyboard(true);
 
@@ -159,11 +159,11 @@ void KeyboardInputRedirection::init()
     m_input->installInputEventSpy(m_keyStateChangedSpy.get());
     m_modifiersChangedSpy = std::make_unique<ModifiersChangedSpy>(m_input);
     m_input->installInputEventSpy(m_modifiersChangedSpy.get());
-    m_keyboardLayout = new KeyboardLayout(m_xkb.get(), config);
+    m_keyboardLayout = new KeyboardLayout(m_activeDevice.get(), config);
     m_keyboardLayout->init();
     m_input->installInputEventSpy(m_keyboardLayout);
 
-    m_keyRepeatSpy = std::make_unique<KeyboardRepeat>(m_xkb.get());
+    m_keyRepeatSpy = std::make_unique<KeyboardRepeat>(m_activeDevice.get());
     connect(m_keyRepeatSpy.get(), &KeyboardRepeat::keyRepeat, this,
             std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, KeyboardKeyState::Repeated, std::placeholders::_2, nullptr));
 
@@ -298,23 +298,23 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
         m_pressedKeys.removeOne(key);
     }
 
-    const quint32 previousLayout = m_xkb->currentLayout();
+    const quint32 previousLayout = m_activeDevice->currentLayout();
     if (state != KeyboardKeyState::Repeated) {
-        m_xkb->updateKey(key, state);
+        m_activeDevice->updateKey(key, state);
     }
 
-    const xkb_keysym_t keySym = m_xkb->toKeysym(key);
-    const Qt::KeyboardModifiers globalShortcutsModifiers = m_xkb->modifiersRelevantForGlobalShortcuts(key);
+    const xkb_keysym_t keySym = m_activeDevice->toKeysym(key);
+    const Qt::KeyboardModifiers globalShortcutsModifiers = m_activeDevice->modifiersRelevantForGlobalShortcuts(key);
 
     KeyboardKeyEvent event{
         .device = device,
         .state = state,
-        .key = m_xkb->toQtKey(keySym, key, globalShortcutsModifiers ? Qt::ControlModifier : Qt::KeyboardModifiers()),
+        .key = m_activeDevice->toQtKey(keySym, key, globalShortcutsModifiers ? Qt::ControlModifier : Qt::KeyboardModifiers()),
         .nativeScanCode = key,
         .nativeVirtualKey = keySym,
-        .text = m_xkb->toString(m_xkb->currentKeysym()),
-        .modifiers = m_xkb->modifiers(),
-        .modifiersRelevantForGlobalShortcuts = m_xkb->modifiersRelevantForGlobalShortcuts(key),
+        .text = m_activeDevice->toString(m_activeDevice->currentKeysym()),
+        .modifiers = m_activeDevice->modifiers(),
+        .modifiersRelevantForGlobalShortcuts = m_activeDevice->modifiersRelevantForGlobalShortcuts(key),
         .timestamp = time,
         .serial = waylandServer()->display()->nextSerial(),
     };
@@ -343,7 +343,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
     }
 
     if (forwardModifiers) {
-        m_xkb->forwardModifiers();
+        m_activeDevice->forwardModifiers();
     }
 
     if (event.modifiersRelevantForGlobalShortcuts == Qt::KeyboardModifier::NoModifier && state != KeyboardKeyState::Released) {

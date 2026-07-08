@@ -8,18 +8,18 @@
 */
 #include "keyboard_repeat.h"
 #include "input_event.h"
+#include "keyboard_device.h"
 #include "keyboard_input.h"
 #include "wayland/keyboard.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
-#include "xkb.h"
 
 #include <QTimer>
 
 namespace KWin
 {
 
-KeyboardRepeat::KeyboardRepeat(Xkb *xkb)
+KeyboardRepeat::KeyboardRepeat(KeyboardDevice *xkb)
     : QObject()
     , m_timer(new QTimer(this))
     , m_xkb(xkb)
