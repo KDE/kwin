@@ -107,6 +107,26 @@ KeyboardDevice *KeyboardInputRedirection::activeDevice() const
     return m_activeDevice.get();
 }
 
+LEDs KeyboardInputRedirection::leds() const
+{
+    return m_activeDevice->leds();
+}
+
+KeyboardDevice::Modifiers KeyboardInputRedirection::depressedModifiers() const
+{
+    return m_activeDevice->depressedModifiers();
+}
+
+KeyboardDevice::Modifiers KeyboardInputRedirection::latchedModifiers() const
+{
+    return m_activeDevice->latchedModifiers();
+}
+
+KeyboardDevice::Modifiers KeyboardInputRedirection::lockedModifiers() const
+{
+    return m_activeDevice->lockedModifiers();
+}
+
 Qt::KeyboardModifiers KeyboardInputRedirection::modifiers() const
 {
     return m_activeDevice->modifiers();

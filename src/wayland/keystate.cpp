@@ -29,18 +29,18 @@ public:
 
     void org_kde_kwin_keystate_fetchStates(Resource *resource) override
     {
-        const LEDs leds = input()->keyboard()->activeDevice()->leds();
+        const LEDs leds = input()->keyboard()->leds();
 
         // Scroll is a virtual modifier and xkbcommon doesn't (yet) support querying those
         // See https://github.com/xkbcommon/libxkbcommon/pull/512
         send_stateChanged(resource->handle, key_scrolllock, leds & LED::ScrollLock ? state_locked : state_unlocked);
 
         auto sendModifier = [this, resource](key k, KeyboardDevice::Modifier mod) {
-            if (input()->keyboard()->activeDevice()->lockedModifiers().testFlag(mod)) {
+            if (input()->keyboard()->lockedModifiers().testFlag(mod)) {
                 send_stateChanged(resource->handle, k, state_locked);
-            } else if (input()->keyboard()->activeDevice()->latchedModifiers().testFlag(mod)) {
+            } else if (input()->keyboard()->latchedModifiers().testFlag(mod)) {
                 send_stateChanged(resource->handle, k, state_latched);
-            } else if (input()->keyboard()->activeDevice()->depressedModifiers().testFlag(mod) && resource->version() >= ORG_KDE_KWIN_KEYSTATE_STATE_PRESSED_SINCE_VERSION) {
+            } else if (input()->keyboard()->depressedModifiers().testFlag(mod) && resource->version() >= ORG_KDE_KWIN_KEYSTATE_STATE_PRESSED_SINCE_VERSION) {
                 send_stateChanged(resource->handle, k, state_pressed);
             } else {
                 send_stateChanged(resource->handle, k, state_unlocked);

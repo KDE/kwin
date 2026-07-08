@@ -10,6 +10,7 @@
 
 #include "a11ykeyboardmonitor.h"
 #include "input.h"
+#include "keyboard_device.h"
 
 #include <QObject>
 #include <QPointF>
@@ -36,7 +37,6 @@ class InputDevice;
 class InputRedirection;
 class KeyboardLayout;
 class ModifiersChangedSpy;
-class KeyboardDevice;
 class KeyboardRepeat;
 class KeyStateChangedSpy;
 
@@ -61,6 +61,10 @@ public:
     void updateKeymap(const QByteArray &keymap = QByteArray());
 
     KeyboardDevice *activeDevice() const;
+    LEDs leds() const;
+    KeyboardDevice::Modifiers depressedModifiers() const;
+    KeyboardDevice::Modifiers latchedModifiers() const;
+    KeyboardDevice::Modifiers lockedModifiers() const;
     Qt::KeyboardModifiers modifiers() const;
     Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const;
     KeyboardLayout *keyboardLayout() const;

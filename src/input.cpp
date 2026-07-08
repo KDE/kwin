@@ -2989,7 +2989,7 @@ void InputRedirection::setupWorkspace()
     m_touch->init();
     m_tablet->init();
 
-    updateLeds(m_keyboard->activeDevice()->leds());
+    updateLeds(m_keyboard->leds());
     connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, this, &InputRedirection::updateLeds);
 
     setupInputFilters();
