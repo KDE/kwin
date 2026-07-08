@@ -295,6 +295,7 @@ void TestInputCapture::testInputCapture()
 
     QCOMPARE(input()->globalPointer(), QPoint(1, 1));
 
+    QVERIFY(motionSpy.isEmpty());
     QVERIFY(eiReadableSpy.wait());
     eiReadableSpy.clear();
     ei_dispatch(ei);
@@ -304,7 +305,8 @@ void TestInputCapture::testInputCapture()
     }
 
     // We receive a warp from the release
-    QVERIFY(motionSpy.wait());
+    // (this can already be received in eiReadableSpy.wait())
+    QVERIFY(motionSpy.count() || motionSpy.wait());
 
     Test::pointerMotion({2, 2}, ++timestamp);
     Test::pointerButtonPressed(BTN_LEFT, ++timestamp);
