@@ -3241,7 +3241,9 @@ void InputRedirection::updateLeds(LEDs leds)
 
 void InputRedirection::addInputDevice(InputDevice *device)
 {
-    connect(device, &InputDevice::keyChanged, m_keyboard, &KeyboardInputRedirection::processKey);
+    connect(device, &InputDevice::keyChanged, m_keyboard, [this](quint32 key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device) {
+        m_keyboard->activeDevice()->processKey(key, state, time, device);
+    });
 
     connect(device, &InputDevice::pointerMotionAbsolute,
             m_pointer, &PointerInputRedirection::processMotionAbsolute);

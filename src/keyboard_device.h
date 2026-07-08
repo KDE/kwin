@@ -33,6 +33,8 @@ typedef uint32_t xkb_layout_index_t;
 namespace KWin
 {
 
+class KeyboardRepeat;
+
 class KWIN_EXPORT KeyboardDevice : public QObject
 {
     Q_OBJECT
@@ -57,6 +59,7 @@ public:
     void setConfig(const KSharedConfigPtr &config);
     void setNumLockConfig(const KSharedConfigPtr &config);
 
+    void processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device = nullptr);
     void updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);
     void updateKey(uint32_t key, KeyboardKeyState state);
     xkb_keysym_t toKeysym(uint32_t key);
@@ -154,6 +157,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     void ledsChanged(const LEDs &leds);
     void keymapChanged(const QByteArray &keymap);
+    void keyRepeat(quint32 key, std::chrono::microseconds time);
     void modifierStateChanged();
 
 private:
@@ -202,6 +206,7 @@ private:
         xkb_mod_index_t locked = 0;
     } m_modifierState;
 
+    std::unique_ptr<KeyboardRepeat> m_keyRepeatSpy;
     const bool m_followLocale1;
 };
 

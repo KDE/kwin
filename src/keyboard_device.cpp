@@ -8,6 +8,8 @@
 */
 #include "keyboard_device.h"
 #include "dbusproperties_interface.h"
+#include "keyboard_input.h"
+#include "keyboard_repeat.h"
 #include "utils/c_ptr.h"
 #include "utils/common.h"
 // frameworks
@@ -460,9 +462,11 @@ KeyboardDevice::KeyboardDevice(bool followLocale1)
     , m_consumedModifiers(Qt::NoModifier)
     , m_keysym(XKB_KEY_NoSymbol)
     , m_leds()
+    , m_keyRepeatSpy(std::make_unique<KeyboardRepeat>(this))
     , m_followLocale1(followLocale1)
 {
     qRegisterMetaType<KWin::LEDs>();
+    connect(m_keyRepeatSpy.get(), &KeyboardRepeat::keyRepeat, this, &KeyboardDevice::keyRepeat);
     if (!m_context) {
         qCWarning(KWIN_XKB) << "Could not create xkb context";
     } else {
@@ -516,6 +520,12 @@ void KeyboardDevice::setConfig(const KSharedConfigPtr &config)
 void KeyboardDevice::setNumLockConfig(const KSharedConfigPtr &config)
 {
     m_numLockConfig = config;
+}
+
+void KeyboardDevice::processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
+{
+    m_keyRepeatSpy->keyboardKey(key, state, time);
+    input()->keyboard()->processKey(key, state, time, device);
 }
 
 void KeyboardDevice::reconfigure()

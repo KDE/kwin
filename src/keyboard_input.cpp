@@ -15,7 +15,6 @@
 #include "inputmethod.h"
 #include "keyboard_device.h"
 #include "keyboard_layout.h"
-#include "keyboard_repeat.h"
 #include "wayland/datadevice.h"
 #include "wayland/display.h"
 #include "wayland/inputmethod_v1.h"
@@ -96,6 +95,8 @@ KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
 {
     connect(m_activeDevice.get(), &KeyboardDevice::ledsChanged, this, &KeyboardInputRedirection::ledsChanged);
     connect(m_activeDevice.get(), &KeyboardDevice::keymapChanged, this, &KeyboardInputRedirection::updateKeymap);
+    connect(m_activeDevice.get(), &KeyboardDevice::keyRepeat, this,
+            std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, KeyboardKeyState::Repeated, std::placeholders::_2, nullptr));
     connect(m_activeDevice.get(), &KeyboardDevice::modifierStateChanged, this, &KeyboardInputRedirection::forwardModifiers);
     connect(m_activeDevice.get(), &KeyboardDevice::modifierStateChanged, this, &KeyboardInputRedirection::modifiersStateChanged);
 }
@@ -185,10 +186,6 @@ void KeyboardInputRedirection::init()
     m_keyboardLayout = new KeyboardLayout(m_activeDevice.get(), config);
     m_keyboardLayout->init();
     m_input->installInputEventSpy(m_keyboardLayout);
-
-    m_keyRepeatSpy = std::make_unique<KeyboardRepeat>(m_activeDevice.get());
-    connect(m_keyRepeatSpy.get(), &KeyboardRepeat::keyRepeat, this,
-            std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, KeyboardKeyState::Repeated, std::placeholders::_2, nullptr));
 
     connect(workspace(), &QObject::destroyed, this, [this] {
         m_inited = false;
@@ -342,8 +339,6 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
     if (!m_inited) {
         return;
     }
-
-    m_keyRepeatSpy->keyboardKey(key, state, time);
 
     if (!waylandServer()->isKeyboardShortcutsInhibited()) {
         const bool ret = m_a11yKeyboardMonitor.processKey(key, state, time);
