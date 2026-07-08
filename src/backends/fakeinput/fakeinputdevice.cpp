@@ -5,6 +5,8 @@
 */
 
 #include "fakeinputdevice.h"
+#include "keyboard_device.h"
+#include "keyboard_input.h"
 
 namespace KWin
 {
@@ -14,7 +16,13 @@ static int s_lastDeviceId = 0;
 FakeInputDevice::FakeInputDevice(QObject *parent)
     : InputDevice(parent)
     , m_name(QStringLiteral("Fake Input Device %1").arg(++s_lastDeviceId))
+    , m_device(false)
 {
+    auto globalDevice = input()->keyboard()->globalDevice();
+    m_device.updateKeymap(globalDevice->keymapContents());
+    connect(globalDevice, &KeyboardDevice::keymapChanged, this, [this](const QByteArray &keymapContents) {
+        m_device.updateKeymap(keymapContents);
+    });
 }
 
 bool FakeInputDevice::isAuthenticated() const

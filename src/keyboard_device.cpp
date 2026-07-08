@@ -466,7 +466,9 @@ KeyboardDevice::KeyboardDevice(bool followLocale1)
     , m_followLocale1(followLocale1)
 {
     qRegisterMetaType<KWin::LEDs>();
-    connect(m_keyRepeatSpy.get(), &KeyboardRepeat::keyRepeat, this, &KeyboardDevice::keyRepeat);
+    connect(m_keyRepeatSpy.get(), &KeyboardRepeat::keyRepeat, this, [this](quint32 key, std::chrono::microseconds time) {
+        processKey(key, KeyboardKeyState::Repeated, time);
+    });
     if (!m_context) {
         qCWarning(KWIN_XKB) << "Could not create xkb context";
     } else {
@@ -525,7 +527,7 @@ void KeyboardDevice::setNumLockConfig(const KSharedConfigPtr &config)
 void KeyboardDevice::processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
 {
     m_keyRepeatSpy->keyboardKey(key, state, time);
-    input()->keyboard()->processKey(key, state, time, device);
+    input()->keyboard()->processKey(key, state, time, device, this);
 }
 
 void KeyboardDevice::reconfigure()
@@ -661,8 +663,8 @@ void KeyboardDevice::updateKeymap(xkb_keymap *keymap)
     bool capsLockIsOn = false;
     static bool s_startup = true;
     if (!s_startup) {
-        numLockIsOn = xkb_state_mod_index_is_active(m_state, m_numModifier, XKB_STATE_MODS_LOCKED);
-        capsLockIsOn = xkb_state_mod_index_is_active(m_state, m_capsModifier, XKB_STATE_MODS_LOCKED);
+        numLockIsOn = xkb_state_mod_index_is_active(state, m_numModifier, XKB_STATE_MODS_LOCKED);
+        capsLockIsOn = xkb_state_mod_index_is_active(state, m_capsModifier, XKB_STATE_MODS_LOCKED);
     }
 
     // now release the old ones
@@ -724,6 +726,24 @@ void KeyboardDevice::updateKeymap(xkb_keymap *keymap)
         Q_EMIT keymapChanged(currentKeymap);
     }
     updateModifiers();
+}
+
+void KeyboardDevice::updateKeymap(const QByteArray &keymapContents)
+{
+    if (keymapContents.isEmpty()) {
+        return;
+    }
+
+    xkb_keymap *keymap = xkb_keymap_new_from_string(m_context,
+                                                    keymapContents.constData(),
+                                                    XKB_KEYMAP_FORMAT_TEXT_V1,
+                                                    XKB_KEYMAP_COMPILE_NO_FLAGS);
+    if (!keymap) {
+        qCWarning(KWIN_XKB) << "Could not create XKB keymap from serialized contents";
+        return;
+    }
+
+    updateKeymap(keymap);
 }
 
 QByteArray KeyboardDevice::keymapContents() const

@@ -7,6 +7,7 @@
 #pragma once
 
 #include "core/inputdevice.h"
+#include "keyboard_device.h"
 
 #include <QSet>
 
@@ -41,8 +42,14 @@ public:
     QSet<quint32> pressedKeys;
     QSet<quint32> activeTouches;
 
+    KeyboardDevice *keyboard()
+    {
+        return &m_device;
+    }
+
 private:
     QString m_name;
+    KeyboardDevice m_device;
     bool m_authenticated = false;
 };
 

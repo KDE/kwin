@@ -95,6 +95,8 @@ public:
     {
         return m_keymap;
     }
+    void updateKeymap(const QByteArray &keymapContents);
+    void updateKeymap(xkb_keymap *keymap);
 
     xkb_state *state() const
     {
@@ -166,7 +168,6 @@ private:
     xkb_keymap *loadDefaultKeymap();
     xkb_keymap *loadKeymapFromLocale1();
     xkb_keymap *createKeymapForKeysym(xkb_keycode_t newKeycode, xkb_keysym_t customSym);
-    void updateKeymap(xkb_keymap *keymap);
     void updateModifiers();
     void updateConsumedModifiers(uint32_t key);
     xkb_context *m_context;

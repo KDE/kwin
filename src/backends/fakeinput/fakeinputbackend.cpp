@@ -298,9 +298,9 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *
         return;
     }
 
-    std::optional<KeyboardDevice::KeyCode> keyCode = input()->keyboard()->activeDevice()->keycodeFromKeysym(keySym);
+    std::optional<KeyboardDevice::KeyCode> keyCode = device->keyboard()->keycodeFromKeysym(keySym);
     // grab the current modifier state, cache it, send our key with our own modifiers at a known state, then reset back
-    xkb_state *state = input()->keyboard()->activeDevice()->state();
+    xkb_state *state = device->keyboard()->state();
     xkb_mod_mask_t formerDepressed = xkb_state_serialize_mods(state, XKB_STATE_MODS_DEPRESSED);
     xkb_mod_mask_t formerLatched = xkb_state_serialize_mods(state, XKB_STATE_MODS_LATCHED);
     xkb_mod_mask_t formerLocked = xkb_state_serialize_mods(state, XKB_STATE_MODS_LOCKED);
@@ -328,9 +328,9 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *
         if (isModifier) {
             sendKey(device, keyCode->keyCode, nativeState);
         } else {
-            input()->keyboard()->activeDevice()->updateModifiers(formerDepressed | keyCode->modifiers, formerLatched, formerLocked, formerLayout);
+            device->keyboard()->updateModifiers(formerDepressed | keyCode->modifiers, formerLatched, formerLocked, formerLayout);
             sendKey(device, keyCode->keyCode, nativeState);
-            input()->keyboard()->activeDevice()->updateModifiers(formerDepressed, formerLatched, formerLocked, formerLayout);
+            device->keyboard()->updateModifiers(formerDepressed, formerLatched, formerLocked, formerLayout);
         }
         return;
     }
@@ -340,7 +340,7 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *
     // for now send a fake release with every press and ignore other releases. We can make the keymap resetting more lazy if it's an issue IRL
     if (nativeState == KeyboardKeyState::Pressed) {
         static const uint unmappedKeyCode = 247;
-        bool keymapUpdated = input()->keyboard()->activeDevice()->updateToKeymapForKeySym(unmappedKeyCode, keySym);
+        bool keymapUpdated = device->keyboard()->updateToKeymapForKeySym(unmappedKeyCode, keySym);
         if (!keymapUpdated) {
             return;
         }
@@ -349,9 +349,8 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *
         for (quint32 key : std::as_const(device->pressedKeys)) {
             sendKey(device, key, KeyboardKeyState::Released);
         }
-        // reset keyboard back
-        input()->keyboard()->activeDevice()->reconfigure();
-        input()->keyboard()->activeDevice()->updateModifiers(formerDepressed, formerLatched, formerLocked, formerLayout);
+        device->keyboard()->updateKeymap(input()->keyboard()->globalDevice()->keymapContents());
+        device->keyboard()->updateModifiers(formerDepressed, formerLatched, formerLocked, formerLayout);
     }
 }
 
@@ -374,7 +373,7 @@ void FakeInputBackendPrivate::sendKey(FakeInputDevice *device, uint32_t keyCode,
         return;
     }
 
-    Q_EMIT device->keyChanged(keyCode, state, currentTime(), device);
+    device->keyboard()->processKey(keyCode, state, currentTime(), device);
 }
 
 FakeInputBackend::FakeInputBackend(Display *display)

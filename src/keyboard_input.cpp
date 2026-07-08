@@ -91,51 +91,54 @@ private:
 KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
     : QObject(parent)
     , m_input(parent)
-    , m_activeDevice(new KeyboardDevice(kwinApp()->followLocale1()))
+    , m_globalDevice(new KeyboardDevice(kwinApp()->followLocale1()))
 {
-    connect(m_activeDevice.get(), &KeyboardDevice::ledsChanged, this, &KeyboardInputRedirection::ledsChanged);
-    connect(m_activeDevice.get(), &KeyboardDevice::keymapChanged, this, &KeyboardInputRedirection::updateKeymap);
-    connect(m_activeDevice.get(), &KeyboardDevice::keyRepeat, this,
-            std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, KeyboardKeyState::Repeated, std::placeholders::_2, nullptr));
-    connect(m_activeDevice.get(), &KeyboardDevice::modifierStateChanged, this, &KeyboardInputRedirection::forwardModifiers);
-    connect(m_activeDevice.get(), &KeyboardDevice::modifierStateChanged, this, &KeyboardInputRedirection::modifiersStateChanged);
+    setActiveKeyboard(m_globalDevice.get());
 }
 
 KeyboardInputRedirection::~KeyboardInputRedirection() = default;
 
+KeyboardDevice *KeyboardInputRedirection::globalDevice() const
+{
+    return m_globalDevice.get();
+}
+
 KeyboardDevice *KeyboardInputRedirection::activeDevice() const
 {
-    return m_activeDevice.get();
+    if (m_activeDevice) {
+        return m_activeDevice.get();
+    }
+    return m_globalDevice.get();
 }
 
 LEDs KeyboardInputRedirection::leds() const
 {
-    return m_activeDevice->leds();
+    return activeDevice()->leds();
 }
 
 KeyboardDevice::Modifiers KeyboardInputRedirection::depressedModifiers() const
 {
-    return m_activeDevice->depressedModifiers();
+    return activeDevice()->depressedModifiers();
 }
 
 KeyboardDevice::Modifiers KeyboardInputRedirection::latchedModifiers() const
 {
-    return m_activeDevice->latchedModifiers();
+    return activeDevice()->latchedModifiers();
 }
 
 KeyboardDevice::Modifiers KeyboardInputRedirection::lockedModifiers() const
 {
-    return m_activeDevice->lockedModifiers();
+    return activeDevice()->lockedModifiers();
 }
 
 Qt::KeyboardModifiers KeyboardInputRedirection::modifiers() const
 {
-    return m_activeDevice->modifiers();
+    return activeDevice()->modifiers();
 }
 
 Qt::KeyboardModifiers KeyboardInputRedirection::modifiersRelevantForGlobalShortcuts() const
 {
-    return m_activeDevice->modifiersRelevantForGlobalShortcuts();
+    return activeDevice()->modifiersRelevantForGlobalShortcuts();
 }
 
 KeyboardLayout *KeyboardInputRedirection::keyboardLayout() const
@@ -162,6 +165,44 @@ QList<uint32_t> KeyboardInputRedirection::unfilteredKeys() const
     return ret;
 }
 
+void KeyboardInputRedirection::setActiveKeyboard(KeyboardDevice *device)
+{
+    if (m_activeDevice) {
+        disconnect(m_activeDevice.get(), nullptr, this, nullptr);
+    }
+
+    auto oldLeds = activeDevice()->leds();
+    auto oldKeymap = activeDevice()->keymap();
+    auto oldDepressedModifiers = activeDevice()->depressedModifiers();
+    auto oldLatchedModifiers = activeDevice()->latchedModifiers();
+    auto oldLockedModifiers = activeDevice()->lockedModifiers();
+
+    m_activeDevice = device;
+
+    m_pressedKeys.clear();
+    m_filteredKeys.clear();
+
+    if (device != m_globalDevice.get()) {
+        connect(m_activeDevice.get(), &QObject::destroyed, this, [this]() {
+            setActiveKeyboard(m_globalDevice.get());
+        });
+    }
+    connect(m_activeDevice.get(), &KeyboardDevice::ledsChanged, this, &KeyboardInputRedirection::ledsChanged);
+    connect(m_activeDevice.get(), &KeyboardDevice::keymapChanged, this, &KeyboardInputRedirection::updateKeymap);
+    connect(m_activeDevice.get(), &KeyboardDevice::modifierStateChanged, this, &KeyboardInputRedirection::forwardModifiers);
+    connect(m_activeDevice.get(), &KeyboardDevice::modifierStateChanged, this, &KeyboardInputRedirection::modifiersStateChanged);
+
+    if (oldLeds != activeDevice()->leds()) {
+        Q_EMIT ledsChanged(activeDevice()->leds());
+    }
+    if (oldKeymap != activeDevice()->keymap()) {
+        updateKeymap(activeDevice()->keymapContents());
+    }
+    if (oldDepressedModifiers != activeDevice()->depressedModifiers() || oldLatchedModifiers != activeDevice()->latchedModifiers() || oldLockedModifiers != activeDevice()->lockedModifiers()) {
+        Q_EMIT modifiersStateChanged();
+    }
+}
+
 void KeyboardInputRedirection::addFilteredKey(uint32_t key)
 {
     if (!m_filteredKeys.contains(key)) {
@@ -174,8 +215,8 @@ void KeyboardInputRedirection::init()
     Q_ASSERT(!m_inited);
     m_inited = true;
     const auto config = kwinApp()->kxkbConfig();
-    m_activeDevice->setNumLockConfig(kwinApp()->inputConfig());
-    m_activeDevice->setConfig(config);
+    m_globalDevice->setNumLockConfig(kwinApp()->inputConfig());
+    m_globalDevice->setConfig(config);
 
     waylandServer()->seat()->setHasKeyboard(true);
 
@@ -183,7 +224,7 @@ void KeyboardInputRedirection::init()
     m_input->installInputEventSpy(m_keyStateChangedSpy.get());
     m_modifiersChangedSpy = std::make_unique<ModifiersChangedSpy>(m_input);
     m_input->installInputEventSpy(m_modifiersChangedSpy.get());
-    m_keyboardLayout = new KeyboardLayout(m_activeDevice.get(), config);
+    m_keyboardLayout = new KeyboardLayout(m_globalDevice.get(), config);
     m_keyboardLayout->init();
     m_input->installInputEventSpy(m_keyboardLayout);
 
@@ -220,11 +261,11 @@ void KeyboardInputRedirection::forwardModifiers()
     if (!seat || !seat->keyboard()) {
         return;
     }
-    const auto &modifierState = m_activeDevice->modifierState();
+    const auto &modifierState = activeDevice()->modifierState();
     seat->notifyKeyboardModifiers(modifierState.depressed,
                                   modifierState.latched,
                                   modifierState.locked,
-                                  m_activeDevice->currentLayout());
+                                  activeDevice()->currentLayout());
 }
 
 void KeyboardInputRedirection::updateKeymap(const QByteArray &keymap)
@@ -232,7 +273,7 @@ void KeyboardInputRedirection::updateKeymap(const QByteArray &keymap)
     if (!m_inited) {
         return;
     }
-    const QByteArray currentKeymap = keymap.isEmpty() ? m_activeDevice->keymapContents() : keymap;
+    const QByteArray currentKeymap = keymap.isEmpty() ? activeDevice()->keymapContents() : keymap;
     if (currentKeymap.isEmpty()) {
         return;
     }
@@ -333,9 +374,12 @@ static constexpr std::array s_modifierKeys = {
     Qt::Key_ScrollLock,
 };
 
-void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
+void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device, KeyboardDevice *keyboardDevice)
 {
     input()->setLastInputHandler(this);
+    if (activeDevice() != keyboardDevice) {
+        setActiveKeyboard(keyboardDevice);
+    }
     if (!m_inited) {
         return;
     }
@@ -355,23 +399,23 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
         m_pressedKeys.removeOne(key);
     }
 
-    const quint32 previousLayout = m_activeDevice->currentLayout();
+    const quint32 previousLayout = activeDevice()->currentLayout();
     if (state != KeyboardKeyState::Repeated) {
-        m_activeDevice->updateKey(key, state);
+        activeDevice()->updateKey(key, state);
     }
 
-    const xkb_keysym_t keySym = m_activeDevice->toKeysym(key);
-    const Qt::KeyboardModifiers globalShortcutsModifiers = m_activeDevice->modifiersRelevantForGlobalShortcuts(key);
+    const xkb_keysym_t keySym = activeDevice()->toKeysym(key);
+    const Qt::KeyboardModifiers globalShortcutsModifiers = activeDevice()->modifiersRelevantForGlobalShortcuts(key);
 
     KeyboardKeyEvent event{
         .device = device,
         .state = state,
-        .key = m_activeDevice->toQtKey(keySym, key, globalShortcutsModifiers ? Qt::ControlModifier : Qt::KeyboardModifiers()),
+        .key = activeDevice()->toQtKey(keySym, key, globalShortcutsModifiers ? Qt::ControlModifier : Qt::KeyboardModifiers()),
         .nativeScanCode = key,
         .nativeVirtualKey = keySym,
-        .text = m_activeDevice->toString(m_activeDevice->currentKeysym()),
-        .modifiers = m_activeDevice->modifiers(),
-        .modifiersRelevantForGlobalShortcuts = m_activeDevice->modifiersRelevantForGlobalShortcuts(key),
+        .text = activeDevice()->toString(activeDevice()->currentKeysym()),
+        .modifiers = activeDevice()->modifiers(),
+        .modifiersRelevantForGlobalShortcuts = activeDevice()->modifiersRelevantForGlobalShortcuts(key),
         .timestamp = time,
         .serial = waylandServer()->display()->nextSerial(),
     };

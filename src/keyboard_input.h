@@ -55,10 +55,12 @@ public:
     /**
      * @internal
      */
-    void processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device = nullptr);
+    void processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device = nullptr, KeyboardDevice *keyboard = nullptr);
+    ;
     void forwardModifiers();
     void updateKeymap(const QByteArray &keymap = QByteArray());
 
+    KeyboardDevice *globalDevice() const;
     KeyboardDevice *activeDevice() const;
     LEDs leds() const;
     KeyboardDevice::Modifiers depressedModifiers() const;
@@ -85,11 +87,13 @@ Q_SIGNALS:
     void modifiersStateChanged();
 
 private:
+    void setActiveKeyboard(KeyboardDevice *device);
     Window *pickFocus() const;
 
     InputRedirection *m_input;
     bool m_inited = false;
-    const std::unique_ptr<KeyboardDevice> m_activeDevice;
+    const std::unique_ptr<KeyboardDevice> m_globalDevice;
+    QPointer<KeyboardDevice> m_activeDevice;
     QMetaObject::Connection m_activeWindowSurfaceChangedConnection;
     std::unique_ptr<KeyStateChangedSpy> m_keyStateChangedSpy;
     std::unique_ptr<ModifiersChangedSpy> m_modifiersChangedSpy;

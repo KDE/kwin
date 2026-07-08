@@ -265,36 +265,54 @@ void FakeInputTest::testTouch()
 void FakeInputTest::testKeyboardKey_data()
 {
     QTest::addColumn<quint32>("linuxKey");
+    QTest::addColumn<xkb_keysym_t>("expectedKeysym");
+    QTest::addColumn<QString>("expectedText");
 
-    QTest::newRow("A") << quint32(KEY_A);
-    QTest::newRow("S") << quint32(KEY_S);
-    QTest::newRow("D") << quint32(KEY_D);
-    QTest::newRow("F") << quint32(KEY_F);
+    QTest::newRow("A") << quint32(KEY_A) << xkb_keysym_t(XKB_KEY_a) << QStringLiteral("a");
+    QTest::newRow("S") << quint32(KEY_S) << xkb_keysym_t(XKB_KEY_s) << QStringLiteral("s");
+    QTest::newRow("D") << quint32(KEY_D) << xkb_keysym_t(XKB_KEY_d) << QStringLiteral("d");
+    QTest::newRow("F") << quint32(KEY_F) << xkb_keysym_t(XKB_KEY_f) << QStringLiteral("f");
 }
 
 void FakeInputTest::testKeyboardKey()
 {
     Test::FakeInput *fakeInput = Test::waylandFakeInput();
 
-    // without an authentication we shouldn't get the signals
-    QSignalSpy keyboardKeySpy(m_inputDevice, &InputDevice::keyChanged);
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(1280, 1024), Qt::red);
+    QVERIFY(window);
+    QVERIFY(window->isActive());
+
+    auto keyboard = std::make_unique<Test::SimpleKeyboard>(window);
+    QSignalSpy clientKeySpy(keyboard->keyboard(), &KWayland::Client::Keyboard::keyChanged);
+    QSignalSpy keySymReceivedSpy(keyboard.get(), &Test::SimpleKeyboard::keySymRecevied);
+
     QFETCH(quint32, linuxKey);
+    QFETCH(xkb_keysym_t, expectedKeysym);
+    QFETCH(QString, expectedText);
+
+    // without authentication the client should not receive keyboard events
     fakeInput->keyboard_key(linuxKey, WL_KEYBOARD_KEY_STATE_PRESSED);
     QVERIFY(Test::waylandSync());
-    QVERIFY(keyboardKeySpy.isEmpty());
+    QVERIFY(clientKeySpy.isEmpty());
+    QVERIFY(keySymReceivedSpy.isEmpty());
 
-    // now authenticate
+    keyboard->clearReceivedText();
     fakeInput->authenticate(QStringLiteral("org.kde.foobar"), QStringLiteral("foobar"));
-    fakeInput->keyboard_key(linuxKey, WL_KEYBOARD_KEY_STATE_PRESSED);
-    QVERIFY(keyboardKeySpy.wait());
-    QCOMPARE(keyboardKeySpy.last().at(0).value<quint32>(), linuxKey);
-    QCOMPARE(keyboardKeySpy.last().at(1).value<KeyboardKeyState>(), KeyboardKeyState::Pressed);
 
-    // and release
+    fakeInput->keyboard_key(linuxKey, WL_KEYBOARD_KEY_STATE_PRESSED);
+    QVERIFY(clientKeySpy.wait());
+    QCOMPARE(clientKeySpy.last().at(0).value<quint32>(), linuxKey);
+    QCOMPARE(clientKeySpy.last().at(1).value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Pressed);
+    QVERIFY(keySymReceivedSpy.count() == 1 || keySymReceivedSpy.wait());
+    QCOMPARE(keySymReceivedSpy.last().at(0).value<xkb_keysym_t>(), expectedKeysym);
+    QTRY_COMPARE(keyboard->receviedText(), expectedText);
+
     fakeInput->keyboard_key(linuxKey, WL_KEYBOARD_KEY_STATE_RELEASED);
-    QVERIFY(keyboardKeySpy.wait());
-    QCOMPARE(keyboardKeySpy.last().at(0).value<quint32>(), linuxKey);
-    QCOMPARE(keyboardKeySpy.last().at(1).value<KeyboardKeyState>(), KeyboardKeyState::Released);
+    QVERIFY(clientKeySpy.count() == 2 || clientKeySpy.wait());
+    QCOMPARE(clientKeySpy.last().at(0).value<quint32>(), linuxKey);
+    QCOMPARE(clientKeySpy.last().at(1).value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Released);
 }
 
 void FakeInputTest::testKeySym()
