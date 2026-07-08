@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-07 00:44+0000\n"
-"PO-Revision-Date: 2026-06-18 08:42+0300\n"
+"POT-Creation-Date: 2026-07-08 00:46+0000\n"
+"PO-Revision-Date: 2026-07-07 09:01+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -82,7 +82,7 @@ msgstr "לחיצה על ה־Ctrl הימני לאחיזת קלט"
 msgid "KDE Wayland Compositor"
 msgstr "מנהל חלונאי KDE Wayland"
 
-#: compositor.cpp:736
+#: compositor.cpp:747
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "אפקטים של שולחן עבודה הופעלן מחגד"
@@ -1570,60 +1570,60 @@ msgstr "קסאבר הוגל"
 msgid "Disable configuration options"
 msgstr "השבתת אפשרויות הגדרה"
 
-#: main_wayland.cpp:322
+#: main_wayland.cpp:327
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "הפעלת שרת Xwayless לא כמשתמש על."
 
-#: main_wayland.cpp:325
+#: main_wayland.cpp:330
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 "שם שקע (socket) ה־Wayland להאזין לו. אם לא הוגדר, ייעשה שימוש ב־„wayland-0”."
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:334
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "תצוגת ה־X11 לשימוש במצב חלוני בפלטפורמת X11."
 
-#: main_wayland.cpp:333
+#: main_wayland.cpp:338
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "תצוגת ה־Wayland לשימוש במצב חלוני בפלטפורמת Wayland."
 
-#: main_wayland.cpp:335
+#: main_wayland.cpp:340
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "עיבוד למכלא חוזי וירטואלי."
 
-#: main_wayland.cpp:337
+#: main_wayland.cpp:342
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "רוחב למצב חלון. רוחב ברירת המחדל הוא 1024."
 
-#: main_wayland.cpp:341
+#: main_wayland.cpp:346
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "גובה למצב חלון. גובה ברירת המחדל הוא 768."
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:351
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
 msgstr "האם להפוך מצב חלון למסך מלא או לא"
 
-#: main_wayland.cpp:350
+#: main_wayland.cpp:355
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "קנה המידה למצב חלון. ערך ברירת המחדל הוא 1."
 
-#: main_wayland.cpp:355
+#: main_wayland.cpp:360
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr "מספר החלונות לפתיחה כערוצי פלט במצב חלוני. ערך ברירת המחדל הוא 1"
 
-#: main_wayland.cpp:360
+#: main_wayland.cpp:365
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1632,7 +1632,7 @@ msgstr ""
 "שקע (socket) Wayland לשימוש לחיבורים נכנסים. אפשר לשלב את זה עם ‎--socket כדי "
 "לתת שם לשקע"
 
-#: main_wayland.cpp:364
+#: main_wayland.cpp:369
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1641,74 +1641,74 @@ msgstr ""
 "שקע (socket) XWayland לשימוש לחיבורי Xwayland הנכנסים. אפשר להגדיר את זה "
 "מספר פעמים"
 
-#: main_wayland.cpp:368
+#: main_wayland.cpp:373
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "שם תצוגת ה־xwayland שהוקמה מראש"
 
-#: main_wayland.cpp:372
+#: main_wayland.cpp:377
 #, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
 msgstr "שקע (socket) XWayland לשימוש לחיבורי Xwayland התחלתיים"
 
-#: main_wayland.cpp:376
+#: main_wayland.cpp:381
 #, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
 msgstr "שם תצוגת ה־xwayland ההתחלתית שהוקמה מראש"
 
-#: main_wayland.cpp:380
+#: main_wayland.cpp:385
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "שם קובץ ה־xauthority "
 
-#: main_wayland.cpp:384
+#: main_wayland.cpp:389
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "יוצא מהמופע הזה כדי שניתן יהיה להפעיל אותו מחדש על ידי kwin_wayland_wrapper."
 
-#: main_wayland.cpp:386
+#: main_wayland.cpp:391
 #, kde-format
 msgid "Render through drm node."
 msgstr "עיבוד דרך צומת drm."
 
-#: main_wayland.cpp:387
+#: main_wayland.cpp:392
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr "חילוץ פרטי הגדרות אזוריות מ־locale1 במקום מהגדרות המשתמש"
 
-#: main_wayland.cpp:416
+#: main_wayland.cpp:421
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "שיטת הקלט בה KWin יתחיל."
 
-#: main_wayland.cpp:422
+#: main_wayland.cpp:427
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "מפעיל את ההפעלה במצב נעול."
 
-#: main_wayland.cpp:426
+#: main_wayland.cpp:431
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "מפעיל את ההפעלה ללא תמיכה במסך נעילה."
 
-#: main_wayland.cpp:431
+#: main_wayland.cpp:436
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "מפעיל את ההפעלה ללא תמיכה במקשי קיצור מקיפים."
 
-#: main_wayland.cpp:436
+#: main_wayland.cpp:441
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "השבתת שילוב מול KActivities."
 
-#: main_wayland.cpp:441
+#: main_wayland.cpp:446
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "לצאת לאחר יציאת יישום ההפעלה, שהופעל על ידי KWin."
 
-#: main_wayland.cpp:446
+#: main_wayland.cpp:451
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "יישומים להתחלה מיד לאחר התחלת שרתי Wayland ו־Xwayland"
@@ -4241,13 +4241,13 @@ msgstr "חיסול חלון"
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Focused Window"
-msgstr ""
+msgstr "מרכוז הסמן בחלון הממוקד"
 
 #: useractions.cpp:1018
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Screen"
-msgstr ""
+msgstr "מרכוז הסמן ביחס למסך"
 
 #: useractions.cpp:1083
 #, kde-format
@@ -4305,6 +4305,8 @@ msgid ""
 "Setting custom modes with too old kde-output-management-v2 protocol versions "
 "is unsupported"
 msgstr ""
+"הגדרת מצבים מותאמים אישית עם גרסאות ישנות מדי של פרוטוקול kde-output-"
+"management-v2 אינה נתמכת"
 
 #: wayland/outputmanagement_v2.cpp:575
 #, kde-format
