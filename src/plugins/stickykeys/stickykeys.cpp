@@ -98,7 +98,7 @@ void StickyKeysFilter::loadConfig(const KConfigGroup &group)
         }
     }
     if (changed) {
-        KWin::input()->keyboard()->activeDevice()->forwardModifiers();
+        KWin::input()->keyboard()->forwardModifiers();
         Q_EMIT KWin::input()->keyboard()->activeDevice()->modifierStateChanged();
     }
 }
@@ -214,7 +214,7 @@ bool StickyKeysFilter::pointerButton(KWin::PointerButtonEvent *event)
             // We need to delay the modifier update until the client received the mouse event, otherwise
             // the updated modifiers arrive before the mouse event and e.g. Ctrl+Click won't work
             QTimer::singleShot(0, this, [] {
-                KWin::input()->keyboard()->activeDevice()->forwardModifiers();
+                KWin::input()->keyboard()->forwardModifiers();
             });
         }
     }

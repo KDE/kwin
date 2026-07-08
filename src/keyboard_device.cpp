@@ -8,12 +8,8 @@
 */
 #include "keyboard_device.h"
 #include "dbusproperties_interface.h"
-#include "inputmethod.h"
 #include "utils/c_ptr.h"
 #include "utils/common.h"
-#include "wayland/inputmethod_v1.h"
-#include "wayland/keyboard.h"
-#include "wayland/seat.h"
 // frameworks
 #include <KConfigGroup>
 // Qt
@@ -713,35 +709,15 @@ void KeyboardDevice::updateKeymap(xkb_keymap *keymap)
         setLock(m_capsModifier, capsLockIsOn);
     }
 
-    createKeymapFile();
-    forwardModifiers();
-    if (auto *inputmethod = kwinApp()->inputMethod()) {
-        inputmethod->forwardModifiers(InputMethod::Force);
+    const QByteArray currentKeymap = keymapContents();
+    if (!currentKeymap.isEmpty()) {
+        Q_EMIT keymapChanged(currentKeymap);
     }
     updateModifiers();
 }
 
-void KeyboardDevice::createKeymapFile()
-{
-    const auto currentKeymap = keymapContents();
-    if (currentKeymap.isEmpty()) {
-        return;
-    }
-    m_seat->keyboard()->setKeymap(currentKeymap);
-    auto *inputmethod = kwinApp()->inputMethod();
-    if (!inputmethod) {
-        return;
-    }
-    if (auto *keyboardGrab = inputmethod->keyboardGrab()) {
-        keyboardGrab->sendKeymap(currentKeymap);
-    }
-}
-
 QByteArray KeyboardDevice::keymapContents() const
 {
-    if (!m_seat || !m_seat->keyboard()) {
-        return {};
-    }
     // TODO: uninstall keymap on server?
     if (!m_keymap) {
         return {};
@@ -764,7 +740,6 @@ void KeyboardDevice::updateModifiers(uint32_t modsDepressed, uint32_t modsLatche
         return;
     }
     updateModifiers();
-    forwardModifiers();
 }
 
 void KeyboardDevice::updateKey(uint32_t key, KeyboardKeyState state)
@@ -851,17 +826,6 @@ void KeyboardDevice::updateModifiers()
 
         Q_EMIT modifierStateChanged();
     }
-}
-
-void KeyboardDevice::forwardModifiers()
-{
-    if (!m_seat || !m_seat->keyboard()) {
-        return;
-    }
-    m_seat->notifyKeyboardModifiers(m_modifierState.depressed,
-                                    m_modifierState.latched,
-                                    m_modifierState.locked,
-                                    m_currentLayout);
 }
 
 QString KeyboardDevice::layoutName(xkb_layout_index_t index) const
@@ -965,8 +929,8 @@ QString KeyboardDevice::toString(xkb_keysym_t keysym)
 }
 
 Qt::Key KeyboardDevice::toQtKey(xkb_keysym_t keySym,
-                     uint32_t scanCode,
-                     Qt::KeyboardModifiers modifiers) const
+                                uint32_t scanCode,
+                                Qt::KeyboardModifiers modifiers) const
 {
     // FIXME: passing superAsMeta doesn't have impact due to bug in the Qt function, so handle it below
     Qt::Key qtKey = Qt::Key(QXkbCommon::keysymToQtKey(keySym, modifiers, m_state, scanCode + EVDEV_OFFSET));
@@ -1016,7 +980,6 @@ bool KeyboardDevice::switchToLayout(xkb_layout_index_t layout)
     const xkb_mod_mask_t locked = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED));
     xkb_state_update_mask(m_state, depressed, latched, locked, 0, 0, layout);
     updateModifiers();
-    forwardModifiers();
     return true;
 }
 
@@ -1234,11 +1197,6 @@ quint32 KeyboardDevice::numberOfLayouts() const
     return xkb_keymap_num_layouts(m_keymap);
 }
 
-void KeyboardDevice::setSeat(SeatInterface *seat)
-{
-    m_seat = QPointer<SeatInterface>(seat);
-}
-
 std::optional<KeyboardDevice::KeyCode> KeyboardDevice::keycodeFromKeysym(xkb_keysym_t keysym)
 {
     if (!m_keymap || !m_state) {
@@ -1343,7 +1301,7 @@ bool KeyboardDevice::updateToKeymapForKeySym(xkb_keycode_t newKeycode, xkb_keysy
 }
 
 xkb_keymap *KeyboardDevice::createKeymapForKeysym(xkb_keycode_t newKeycode,
-                                       xkb_keysym_t customSym)
+                                                  xkb_keysym_t customSym)
 {
     char symName[64];
     if (xkb_keysym_get_name(customSym, symName, sizeof(symName)) <= 0) {

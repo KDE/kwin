@@ -57,6 +57,8 @@ public:
      * @internal
      */
     void processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device = nullptr);
+    void forwardModifiers();
+    void updateKeymap(const QByteArray &keymap = QByteArray());
 
     KeyboardDevice *activeDevice() const;
     Qt::KeyboardModifiers modifiers() const;

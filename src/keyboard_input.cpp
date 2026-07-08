@@ -18,6 +18,7 @@
 #include "keyboard_repeat.h"
 #include "wayland/datadevice.h"
 #include "wayland/display.h"
+#include "wayland/inputmethod_v1.h"
 #include "wayland/keyboard.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
@@ -94,7 +95,8 @@ KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
     , m_activeDevice(new KeyboardDevice(kwinApp()->followLocale1()))
 {
     connect(m_activeDevice.get(), &KeyboardDevice::ledsChanged, this, &KeyboardInputRedirection::ledsChanged);
-    m_activeDevice->setSeat(waylandServer()->seat());
+    connect(m_activeDevice.get(), &KeyboardDevice::keymapChanged, this, &KeyboardInputRedirection::updateKeymap);
+    connect(m_activeDevice.get(), &KeyboardDevice::modifierStateChanged, this, &KeyboardInputRedirection::forwardModifiers);
 }
 
 KeyboardInputRedirection::~KeyboardInputRedirection() = default;
@@ -189,6 +191,45 @@ void KeyboardInputRedirection::init()
 #endif
 
     reconfigure();
+}
+
+void KeyboardInputRedirection::forwardModifiers()
+{
+    if (!m_inited) {
+        return;
+    }
+    auto seat = waylandServer()->seat();
+    if (!seat || !seat->keyboard()) {
+        return;
+    }
+    const auto &modifierState = m_activeDevice->modifierState();
+    seat->notifyKeyboardModifiers(modifierState.depressed,
+                                  modifierState.latched,
+                                  modifierState.locked,
+                                  m_activeDevice->currentLayout());
+}
+
+void KeyboardInputRedirection::updateKeymap(const QByteArray &keymap)
+{
+    if (!m_inited) {
+        return;
+    }
+    const QByteArray currentKeymap = keymap.isEmpty() ? m_activeDevice->keymapContents() : keymap;
+    if (currentKeymap.isEmpty()) {
+        return;
+    }
+
+    auto seat = waylandServer()->seat();
+    if (seat->keyboard()) {
+        seat->keyboard()->setKeymap(currentKeymap);
+    }
+    if (auto *inputmethod = kwinApp()->inputMethod()) {
+        if (auto *keyboardGrab = inputmethod->keyboardGrab()) {
+            keyboardGrab->sendKeymap(currentKeymap);
+        }
+        inputmethod->forwardModifiers(InputMethod::Force);
+    }
+    forwardModifiers();
 }
 
 void KeyboardInputRedirection::reconfigure()
@@ -343,7 +384,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
     }
 
     if (forwardModifiers) {
-        m_activeDevice->forwardModifiers();
+        this->forwardModifiers();
     }
 
     if (event.modifiersRelevantForGlobalShortcuts == Qt::KeyboardModifier::NoModifier && state != KeyboardKeyState::Released) {

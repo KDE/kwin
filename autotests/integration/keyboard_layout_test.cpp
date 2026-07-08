@@ -164,7 +164,7 @@ void KeyboardLayoutTest::testReconfigure()
     // verifies that we can change the keymap
 
     // default should be a keymap with only us layout
-    auto device = input()->keyboard()->activeDevice();
+    auto xkb = input()->keyboard()->activeDevice();
     QCOMPARE(xkb->numberOfLayouts(), 1u);
     QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
     QCOMPARE(xkb->numberOfLayouts(), 1);
@@ -199,7 +199,7 @@ void KeyboardLayoutTest::testChangeLayoutThroughDBus()
     layoutGroup.sync();
     reconfigureLayouts();
     // now we should have three layouts
-    auto xkb = input()->keyboard()->xkb();
+    auto xkb = input()->keyboard()->activeDevice();
     QCOMPARE(xkb->numberOfLayouts(), 3u);
     // default layout is German
     xkb->switchToLayout(0);

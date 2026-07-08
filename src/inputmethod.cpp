@@ -498,7 +498,7 @@ void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, Keyb
     if (state == KeyboardKeyState::Pressed) {
         forwardKeySym(sym);
         // reset any modifiers to the actual state
-        input()->keyboard()->activeDevice()->forwardModifiers();
+        input()->keyboard()->forwardModifiers();
     }
 }
 
@@ -535,7 +535,7 @@ void InputMethod::commitString(quint32 serial, const QString &text)
         }
 
         // reset any modifiers to the actual state
-        input()->keyboard()->activeDevice()->forwardModifiers();
+        input()->keyboard()->forwardModifiers();
     }
 }
 
@@ -552,7 +552,7 @@ void InputMethod::forwardKeySym(int keySym)
         waylandServer()->seat()->keyboard()->setKeymap(temporaryKeymap);
         waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Pressed, waylandServer()->display()->nextSerial());
         waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Released, waylandServer()->display()->nextSerial());
-        waylandServer()->seat()->keyboard()->setKeymap(input()->keyboard()->activeDevice()->keymapContents());
+        input()->keyboard()->updateKeymap();
     } else {
         waylandServer()->seat()->notifyKeyboardModifiers(keyCode->modifiers, 0, 0, input()->keyboard()->activeDevice()->currentLayout());
         waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Pressed, waylandServer()->display()->nextSerial());
@@ -738,7 +738,7 @@ void InputMethod::modifiers(quint32 serial, quint32 mods_depressed, quint32 mods
     auto xkb = input()->keyboard()->activeDevice();
     xkb->updateModifiers(mods_depressed, mods_latched, mods_locked, group);
     // explicitly forward as previous updates may have been filtered
-    xkb->forwardModifiers();
+    input()->keyboard()->forwardModifiers();
 }
 
 void InputMethod::forwardModifiers(ForwardModifiersForce force)
