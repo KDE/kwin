@@ -2798,7 +2798,7 @@ void X11Window::checkActiveModal()
     }
 }
 
-QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
+QSizeF X11Window::constrainClientSize(const QSizeF &size) const
 {
     qreal w = size.width();
     qreal h = size.height();
@@ -2834,131 +2834,6 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
     h = std::min(max_size.height(), h);
     w = std::max(min_size.width(), w);
     h = std::max(min_size.height(), h);
-
-    if (!rules()->checkStrictGeometry(false)) {
-        // Disobey increments and aspect by explicit rule.
-        return QSizeF(w, h);
-    }
-
-    qreal width_inc = Xcb::fromXNative(m_geometryHints.resizeIncrements()).width();
-    qreal height_inc = Xcb::fromXNative(m_geometryHints.resizeIncrements()).height();
-    qreal basew_inc = Xcb::fromXNative(m_geometryHints.baseSize()).width();
-    qreal baseh_inc = Xcb::fromXNative(m_geometryHints.baseSize()).height();
-    if (!m_geometryHints.hasBaseSize()) {
-        basew_inc = Xcb::fromXNative(m_geometryHints.minSize()).width();
-        baseh_inc = Xcb::fromXNative(m_geometryHints.minSize()).height();
-    }
-
-    w = std::floor((w - basew_inc) / width_inc) * width_inc + basew_inc;
-    h = std::floor((h - baseh_inc) / height_inc) * height_inc + baseh_inc;
-
-    // code for aspect ratios based on code from FVWM
-    /*
-     * The math looks like this:
-     *
-     * minAspectX    dwidth     maxAspectX
-     * ---------- <= ------- <= ----------
-     * minAspectY    dheight    maxAspectY
-     *
-     * If that is multiplied out, then the width and height are
-     * invalid in the following situations:
-     *
-     * minAspectX * dheight > minAspectY * dwidth
-     * maxAspectX * dheight < maxAspectY * dwidth
-     *
-     */
-    if (m_geometryHints.hasAspect()) {
-        double min_aspect_w = m_geometryHints.minAspect().width(); // use doubles, because the values can be MAX_INT
-        double min_aspect_h = m_geometryHints.minAspect().height(); // and multiplying would go wrong otherwise
-        double max_aspect_w = m_geometryHints.maxAspect().width();
-        double max_aspect_h = m_geometryHints.maxAspect().height();
-        // According to ICCCM 4.1.2.3 PMinSize should be a fallback for PBaseSize for size increments,
-        // but not for aspect ratio. Since this code comes from FVWM, handles both at the same time,
-        // and I have no idea how it works, let's hope nobody relies on that.
-        const QSizeF baseSize = Xcb::fromXNative(m_geometryHints.baseSize());
-        w -= baseSize.width();
-        h -= baseSize.height();
-        qreal max_width = max_size.width() - baseSize.width();
-        qreal min_width = min_size.width() - baseSize.width();
-        qreal max_height = max_size.height() - baseSize.height();
-        qreal min_height = min_size.height() - baseSize.height();
-#define ASPECT_CHECK_GROW_W                                                           \
-    if (min_aspect_w * h > min_aspect_h * w) {                                        \
-        int delta = int(min_aspect_w * h / min_aspect_h - w) / width_inc * width_inc; \
-        if (w + delta <= max_width)                                                   \
-            w += delta;                                                               \
-    }
-#define ASPECT_CHECK_SHRINK_H_GROW_W                                                      \
-    if (min_aspect_w * h > min_aspect_h * w) {                                            \
-        int delta = int(h - w * min_aspect_h / min_aspect_w) / height_inc * height_inc;   \
-        if (h - delta >= min_height)                                                      \
-            h -= delta;                                                                   \
-        else {                                                                            \
-            int delta = int(min_aspect_w * h / min_aspect_h - w) / width_inc * width_inc; \
-            if (w + delta <= max_width)                                                   \
-                w += delta;                                                               \
-        }                                                                                 \
-    }
-#define ASPECT_CHECK_GROW_H                                                             \
-    if (max_aspect_w * h < max_aspect_h * w) {                                          \
-        int delta = int(w * max_aspect_h / max_aspect_w - h) / height_inc * height_inc; \
-        if (h + delta <= max_height)                                                    \
-            h += delta;                                                                 \
-    }
-#define ASPECT_CHECK_SHRINK_W_GROW_H                                                        \
-    if (max_aspect_w * h < max_aspect_h * w) {                                              \
-        int delta = int(w - max_aspect_w * h / max_aspect_h) / width_inc * width_inc;       \
-        if (w - delta >= min_width)                                                         \
-            w -= delta;                                                                     \
-        else {                                                                              \
-            int delta = int(w * max_aspect_h / max_aspect_w - h) / height_inc * height_inc; \
-            if (h + delta <= max_height)                                                    \
-                h += delta;                                                                 \
-        }                                                                                   \
-    }
-        switch (mode) {
-        case SizeModeAny:
-#if 0 // make SizeModeAny equal to SizeModeFixedW - prefer keeping fixed width,
-      // so that changing aspect ratio to a different value and back keeps the same size (#87298)
-            {
-                ASPECT_CHECK_SHRINK_H_GROW_W
-                ASPECT_CHECK_SHRINK_W_GROW_H
-                ASPECT_CHECK_GROW_H
-                ASPECT_CHECK_GROW_W
-                break;
-            }
-#endif
-        case SizeModeFixedW: {
-            // the checks are order so that attempts to modify height are first
-            ASPECT_CHECK_GROW_H
-            ASPECT_CHECK_SHRINK_H_GROW_W
-            ASPECT_CHECK_SHRINK_W_GROW_H
-            ASPECT_CHECK_GROW_W
-            break;
-        }
-        case SizeModeFixedH: {
-            ASPECT_CHECK_GROW_W
-            ASPECT_CHECK_SHRINK_W_GROW_H
-            ASPECT_CHECK_SHRINK_H_GROW_W
-            ASPECT_CHECK_GROW_H
-            break;
-        }
-        case SizeModeMax: {
-            // first checks that try to shrink
-            ASPECT_CHECK_SHRINK_H_GROW_W
-            ASPECT_CHECK_SHRINK_W_GROW_H
-            ASPECT_CHECK_GROW_W
-            ASPECT_CHECK_GROW_H
-            break;
-        }
-        }
-#undef ASPECT_CHECK_SHRINK_H_GROW_W
-#undef ASPECT_CHECK_SHRINK_W_GROW_H
-#undef ASPECT_CHECK_GROW_W
-#undef ASPECT_CHECK_GROW_H
-        w += baseSize.width();
-        h += baseSize.height();
-    }
 
     return QSizeF(w, h);
 }
@@ -3681,7 +3556,7 @@ void X11Window::maximize(MaximizeMode mode, const RectF &restore)
         if (old_mode & MaximizeHorizontal) { // actually restoring from MaximizeFull
             if (geometryRestore().width() == 0) {
                 // needs placement
-                const QSizeF constraintedSize = constrainFrameSize(QSizeF(width() * 2 / 3, clientArea.height()), SizeModeFixedH);
+                const QSizeF constraintedSize = constrainFrameSize(QSizeF(width() * 2 / 3, clientArea.height()));
                 resize(QSizeF(constraintedSize.width(), clientArea.height()));
                 if (const auto placement = workspace()->placement()->placeSmart(this, clientArea)) {
                     place(*placement);
@@ -3702,7 +3577,7 @@ void X11Window::maximize(MaximizeMode mode, const RectF &restore)
         if (old_mode & MaximizeVertical) { // actually restoring from MaximizeFull
             if (geometryRestore().height() == 0) {
                 // needs placement
-                const QSizeF constraintedSize = constrainFrameSize(QSizeF(clientArea.width(), height() * 2 / 3), SizeModeFixedW);
+                const QSizeF constraintedSize = constrainFrameSize(QSizeF(clientArea.width(), height() * 2 / 3));
                 resize(QSizeF(clientArea.width(), constraintedSize.height()));
                 if (const auto placement = workspace()->placement()->placeSmart(this, clientArea)) {
                     place(*placement);
@@ -3752,7 +3627,7 @@ void X11Window::maximize(MaximizeMode mode, const RectF &restore)
             setGeometryRestore(restore); // relevant for mouse pos calculation, bug #298646
         }
 
-        restore.setSize(constrainFrameSize(restore.size(), SizeModeAny));
+        restore.setSize(constrainFrameSize(restore.size()));
 
         if (isFullScreen()) {
             if (info->fullscreenMonitors().isSet()) {

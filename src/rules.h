@@ -68,7 +68,6 @@ public:
     FocusStealingPreventionLevel checkFPP(FocusStealingPreventionLevel fpp) const;
     bool checkAcceptFocus(bool focus) const;
     bool checkCloseable(bool closeable) const;
-    bool checkStrictGeometry(bool strict) const;
     QString checkShortcut(QString s, bool init = false) const;
     bool checkDisableGlobalShortcuts(bool disable) const;
     QString checkDesktopFile(QString desktopFile, bool init = false) const;
@@ -283,8 +282,6 @@ private:
     ForceRule acceptfocusrule;
     bool closeable;
     ForceRule closeablerule;
-    bool strictgeometry;
-    ForceRule strictgeometryrule;
     QString shortcut;
     SetRule shortcutrule;
     bool disableglobalshortcuts;

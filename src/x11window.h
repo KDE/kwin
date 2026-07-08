@@ -148,7 +148,7 @@ public:
     RectF resizeWithChecks(const RectF &geometry, const QSizeF &size) const override;
     RectF resizeWithChecks(const RectF &geometry, qreal w, qreal h, xcb_gravity_t gravity) const;
     RectF resizeWithChecks(const RectF &geometry, const QSizeF &s, xcb_gravity_t gravity) const;
-    QSizeF constrainClientSize(const QSizeF &size, SizeMode mode = SizeModeAny) const override;
+    QSizeF constrainClientSize(const QSizeF &size) const override;
 
     bool providesContextHelp() const override;
 

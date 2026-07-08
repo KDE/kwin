@@ -362,15 +362,6 @@
       <default code="true">Rules::UnusedForceRule</default>
     </entry>
 
-    <entry name="strictgeometry" type="Bool">
-      <label>Obey geometry restrictions</label>
-      <default>false</default>
-    </entry>
-    <entry name="strictgeometryrule" type="Int">
-      <label>Obey geometry restrictions rule type</label>
-      <default code="true">Rules::UnusedForceRule</default>
-    </entry>
-
     <entry name="shortcut" type="String">
       <label>Shortcut</label>
     </entry>

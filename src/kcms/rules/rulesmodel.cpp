@@ -560,18 +560,6 @@ void RulesModel::populateRuleList()
                          i18n("Maximum Size"), i18n("Size & Position"),
                          QIcon::fromTheme("transform-scale")));
 
-    addRule(new RuleItem(QLatin1StringView("strictgeometry"),
-                         RulePolicy::ForceRule, RuleItem::Boolean,
-                         i18n("Obey geometry restrictions"), i18n("Size & Position"),
-                         QIcon::fromTheme("transform-crop-and-resize"),
-                         xi18nc("@info:tooltip", "Some apps like video players or terminals can ask KWin to constrain them to "
-                                                 "certain aspect ratios or only grow by values larger than the dimensions of one "
-                                                 "character. Use this property to ignore such restrictions and allow those windows "
-                                                 "to be resized to arbitrary sizes."
-                                                 "<nl/><nl/>"
-                                                 "This can be helpful for windows that can't quite fit the full screen area when "
-                                                 "maximized.")));
-
     // Arrangement & Access
     addRule(new RuleItem(QLatin1StringView("above"),
                          RulePolicy::SetRule, RuleItem::Boolean,

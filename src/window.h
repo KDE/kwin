@@ -745,18 +745,8 @@ public:
     RectF clientRectToFrameRect(const RectF &rect) const;
     RectF nextClientRectToFrameRect(const RectF &rect) const;
 
-    /**
-     * How to resize the window in order to obey constraints (mainly aspect ratios).
-     */
-    enum SizeMode {
-        SizeModeAny,
-        SizeModeFixedW, ///< Try not to affect width
-        SizeModeFixedH, ///< Try not to affect height
-        SizeModeMax, ///< Try not to make it larger in either direction
-    };
-
-    virtual QSizeF constrainClientSize(const QSizeF &size, SizeMode mode = SizeModeAny) const;
-    QSizeF constrainFrameSize(const QSizeF &size, SizeMode mode = SizeModeAny) const;
+    virtual QSizeF constrainClientSize(const QSizeF &size) const;
+    QSizeF constrainFrameSize(const QSizeF &size) const;
 
     /**
      * Moves the window so that the new topLeft corner of the frame is @p topLeft.

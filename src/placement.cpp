@@ -667,7 +667,7 @@ void Window::growHorizontal()
     }
     RectF geom = moveResizeGeometry();
     geom.setRight(workspace()->packPositionRight(this, geom.right(), true));
-    QSizeF adjsize = constrainFrameSize(geom.size(), SizeModeFixedW);
+    QSizeF adjsize = constrainFrameSize(geom.size());
     if (moveResizeGeometry().size() == adjsize && geom.size() != adjsize && resizeIncrements().width() > 1) { // take care of size increments
         qreal newright = workspace()->packPositionRight(this, geom.right() + resizeIncrements().width() - 1, true);
         // check that it hasn't grown outside of the area, due to size increments
@@ -680,8 +680,8 @@ void Window::growHorizontal()
             geom.setRight(newright);
         }
     }
-    geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedW));
-    geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedH));
+    geom.setSize(constrainFrameSize(geom.size()));
+    geom.setSize(constrainFrameSize(geom.size()));
     workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
     exitQuickTileMode();
     moveResize(geom);
@@ -704,7 +704,7 @@ void Window::shrinkHorizontal()
     if (geom.width() <= 1) {
         return;
     }
-    geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedW));
+    geom.setSize(constrainFrameSize(geom.size()));
     if (geom.width() > 20) {
         workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
         exitQuickTileMode();
@@ -726,7 +726,7 @@ void Window::growVertical()
     }
     RectF geom = moveResizeGeometry();
     geom.setBottom(workspace()->packPositionDown(this, geom.bottom(), true));
-    QSizeF adjsize = constrainFrameSize(geom.size(), SizeModeFixedH);
+    QSizeF adjsize = constrainFrameSize(geom.size());
     if (moveResizeGeometry().size() == adjsize && geom.size() != adjsize && resizeIncrements().height() > 1) { // take care of size increments
         qreal newbottom = workspace()->packPositionDown(this, geom.bottom() + resizeIncrements().height(), true);
         // check that it hasn't grown outside of the area, due to size increments
@@ -738,7 +738,7 @@ void Window::growVertical()
             geom.setBottom(newbottom);
         }
     }
-    geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedH));
+    geom.setSize(constrainFrameSize(geom.size()));
     workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
     exitQuickTileMode();
     moveResize(geom);
@@ -761,7 +761,7 @@ void Window::shrinkVertical()
     if (geom.height() <= 1) {
         return;
     }
-    geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedH));
+    geom.setSize(constrainFrameSize(geom.size()));
     if (geom.height() > 20) {
         workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
         exitQuickTileMode();

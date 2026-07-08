@@ -1524,9 +1524,6 @@ RectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
     QPointF topleft = global - QPointF(interactiveMoveOffset().x() * orig.width(), interactiveMoveOffset().y() * orig.height());
     QPointF bottomright = global + QPointF((1.0 - interactiveMoveOffset().x()) * orig.width(), (1.0 - interactiveMoveOffset().y()) * orig.height());
 
-    // TODO move whole group when moving its leader or when the leader is not mapped?
-
-    SizeMode sizeMode = SizeModeAny;
     switch (gravity) {
     case Gravity::TopLeft:
         nextMoveResizeGeom = RectF(topleft, orig.bottomRight());
@@ -1542,19 +1539,15 @@ RectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
         break;
     case Gravity::Top:
         nextMoveResizeGeom = RectF(QPointF(orig.left(), topleft.y()), orig.bottomRight());
-        sizeMode = SizeModeFixedH; // try not to affect height
         break;
     case Gravity::Bottom:
         nextMoveResizeGeom = RectF(orig.topLeft(), QPointF(orig.right(), bottomright.y()));
-        sizeMode = SizeModeFixedH;
         break;
     case Gravity::Left:
         nextMoveResizeGeom = RectF(QPointF(topleft.x(), orig.top()), orig.bottomRight());
-        sizeMode = SizeModeFixedW;
         break;
     case Gravity::Right:
         nextMoveResizeGeom = RectF(orig.topLeft(), QPointF(bottomright.x(), orig.bottom()));
-        sizeMode = SizeModeFixedW;
         break;
     case Gravity::None:
         Q_UNREACHABLE();
@@ -1563,7 +1556,7 @@ RectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
 
     nextMoveResizeGeom = workspace()->adjustWindowSize(this, nextMoveResizeGeom, gravity);
 
-    const QSizeF constrainedSize = constrainFrameSize(nextMoveResizeGeom.size(), sizeMode);
+    const QSizeF constrainedSize = constrainFrameSize(nextMoveResizeGeom.size());
     switch (gravity) {
     case Gravity::TopLeft:
         nextMoveResizeGeom.setLeft(nextMoveResizeGeom.right() - constrainedSize.width());
@@ -4148,7 +4141,7 @@ void Window::checkOffscreenPosition(RectF *geom, const RectF &screenArea)
  *
  * Default implementation applies only minimum and maximum size constraints.
  */
-QSizeF Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
+QSizeF Window::constrainClientSize(const QSizeF &size) const
 {
     qreal width = size.width();
     qreal height = size.height();
@@ -4174,10 +4167,10 @@ QSizeF Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
 /**
  * Constrains the frame size @p size according to a set of the window's size hints.
  */
-QSizeF Window::constrainFrameSize(const QSizeF &size, SizeMode mode) const
+QSizeF Window::constrainFrameSize(const QSizeF &size) const
 {
     const QSizeF unconstrainedClientSize = nextFrameSizeToClientSize(size);
-    const QSizeF constrainedClientSize = constrainClientSize(unconstrainedClientSize, mode);
+    const QSizeF constrainedClientSize = constrainClientSize(unconstrainedClientSize);
     return nextClientSizeToFrameSize(constrainedClientSize);
 }
 
