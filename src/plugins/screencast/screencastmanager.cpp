@@ -104,8 +104,9 @@ void ScreencastManager::streamWaylandOutput(ScreencastStreamV1Interface *wayland
 static std::optional<pid_t> getPid(ScreencastStreamV1Interface *waylandStream)
 {
     const QString executablePath = waylandStream->connection()->executablePath();
-    if (executablePath.endsWith("/xdg-desktop-portal-kde") || executablePath.endsWith(("/plasmashell"))) {
-        // HACK to avoid the portal and plasmashell windows being hidden
+    if (executablePath.endsWith("/xdg-desktop-portal-kde") || executablePath.endsWith(("/plasmashell"))
+        || waylandStream->connection()->processId() == getpid()) {
+        // HACK to avoid the portal, plasmashell windows and autotest windows being hidden
         return std::nullopt;
     }
     return waylandStream->connection()->processId();
