@@ -227,13 +227,22 @@ static inline bool shouldUseOpenGLES()
 
 ::EGLContext EglContext::createContext(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext)
 {
+    // Creating a Vulkan instance can change the current EGL API,
+    // so we must always call this explicitly right before creating
+    // the context, or the wrong API may be chosen
+    const bool GLES = shouldUseOpenGLES();
+    if (eglBindAPI(GLES ? EGL_OPENGL_ES_API : EGL_OPENGL_API) == EGL_FALSE) {
+        qCCritical(KWIN_OPENGL) << "bind OpenGL API failed";
+        return nullptr;
+    }
+
     const bool haveRobustness = display->hasExtension(QByteArrayLiteral("EGL_EXT_create_context_robustness"));
     const bool haveCreateContext = display->hasExtension(QByteArrayLiteral("EGL_KHR_create_context"));
     const bool haveContextPriority = display->hasExtension(QByteArrayLiteral("EGL_IMG_context_priority"));
     const bool haveResetOnVideoMemoryPurge = display->hasExtension(QByteArrayLiteral("EGL_NV_robustness_video_memory_purge"));
 
     std::vector<std::unique_ptr<AbstractOpenGLContextAttributeBuilder>> candidates;
-    if (shouldUseOpenGLES()) {
+    if (GLES) {
         if (haveCreateContext && haveRobustness && haveContextPriority && haveResetOnVideoMemoryPurge) {
             auto glesRobustPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
             glesRobustPriority->setResetOnVideoMemoryPurge(true);
