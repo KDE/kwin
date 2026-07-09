@@ -102,7 +102,9 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::doBeginFrame()
 bool WaylandEglLayer::doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     m_query->end();
-    frame->addRenderTimeQuery(std::move(m_query));
+    if (frame) {
+        frame->addRenderTimeQuery(std::move(m_query));
+    }
     // Flush rendering commands to the dmabuf.
     glFlush();
     EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
