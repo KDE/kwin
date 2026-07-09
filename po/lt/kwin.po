@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-08 00:46+0000\n"
-"PO-Revision-Date: 2026-06-24 02:09+0300\n"
+"PO-Revision-Date: 2026-07-08 13:02+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -4271,13 +4271,13 @@ msgstr "Nutraukti lango darbą"
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Focused Window"
-msgstr ""
+msgstr "Centruoti pelės rodyklę fokusuotame lange"
 
 #: useractions.cpp:1018
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Screen"
-msgstr ""
+msgstr "Centruoti pelės rodyklę ekrane"
 
 #: useractions.cpp:1083
 #, kde-format
@@ -4335,6 +4335,8 @@ msgid ""
 "Setting custom modes with too old kde-output-management-v2 protocol versions "
 "is unsupported"
 msgstr ""
+"Tinkintų veiksenų nustatymas naudojant per senas kde-output-management-v2 "
+"protokolo versijas yra nepalaikomas"
 
 #: wayland/outputmanagement_v2.cpp:575
 #, kde-format
