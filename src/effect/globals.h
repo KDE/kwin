@@ -414,6 +414,24 @@ enum class OutputConfigurationError {
     NotActive,
 };
 
+/**
+ * The DecorationPolicy enum indicates how the decoration mode is determined.
+ */
+enum class DecorationPolicy {
+    /**
+     * Force no decoration.
+     */
+    None,
+    /**
+     * Follow the preferred decoration mode of the client.
+     */
+    PreferredByClient,
+    /**
+     * Force the server side decoration mode.
+     */
+    Server,
+};
+
 } // namespace
 
 Q_DECLARE_METATYPE(std::chrono::nanoseconds)

@@ -61,7 +61,6 @@ public:
     bool checkKeepAbove(bool above, bool init = false) const;
     bool checkKeepBelow(bool below, bool init = false) const;
     bool checkFullScreen(bool fs, bool init = false) const;
-    bool checkNoBorder(bool noborder, bool init = false) const;
     DecorationPolicy checkDecorationPolicy(DecorationPolicy policy, bool init = false) const;
     QString checkDecoColor(QString schemeFile) const;
     FocusStealingPreventionLevel checkFSP(FocusStealingPreventionLevel fsp) const;
@@ -102,7 +101,7 @@ public:
         Above = 1 << 10,
         Below = 1 << 11,
         Fullscreen = 1 << 12,
-        NoBorder = 1 << 13,
+        DecorationPolicy = 1 << 13,
         OpacityActive = 1 << 14,
         OpacityInactive = 1 << 15,
         Activity = 1 << 16,
@@ -174,7 +173,7 @@ public:
     bool applyKeepAbove(bool &above, bool init) const;
     bool applyKeepBelow(bool &below, bool init) const;
     bool applyFullScreen(bool &fs, bool init) const;
-    bool applyNoBorder(bool &noborder, bool init) const;
+    bool applyDecorationPolicy(KWin::DecorationPolicy &policy, bool init) const;
     bool applyDecoColor(QString &schemeFile) const;
     bool applyFSP(FocusStealingPreventionLevel &fsp) const;
     bool applyFPP(FocusStealingPreventionLevel &fpp) const;
@@ -270,8 +269,8 @@ private:
     SetRule belowrule;
     bool fullscreen;
     SetRule fullscreenrule;
-    bool noborder;
-    SetRule noborderrule;
+    KWin::DecorationPolicy decorationpolicy;
+    SetRule decorationpolicyrule;
     QString decocolor;
     ForceRule decocolorrule;
     FocusStealingPreventionLevel fsplevel;

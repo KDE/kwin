@@ -136,6 +136,7 @@ QVariantMap clientToVariantMap(const Window *c)
         {QStringLiteral("keepAbove"), c->keepAbove()},
         {QStringLiteral("keepBelow"), c->keepBelow()},
         {QStringLiteral("noBorder"), c->noBorder()},
+        {QStringLiteral("decorationPolicy"), int(c->decorationPolicy())},
         {QStringLiteral("skipTaskbar"), c->skipTaskbar()},
         {QStringLiteral("skipPager"), c->skipPager()},
         {QStringLiteral("skipSwitcher"), c->skipSwitcher()},

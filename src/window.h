@@ -76,24 +76,6 @@ using ElectricBorderMode = std::variant<QuickTileMode, MaximizeMode>;
 using PlacementCommand = std::variant<QPointF, RectF, MaximizeMode>;
 
 /**
- * The DecorationPolicy enum indicates how the decoration mode is determined.
- */
-enum class DecorationPolicy {
-    /**
-     * Force no decoration.
-     */
-    None,
-    /**
-     * Follow the preferred decoration mode of the client.
-     */
-    PreferredByClient,
-    /**
-     * Force the server side decoration mode.
-     */
-    Server,
-};
-
-/**
  * The DecorationMode enum specifies who draws the window decoration, if at all.
  */
 enum class DecorationMode {

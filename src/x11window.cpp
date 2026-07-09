@@ -902,7 +902,7 @@ void X11Window::setDecorationPolicy(DecorationPolicy policy)
     }
     m_decorationPolicy = effectivePolicy;
     updateDecoration(true, false);
-    updateWindowRules(Rules::NoBorder);
+    updateWindowRules(Rules::DecorationPolicy);
     Q_EMIT decorationPolicyChanged();
 }
 

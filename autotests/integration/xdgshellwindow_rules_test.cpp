@@ -138,12 +138,20 @@ private Q_SLOTS:
     void testInactiveOpacityForce();
     void testInactiveOpacityForceTemporarily();
 
+    // For compatibility reasons. The decorationpolicy is the new rule.
     void testNoBorderDontAffect();
     void testNoBorderApply();
     void testNoBorderRemember();
     void testNoBorderForce();
     void testNoBorderApplyNow();
     void testNoBorderForceTemporarily();
+
+    void testDecorationPolicyDontAffect();
+    void testDecorationPolicyApply();
+    void testDecorationPolicyRemember();
+    void testDecorationPolicyForce();
+    void testDecorationPolicyApplyNow();
+    void testDecorationPolicyForceTemporarily();
 
     void testScreenDontAffect();
     void testScreenApply();
@@ -2784,7 +2792,7 @@ void TestXdgShellWindowRules::testNoBorderDontAffect()
     createTestWindow(ServerSideDecoration);
 
     // The window should not be affected by the rule.
-    QVERIFY(!m_window->noBorder());
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::PreferredByClient);
 
     destroyTestWindow();
 }
@@ -2795,18 +2803,17 @@ void TestXdgShellWindowRules::testNoBorderApply()
     createTestWindow(ServerSideDecoration);
 
     // Initially, the window should not be decorated.
-    QVERIFY(m_window->noBorder());
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
     QVERIFY(!m_window->isDecorated());
 
-    // But you should be able to change "no border" property afterwards.
-    QVERIFY(m_window->userCanSetNoBorder());
-    m_window->setNoBorder(false);
-    QVERIFY(!m_window->noBorder());
+    // But you should be able to change the "decoration policy" property afterwards.
+    m_window->setDecorationPolicy(DecorationPolicy::PreferredByClient);
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::PreferredByClient);
 
     // If one re-opens the window, it should have no border again.
     destroyTestWindow();
     createTestWindow(ServerSideDecoration);
-    QVERIFY(m_window->noBorder());
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
 
     destroyTestWindow();
 }
@@ -2817,19 +2824,18 @@ void TestXdgShellWindowRules::testNoBorderRemember()
     createTestWindow(ServerSideDecoration);
 
     // Initially, the window should not be decorated.
-    QVERIFY(m_window->noBorder());
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
     QVERIFY(!m_window->isDecorated());
 
-    // Unset the "no border" property.
-    QVERIFY(m_window->userCanSetNoBorder());
-    m_window->setNoBorder(false);
-    QVERIFY(!m_window->noBorder());
+    // Reset the decoration policy property.
+    m_window->setDecorationPolicy(DecorationPolicy::PreferredByClient);
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::PreferredByClient);
 
     // Re-open the window, it should be decorated.
     destroyTestWindow();
     createTestWindow(ServerSideDecoration);
     QVERIFY(m_window->isDecorated());
-    QVERIFY(!m_window->noBorder());
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::PreferredByClient);
 
     destroyTestWindow();
 }
@@ -2840,19 +2846,19 @@ void TestXdgShellWindowRules::testNoBorderForce()
     createTestWindow(ServerSideDecoration);
 
     // The window should not be decorated.
-    QVERIFY(m_window->noBorder());
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
     QVERIFY(!m_window->isDecorated());
 
-    // And the user should not be able to change the "no border" property.
-    m_window->setNoBorder(false);
-    QVERIFY(m_window->noBorder());
+    // And the user should not be able to change the decoration policy.
+    m_window->setDecorationPolicy(DecorationPolicy::PreferredByClient);
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
 
     // Reopen the window.
     destroyTestWindow();
     createTestWindow(ServerSideDecoration);
 
-    // The "no border" property should be still forced.
-    QVERIFY(m_window->noBorder());
+    // The none decoration policy should be still forced.
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
 
     destroyTestWindow();
 }
@@ -2860,21 +2866,21 @@ void TestXdgShellWindowRules::testNoBorderForce()
 void TestXdgShellWindowRules::testNoBorderApplyNow()
 {
     createTestWindow(ServerSideDecoration);
-    QVERIFY(!m_window->noBorder());
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::PreferredByClient);
 
     // Initialize RuleBook with the test rule.
     setWindowRule("noborder", true, int(Rules::ApplyNow));
 
-    // The "no border" property should be set now.
-    QVERIFY(m_window->noBorder());
+    // The none decoration policy should be set now.
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
 
-    // One should be still able to change the "no border" property.
-    m_window->setNoBorder(false);
-    QVERIFY(!m_window->noBorder());
+    // One should be still able to change the decoration policy.
+    m_window->setDecorationPolicy(DecorationPolicy::PreferredByClient);
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::PreferredByClient);
 
     // The rule should not be applied again.
     m_window->evaluateWindowRules();
-    QVERIFY(!m_window->noBorder());
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::PreferredByClient);
 
     destroyTestWindow();
 }
@@ -2884,23 +2890,148 @@ void TestXdgShellWindowRules::testNoBorderForceTemporarily()
     setWindowRule("noborder", true, int(Rules::ForceTemporarily));
     createTestWindow(ServerSideDecoration);
 
-    // The "no border" property should be set.
-    QVERIFY(m_window->noBorder());
+    // The none decoration policy property should be set.
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
 
     // And you should not be able to change it.
-    m_window->setNoBorder(false);
-    QVERIFY(m_window->noBorder());
+    m_window->setDecorationPolicy(DecorationPolicy::PreferredByClient);
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
 
     // The rule should be discarded when the window is closed.
     destroyTestWindow();
     createTestWindow(ServerSideDecoration);
-    QVERIFY(!m_window->noBorder());
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::PreferredByClient);
 
-    // The "no border" property is no longer forced.
-    m_window->setNoBorder(true);
-    QVERIFY(m_window->noBorder());
-    m_window->setNoBorder(false);
-    QVERIFY(!m_window->noBorder());
+    // The none decoration policy is no longer forced.
+    m_window->setDecorationPolicy(DecorationPolicy::PreferredByClient);
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::PreferredByClient);
+    m_window->setDecorationPolicy(DecorationPolicy::None);
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
+
+    destroyTestWindow();
+}
+
+void TestXdgShellWindowRules::testDecorationPolicyDontAffect()
+{
+    setWindowRule("decorationpolicy", "none", int(Rules::DontAffect));
+    createTestWindow(ServerSideDecoration);
+
+    // The window should not be affected by the rule.
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::PreferredByClient);
+
+    destroyTestWindow();
+}
+
+void TestXdgShellWindowRules::testDecorationPolicyApply()
+{
+    setWindowRule("decorationpolicy", "none", int(Rules::Apply));
+    createTestWindow(ServerSideDecoration);
+
+    // Initially, the window should not be decorated.
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
+    QVERIFY(!m_window->isDecorated());
+
+    // But you should be able to change the "decoration policy" property afterwards.
+    m_window->setDecorationPolicy(DecorationPolicy::PreferredByClient);
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::PreferredByClient);
+
+    // If one re-opens the window, it should have no border again.
+    destroyTestWindow();
+    createTestWindow(ServerSideDecoration);
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
+
+    destroyTestWindow();
+}
+
+void TestXdgShellWindowRules::testDecorationPolicyRemember()
+{
+    setWindowRule("decorationpolicy", "none", int(Rules::Remember));
+    createTestWindow(ServerSideDecoration);
+
+    // Initially, the window should not be decorated.
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
+    QVERIFY(!m_window->isDecorated());
+
+    // Reset the decoration policy property.
+    m_window->setDecorationPolicy(DecorationPolicy::PreferredByClient);
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::PreferredByClient);
+
+    // Re-open the window, it should be decorated.
+    destroyTestWindow();
+    createTestWindow(ServerSideDecoration);
+    QVERIFY(m_window->isDecorated());
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::PreferredByClient);
+
+    destroyTestWindow();
+}
+
+void TestXdgShellWindowRules::testDecorationPolicyForce()
+{
+    setWindowRule("decorationpolicy", "none", int(Rules::Force));
+    createTestWindow(ServerSideDecoration);
+
+    // The window should not be decorated.
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
+    QVERIFY(!m_window->isDecorated());
+
+    // And the user should not be able to change the decoration policy.
+    m_window->setDecorationPolicy(DecorationPolicy::PreferredByClient);
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
+
+    // Reopen the window.
+    destroyTestWindow();
+    createTestWindow(ServerSideDecoration);
+
+    // The none decoration policy should be still forced.
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
+
+    destroyTestWindow();
+}
+
+void TestXdgShellWindowRules::testDecorationPolicyApplyNow()
+{
+    createTestWindow(ServerSideDecoration);
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::PreferredByClient);
+
+    // Initialize RuleBook with the test rule.
+    setWindowRule("decorationpolicy", "none", int(Rules::ApplyNow));
+
+    // The none decoration policy should be set now.
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
+
+    // One should be still able to change the decoration policy.
+    m_window->setDecorationPolicy(DecorationPolicy::PreferredByClient);
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::PreferredByClient);
+
+    // The rule should not be applied again.
+    m_window->evaluateWindowRules();
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::PreferredByClient);
+
+    destroyTestWindow();
+}
+
+void TestXdgShellWindowRules::testDecorationPolicyForceTemporarily()
+{
+    setWindowRule("decorationpolicy", "none", int(Rules::ForceTemporarily));
+    createTestWindow(ServerSideDecoration);
+
+    // The none decoration policy property should be set.
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
+
+    // And you should not be able to change it.
+    m_window->setDecorationPolicy(DecorationPolicy::PreferredByClient);
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
+
+    // The rule should be discarded when the window is closed.
+    destroyTestWindow();
+    createTestWindow(ServerSideDecoration);
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::PreferredByClient);
+
+    // The none decoration policy is no longer forced.
+    m_window->setDecorationPolicy(DecorationPolicy::PreferredByClient);
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::PreferredByClient);
+    m_window->setDecorationPolicy(DecorationPolicy::None);
+    QCOMPARE(m_window->decorationPolicy(), DecorationPolicy::None);
 
     destroyTestWindow();
 }

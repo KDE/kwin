@@ -80,7 +80,18 @@ void RuleBookSettings::usrRead()
 
     m_list.reserve(mRuleGroupList.count());
     for (const QString &groupName : std::as_const(mRuleGroupList)) {
-        m_list.append(new RuleSettings(sharedConfig(), groupName, this));
+        auto ruleSettings = new RuleSettings(sharedConfig(), groupName, this);
+        m_list.append(ruleSettings);
+
+        // TODO Plasma 7: Drop this migration path.
+        if (const int noBorderRule = ruleSettings->noborderrule()) {
+            ruleSettings->setDecorationpolicyrule(noBorderRule);
+            ruleSettings->setDecorationpolicy(ruleSettings->noborder() ? DecorationPolicy::None : DecorationPolicy::Server);
+
+            // Set the default values so the noborder rule gets removed from the config.
+            ruleSettings->setNoborderrule(0);
+            ruleSettings->setNoborder(false);
+        }
     }
 }
 

@@ -755,7 +755,7 @@ void XdgToplevelWindow::setDecorationPolicy(DecorationPolicy policy)
     }
     m_decorationPolicy = effectivePolicy;
     configureDecoration();
-    updateWindowRules(Rules::NoBorder);
+    updateWindowRules(Rules::DecorationPolicy);
     Q_EMIT decorationPolicyChanged();
 }
 

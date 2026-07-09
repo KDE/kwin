@@ -595,10 +595,11 @@ void RulesModel::populateRuleList()
                          QIcon::fromTheme("configure-shortcuts")));
 
     // Appearance & Fixes
-    addRule(new RuleItem(QLatin1StringView("noborder"),
-                         RulePolicy::SetRule, RuleItem::Boolean,
-                         i18n("No titlebar and frame"), i18n("Appearance & Fixes"),
-                         QIcon::fromTheme("dialog-cancel")));
+    auto decorationPolicy = addRule(new RuleItem(QLatin1StringView("decorationpolicy"),
+                                                 RulePolicy::SetRule, RuleItem::Option,
+                                                 i18n("Window manager draws titlebar, frame, and shadows"), i18n("Appearance & Fixes"),
+                                                 QIcon::fromTheme("dialog-cancel")));
+    decorationPolicy->setOptionsData(decorationPolicyData());
 
     auto decocolor = addRule(new RuleItem(QLatin1StringView("decocolor"),
                                           RulePolicy::ForceRule, RuleItem::Option,
@@ -734,7 +735,7 @@ const QHash<QString, QString> RulesModel::x11PropertyHash()
         {"fullscreen", "fullscreen"},
         {"keepAbove", "above"},
         {"keepBelow", "below"},
-        {"noBorder", "noborder"},
+        {"decorationPolicy", "decorationpolicy"},
         {"skipTaskbar", "skiptaskbar"},
         {"skipPager", "skippager"},
         {"skipSwitcher", "skipswitcher"},
@@ -925,6 +926,16 @@ QList<OptionsModel::Data> RulesModel::layerModelData() const
         {CriticalNotificationLayer, i18n("Critical notification")},
         {OnScreenDisplayLayer, i18n("On-screen display")},
         {OverlayLayer, i18n("Overlay")},
+    };
+    return modelData;
+}
+
+QList<OptionsModel::Data> RulesModel::decorationPolicyData() const
+{
+    static const auto modelData = QList<OptionsModel::Data>{
+        {int(DecorationPolicy::None), i18nc("Never draw a server side decoration", "Never")},
+        {int(DecorationPolicy::PreferredByClient), i18nc("Draw a server side decoration if the application asks for it", "If the application asks")},
+        {int(DecorationPolicy::Server), i18nc("Always draw a server side decoration", "Always")},
     };
     return modelData;
 }

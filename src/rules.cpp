@@ -66,7 +66,7 @@ Rules::Rules()
     , aboverule(UnusedSetRule)
     , belowrule(UnusedSetRule)
     , fullscreenrule(UnusedSetRule)
-    , noborderrule(UnusedSetRule)
+    , decorationpolicyrule(UnusedSetRule)
     , decocolorrule(UnusedForceRule)
     , fsplevelrule(UnusedForceRule)
     , fpplevelrule(UnusedForceRule)
@@ -144,8 +144,7 @@ void Rules::readFromSettings(const RuleSettings *settings)
     READ_SET_RULE(above);
     READ_SET_RULE(below);
     READ_SET_RULE(fullscreen);
-    READ_SET_RULE(noborder);
-
+    READ_SET_RULE(decorationpolicy);
     READ_FORCE_RULE(decocolor, getDecoColor);
     if (decocolor.isEmpty()) {
         decocolorrule = UnusedForceRule;
@@ -230,7 +229,8 @@ void Rules::write(RuleSettings *settings) const
     WRITE_SET_RULE(above, Above, );
     WRITE_SET_RULE(below, Below, );
     WRITE_SET_RULE(fullscreen, Fullscreen, );
-    WRITE_SET_RULE(noborder, Noborder, );
+    WRITE_SET_RULE(decorationpolicy, Decorationpolicy, );
+
     auto colorToString = [](const QString &value) -> QString {
         if (value.endsWith(QLatin1StringView(".colors"))) {
             return QFileInfo(value).baseName();
@@ -280,7 +280,7 @@ bool Rules::isEmpty() const
         && aboverule == UnusedSetRule
         && belowrule == UnusedSetRule
         && fullscreenrule == UnusedSetRule
-        && noborderrule == UnusedSetRule
+        && decorationpolicyrule == UnusedSetRule
         && decocolorrule == UnusedForceRule
         && fsplevelrule == UnusedForceRule
         && fpplevelrule == UnusedForceRule
@@ -578,9 +578,9 @@ bool Rules::update(Window *c, int selection)
         updated = updated || fullscreen != c->isFullScreen();
         fullscreen = c->isFullScreen();
     }
-    if NOW_REMEMBER (NoBorder, noborder) {
-        updated = updated || noborder != c->noBorder();
-        noborder = c->noBorder();
+    if NOW_REMEMBER (DecorationPolicy, decorationpolicy) {
+        updated = updated || decorationpolicy != c->decorationPolicy();
+        decorationpolicy = c->decorationPolicy();
     }
     if NOW_REMEMBER (DesktopFile, desktopfile) {
         updated = updated || desktopfile != c->desktopFileName();
@@ -705,7 +705,7 @@ APPLY_RULE(skipswitcher, SkipSwitcher, bool)
 APPLY_RULE(above, KeepAbove, bool)
 APPLY_RULE(below, KeepBelow, bool)
 APPLY_RULE(fullscreen, FullScreen, bool)
-APPLY_RULE(noborder, NoBorder, bool)
+APPLY_RULE(decorationpolicy, DecorationPolicy, KWin::DecorationPolicy)
 APPLY_FORCE_RULE(decocolor, DecoColor, QString)
 APPLY_FORCE_RULE(fsplevel, FSP, FocusStealingPreventionLevel)
 APPLY_FORCE_RULE(fpplevel, FPP, FocusStealingPreventionLevel)
@@ -759,7 +759,7 @@ bool Rules::discardUsed(bool withdrawn)
     DISCARD_USED_SET_RULE(above);
     DISCARD_USED_SET_RULE(below);
     DISCARD_USED_SET_RULE(fullscreen);
-    DISCARD_USED_SET_RULE(noborder);
+    DISCARD_USED_SET_RULE(decorationpolicy);
     DISCARD_USED_FORCE_RULE(decocolor);
     DISCARD_USED_FORCE_RULE(fsplevel);
     DISCARD_USED_FORCE_RULE(fpplevel);
@@ -897,18 +897,6 @@ LogicalOutput *WindowRules::checkOutput(LogicalOutput *output, bool init) const
     return ruleOutput ? ruleOutput : output;
 }
 
-DecorationPolicy WindowRules::checkDecorationPolicy(DecorationPolicy policy, bool init) const
-{
-    if (checkNoBorder(true, init) == false) {
-        return DecorationPolicy::Server;
-    }
-    if (checkNoBorder(false, init) == true) {
-        return DecorationPolicy::None;
-    }
-
-    return policy;
-}
-
 CHECK_RULE(Minimize, bool)
 CHECK_RULE(SkipTaskbar, bool)
 CHECK_RULE(SkipPager, bool)
@@ -916,7 +904,7 @@ CHECK_RULE(SkipSwitcher, bool)
 CHECK_RULE(KeepAbove, bool)
 CHECK_RULE(KeepBelow, bool)
 CHECK_RULE(FullScreen, bool)
-CHECK_RULE(NoBorder, bool)
+CHECK_RULE(DecorationPolicy, KWin::DecorationPolicy)
 CHECK_FORCE_RULE(DecoColor, QString)
 CHECK_FORCE_RULE(FSP, FocusStealingPreventionLevel)
 CHECK_FORCE_RULE(FPP, FocusStealingPreventionLevel)

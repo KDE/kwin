@@ -4383,9 +4383,9 @@ void Window::setNoBorder(bool set)
 
 bool Window::userCanSetNoBorder() const
 {
-    const bool forcingNoDecoration = rules()->checkNoBorder(false);
-    const bool forcingServerDecoration = !rules()->checkNoBorder(true);
-    return !forcingNoDecoration && !forcingServerDecoration;
+    // In other words, check that no specific decoration mode is forced.
+    return rules()->checkDecorationPolicy(DecorationPolicy::None) == DecorationPolicy::None
+        && rules()->checkDecorationPolicy(DecorationPolicy::PreferredByClient) == DecorationPolicy::PreferredByClient;
 }
 
 DecorationPolicy Window::decorationPolicy() const

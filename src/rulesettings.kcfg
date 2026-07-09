@@ -303,12 +303,32 @@
       <default code="true">Rules::UnusedSetRule</default>
     </entry>
 
+    <!--
+        The noborder is a legacy property. The decorationpolicy rule should be used
+        instead. Delete the noborder rule some time later when it is safe enough to do so.
+    -->
     <entry name="noborder" type="Bool">
       <label>No titlebar and frame</label>
       <default>false</default>
     </entry>
     <entry name="noborderrule" type="Int">
       <label>No titlebar rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="decorationpolicy" type="Enum">
+      <label>Decoration policy</label>
+      <choices name="KWin::DecorationPolicy">
+        <choice name="None" value="none" />
+        <choice name="PreferredByClient" value="preferred-by-client" />
+        <choice name="Server" value="server" />
+      </choices>
+      <default code="true">KWin::DecorationPolicy::PreferredByClient</default>
+    </entry>
+    <entry name="decorationpolicyrule" type="Int">
+      <label>Decoration policy rule type</label>
       <min code="true">Rules::UnusedSetRule</min>
       <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
       <default code="true">Rules::UnusedSetRule</default>
