@@ -175,6 +175,14 @@ bool EglContext::isValid() const
 
 ::EGLContext EglContext::createContext(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext)
 {
+    // Creating a Vulkan instance can change the current EGL API,
+    // so we must always call this explicitly right before creating
+    // the context, or the wrong API may be chosen
+    if (eglBindAPI(EGL_OPENGL_ES_API) == EGL_FALSE) {
+        qCCritical(KWIN_OPENGL, "Couldn't bind EGL API!");
+        return nullptr;
+    }
+
     const bool haveRobustness = display->hasExtension(QByteArrayLiteral("EGL_EXT_create_context_robustness"));
     const bool haveCreateContext = display->hasExtension(QByteArrayLiteral("EGL_KHR_create_context"));
     const bool haveContextPriority = display->hasExtension(QByteArrayLiteral("EGL_IMG_context_priority"));
