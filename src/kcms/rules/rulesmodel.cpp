@@ -934,7 +934,7 @@ QList<OptionsModel::Data> RulesModel::decorationPolicyData() const
 {
     static const auto modelData = QList<OptionsModel::Data>{
         {int(DecorationPolicy::None), i18nc("Never draw a server side decoration", "Never")},
-        {int(DecorationPolicy::PreferredByClient), i18nc("Draw a server side decoration if the application asks for it", "If the application asks")},
+        {int(DecorationPolicy::ClientPreference), i18nc("Draw a server side decoration if the application asks for it", "If the application asks")},
         {int(DecorationPolicy::Server), i18nc("Always draw a server side decoration", "Always")},
     };
     return modelData;

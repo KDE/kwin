@@ -425,7 +425,7 @@ enum class DecorationPolicy {
     /**
      * Follow the preferred decoration mode of the client.
      */
-    PreferredByClient,
+    ClientPreference,
     /**
      * Force the server side decoration mode.
      */

@@ -371,7 +371,7 @@ private:
     xcb_window_t m_transientForId;
     xcb_window_t m_originalTransientForId;
     Xcb::MotifHints m_motif;
-    DecorationPolicy m_decorationPolicy = DecorationPolicy::PreferredByClient;
+    DecorationPolicy m_decorationPolicy = DecorationPolicy::ClientPreference;
     bool m_wantsNoDecoration = false;
     bool ignore_focus_stealing = false; ///< Don't apply focus stealing prevention to this client
     bool is_shape = false;

@@ -4377,7 +4377,7 @@ void Window::setNoBorder(bool set)
     if (set) {
         setDecorationPolicy(DecorationPolicy::None);
     } else {
-        setDecorationPolicy(DecorationPolicy::PreferredByClient);
+        setDecorationPolicy(DecorationPolicy::ClientPreference);
     }
 }
 
@@ -4385,12 +4385,12 @@ bool Window::userCanSetNoBorder() const
 {
     // In other words, check that no specific decoration mode is forced.
     return rules()->checkDecorationPolicy(DecorationPolicy::None) == DecorationPolicy::None
-        && rules()->checkDecorationPolicy(DecorationPolicy::PreferredByClient) == DecorationPolicy::PreferredByClient;
+        && rules()->checkDecorationPolicy(DecorationPolicy::ClientPreference) == DecorationPolicy::ClientPreference;
 }
 
 DecorationPolicy Window::decorationPolicy() const
 {
-    return DecorationPolicy::PreferredByClient;
+    return DecorationPolicy::ClientPreference;
 }
 
 void Window::setDecorationPolicy(DecorationPolicy policy)

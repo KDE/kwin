@@ -93,7 +93,7 @@ private:
     QString m_captionNormal;
     QString m_captionSuffix;
     Qt::WindowFlags m_internalWindowFlags = Qt::WindowFlags();
-    DecorationPolicy m_decorationPolicy = DecorationPolicy::PreferredByClient;
+    DecorationPolicy m_decorationPolicy = DecorationPolicy::ClientPreference;
     GraphicsBufferRef m_graphicsBufferRef;
     OutputTransform m_bufferTransform = OutputTransform::Normal;
 

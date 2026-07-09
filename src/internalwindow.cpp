@@ -313,7 +313,7 @@ DecorationMode InternalWindow::preferredDecorationMode() const
         return DecorationMode::None;
     case DecorationPolicy::Server:
         return DecorationMode::Server;
-    case DecorationPolicy::PreferredByClient:
+    case DecorationPolicy::ClientPreference:
         if (m_internalWindowFlags.testFlag(Qt::FramelessWindowHint) || m_internalWindowFlags.testFlag(Qt::Popup)) {
             return DecorationMode::Client;
         } else {

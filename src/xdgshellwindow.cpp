@@ -1571,7 +1571,7 @@ DecorationMode XdgToplevelWindow::preferredDecorationMode() const
         return DecorationMode::None;
     case DecorationPolicy::Server:
         return DecorationMode::Server;
-    case DecorationPolicy::PreferredByClient:
+    case DecorationPolicy::ClientPreference:
         if (m_xdgDecoration) {
             switch (m_xdgDecoration->preferredMode()) {
             case XdgToplevelDecorationV1Interface::Mode::Undefined:

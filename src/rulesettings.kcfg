@@ -322,10 +322,10 @@
       <label>Decoration policy</label>
       <choices name="KWin::DecorationPolicy">
         <choice name="None" value="none" />
-        <choice name="PreferredByClient" value="preferred-by-client" />
+        <choice name="ClientPreference" value="client-preference" />
         <choice name="Server" value="server" />
       </choices>
-      <default code="true">KWin::DecorationPolicy::PreferredByClient</default>
+      <default code="true">KWin::DecorationPolicy::ClientPreference</default>
     </entry>
     <entry name="decorationpolicyrule" type="Int">
       <label>Decoration policy rule type</label>

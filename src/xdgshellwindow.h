@@ -270,7 +270,7 @@ private:
     MaximizeMode m_requestedMaximizeMode = MaximizeRestore;
     QSizeF m_minimumSize = QSizeF(0, 0);
     QSizeF m_maximumSize = QSizeF(0, 0);
-    DecorationPolicy m_decorationPolicy = DecorationPolicy::PreferredByClient;
+    DecorationPolicy m_decorationPolicy = DecorationPolicy::ClientPreference;
     bool m_isFullScreen = false;
     bool m_isRequestedFullScreen = false;
     bool m_isInitialized = false;

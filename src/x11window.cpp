@@ -919,7 +919,7 @@ DecorationMode X11Window::preferredDecorationMode() const
         return DecorationMode::None;
     case DecorationPolicy::Server:
         return DecorationMode::Server;
-    case DecorationPolicy::PreferredByClient:
+    case DecorationPolicy::ClientPreference:
         if (!m_clientFrameExtents.isNull()) {
             return DecorationMode::Client;
         } else if (m_wantsNoDecoration) {

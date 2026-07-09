@@ -221,7 +221,7 @@ void SessionManager::addSessionInfo(KConfigGroup &cg)
         info.skipTaskbar = cg.readEntry(QLatin1StringView("skipTaskbar") + n, false);
         info.skipPager = cg.readEntry(QLatin1StringView("skipPager") + n, false);
         info.skipSwitcher = cg.readEntry(QLatin1StringView("skipSwitcher") + n, false);
-        info.decorationPolicy = DecorationPolicy(cg.readEntry(QLatin1StringView("decorationPolicy") + n, uint(DecorationPolicy::PreferredByClient)));
+        info.decorationPolicy = DecorationPolicy(cg.readEntry(QLatin1StringView("decorationPolicy") + n, uint(DecorationPolicy::ClientPreference)));
         info.windowType = txtToWindowType(cg.readEntry(QLatin1StringView("windowType") + n, QString()).toLatin1().constData());
         info.shortcut = cg.readEntry(QLatin1StringView("shortcut") + n, QString());
         info.active = (active_client == i);
