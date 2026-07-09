@@ -74,7 +74,14 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::doBeginFrame()
             if (it == formatTable.constEnd()) {
                 continue;
             }
-            m_swapchain = EglSwapchain::create(m_backend->renderDevice()->allocator(), m_backend->openglContext(), nativeSize, it.key(), it.value(), false);
+            GraphicsBufferOptions options{
+                .size = nativeSize,
+                .format = it.key(),
+                .modifiers = it.value(),
+                .software = false,
+                .scanout = false,
+            };
+            m_swapchain = EglSwapchain::create(m_backend->renderDevice()->allocator(), m_backend->openglContext(), options);
             if (m_swapchain) {
                 break;
             }
@@ -165,7 +172,14 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::doBeginFrame()
             if (it == formatTable.constEnd()) {
                 continue;
             }
-            m_swapchain = EglSwapchain::create(m_backend->renderDevice()->allocator(), m_backend->openglContext(), bufferSize, it.key(), it.value(), false);
+            GraphicsBufferOptions options{
+                .size = bufferSize,
+                .format = it.key(),
+                .modifiers = it.value(),
+                .software = false,
+                .scanout = false,
+            };
+            m_swapchain = EglSwapchain::create(m_backend->renderDevice()->allocator(), m_backend->openglContext(), options);
             if (m_swapchain) {
                 break;
             }

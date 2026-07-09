@@ -62,13 +62,10 @@ std::shared_ptr<SyncReleasePoint> VulkanSwapchainSlot::releasePoint()
     return m_releasePoint;
 }
 
-VulkanSwapchain::VulkanSwapchain(VulkanDevice *device, GraphicsBufferAllocator *allocator, const QSize &size, uint32_t format, uint64_t modifier, bool scanout, std::shared_ptr<VulkanSwapchainSlot> &&initialSlot)
+VulkanSwapchain::VulkanSwapchain(VulkanDevice *device, GraphicsBufferAllocator *allocator, const GraphicsBufferOptions &options, std::shared_ptr<VulkanSwapchainSlot> &&initialSlot)
     : m_device(device)
     , m_allocator(allocator)
-    , m_size(size)
-    , m_format(format)
-    , m_modifier(modifier)
-    , m_scanout(scanout)
+    , m_options(options)
     , m_slots({std::move(initialSlot)})
 {
 }
@@ -79,22 +76,22 @@ VulkanSwapchain::~VulkanSwapchain()
 
 QSize VulkanSwapchain::size() const
 {
-    return m_size;
+    return m_options.size;
 }
 
 uint32_t VulkanSwapchain::format() const
 {
-    return m_format;
+    return m_options.format;
 }
 
 uint64_t VulkanSwapchain::modifier() const
 {
-    return m_modifier;
+    return m_options.modifiers.front();
 }
 
 bool VulkanSwapchain::scanout() const
 {
-    return m_scanout;
+    return m_options.scanout;
 }
 
 std::shared_ptr<VulkanSwapchainSlot> VulkanSwapchain::acquire()
@@ -105,12 +102,7 @@ std::shared_ptr<VulkanSwapchainSlot> VulkanSwapchain::acquire()
         }
     }
 
-    GraphicsBuffer *buffer = m_allocator->allocate(GraphicsBufferOptions{
-        .size = m_size,
-        .format = m_format,
-        .modifiers = {m_modifier},
-        .scanout = m_scanout,
-    });
+    GraphicsBuffer *buffer = m_allocator->allocate(m_options);
     if (!buffer) {
         qCWarning(KWIN_VULKAN) << "Failed to allocate a vulkan swapchain buffer";
         return nullptr;
@@ -144,14 +136,9 @@ void VulkanSwapchain::resetBufferAge()
     }
 }
 
-std::unique_ptr<VulkanSwapchain> VulkanSwapchain::create(VulkanDevice *device, GraphicsBufferAllocator *allocator, const QSize &size, uint32_t format, const ModifierList &modifiers, bool scanout)
+std::unique_ptr<VulkanSwapchain> VulkanSwapchain::create(VulkanDevice *device, GraphicsBufferAllocator *allocator, GraphicsBufferOptions options)
 {
-    GraphicsBuffer *buffer = allocator->allocate(GraphicsBufferOptions{
-        .size = size,
-        .format = format,
-        .modifiers = modifiers,
-        .scanout = scanout,
-    });
+    GraphicsBuffer *buffer = allocator->allocate(options);
     if (!buffer) {
         qCWarning(KWIN_VULKAN) << "Failed to allocate a graphics buffer for a Vulkan swapchain";
         return nullptr;
@@ -160,8 +147,9 @@ std::unique_ptr<VulkanSwapchain> VulkanSwapchain::create(VulkanDevice *device, G
     if (!texture) {
         return nullptr;
     }
+    options.modifiers = {buffer->dmabufAttributes()->modifier};
     auto slot = std::make_shared<VulkanSwapchainSlot>(buffer, std::move(texture));
-    return std::make_unique<VulkanSwapchain>(device, allocator, size, format, buffer->dmabufAttributes()->modifier, scanout, std::move(slot));
+    return std::make_unique<VulkanSwapchain>(device, allocator, options, std::move(slot));
 }
 
 }

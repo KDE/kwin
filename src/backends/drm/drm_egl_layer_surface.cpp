@@ -136,7 +136,14 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
             const auto formats = m_eglBackend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats();
             const QList<FormatInfo> sortedFormats = OutputLayer::filterAndSortFormats(formats, requiredAlphaBits, tradeoff);
             for (const auto format : sortedFormats) {
-                m_surface->shadowSwapchain = EglSwapchain::create(m_eglBackend->renderDevice()->allocator(), m_eglBackend->openglContext(), m_surface->gbmSwapchain->size(), format.drmFormat, formats[format.drmFormat], false);
+                GraphicsBufferOptions options{
+                    .size = m_surface->gbmSwapchain->size(),
+                    .format = format.drmFormat,
+                    .modifiers = formats[format.drmFormat],
+                    .software = false,
+                    .scanout = false,
+                };
+                m_surface->shadowSwapchain = EglSwapchain::create(m_eglBackend->renderDevice()->allocator(), m_eglBackend->openglContext(), options);
                 if (m_surface->shadowSwapchain) {
                     break;
                 }
@@ -459,10 +466,17 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     ret->context = m_eglBackend->openglContextRef();
     ret->bufferTarget = bufferTarget;
     ret->importMode = importMode;
+    GraphicsBufferOptions options{
+        .size = size,
+        .format = format,
+        .modifiers = renderModifiers,
+        .software = false,
+        .scanout = importMode == MultiGpuImportMode::None && bufferTarget == BufferTarget::Normal,
+    };
     if (importMode == MultiGpuImportMode::None && bufferTarget == BufferTarget::Normal) {
-        ret->gbmSwapchain = EglSwapchain::create(m_gpu->drmDevice()->allocator(), m_eglBackend->openglContext(), size, format, renderModifiers, true);
+        ret->gbmSwapchain = EglSwapchain::create(m_gpu->drmDevice()->allocator(), m_eglBackend->openglContext(), options);
     } else {
-        ret->gbmSwapchain = EglSwapchain::create(m_eglBackend->renderDevice()->allocator(), m_eglBackend->openglContext(), size, format, renderModifiers, false);
+        ret->gbmSwapchain = EglSwapchain::create(m_eglBackend->renderDevice()->allocator(), m_eglBackend->openglContext(), options);
     }
     ret->tradeoff = tradeoff;
     ret->requiredAlphaBits = requiredAlphaBits;

@@ -318,17 +318,25 @@ void OffscreenQuickView::update(OutputFrame *frame)
 
             const uint32_t format = d->m_hasAlphaChannel ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888;
             if (d->m_scanoutDevice) {
-                d->m_swapchain = EglSwapchain::create(d->m_scanoutDevice->allocator(),
-                                                      EglContext::currentContext(), nativeSize,
-                                                      format, d->m_scanoutFormats.value(format),
-                                                      true);
+                GraphicsBufferOptions options{
+                    .size = nativeSize,
+                    .format = format,
+                    .modifiers = d->m_scanoutFormats.value(format),
+                    .software = false,
+                    .scanout = true,
+                };
+                d->m_swapchain = EglSwapchain::create(d->m_scanoutDevice->allocator(), EglContext::currentContext(), options);
             }
             if (!d->m_swapchain) {
                 // TODO add non-scanout feedback on the item for this?
-                d->m_swapchain = EglSwapchain::create(Compositor::self()->backend()->renderDevice()->allocator(),
-                                                      EglContext::currentContext(), nativeSize,
-                                                      format, Compositor::self()->backend()->supportedFormats()[format],
-                                                      false);
+                GraphicsBufferOptions options{
+                    .size = nativeSize,
+                    .format = format,
+                    .modifiers = Compositor::self()->backend()->supportedFormats()[format],
+                    .software = false,
+                    .scanout = false,
+                };
+                d->m_swapchain = EglSwapchain::create(Compositor::self()->backend()->renderDevice()->allocator(), EglContext::currentContext(), options);
             }
             if (!d->m_swapchain) {
                 d->m_glcontext->doneCurrent();

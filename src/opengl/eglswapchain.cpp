@@ -93,13 +93,10 @@ std::shared_ptr<EglSwapchainSlot> EglSwapchainSlot::create(EglContext *context, 
     return std::make_shared<EglSwapchainSlot>(buffer, std::move(framebuffer), texture);
 }
 
-EglSwapchain::EglSwapchain(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, uint64_t modifier, bool scanout, const std::shared_ptr<EglSwapchainSlot> &seed)
+EglSwapchain::EglSwapchain(GraphicsBufferAllocator *allocator, EglContext *context, const GraphicsBufferOptions &options, const std::shared_ptr<EglSwapchainSlot> &seed)
     : m_allocator(allocator)
     , m_context(context)
-    , m_size(size)
-    , m_format(format)
-    , m_modifier(modifier)
-    , m_scanout(scanout)
+    , m_options(options)
     , m_slots({seed})
 {
 }
@@ -110,22 +107,22 @@ EglSwapchain::~EglSwapchain()
 
 QSize EglSwapchain::size() const
 {
-    return m_size;
+    return m_options.size;
 }
 
 uint32_t EglSwapchain::format() const
 {
-    return m_format;
+    return m_options.format;
 }
 
 uint64_t EglSwapchain::modifier() const
 {
-    return m_modifier;
+    return m_options.modifiers.front();
 }
 
 bool EglSwapchain::scanout() const
 {
-    return m_scanout;
+    return m_options.scanout;
 }
 
 std::shared_ptr<EglSwapchainSlot> EglSwapchain::acquire()
@@ -137,12 +134,7 @@ std::shared_ptr<EglSwapchainSlot> EglSwapchain::acquire()
         return *it;
     }
 
-    GraphicsBuffer *buffer = m_allocator->allocate(GraphicsBufferOptions{
-        .size = m_size,
-        .format = m_format,
-        .modifiers = {m_modifier},
-        .scanout = m_scanout,
-    });
+    GraphicsBuffer *buffer = m_allocator->allocate(m_options);
     if (!buffer) {
         qCWarning(KWIN_OPENGL) << "Failed to allocate an egl gbm swapchain graphics buffer";
         return nullptr;
@@ -175,19 +167,14 @@ void EglSwapchain::resetBufferAge()
     }
 }
 
-std::shared_ptr<EglSwapchain> EglSwapchain::create(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, const ModifierList &modifiers, bool scanout)
+std::shared_ptr<EglSwapchain> EglSwapchain::create(GraphicsBufferAllocator *allocator, EglContext *context, GraphicsBufferOptions options)
 {
     if (!context->makeCurrent()) {
         return nullptr;
     }
 
     // The seed graphics buffer is used to fixate modifiers.
-    GraphicsBuffer *seed = allocator->allocate(GraphicsBufferOptions{
-        .size = size,
-        .format = format,
-        .modifiers = modifiers,
-        .scanout = scanout,
-    });
+    GraphicsBuffer *seed = allocator->allocate(options);
     if (!seed) {
         return nullptr;
     }
@@ -195,12 +182,10 @@ std::shared_ptr<EglSwapchain> EglSwapchain::create(GraphicsBufferAllocator *allo
     if (!first) {
         return nullptr;
     }
+    options.modifiers = {seed->dmabufAttributes()->modifier};
     return std::make_shared<EglSwapchain>(std::move(allocator),
                                           context,
-                                          size,
-                                          format,
-                                          seed->dmabufAttributes()->modifier,
-                                          scanout,
+                                          options,
                                           first);
 }
 

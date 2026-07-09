@@ -42,7 +42,14 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::doBeginFrame()
 
     const QSize nativeSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
-        m_swapchain = EglSwapchain::create(m_backend->renderDevice()->allocator(), m_backend->openglContext(), nativeSize, DRM_FORMAT_XRGB8888, m_backend->supportedFormats()[DRM_FORMAT_XRGB8888], false);
+        GraphicsBufferOptions options{
+            .size = nativeSize,
+            .format = DRM_FORMAT_XRGB8888,
+            .modifiers = m_backend->supportedFormats()[DRM_FORMAT_XRGB8888],
+            .software = false,
+            .scanout = false,
+        };
+        m_swapchain = EglSwapchain::create(m_backend->renderDevice()->allocator(), m_backend->openglContext(), options);
         if (!m_swapchain) {
             return std::nullopt;
         }

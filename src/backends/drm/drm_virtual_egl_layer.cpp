@@ -106,14 +106,14 @@ std::shared_ptr<EglSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
             const auto format = it.key();
             const auto modifiers = it.value();
 
-            if (allowModifiers && !modifiers.empty()) {
-                if (auto swapchain = EglSwapchain::create(m_eglBackend->renderDevice()->allocator(), m_eglBackend->openglContext(), size, format, modifiers, false)) {
-                    return swapchain;
-                }
-            }
-
-            static const ModifierList implicitModifier{DRM_FORMAT_MOD_INVALID};
-            if (auto swapchain = EglSwapchain::create(m_eglBackend->renderDevice()->allocator(), m_eglBackend->openglContext(), size, format, implicitModifier, false)) {
+            GraphicsBufferOptions options{
+                .size = size,
+                .format = format,
+                .modifiers = allowModifiers ? modifiers : ModifierList{DRM_FORMAT_MOD_INVALID},
+                .software = false,
+                .scanout = false,
+            };
+            if (auto swapchain = EglSwapchain::create(m_eglBackend->renderDevice()->allocator(), m_eglBackend->openglContext(), options)) {
                 return swapchain;
             }
         }

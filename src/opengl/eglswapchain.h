@@ -9,6 +9,7 @@
 #pragma once
 
 #include "core/drm_formats.h"
+#include "core/graphicsbufferallocator.h"
 #include "kwin_export.h"
 #include "utils/filedescriptor.h"
 
@@ -22,8 +23,6 @@
 namespace KWin
 {
 
-class GraphicsBufferAllocator;
-class GraphicsBuffer;
 class GLFramebuffer;
 class GLTexture;
 class EglContext;
@@ -59,7 +58,7 @@ private:
 class KWIN_EXPORT EglSwapchain
 {
 public:
-    EglSwapchain(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, uint64_t modifier, bool scanout, const std::shared_ptr<EglSwapchainSlot> &seed);
+    EglSwapchain(GraphicsBufferAllocator *allocator, EglContext *context, const GraphicsBufferOptions &options, const std::shared_ptr<EglSwapchainSlot> &seed);
     ~EglSwapchain();
 
     QSize size() const;
@@ -72,15 +71,12 @@ public:
 
     void resetBufferAge();
 
-    static std::shared_ptr<EglSwapchain> create(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, const ModifierList &modifiers, bool scanout);
+    static std::shared_ptr<EglSwapchain> create(GraphicsBufferAllocator *allocator, EglContext *context, GraphicsBufferOptions options);
 
 private:
     GraphicsBufferAllocator *m_allocator;
     EglContext *m_context;
-    QSize m_size;
-    uint32_t m_format;
-    uint64_t m_modifier;
-    bool m_scanout;
+    GraphicsBufferOptions m_options;
     QList<std::shared_ptr<EglSwapchainSlot>> m_slots;
 };
 

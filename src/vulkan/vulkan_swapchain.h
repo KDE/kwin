@@ -8,6 +8,7 @@
 */
 #pragma once
 #include "core/drm_formats.h"
+#include "core/graphicsbufferallocator.h"
 #include "kwin_export.h"
 #include "utils/filedescriptor.h"
 
@@ -19,8 +20,6 @@
 namespace KWin
 {
 
-class GraphicsBuffer;
-class GraphicsBufferAllocator;
 class VulkanDevice;
 class VulkanTexture;
 class VulkanSwapchain;
@@ -51,7 +50,7 @@ private:
 class KWIN_EXPORT VulkanSwapchain
 {
 public:
-    explicit VulkanSwapchain(VulkanDevice *device, GraphicsBufferAllocator *allocator, const QSize &size, uint32_t format, uint64_t modifier, bool scanout, std::shared_ptr<VulkanSwapchainSlot> &&initialSlot);
+    explicit VulkanSwapchain(VulkanDevice *device, GraphicsBufferAllocator *allocator, const GraphicsBufferOptions &options, std::shared_ptr<VulkanSwapchainSlot> &&initialSlot);
     ~VulkanSwapchain();
 
     QSize size() const;
@@ -64,15 +63,12 @@ public:
 
     void resetBufferAge();
 
-    static std::unique_ptr<VulkanSwapchain> create(VulkanDevice *device, GraphicsBufferAllocator *allocator, const QSize &size, uint32_t format, const ModifierList &modifiers, bool scanout);
+    static std::unique_ptr<VulkanSwapchain> create(VulkanDevice *device, GraphicsBufferAllocator *allocator, GraphicsBufferOptions options);
 
 private:
     VulkanDevice *const m_device;
     GraphicsBufferAllocator *const m_allocator;
-    const QSize m_size;
-    const uint32_t m_format;
-    const uint64_t m_modifier;
-    const bool m_scanout;
+    const GraphicsBufferOptions m_options;
     std::vector<std::shared_ptr<VulkanSwapchainSlot>> m_slots;
 };
 
