@@ -88,10 +88,6 @@ private:
 
 void ScreencastingTest::init()
 {
-    if (qgetenv("KDECI_BUILD") == "TRUE") {
-        QSKIP("CI has pipewire 1.2 that has known process callback issues"); // TODO: Remove it later when CI ships pipewire 1.2 with the fix
-    }
-
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::ScreencastingV1 | Test::AdditionalWaylandInterface::PresentationTime));
     QVERIFY(KWin::Test::screencasting());
     Cursors::self()->hideCursor();
