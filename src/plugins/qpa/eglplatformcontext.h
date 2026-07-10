@@ -9,6 +9,7 @@
 */
 
 #pragma once
+#include "core/graphicsbuffer.h"
 
 #include <epoxy/egl.h>
 
@@ -21,7 +22,6 @@ namespace KWin
 
 class GLFramebuffer;
 class GLTexture;
-class GraphicsBuffer;
 class EglDisplay;
 class EglContext;
 
@@ -29,16 +29,21 @@ namespace QPA
 {
 
 class Window;
+class EGLPlatformContext;
 
-class EGLRenderTarget
+class EGLRenderTarget : public GraphicsBuffer::AttachedResource
 {
 public:
-    EGLRenderTarget(GraphicsBuffer *buffer, std::unique_ptr<GLFramebuffer> fbo, std::shared_ptr<GLTexture> texture);
+    EGLRenderTarget(EGLPlatformContext *context, GraphicsBuffer *buffer, std::unique_ptr<GLFramebuffer> fbo, std::shared_ptr<GLTexture> texture);
     ~EGLRenderTarget();
 
-    GraphicsBuffer *buffer;
     std::unique_ptr<GLFramebuffer> fbo;
     std::shared_ptr<GLTexture> texture;
+
+private:
+    void handleBufferDeleted() override;
+
+    EGLPlatformContext *const m_context;
 };
 
 class EGLPlatformContext : public QObject, public QPlatformOpenGLContext, public QNativeInterface::QEGLContext
@@ -65,6 +70,9 @@ public:
 private:
     void create(const QSurfaceFormat &format, EglContext *shareContext);
     void updateFormatFromContext();
+
+    friend class EGLRenderTarget;
+    void removeBuffer(GraphicsBuffer *buffer);
 
     EglDisplay *const m_eglDisplay;
     QSurfaceFormat m_format;

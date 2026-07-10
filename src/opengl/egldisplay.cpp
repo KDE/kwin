@@ -26,6 +26,25 @@
 namespace KWin
 {
 
+class AttachedEglImage : public GraphicsBuffer::AttachedResource
+{
+public:
+    explicit AttachedEglImage(GraphicsBuffer *buffer, EglDisplay *display)
+        : AttachedResource(buffer)
+        , m_display(display)
+    {
+    }
+
+    EglDisplay *const m_display;
+    std::array<std::optional<EGLImage>, 4> m_images;
+
+private:
+    void handleBufferDeleted() override
+    {
+        m_display->removeAttachedImage(m_buffer);
+    }
+};
+
 static void epoxyFailureWorkaround()
 {
     // do nothing
@@ -133,9 +152,7 @@ EglDisplay::EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions
 
 EglDisplay::~EglDisplay()
 {
-    for (const auto &image : m_importCache) {
-        destroyImage(image);
-    }
+    m_importCache.clear();
     eglTerminate(m_handle);
 }
 
@@ -385,49 +402,59 @@ void EglDisplay::destroyImage(EGLImageKHR image) const
     m_functions.destroyImageKHR(m_handle, image);
 }
 
+void EglDisplay::removeAttachedImage(GraphicsBuffer *buffer)
+{
+    m_importCache.erase(buffer);
+}
+
 static const auto s_disableUdmabuf = environmentVariableBoolValue("KWIN_DISABLE_UDMABUF_IMPORT");
 
 EGLImageKHR EglDisplay::importBufferAsImage(GraphicsBuffer *buffer)
 {
     Q_ASSERT(buffer->dmabufAttributes() || buffer->shmAttributes());
 
-    std::pair key(buffer, 0);
-    auto it = m_importCache.constFind(key);
-    if (Q_LIKELY(it != m_importCache.constEnd())) {
-        return *it;
+    auto &resource = m_importCache[buffer];
+    if (!resource) {
+        resource = std::make_unique<AttachedEglImage>(buffer, this);
     }
-
-    EGLImageKHR image = EGL_NO_IMAGE;
+    auto &image = resource->m_images[0];
+    if (image.has_value()) {
+        return *image;
+    }
     if (buffer->dmabufAttributes()) {
         image = importDmaBufAsImage(*buffer->dmabufAttributes());
         // On Nvidia, sampling from udmabuf just results in black,
         // and on i915 there are glitches on some systems
     } else if (buffer->udmabufAttributes() && (!m_drmDevice || !s_disableUdmabuf.value_or(m_drmDevice->isNvidia() || m_drmDevice->isI915()))) {
         image = importDmaBufAsImage(*buffer->udmabufAttributes());
+    } else {
+        image = EGL_NO_IMAGE;
     }
-    m_importCache[key] = image;
-    connect(buffer, &QObject::destroyed, this, [this, key]() {
-        destroyImage(m_importCache.take(key));
-    });
-    return image;
+    return *image;
 }
 
 EGLImageKHR EglDisplay::importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size)
 {
-    Q_ASSERT(buffer->dmabufAttributes());
+    Q_ASSERT(buffer->dmabufAttributes() || buffer->shmAttributes());
 
-    std::pair key(buffer, plane);
-    auto it = m_importCache.constFind(key);
-    if (Q_LIKELY(it != m_importCache.constEnd())) {
-        return *it;
+    auto &resource = m_importCache[buffer];
+    if (!resource) {
+        resource = std::make_unique<AttachedEglImage>(buffer, this);
     }
-
-    EGLImageKHR image = importDmaBufAsImage(*buffer->dmabufAttributes(), plane, format, size);
-    m_importCache[key] = image;
-    connect(buffer, &QObject::destroyed, this, [this, key]() {
-        destroyImage(m_importCache.take(key));
-    });
-    return image;
+    auto &image = resource->m_images[plane];
+    if (image.has_value()) {
+        return *image;
+    }
+    if (buffer->dmabufAttributes()) {
+        image = importDmaBufAsImage(*buffer->dmabufAttributes(), plane, format, size);
+        // On Nvidia, sampling from udmabuf just results in black,
+        // and on i915 there are glitches on some systems
+    } else if (buffer->udmabufAttributes() && m_drmDevice && !s_disableUdmabuf.value_or(m_drmDevice->isNvidia() || m_drmDevice->isI915())) {
+        image = importDmaBufAsImage(*buffer->udmabufAttributes(), plane, format, size);
+    } else {
+        image = EGL_NO_IMAGE;
+    }
+    return *image;
 }
 
 }

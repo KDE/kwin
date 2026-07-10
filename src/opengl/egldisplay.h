@@ -26,6 +26,7 @@ struct DmaBufAttributes;
 class GLTexture;
 class GraphicsBuffer;
 class DrmDevice;
+class AttachedEglImage;
 
 class KWIN_EXPORT EglDisplay : public QObject
 {
@@ -70,6 +71,9 @@ private:
     Formats queryImportFormats() const;
     QString determineRenderNode() const;
 
+    friend class AttachedEglImage;
+    void removeAttachedImage(GraphicsBuffer *buffer);
+
     const ::EGLDisplay m_handle;
     const QList<QByteArray> m_clientExtensions;
     const QList<QByteArray> m_extensions;
@@ -92,7 +96,7 @@ private:
         PFNEGLQUERYDMABUFMODIFIERSEXTPROC queryDmaBufModifiersEXT = nullptr;
     } m_functions;
 
-    QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> m_importCache;
+    std::unordered_map<GraphicsBuffer *, std::unique_ptr<AttachedEglImage>> m_importCache;
 };
 
 }

@@ -83,7 +83,7 @@ struct SurfaceState
     OutputTransform bufferTransform = OutputTransform::Normal;
     wl_list frameCallbacks;
     QPointF offset = QPointF();
-    QPointer<GraphicsBuffer> buffer;
+    std::weak_ptr<GraphicsBuffer> buffer;
     QPointer<ShadowInterface> shadow;
     QPointer<SlideInterface> slide;
     ContentType contentType = ContentType::None;

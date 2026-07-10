@@ -26,6 +26,7 @@ class VulkanTexture;
 class GraphicsBuffer;
 struct DmaBufAttributes;
 class RenderDevice;
+class AttachedVulkanImage;
 
 class KWIN_EXPORT VulkanDevice : public QObject
 {
@@ -39,6 +40,7 @@ public:
     ~VulkanDevice();
 
     std::shared_ptr<VulkanTexture> importBuffer(GraphicsBuffer *buffer, VkImageUsageFlags usage);
+    void removeAttachedImage(AttachedVulkanImage *image);
 
     bool isSoftwareRenderer() const;
     vk::PhysicalDeviceType type() const;
@@ -118,7 +120,7 @@ private:
     std::deque<SubmittedCommand> m_submittedCommandBuffers;
     vk::PhysicalDeviceLimits m_deviceLimits;
 
-    QHash<GraphicsBuffer *, std::shared_ptr<VulkanTexture>> m_importedTextures;
+    std::unordered_map<GraphicsBuffer *, std::unique_ptr<AttachedVulkanImage>> m_importedTextures;
     bool m_lost = false;
 };
 

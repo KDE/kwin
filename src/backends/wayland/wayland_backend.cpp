@@ -645,10 +645,7 @@ wl_buffer *WaylandBackend::importBuffer(GraphicsBuffer *graphicsBuffer)
             return nullptr;
         }
 
-        buffer = std::make_unique<WaylandBuffer>(handle, graphicsBuffer);
-        connect(buffer.get(), &WaylandBuffer::defunct, this, [this, graphicsBuffer]() {
-            m_buffers.erase(graphicsBuffer);
-        });
+        buffer = std::make_unique<WaylandBuffer>(this, handle, graphicsBuffer);
 
         static const wl_buffer_listener listener = {
             .release = [](void *userData, wl_buffer *buffer) {
@@ -663,6 +660,11 @@ wl_buffer *WaylandBackend::importBuffer(GraphicsBuffer *graphicsBuffer)
     return buffer->handle();
 }
 
+void WaylandBackend::removeBuffer(GraphicsBuffer *buffer)
+{
+    m_buffers.erase(buffer);
+}
+
 DrmDevice *WaylandBackend::drmDevice() const
 {
     return m_renderDevice ? m_renderDevice->drmDevice() : nullptr;
@@ -673,18 +675,23 @@ RenderDevice *WaylandBackend::renderDevice() const
     return m_renderDevice;
 }
 
-WaylandBuffer::WaylandBuffer(wl_buffer *handle, GraphicsBuffer *graphicsBuffer)
-    : m_graphicsBuffer(graphicsBuffer)
+WaylandBuffer::WaylandBuffer(WaylandBackend *backend, wl_buffer *handle, GraphicsBuffer *graphicsBuffer)
+    : AttachedResource(graphicsBuffer)
+    , m_backend(backend)
+    , m_graphicsBuffer(graphicsBuffer)
     , m_handle(handle)
 {
-    connect(graphicsBuffer, &GraphicsBuffer::destroyed, this, &WaylandBuffer::defunct);
 }
 
 WaylandBuffer::~WaylandBuffer()
 {
-    m_graphicsBuffer->disconnect(this);
     m_lock.reset();
     wl_buffer_destroy(m_handle);
+}
+
+void WaylandBuffer::handleBufferDeleted()
+{
+    m_backend->removeBuffer(m_buffer);
 }
 
 wl_buffer *WaylandBuffer::handle() const

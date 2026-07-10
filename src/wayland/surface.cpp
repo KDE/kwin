@@ -234,9 +234,9 @@ void SurfaceInterfacePrivate::surface_attach(Resource *resource, struct ::wl_res
 
     pending->committed |= SurfaceState::Field::Buffer;
     if (!buffer) {
-        pending->buffer = nullptr;
+        pending->buffer.reset();
     } else {
-        pending->buffer = Display::bufferForResource(buffer);
+        pending->buffer = Display::bufferForResource(buffer)->weak_from_this();
     }
 }
 
@@ -288,7 +288,8 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
         return;
     }
 
-    if ((pending->committed & SurfaceState::Field::Buffer) && !pending->buffer) {
+    const auto buffer = pending->buffer.lock();
+    if ((pending->committed & SurfaceState::Field::Buffer) && !buffer) {
         pending->damage = RegionF();
         pending->bufferDamage = Region();
     }
@@ -297,8 +298,8 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
     // matrix and color space to be attached to YUV formats
     const bool hasColorManagementProtocol = colorSurface != nullptr;
     const bool hasColorRepresentation = colorRepresentation != nullptr;
-    if (pending->buffer && pending->buffer->dmabufAttributes()) {
-        switch (pending->buffer->dmabufAttributes()->format) {
+    if (buffer && buffer->dmabufAttributes()) {
+        switch (buffer->dmabufAttributes()->format) {
         case DRM_FORMAT_NV12:
         case DRM_FORMAT_XYUV8888:
             if (!hasColorRepresentation) {
@@ -526,10 +527,10 @@ bool SurfaceInterface::hasFrameCallbacks() const
 RectF SurfaceInterfacePrivate::computeBufferSourceBox() const
 {
     if (!current->viewport.sourceGeometry.isValid()) {
-        return RectF(QPointF(0, 0), current->buffer->size());
+        return RectF(QPointF(0, 0), bufferRef->size());
     }
 
-    const QSizeF bounds = current->bufferTransform.map(current->buffer->size());
+    const QSizeF bounds = current->bufferTransform.map(bufferRef->size());
     const RectF box(current->viewport.sourceGeometry.x() * current->bufferScale,
                     current->viewport.sourceGeometry.y() * current->bufferScale,
                     current->viewport.sourceGeometry.width() * current->bufferScale,
@@ -620,14 +621,16 @@ void SurfaceState::mergeInto(SurfaceState *target)
 
 void SurfaceInterfacePrivate::applyState(SurfaceState *next)
 {
-    const bool bufferChanged = (next->committed & SurfaceState::Field::Buffer) && (current->buffer != next->buffer);
+    const auto oldBuffer = current->buffer.lock();
+    const auto newBuffer = next->buffer.lock();
+    const bool bufferChanged = (next->committed & SurfaceState::Field::Buffer) && (oldBuffer != newBuffer);
     const bool opaqueRegionChanged = (next->committed & SurfaceState::Field::Opaque);
     const bool transformChanged = (next->committed & SurfaceState::Field::BufferTransform) && (current->bufferTransform != next->bufferTransform);
     const bool shadowChanged = (next->committed & SurfaceState::Field::Shadow);
     const bool blurChanged = (next->committed & SurfaceState::Field::Blur);
     const bool slideChanged = (next->committed & SurfaceState::Field::Slide);
     const bool subsurfaceOrderChanged = (next->committed & SurfaceState::Field::SubsurfaceOrder);
-    const bool visibilityChanged = (next->committed & SurfaceState::Field::Buffer) && bool(current->buffer) != bool(next->buffer);
+    const bool visibilityChanged = (next->committed & SurfaceState::Field::Buffer) && bool(oldBuffer) != bool(newBuffer);
     const bool colorDescriptionChanged = (next->committed & SurfaceState::Field::ColorDescription)
         && (current->colorDescription != next->colorDescription || current->renderingIntent != next->renderingIntent);
     const bool presentationModeHintChanged = (next->committed & SurfaceState::Field::PresentationModeHint);
@@ -649,7 +652,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         bufferRef->addReleasePoint(current->releasePoint);
     }
 
-    if (current->buffer) {
+    if (bufferRef) {
         bufferSourceBox = computeBufferSourceBox();
 
         if (current->viewport.destinationSize.isValid()) {
@@ -657,18 +660,18 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         } else if (current->viewport.sourceGeometry.isValid()) {
             surfaceSize = current->viewport.sourceGeometry.size();
         } else {
-            surfaceSize = current->bufferTransform.map(current->buffer->size() / current->bufferScale);
+            surfaceSize = current->bufferTransform.map(bufferRef->size() / current->bufferScale);
         }
         surfaceSize /= serverScale;
 
         const RectF surfaceRect = RectF(QPointF(0, 0), surfaceSize);
-        const Rect bufferRect = Rect(QPoint(0, 0), current->buffer->size());
+        const Rect bufferRect = Rect(QPoint(0, 0), bufferRef->size());
 
         inputRegion = current->input
                           .scaled(1.0 / serverScale)
                           .intersected(surfaceRect);
 
-        if (!current->buffer->hasAlphaChannel()) {
+        if (!bufferRef->hasAlphaChannel()) {
             opaqueRegion = surfaceRect;
         } else {
             opaqueRegion = current->opaque
@@ -839,7 +842,7 @@ Region SurfaceInterfacePrivate::mapToBuffer(const RegionF &region) const
         return Region();
     }
 
-    const RectF sourceBox = current->bufferTransform.inverted().map(bufferSourceBox, current->buffer->size());
+    const RectF sourceBox = current->bufferTransform.inverted().map(bufferSourceBox, bufferRef->size());
     const qreal xScale = sourceBox.width() / surfaceSize.width();
     const qreal yScale = sourceBox.height() / surfaceSize.height();
 

@@ -128,16 +128,17 @@ void ColorRepresentationSurfaceV1::wp_color_representation_surface_v1_set_chroma
 bool ColorRepresentationSurfaceV1::maybeEmitProtocolErrors()
 {
     const auto priv = SurfaceInterfacePrivate::get(m_surface);
-    if (!priv->pending->buffer) {
+    const auto buffer = priv->pending->buffer.lock();
+    if (!buffer) {
         return false;
     }
     bool yuv = false;
-    if (auto attrs = priv->pending->buffer->dmabufAttributes()) {
+    if (auto attrs = buffer->dmabufAttributes()) {
         // this assumes that we only support YUV formats we have conversions for
         // if we ever change that, we should add a "isYUV" flag in FormatInfo
         const auto info = FormatInfo::get(attrs->format);
         yuv = info && info->yuvConversion();
-    } else if (auto attrs = priv->pending->buffer->shmAttributes()) {
+    } else if (auto attrs = buffer->shmAttributes()) {
         const auto info = FormatInfo::get(attrs->format);
         yuv = info && info->yuvConversion();
     } else {

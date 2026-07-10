@@ -97,14 +97,14 @@ public:
             BottomLeftBuffer = 1 << 7,
             Offset = 1 << 8,
         };
-        QPointer<GraphicsBuffer> left;
-        QPointer<GraphicsBuffer> topLeft;
-        QPointer<GraphicsBuffer> top;
-        QPointer<GraphicsBuffer> topRight;
-        QPointer<GraphicsBuffer> right;
-        QPointer<GraphicsBuffer> bottomRight;
-        QPointer<GraphicsBuffer> bottom;
-        QPointer<GraphicsBuffer> bottomLeft;
+        std::weak_ptr<GraphicsBuffer> left;
+        std::weak_ptr<GraphicsBuffer> topLeft;
+        std::weak_ptr<GraphicsBuffer> top;
+        std::weak_ptr<GraphicsBuffer> topRight;
+        std::weak_ptr<GraphicsBuffer> right;
+        std::weak_ptr<GraphicsBuffer> bottomRight;
+        std::weak_ptr<GraphicsBuffer> bottom;
+        std::weak_ptr<GraphicsBuffer> bottomLeft;
         QMarginsF offset;
         Flags flags = Flags::None;
     };
@@ -179,7 +179,7 @@ void ShadowInterfacePrivate::org_kde_kwin_shadow_commit(Resource *resource)
 
 void ShadowInterfacePrivate::attach(Commit::Flags flag, wl_resource *buffer)
 {
-    GraphicsBuffer *b = Display::bufferForResource(buffer);
+    auto b = Display::bufferForResource(buffer)->weak_from_this();
     switch (flag) {
     case Commit::LeftBuffer:
         pending.left = b;

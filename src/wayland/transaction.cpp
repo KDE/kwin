@@ -208,7 +208,7 @@ void Transaction::commit()
             continue;
         }
 
-        if ((entry.state->committed & SurfaceState::Field::Buffer) && entry.state->buffer) {
+        if ((entry.state->committed & SurfaceState::Field::Buffer) && !entry.state->buffer.expired()) {
             // Avoid applying the transaction until all graphics buffers have become idle.
             if (entry.state->acquirePoint.timeline) {
                 watchSyncObj(&entry);

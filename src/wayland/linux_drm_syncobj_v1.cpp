@@ -157,7 +157,11 @@ void LinuxDrmSyncObjSurfaceV1::wp_linux_drm_syncobj_surface_v1_destroy(Resource 
 bool LinuxDrmSyncObjSurfaceV1::maybeEmitProtocolErrors()
 {
     const auto priv = SurfaceInterfacePrivate::get(m_surface);
-    if ((!(priv->pending->committed & SurfaceState::Field::Buffer) || !priv->pending->buffer) && !priv->pending->acquirePoint.timeline && !priv->pending->releasePoint) {
+    if (!(priv->pending->committed & SurfaceState::Field::Buffer)) {
+        return false;
+    }
+    const auto buffer = priv->pending->buffer.lock();
+    if ((!priv->pending->acquirePoint.timeline && !priv->pending->releasePoint) && !buffer) {
         return false;
     }
     if (!priv->pending->acquirePoint.timeline) {
@@ -173,11 +177,11 @@ bool LinuxDrmSyncObjSurfaceV1::maybeEmitProtocolErrors()
         wl_resource_post_error(resource()->handle, error_conflicting_points, "acquire and release points are on the same timeline and acquire >= release");
         return true;
     }
-    if (!priv->pending->buffer) {
+    if (!buffer) {
         wl_resource_post_error(resource()->handle, error_no_buffer, "explicit sync is used, but no buffer is attached");
         return true;
     }
-    if (!priv->pending->buffer->dmabufAttributes()) {
+    if (!buffer->dmabufAttributes()) {
         wl_resource_post_error(resource()->handle, error_unsupported_buffer, "only linux dmabuf buffers are allowed to use explicit sync");
         return true;
     }

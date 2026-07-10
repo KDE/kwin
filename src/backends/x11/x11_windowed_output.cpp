@@ -38,16 +38,15 @@ namespace KWin
 {
 
 X11WindowedBuffer::X11WindowedBuffer(X11WindowedOutput *output, xcb_pixmap_t pixmap, GraphicsBuffer *graphicsBuffer)
-    : m_output(output)
+    : AttachedResource(graphicsBuffer)
+    , m_output(output)
     , m_buffer(graphicsBuffer)
     , m_pixmap(pixmap)
 {
-    connect(graphicsBuffer, &GraphicsBuffer::destroyed, this, &X11WindowedBuffer::defunct);
 }
 
 X11WindowedBuffer::~X11WindowedBuffer()
 {
-    m_buffer->disconnect(this);
     xcb_free_pixmap(m_output->backend()->connection(), m_pixmap);
     unlock();
 }
@@ -70,6 +69,11 @@ void X11WindowedBuffer::lock()
 void X11WindowedBuffer::unlock()
 {
     m_lock.reset();
+}
+
+void X11WindowedBuffer::handleBufferDeleted()
+{
+    m_output->removeBuffer(m_buffer);
 }
 
 X11WindowedCursor::X11WindowedCursor(X11WindowedOutput *output)
@@ -418,9 +422,6 @@ xcb_pixmap_t X11WindowedOutput::importBuffer(GraphicsBuffer *graphicsBuffer)
         }
 
         x11Buffer = std::make_unique<X11WindowedBuffer>(this, pixmap, graphicsBuffer);
-        connect(x11Buffer.get(), &X11WindowedBuffer::defunct, this, [this, graphicsBuffer]() {
-            m_buffers.erase(graphicsBuffer);
-        });
     }
 
     x11Buffer->lock();
@@ -493,6 +494,11 @@ void X11WindowedOutput::setOutputLayers(std::vector<std::unique_ptr<OutputLayer>
 QList<OutputLayer *> X11WindowedOutput::outputLayers() const
 {
     return m_layers | std::views::transform(&std::unique_ptr<OutputLayer>::get) | std::ranges::to<QList>();
+}
+
+void X11WindowedOutput::removeBuffer(GraphicsBuffer *buffer)
+{
+    m_buffers.erase(buffer);
 }
 
 } // namespace KWin

@@ -23,7 +23,7 @@ public:
 
     QSize size() const;
 
-    GraphicsBuffer *acquire();
+    std::shared_ptr<GraphicsBuffer> acquire();
     uint32_t format() const;
     const ModifierList &modifiers() const;
 

@@ -82,8 +82,6 @@ private:
 
 class LinuxDmaBufV1ClientBuffer : public GraphicsBuffer
 {
-    Q_OBJECT
-
 public:
     LinuxDmaBufV1ClientBuffer(DmaBufAttributes &&attrs);
 

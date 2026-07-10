@@ -1052,19 +1052,12 @@ std::shared_ptr<DrmFramebuffer> DrmGpu::importBuffer(GraphicsBuffer *buffer, Fil
 
     auto fbData = std::make_shared<DrmFramebufferData>(this, framebufferId, buffer);
     m_fbCache[buffer] = fbData;
-    connect(buffer, &GraphicsBuffer::destroyed, this, &DrmGpu::forgetBufferObject);
     return std::make_shared<DrmFramebuffer>(fbData, buffer, std::move(readFence));
 }
 
-void DrmGpu::forgetBuffer(GraphicsBuffer *buf)
+void DrmGpu::forgetBuffer(GraphicsBuffer *buffer)
 {
-    disconnect(buf, &GraphicsBuffer::destroyed, this, &DrmGpu::forgetBufferObject);
-    m_fbCache.remove(buf);
-}
-
-void DrmGpu::forgetBufferObject(QObject *buf)
-{
-    m_fbCache.remove(static_cast<GraphicsBuffer *>(buf));
+    m_fbCache.remove(buffer);
 }
 
 QList<OutputLayer *> DrmGpu::compatibleOutputLayers(BackendOutput *output) const

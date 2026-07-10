@@ -48,21 +48,21 @@ void BackingStore::beginPaint(const QRegion &region)
         return;
     }
 
-    const auto oldBuffer = m_buffer;
+    const auto oldBuffer = std::move(m_buffer);
     m_buffer = swapchain->acquire();
     if (!m_buffer) {
         qCCritical(KWIN_QPA, "Failed to acquire a graphics buffer for the backing store");
         return;
     }
 
-    m_bufferView = std::make_unique<GraphicsBufferView>(m_buffer, GraphicsBuffer::Read | GraphicsBuffer::Write);
+    m_bufferView = std::make_unique<GraphicsBufferView>(m_buffer.get(), GraphicsBuffer::Read | GraphicsBuffer::Write);
     if (m_bufferView->isNull()) {
         qCCritical(KWIN_QPA) << "Failed to map a graphics buffer for the backing store";
         return;
     }
 
     if (oldBuffer && oldBuffer != m_buffer && oldBuffer->size() == m_buffer->size()) {
-        const GraphicsBufferView oldView(oldBuffer, GraphicsBuffer::Read);
+        const GraphicsBufferView oldView(oldBuffer.get(), GraphicsBuffer::Read);
         std::memcpy(m_bufferView->image()->bits(), oldView.image()->constBits(), oldView.image()->sizeInBytes());
     }
 
@@ -103,7 +103,7 @@ void BackingStore::flush(QWindow *window, const QRegion &region, const QPoint &o
     }
 
     internalWindow->present(InternalWindowFrame{
-        .buffer = m_buffer,
+        .buffer = m_buffer.get(),
         .bufferDamage = bufferDamage,
     });
 }

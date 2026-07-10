@@ -168,12 +168,10 @@ private:
     std::unique_ptr<WaylandInputDevice> m_touchDevice;
 };
 
-class WaylandBuffer : public QObject
+class WaylandBuffer : public GraphicsBuffer::AttachedResource
 {
-    Q_OBJECT
-
 public:
-    WaylandBuffer(wl_buffer *handle, GraphicsBuffer *graphicsBuffer);
+    WaylandBuffer(WaylandBackend *backend, wl_buffer *handle, GraphicsBuffer *graphicsBuffer);
     ~WaylandBuffer() override;
 
     wl_buffer *handle() const;
@@ -181,10 +179,10 @@ public:
     void lock();
     void unlock();
 
-Q_SIGNALS:
-    void defunct();
-
 private:
+    void handleBufferDeleted() override;
+
+    WaylandBackend *const m_backend;
     GraphicsBuffer *m_graphicsBuffer;
     wl_buffer *m_handle;
     GraphicsBufferRef m_lock;
@@ -259,6 +257,9 @@ private:
     void createOutputs();
     void destroyOutputs();
     WaylandOutput *createOutput(const QString &name, const QSize &size, qreal scale, bool fullscreen);
+
+    friend class WaylandBuffer;
+    void removeBuffer(GraphicsBuffer *buffer);
 
     WaylandBackendOptions m_options;
     std::unique_ptr<WaylandDisplay> m_display;

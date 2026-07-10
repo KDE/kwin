@@ -34,7 +34,7 @@ public:
     void endPaint() override;
 
 private:
-    QPointer<GraphicsBuffer> m_buffer;
+    std::shared_ptr<GraphicsBuffer> m_buffer;
     std::unique_ptr<GraphicsBufferView> m_bufferView;
 };
 

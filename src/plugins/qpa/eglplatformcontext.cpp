@@ -28,10 +28,11 @@ namespace KWin
 namespace QPA
 {
 
-EGLRenderTarget::EGLRenderTarget(GraphicsBuffer *buffer, std::unique_ptr<GLFramebuffer> fbo, std::shared_ptr<GLTexture> texture)
-    : buffer(buffer)
+EGLRenderTarget::EGLRenderTarget(EGLPlatformContext *context, GraphicsBuffer *buffer, std::unique_ptr<GLFramebuffer> fbo, std::shared_ptr<GLTexture> texture)
+    : AttachedResource(buffer)
     , fbo(std::move(fbo))
     , texture(std::move(texture))
+    , m_context(context)
 {
 }
 
@@ -39,6 +40,11 @@ EGLRenderTarget::~EGLRenderTarget()
 {
     fbo.reset();
     texture.reset();
+}
+
+void EGLRenderTarget::handleBufferDeleted()
+{
+    m_context->removeBuffer(m_buffer);
 }
 
 EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, EglContext *shareContext)
@@ -70,6 +76,7 @@ bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
         return false;
     }
     if (m_eglContext->checkGraphicsResetStatus() != GL_NO_ERROR) {
+        // deleting render targets can modify
         m_renderTargets.clear();
         m_zombieRenderTargets.clear();
         m_eglContext.reset();
@@ -85,12 +92,12 @@ bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
             return false;
         }
 
-        GraphicsBuffer *buffer = swapchain->acquire();
+        auto buffer = swapchain->acquire();
         if (!buffer) {
             return false;
         }
 
-        auto it = m_renderTargets.find(buffer);
+        auto it = m_renderTargets.find(buffer.get());
         if (it != m_renderTargets.end()) {
             m_current = it->second;
         } else {
@@ -104,15 +111,8 @@ bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
                 return false;
             }
 
-            auto target = std::make_shared<EGLRenderTarget>(buffer, std::move(fbo), std::move(texture));
-            m_renderTargets[buffer] = target;
-            QObject::connect(buffer, &QObject::destroyed, this, [this, buffer]() {
-                if (auto it = m_renderTargets.find(buffer); it != m_renderTargets.end()) {
-                    m_zombieRenderTargets.push_back(std::move(it->second));
-                    m_renderTargets.erase(it);
-                }
-            });
-
+            auto target = std::make_shared<EGLRenderTarget>(this, buffer.get(), std::move(fbo), std::move(texture));
+            m_renderTargets[buffer.get()] = target;
             m_current = target;
         }
 
@@ -161,8 +161,8 @@ void EGLPlatformContext::swapBuffers(QPlatformSurface *surface)
         glFlush(); // We need to flush pending rendering commands manually
 
         internalWindow->present(InternalWindowFrame{
-            .buffer = m_current->buffer,
-            .bufferDamage = Rect(QPoint(0, 0), m_current->buffer->size()),
+            .buffer = m_current->m_buffer,
+            .bufferDamage = Rect(QPoint(0, 0), m_current->m_buffer->size()),
             .bufferTransform = OutputTransform::FlipY,
         });
 
@@ -264,6 +264,14 @@ void EGLPlatformContext::invalidateContext()
         m_renderTargets.clear();
         m_zombieRenderTargets.clear();
         m_eglContext.reset();
+    }
+}
+
+void EGLPlatformContext::removeBuffer(GraphicsBuffer *buffer)
+{
+    if (auto it = m_renderTargets.find(buffer); it != m_renderTargets.end()) {
+        m_zombieRenderTargets.push_back(std::move(it->second));
+        m_renderTargets.erase(it);
     }
 }
 

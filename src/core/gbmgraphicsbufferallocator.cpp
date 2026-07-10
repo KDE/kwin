@@ -64,8 +64,6 @@ static inline std::optional<DmaBufAttributes> dmaBufAttributesForBo(gbm_bo *bo, 
 
 class GbmGraphicsBuffer : public GraphicsBuffer
 {
-    Q_OBJECT
-
 public:
     GbmGraphicsBuffer(DmaBufAttributes attributes, gbm_bo *handle);
     ~GbmGraphicsBuffer() override;
@@ -90,8 +88,6 @@ private:
 
 class DumbGraphicsBuffer : public GraphicsBuffer
 {
-    Q_OBJECT
-
 public:
     DumbGraphicsBuffer(int drmFd, uint32_t handle, DmaBufAttributes attributes);
     ~DumbGraphicsBuffer() override;
@@ -356,5 +352,3 @@ void DumbGraphicsBuffer::unmap()
 }
 
 } // namespace KWin
-
-#include "gbmgraphicsbufferallocator.moc"

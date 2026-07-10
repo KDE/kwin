@@ -32,9 +32,9 @@ namespace KWin
 static std::optional<bool> s_disableBufferWait = environmentVariableBoolValue("KWIN_DRM_DISABLE_BUFFER_READABILITY_CHECKS");
 
 DrmFramebufferData::DrmFramebufferData(DrmGpu *gpu, uint32_t fbid, GraphicsBuffer *buffer)
-    : m_gpu(gpu)
+    : AttachedResource(buffer)
+    , m_gpu(gpu)
     , m_framebufferId(fbid)
-    , m_buffer(buffer)
 {
 }
 
@@ -46,6 +46,11 @@ DrmFramebufferData::~DrmFramebufferData()
     if (m_buffer) {
         m_gpu->forgetBuffer(m_buffer);
     }
+}
+
+void DrmFramebufferData::handleBufferDeleted()
+{
+    m_gpu->forgetBuffer(m_buffer);
 }
 
 DrmFramebuffer::DrmFramebuffer(const std::shared_ptr<DrmFramebufferData> &data, GraphicsBuffer *buffer, FileDescriptor &&readFence)

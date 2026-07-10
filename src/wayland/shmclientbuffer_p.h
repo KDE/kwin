@@ -59,8 +59,6 @@ struct ShmAccess
 
 class KWIN_EXPORT ShmClientBuffer : public GraphicsBuffer
 {
-    Q_OBJECT
-
 public:
     ShmClientBuffer(ShmPool *pool, ShmAttributes attributes, wl_client *client, uint32_t id);
     ~ShmClientBuffer() override;

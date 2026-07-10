@@ -20,15 +20,17 @@ namespace KWin
 
 class DrmGpu;
 
-class DrmFramebufferData
+class DrmFramebufferData : public GraphicsBuffer::AttachedResource
 {
 public:
     DrmFramebufferData(DrmGpu *gpu, uint32_t fbid, GraphicsBuffer *buffer);
-    ~DrmFramebufferData();
+    ~DrmFramebufferData() override;
 
     DrmGpu *const m_gpu;
     const uint32_t m_framebufferId;
-    const QPointer<GraphicsBuffer> m_buffer;
+
+private:
+    void handleBufferDeleted() override;
 };
 
 class KWIN_EXPORT DrmFramebuffer

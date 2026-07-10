@@ -12,6 +12,7 @@
 #include <QObject>
 #include <QSize>
 #include <mutex>
+#include <set>
 #include <sys/types.h>
 #include <utility>
 
@@ -58,13 +59,11 @@ struct SinglePixelAttributes
  * references are dropped. You can use the isDropped() function to check whether the
  * buffer has been marked as destroyed.
  */
-class KWIN_EXPORT GraphicsBuffer : public QObject, public std::enable_shared_from_this<GraphicsBuffer>
+class KWIN_EXPORT GraphicsBuffer : public std::enable_shared_from_this<GraphicsBuffer>
 {
-    Q_OBJECT
-
 public:
     explicit GraphicsBuffer();
-    ~GraphicsBuffer() override;
+    virtual ~GraphicsBuffer();
 
     /**
      * NOTE this assumes that once the buffer is no longer referenced,
@@ -100,6 +99,24 @@ public:
      */
     void addReleasePoint(const std::shared_ptr<SyncReleasePoint> &releasePoint);
 
+    class AttachedResource
+    {
+    public:
+        explicit AttachedResource(GraphicsBuffer *buffer);
+        virtual ~AttachedResource();
+
+        void bufferDeleted();
+
+        GraphicsBuffer *m_buffer;
+
+    private:
+        virtual void handleBufferDeleted();
+
+        std::weak_ptr<GraphicsBuffer> m_bufferRef;
+    };
+    void attachResource(AttachedResource *resource);
+    void detachResource(AttachedResource *resource);
+
     static bool alphaChannelFromDrmFormat(uint32_t format);
 
 protected:
@@ -117,6 +134,7 @@ protected:
     std::atomic<int> m_references = 0;
     std::mutex m_mutex;
     std::vector<std::shared_ptr<SyncReleasePoint>> m_releasePoints;
+    std::set<AttachedResource *> m_resources;
 };
 
 /**

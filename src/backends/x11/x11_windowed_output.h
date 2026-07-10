@@ -33,10 +33,8 @@ class OutputFrame;
 struct DmaBufAttributes;
 struct ShmAttributes;
 
-class X11WindowedBuffer : public QObject
+class X11WindowedBuffer : public GraphicsBuffer::AttachedResource
 {
-    Q_OBJECT
-
 public:
     X11WindowedBuffer(X11WindowedOutput *output, xcb_pixmap_t pixmap, GraphicsBuffer *buffer);
     ~X11WindowedBuffer() override;
@@ -47,10 +45,9 @@ public:
     void lock();
     void unlock();
 
-Q_SIGNALS:
-    void defunct();
-
 private:
+    void handleBufferDeleted() override;
+
     X11WindowedOutput *m_output;
     GraphicsBuffer *m_buffer;
     GraphicsBufferRef m_lock;
@@ -123,6 +120,9 @@ private:
 
     xcb_pixmap_t importDmaBufBuffer(const DmaBufAttributes *attributes);
     xcb_pixmap_t importShmBuffer(const ShmAttributes *attributes);
+
+    friend class X11WindowedBuffer;
+    void removeBuffer(GraphicsBuffer *buffer);
 
     std::vector<std::unique_ptr<OutputLayer>> m_layers;
     xcb_window_t m_window = XCB_WINDOW_NONE;

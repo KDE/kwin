@@ -20,6 +20,9 @@ GraphicsBuffer::GraphicsBuffer()
 
 GraphicsBuffer::~GraphicsBuffer()
 {
+    // NOTE that deleting resources may modify m_resources
+    const auto resources = std::move(m_resources);
+    std::ranges::for_each(resources, &AttachedResource::bufferDeleted);
 }
 
 bool GraphicsBuffer::isReferenced() const
@@ -86,6 +89,39 @@ const SinglePixelAttributes *GraphicsBuffer::singlePixelAttributes() const
 void GraphicsBuffer::addReleasePoint(const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     m_releasePoints.push_back(releasePoint);
+}
+
+GraphicsBuffer::AttachedResource::AttachedResource(GraphicsBuffer *buffer)
+    : m_buffer(buffer)
+{
+    m_bufferRef = m_buffer->weak_from_this();
+}
+
+GraphicsBuffer::AttachedResource::~AttachedResource()
+{
+    if (auto b = m_bufferRef.lock()) {
+        b->detachResource(this);
+    }
+}
+
+void GraphicsBuffer::AttachedResource::bufferDeleted()
+{
+    handleBufferDeleted();
+    m_buffer = nullptr;
+}
+
+void GraphicsBuffer::AttachedResource::handleBufferDeleted()
+{
+}
+
+void GraphicsBuffer::attachResource(AttachedResource *resource)
+{
+    m_resources.insert(resource);
+}
+
+void GraphicsBuffer::detachResource(AttachedResource *resource)
+{
+    m_resources.erase(resource);
 }
 
 bool GraphicsBuffer::alphaChannelFromDrmFormat(uint32_t format)

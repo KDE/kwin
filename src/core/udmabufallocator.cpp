@@ -26,8 +26,6 @@ namespace KWin
 
 class UdmabufGraphicsBuffer : public GraphicsBuffer
 {
-    Q_OBJECT
-
 public:
     explicit UdmabufGraphicsBuffer(DmaBufAttributes &&attributes, MemoryMap &&map);
 
@@ -170,4 +168,3 @@ std::shared_ptr<GraphicsBuffer> UDmabufAllocator::allocate(uint32_t format, cons
 }
 
 }
-#include "udmabufallocator.moc"

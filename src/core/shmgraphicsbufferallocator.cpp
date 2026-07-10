@@ -21,8 +21,6 @@ namespace KWin
 
 class ShmGraphicsBuffer : public GraphicsBuffer
 {
-    Q_OBJECT
-
 public:
     ShmGraphicsBuffer(ShmAttributes &&attributes, MemoryMap &&memoryMap);
 
@@ -143,5 +141,3 @@ std::shared_ptr<GraphicsBuffer> ShmGraphicsBufferAllocator::allocate(const Graph
 }
 
 } // namespace KWin
-
-#include "shmgraphicsbufferallocator.moc"

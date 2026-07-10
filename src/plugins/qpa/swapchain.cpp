@@ -27,11 +27,11 @@ QSize Swapchain::size() const
     return m_allocationOptions.size;
 }
 
-GraphicsBuffer *Swapchain::acquire()
+std::shared_ptr<GraphicsBuffer> Swapchain::acquire()
 {
     for (const auto &buffer : std::as_const(m_buffers)) {
         if (!buffer->isReferenced()) {
-            return buffer.get();
+            return buffer;
         }
     }
 
@@ -41,7 +41,7 @@ GraphicsBuffer *Swapchain::acquire()
     }
 
     m_buffers.append(buffer);
-    return buffer.get();
+    return buffer;
 }
 
 uint32_t Swapchain::format() const

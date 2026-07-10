@@ -18,6 +18,25 @@
 namespace KWin
 {
 
+class AttachedVulkanImage : public GraphicsBuffer::AttachedResource
+{
+public:
+    explicit AttachedVulkanImage(GraphicsBuffer *buffer, VulkanDevice *device)
+        : AttachedResource(buffer)
+        , m_device(device)
+    {
+    }
+
+    VulkanDevice *const m_device;
+    std::shared_ptr<VulkanTexture> m_texture;
+
+private:
+    void handleBufferDeleted() override
+    {
+        m_device->removeAttachedImage(this);
+    }
+};
+
 VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::Device &&logicalDevice,
                            std::vector<VkQueueFamilyProperties> &&queueProperties, vk::PhysicalDeviceType type)
     : m_type(type)
@@ -75,19 +94,18 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importBuffer(GraphicsBuffer *buffer
     if (!buffer->dmabufAttributes()) {
         return nullptr;
     }
-    auto it = m_importedTextures.find(buffer);
-    if (it != m_importedTextures.end()) {
-        return it.value();
+    auto &resource = m_importedTextures[buffer];
+    if (resource) {
+        return resource->m_texture;
     }
-    auto ret = importDmabuf(buffer->dmabufAttributes(), usage);
-    if (!ret) {
-        return nullptr;
-    }
-    m_importedTextures[buffer] = ret;
-    connect(buffer, &QObject::destroyed, this, [this, buffer]() {
-        m_importedTextures.remove(buffer);
-    });
-    return ret;
+    resource = std::make_unique<AttachedVulkanImage>(buffer, this);
+    resource->m_texture = importDmabuf(buffer->dmabufAttributes(), usage);
+    return resource->m_texture;
+}
+
+void VulkanDevice::removeAttachedImage(AttachedVulkanImage *image)
+{
+    m_importedTextures.erase(image->m_buffer);
 }
 
 /**
