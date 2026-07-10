@@ -813,12 +813,10 @@ bool Scanner::process()
             printf("        m_global = wl_global_create(display, &::%s_interface, version, this, bind_func);\n", interfaceName);
             printf("        m_displayDestroyedListener.notify = %s::display_destroy_func;\n", interfaceName);
             printf("        m_displayDestroyedListener.parent = this;\n");
-            printf("#ifdef HAVE_ACK_GLOBAL_REMOVE\n");
             printf("        wl_global_set_withdrawn_listener(m_global, [](wl_global *global) {\n");
             printf("            auto object = static_cast<%s *>(wl_global_get_user_data(global));\n", interfaceName);
             printf("            object->%s_destroy_global();\n", interfaceNameStripped);
             printf("        });\n");
-            printf("#endif\n");
             printf("        wl_display_add_destroy_listener(display, &m_displayDestroyedListener);\n");
             printf("    }\n");
             printf("\n");

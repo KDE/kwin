@@ -202,14 +202,11 @@ set_package_properties(epoxy PROPERTIES
 
 find_package(Vulkan REQUIRED)
 
-find_package(Wayland 1.24)
+find_package(Wayland 1.25.91)
 set_package_properties(Wayland PROPERTIES
     TYPE REQUIRED
     PURPOSE "Required for building KWin with Wayland support"
 )
-if (Wayland_VERSION VERSION_GREATER_EQUAL "1.25.91")
-    add_compile_definitions(HAVE_ACK_GLOBAL_REMOVE=1)
-endif()
 
 find_package(WaylandProtocols 1.48)
 set_package_properties(WaylandProtocols PROPERTIES
