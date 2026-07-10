@@ -39,7 +39,7 @@ void GraphicsBuffer::ref()
     Q_ASSERT(QCoreApplication::instance()->thread() == thread());
     ++m_refCount;
     if (m_refCount == 1) {
-        Q_EMIT referenced();
+        referenced();
     }
 }
 
@@ -53,7 +53,7 @@ void GraphicsBuffer::unref()
             delete this;
         } else {
             m_releasePoints.clear();
-            Q_EMIT released();
+            released();
         }
     }
 }
@@ -105,6 +105,14 @@ bool GraphicsBuffer::alphaChannelFromDrmFormat(uint32_t format)
 {
     const auto info = FormatInfo::get(format);
     return info && info->alphaBits > 0;
+}
+
+void GraphicsBuffer::referenced()
+{
+}
+
+void GraphicsBuffer::released()
+{
 }
 
 } // namespace KWin

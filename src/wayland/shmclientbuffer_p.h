@@ -79,8 +79,8 @@ private:
     static void buffer_destroy_resource(wl_resource *resource);
     static void buffer_destroy(wl_client *client, wl_resource *resource);
     static const struct wl_buffer_interface implementation;
-    void onReferenced();
-    void onReleased();
+    void referenced() override;
+    void released() override;
 
     wl_resource *m_resource = nullptr;
     ShmPool *m_shmPool;

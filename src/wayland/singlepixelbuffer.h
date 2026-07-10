@@ -45,6 +45,8 @@ private:
     static void buffer_destroy(wl_client *client, wl_resource *resource);
     static const struct wl_buffer_interface implementation;
 
+    void released() override;
+
     const SinglePixelAttributes m_attributes;
     uint32_t m_argb8888;
     wl_resource *m_resource;

@@ -197,9 +197,6 @@ ShmClientBuffer::ShmClientBuffer(ShmPool *pool, ShmAttributes attributes, wl_cli
 #endif
     }
 
-    connect(this, &GraphicsBuffer::released, this, &ShmClientBuffer::onReleased);
-    connect(this, &GraphicsBuffer::referenced, this, &ShmClientBuffer::onReferenced);
-
     m_resource = wl_resource_create(client, &wl_buffer_interface, 1, id);
     wl_resource_set_implementation(m_resource, &implementation, this, buffer_destroy_resource);
 }
@@ -210,7 +207,7 @@ ShmClientBuffer::~ShmClientBuffer()
     m_shmPool->unref();
 }
 
-void ShmClientBuffer::onReferenced()
+void ShmClientBuffer::referenced()
 {
 #if defined(Q_OS_LINUX)
     if (m_udmabufAttributes) {
@@ -222,7 +219,7 @@ void ShmClientBuffer::onReferenced()
 #endif
 }
 
-void ShmClientBuffer::onReleased()
+void ShmClientBuffer::released()
 {
 #if defined(Q_OS_LINUX)
     if (m_udmabufAttributes) {

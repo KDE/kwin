@@ -101,14 +101,13 @@ public:
 
     static bool alphaChannelFromDrmFormat(uint32_t format);
 
-Q_SIGNALS:
-    /**
-     * emitted the first time the buffer is referenced after it's created or released
-     */
-    void referenced();
-    void released();
-
 protected:
+    /**
+     * called the first time the buffer is referenced after it's created or released
+     */
+    virtual void referenced();
+    virtual void released();
+
     int m_refCount = 0;
     bool m_dropped = false;
     std::vector<std::shared_ptr<SyncReleasePoint>> m_releasePoints;

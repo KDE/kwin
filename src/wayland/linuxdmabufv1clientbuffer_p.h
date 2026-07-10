@@ -95,6 +95,7 @@ public:
 
 private:
     void initialize(wl_resource *resource);
+    void released() override;
 
     static void buffer_destroy_resource(wl_resource *resource);
     static void buffer_destroy(wl_client *client, wl_resource *resource);

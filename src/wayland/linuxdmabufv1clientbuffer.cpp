@@ -394,10 +394,11 @@ void LinuxDmaBufV1ClientBuffer::initialize(wl_resource *resource)
 {
     m_resource = resource;
     wl_resource_set_implementation(resource, &implementation, this, buffer_destroy_resource);
+}
 
-    connect(this, &GraphicsBuffer::released, this, [this]() {
-        wl_buffer_send_release(m_resource);
-    });
+void LinuxDmaBufV1ClientBuffer::released()
+{
+    wl_buffer_send_release(m_resource);
 }
 
 const DmaBufAttributes *LinuxDmaBufV1ClientBuffer::dmabufAttributes() const
