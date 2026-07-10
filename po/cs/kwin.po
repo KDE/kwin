@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-08 00:46+0000\n"
+"POT-Creation-Date: 2026-07-10 00:46+0000\n"
 "PO-Revision-Date: 2026-03-19 10:08+0100\n"
 "Last-Translator:  Vít Pelčák <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -74,7 +74,7 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: compositor.cpp:747
+#: compositor.cpp:749
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Grafické efekty byly restartovány kvůli restartu grafiky"
@@ -3426,194 +3426,134 @@ msgstr ""
 msgid "Titlebar color rule type"
 msgstr ""
 
-#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:326
-#, kde-format
-msgid "Block Compositing"
-msgstr "Zablokovat kompozici"
-
-#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:330
-#, kde-format
-msgid "Block Compositing rule type"
-msgstr ""
-
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:335
+#: rulesettings.kcfg:326
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "Prevence ztráty zaměření"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:341
+#: rulesettings.kcfg:332
 #, kde-format
 msgid "Focus stealing prevention rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:346
+#: rulesettings.kcfg:337
 #, kde-format
 msgid "Focus protection"
 msgstr "Ochrana zaměření"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:352
+#: rulesettings.kcfg:343
 #, kde-format
 msgid "Focus protection rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:357
+#: rulesettings.kcfg:348
 #, kde-format
 msgid "Accept Focus"
 msgstr "Přijmout zaměření"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:361
+#: rulesettings.kcfg:352
 #, kde-format
 msgid "Accept Focus rule type"
 msgstr "Typ pravidla pro přijetí zaměření"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:366
+#: rulesettings.kcfg:357
 #, kde-format
 msgid "Closeable"
 msgstr "Lze zavřít"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:370
+#: rulesettings.kcfg:361
 #, kde-format
 msgid "Closeable rule type"
 msgstr "Typ pravidla -  Lze zavřít"
 
-#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:375
-#, kde-format
-msgid "Autogroup with identical"
-msgstr "Automaticky seskupovat se stejnými"
-
-#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:379
-#, kde-format
-msgid "Autogroup with identical rule type"
-msgstr "Automaticky seskupovat se stejným typem"
-
-#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:384
-#, kde-format
-msgid "Autogroup in foreground"
-msgstr "Automaticky seskupovat na popředí"
-
-#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:388
-#, kde-format
-msgid "Autogroup in foreground rule type"
-msgstr "Automaticky seskupovat typ na popředí"
-
-#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:393
-#, kde-format
-msgid "Autogroup by ID"
-msgstr "Automaticky seskupovat podle ID"
-
-#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:396
-#, kde-format
-msgid "Autogroup by ID rule type"
-msgstr "Automaticky seskupovat typ podle ID"
-
-#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:401
-#, kde-format
-msgid "Obey geometry restrictions"
-msgstr "Řídit se omezenou geometrií"
-
-#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:405
-#, kde-format
-msgid "Obey geometry restrictions rule type"
-msgstr "Řídit se typem pravidla pro omezenou geometrii"
-
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:410
+#: rulesettings.kcfg:366
 #, kde-format
 msgid "Shortcut"
 msgstr "Zkratka"
 
 #. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:413
+#: rulesettings.kcfg:369
 #, kde-format
 msgid "Shortcut rule type"
 msgstr "Typ pravidla pro zkratky:"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:420
+#: rulesettings.kcfg:376
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Ignorovat globální zkratky"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:424
+#: rulesettings.kcfg:380
 #, kde-format
 msgid "Ignore global shortcuts rule type"
 msgstr "Ignorovat typ pravidla pro globální zkratky"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
+#: rulesettings.kcfg:385
 #, kde-format
 msgid "Desktop file name"
 msgstr "Název souboru plochy"
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:432
+#: rulesettings.kcfg:388
 #, kde-format
 msgid "Desktop file name rule type"
 msgstr "Typ pravidla pro název souboru plochy"
 
 #. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:439
+#: rulesettings.kcfg:395
 #, kde-format
 msgid "Layer"
 msgstr "Vrstva"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:455
+#: rulesettings.kcfg:411
 #, kde-format
 msgid "Layer rule type"
 msgstr "Typ pravidla vrstvy"
 
 #. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:460
+#: rulesettings.kcfg:416
 #, kde-format
 msgid "AdaptiveSync"
 msgstr "Adaptivní synchronizace"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:464
+#: rulesettings.kcfg:420
 #, kde-format
 msgid "AdaptiveSync rule type"
 msgstr "Typ pravidla adaptivní synchronizace"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:469
+#: rulesettings.kcfg:425
 #, kde-format
 msgid "Allow Tearing"
 msgstr "Povolit trhání obrazovky"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:473
+#: rulesettings.kcfg:429
 #, kde-format
 msgid "Tearing rule type"
 msgstr "Typ pravidla trhání obrazovky"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:478
+#: rulesettings.kcfg:434
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
 msgstr ""
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:482
+#: rulesettings.kcfg:438
 #, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr ""
@@ -4326,7 +4266,7 @@ msgstr ""
 msgid "The session is not active"
 msgstr "Klávesa Alt je nyní aktivní."
 
-#: window.cpp:3107
+#: window.cpp:3100
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4374,6 +4314,33 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland spadnul"
+
+#~ msgid "Block Compositing"
+#~ msgstr "Zablokovat kompozici"
+
+#~ msgid "Autogroup with identical"
+#~ msgstr "Automaticky seskupovat se stejnými"
+
+#~ msgid "Autogroup with identical rule type"
+#~ msgstr "Automaticky seskupovat se stejným typem"
+
+#~ msgid "Autogroup in foreground"
+#~ msgstr "Automaticky seskupovat na popředí"
+
+#~ msgid "Autogroup in foreground rule type"
+#~ msgstr "Automaticky seskupovat typ na popředí"
+
+#~ msgid "Autogroup by ID"
+#~ msgstr "Automaticky seskupovat podle ID"
+
+#~ msgid "Autogroup by ID rule type"
+#~ msgstr "Automaticky seskupovat typ podle ID"
+
+#~ msgid "Obey geometry restrictions"
+#~ msgstr "Řídit se omezenou geometrií"
+
+#~ msgid "Obey geometry restrictions rule type"
+#~ msgstr "Řídit se typem pravidla pro omezenou geometrii"
 
 #~ msgid "Move Mouse to Focus"
 #~ msgstr "Přesunout myš na zaměření"

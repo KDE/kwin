@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-08 00:46+0000\n"
+"POT-Creation-Date: 2026-07-10 00:46+0000\n"
 "PO-Revision-Date: 2026-06-25 22:17+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -70,7 +70,7 @@ msgstr "Nyomja meg a jobb Controlt a bemenet elkapásához"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland kompozitor"
 
-#: compositor.cpp:747
+#: compositor.cpp:749
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -3475,194 +3475,134 @@ msgstr "Címsorszín és séma"
 msgid "Titlebar color rule type"
 msgstr "Címsorszín szabálytípus"
 
-#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:326
-#, kde-format
-msgid "Block Compositing"
-msgstr "Kompozitálás blokkolása"
-
-#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:330
-#, kde-format
-msgid "Block Compositing rule type"
-msgstr "Kompozitálás blokkolása szabálytípus"
-
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:335
+#: rulesettings.kcfg:326
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "Fókuszelvétel megakadályozása"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:341
+#: rulesettings.kcfg:332
 #, kde-format
 msgid "Focus stealing prevention rule type"
 msgstr "Fókuszelvétel megakadályozása szabálytípus"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:346
+#: rulesettings.kcfg:337
 #, kde-format
 msgid "Focus protection"
 msgstr "Fókuszvédelem"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:352
+#: rulesettings.kcfg:343
 #, kde-format
 msgid "Focus protection rule type"
 msgstr "Fókuszvédelem szabálytípus"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:357
+#: rulesettings.kcfg:348
 #, kde-format
 msgid "Accept Focus"
 msgstr "Fókusz elfogadása"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:361
+#: rulesettings.kcfg:352
 #, kde-format
 msgid "Accept Focus rule type"
 msgstr "Fókusz elfogadása szabálytípus"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:366
+#: rulesettings.kcfg:357
 #, kde-format
 msgid "Closeable"
 msgstr "Bezárható"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:370
+#: rulesettings.kcfg:361
 #, kde-format
 msgid "Closeable rule type"
 msgstr "Bezárhatósági szabálytípus"
 
-#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:375
-#, kde-format
-msgid "Autogroup with identical"
-msgstr "Azonosak automatikus csoportosítása"
-
-#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:379
-#, kde-format
-msgid "Autogroup with identical rule type"
-msgstr "Azonosak automatikus csoportosítása szabálytípus"
-
-#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:384
-#, kde-format
-msgid "Autogroup in foreground"
-msgstr "Automatikus csoportosítás előtérben"
-
-#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:388
-#, kde-format
-msgid "Autogroup in foreground rule type"
-msgstr "Automatikus csoportosítás előtérben szabálytípus"
-
-#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:393
-#, kde-format
-msgid "Autogroup by ID"
-msgstr "Automatikus csoportosítás azonosító szerint"
-
-#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:396
-#, kde-format
-msgid "Autogroup by ID rule type"
-msgstr "Automatikus csoportosítás azonosító szerint szabálytípus"
-
-#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:401
-#, kde-format
-msgid "Obey geometry restrictions"
-msgstr "Méret- és elhelyezkedéskorlátozások betartása"
-
-#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:405
-#, kde-format
-msgid "Obey geometry restrictions rule type"
-msgstr "Méret- és elhelyezkedéskorlátozások betartása szabálytípus"
-
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:410
+#: rulesettings.kcfg:366
 #, kde-format
 msgid "Shortcut"
 msgstr "Billentyűparancs"
 
 #. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:413
+#: rulesettings.kcfg:369
 #, kde-format
 msgid "Shortcut rule type"
 msgstr "Billentyűparancs szabálytípus"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:420
+#: rulesettings.kcfg:376
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Globális gyorsbillentyűk mellőzése"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:424
+#: rulesettings.kcfg:380
 #, kde-format
 msgid "Ignore global shortcuts rule type"
 msgstr "Globális gyorsbillentyűk mellőzése szabálytípus"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
+#: rulesettings.kcfg:385
 #, kde-format
 msgid "Desktop file name"
 msgstr "Asztali fájl neve"
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:432
+#: rulesettings.kcfg:388
 #, kde-format
 msgid "Desktop file name rule type"
 msgstr "Asztali fájl neve szabálytípus"
 
 #. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:439
+#: rulesettings.kcfg:395
 #, kde-format
 msgid "Layer"
 msgstr "Réteg"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:455
+#: rulesettings.kcfg:411
 #, kde-format
 msgid "Layer rule type"
 msgstr "Réteg szabálytípus"
 
 #. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:460
+#: rulesettings.kcfg:416
 #, kde-format
 msgid "AdaptiveSync"
 msgstr "Adaptív szinkronizáció"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:464
+#: rulesettings.kcfg:420
 #, kde-format
 msgid "AdaptiveSync rule type"
 msgstr "Adaptív szinkronizáció szabálytípus"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:469
+#: rulesettings.kcfg:425
 #, kde-format
 msgid "Allow Tearing"
 msgstr "Képtörés engedélyezése"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:473
+#: rulesettings.kcfg:429
 #, kde-format
 msgid "Tearing rule type"
 msgstr "Törés szabálytípus"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:478
+#: rulesettings.kcfg:434
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
 msgstr "Elrejtés a képernyőképekből és a képernyőfelvételekből"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:482
+#: rulesettings.kcfg:438
 #, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr "Elrejtés a képernyőképekből és a képernyőfelvételekből szabálytípus"
@@ -4381,7 +4321,7 @@ msgstr "Az illesztőprogram elutasította a kimenetbeállítást"
 msgid "The session is not active"
 msgstr "A munkamenet nem aktív"
 
-#: window.cpp:3107
+#: window.cpp:3100
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4436,6 +4376,36 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Az Xwayland összeomlott"
+
+#~ msgid "Block Compositing"
+#~ msgstr "Kompozitálás blokkolása"
+
+#~ msgid "Block Compositing rule type"
+#~ msgstr "Kompozitálás blokkolása szabálytípus"
+
+#~ msgid "Autogroup with identical"
+#~ msgstr "Azonosak automatikus csoportosítása"
+
+#~ msgid "Autogroup with identical rule type"
+#~ msgstr "Azonosak automatikus csoportosítása szabálytípus"
+
+#~ msgid "Autogroup in foreground"
+#~ msgstr "Automatikus csoportosítás előtérben"
+
+#~ msgid "Autogroup in foreground rule type"
+#~ msgstr "Automatikus csoportosítás előtérben szabálytípus"
+
+#~ msgid "Autogroup by ID"
+#~ msgstr "Automatikus csoportosítás azonosító szerint"
+
+#~ msgid "Autogroup by ID rule type"
+#~ msgstr "Automatikus csoportosítás azonosító szerint szabálytípus"
+
+#~ msgid "Obey geometry restrictions"
+#~ msgstr "Méret- és elhelyezkedéskorlátozások betartása"
+
+#~ msgid "Obey geometry restrictions rule type"
+#~ msgstr "Méret- és elhelyezkedéskorlátozások betartása szabálytípus"
 
 #~ msgid "Move Mouse to Focus"
 #~ msgstr "Egér mozgatása a fókuszra"

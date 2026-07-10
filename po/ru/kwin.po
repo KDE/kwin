@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-08 00:46+0000\n"
+"POT-Creation-Date: 2026-07-10 00:46+0000\n"
 "PO-Revision-Date: 2026-06-24 23:50+0200\n"
 "Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -92,7 +92,7 @@ msgstr "Чтобы захватить ввод нажмите правую кл�
 msgid "KDE Wayland Compositor"
 msgstr "Графический сервер Wayland для KDE"
 
-#: compositor.cpp:747
+#: compositor.cpp:749
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -3519,194 +3519,134 @@ msgstr "Цветовая схема заголовка"
 msgid "Titlebar color rule type"
 msgstr "Типа правила цветовой схемы заголовка"
 
-#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:326
-#, kde-format
-msgid "Block Compositing"
-msgstr "Не применять графические эффекты"
-
-#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:330
-#, kde-format
-msgid "Block Compositing rule type"
-msgstr "Тип правила отключения графических эффектов"
-
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:335
+#: rulesettings.kcfg:326
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "Предотвращение похищения фокуса"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:341
+#: rulesettings.kcfg:332
 #, kde-format
 msgid "Focus stealing prevention rule type"
 msgstr "Тип правила предотвращения похищения фокуса"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:346
+#: rulesettings.kcfg:337
 #, kde-format
 msgid "Focus protection"
 msgstr "Защита фокуса"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:352
+#: rulesettings.kcfg:343
 #, kde-format
 msgid "Focus protection rule type"
 msgstr "Типа правила защиты фокуса"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:357
+#: rulesettings.kcfg:348
 #, kde-format
 msgid "Accept Focus"
 msgstr "Может принимать &фокус"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:361
+#: rulesettings.kcfg:352
 #, kde-format
 msgid "Accept Focus rule type"
 msgstr "Тип правила разрешения приёма фокуса"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:366
+#: rulesettings.kcfg:357
 #, kde-format
 msgid "Closeable"
 msgstr "Закрываемое"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:370
+#: rulesettings.kcfg:361
 #, kde-format
 msgid "Closeable rule type"
 msgstr "Тип правила возможности закрытия окна"
 
-#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:375
-#, kde-format
-msgid "Autogroup with identical"
-msgstr "Группировать с одинаковыми окнами"
-
-#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:379
-#, kde-format
-msgid "Autogroup with identical rule type"
-msgstr "Тип правила группировки с одинаковыми окнами"
-
-#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:384
-#, kde-format
-msgid "Autogroup in foreground"
-msgstr "Группировать на переднем плане"
-
-#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:388
-#, kde-format
-msgid "Autogroup in foreground rule type"
-msgstr "Тип правила группировки на переднем плане"
-
-#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:393
-#, kde-format
-msgid "Autogroup by ID"
-msgstr "Группировать по идентификатору"
-
-#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:396
-#, kde-format
-msgid "Autogroup by ID rule type"
-msgstr "Тип правила группировки по идентификатору"
-
-#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:401
-#, kde-format
-msgid "Obey geometry restrictions"
-msgstr "Соблюдать требуемую приложением геометрию"
-
-#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:405
-#, kde-format
-msgid "Obey geometry restrictions rule type"
-msgstr "Тип правила соблюдения требуемой приложением геометрии"
-
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:410
+#: rulesettings.kcfg:366
 #, kde-format
 msgid "Shortcut"
 msgstr "Комбинация клавиш"
 
 #. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:413
+#: rulesettings.kcfg:369
 #, kde-format
 msgid "Shortcut rule type"
 msgstr "Тип правила комбинации клавиш"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:420
+#: rulesettings.kcfg:376
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Игнорировать глобальные комбинации клавиш"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:424
+#: rulesettings.kcfg:380
 #, kde-format
 msgid "Ignore global shortcuts rule type"
 msgstr "Тип правила игнорирования глобальных комбинаций клавиш"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
+#: rulesettings.kcfg:385
 #, kde-format
 msgid "Desktop file name"
 msgstr "Файл .desktop"
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:432
+#: rulesettings.kcfg:388
 #, kde-format
 msgid "Desktop file name rule type"
 msgstr "Тип правила файла .desktop"
 
 #. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:439
+#: rulesettings.kcfg:395
 #, kde-format
 msgid "Layer"
 msgstr "Слой"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:455
+#: rulesettings.kcfg:411
 #, kde-format
 msgid "Layer rule type"
 msgstr "Тип правила назначения слоя"
 
 #. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:460
+#: rulesettings.kcfg:416
 #, kde-format
 msgid "AdaptiveSync"
 msgstr "Адаптивная синхронизация"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:464
+#: rulesettings.kcfg:420
 #, kde-format
 msgid "AdaptiveSync rule type"
 msgstr "Тип правила адаптивной синхронизации"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:469
+#: rulesettings.kcfg:425
 #, kde-format
 msgid "Allow Tearing"
 msgstr "Разрешить разрывы"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:473
+#: rulesettings.kcfg:429
 #, kde-format
 msgid "Tearing rule type"
 msgstr "Тип правила назначения разрыва"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:478
+#: rulesettings.kcfg:434
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
 msgstr "Скрыть на снимках экрана и в записях экрана"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:482
+#: rulesettings.kcfg:438
 #, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr "Тип правила «Скрыть из снимков экрана и записей экрана»"
@@ -4425,7 +4365,7 @@ msgstr "Конфигурация вывода отклонена драйвер�
 msgid "The session is not active"
 msgstr "Сеанс неактивен"
 
-#: window.cpp:3107
+#: window.cpp:3100
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4482,6 +4422,36 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Произошло аварийное завершение Xwayland"
+
+#~ msgid "Block Compositing"
+#~ msgstr "Не применять графические эффекты"
+
+#~ msgid "Block Compositing rule type"
+#~ msgstr "Тип правила отключения графических эффектов"
+
+#~ msgid "Autogroup with identical"
+#~ msgstr "Группировать с одинаковыми окнами"
+
+#~ msgid "Autogroup with identical rule type"
+#~ msgstr "Тип правила группировки с одинаковыми окнами"
+
+#~ msgid "Autogroup in foreground"
+#~ msgstr "Группировать на переднем плане"
+
+#~ msgid "Autogroup in foreground rule type"
+#~ msgstr "Тип правила группировки на переднем плане"
+
+#~ msgid "Autogroup by ID"
+#~ msgstr "Группировать по идентификатору"
+
+#~ msgid "Autogroup by ID rule type"
+#~ msgstr "Тип правила группировки по идентификатору"
+
+#~ msgid "Obey geometry restrictions"
+#~ msgstr "Соблюдать требуемую приложением геометрию"
+
+#~ msgid "Obey geometry restrictions rule type"
+#~ msgstr "Тип правила соблюдения требуемой приложением геометрии"
 
 #~ msgid "Move Mouse to Focus"
 #~ msgstr "Переместить мышь в фокус ввода"

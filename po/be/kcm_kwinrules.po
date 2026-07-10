@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-24 01:25+0000\n"
+"POT-Creation-Date: 2026-07-10 00:46+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -269,7 +269,7 @@ msgstr "Пазіцыя"
 #: rulesmodel.cpp:453 rulesmodel.cpp:459 rulesmodel.cpp:465 rulesmodel.cpp:470
 #: rulesmodel.cpp:478 rulesmodel.cpp:484 rulesmodel.cpp:503 rulesmodel.cpp:519
 #: rulesmodel.cpp:524 rulesmodel.cpp:529 rulesmodel.cpp:534 rulesmodel.cpp:541
-#: rulesmodel.cpp:555 rulesmodel.cpp:560 rulesmodel.cpp:565
+#: rulesmodel.cpp:555 rulesmodel.cpp:560
 #, kde-format
 msgid "Size & Position"
 msgstr "Памер і пазіцыя"
@@ -309,7 +309,7 @@ msgstr "Пакоі"
 msgid "Screen"
 msgstr "Экран"
 
-#: rulesmodel.cpp:524 rulesmodel.cpp:940
+#: rulesmodel.cpp:524 rulesmodel.cpp:923
 #, kde-format
 msgid "Fullscreen"
 msgstr "На ўвесь экран"
@@ -358,73 +358,51 @@ msgstr "Мінімальны памер"
 msgid "Maximum Size"
 msgstr "Максімальны памер"
 
-#: rulesmodel.cpp:565
-#, kde-format
-msgid "Obey geometry restrictions"
-msgstr "Пільнавацца геаметрычных абмежаванняў"
-
-#: rulesmodel.cpp:567
-#, kde-kuit-format
-msgctxt "@info:tooltip"
-msgid ""
-"Some apps like video players or terminals can ask KWin to constrain them to "
-"certain aspect ratios or only grow by values larger than the dimensions of "
-"one character. Use this property to ignore such restrictions and allow those "
-"windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
-"windows that can't quite fit the full screen area when maximized."
-msgstr ""
-"Некаторыя праграмы накшталт відэаплэераў або тэрміналаў могуць звяртацца да "
-"KWin, каб абмежаваць іх пэўнымі прапорцыямі або павялічваць на значэнні, "
-"большыя за памеры аднаго сімвала. Выкарыстоўвайце гэтую ўласцівасць, каб "
-"ігнараваць такія абмежаванні і дазваляць змяняць памер гэтых акон да "
-"адвольных памераў.<nl/><nl/>Гэта можа быць карысным для акон, якія не могуць "
-"умясціцца ў экран пры разгортванні."
-
-#: rulesmodel.cpp:578
+#: rulesmodel.cpp:566
 #, kde-format
 msgid "Keep above other windows"
 msgstr "Размяшчаць вышэй астатніх акон"
 
-#: rulesmodel.cpp:578 rulesmodel.cpp:583 rulesmodel.cpp:588 rulesmodel.cpp:594
-#: rulesmodel.cpp:600 rulesmodel.cpp:606
+#: rulesmodel.cpp:566 rulesmodel.cpp:571 rulesmodel.cpp:576 rulesmodel.cpp:582
+#: rulesmodel.cpp:588 rulesmodel.cpp:594
 #, kde-format
 msgid "Arrangement & Access"
 msgstr "Парадак і доступ"
 
-#: rulesmodel.cpp:583
+#: rulesmodel.cpp:571
 #, kde-format
 msgid "Keep below other windows"
 msgstr "Размяшчаць ніжэй астатніх акон"
 
-#: rulesmodel.cpp:588
+#: rulesmodel.cpp:576
 #, kde-format
 msgid "Skip taskbar"
 msgstr "Схаваць для панэлі задач"
 
-#: rulesmodel.cpp:590
+#: rulesmodel.cpp:578
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
 msgstr "Кіруе з'яўленнем акна ў кіраўніку задач."
 
-#: rulesmodel.cpp:594
+#: rulesmodel.cpp:582
 #, kde-format
 msgid "Skip pager"
 msgstr "Схаваць для пэйджара"
 
-#: rulesmodel.cpp:596
+#: rulesmodel.cpp:584
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr "Кіруе з'яўленнем акна ў кіраўніку віртуальных працоўных сталоў."
 
-#: rulesmodel.cpp:600
+#: rulesmodel.cpp:588
 #, kde-format
 msgid "Skip switcher"
 msgstr "Схаваць для пераключальніка"
 
-#: rulesmodel.cpp:602
+#: rulesmodel.cpp:590
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -432,45 +410,45 @@ msgid ""
 "shortcut> window list."
 msgstr "Кіруе з'яўленнем акна ў спісе акон па <shortcut>Alt+Tab</shortcut>."
 
-#: rulesmodel.cpp:606
+#: rulesmodel.cpp:594
 #, kde-format
 msgid "Shortcut"
 msgstr "Спалучэнне клавіш"
 
-#: rulesmodel.cpp:612
+#: rulesmodel.cpp:600
 #, kde-format
 msgid "No titlebar and frame"
 msgstr "Без панэлі загалоўка і рамкі"
 
-#: rulesmodel.cpp:612 rulesmodel.cpp:617 rulesmodel.cpp:623 rulesmodel.cpp:628
-#: rulesmodel.cpp:634 rulesmodel.cpp:661 rulesmodel.cpp:689 rulesmodel.cpp:695
-#: rulesmodel.cpp:707 rulesmodel.cpp:712 rulesmodel.cpp:717 rulesmodel.cpp:722
-#: rulesmodel.cpp:728 rulesmodel.cpp:733 rulesmodel.cpp:738
+#: rulesmodel.cpp:600 rulesmodel.cpp:605 rulesmodel.cpp:611 rulesmodel.cpp:616
+#: rulesmodel.cpp:622 rulesmodel.cpp:649 rulesmodel.cpp:677 rulesmodel.cpp:683
+#: rulesmodel.cpp:695 rulesmodel.cpp:700 rulesmodel.cpp:705 rulesmodel.cpp:711
+#: rulesmodel.cpp:716 rulesmodel.cpp:721
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "Выгляд і фіксацыя"
 
-#: rulesmodel.cpp:617
+#: rulesmodel.cpp:605
 #, kde-format
 msgid "Titlebar color scheme"
 msgstr "Колеравая схема панэлі загалоўка"
 
-#: rulesmodel.cpp:623
+#: rulesmodel.cpp:611
 #, kde-format
 msgid "Active opacity"
 msgstr "Непразрыстасць актыўнага акна"
 
-#: rulesmodel.cpp:628
+#: rulesmodel.cpp:616
 #, kde-format
 msgid "Inactive opacity"
 msgstr "Непразрыстасць неактыўнага акна"
 
-#: rulesmodel.cpp:634
+#: rulesmodel.cpp:622
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "Прадухіленне перахоплівання фокуса"
 
-#: rulesmodel.cpp:636
+#: rulesmodel.cpp:624
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -510,12 +488,12 @@ msgstr ""
 "strong='true'>Экстрэмальны:</emphasis> акно ніколі не будзе  ўзнімацца і "
 "трапляць у фокус.</item></list>"
 
-#: rulesmodel.cpp:661
+#: rulesmodel.cpp:649
 #, kde-format
 msgid "Focus protection"
 msgstr "Абарона фокуса"
 
-#: rulesmodel.cpp:663
+#: rulesmodel.cpp:651
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -557,22 +535,22 @@ msgstr ""
 "strong='true'>Экстрэмальны:</emphasis> вокны ніколі самі не ўзнімаюцца і не "
 "трапляюць у фокус.</item></list>"
 
-#: rulesmodel.cpp:689
+#: rulesmodel.cpp:677
 #, kde-format
 msgid "Accept focus"
 msgstr "Прыманне фокуса"
 
-#: rulesmodel.cpp:691
+#: rulesmodel.cpp:679
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
 msgstr "Кіруе факусаваннем акна пры націсканні."
 
-#: rulesmodel.cpp:695
+#: rulesmodel.cpp:683
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Не зважаць на глабальныя спалучэнні клавіш"
 
-#: rulesmodel.cpp:697
+#: rulesmodel.cpp:685
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -591,47 +569,42 @@ msgstr ""
 "глабальныя спалучэнні клавіш накшталт <shortcut>Alt+Space</shortcut>, каб "
 "актываваць KRunner."
 
-#: rulesmodel.cpp:707
+#: rulesmodel.cpp:695
 #, kde-format
 msgid "Closeable"
 msgstr "Можна закрыць"
 
-#: rulesmodel.cpp:712
+#: rulesmodel.cpp:700
 #, kde-format
 msgid "Desktop file name"
 msgstr "Назва файла працоўнага стала"
 
-#: rulesmodel.cpp:717
-#, kde-format
-msgid "Block compositing"
-msgstr "Блакаванне кампазітынгу"
-
-#: rulesmodel.cpp:722
+#: rulesmodel.cpp:705
 #, kde-format
 msgid "Layer"
 msgstr "Слой"
 
-#: rulesmodel.cpp:728
+#: rulesmodel.cpp:711
 #, kde-format
 msgid "Adaptive sync"
 msgstr "Прыстасавальная сінхранізацыя"
 
-#: rulesmodel.cpp:733
+#: rulesmodel.cpp:716
 #, kde-format
 msgid "Allow tearing"
 msgstr "Дазволіць тырынг"
 
-#: rulesmodel.cpp:738
+#: rulesmodel.cpp:721
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
 msgstr ""
 
-#: rulesmodel.cpp:791
+#: rulesmodel.cpp:774
 #, kde-format
 msgid "Window class not available"
 msgstr "Клас акна недаступны"
 
-#: rulesmodel.cpp:792
+#: rulesmodel.cpp:775
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -646,190 +619,190 @@ msgstr ""
 "загаловак акна.<nl/><nl/>Калі ласка, паведаміце пра гэтую хібу "
 "распрацоўнікам праграмы."
 
-#: rulesmodel.cpp:826
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "All window types"
 msgstr "Усе тыпы акон"
 
-#: rulesmodel.cpp:827
+#: rulesmodel.cpp:810
 #, kde-format
 msgid "Normal window"
 msgstr "Звычайнае акно"
 
-#: rulesmodel.cpp:828
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "Dialog window"
 msgstr "Дыялогавае акно"
 
-#: rulesmodel.cpp:829
+#: rulesmodel.cpp:812
 #, kde-format
 msgid "Utility window"
 msgstr "Дапаможнае акно"
 
-#: rulesmodel.cpp:830
+#: rulesmodel.cpp:813
 #, kde-format
 msgid "Dock (panel)"
 msgstr "Док (панэль)"
 
-#: rulesmodel.cpp:831
+#: rulesmodel.cpp:814
 #, kde-format
 msgid "Toolbar"
 msgstr "Панэль інструментаў"
 
-#: rulesmodel.cpp:832
+#: rulesmodel.cpp:815
 #, kde-format
 msgid "Torn-off menu"
 msgstr "Адчэпленыя меню"
 
-#: rulesmodel.cpp:833
+#: rulesmodel.cpp:816
 #, kde-format
 msgid "Splash screen"
 msgstr "Экранная застаўка"
 
-#: rulesmodel.cpp:834 rulesmodel.cpp:935
+#: rulesmodel.cpp:817 rulesmodel.cpp:918
 #, kde-format
 msgid "Desktop"
 msgstr "Працоўны стол"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:836
+#: rulesmodel.cpp:819
 #, kde-format
 msgid "Standalone menubar"
 msgstr "Асобная панэль меню"
 
-#: rulesmodel.cpp:837 rulesmodel.cpp:943
+#: rulesmodel.cpp:820 rulesmodel.cpp:926
 #, kde-format
 msgid "On-screen display"
 msgstr "Экраннае меню"
 
-#: rulesmodel.cpp:847
+#: rulesmodel.cpp:830
 #, kde-format
 msgid "All desktops"
 msgstr "Усе працоўныя сталы"
 
-#: rulesmodel.cpp:849
+#: rulesmodel.cpp:832
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "Паказваць акно на ўсіх працоўных сталах"
 
-#: rulesmodel.cpp:868
+#: rulesmodel.cpp:851
 #, kde-format
 msgid "All activities"
 msgstr "Усе пакоі"
 
-#: rulesmodel.cpp:870
+#: rulesmodel.cpp:853
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "Паказваць акно ва ўсіх пакоях"
 
-#: rulesmodel.cpp:891
+#: rulesmodel.cpp:874
 #, kde-format
 msgid "Default"
 msgstr "Прадвызначана"
 
-#: rulesmodel.cpp:892
+#: rulesmodel.cpp:875
 #, kde-format
 msgid "No placement"
 msgstr "Без размяшчэння"
 
-#: rulesmodel.cpp:893
+#: rulesmodel.cpp:876
 #, kde-format
 msgid "Minimal overlapping"
 msgstr "Мінімальнае перакрыццё"
 
-#: rulesmodel.cpp:894
+#: rulesmodel.cpp:877
 #, kde-format
 msgid "Maximized"
 msgstr "Разгорнута"
 
-#: rulesmodel.cpp:895
+#: rulesmodel.cpp:878
 #, kde-format
 msgid "Centered"
 msgstr "Па цэнтры"
 
-#: rulesmodel.cpp:896
+#: rulesmodel.cpp:879
 #, kde-format
 msgid "Random"
 msgstr "Выпадкова"
 
-#: rulesmodel.cpp:897
+#: rulesmodel.cpp:880
 #, kde-format
 msgid "In top-left corner"
 msgstr "У левым верхнім куце"
 
-#: rulesmodel.cpp:898
+#: rulesmodel.cpp:881
 #, kde-format
 msgid "Under mouse"
 msgstr "Пад мышшу"
 
-#: rulesmodel.cpp:899
+#: rulesmodel.cpp:882
 #, kde-format
 msgid "On main window"
 msgstr "На асноўным акне"
 
-#: rulesmodel.cpp:906
+#: rulesmodel.cpp:889
 #, kde-format
 msgid "None"
 msgstr "Няма"
 
-#: rulesmodel.cpp:907
+#: rulesmodel.cpp:890
 #, kde-format
 msgid "Low"
 msgstr "Нізкі ўзровень"
 
-#: rulesmodel.cpp:908 rulesmodel.cpp:937
+#: rulesmodel.cpp:891 rulesmodel.cpp:920
 #, kde-format
 msgid "Normal"
 msgstr "Звычайны ўзровень"
 
-#: rulesmodel.cpp:909
+#: rulesmodel.cpp:892
 #, kde-format
 msgid "High"
 msgstr "Высокі ўзровень"
 
-#: rulesmodel.cpp:910
+#: rulesmodel.cpp:893
 #, kde-format
 msgid "Extreme"
 msgstr "Экстрымальны ўзровень"
 
-#: rulesmodel.cpp:936
+#: rulesmodel.cpp:919
 #, kde-format
 msgid "Below"
 msgstr "Знізу"
 
-#: rulesmodel.cpp:938
+#: rulesmodel.cpp:921
 #, kde-format
 msgid "Above"
 msgstr "Наверсе"
 
-#: rulesmodel.cpp:939
+#: rulesmodel.cpp:922
 #, kde-format
 msgid "Notification"
 msgstr "Апавяшчэнне"
 
-#: rulesmodel.cpp:941
+#: rulesmodel.cpp:924
 #, kde-format
 msgid "Popup"
 msgstr "Выплыўное акно"
 
-#: rulesmodel.cpp:942
+#: rulesmodel.cpp:925
 #, kde-format
 msgid "Critical notification"
 msgstr "Крытычныя апавяшчэнні"
 
-#: rulesmodel.cpp:944
+#: rulesmodel.cpp:927
 #, kde-format
 msgid "Overlay"
 msgstr "Пакрыццё"
 
-#: rulesmodel.cpp:969
+#: rulesmodel.cpp:952
 #, kde-format
 msgid "Unmanaged window"
 msgstr "Акно без кіравання"
 
-#: rulesmodel.cpp:970
+#: rulesmodel.cpp:953
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "Не ўдалося выявіць уласцівасці акна. Акно не кіруецца KWin."
@@ -1027,6 +1000,28 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
+
+#~ msgid "Obey geometry restrictions"
+#~ msgstr "Пільнавацца геаметрычных абмежаванняў"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid ""
+#~ "Some apps like video players or terminals can ask KWin to constrain them "
+#~ "to certain aspect ratios or only grow by values larger than the "
+#~ "dimensions of one character. Use this property to ignore such "
+#~ "restrictions and allow those windows to be resized to arbitrary sizes.<nl/"
+#~ "><nl/>This can be helpful for windows that can't quite fit the full "
+#~ "screen area when maximized."
+#~ msgstr ""
+#~ "Некаторыя праграмы накшталт відэаплэераў або тэрміналаў могуць звяртацца "
+#~ "да KWin, каб абмежаваць іх пэўнымі прапорцыямі або павялічваць на "
+#~ "значэнні, большыя за памеры аднаго сімвала. Выкарыстоўвайце гэтую "
+#~ "ўласцівасць, каб ігнараваць такія абмежаванні і дазваляць змяняць памер "
+#~ "гэтых акон да адвольных памераў.<nl/><nl/>Гэта можа быць карысным для "
+#~ "акон, якія не могуць умясціцца ў экран пры разгортванні."
+
+#~ msgid "Block compositing"
+#~ msgstr "Блакаванне кампазітынгу"
 
 #~ msgid "Shaded"
 #~ msgstr "Згорнута ў загаловак"

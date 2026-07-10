@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-08 00:46+0000\n"
+"POT-Creation-Date: 2026-07-10 00:46+0000\n"
 "PO-Revision-Date: 2026-05-31 20:05-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -70,7 +70,7 @@ msgstr "ئوڭ Ctrl بېسىلسا كىرگۈزۈشكە ئېرىشىدۇ"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland بىرىكتۈرگۈچ"
 
-#: compositor.cpp:747
+#: compositor.cpp:749
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -3467,194 +3467,134 @@ msgstr "ماۋزۇ بالداق رەڭگى ۋە لايىھەسى"
 msgid "Titlebar color rule type"
 msgstr "ماۋزۇ بالداق رەڭ قائىدىسىنىڭ تۈرى"
 
-#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:326
-#, kde-format
-msgid "Block Compositing"
-msgstr "بىرىكتۈرۈشنى توس"
-
-#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:330
-#, kde-format
-msgid "Block Compositing rule type"
-msgstr "بىرىكتۈرۈشنى توشۇش قائىدىسىنىڭ تۈرى"
-
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:335
+#: rulesettings.kcfg:326
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "فوكۇسنى ئوغرىلاشتىن ساقلان"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:341
+#: rulesettings.kcfg:332
 #, kde-format
 msgid "Focus stealing prevention rule type"
 msgstr "فوكۇسنى ئوغرىلاشتىن ساقلىنىش قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:346
+#: rulesettings.kcfg:337
 #, kde-format
 msgid "Focus protection"
 msgstr "فوكۇسنى قوغداش"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:352
+#: rulesettings.kcfg:343
 #, kde-format
 msgid "Focus protection rule type"
 msgstr "فوكۇسنى قوغداش قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:357
+#: rulesettings.kcfg:348
 #, kde-format
 msgid "Accept Focus"
 msgstr "فوكۇس قوبۇل قىل"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:361
+#: rulesettings.kcfg:352
 #, kde-format
 msgid "Accept Focus rule type"
 msgstr "فوكۇس قوبۇل قىلىش قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:366
+#: rulesettings.kcfg:357
 #, kde-format
 msgid "Closeable"
 msgstr "يېپىشچان"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:370
+#: rulesettings.kcfg:361
 #, kde-format
 msgid "Closeable rule type"
 msgstr "يېپىشچانلىق قائىدىسىنىڭ تۈرى"
 
-#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:375
-#, kde-format
-msgid "Autogroup with identical"
-msgstr "ئوخشاشلىقى بويىچە ئۆزلۈكىدىن گۇرۇپپىلا"
-
-#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:379
-#, kde-format
-msgid "Autogroup with identical rule type"
-msgstr "ئوخشاشلىقى بويىچە ئۆزلۈكىدىن گۇرۇپپىلاش قائىدىسىنىڭ تۈرى"
-
-#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:384
-#, kde-format
-msgid "Autogroup in foreground"
-msgstr "ئالدى سۇپىدا ئۆزلۈكىدىن گۇرۇپپىلاش"
-
-#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:388
-#, kde-format
-msgid "Autogroup in foreground rule type"
-msgstr "ئالدى سۇپىدا ئۆزلۈكىدىن گۇرۇپپىلاش قائىدىسىنىڭ تۈرى"
-
-#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:393
-#, kde-format
-msgid "Autogroup by ID"
-msgstr "كىملىكى بويىچە ئۆزلۈكىدىن گۇرۇپپىلاش"
-
-#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:396
-#, kde-format
-msgid "Autogroup by ID rule type"
-msgstr "كىملىكى بويىچە ئۆزلۈكىدىن گۇرۇپپىلاش قائىدىسىنىڭ تۈرى"
-
-#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:401
-#, kde-format
-msgid "Obey geometry restrictions"
-msgstr "چوڭلۇق ۋە ئورۇن چەكلىمىسىگە بويسۇنىدۇ"
-
-#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:405
-#, kde-format
-msgid "Obey geometry restrictions rule type"
-msgstr "چوڭلۇق ۋە ئورۇن چەكلىمىسىگە بويسۇنۇش قائىدىسىنىڭ تۈرى"
-
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:410
+#: rulesettings.kcfg:366
 #, kde-format
 msgid "Shortcut"
 msgstr "تېزلەتمە"
 
 #. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:413
+#: rulesettings.kcfg:369
 #, kde-format
 msgid "Shortcut rule type"
 msgstr "تېزلەتمە قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:420
+#: rulesettings.kcfg:376
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "ئومۇمىيەت تېزلەتمىگە پەرۋا قىلما"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:424
+#: rulesettings.kcfg:380
 #, kde-format
 msgid "Ignore global shortcuts rule type"
 msgstr "ئومۇمىيەت تېزلەتمىگە پەرۋا قىلماسلىق قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
+#: rulesettings.kcfg:385
 #, kde-format
 msgid "Desktop file name"
 msgstr "ئۈستەلئۈستى ھۆججەت ئاتى"
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:432
+#: rulesettings.kcfg:388
 #, kde-format
 msgid "Desktop file name rule type"
 msgstr "ئۈستەلئۈستى ھۆججەت ئاتى قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:439
+#: rulesettings.kcfg:395
 #, kde-format
 msgid "Layer"
 msgstr "قەۋەت"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:455
+#: rulesettings.kcfg:411
 #, kde-format
 msgid "Layer rule type"
 msgstr "قەۋەت قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:460
+#: rulesettings.kcfg:416
 #, kde-format
 msgid "AdaptiveSync"
 msgstr "ئۆزلۈكىدىن ماسلىشىشنى قەدەمداشلاش"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:464
+#: rulesettings.kcfg:420
 #, kde-format
 msgid "AdaptiveSync rule type"
 msgstr "ئۆزلۈكىدىن ماسلىشىشنى قەدەمداشلاش قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:469
+#: rulesettings.kcfg:425
 #, kde-format
 msgid "Allow Tearing"
 msgstr "يىرتىلىشقا يول قويىدۇ"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:473
+#: rulesettings.kcfg:429
 #, kde-format
 msgid "Tearing rule type"
 msgstr "يىرتىلىش قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:478
+#: rulesettings.kcfg:434
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
 msgstr ""
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:482
+#: rulesettings.kcfg:438
 #, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr ""
@@ -4368,7 +4308,7 @@ msgstr "قوزغاتقۇ چىقىرىش سەپلىمىسىنى رەت قىلدى
 msgid "The session is not active"
 msgstr ""
 
-#: window.cpp:3107
+#: window.cpp:3100
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4426,6 +4366,36 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland يىمىرىلدى"
+
+#~ msgid "Block Compositing"
+#~ msgstr "بىرىكتۈرۈشنى توس"
+
+#~ msgid "Block Compositing rule type"
+#~ msgstr "بىرىكتۈرۈشنى توشۇش قائىدىسىنىڭ تۈرى"
+
+#~ msgid "Autogroup with identical"
+#~ msgstr "ئوخشاشلىقى بويىچە ئۆزلۈكىدىن گۇرۇپپىلا"
+
+#~ msgid "Autogroup with identical rule type"
+#~ msgstr "ئوخشاشلىقى بويىچە ئۆزلۈكىدىن گۇرۇپپىلاش قائىدىسىنىڭ تۈرى"
+
+#~ msgid "Autogroup in foreground"
+#~ msgstr "ئالدى سۇپىدا ئۆزلۈكىدىن گۇرۇپپىلاش"
+
+#~ msgid "Autogroup in foreground rule type"
+#~ msgstr "ئالدى سۇپىدا ئۆزلۈكىدىن گۇرۇپپىلاش قائىدىسىنىڭ تۈرى"
+
+#~ msgid "Autogroup by ID"
+#~ msgstr "كىملىكى بويىچە ئۆزلۈكىدىن گۇرۇپپىلاش"
+
+#~ msgid "Autogroup by ID rule type"
+#~ msgstr "كىملىكى بويىچە ئۆزلۈكىدىن گۇرۇپپىلاش قائىدىسىنىڭ تۈرى"
+
+#~ msgid "Obey geometry restrictions"
+#~ msgstr "چوڭلۇق ۋە ئورۇن چەكلىمىسىگە بويسۇنىدۇ"
+
+#~ msgid "Obey geometry restrictions rule type"
+#~ msgstr "چوڭلۇق ۋە ئورۇن چەكلىمىسىگە بويسۇنۇش قائىدىسىنىڭ تۈرى"
 
 #~ msgid "Move Mouse to Focus"
 #~ msgstr "چاشقىنەكنى فوكۇسقا يۆتكە"
