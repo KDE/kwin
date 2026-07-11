@@ -4448,33 +4448,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland krasjet"
-
-#~ msgid "Block Compositing"
-#~ msgstr "Blokker sammensetting"
-
-#~ msgid "Block Compositing rule type"
-#~ msgstr "Regeltype for blokkering av sammensetting"
-
-#~ msgid "Autogroup with identical"
-#~ msgstr "Grupper automatisk med identiske"
-
-#~ msgid "Autogroup with identical rule type"
-#~ msgstr "Regeltype for å gruppere automatisk med identiske"
-
-#~ msgid "Autogroup in foreground"
-#~ msgstr "Grupper i forgrunnen"
-
-#~ msgid "Autogroup in foreground rule type"
-#~ msgstr "Regeltype for gruppering i forgrunnen"
-
-#~ msgid "Autogroup by ID"
-#~ msgstr "Grupper etter ID"
-
-#~ msgid "Autogroup by ID rule type"
-#~ msgstr "Regeltype for gruppering etter ID"
-
-#~ msgid "Obey geometry restrictions"
-#~ msgstr "Følg geometrirestriksjoner"
-
-#~ msgid "Obey geometry restrictions rule type"
-#~ msgstr "Regeltype for å følge geometrirestriksjoner"

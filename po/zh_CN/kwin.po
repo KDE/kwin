@@ -4328,39 +4328,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgid "Block Compositing"
-#~ msgstr "阻止显示特效合成"
-
-#~ msgid "Block Compositing rule type"
-#~ msgstr "阻止显示特效合成规则类型"
-
-#~ msgid "Autogroup with identical"
-#~ msgstr "相同程序自动分组"
-
-#~ msgid "Autogroup with identical rule type"
-#~ msgstr "相同程序自动分组规则类型"
-
-#~ msgid "Autogroup in foreground"
-#~ msgstr "前台自动分组"
-
-#~ msgid "Autogroup in foreground rule type"
-#~ msgstr "前台自动分组规则类型"
-
-#~ msgid "Autogroup by ID"
-#~ msgstr "按 ID 自动分组"
-
-#~ msgid "Autogroup by ID rule type"
-#~ msgstr "按 ID 自动分组规则类型"
-
-#~ msgid "Obey geometry restrictions"
-#~ msgstr "服从大小和位置限制"
-
-#~ msgid "Obey geometry restrictions rule type"
-#~ msgstr "服从大小和位置限制规则类型"
-
-#~ msgid "Move Mouse to Focus"
-#~ msgstr "移动鼠标到焦点"
-
-#~ msgid "Move Mouse to Center"
-#~ msgstr "移动鼠标到中央"
