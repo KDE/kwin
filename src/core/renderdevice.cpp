@@ -197,11 +197,11 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             }
         }
         std::vector<vk::QueueFamilyProperties> queueProperties = physicalDevice.getQueueFamilyProperties();
-        const bool hasTransfer = std::ranges::any_of(queueProperties, [](const vk::QueueFamilyProperties &props) {
-            return bool(props.queueFlags & vk::QueueFlagBits::eTransfer);
+        const bool hasGraphics = std::ranges::any_of(queueProperties, [](const vk::QueueFamilyProperties &props) {
+            return bool(props.queueFlags & vk::QueueFlagBits::eGraphics);
         });
-        if (!hasTransfer) {
-            qCWarning(KWIN_VULKAN, "Physical device %s has no transfer queue", deviceName);
+        if (!hasGraphics) {
+            qCWarning(KWIN_VULKAN, "Physical device %s has no graphics queue", deviceName);
             continue;
         }
 

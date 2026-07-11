@@ -49,8 +49,8 @@ public:
     const FormatModifierMap &supportedFormats() const;
     const vk::raii::Device &logicalDevice() const;
 
-    const vk::raii::Queue &transferQueue() const;
-    uint32_t transferQueueFamily() const;
+    const vk::raii::Queue &graphicsQueue() const;
+    uint32_t graphicsQueueFamily() const;
     std::span<const VkQueueFamilyProperties> queueFamilyProperties() const;
     float nanosecondsPerQueryTick() const;
 
@@ -105,7 +105,7 @@ private:
     vk::raii::Device m_logical;
     FormatModifierMap m_formats;
     std::vector<VkQueueFamilyProperties> m_queueProperties;
-    vk::raii::Queue m_transferQueue;
+    vk::raii::Queue m_graphicsQueue;
     vk::raii::CommandPool m_commandPool;
     uint32_t m_queueFamilyIndex;
     vk::PhysicalDeviceMemoryProperties m_memoryProperties;
