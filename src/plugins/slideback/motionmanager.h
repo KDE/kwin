@@ -13,6 +13,8 @@
 namespace KWin
 {
 
+class TransformItem;
+
 /**
  * @internal
  */
@@ -186,18 +188,9 @@ public:
     /**
      * Determine the new positions for windows that have not
      * reached their target. Called once per frame, usually in
-     * prePaintScreen(). Remember to set the
-     * Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS flag.
+     * prePaintScreen().
      */
     void calculate(int time);
-    /**
-     * Modify a registered window's paint data to make it appear
-     * at its real location on the screen. Usually called in
-     * paintWindow(). Remember to flag the window as having been
-     * transformed in prePaintWindow() by calling
-     * WindowPrePaintData::setTransformed()
-     */
-    void apply(EffectWindow *w, WindowPaintData &data);
     /**
      * Set all motion targets and values back to where the
      * windows were before transformations. The same as
@@ -259,7 +252,7 @@ public:
      */
     inline QList<EffectWindow *> managedWindows() const
     {
-        return m_managedWindows.keys();
+        return m_managedWindows | std::views::keys | std::ranges::to<QList>();
     }
     /**
      * Returns whether or not a specified window is being managed
@@ -302,8 +295,9 @@ private:
         // TODO: Rotation, etc?
         Motion2D translation; // Absolute position
         Motion2D scale; // xScale and yScale
+        std::unique_ptr<TransformItem> item;
     };
-    QHash<EffectWindow *, WindowMotion> m_managedWindows;
+    std::unordered_map<EffectWindow *, WindowMotion> m_managedWindows;
     QSet<EffectWindow *> m_movingWindowsSet;
 };
 

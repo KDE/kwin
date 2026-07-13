@@ -138,12 +138,6 @@ void SlideBackEffect::prePaintScreen(ScreenPrePaintData &data)
 
     if (motionManager.managingWindows()) {
         motionManager.calculate(time);
-        data.mask |= Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
-    }
-
-    const QList<EffectWindow *> windows = effects->stackingOrder();
-    for (auto *w : windows) {
-        w->setData(WindowForceBlurRole, QVariant(true));
     }
 
     effects->prePaintScreen(data);
@@ -218,11 +212,8 @@ void SlideBackEffect::postPaintScreen()
     }
 
     if (motionManager.areWindowsMoving()) {
+        // TODO only schedule frames instead?
         effects->addRepaintFull();
-    }
-
-    for (auto &w : effects->stackingOrder()) {
-        w->setData(WindowForceBlurRole, QVariant());
     }
 
     if (!isActive()) {
@@ -230,28 +221,6 @@ void SlideBackEffect::postPaintScreen()
     }
 
     effects->postPaintScreen();
-}
-
-void SlideBackEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data)
-{
-    if (motionManager.isManaging(w)) {
-        data.setTransformed();
-    }
-
-    effects->prePaintWindow(view, w, data);
-}
-
-bool SlideBackEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data)
-{
-    if (motionManager.isManaging(w)) {
-        motionManager.apply(w, data);
-    }
-    Region effectiveRegion = deviceGeometry;
-    for (const Region &r : std::as_const(clippedRegions)) {
-        effectiveRegion = effectiveRegion.intersected(viewport.mapToDeviceCoordinatesAligned(r));
-    }
-    clippedRegions.clear();
-    return effects->paintWindow(renderTarget, viewport, w, mask, effectiveRegion, data);
 }
 
 void SlideBackEffect::slotWindowDeleted(EffectWindow *w)
