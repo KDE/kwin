@@ -25,9 +25,6 @@ class SlideBackEffect
 public:
     SlideBackEffect();
 
-    void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data) override;
-    bool paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data) override;
-
     void prePaintScreen(ScreenPrePaintData &data) override;
     void postPaintScreen() override;
     bool isActive() const override;
