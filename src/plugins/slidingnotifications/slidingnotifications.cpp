@@ -316,22 +316,11 @@ std::unique_ptr<SlideNotificationAnimation> SlideNotificationAnimation::outro(Ef
     return animation;
 }
 
-RectF SlideNotificationAnimation::clipArea() const
+void SlideNotificationAnimation::apply(Item *transform)
 {
-    return window->screen()->geometryF();
-}
-
-RectF SlideNotificationAnimation::dirtyArea() const
-{
-    const RectF current = window->expandedGeometry().translated(offset());
-    const RectF target = window->expandedGeometry().translated(QPointF(springX.anchor(), springY.anchor()));
-    return current.united(target).intersected(clipArea());
-}
-
-void SlideNotificationAnimation::apply(WindowPaintData &data)
-{
-    data += offset();
-    data.multiplyOpacity(opacity());
+    transform->setPosition(offset());
+    transform->setOpacity(opacity());
+    transform->setGlobalClipRect(window->screen()->geometryF());
 }
 
 DisplaceNotificationAnimation::DisplaceNotificationAnimation(EffectWindow *window)
@@ -342,14 +331,6 @@ DisplaceNotificationAnimation::DisplaceNotificationAnimation(EffectWindow *windo
 QPointF DisplaceNotificationAnimation::position() const
 {
     return QPointF(springX.position(), springY.position());
-}
-
-RectF DisplaceNotificationAnimation::dirtyArea() const
-{
-    const RectF visibleRect = window->expandedGeometry().translated(-window->pos());
-    const RectF current = visibleRect.translated(position());
-    const RectF target = visibleRect.translated(QPointF(springX.anchor(), springY.anchor()));
-    return current.united(target);
 }
 
 void DisplaceNotificationAnimation::moveTo(const QPointF &point)
@@ -370,9 +351,9 @@ bool DisplaceNotificationAnimation::done() const
     return !springX.isMoving() && !springY.isMoving();
 }
 
-void DisplaceNotificationAnimation::apply(WindowPaintData &data)
+void DisplaceNotificationAnimation::apply(Item *transform)
 {
-    data += position() - window->pos();
+    transform->setPosition(position() - window->pos());
 }
 
 std::unique_ptr<DisplaceNotificationAnimation> DisplaceNotificationAnimation::move(EffectWindow *window, const QPointF &initialPosition, const QPointF &finalPosition)
@@ -389,7 +370,7 @@ std::unique_ptr<DisplaceNotificationAnimation> DisplaceNotificationAnimation::mo
 
 NotificationAnimation::NotificationAnimation(EffectWindow *window)
     : window(window)
-    , effect(window->windowItem())
+    , transform(std::make_unique<TransformItem>(window))
     , deletedRef(window)
 {
     window->setData(WindowForceBlurRole, true);
@@ -410,22 +391,12 @@ void NotificationAnimation::advance(RenderView *view)
 {
     if (slide) {
         slide->advance(view);
+        slide->apply(transform.get());
     }
     if (displace) {
         displace->advance(view);
+        displace->apply(transform.get());
     }
-}
-
-RectF NotificationAnimation::dirtyArea() const
-{
-    RectF dirtyArea;
-    if (slide) {
-        dirtyArea |= slide->dirtyArea();
-    }
-    if (displace) {
-        dirtyArea |= displace->dirtyArea();
-    }
-    return dirtyArea;
 }
 
 SlidingNotificationsEffect::SlidingNotificationsEffect()
@@ -454,33 +425,10 @@ void SlidingNotificationsEffect::prePaintWindow(RenderView *view, EffectWindow *
     if (auto it = m_animations.find(window); it != m_animations.end()) {
         auto &[window, animation] = *it;
 
-        data.setTransformed();
         animation->advance(view);
     }
 
     effects->prePaintWindow(view, window, data);
-}
-
-bool SlidingNotificationsEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceGeometry, WindowPaintData &data)
-{
-    const auto it = m_animations.find(window);
-    if (it == m_animations.end()) {
-        return effects->paintWindow(renderTarget, viewport, window, mask, deviceGeometry, data);
-    }
-
-    const auto &[_, animation] = *it;
-    Region clipped = deviceGeometry;
-
-    if (animation->slide) {
-        clipped &= viewport.mapToDeviceCoordinates(animation->slide->clipArea()).rounded();
-        animation->slide->apply(data);
-    }
-
-    if (animation->displace) {
-        animation->displace->apply(data);
-    }
-
-    return effects->paintWindow(renderTarget, viewport, window, mask, clipped, data);
 }
 
 void SlidingNotificationsEffect::postPaintScreen()
@@ -491,7 +439,7 @@ void SlidingNotificationsEffect::postPaintScreen()
     });
 
     for (const auto &[window, animation] : m_animations) {
-        window->addLayerRepaint(animation->dirtyArea());
+        window->windowItem()->scheduleFrameRecursive();
     }
 
     effects->postPaintScreen();
@@ -526,7 +474,7 @@ void SlidingNotificationsEffect::onWindowAdded(EffectWindow *window)
     }
 
     animation->slide = SlideNotificationAnimation::intro(window);
-    window->addLayerRepaint(animation->dirtyArea());
+    window->windowItem()->scheduleFrameRecursive();
 }
 
 void SlidingNotificationsEffect::onWindowClosed(EffectWindow *window)
@@ -557,7 +505,7 @@ void SlidingNotificationsEffect::onWindowClosed(EffectWindow *window)
         animation->slide = SlideNotificationAnimation::outro(window);
     }
 
-    window->addLayerRepaint(animation->dirtyArea());
+    window->windowItem()->scheduleFrameRecursive();
 }
 
 void SlidingNotificationsEffect::onWindowFrameGeometryChanged(EffectWindow *window, const RectF &oldGeometry)
@@ -593,7 +541,7 @@ void SlidingNotificationsEffect::onWindowFrameGeometryChanged(EffectWindow *wind
         animation->displace = DisplaceNotificationAnimation::move(window, oldGeometry.topLeft(), window->pos());
     }
 
-    window->addLayerRepaint(animation->dirtyArea());
+    window->windowItem()->scheduleFrameRecursive();
 }
 
 }
