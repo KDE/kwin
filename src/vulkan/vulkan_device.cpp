@@ -27,7 +27,7 @@ VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::De
     // and sample + color attachment + transfer_dst
     , m_formats(queryFormats(VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT))
     , m_queueProperties(std::move(queueProperties))
-    , m_transferQueue(nullptr)
+    , m_graphicsQueue(nullptr)
     , m_commandPool(nullptr)
     , m_deviceLimits(m_physical.getProperties().limits)
 {
@@ -39,7 +39,7 @@ VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::De
 VulkanDevice::~VulkanDevice()
 {
     Q_EMIT deviceLost();
-    m_transferQueue.waitIdle();
+    m_graphicsQueue.waitIdle();
     m_importedTextures.clear();
     m_submittedCommandBuffers.clear();
     m_commandPool.clear();
@@ -48,20 +48,12 @@ VulkanDevice::~VulkanDevice()
 
 void VulkanDevice::getQueue()
 {
-    // transfer-only queues usually do DMA, so prefer them
     auto it = std::ranges::find_if(m_queueProperties, [](const VkQueueFamilyProperties &props) {
-        return props.queueFlags == VK_QUEUE_TRANSFER_BIT;
+        return props.queueFlags & VK_QUEUE_GRAPHICS_BIT;
     });
-    if (it == m_queueProperties.end()) {
-        // fall back to anything else that can do transfer.
-        // NOTE that compute and graphics queues are guaranteed to have that capability
-        it = std::ranges::find_if(m_queueProperties, [](const VkQueueFamilyProperties &props) {
-            return props.queueFlags & VK_QUEUE_TRANSFER_BIT;
-        });
-    }
     Q_ASSERT(it != m_queueProperties.end());
     m_queueFamilyIndex = std::distance(m_queueProperties.begin(), it);
-    m_transferQueue = m_logical.getQueue(m_queueFamilyIndex, 0);
+    m_graphicsQueue = m_logical.getQueue(m_queueFamilyIndex, 0);
 }
 
 void VulkanDevice::createCommandPool()
@@ -355,12 +347,12 @@ const vk::raii::Device &VulkanDevice::logicalDevice() const
     return m_logical;
 }
 
-const vk::raii::Queue &VulkanDevice::transferQueue() const
+const vk::raii::Queue &VulkanDevice::graphicsQueue() const
 {
-    return m_transferQueue;
+    return m_graphicsQueue;
 }
 
-uint32_t VulkanDevice::transferQueueFamily() const
+uint32_t VulkanDevice::graphicsQueueFamily() const
 {
     return m_queueFamilyIndex;
 }
@@ -444,7 +436,7 @@ std::optional<FileDescriptor> VulkanDevice::submit(vk::raii::CommandBuffer &&buf
         waitSemaphores.push_back(*waitSemaphore);
         waitFlags.push_back(vk::PipelineStageFlagBits::eAllCommands);
     }
-    vk::Result result = m_transferQueue.submit(vk::SubmitInfo{
+    vk::Result result = m_graphicsQueue.submit(vk::SubmitInfo{
                                                    waitSemaphores,
                                                    waitFlags,
                                                    *buffer,
@@ -529,7 +521,7 @@ vk::raii::DeviceMemory VulkanDevice::allocateMemory(const vk::BufferCreateInfo &
 
 void VulkanDevice::waitIdle()
 {
-    m_transferQueue.waitIdle();
+    m_graphicsQueue.waitIdle();
 }
 
 }

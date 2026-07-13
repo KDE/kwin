@@ -199,7 +199,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
 
     std::unique_ptr<VulkanRenderTimeQuery> query;
     if (frame) {
-        query = VulkanRenderTimeQuery::begin(copyVk, commandBuffer, copyVk->transferQueueFamily());
+        query = VulkanRenderTimeQuery::begin(copyVk, commandBuffer, copyVk->graphicsQueueFamily());
     }
 
     vk::ImageMemoryBarrier2 memoryBarrier{
@@ -210,7 +210,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
         vk::ImageLayout::eGeneral,
         vk::ImageLayout::eGeneral,
         vk::QueueFamilyExternal,
-        copyVk->transferQueueFamily(),
+        copyVk->graphicsQueueFamily(),
         m_currentVulkanSlot->texture()->handle(),
         vk::ImageSubresourceRange{
             vk::ImageAspectFlagBits::eColor,
@@ -257,7 +257,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
                             m_currentVulkanSlot->texture()->handle(), vk::ImageLayout::eGeneral,
                             regions, vk::Filter::eNearest);
 
-    memoryBarrier.setSrcQueueFamilyIndex(copyVk->transferQueueFamily());
+    memoryBarrier.setSrcQueueFamilyIndex(copyVk->graphicsQueueFamily());
     memoryBarrier.setDstQueueFamilyIndex(vk::QueueFamilyExternal);
     commandBuffer.pipelineBarrier2(vk::DependencyInfo{
         vk::DependencyFlags{},
