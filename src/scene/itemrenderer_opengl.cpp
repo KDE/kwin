@@ -131,7 +131,7 @@ static RenderGeometry createGeometry(ItemRenderer *renderer, const Item *item, c
     return geometry;
 }
 
-bool ItemRendererOpenGL::maybeCreateSingleRenderNode(Item *item, RenderContext *context, bool hole)
+bool ItemRendererOpenGL::maybeCreateSingleRenderNode(Item *item, RenderContext *context, bool hole, const Rect &deviceClip)
 {
     const Rect deviceBounds = RectF(context->transformStack.top().mapRect(item->rect().scaled(context->renderTargetScale)))
                                   .translated(context->renderOffset - context->viewportOrigin)
@@ -139,7 +139,7 @@ bool ItemRendererOpenGL::maybeCreateSingleRenderNode(Item *item, RenderContext *
     if (deviceBounds.isEmpty()) {
         return true;
     }
-    if (!context->deviceClip.intersects(deviceBounds)) {
+    if (!context->deviceClip.intersects(deviceBounds & deviceClip)) {
         return true;
     }
 
@@ -167,6 +167,7 @@ bool ItemRendererOpenGL::maybeCreateSingleRenderNode(Item *item, RenderContext *
                     .renderingIntent = item->renderingIntent(),
                     .bufferReleasePoint = nullptr,
                     .paintHole = hole,
+                    .clipRect = deviceClip,
                 });
                 renderNode.geometry.postProcessTextureCoordinates(ninePatch->texture()->matrix(UnnormalizedCoordinates));
             }
@@ -186,6 +187,7 @@ bool ItemRendererOpenGL::maybeCreateSingleRenderNode(Item *item, RenderContext *
                     .renderingIntent = item->renderingIntent(),
                     .bufferReleasePoint = nullptr,
                     .paintHole = hole,
+                    .clipRect = deviceClip,
                 });
                 renderNode.geometry.postProcessTextureCoordinates(atlas->texture()->matrix(UnnormalizedCoordinates));
             }
@@ -206,6 +208,7 @@ bool ItemRendererOpenGL::maybeCreateSingleRenderNode(Item *item, RenderContext *
                     .paintHole = hole,
                     .hasFloatingPointColor = texture->isFloatingPoint(),
                     .layerDebugBox = m_debug.layerEnabled ? std::optional(item->rect()) : std::nullopt,
+                    .clipRect = deviceClip,
                 });
 
                 if (texture->texture()->target() == GL_TEXTURE_EXTERNAL_OES) {
@@ -244,6 +247,7 @@ bool ItemRendererOpenGL::maybeCreateSingleRenderNode(Item *item, RenderContext *
                     .renderingIntent = item->renderingIntent(),
                     .bufferReleasePoint = texture->releasePoint(),
                     .paintHole = hole,
+                    .clipRect = deviceClip,
                 });
                 renderNode.geometry.postProcessTextureCoordinates(texture->texture()->matrix(UnnormalizedCoordinates));
             }
@@ -270,13 +274,15 @@ bool ItemRendererOpenGL::maybeCreateSingleRenderNode(Item *item, RenderContext *
                 .borderThickness = thickness,
                 .borderColor = outline.color(),
                 .paintHole = hole,
+                .clipRect = deviceClip,
             });
         }
     }
     return true;
 }
 
-bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
+bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, Rect deviceClip,
+                                          const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
 {
     bool hole = false;
     if (filter && filter(item)) {
@@ -301,15 +307,17 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
         matrix.scale(1 / scale, 1 / scale);
     }
     context->transformStack.push(context->transformStack.top() * matrix);
-
     context->opacityStack.push(context->opacityStack.top() * item->opacity());
+    if (auto clip = item->globalClipRect()) {
+        deviceClip &= clip->scaled(scale).translated(-context->viewportOrigin).rounded();
+    }
 
     for (Item *childItem : sortedChildItems) {
         if (childItem->z() >= 0) {
             break;
         }
         if (childItem->explicitVisible()) {
-            if (!createRenderNode(childItem, context, filter, holeFilter)) {
+            if (!createRenderNode(childItem, context, deviceClip, filter, holeFilter)) {
                 return false;
             }
         }
@@ -330,7 +338,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
         });
     }
 
-    if (!maybeCreateSingleRenderNode(item, context, hole)) {
+    if (!maybeCreateSingleRenderNode(item, context, hole, deviceClip)) {
         return false;
     }
 
@@ -339,7 +347,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
             continue;
         }
         if (childItem->explicitVisible()) {
-            if (!createRenderNode(childItem, context, filter, holeFilter)) {
+            if (!createRenderNode(childItem, context, deviceClip, filter, holeFilter)) {
                 return false;
             }
         }
@@ -380,12 +388,13 @@ bool ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         .renderTargetScale = viewport.scale(),
         .viewportOrigin = viewport.scaledRenderRect().topLeft(),
         .renderOffset = viewport.renderOffset(),
+        .deviceRect = viewport.deviceRect(),
     };
 
     renderContext.transformStack.push(QMatrix4x4());
     renderContext.opacityStack.push(data.opacity());
 
-    if (!createRenderNode(item, &renderContext, filter, holeFilter)) {
+    if (!createRenderNode(item, &renderContext, viewport.deviceRect(), filter, holeFilter)) {
         return false;
     }
 
@@ -506,7 +515,9 @@ bool ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             renderNode.texture->bind();
         }
 
-        vbo->draw(scissorRegion, GL_TRIANGLES, renderNode.firstVertex, renderNode.vertexCount);
+        const Rect renderTargetClip = viewport.transform().map(renderNode.clipRect, renderTarget.transformedSize());
+        const Region clippedScissor = scissorRegion & renderTargetClip;
+        vbo->draw(clippedScissor, GL_TRIANGLES, renderNode.firstVertex, renderNode.vertexCount);
 
         if (renderNode.texture && !renderNode.paintHole) {
             glActiveTexture(GL_TEXTURE0);
@@ -539,7 +550,7 @@ bool ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             } else {
                 shader->setUniform(GLShader::ColorUniform::Color, QColor(255, 0, 0, 50));
             }
-            vbo->draw(scissorRegion, GL_TRIANGLES, renderNode.firstVertex, renderNode.vertexCount);
+            vbo->draw(clippedScissor, GL_TRIANGLES, renderNode.firstVertex, renderNode.vertexCount);
         }
     }
     if (shader) {
