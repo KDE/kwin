@@ -694,7 +694,7 @@ std::pair<QList<Compositor::LayerData>, bool> Compositor::setupLayers(SceneView 
                     }
                     outputLayer->setTargetRect(mapGlobalLogicalToOutputDeviceCoordinates(cursorView->viewport(), logicalOutput, backendOutput));
                     outputLayer->setEnabled(true);
-                    if (cursorView->needsRepaint()) {
+                    if (cursorView->needsRepaint() && prepareRendering(cursorView, logicalOutput, backendOutput, 8)) {
                         renderLayer(cursorView, logicalOutput, backendOutput, nullptr, cursorView->collectDamage());
                     }
                     if (backendOutput->presentAsync(outputLayer, maxVrrCursorDelay)) {
