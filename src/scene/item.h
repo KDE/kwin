@@ -89,6 +89,12 @@ public:
     virtual RegionF shape() const;
     virtual RegionF opaque() const;
 
+    void setGlobalClipRect(const std::optional<RectF> &clip);
+    /**
+     * @returns a clip rect (if set) in global logical coordinates
+     */
+    std::optional<RectF> globalClipRect() const;
+
     /**
      * Returns the visual parent of the item. Note that the visual parent differs from
      * the QObject parent.
@@ -254,6 +260,7 @@ private:
     RenderingIntent m_renderingIntent = RenderingIntent::Perceptual;
     PresentationModeHint m_presentationHint = PresentationModeHint::VSync;
     int m_effectCount = 0;
+    std::optional<RectF> m_clipRect;
 
     friend class Scene;
 };
