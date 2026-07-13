@@ -520,7 +520,7 @@ double WorkspaceScene::desiredHdrHeadroom() const
 {
     double maxHeadroom = 1;
     for (const auto &item : stacking_order) {
-        if (!item->window()->frameGeometry().intersects(painted_delegate->viewport())) {
+        if (!item->boundingRect().intersects(painted_delegate->viewport())) {
             continue;
         }
         maxHeadroom = std::max(maxHeadroom, getDesiredHdrHeadroom(item));
@@ -654,20 +654,15 @@ static void addOpaqueRegionRecursive(SceneView *view, Item *item, const std::opt
 void WorkspaceScene::preparePaintSimpleScreen()
 {
     for (WindowItem *windowItem : std::as_const(stacking_order)) {
-        Window *window = windowItem->window();
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
 
         effects->prePaintWindow(painted_delegate, windowItem->effectWindow(), data);
 
-        Region opaque;
-        if (window->opacity() == 1.0 && !(data.mask & PAINT_WINDOW_TRANSLUCENT)) {
-            addOpaqueRegionRecursive(painted_delegate, windowItem, std::nullopt, opaque);
-        }
         m_paintContext.phase2Data.append(Phase2Data{
             .item = windowItem,
             .deviceRegion = Region{},
-            .deviceOpaque = std::move(opaque),
+            .deviceOpaque = Region{},
             .mask = data.mask,
         });
     }
@@ -696,9 +691,8 @@ Region WorkspaceScene::collectDamage()
             m_paintContext.deviceDamage |= paintData.deviceRegion - opaque;
 
             // TODO make occlusion culling per item, rather than per window
-            const bool canCover = painted_delegate->shouldRenderItem(paintData.item->surfaceItem())
-                || painted_delegate->shouldRenderHole(paintData.item->surfaceItem());
-            if (!(paintData.mask & (PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED)) && canCover) {
+            if (!(paintData.mask & (PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED))) {
+                addOpaqueRegionRecursive(painted_delegate, paintData.item, std::nullopt, paintData.deviceOpaque);
                 opaque += paintData.deviceOpaque;
             }
         }
@@ -779,11 +773,7 @@ bool WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
             data->deviceRegion &= viewport.mapToDeviceCoordinatesAligned(data->item->mapToScene(data->item->boundingRect()));
 
             // TODO change effects API, so occlusion culling is per item, rather than per window
-            const bool canCover = painted_delegate->shouldRenderItem(data->item->surfaceItem())
-                || painted_delegate->shouldRenderHole(data->item->surfaceItem());
-            if (!(data->mask & PAINT_WINDOW_TRANSLUCENT) && canCover) {
-                visible -= data->deviceOpaque;
-            }
+            visible -= data->deviceOpaque;
         }
     }
 
