@@ -576,11 +576,18 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
     const Rect deviceBackgroundRect = viewport.mapToDeviceCoordinates(backgroundRect).rounded();
     const auto opacity = w->opacity() * data.opacity();
 
+    Region effectiveDeviceRegion = deviceRegion;
+    for (Item *item = w->windowItem(); item; item = item->parentItem()) {
+        if (auto clip = item->globalClipRect()) {
+            effectiveDeviceRegion &= m_currentView->mapToDeviceCoordinates(*clip).rounded();
+        }
+    }
+
     // Get the effective shape that will be actually blurred. It's possible that all of it will be clipped.
     QList<RectF> effectiveShape;
     effectiveShape.reserve(blurShape.rects().size());
-    if (deviceRegion != Region::infinite()) {
-        for (const Rect &clipRect : deviceRegion.rects()) {
+    if (effectiveDeviceRegion != Region::infinite()) {
+        for (const Rect &clipRect : effectiveDeviceRegion.rects()) {
             const RectF deviceClipRect = clipRect.translated(-deviceBackgroundRect.topLeft());
             for (const RectF &shapeRect : blurShape.rects()) {
                 const RectF deviceShapeRect = shapeRect.translated(-backgroundRect.topLeft()).scaled(viewport.scale()).rounded();
@@ -633,7 +640,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
     }
 
     // Fetch the pixels behind the shape that is going to be blurred.
-    const Region dirtyRegion = viewport.mapFromDeviceCoordinatesContained(deviceRegion) & backgroundRect;
+    const Region dirtyRegion = viewport.mapFromDeviceCoordinatesContained(effectiveDeviceRegion) & backgroundRect;
     for (const Rect &dirtyRect : dirtyRegion.rects()) {
         renderInfo.framebuffers[0]->blitFromRenderTarget(renderTarget, viewport, dirtyRect, dirtyRect.translated(-backgroundRect.topLeft()));
     }

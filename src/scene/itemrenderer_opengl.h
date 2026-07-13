@@ -40,6 +40,7 @@ public:
         bool paintHole = false;
         bool hasFloatingPointColor = false;
         std::optional<RectF> layerDebugBox;
+        Rect clipRect;
     };
 
     struct RenderCorner
@@ -61,6 +62,7 @@ public:
         const qreal renderTargetScale;
         const QPointF viewportOrigin;
         const QPoint renderOffset;
+        const Rect deviceRect;
     };
 
     ItemRendererOpenGL(EglDisplay *eglDisplay);
@@ -91,7 +93,7 @@ public:
 private:
     QVector4D modulate(float opacity, float brightness) const;
     void setBlendEnabled(bool enabled);
-    bool createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter);
+    bool createRenderNode(Item *item, RenderContext *context, Rect deviceClip, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter);
     void visualizeFractional(const RenderViewport &viewport, const Region &logicalRegion, const RenderContext &renderContext);
 
     bool m_blendingEnabled = false;
