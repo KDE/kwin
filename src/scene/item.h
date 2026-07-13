@@ -173,7 +173,8 @@ public:
     void scheduleRepaint(const RegionF &region);
     void scheduleSceneRepaint(const RegionF &region);
     void scheduleRepaint(RenderView *delegate, const RegionF &region);
-    void scheduleFrame(std::optional<std::chrono::steady_clock::time_point> targetTime = std::nullopt);
+    bool scheduleFrame(std::optional<std::chrono::steady_clock::time_point> targetTime = std::nullopt);
+    bool scheduleFrameRecursive(std::optional<std::chrono::steady_clock::time_point> targetTime = std::nullopt);
     bool hasRepaints(RenderView *view) const;
     Region takeDeviceRepaints(RenderView *delegate);
     void resetRepaints(RenderView *delegate);
