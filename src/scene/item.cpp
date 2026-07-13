@@ -522,14 +522,15 @@ void Item::scheduleRepaintInternal(RenderView *view, const RegionF &region)
     }
 }
 
-void Item::scheduleFrame()
+bool Item::scheduleFrame()
 {
     if (!isVisible()) {
-        return;
+        return false;
     }
     if (Q_UNLIKELY(!m_scene)) {
-        return;
+        return false;
     }
+    bool ret = false;
     const QList<RenderView *> views = m_scene->views();
     for (RenderView *view : views) {
         if (!view->shouldRenderItem(this)) {
@@ -538,8 +539,22 @@ void Item::scheduleFrame()
         const Rect geometry = paintedDeviceArea(view, rect());
         if (!geometry.isEmpty()) {
             view->scheduleRepaint(this);
+            ret = true;
         }
     }
+    return ret;
+}
+
+bool Item::scheduleFrameRecursive()
+{
+    if (!isVisible() || !m_scene) {
+        return false;
+    }
+    bool ret = scheduleFrame();
+    for (Item *child : m_childItems) {
+        ret |= child->scheduleFrameRecursive();
+    }
+    return ret;
 }
 
 void Item::scheduleSceneRepaintInternal(const RegionF &region)

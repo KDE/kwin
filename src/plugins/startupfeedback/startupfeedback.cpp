@@ -176,7 +176,7 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data)
 void StartupFeedbackEffect::postPaintScreen()
 {
     if (m_active) {
-        m_item->scheduleFrame();
+        m_item->scheduleFrameRecursive();
     }
     effects->postPaintScreen();
 }
