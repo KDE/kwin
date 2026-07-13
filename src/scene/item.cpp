@@ -85,6 +85,8 @@ void Item::setZ(int z)
         m_parentItem->markSortedChildItemsDirty();
     }
     scheduleSceneRepaint(boundingRect());
+
+    Q_EMIT zChanged();
 }
 
 Item *Item::parentItem() const
@@ -351,6 +353,11 @@ RectF Item::mapToScene(const RectF &rect) const
         return Rect();
     }
     return m_itemToSceneTransform.mapRect(rect);
+}
+
+QPointF Item::mapToScene(const QPointF &point) const
+{
+    return m_itemToSceneTransform.map(point);
 }
 
 RectF Item::mapFromScene(const RectF &rect) const
