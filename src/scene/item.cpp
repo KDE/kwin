@@ -245,6 +245,21 @@ RegionF Item::opaque() const
     return RegionF();
 }
 
+void Item::setGlobalClipRect(const std::optional<RectF> &clip)
+{
+    if (m_clipRect == clip) {
+        return;
+    }
+    scheduleRepaint(boundingRect());
+    m_clipRect = clip;
+    scheduleRepaint(boundingRect());
+}
+
+std::optional<RectF> Item::globalClipRect() const
+{
+    return m_clipRect;
+}
+
 QTransform Item::transform() const
 {
     return m_transform;
@@ -359,7 +374,11 @@ Rect Item::paintedDeviceArea(RenderView *view, const RectF &rect) const
 
         snapped.translate((item->position() * scale).toPoint());
     }
-    return view->mapToDeviceCoordinatesAligned(snapped.scaled(1.0 / scale)) & view->deviceRect();
+    snapped.scale(1.0 / scale);
+    if (m_clipRect) {
+        snapped &= *m_clipRect;
+    }
+    return view->mapToDeviceCoordinatesAligned(snapped) & view->deviceRect();
 }
 
 Region Item::paintedDeviceArea(RenderView *view, const RegionF &region) const
