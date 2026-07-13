@@ -4154,13 +4154,13 @@ msgstr "强制终止窗口"
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Focused Window"
-msgstr ""
+msgstr "指针移至焦点窗口中心"
 
 #: useractions.cpp:1018
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Screen"
-msgstr ""
+msgstr "指针移至屏幕中心"
 
 #: useractions.cpp:1083
 #, kde-format
@@ -4217,7 +4217,7 @@ msgstr "切换到桌面 %1"
 msgid ""
 "Setting custom modes with too old kde-output-management-v2 protocol versions "
 "is unsupported"
-msgstr ""
+msgstr "不支持使用过时的 kde-output-management-v2 协议版本设置自定义模式"
 
 #: wayland/outputmanagement_v2.cpp:575
 #, kde-format
