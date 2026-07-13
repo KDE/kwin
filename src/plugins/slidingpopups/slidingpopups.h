@@ -13,12 +13,13 @@
 #include "effect/effect.h"
 #include "effect/effectwindow.h"
 #include "effect/timeline.h"
-#include "scene/item.h"
+#include "scene/transformitem.h"
 
 namespace KWin
 {
 
 class SlideManagerInterface;
+class TransformItem;
 
 class SlidingPopupsEffect : public Effect
 {
@@ -31,7 +32,6 @@ public:
     ~SlidingPopupsEffect() override;
 
     void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data) override;
-    bool paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data) override;
     void reconfigure(ReconfigureFlags flags) override;
     bool isActive() const override;
     void postPaintScreen() override;
@@ -69,7 +69,7 @@ private:
     static SlideManagerInterface *s_slideManager;
     static QTimer *s_slideManagerRemoveTimer;
 
-    int m_slideLength;
+    double m_slideLength = 0;
     std::chrono::milliseconds m_slideInDuration;
     std::chrono::milliseconds m_slideOutDuration;
 
@@ -84,7 +84,7 @@ private:
         EffectWindowVisibleRef visibleRef;
         AnimationKind kind;
         TimeLine timeLine;
-        ItemEffect windowEffect;
+        std::unique_ptr<TransformItem> transform;
     };
     std::unordered_map<EffectWindow *, Animation> m_animations;
 
@@ -101,11 +101,8 @@ private:
         Location location;
         std::chrono::milliseconds slideInDuration;
         std::chrono::milliseconds slideOutDuration;
-        int slideLength;
     };
     QHash<const EffectWindow *, AnimationData> m_animationsData;
-
-    RectF damagedLogicalArea(EffectWindow *w, const AnimationData animData);
 };
 
 inline int SlidingPopupsEffect::slideInDuration() const
