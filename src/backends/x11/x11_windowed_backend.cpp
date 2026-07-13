@@ -211,9 +211,11 @@ bool X11WindowedBackend::initialize()
             m_hasDri = true;
             m_driMajorVersion = reply->major_version;
             m_driMinorVersion = reply->minor_version;
-        } else {
-            qCWarning(KWIN_X11WINDOWED) << "Requested DRI3 extension version is unsupported";
         }
+    }
+    if (!m_hasDri) {
+        qCCritical(KWIN_X11WINDOWED, "X11 server is missing support for DRI3 1.2+, which the nested X11 backend requires");
+        return false;
     }
 
     initXInput();
