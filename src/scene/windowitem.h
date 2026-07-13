@@ -55,6 +55,7 @@ public:
     Window *window() const;
     EffectWindow *effectWindow() const;
     Item *windowContainer() const;
+    Item *effectContainer() const;
 
     void refVisible(int reason);
     void unrefVisible(int reason);
@@ -66,6 +67,7 @@ protected:
     explicit WindowItem(Window *window, Item *parent = nullptr);
     void updateSurfaceItem(std::unique_ptr<SurfaceItem> &&surfaceItem);
 
+    const std::unique_ptr<Item> m_effectContainer;
     const std::unique_ptr<Item> m_windowContainer;
 
 private Q_SLOTS:

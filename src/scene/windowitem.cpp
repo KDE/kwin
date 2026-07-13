@@ -26,7 +26,8 @@ namespace KWin
 
 WindowItem::WindowItem(Window *window, Item *parent)
     : Item(parent)
-    , m_windowContainer(std::make_unique<Item>(this))
+    , m_effectContainer(std::make_unique<Item>(this))
+    , m_windowContainer(std::make_unique<Item>(m_effectContainer.get()))
     , m_window(window)
 {
     connect(window, &Window::decorationChanged, this, &WindowItem::updateDecorationItem);
@@ -98,6 +99,11 @@ EffectWindow *WindowItem::effectWindow() const
 Item *WindowItem::windowContainer() const
 {
     return m_windowContainer.get();
+}
+
+Item *WindowItem::effectContainer() const
+{
+    return m_effectContainer.get();
 }
 
 void WindowItem::refVisible(int reason)
@@ -257,7 +263,7 @@ void WindowItem::updateShadowItem()
     Shadow *shadow = m_window->shadow();
     if (shadow) {
         if (!m_shadowItem || m_shadowItem->shadow() != shadow) {
-            m_shadowItem = std::make_unique<ShadowItem>(shadow, m_window, this);
+            m_shadowItem = std::make_unique<ShadowItem>(shadow, m_window, m_effectContainer.get());
         }
         m_shadowItem->stackBefore(m_windowContainer.get());
         markDamaged();
