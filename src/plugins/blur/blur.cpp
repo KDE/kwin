@@ -569,12 +569,19 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         blurShape.translate(data.xTranslation(), data.yTranslation());
     }
 
-    blurShape.translate(w->pos());
+    blurShape.translate(w->windowItem()->mapToScene(QPointF()));
 
     const Rect backgroundRect = blurShape.boundingRect().rounded();
     const Rect scaledBackgroundRect = backgroundRect.scaled(viewport.scale()).rounded();
     const Rect deviceBackgroundRect = viewport.mapToDeviceCoordinates(backgroundRect).rounded();
-    const auto opacity = w->opacity() * data.opacity();
+
+    double opacity = data.opacity();
+    for (Item *item = w->windowItem(); item; item = item->parentItem()) {
+        opacity *= item->opacity();
+    }
+    if (opacity == 0) {
+        return;
+    }
 
     Region effectiveDeviceRegion = deviceRegion;
     for (Item *item = w->windowItem(); item; item = item->parentItem()) {
@@ -816,11 +823,13 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         const QVector2D halfpixel(0.5 / read->colorAttachment()->width(),
                                   0.5 / read->colorAttachment()->height());
 
+        Item *surfaceItem = w->windowItem()->surfaceItem();
+        const RectF rect = surfaceItem->mapToView(surfaceItem->rect(), m_currentView);
         const RectF transformedRect = RectF{
-            w->frameGeometry().x() + data.xTranslation(),
-            w->frameGeometry().y() + data.yTranslation(),
-            w->frameGeometry().width() * data.xScale(),
-            w->frameGeometry().height() * data.yScale(),
+            rect.x() + data.xTranslation(),
+            rect.y() + data.yTranslation(),
+            rect.width() * data.xScale(),
+            rect.height() * data.yScale(),
         };
         const RectF nativeBox = transformedRect
                                     .scaled(viewport.scale())

@@ -131,6 +131,11 @@ public:
      */
     RegionF mapToScene(const RegionF &region) const;
     /**
+     * Maps the given @a point from the scene's coordinate system to the item's coordinate
+     * system.
+     */
+    QPointF mapToScene(const QPointF &point) const;
+    /**
      * Maps the given @a rect from the item's coordinate system to the scene's coordinate
      * system.
      */
@@ -207,6 +212,7 @@ Q_SIGNALS:
      * has changed.
      */
     void boundingRectChanged();
+    void zChanged();
 
 protected:
     virtual WindowQuadList buildQuads() const;

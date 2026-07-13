@@ -191,6 +191,7 @@ target_sources(kwin PRIVATE
     scene/surfaceitem_internal.cpp
     scene/surfaceitem_wayland.cpp
     scene/texture.cpp
+    scene/transformitem.cpp
     scene/windowitem.cpp
     scene/workspacescene.cpp
     screenedge.cpp
@@ -674,6 +675,7 @@ install(FILES
     scene/surfaceitem_internal.h
     scene/surfaceitem_wayland.h
     scene/texture.h
+    scene/transformitem.h
     scene/windowitem.h
     scene/workspacescene.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/scene COMPONENT Devel
