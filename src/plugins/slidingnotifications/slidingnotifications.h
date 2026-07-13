@@ -11,6 +11,7 @@
 #include "effect/springmotion.h"
 #include "effect/timeline.h"
 #include "scene/item.h"
+#include "scene/transformitem.h"
 
 namespace KWin
 {
@@ -27,10 +28,7 @@ public:
     QPointF offset() const;
     qreal opacity() const;
 
-    RectF clipArea() const;
-    RectF dirtyArea() const;
-
-    void apply(WindowPaintData &data);
+    void apply(Item *transform);
 
     static std::unique_ptr<SlideNotificationAnimation> intro(EffectWindow *window);
     static std::unique_ptr<SlideNotificationAnimation> outro(EffectWindow *window);
@@ -48,15 +46,13 @@ class DisplaceNotificationAnimation
 public:
     explicit DisplaceNotificationAnimation(EffectWindow *window);
 
-    RectF dirtyArea() const;
-
     void moveTo(const QPointF &point);
     void advance(RenderView *view);
     bool done() const;
 
     QPointF position() const;
 
-    void apply(WindowPaintData &data);
+    void apply(Item *transform);
 
     static std::unique_ptr<DisplaceNotificationAnimation> move(EffectWindow *window, const QPointF &initialPosition, const QPointF &finalPosition);
 
@@ -74,10 +70,9 @@ public:
 
     bool isFinished() const;
     void advance(RenderView *view);
-    RectF dirtyArea() const;
 
     EffectWindow *window;
-    ItemEffect effect;
+    std::unique_ptr<TransformItem> transform;
     EffectWindowDeletedRef deletedRef;
 
     std::unique_ptr<SlideNotificationAnimation> slide;
@@ -96,7 +91,6 @@ public:
     bool blocksDirectScanout() const override;
 
     void prePaintWindow(RenderView *view, EffectWindow *window, WindowPrePaintData &data) override;
-    bool paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data) override;
     void postPaintScreen() override;
 
     static bool supported();
