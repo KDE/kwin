@@ -2463,10 +2463,13 @@ void OutputChangesTest::testTemporaryDpmsHotplug()
 
     Test::setOutputConfig({
         Test::OutputInfo{
-            .geometry = Rect(0, 0, 1280, 1200),
+            .geometry = Rect(0, 0, 5120, 1440),
             .connectorName = QStringLiteral("TEST"),
         },
     });
+
+    // warp the cursor so it's "off screen" with the placeholder output (which is 1920x1080)
+    Test::pointerMotion(QPointF(5000, 1400), 0);
 
     // turn off the outputs
     workspace()->requestDpmsState(Workspace::DpmsState::Off);
@@ -2484,7 +2487,7 @@ void OutputChangesTest::testTemporaryDpmsHotplug()
     // re-adding the output immediately should keep it off
     Test::setOutputConfig({
         Test::OutputInfo{
-            .geometry = Rect(0, 0, 1280, 1200),
+            .geometry = Rect(0, 0, 5120, 1440),
             .connectorName = QStringLiteral("TEST"),
         },
     });
