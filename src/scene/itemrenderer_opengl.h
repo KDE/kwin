@@ -58,7 +58,6 @@ public:
         const QMatrix4x4 projectionMatrix;
         const QMatrix4x4 rootTransform;
         const Region deviceClip;
-        const bool hardwareClipping;
         const qreal renderTargetScale;
         const QPointF viewportOrigin;
         const QPoint renderOffset;
