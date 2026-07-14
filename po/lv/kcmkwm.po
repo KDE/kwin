@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-18 00:45+0000\n"
+"POT-Creation-Date: 2026-07-14 00:45+0000\n"
 "PO-Revision-Date: 2025-08-19 11:20+0300\n"
 "Last-Translator: Toms Trasūns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -22,1259 +22,1079 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
 
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
-#: actions.ui:20
-#, kde-format
-msgid "Inactive Inner Window Actions"
-msgstr "Neaktīva iekšējā loga darbības"
-
-#. i18n: ectx: property (text), widget (QLabel, label_1)
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: actions.ui:29 mouse.ui:173
-#, kde-format
-msgid "&Left click:"
-msgstr "&Kreisais klikšķi:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow1)
-#: actions.ui:42
-#, kde-format
-msgid ""
-"In this row you can customize left click behavior when clicking into an "
-"inactive inner window ('inner' means: not titlebar, not frame)."
-msgstr ""
-"Šajā rindā jūs varat pielāgot kreisā klikšķa izturēšanos, ieklikšķinot "
-"neaktīvā iekšējā logā („iekšējais„ nozīmē: ne uz virsraksta joslas vai "
-"ietvara)."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
-#: actions.ui:46
-#, kde-format
-msgid "Activate, pass click and raise on release"
-msgstr "Aktivizēt, padot klikšķi un pacelt pēc atlaišanas"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:51 actions.ui:91 actions.ui:131
-#, kde-format
-msgid "Activate, raise and pass click"
-msgstr "Aktivizēt, pacelt un padod klikšķi"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:56 actions.ui:96 actions.ui:136
-#, kde-format
-msgid "Activate and pass click"
-msgstr "Aktivizēt un padot klikšķi"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:61 actions.ui:101 actions.ui:141 mouse.ui:284 mouse.ui:389
-#: mouse.ui:494
-#, kde-format
-msgid "Activate"
-msgstr "Aktivizēt"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:66 actions.ui:106 actions.ui:146 mouse.ui:274 mouse.ui:379
-#: mouse.ui:484
-#, kde-format
-msgid "Activate and raise"
-msgstr "Aktivizēt un pacelt"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-#: actions.ui:74 mouse.ui:196
-#, kde-format
-msgid "&Middle click:"
-msgstr "&Vidējais klikšķis:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
-#: actions.ui:87
-#, kde-format
-msgid ""
-"In this row you can customize middle click behavior when clicking into an "
-"inactive inner window ('inner' means: not titlebar, not frame)."
-msgstr ""
-"Šajā rindā varat pielāgot vidējā klikšķa izturēšanos, ieklikšķinot neaktīvā "
-"iekšējā logā („iekšējais“ nozīmē: ne uz virsrakstjoslas vai ietvara)."
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-#: actions.ui:114 mouse.ui:209
-#, kde-format
-msgid "&Right click:"
-msgstr "&Labais klikšķis:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:127
-#, kde-format
-msgid ""
-"In this row you can customize right click behavior when clicking into an "
-"inactive inner window ('inner' means: not titlebar, not frame)."
-msgstr ""
-"Šajā rindā jūs varat pielāgot labā klikšķa izturēšanos, ieklikšķinot "
-"neaktīvā iekšējā logā („iekšējais“ nozīmē: ne uz virsrakstjoslas vai "
-"ietvara)."
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: actions.ui:154 mouse.ui:86
-#, kde-format
-msgid "Mouse &wheel:"
-msgstr "Peles &ritenis:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:167
-#, kde-format
-msgid ""
-"In this row you can customize behavior when scrolling into an inactive inner "
-"window ('inner' means: not titlebar, not frame)."
-msgstr ""
-"Šajā rindā jūs varat pielāgot ritināšanas izturēšanos, ritinot neaktīvā "
-"iekšējā logā („iekšējais“ nozīmē: ne uz virsrakstjoslas vai ietvara)."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:171
-#, kde-format
-msgid "Scroll"
-msgstr "Ritināt"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:176
-#, kde-format
-msgid "Activate and scroll"
-msgstr "Aktivizēt un ritināt"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:181
-#, kde-format
-msgid "Activate, raise and scroll"
-msgstr "Aktivizēt, pacelt un ritināt"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: actions.ui:195
-#, kde-format
-msgid "Inner Window, Titlebar and Frame Actions"
-msgstr "Iekšējā loga, virsrakstjoslas un ietvara darbības"
-
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: actions.ui:206
-#, kde-format
-msgid "Mo&difier key:"
-msgstr "&Modifikatora taustiņš:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:216
-#, kde-format
-msgid ""
-"Here you select whether holding the Meta key or Alt key will allow you to "
-"perform the following actions."
-msgstr ""
-"Šeit varat izvēlēties vai „Meta“ taustiņa vai „Alt“ taustiņa turēšana ļaus "
-"veikt sekojošas darbības."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:220
-#, kde-format
-msgid "Meta"
-msgstr "Meta"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:225
-#, kde-format
-msgid "Alt"
-msgstr "Alt"
-
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-#: actions.ui:247
-#, kde-format
-msgid "  + "
-msgstr "  + "
-
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-#. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:259 mouse.ui:577
-#, kde-format
-msgid "L&eft click:"
-msgstr "&Kreisais klikšķis:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll1)
-#: actions.ui:272
-#, kde-format
-msgid ""
-"In this row you can customize left click behavior when clicking into the "
-"titlebar or the frame."
-msgstr ""
-"Šajā rindā varat pielāgot kreisā klikšķa izturēšanos, ieklikšķinot "
-"virsrakstjoslā vai ietvarā."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:276 actions.ui:356 actions.ui:436
-#, kde-format
-msgid "Move"
-msgstr "Pārvietot"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:281 actions.ui:361 actions.ui:441
-#, kde-format
-msgid "Activate, raise and move"
-msgstr "Aktivizēt, pacelt un pārvietot"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:286 actions.ui:366 actions.ui:446
+#: ui/Focus.qml:22
 #, fuzzy, kde-format
-#| msgid "Activate, raise and move"
-msgid "Activate, raise and resize"
-msgstr "Aktivizēt, pacelt un pārvietot"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:291 actions.ui:371 actions.ui:451 mouse.ui:242 mouse.ui:299
-#: mouse.ui:347 mouse.ui:404 mouse.ui:452 mouse.ui:509
-#, kde-format
-msgid "Toggle raise and lower"
-msgstr "Pārslēgt pacelšanu/nolaišanu"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:296 actions.ui:376 actions.ui:456
-#, kde-format
-msgid "Resize"
-msgstr "Mainīt izmēru"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:301 actions.ui:381 actions.ui:461 mouse.ui:232 mouse.ui:289
-#: mouse.ui:337 mouse.ui:394 mouse.ui:442 mouse.ui:499
-#, kde-format
-msgid "Raise"
-msgstr "Pacelt"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:306 actions.ui:386 actions.ui:466 mouse.ui:63 mouse.ui:237
-#: mouse.ui:294 mouse.ui:342 mouse.ui:399 mouse.ui:447 mouse.ui:504
-#, kde-format
-msgid "Lower"
-msgstr "Nolaist"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:311 actions.ui:391 actions.ui:471 mouse.ui:58 mouse.ui:247
-#: mouse.ui:304 mouse.ui:352 mouse.ui:409 mouse.ui:457 mouse.ui:514
-#, kde-format
-msgid "Minimize"
-msgstr "Minimizēt"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:316 actions.ui:396 actions.ui:476
-#, kde-format
-msgid "Decrease opacity"
-msgstr "Samazināt necaurspīdīgumu"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:321 actions.ui:401 actions.ui:481
-#, kde-format
-msgid "Increase opacity"
-msgstr "Palielināt necaurspīdīgumu"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:326 actions.ui:406 actions.ui:486 mouse.ui:257 mouse.ui:314
-#: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Window menu"
-msgstr "Loga izvēlne"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:331 actions.ui:411 actions.ui:491 actions.ui:541 advanced.ui:108
-#: mouse.ui:78 mouse.ui:125 mouse.ui:262 mouse.ui:319 mouse.ui:367 mouse.ui:424
-#: mouse.ui:472 mouse.ui:529
-#, kde-format
-msgid "Do nothing"
-msgstr "Nedarīt neko"
-
-#. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:339
-#, kde-format
-msgid "Middle &click:"
-msgstr "Vidējais &klikšķis:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
-#: actions.ui:352
-#, kde-format
-msgid ""
-"In this row you can customize middle click behavior when clicking into the "
-"titlebar or the frame."
-msgstr ""
-"Šajā rindā varat pielāgot vidējā klikšķa izturēšanos, ieklikšķinot "
-"virsrakstjoslā vai ietvarā."
-
-#. i18n: ectx: property (text), widget (QLabel, label_9)
-#. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:419 mouse.ui:647
-#, kde-format
-msgid "Right clic&k:"
-msgstr "Labais &klikšķis:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:432
-#, kde-format
-msgid ""
-"In this row you can customize right click behavior when clicking into the "
-"titlebar or the frame."
-msgstr ""
-"Šajā rindā varat pielāgot labā klikšķa izturēšanos, ieklikšķinot "
-"virsrakstjoslā vai ietvarā."
-
-#. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:499
-#, kde-format
-msgid "Mo&use wheel:"
-msgstr "&Peles ritenis:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
-#: actions.ui:512
-#, kde-format
-msgid ""
-"Here you can customize KDE's behavior when scrolling with the mouse wheel in "
-"a window while pressing the modifier key."
-msgstr ""
-"Šeit varat pielāgot KDE izturēšanos, ritinot kaut kur logā pie nospiesta "
-"modifikatora taustiņa."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:516 mouse.ui:100
-#, kde-format
-msgid "Raise/lower"
-msgstr "Pacelt/nolaist"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:521 mouse.ui:105
-#, kde-format
-msgid "Maximize/restore"
-msgstr "Maksimizēt/atjaunot"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:526 mouse.ui:110
-#, kde-format
-msgid "Keep above/below"
-msgstr "Paturēt virs/zem citiem"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:531 mouse.ui:115
-#, kde-format
-msgid "Move to previous/next desktop"
-msgstr "Pārvietot uz iepriekšējo/nākamo darbvirsmu"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:536 mouse.ui:120
-#, kde-format
-msgid "Change opacity"
-msgstr "Mainīt necaurspīdīgumu"
-
-#. i18n: ectx: property (text), widget (QLabel, windowPlacementLabel)
-#: advanced.ui:20
-#, kde-format
-msgid "Window &placement:"
-msgstr "Loga &novietojums:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
-#: advanced.ui:30
-#, kde-format
-msgid ""
-"<html><head/><body><p>The placement policy determines where a new window "
-"will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-bottom: "
-"0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" "
-"margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-"\">Smart</span> will try to achieve a minimum overlap of windows</li><li "
-"style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">Maximizing</span> will try to maximize every window to fill the "
-"whole screen. It might be useful to selectively affect placement of some "
-"windows using the window-specific settings.</li><li style=\" margin-top:0px; "
-"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
-"text-indent:0px;\"><span style=\" font-style:italic;\">Random</span> will "
-"use a random position</li><li style=\" margin-top:0px; margin-bottom:0px; "
-"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
-"\"><span style=\" font-style:italic;\">Centered</span> will place the window "
-"centered</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">Zero-cornered</span> will place the window in "
-"the top-left corner</li><li style=\" margin-top:0px; margin-bottom:12px; "
-"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
-"\"><span style=\" font-style:italic;\">Under mouse</span> will place the "
-"window under the pointer</li></ul></body></html>"
-msgstr ""
-"<html><head/><body><p>Novietojuma politika nosaka vietu, kur jauns logs "
-"atvērsies ekrānā.</p><ul style=\"margin-top: 0px; margin-bottom: 0px; margin-"
-"left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" margin-"
-"top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Vieda</"
-"span> mēģinās sasniegt minimālu logu pārklāšanos</li><li style=\" margin-"
-"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-"indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-"\">Maksimizējoša</span> mēģinās maksimizēt katru logu, lai piepildītu visu "
-"ekrānu. Tā var būt lietderīga, lai pēc izvēles ietekmētu atsevišķu logu "
-"novietojumu, izmantojot logam specifiskus iestatījumus.</li><li style=\" "
-"margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-"\">Nejaušs</span> mēģinās izvēlēties nejaušu pozīciju</li><li style=\" "
-"margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-"\">Centrēts</span> logu atvērs ekrāna centrā</li><li style=\" margin-"
-"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Nulles "
-"stūrī</span> logu novietos augšējā kreisajā stūrī</li><li style=\" margin-"
-"top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-"
-"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Zem peles "
-"kursora</span> logu novietos zem peles kursora</li></ul></body></html>"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:34
-#, kde-format
-msgid "Minimal Overlapping"
-msgstr "Minimāli pārklājoties"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:39
-#, kde-format
-msgid "Maximized"
-msgstr "Maksimizēts"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:44
-#, kde-format
-msgid "Random"
-msgstr "Nejaušs"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:49
-#, kde-format
-msgid "Centered"
-msgstr "Centrā"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:54
-#, kde-format
-msgid "In Top-Left Corner"
-msgstr "Kreisajā augšējā stūrī"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:59
-#, kde-format
-msgid "Under mouse"
-msgstr "Zem peles kursora"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
-#: advanced.ui:67
-#, kde-format
-msgid ""
-"When turned on, apps which are able to remember the positions of their "
-"windows are allowed to do so. This will override the window placement mode "
-"defined above."
-msgstr ""
-"Pēc ieslēgšanas programmas, kurām ir šāda funkcija, drīkstēs atcerēties savu "
-"logu novietojumu. Šis iestatījums pārraksta logu novietojuma režīmu, kas ir "
-"definēts iepriekš."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
-#: advanced.ui:70
-#, kde-format
-msgid ""
-"Allow apps to remember the positions of their own windows, if they support it"
-msgstr "Programmas atcerēsies savu logu novietojumu, ja atbalsta šādu funkciju"
-
-#. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
-#: advanced.ui:77
-#, kde-format
-msgid "Virtual Desktop behavior:"
-msgstr "Virtuālās darbvirsmas uzvedība:"
-
-#. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
-#: advanced.ui:87
-#, kde-format
-msgid "When activating a window on a different Virtual Desktop:"
-msgstr "Aktivizējot logu citā virtuālajā darbvirsmā:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:94
-#, kde-format
-msgid ""
-"<html><head/><body><p>This setting controls what happens when an open window "
-"located on a Virtual Desktop other than the current one is activated. </"
-"p><p><span style=\" font-style:italic;\">Switch to that Virtual Desktop</"
-"span> will switch to the Virtual Desktop where the window is currently "
-"located. </p><p><span style=\" font-style:italic;\">Bring window to current "
-"Virtual Desktop</span> will cause the window to jump to the active Virtual "
-"Desktop. </p></body></html>"
-msgstr ""
-"<html><head/><body><p>Šis iestatījums kontrolē to, kas notiek, kad tiek "
-"aktivizēts atvērts logs, kas atrodas citā virtuālajā darbvirsmā. </"
-"p><p><span style=\" font-style:italic;\">Pārslēgties uz šo virtuālo "
-"darbvirsmu</span> pārslēgsies uz to virtuālo darbvirsmu, kurā atrodas "
-"pašreizējais logs. </p><p><span style=\" font-style:italic;\">Aiznest logu "
-"uz aktīvo virtuālo darbvirsmu </span> liks logam pāriet uz aktīvo virtuālo "
-"darbvirsmu. </p></body></html>"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:98
-#, kde-format
-msgid "Switch to that Virtual Desktop"
-msgstr "Pārslēgties uz šo virtuālo darbvirsmu"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:103
-#, kde-format
-msgid "Bring window to current Virtual Desktop"
-msgstr "Pārvietot logu uz aktīvo virtuālo darbvirsmu"
-
-#. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
-#: focus.ui:22
-#, kde-format
-msgid "Window &activation policy:"
+#| msgid "Window &activation policy:"
+msgctxt "@label:listbox"
+msgid "Window focus policy:"
 msgstr "Loga &aktivizēšanas politika:"
 
-#. i18n: ectx: property (whatsThis), widget (QComboBox, windowFocusPolicy)
-#: focus.ui:32
-#, kde-format
-msgid "With this option you can specify how and when windows will be focused."
-msgstr "Šī iespēja ļauj noteikt, kā un kad logi iegūs fokusu."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
-#: focus.ui:36
-#, kde-format
-msgctxt "sassa asas"
+#: ui/Focus.qml:46
+#, fuzzy, kde-format
+#| msgctxt "sassa asas"
+#| msgid "Click to focus"
+msgctxt "@item:inlistbox Window focus policy"
 msgid "Click to focus"
 msgstr "Klikšķināt lai fokusētu"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
-#: focus.ui:41
+#: ui/Focus.qml:47
 #, kde-format
-msgid "Click to focus (mouse precedence)"
-msgstr "Klikšķināt lai fokusētu (peles priekšroka)"
+msgctxt "@info:tooltip Window focus policy"
+msgid "Window becomes focused when clicked."
+msgstr ""
 
-#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
-#: focus.ui:46
-#, kde-format
-msgid "Focus follows mouse"
+#: ui/Focus.qml:51
+#, fuzzy, kde-format
+#| msgid "Focus follows mouse"
+msgctxt "@item:inlistbox Window focus policy"
+msgid "Focus follows pointer"
 msgstr "Fokuss seko pelei"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
-#: focus.ui:51
+#: ui/Focus.qml:52
 #, kde-format
-msgid "Focus follows mouse (mouse precedence)"
-msgstr "Fokuss seko pelei (peles priekšroka)"
+msgctxt "@info:tooltip Window focus policy"
+msgid ""
+"As the pointer moves, windows under it become focused after a configurable "
+"delay."
+msgstr ""
 
-#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
-#: focus.ui:56
-#, kde-format
-msgid "Focus under mouse"
+#: ui/Focus.qml:56
+#, fuzzy, kde-format
+#| msgid "Focus under mouse"
+msgctxt "@item:inlistbox Window focus policy"
+msgid "Focus under pointer"
 msgstr "Fokuss zem peles"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
-#: focus.ui:61
+#: ui/Focus.qml:57
 #, kde-format
-msgid "Focus strictly under mouse"
-msgstr "Fokuss stingri zem peles"
+msgctxt "@info:tooltip Window focus policy"
+msgid "Window under pointer receives focus, even if the pointer has not moved."
+msgstr ""
 
-#. i18n: ectx: property (text), widget (QLabel, delayFocusOnLabel)
-#: focus.ui:69
+#: ui/Focus.qml:75
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"Selecting <interface>Focus under pointer</interface> will prevent focus on "
+"some windows appearing on screen. This can lead to assigning focus to "
+"unwanted windows. Use with caution."
+msgstr ""
+
+#: ui/Focus.qml:81
+#, kde-format
+msgctxt "@option:radio After closing a window, move focus to:"
+msgid "Last focused window"
+msgstr ""
+
+#: ui/Focus.qml:83
+#, kde-format
+msgctxt "@title:group"
+msgid "After closing a window, move focus to:"
+msgstr ""
+
+#: ui/Focus.qml:86
+#, fuzzy, kde-format
+#| msgid "&Window snap zone:"
+msgctxt "@option:radio After closing a window, move focus to:"
+msgid "Window under pointer"
+msgstr "&Logu pielipšanas zona:"
+
+#: ui/Focus.qml:115
 #, kde-format
 msgid "&Delay focus by:"
 msgstr "&Novēlot fokusu par:"
 
-#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_DelayFocusInterval)
-#: focus.ui:82
+#: ui/Focus.qml:124 ui/Focus.qml:250
 #, kde-format
-msgid ""
-"This is the delay after which the window the mouse pointer is over will "
-"automatically receive focus."
+msgctxt "short for millisecond(s)"
+msgid "%1 ms"
 msgstr ""
-"Šī ir noildze, norādot laiku, pēc kura, peles kursoram esot virs loga, tas "
-"automātiski kļūs aktīvs (iegūs fokusu)."
 
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
-#: focus.ui:85 focus.ui:181
-#, kde-format
-msgid " ms"
+#: ui/Focus.qml:128 ui/Focus.qml:254
+#, fuzzy, kde-format
+#| msgid " ms"
+msgctxt "short for millisecond(s)"
+msgid "ms"
 msgstr " ms"
 
-#. i18n: ectx: property (text), widget (QLabel, focusStealingLabel)
-#: focus.ui:101
+#: ui/Focus.qml:146
 #, kde-format
 msgid "Focus &stealing prevention:"
 msgstr "Fokusa &zaudēšanas novēršana:"
 
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
-#: focus.ui:114
-#, kde-format
-msgid ""
-"<html><head/><body><p>This option specifies how much KWin will try to "
-"prevent unwanted focus stealing caused by unexpected activation of new "
-"windows. (Note: This feature does not work with the <span style=\" font-"
-"style:italic;\">Focus under mouse</span> or <span style=\" font-style:italic;"
-"\">Focus strictly under mouse</span> focus policies.) </p><ul style=\"margin-"
-"top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-"
-"indent: 1;\"><li style=\" margin-top:12px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">None:</span> Prevention is turned off and new "
-"windows always become activated.</li><li style=\" margin-top:0px; margin-"
-"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">Low:</span> Prevention is "
-"enabled; when some window does not have support for the underlying mechanism "
-"and KWin cannot reliably decide whether to activate the window or not, it "
-"will be activated. This setting may have both worse and better results than "
-"the medium level, depending on the applications.</li><li style=\" margin-"
-"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Medium:</"
-"span> Prevention is enabled.</li><li style=\" margin-top:0px; margin-"
-"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">High:</span> New windows "
-"get activated only if no window is currently active or if they belong to the "
-"currently active application. This setting is probably not really usable "
-"when not using mouse focus policy.</li><li style=\" margin-top:0px; margin-"
-"bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">Extreme:</span> All "
-"windows must be explicitly activated by the user.</li></ul><p>Windows that "
-"are prevented from stealing focus are marked as demanding attention, which "
-"by default means their taskbar entry will be highlighted. This can be "
-"changed in the Notifications control module.</p></body></html>"
-msgstr ""
-"<html><head/><body><p>Šī iespēja nosaka, cik lielā mērā „KWin“ mēģinās "
-"novērst negribētu fokusa zaudēšanu, ko izraisa jaunu logu negaidīta "
-"aktivācija. (Ievērojiet, ka šīs iespēja nestrādā kopā ar <span style=\" font-"
-"style:italic;\">Fokuss zem peles</span> vai <span style=\" font-style:italic;"
-"\">Fokuss stingri zem peles</span> fokusa politiku.) </p><ul style=\"margin-"
-"top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-"
-"indent: 1;\"><li style=\" margin-top:12px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">Nav:</span> novēršana ir izslēgta un jauni "
-"logi vienmēr kļūs aktīvi.</li><li style=\" margin-top:0px; margin-"
-"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">Zema:</span> Novēršana ir "
-"ieslēgta. Ja kāds logs neatbalsta šo mehānismu un „KWin“ nespēj droši "
-"izlemt, vai logu aktivizēt, tas tiks aktivizēts. Šis iestatījums var sniegt "
-"gan sliktākus, gan labākus rezultātus atkarībā no programmas.</li><li style="
-"\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-"\">Vidēja:</span> Novēršana ir ieslēgta.</li><li style=\" margin-top:0px; "
-"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
-"text-indent:0px;\"><span style=\" font-style:italic;\">Augsta:</span> jaunie "
-"logi tiks aktivēti tikai tad, ja šobrīd nebūs aktīvi citi logi vai ja tie "
-"pieder pašreizējai aktīvajai programmai. Šis iestatījums visdrīzāk nebūs "
-"lietojams, ja ir ieslēgta peles fokusa politika.</li><li style=\" margin-"
-"top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-"
-"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Ekstrēma:</"
-"span> lietotājam ir speciāli jāaktivizē visi logi.</li></ul><p>Logi, kuriem "
-"nav ļauts pārņemt fokusu, tiek atzīmēti kā „pieprasa uzmanību“, kas pēc "
-"noklusējuma nozīmē, ka tiks iezīmētas to virsrakstjoslas. To iespējams "
-"mainīt Paziņojumu kontroles modulī.</p></body></html>"
-
-#. i18n: Focus Stealing Prevention Level
-#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
-#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_WindowSnapZone)
-#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_CenterSnapZone)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
-#: focus.ui:118 moving.ui:33 moving.ui:65 moving.ui:97
+#: ui/Focus.qml:150 ui/MovementAndPlacement.qml:30
+#: ui/MovementAndPlacement.qml:58 ui/MovementAndPlacement.qml:87
 #, kde-format
 msgid "None"
 msgstr "Nav"
 
-#. i18n: Focus Stealing Prevention Level
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
-#: focus.ui:123
+#: ui/Focus.qml:151
 #, kde-format
 msgid "Low"
 msgstr "Zems"
 
-#. i18n: Focus Stealing Prevention Level
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
-#: focus.ui:128
+#: ui/Focus.qml:152
 #, kde-format
 msgid "Medium"
 msgstr "Vidējs"
 
-#. i18n: Focus Stealing Prevention Level
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
-#: focus.ui:133
+#: ui/Focus.qml:153
 #, kde-format
 msgid "High"
 msgstr "Augsta"
 
-#. i18n: Focus Stealing Prevention Level
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
-#: focus.ui:138
+#: ui/Focus.qml:154
 #, kde-format
 msgid "Extreme"
 msgstr "Ekstrēma"
 
-#. i18n: ectx: property (text), widget (QLabel, raisingWindowsLabel)
-#: focus.ui:146
+#: ui/Focus.qml:171
+#, fuzzy, kde-format
+#| msgid "Switch to that Virtual Desktop"
+msgctxt "@option:radio When focusing a window on a different Virtual Desktop:"
+msgid "Switch to window’s Virtual Desktop"
+msgstr "Pārslēgties uz šo virtuālo darbvirsmu"
+
+#: ui/Focus.qml:173
+#, fuzzy, kde-format
+#| msgid "When activating a window on a different Virtual Desktop:"
+msgctxt "@title:group"
+msgid "When focusing a window on a different Virtual Desktop:"
+msgstr "Aktivizējot logu citā virtuālajā darbvirsmā:"
+
+#: ui/Focus.qml:176
+#, kde-format
+msgid "Bring window to current Virtual Desktop"
+msgstr "Pārvietot logu uz aktīvo virtuālo darbvirsmu"
+
+#: ui/Focus.qml:180 ui/TitlebarActions.qml:26 ui/TitlebarActions.qml:39
+#: ui/TitlebarActions.qml:64 ui/TitlebarActions.qml:87 ui/WindowActions.qml:38
+#: ui/WindowActions.qml:211
+#, kde-format
+msgid "Do nothing"
+msgstr "Nedarīt neko"
+
+#: ui/Focus.qml:207
 #, kde-format
 msgid "Raising windows:"
 msgstr "Pacelt logus:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ClickRaise)
-#: focus.ui:153
-#, kde-format
-msgid ""
-"When this option is enabled, the active window will be brought to the front "
-"when you click somewhere into the window contents. To change it for inactive "
-"windows, you need to change the settings in the Actions tab."
-msgstr ""
-"Ja šī iespēja ir ieslēgta, tad aktīvais logs tiks pārcelts priekšplānā, ja "
-"uzklikšķināsiet kaut kur uz tā. Lai mainītu šo neaktīvajiem logiem, jums ir "
-"jāizmanto iestatījumi Darbību cilnē."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ClickRaise)
-#: focus.ui:156
-#, kde-format
-msgid "&Click raises active window"
+#: ui/Focus.qml:208
+#, fuzzy, kde-format
+#| msgid "&Click raises active window"
+msgid "&Click raises focused window"
 msgstr "&Klikšķis paceļ aktīvo logu"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AutoRaise)
-#: focus.ui:165
-#, kde-format
-msgid ""
-"When this option is enabled, a window in the background will automatically "
-"come to the front when the mouse pointer has been over it for some time."
-msgstr ""
-"Ja šī opcija ir ieslēgta, fonā esošs logs tiks pacelts priekšplānā, uz tā "
-"noteiktu laiku paturot peles kursoru."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AutoRaise)
-#: focus.ui:168
+#: ui/Focus.qml:228
 #, kde-format
 msgid "&Raise on hover, delayed by:"
 msgstr "&Pacelt un paturēt virs, ar aizturi:"
 
-#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_AutoRaiseInterval)
-#: focus.ui:178
-#, kde-format
-msgid ""
-"This is the delay after which the window that the mouse pointer is over will "
-"automatically come to the front."
-msgstr ""
-"Šī ir aizture, cik ilgi peles kursoram ir jāatrodas virs fonā esoša loga, "
-"lai tas pārvietotos priekšplānā."
-
-#. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
-#: focus.ui:199
+#: ui/Focus.qml:272
 #, kde-format
 msgid "Multiscreen behavior:"
 msgstr "Vairāku ekrānu uzvedība:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:206
-#, kde-format
-msgid ""
-"When this option is enabled, focus operations are limited only to the active "
-"screen"
-msgstr ""
-"Ja šī iespēja ir ieslēgta, fokusa darbības ir ierobežotas līdz tikai "
-"aktīvajam ekrānam"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:209
+#: ui/Focus.qml:273
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "&Atdalīts ekrānu fokuss"
 
-#. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:222
-#, kde-format
-msgid "Window activation policy description"
-msgstr "Loga aktivitātes politikas apraksts"
-
-#: main.cpp:48
+#: ui/main.qml:31
 #, kde-format
 msgid "&Focus"
 msgstr "&Fokuss"
 
-#: main.cpp:53
+#: ui/main.qml:37
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "&Virsrakstjoslas darbības"
 
-#: main.cpp:58
+#: ui/main.qml:43
 #, kde-format
 msgid "W&indow Actions"
 msgstr "&Logu darbības"
 
-#: main.cpp:63
-#, kde-format
-msgid "Mo&vement"
+#: ui/main.qml:49
+#, fuzzy, kde-format
+#| msgid "Mo&vement"
+msgid "Mo&vement & Placement"
 msgstr "&Novietojums"
 
-#: main.cpp:68
-#, kde-format
-msgid "Adva&nced"
-msgstr "&Paplašināti"
+#: ui/MovementAndPlacement.qml:17
+#, fuzzy, kde-format
+#| msgid "Mo&vement"
+msgctxt "@title:group"
+msgid "Movement"
+msgstr "&Novietojums"
 
-#: main.cpp:74
-#, kde-format
-msgid "&Picture-in-picture"
-msgstr "&Attēls attēlā"
-
-#: main.cpp:165
-#, kde-format
-msgid "&Titlebar Actions"
-msgstr "&Virsraksta joslas darbības"
-
-#: main.cpp:175
-#, kde-format
-msgid "Window Actio&ns"
-msgstr "&Logu darbības"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
-#: mouse.ui:17
-#, kde-format
-msgid "Titlebar Actions"
-msgstr "Virsrakstjoslas darbības"
-
-#. i18n: ectx: property (text), widget (QLabel, label_1)
-#: mouse.ui:29
-#, kde-format
-msgid "&Double-click:"
-msgstr "&Dubultklikšķis:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#: mouse.ui:39
-#, kde-format
-msgid "Behavior on <em>double</em> click into the titlebar."
-msgstr "Izturēšanās, veicot <em>dubultklikšķi</em> virsraksta joslā."
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:43 mouse.ui:591 mouse.ui:626 mouse.ui:661
-#, kde-format
-msgid "Maximize"
-msgstr "Maksimizēt"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:48 mouse.ui:596 mouse.ui:631 mouse.ui:666
-#, kde-format
-msgid "Vertically maximize"
-msgstr "Vertikāli maksimizēt"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:53 mouse.ui:601 mouse.ui:636 mouse.ui:671
-#, kde-format
-msgid "Horizontally maximize"
-msgstr "Horizontāli maksimizēt"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:68 mouse.ui:252 mouse.ui:309 mouse.ui:357 mouse.ui:414 mouse.ui:462
-#: mouse.ui:519
-#, kde-format
-msgid "Close"
-msgstr "Aizvērt"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#: mouse.ui:73
-#, kde-format
-msgid "Show on all desktops"
-msgstr "Rādīt visās darbvirsmās"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: mouse.ui:96
-#, kde-format
-msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
-msgstr "Izturēšanās, virsrakstjoslā <em>ritinot ar peli</em>."
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: mouse.ui:136
-#, kde-format
-msgid "Titlebar and Frame Actions"
-msgstr "Virsrakstjoslas un ietvara darbības"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: mouse.ui:163
-#, kde-format
-msgid "Active"
-msgstr "Aktīvs"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: mouse.ui:186
-#, kde-format
-msgid "Inactive"
-msgstr "Neaktīvs"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#: mouse.ui:228 mouse.ui:333 mouse.ui:438
-#, kde-format
-msgid ""
-"Behavior on <em>left</em> click into the titlebar or frame of an <em>active</"
-"em> window."
-msgstr ""
-"Izturēšanās , veicot peles <em>kreiso</em> klikšķi <em>aktīva</em> loga "
-"virsrakstjoslā vai ietvarā."
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:270 mouse.ui:375 mouse.ui:480
-#, kde-format
-msgid ""
-"Behavior on <em>left</em> click into the titlebar or frame of an "
-"<em>inactive</em> window."
-msgstr ""
-"Izturēšanās, veicot peles <em>kreiso</em> klikšķi <em>neaktīva</em> loga "
-"virsrakstjoslā vai ietvarā."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:279 mouse.ui:384 mouse.ui:489
-#, kde-format
-msgid "Activate and lower"
-msgstr "Aktivizēt un nolaist"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DoubleClickBorderToMaximize)
-#: mouse.ui:537
-#, kde-format
-msgid "Maximize window by double clicking its frame"
-msgstr "Maksimizēt logu, veicot dubultklikšķi uz tā ietvara"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
-#: mouse.ui:562
-#, kde-format
-msgid "Maximize Button Actions"
-msgstr "Maksimizēšanas pogas darbības"
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label_8)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
-#: mouse.ui:574 mouse.ui:587
-#, kde-format
-msgid "Behavior on <em>left</em> click onto the maximize button."
-msgstr ""
-"Izturēšanās, veicot peles <em>kreiso</em> klikšķi uz maksimizēšanas pogas."
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label_9)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
-#: mouse.ui:609 mouse.ui:622
-#, kde-format
-msgid "Behavior on <em>middle</em> click onto the maximize button."
-msgstr ""
-"Izturēšanās, veicot peles <em>vidējo</em> klikšķi uz maksimizēšanas pogas."
-
-#. i18n: ectx: property (text), widget (QLabel, label_9)
-#: mouse.ui:612
-#, kde-format
-msgid "Middle c&lick:"
-msgstr "&Vidējais klikšķis:"
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label_10)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:644 mouse.ui:657
-#, kde-format
-msgid "Behavior on <em>right</em> click onto the maximize button."
-msgstr ""
-"Izturēšanās, veicot peles <em>labo</em> klikšķi uz maksimizēšanas pogas."
-
-#. i18n: ectx: property (text), widget (QLabel, borderSnapLabel)
-#: moving.ui:20
+#: ui/MovementAndPlacement.qml:22
 #, kde-format
 msgid "Screen &edge snap zone:"
 msgstr "&Robežu pielipšanas zona:"
 
-#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_BorderSnapZone)
-#: moving.ui:30
+#: ui/MovementAndPlacement.qml:30 ui/MovementAndPlacement.qml:58
+#: ui/MovementAndPlacement.qml:87 ui/MovementAndPlacement.qml:183
 #, kde-format
-msgid ""
-"Here you can set the snap zone for screen edges, i.e. the 'strength' of the "
-"magnetic field which will make windows snap to the border when moved near it."
+msgctxt "short for pixel(s)"
+msgid "%1 px"
 msgstr ""
-"Šeit varat iestatīt pielipšanas zonu ekrāna malām, proti, magnētiskā lauka "
-"„spēku“ kas pierauj logus pie ekrāna malas, kad tos tai pietuvināt."
 
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_CenterSnapZone)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_PictureInPictureMargin)
-#: moving.ui:36 moving.ui:68 moving.ui:100 pip.ui:61
-#, kde-format
-msgid " px"
+#: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
+#: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
+#, fuzzy, kde-format
+#| msgid " px"
+msgctxt "short for pixel(s)"
+msgid "px"
 msgstr " px"
 
-#. i18n: ectx: property (text), widget (QLabel, windowSnapLabel)
-#: moving.ui:52
+#: ui/MovementAndPlacement.qml:50
 #, kde-format
 msgid "&Window snap zone:"
 msgstr "&Logu pielipšanas zona:"
 
-#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_WindowSnapZone)
-#: moving.ui:62
-#, kde-format
-msgid ""
-"Here you can set the snap zone for windows, i.e. the 'strength' of the "
-"magnetic field which will make windows snap to each other when they are "
-"moved near another window."
-msgstr ""
-"Šeit varat konfigurēt logu pielipšanas zonu, proti, magnētiskā lauka "
-"„spēku“, kurš liek logiem salipt kopā, kad tiek satuvināti divi logi."
-
-#. i18n: ectx: property (text), widget (QLabel, centerSnaplabel)
-#: moving.ui:84
+#: ui/MovementAndPlacement.qml:79
 #, kde-format
 msgid "&Center snap zone:"
 msgstr "&Centra pielipšanas zona:"
 
-#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_CenterSnapZone)
-#: moving.ui:94
-#, kde-format
-msgid ""
-"Here you can set the snap zone for the screen center, i.e. the 'strength' of "
-"the magnetic field which will make windows snap to the center of the screen "
-"when moved near it."
-msgstr ""
-"Šeit jūs varat iestatīt pielipšanas zonu ekrāna centram, proti, magnētiskā "
-"lauka „spēku“, kas pierauj logus ekrāna centram, kad pārvieto tuvu tam."
-
-#. i18n: ectx: property (text), widget (QLabel, OverlapSnapLabel)
-#: moving.ui:113
+#: ui/MovementAndPlacement.qml:106
 #, kde-format
 msgid "&Snap windows:"
 msgstr "Logu &pielipšana:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
-#: moving.ui:123
-#, kde-format
-msgid ""
-"Here you can set that windows will be only snapped if you try to overlap "
-"them, i.e. they will not be snapped if the windows comes only near another "
-"window or border."
-msgstr ""
-"Šeit varat noteikt, lai logi saliptu tikai pie to pārklāšanās, proti, tie "
-"nesalips, ja atradīsies tikai blakus citam logam vai ietvaram."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
-#: moving.ui:126
+#: ui/MovementAndPlacement.qml:107
 #, kde-format
 msgid "Only when overlapping"
 msgstr "Tikai pārklājoties"
 
-#. i18n: ectx: property (text), widget (QLabel, homeCornerLabel)
-#: pip.ui:20
+#: ui/MovementAndPlacement.qml:122
+#, kde-format
+msgctxt "@title:group"
+msgid "Placement"
+msgstr ""
+
+#: ui/MovementAndPlacement.qml:125
+#, kde-format
+msgid "Window &placement:"
+msgstr "Loga &novietojums:"
+
+#: ui/MovementAndPlacement.qml:129
+#, kde-format
+msgid "Minimal Overlapping"
+msgstr "Minimāli pārklājoties"
+
+#: ui/MovementAndPlacement.qml:130
+#, kde-format
+msgid "Maximized"
+msgstr "Maksimizēts"
+
+#: ui/MovementAndPlacement.qml:131
+#, kde-format
+msgid "Random"
+msgstr "Nejaušs"
+
+#: ui/MovementAndPlacement.qml:132
+#, kde-format
+msgid "Centered"
+msgstr "Centrā"
+
+#: ui/MovementAndPlacement.qml:133
+#, kde-format
+msgid "In Top-Left Corner"
+msgstr "Kreisajā augšējā stūrī"
+
+#: ui/MovementAndPlacement.qml:134
+#, kde-format
+msgid "Under mouse"
+msgstr "Zem peles kursora"
+
+#: ui/MovementAndPlacement.qml:149
+#, fuzzy, kde-format
+#| msgid "&Picture-in-picture"
+msgctxt "@title:group"
+msgid "Picture-in-picture Placement"
+msgstr "&Attēls attēlā"
+
+#: ui/MovementAndPlacement.qml:152
 #, kde-format
 msgid "Open in screen corner:"
 msgstr "Atvērt ekrāna stūrī:"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
-#: pip.ui:31
+#: ui/MovementAndPlacement.qml:157
 #, kde-format
 msgid "Top-left"
 msgstr "Augšā pa kreisi"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
-#: pip.ui:36
+#: ui/MovementAndPlacement.qml:158
 #, kde-format
 msgid "Top-right"
 msgstr "Augšā pa labi"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
-#: pip.ui:41
+#: ui/MovementAndPlacement.qml:159
 #, kde-format
 msgid "Bottom-left"
 msgstr "Apakšā pe kreisi"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
-#: pip.ui:46
+#: ui/MovementAndPlacement.qml:160
 #, kde-format
 msgid "Bottom-right"
 msgstr "Apakšā pa labi"
 
-#. i18n: ectx: property (text), widget (QLabel, marginLabel)
-#: pip.ui:54
+#: ui/MovementAndPlacement.qml:173
 #, kde-format
 msgid "Margin:"
 msgstr "Attālums līdz malai:"
 
-#: windows.cpp:92
+#: ui/TitlebarActions.qml:20 ui/TitlebarActions.qml:33 ui/WindowActions.qml:31
 #, kde-format
-msgid ""
-"<em>Click to focus:</em> A window becomes active when you click into it. "
-"This behavior is common on other operating systems and likely what you want."
-msgstr ""
-"<em>Klikšķināt, lai fokusētu:</em> logs kļūst aktīvs, kad to klikšķina. Šī "
-"uzvedība ir ierasta citās operētājsistēmās un, iespējams, arī jums."
+msgid "Raise"
+msgstr "Pacelt"
 
-#: windows.cpp:95
+#: ui/TitlebarActions.qml:21 ui/TitlebarActions.qml:34
+#: ui/TitlebarActions.qml:61 ui/WindowActions.qml:32
 #, kde-format
-msgid ""
-"<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
-"focus</em>. If an active window has to be chosen by the system (eg. because "
-"the currently active one was closed) the window under the mouse is the "
-"preferred candidate. Unusual, but possible variant of <em>Click to focus</"
-"em>."
-msgstr ""
-"<em>Klikšķiniet, lai fokusētu (peles priekšroka):</em> parasti tas pats, kas "
-"<em>klikšķināt, lai fokusētu</em>. Ja sistēmai ir jāizvēlas aktīvais logs "
-"(piemēram, lietotājs aizver pašreiz aktīvo logu), priekšroka ir tam logam, "
-"kas atrodas zem peles kursora. Neierasts, bet iespējams variants iespējai "
-"<em>Klikšķināt, lai fokusētu</em>."
+msgid "Lower"
+msgstr "Nolaist"
 
-#: windows.cpp:98
+#: ui/TitlebarActions.qml:22 ui/TitlebarActions.qml:35
+#: ui/TitlebarActions.qml:82 ui/WindowActions.qml:33 ui/WindowActions.qml:206
 #, kde-format
-msgid ""
-"<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
-"it. Eg. windows randomly appearing under the mouse will not gain the focus. "
-"<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
-"to focus</em> just without having to actually click."
-msgstr ""
-"<em>Fokuss seko pelei:</em> peles pārvietošana logā to aktivizē. Piemēram, "
-"logs, kas nejauši parādās zem peles kursora, neiegūs fokusu. Piemēram, ja "
-"logs pēkšņi atveras zem peles kursora, tas neiegūs fokusu. <em>Fokusa "
-"zaudēšanas novēršana </em> notiek ierastā veidā. Domājiet, kā <em>Klikšķis, "
-"lai fokusētu</em>, bet bez klikšķināšanas."
+msgid "Raise/lower"
+msgstr "Pacelt/nolaist"
 
-#: windows.cpp:101
+#: ui/TitlebarActions.qml:23 ui/TitlebarActions.qml:36
+#: ui/TitlebarActions.qml:60 ui/WindowActions.qml:34
 #, kde-format
-msgid ""
-"This is mostly the same as <em>Focus follows mouse</em>. If an active window "
-"has to be chosen by the system (eg. because the currently active one was "
-"closed) the window under the mouse is the preferred candidate. Choose this, "
-"if you want a hover controlled focus."
-msgstr ""
-"Lielākoties tas pats, kas <em>Fokuss seko pelei</em>. Ja sistēma ir "
-"izvēlējusi aktīvo logu (piemēram, iepriekšējais aktīvais logs ir aizvērts), "
-"pirmais kandidāts būs logs zem peles kursora. Izvēlieties šo iespēju, ja "
-"vēlaties fokusu, ko kontrolē pele bez klikšķināšanas."
+msgid "Minimize"
+msgstr "Minimizēt"
 
-#: windows.cpp:104
+#: ui/TitlebarActions.qml:24 ui/TitlebarActions.qml:37
+#: ui/TitlebarActions.qml:62
 #, kde-format
-msgid ""
-"<em>Focus under mouse:</em> The focus always remains on the window under the "
-"mouse.<br/><strong>Warning:</strong> <em>Focus stealing prevention</em> and "
-"the <em>tabbox ('Alt+Tab')</em> contradict the activation policy and will "
-"not work. You very likely want to use <em>Focus follows mouse (mouse "
-"precedence)</em> instead!"
-msgstr ""
-"<em>Fokuss zem peles:</em> fokusu vienmēr saglabā logs, kas atrodas zem "
-"peles kursora.<br/><strong>Uzmanību:</strong> <em>fokusa zaudēšanas "
-"novēršana</em> un <em>Alt+Tab lodziņš</em> ir pretrunā aktivitātes politikai "
-"un nedarbosies. Tā vietā visdrīzāk gribēsiet lietot iespēju <em>Fokuss seko "
-"pelei (peles priekšroka)</em>!"
+msgid "Close"
+msgstr "Aizvērt"
 
-#: windows.cpp:107
+#: ui/TitlebarActions.qml:25 ui/TitlebarActions.qml:38 ui/WindowActions.qml:37
 #, kde-format
-msgid ""
-"<em>Focus strictly under mouse:</em> The focus is always on the window under "
-"the mouse (in doubt nowhere) very much like the focus behavior in an "
-"unmanaged legacy X11 environment.<br/><strong>Warning:</strong> <em>Focus "
-"stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> contradict the "
-"activation policy and will not work. You very likely want to use <em>Focus "
-"follows mouse (mouse precedence)</em> instead!"
+msgid "Window menu"
+msgstr "Loga izvēlne"
+
+#: ui/TitlebarActions.qml:30 ui/WindowActions.qml:23 ui/WindowActions.qml:54
+#, fuzzy, kde-format
+#| msgid "Focus under mouse"
+msgid "Focus and raise"
+msgstr "Fokuss zem peles"
+
+#: ui/TitlebarActions.qml:31
+#, fuzzy, kde-format
+#| msgid "Focus under mouse"
+msgid "Focus and lower"
+msgstr "Fokuss zem peles"
+
+#: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
+#, fuzzy, kde-format
+#| msgid "&Focus"
+msgid "Focus"
+msgstr "&Fokuss"
+
+#: ui/TitlebarActions.qml:43 ui/TitlebarActions.qml:57
+#, kde-format
+msgid "Maximize"
+msgstr "Maksimizēt"
+
+#: ui/TitlebarActions.qml:44 ui/TitlebarActions.qml:58
+#, kde-format
+msgid "Vertically maximize"
+msgstr "Vertikāli maksimizēt"
+
+#: ui/TitlebarActions.qml:45 ui/TitlebarActions.qml:59
+#, kde-format
+msgid "Horizontally maximize"
+msgstr "Horizontāli maksimizēt"
+
+#: ui/TitlebarActions.qml:49
+#, kde-format
+msgid "Titlebar Actions"
+msgstr "Virsrakstjoslas darbības"
+
+#: ui/TitlebarActions.qml:52
+#, kde-format
+msgid "&Double-click:"
+msgstr "&Dubultklikšķis:"
+
+#: ui/TitlebarActions.qml:63
+#, kde-format
+msgid "Show on all desktops"
+msgstr "Rādīt visās darbvirsmās"
+
+#: ui/TitlebarActions.qml:77 ui/WindowActions.qml:99
+#, kde-format
+msgid "Mouse &wheel:"
+msgstr "Peles &ritenis:"
+
+#: ui/TitlebarActions.qml:83 ui/WindowActions.qml:207
+#, kde-format
+msgid "Maximize/restore"
+msgstr "Maksimizēt/atjaunot"
+
+#: ui/TitlebarActions.qml:84 ui/WindowActions.qml:208
+#, kde-format
+msgid "Keep above/below"
+msgstr "Paturēt virs/zem citiem"
+
+#: ui/TitlebarActions.qml:85 ui/WindowActions.qml:209
+#, kde-format
+msgid "Move to previous/next desktop"
+msgstr "Pārvietot uz iepriekšējo/nākamo darbvirsmu"
+
+#: ui/TitlebarActions.qml:86 ui/WindowActions.qml:210
+#, kde-format
+msgid "Change opacity"
+msgstr "Mainīt necaurspīdīgumu"
+
+#: ui/TitlebarActions.qml:102
+#, kde-format
+msgid "Titlebar and Frame Actions"
+msgstr "Virsrakstjoslas un ietvara darbības"
+
+#: ui/TitlebarActions.qml:111
+#, fuzzy, kde-format
+#| msgid "&Focus"
+msgctxt ""
+"@label for a group of comboboxes Left/Middle/Right-Click for focused windows"
+msgid "Focused"
+msgstr "&Fokuss"
+
+#: ui/TitlebarActions.qml:116
+#, kde-format
+msgctxt ""
+"@label for a group of comboboxes Left/Middle/Right-Click for unfocused "
+"windows"
+msgid "Unfocused"
 msgstr ""
-"<em>Fokuss stingri zem peles:</em> fokuss vienmēr ir logam zem peles (ja nav "
-"skaidrs, tad nekur), kas ir līdzīga fokusa uzvedība, kāda bija nepārvaldītā "
-"vecā X11 vidē.<br/><strong>Uzmanību:</strong> <em>fokusa zaudēšanas "
-"novēršana</em> un <em>Alt+Tab lodziņš</em> ir pretrunā aktivācijas politikai "
-"un nedarbosies. Ļoti iespējams, ka tā vietā vēlēsieties izmantot <em>Fokuss "
-"seko pelei (peles priekšroka)</em>!"
+
+#: ui/TitlebarActions.qml:122 ui/WindowActions.qml:46
+#, kde-format
+msgid "&Left click:"
+msgstr "&Kreisais klikšķi:"
+
+#: ui/TitlebarActions.qml:128
+#, kde-format
+msgctxt "@label:listbox accessible name"
+msgid "Left click on a focused titlebar or frame"
+msgstr ""
+
+#: ui/TitlebarActions.qml:143
+#, kde-format
+msgctxt "@label:listbox accessible name"
+msgid "Left click on an unfocused titlebar or frame"
+msgstr ""
+
+#: ui/TitlebarActions.qml:160 ui/WindowActions.qml:68
+#, kde-format
+msgid "&Middle click:"
+msgstr "&Vidējais klikšķis:"
+
+#: ui/TitlebarActions.qml:165
+#, kde-format
+msgctxt "@label:listbox accessible name"
+msgid "Middle click on a focused titlebar or frame"
+msgstr ""
+
+#: ui/TitlebarActions.qml:179
+#, kde-format
+msgctxt "@label:listbox accessible name"
+msgid "Middle click on an unfocused titlebar or frame"
+msgstr ""
+
+#: ui/TitlebarActions.qml:196 ui/WindowActions.qml:83
+#, kde-format
+msgid "&Right click:"
+msgstr "&Labais klikšķis:"
+
+#: ui/TitlebarActions.qml:201
+#, kde-format
+msgctxt "@label:listbox accessible name"
+msgid "Right click on a focused titlebar or frame"
+msgstr ""
+
+#: ui/TitlebarActions.qml:215
+#, kde-format
+msgctxt "@label:listbox accessible name"
+msgid "Right click on an unfocused titlebar or frame"
+msgstr ""
+
+#: ui/TitlebarActions.qml:233
+#, kde-format
+msgid "Maximize window by double clicking its frame"
+msgstr "Maksimizēt logu, veicot dubultklikšķi uz tā ietvara"
+
+#: ui/TitlebarActions.qml:248
+#, kde-format
+msgid "Maximize Button Actions"
+msgstr "Maksimizēšanas pogas darbības"
+
+#: ui/TitlebarActions.qml:251 ui/WindowActions.qml:154
+#, kde-format
+msgid "L&eft click:"
+msgstr "&Kreisais klikšķis:"
+
+#: ui/TitlebarActions.qml:268
+#, kde-format
+msgid "Middle c&lick:"
+msgstr "&Vidējais klikšķis:"
+
+#: ui/TitlebarActions.qml:285 ui/WindowActions.qml:186
+#, kde-format
+msgid "Right clic&k:"
+msgstr "Labais &klikšķis:"
+
+#: ui/WindowActions.qml:20 ui/WindowActions.qml:51
+#, kde-format
+msgid "Focus, raise, and click through"
+msgstr ""
+
+#: ui/WindowActions.qml:21 ui/WindowActions.qml:52
+#, kde-format
+msgid "Focus and click through"
+msgstr ""
+
+#: ui/WindowActions.qml:27
+#, kde-format
+msgid "Move"
+msgstr "Pārvietot"
+
+#: ui/WindowActions.qml:28
+#, fuzzy, kde-format
+#| msgid "Activate, raise and move"
+msgid "Focus, raise, and move"
+msgstr "Aktivizēt, pacelt un pārvietot"
+
+#: ui/WindowActions.qml:29
+#, fuzzy, kde-format
+#| msgid "Activate, raise and move"
+msgid "Focus, raise, and resize"
+msgstr "Aktivizēt, pacelt un pārvietot"
+
+#: ui/WindowActions.qml:30
+#, kde-format
+msgid "Resize"
+msgstr "Mainīt izmēru"
+
+#: ui/WindowActions.qml:35
+#, kde-format
+msgid "Decrease opacity"
+msgstr "Samazināt necaurspīdīgumu"
+
+#: ui/WindowActions.qml:36
+#, kde-format
+msgid "Increase opacity"
+msgstr "Palielināt necaurspīdīgumu"
+
+#: ui/WindowActions.qml:42
+#, fuzzy, kde-format
+#| msgid "Inactive Inner Window Actions"
+msgctxt "@title:group"
+msgid "Unfocused Inner Window Actions"
+msgstr "Neaktīva iekšējā loga darbības"
+
+#: ui/WindowActions.qml:50
+#, fuzzy, kde-format
+#| msgid "Activate, pass click and raise on release"
+msgid "Focus, click through, and raise on release"
+msgstr "Aktivizēt, padot klikšķi un pacelt pēc atlaišanas"
+
+#: ui/WindowActions.qml:103
+#, kde-format
+msgid "Scroll"
+msgstr "Ritināt"
+
+#: ui/WindowActions.qml:104
+#, fuzzy, kde-format
+#| msgid "Activate and scroll"
+msgid "Focus and scroll"
+msgstr "Aktivizēt un ritināt"
+
+#: ui/WindowActions.qml:105
+#, fuzzy, kde-format
+#| msgid "Activate, raise and scroll"
+msgid "Focus, raise, and scroll"
+msgstr "Aktivizēt, pacelt un ritināt"
+
+#: ui/WindowActions.qml:120
+#, fuzzy, kde-format
+#| msgid "Inner Window, Titlebar and Frame Actions"
+msgid "Inner Window, Titlebar, and Frame Actions"
+msgstr "Iekšējā loga, virsrakstjoslas un ietvara darbības"
+
+#: ui/WindowActions.qml:123
+#, kde-format
+msgid "Mo&difier key:"
+msgstr "&Modifikatora taustiņš:"
+
+#: ui/WindowActions.qml:131
+#, kde-format
+msgid "Meta"
+msgstr "Meta"
+
+#: ui/WindowActions.qml:132
+#, kde-format
+msgid "Alt"
+msgstr "Alt"
+
+#: ui/WindowActions.qml:170
+#, kde-format
+msgid "Middle &click:"
+msgstr "Vidējais &klikšķis:"
+
+#: ui/WindowActions.qml:202
+#, kde-format
+msgid "Mo&use wheel:"
+msgstr "&Peles ritenis:"
+
+#~ msgid ""
+#~ "In this row you can customize left click behavior when clicking into an "
+#~ "inactive inner window ('inner' means: not titlebar, not frame)."
+#~ msgstr ""
+#~ "Šajā rindā jūs varat pielāgot kreisā klikšķa izturēšanos, ieklikšķinot "
+#~ "neaktīvā iekšējā logā („iekšējais„ nozīmē: ne uz virsraksta joslas vai "
+#~ "ietvara)."
+
+#~ msgid "Activate, raise and pass click"
+#~ msgstr "Aktivizēt, pacelt un padod klikšķi"
+
+#~ msgid "Activate and pass click"
+#~ msgstr "Aktivizēt un padot klikšķi"
+
+#~ msgid "Activate"
+#~ msgstr "Aktivizēt"
+
+#~ msgid "Activate and raise"
+#~ msgstr "Aktivizēt un pacelt"
+
+#~ msgid ""
+#~ "In this row you can customize middle click behavior when clicking into an "
+#~ "inactive inner window ('inner' means: not titlebar, not frame)."
+#~ msgstr ""
+#~ "Šajā rindā varat pielāgot vidējā klikšķa izturēšanos, ieklikšķinot "
+#~ "neaktīvā iekšējā logā („iekšējais“ nozīmē: ne uz virsrakstjoslas vai "
+#~ "ietvara)."
+
+#~ msgid ""
+#~ "In this row you can customize right click behavior when clicking into an "
+#~ "inactive inner window ('inner' means: not titlebar, not frame)."
+#~ msgstr ""
+#~ "Šajā rindā jūs varat pielāgot labā klikšķa izturēšanos, ieklikšķinot "
+#~ "neaktīvā iekšējā logā („iekšējais“ nozīmē: ne uz virsrakstjoslas vai "
+#~ "ietvara)."
+
+#~ msgid ""
+#~ "In this row you can customize behavior when scrolling into an inactive "
+#~ "inner window ('inner' means: not titlebar, not frame)."
+#~ msgstr ""
+#~ "Šajā rindā jūs varat pielāgot ritināšanas izturēšanos, ritinot neaktīvā "
+#~ "iekšējā logā („iekšējais“ nozīmē: ne uz virsrakstjoslas vai ietvara)."
+
+#~ msgid ""
+#~ "Here you select whether holding the Meta key or Alt key will allow you to "
+#~ "perform the following actions."
+#~ msgstr ""
+#~ "Šeit varat izvēlēties vai „Meta“ taustiņa vai „Alt“ taustiņa turēšana "
+#~ "ļaus veikt sekojošas darbības."
+
+#~ msgid "  + "
+#~ msgstr "  + "
+
+#~ msgid ""
+#~ "In this row you can customize left click behavior when clicking into the "
+#~ "titlebar or the frame."
+#~ msgstr ""
+#~ "Šajā rindā varat pielāgot kreisā klikšķa izturēšanos, ieklikšķinot "
+#~ "virsrakstjoslā vai ietvarā."
+
+#~ msgid "Toggle raise and lower"
+#~ msgstr "Pārslēgt pacelšanu/nolaišanu"
+
+#~ msgid ""
+#~ "In this row you can customize middle click behavior when clicking into "
+#~ "the titlebar or the frame."
+#~ msgstr ""
+#~ "Šajā rindā varat pielāgot vidējā klikšķa izturēšanos, ieklikšķinot "
+#~ "virsrakstjoslā vai ietvarā."
+
+#~ msgid ""
+#~ "In this row you can customize right click behavior when clicking into the "
+#~ "titlebar or the frame."
+#~ msgstr ""
+#~ "Šajā rindā varat pielāgot labā klikšķa izturēšanos, ieklikšķinot "
+#~ "virsrakstjoslā vai ietvarā."
+
+#~ msgid ""
+#~ "Here you can customize KDE's behavior when scrolling with the mouse wheel "
+#~ "in a window while pressing the modifier key."
+#~ msgstr ""
+#~ "Šeit varat pielāgot KDE izturēšanos, ritinot kaut kur logā pie nospiesta "
+#~ "modifikatora taustiņa."
+
+#~ msgid ""
+#~ "<html><head/><body><p>The placement policy determines where a new window "
+#~ "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-"
+#~ "bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"
+#~ "\"><li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; "
+#~ "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
+#~ "font-style:italic;\">Smart</span> will try to achieve a minimum overlap "
+#~ "of windows</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+#~ "style=\" font-style:italic;\">Maximizing</span> will try to maximize "
+#~ "every window to fill the whole screen. It might be useful to selectively "
+#~ "affect placement of some windows using the window-specific settings.</"
+#~ "li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
+#~ "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
+#~ "font-style:italic;\">Random</span> will use a random position</li><li "
+#~ "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">Centered</span> will place the window centered</li><li "
+#~ "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">Zero-cornered</span> will place the window in the top-"
+#~ "left corner</li><li style=\" margin-top:0px; margin-bottom:12px; margin-"
+#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+#~ "style=\" font-style:italic;\">Under mouse</span> will place the window "
+#~ "under the pointer</li></ul></body></html>"
+#~ msgstr ""
+#~ "<html><head/><body><p>Novietojuma politika nosaka vietu, kur jauns logs "
+#~ "atvērsies ekrānā.</p><ul style=\"margin-top: 0px; margin-bottom: 0px; "
+#~ "margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" "
+#~ "margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -"
+#~ "qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+#~ "\">Vieda</span> mēģinās sasniegt minimālu logu pārklāšanos</li><li style="
+#~ "\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -"
+#~ "qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+#~ "\">Maksimizējoša</span> mēģinās maksimizēt katru logu, lai piepildītu "
+#~ "visu ekrānu. Tā var būt lietderīga, lai pēc izvēles ietekmētu atsevišķu "
+#~ "logu novietojumu, izmantojot logam specifiskus iestatījumus.</li><li "
+#~ "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">Nejaušs</span> mēģinās izvēlēties nejaušu pozīciju</"
+#~ "li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
+#~ "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
+#~ "font-style:italic;\">Centrēts</span> logu atvērs ekrāna centrā</li><li "
+#~ "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">Nulles stūrī</span> logu novietos augšējā kreisajā stūrī</"
+#~ "li><li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; "
+#~ "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
+#~ "font-style:italic;\">Zem peles kursora</span> logu novietos zem peles "
+#~ "kursora</li></ul></body></html>"
+
+#~ msgid ""
+#~ "When turned on, apps which are able to remember the positions of their "
+#~ "windows are allowed to do so. This will override the window placement "
+#~ "mode defined above."
+#~ msgstr ""
+#~ "Pēc ieslēgšanas programmas, kurām ir šāda funkcija, drīkstēs atcerēties "
+#~ "savu logu novietojumu. Šis iestatījums pārraksta logu novietojuma režīmu, "
+#~ "kas ir definēts iepriekš."
+
+#~ msgid ""
+#~ "Allow apps to remember the positions of their own windows, if they "
+#~ "support it"
+#~ msgstr ""
+#~ "Programmas atcerēsies savu logu novietojumu, ja atbalsta šādu funkciju"
+
+#~ msgid "Virtual Desktop behavior:"
+#~ msgstr "Virtuālās darbvirsmas uzvedība:"
+
+#~ msgid ""
+#~ "<html><head/><body><p>This setting controls what happens when an open "
+#~ "window located on a Virtual Desktop other than the current one is "
+#~ "activated. </p><p><span style=\" font-style:italic;\">Switch to that "
+#~ "Virtual Desktop</span> will switch to the Virtual Desktop where the "
+#~ "window is currently located. </p><p><span style=\" font-style:italic;"
+#~ "\">Bring window to current Virtual Desktop</span> will cause the window "
+#~ "to jump to the active Virtual Desktop. </p></body></html>"
+#~ msgstr ""
+#~ "<html><head/><body><p>Šis iestatījums kontrolē to, kas notiek, kad tiek "
+#~ "aktivizēts atvērts logs, kas atrodas citā virtuālajā darbvirsmā. </"
+#~ "p><p><span style=\" font-style:italic;\">Pārslēgties uz šo virtuālo "
+#~ "darbvirsmu</span> pārslēgsies uz to virtuālo darbvirsmu, kurā atrodas "
+#~ "pašreizējais logs. </p><p><span style=\" font-style:italic;\">Aiznest "
+#~ "logu uz aktīvo virtuālo darbvirsmu </span> liks logam pāriet uz aktīvo "
+#~ "virtuālo darbvirsmu. </p></body></html>"
+
+#~ msgid ""
+#~ "With this option you can specify how and when windows will be focused."
+#~ msgstr "Šī iespēja ļauj noteikt, kā un kad logi iegūs fokusu."
+
+#~ msgid "Click to focus (mouse precedence)"
+#~ msgstr "Klikšķināt lai fokusētu (peles priekšroka)"
+
+#~ msgid "Focus follows mouse (mouse precedence)"
+#~ msgstr "Fokuss seko pelei (peles priekšroka)"
+
+#~ msgid "Focus strictly under mouse"
+#~ msgstr "Fokuss stingri zem peles"
+
+#~ msgid ""
+#~ "This is the delay after which the window the mouse pointer is over will "
+#~ "automatically receive focus."
+#~ msgstr ""
+#~ "Šī ir noildze, norādot laiku, pēc kura, peles kursoram esot virs loga, "
+#~ "tas automātiski kļūs aktīvs (iegūs fokusu)."
+
+#~ msgid ""
+#~ "<html><head/><body><p>This option specifies how much KWin will try to "
+#~ "prevent unwanted focus stealing caused by unexpected activation of new "
+#~ "windows. (Note: This feature does not work with the <span style=\" font-"
+#~ "style:italic;\">Focus under mouse</span> or <span style=\" font-style:"
+#~ "italic;\">Focus strictly under mouse</span> focus policies.) </p><ul "
+#~ "style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-"
+#~ "right: 0px; -qt-list-indent: 1;\"><li style=\" margin-top:12px; margin-"
+#~ "bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+#~ "indent:0px;\"><span style=\" font-style:italic;\">None:</span> Prevention "
+#~ "is turned off and new windows always become activated.</li><li style=\" "
+#~ "margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
+#~ "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+#~ "\">Low:</span> Prevention is enabled; when some window does not have "
+#~ "support for the underlying mechanism and KWin cannot reliably decide "
+#~ "whether to activate the window or not, it will be activated. This setting "
+#~ "may have both worse and better results than the medium level, depending "
+#~ "on the applications.</li><li style=\" margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"><span style=\" font-style:italic;\">Medium:</span> Prevention is "
+#~ "enabled.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+#~ "style=\" font-style:italic;\">High:</span> New windows get activated only "
+#~ "if no window is currently active or if they belong to the currently "
+#~ "active application. This setting is probably not really usable when not "
+#~ "using mouse focus policy.</li><li style=\" margin-top:0px; margin-"
+#~ "bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+#~ "indent:0px;\"><span style=\" font-style:italic;\">Extreme:</span> All "
+#~ "windows must be explicitly activated by the user.</li></ul><p>Windows "
+#~ "that are prevented from stealing focus are marked as demanding attention, "
+#~ "which by default means their taskbar entry will be highlighted. This can "
+#~ "be changed in the Notifications control module.</p></body></html>"
+#~ msgstr ""
+#~ "<html><head/><body><p>Šī iespēja nosaka, cik lielā mērā „KWin“ mēģinās "
+#~ "novērst negribētu fokusa zaudēšanu, ko izraisa jaunu logu negaidīta "
+#~ "aktivācija. (Ievērojiet, ka šīs iespēja nestrādā kopā ar <span style=\" "
+#~ "font-style:italic;\">Fokuss zem peles</span> vai <span style=\" font-"
+#~ "style:italic;\">Fokuss stingri zem peles</span> fokusa politiku.) </p><ul "
+#~ "style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-"
+#~ "right: 0px; -qt-list-indent: 1;\"><li style=\" margin-top:12px; margin-"
+#~ "bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+#~ "indent:0px;\"><span style=\" font-style:italic;\">Nav:</span> novēršana "
+#~ "ir izslēgta un jauni logi vienmēr kļūs aktīvi.</li><li style=\" margin-"
+#~ "top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+#~ "indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Zema:</"
+#~ "span> Novēršana ir ieslēgta. Ja kāds logs neatbalsta šo mehānismu un "
+#~ "„KWin“ nespēj droši izlemt, vai logu aktivizēt, tas tiks aktivizēts. Šis "
+#~ "iestatījums var sniegt gan sliktākus, gan labākus rezultātus atkarībā no "
+#~ "programmas.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+#~ "style=\" font-style:italic;\">Vidēja:</span> Novēršana ir ieslēgta.</"
+#~ "li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
+#~ "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
+#~ "font-style:italic;\">Augsta:</span> jaunie logi tiks aktivēti tikai tad, "
+#~ "ja šobrīd nebūs aktīvi citi logi vai ja tie pieder pašreizējai aktīvajai "
+#~ "programmai. Šis iestatījums visdrīzāk nebūs lietojams, ja ir ieslēgta "
+#~ "peles fokusa politika.</li><li style=\" margin-top:0px; margin-"
+#~ "bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+#~ "indent:0px;\"><span style=\" font-style:italic;\">Ekstrēma:</span> "
+#~ "lietotājam ir speciāli jāaktivizē visi logi.</li></ul><p>Logi, kuriem nav "
+#~ "ļauts pārņemt fokusu, tiek atzīmēti kā „pieprasa uzmanību“, kas pēc "
+#~ "noklusējuma nozīmē, ka tiks iezīmētas to virsrakstjoslas. To iespējams "
+#~ "mainīt Paziņojumu kontroles modulī.</p></body></html>"
+
+#~ msgid ""
+#~ "When this option is enabled, the active window will be brought to the "
+#~ "front when you click somewhere into the window contents. To change it for "
+#~ "inactive windows, you need to change the settings in the Actions tab."
+#~ msgstr ""
+#~ "Ja šī iespēja ir ieslēgta, tad aktīvais logs tiks pārcelts priekšplānā, "
+#~ "ja uzklikšķināsiet kaut kur uz tā. Lai mainītu šo neaktīvajiem logiem, "
+#~ "jums ir jāizmanto iestatījumi Darbību cilnē."
+
+#~ msgid ""
+#~ "When this option is enabled, a window in the background will "
+#~ "automatically come to the front when the mouse pointer has been over it "
+#~ "for some time."
+#~ msgstr ""
+#~ "Ja šī opcija ir ieslēgta, fonā esošs logs tiks pacelts priekšplānā, uz tā "
+#~ "noteiktu laiku paturot peles kursoru."
+
+#~ msgid ""
+#~ "This is the delay after which the window that the mouse pointer is over "
+#~ "will automatically come to the front."
+#~ msgstr ""
+#~ "Šī ir aizture, cik ilgi peles kursoram ir jāatrodas virs fonā esoša loga, "
+#~ "lai tas pārvietotos priekšplānā."
+
+#~ msgid ""
+#~ "When this option is enabled, focus operations are limited only to the "
+#~ "active screen"
+#~ msgstr ""
+#~ "Ja šī iespēja ir ieslēgta, fokusa darbības ir ierobežotas līdz tikai "
+#~ "aktīvajam ekrānam"
+
+#~ msgid "Window activation policy description"
+#~ msgstr "Loga aktivitātes politikas apraksts"
+
+#~ msgid "Adva&nced"
+#~ msgstr "&Paplašināti"
+
+#~ msgid "&Titlebar Actions"
+#~ msgstr "&Virsraksta joslas darbības"
+
+#~ msgid "Window Actio&ns"
+#~ msgstr "&Logu darbības"
+
+#~ msgid "Behavior on <em>double</em> click into the titlebar."
+#~ msgstr "Izturēšanās, veicot <em>dubultklikšķi</em> virsraksta joslā."
+
+#~ msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
+#~ msgstr "Izturēšanās, virsrakstjoslā <em>ritinot ar peli</em>."
+
+#~ msgid "Active"
+#~ msgstr "Aktīvs"
+
+#~ msgid "Inactive"
+#~ msgstr "Neaktīvs"
+
+#~ msgid ""
+#~ "Behavior on <em>left</em> click into the titlebar or frame of an "
+#~ "<em>active</em> window."
+#~ msgstr ""
+#~ "Izturēšanās , veicot peles <em>kreiso</em> klikšķi <em>aktīva</em> loga "
+#~ "virsrakstjoslā vai ietvarā."
+
+#~ msgid ""
+#~ "Behavior on <em>left</em> click into the titlebar or frame of an "
+#~ "<em>inactive</em> window."
+#~ msgstr ""
+#~ "Izturēšanās, veicot peles <em>kreiso</em> klikšķi <em>neaktīva</em> loga "
+#~ "virsrakstjoslā vai ietvarā."
+
+#~ msgid "Activate and lower"
+#~ msgstr "Aktivizēt un nolaist"
+
+#~ msgid "Behavior on <em>left</em> click onto the maximize button."
+#~ msgstr ""
+#~ "Izturēšanās, veicot peles <em>kreiso</em> klikšķi uz maksimizēšanas pogas."
+
+#~ msgid "Behavior on <em>middle</em> click onto the maximize button."
+#~ msgstr ""
+#~ "Izturēšanās, veicot peles <em>vidējo</em> klikšķi uz maksimizēšanas pogas."
+
+#~ msgid "Behavior on <em>right</em> click onto the maximize button."
+#~ msgstr ""
+#~ "Izturēšanās, veicot peles <em>labo</em> klikšķi uz maksimizēšanas pogas."
+
+#~ msgid ""
+#~ "Here you can set the snap zone for screen edges, i.e. the 'strength' of "
+#~ "the magnetic field which will make windows snap to the border when moved "
+#~ "near it."
+#~ msgstr ""
+#~ "Šeit varat iestatīt pielipšanas zonu ekrāna malām, proti, magnētiskā "
+#~ "lauka „spēku“ kas pierauj logus pie ekrāna malas, kad tos tai pietuvināt."
+
+#~ msgid ""
+#~ "Here you can set the snap zone for windows, i.e. the 'strength' of the "
+#~ "magnetic field which will make windows snap to each other when they are "
+#~ "moved near another window."
+#~ msgstr ""
+#~ "Šeit varat konfigurēt logu pielipšanas zonu, proti, magnētiskā lauka "
+#~ "„spēku“, kurš liek logiem salipt kopā, kad tiek satuvināti divi logi."
+
+#~ msgid ""
+#~ "Here you can set the snap zone for the screen center, i.e. the 'strength' "
+#~ "of the magnetic field which will make windows snap to the center of the "
+#~ "screen when moved near it."
+#~ msgstr ""
+#~ "Šeit jūs varat iestatīt pielipšanas zonu ekrāna centram, proti, "
+#~ "magnētiskā lauka „spēku“, kas pierauj logus ekrāna centram, kad pārvieto "
+#~ "tuvu tam."
+
+#~ msgid ""
+#~ "Here you can set that windows will be only snapped if you try to overlap "
+#~ "them, i.e. they will not be snapped if the windows comes only near "
+#~ "another window or border."
+#~ msgstr ""
+#~ "Šeit varat noteikt, lai logi saliptu tikai pie to pārklāšanās, proti, tie "
+#~ "nesalips, ja atradīsies tikai blakus citam logam vai ietvaram."
+
+#~ msgid ""
+#~ "<em>Click to focus:</em> A window becomes active when you click into it. "
+#~ "This behavior is common on other operating systems and likely what you "
+#~ "want."
+#~ msgstr ""
+#~ "<em>Klikšķināt, lai fokusētu:</em> logs kļūst aktīvs, kad to klikšķina. "
+#~ "Šī uzvedība ir ierasta citās operētājsistēmās un, iespējams, arī jums."
+
+#~ msgid ""
+#~ "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click "
+#~ "to focus</em>. If an active window has to be chosen by the system (eg. "
+#~ "because the currently active one was closed) the window under the mouse "
+#~ "is the preferred candidate. Unusual, but possible variant of <em>Click to "
+#~ "focus</em>."
+#~ msgstr ""
+#~ "<em>Klikšķiniet, lai fokusētu (peles priekšroka):</em> parasti tas pats, "
+#~ "kas <em>klikšķināt, lai fokusētu</em>. Ja sistēmai ir jāizvēlas aktīvais "
+#~ "logs (piemēram, lietotājs aizver pašreiz aktīvo logu), priekšroka ir tam "
+#~ "logam, kas atrodas zem peles kursora. Neierasts, bet iespējams variants "
+#~ "iespējai <em>Klikšķināt, lai fokusētu</em>."
+
+#~ msgid ""
+#~ "<em>Focus follows mouse:</em> Moving the mouse onto a window will "
+#~ "activate it. Eg. windows randomly appearing under the mouse will not gain "
+#~ "the focus. <em>Focus stealing prevention</em> takes place as usual. Think "
+#~ "as <em>Click to focus</em> just without having to actually click."
+#~ msgstr ""
+#~ "<em>Fokuss seko pelei:</em> peles pārvietošana logā to aktivizē. "
+#~ "Piemēram, logs, kas nejauši parādās zem peles kursora, neiegūs fokusu. "
+#~ "Piemēram, ja logs pēkšņi atveras zem peles kursora, tas neiegūs fokusu. "
+#~ "<em>Fokusa zaudēšanas novēršana </em> notiek ierastā veidā. Domājiet, kā "
+#~ "<em>Klikšķis, lai fokusētu</em>, bet bez klikšķināšanas."
+
+#~ msgid ""
+#~ "This is mostly the same as <em>Focus follows mouse</em>. If an active "
+#~ "window has to be chosen by the system (eg. because the currently active "
+#~ "one was closed) the window under the mouse is the preferred candidate. "
+#~ "Choose this, if you want a hover controlled focus."
+#~ msgstr ""
+#~ "Lielākoties tas pats, kas <em>Fokuss seko pelei</em>. Ja sistēma ir "
+#~ "izvēlējusi aktīvo logu (piemēram, iepriekšējais aktīvais logs ir "
+#~ "aizvērts), pirmais kandidāts būs logs zem peles kursora. Izvēlieties šo "
+#~ "iespēju, ja vēlaties fokusu, ko kontrolē pele bez klikšķināšanas."
+
+#~ msgid ""
+#~ "<em>Focus under mouse:</em> The focus always remains on the window under "
+#~ "the mouse.<br/><strong>Warning:</strong> <em>Focus stealing prevention</"
+#~ "em> and the <em>tabbox ('Alt+Tab')</em> contradict the activation policy "
+#~ "and will not work. You very likely want to use <em>Focus follows mouse "
+#~ "(mouse precedence)</em> instead!"
+#~ msgstr ""
+#~ "<em>Fokuss zem peles:</em> fokusu vienmēr saglabā logs, kas atrodas zem "
+#~ "peles kursora.<br/><strong>Uzmanību:</strong> <em>fokusa zaudēšanas "
+#~ "novēršana</em> un <em>Alt+Tab lodziņš</em> ir pretrunā aktivitātes "
+#~ "politikai un nedarbosies. Tā vietā visdrīzāk gribēsiet lietot iespēju "
+#~ "<em>Fokuss seko pelei (peles priekšroka)</em>!"
+
+#~ msgid ""
+#~ "<em>Focus strictly under mouse:</em> The focus is always on the window "
+#~ "under the mouse (in doubt nowhere) very much like the focus behavior in "
+#~ "an unmanaged legacy X11 environment.<br/><strong>Warning:</strong> "
+#~ "<em>Focus stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> "
+#~ "contradict the activation policy and will not work. You very likely want "
+#~ "to use <em>Focus follows mouse (mouse precedence)</em> instead!"
+#~ msgstr ""
+#~ "<em>Fokuss stingri zem peles:</em> fokuss vienmēr ir logam zem peles (ja "
+#~ "nav skaidrs, tad nekur), kas ir līdzīga fokusa uzvedība, kāda bija "
+#~ "nepārvaldītā vecā X11 vidē.<br/><strong>Uzmanību:</strong> <em>fokusa "
+#~ "zaudēšanas novēršana</em> un <em>Alt+Tab lodziņš</em> ir pretrunā "
+#~ "aktivācijas politikai un nedarbosies. Ļoti iespējams, ka tā vietā "
+#~ "vēlēsieties izmantot <em>Fokuss seko pelei (peles priekšroka)</em>!"
 
 #~ msgid ""
 #~ "Note that \"Activate, pass click and raise on release\" doesn't work on "

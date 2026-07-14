@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-18 00:45+0000\n"
+"POT-Creation-Date: 2026-07-14 00:45+0000\n"
 "PO-Revision-Date: 2026-06-25 23:58+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -24,1215 +24,1034 @@ msgstr ""
 "X-Generator: Lokalize 26.07.70\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
-#: actions.ui:20
-#, kde-format
-msgid "Inactive Inner Window Actions"
-msgstr "非作用中的內部視窗動作"
-
-#. i18n: ectx: property (text), widget (QLabel, label_1)
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: actions.ui:29 mouse.ui:173
-#, kde-format
-msgid "&Left click:"
-msgstr "左鍵(&L)："
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow1)
-#: actions.ui:42
-#, kde-format
-msgid ""
-"In this row you can customize left click behavior when clicking into an "
-"inactive inner window ('inner' means: not titlebar, not frame)."
-msgstr ""
-"在這一列您可以自訂當左鍵在非作用中的內部視窗按下的行為（「內部」表示：非標題"
-"列、非邊框）。"
-
-# https://invent.kde.org/plasma/kwin/-/merge_requests/6555
-# activate (passing clicks), then on release, raise. The "on release" isn't for "activate".
-# --Kisaragi
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
-#: actions.ui:46
-#, kde-format
-msgid "Activate, pass click and raise on release"
-msgstr "作用及點選，並在放開時移到上層"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:51 actions.ui:91 actions.ui:131
-#, kde-format
-msgid "Activate, raise and pass click"
-msgstr "作用、移到上層及點選"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:56 actions.ui:96 actions.ui:136
-#, kde-format
-msgid "Activate and pass click"
-msgstr "作用及點選"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:61 actions.ui:101 actions.ui:141 mouse.ui:284 mouse.ui:389
-#: mouse.ui:494
-#, kde-format
-msgid "Activate"
-msgstr "作用"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:66 actions.ui:106 actions.ui:146 mouse.ui:274 mouse.ui:379
-#: mouse.ui:484
-#, kde-format
-msgid "Activate and raise"
-msgstr "作用及移到上層"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-#: actions.ui:74 mouse.ui:196
-#, kde-format
-msgid "&Middle click:"
-msgstr "中鍵(&M)："
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
-#: actions.ui:87
-#, kde-format
-msgid ""
-"In this row you can customize middle click behavior when clicking into an "
-"inactive inner window ('inner' means: not titlebar, not frame)."
-msgstr ""
-"在這一列您可以自訂當中鍵在非作用中的內部視窗按下的行為('內部'代表: 非標題列,"
-"非邊框)。"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-#: actions.ui:114 mouse.ui:209
-#, kde-format
-msgid "&Right click:"
-msgstr "右鍵(&R)："
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:127
-#, kde-format
-msgid ""
-"In this row you can customize right click behavior when clicking into an "
-"inactive inner window ('inner' means: not titlebar, not frame)."
-msgstr ""
-"在這一列您可以自訂當右鍵在非作用中的內部視窗按下的行為('內部'代表: 非標題列,"
-"非邊框)。"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: actions.ui:154 mouse.ui:86
-#, kde-format
-msgid "Mouse &wheel:"
-msgstr "滑鼠滾輪(&W)："
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:167
-#, kde-format
-msgid ""
-"In this row you can customize behavior when scrolling into an inactive inner "
-"window ('inner' means: not titlebar, not frame)."
-msgstr ""
-"在這一列您可以自訂在非作用中的內部視窗捲軸的行為('內部'代表: 非標題列,非邊"
-"框)。"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:171
-#, kde-format
-msgid "Scroll"
-msgstr "捲軸"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:176
-#, kde-format
-msgid "Activate and scroll"
-msgstr "作用及滾動"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:181
-#, kde-format
-msgid "Activate, raise and scroll"
-msgstr "作用、移到上層及滾動"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: actions.ui:195
-#, kde-format
-msgid "Inner Window, Titlebar and Frame Actions"
-msgstr "內部視窗、標題列及邊框動作"
-
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: actions.ui:206
-#, kde-format
-msgid "Mo&difier key:"
-msgstr "組合鍵(&D)："
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:216
-#, kde-format
-msgid ""
-"Here you select whether holding the Meta key or Alt key will allow you to "
-"perform the following actions."
-msgstr "在這裡您可以選擇當按住 Meta 或是 ALT 讓您執行的行為。"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:220
-#, kde-format
-msgid "Meta"
-msgstr "Meta"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:225
-#, kde-format
-msgid "Alt"
-msgstr "ALT"
-
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-#: actions.ui:247
-#, kde-format
-msgid "  + "
-msgstr "  + "
-
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-#. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:259 mouse.ui:577
-#, kde-format
-msgid "L&eft click:"
-msgstr "左鍵(&E)："
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll1)
-#: actions.ui:272
-#, kde-format
-msgid ""
-"In this row you can customize left click behavior when clicking into the "
-"titlebar or the frame."
-msgstr "在這一列您可以自訂當左鍵按在標題列或邊框時的行為。"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:276 actions.ui:356 actions.ui:436
-#, kde-format
-msgid "Move"
-msgstr "移動"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:281 actions.ui:361 actions.ui:441
-#, kde-format
-msgid "Activate, raise and move"
-msgstr "作用、移到上層及移動"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:286 actions.ui:366 actions.ui:446
-#, kde-format
-msgid "Activate, raise and resize"
-msgstr "作用、移到上層及調整大小"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:291 actions.ui:371 actions.ui:451 mouse.ui:242 mouse.ui:299
-#: mouse.ui:347 mouse.ui:404 mouse.ui:452 mouse.ui:509
-#, kde-format
-msgid "Toggle raise and lower"
-msgstr "移至上下層"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:296 actions.ui:376 actions.ui:456
-#, kde-format
-msgid "Resize"
-msgstr "改變視窗大小"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:301 actions.ui:381 actions.ui:461 mouse.ui:232 mouse.ui:289
-#: mouse.ui:337 mouse.ui:394 mouse.ui:442 mouse.ui:499
-#, kde-format
-msgid "Raise"
-msgstr "前景"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:306 actions.ui:386 actions.ui:466 mouse.ui:63 mouse.ui:237
-#: mouse.ui:294 mouse.ui:342 mouse.ui:399 mouse.ui:447 mouse.ui:504
-#, kde-format
-msgid "Lower"
-msgstr "背景"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:311 actions.ui:391 actions.ui:471 mouse.ui:58 mouse.ui:247
-#: mouse.ui:304 mouse.ui:352 mouse.ui:409 mouse.ui:457 mouse.ui:514
-#, kde-format
-msgid "Minimize"
-msgstr "最小化"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:316 actions.ui:396 actions.ui:476
-#, kde-format
-msgid "Decrease opacity"
-msgstr "降低不透明度"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:321 actions.ui:401 actions.ui:481
-#, kde-format
-msgid "Increase opacity"
-msgstr "增加不透明度"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:326 actions.ui:406 actions.ui:486 mouse.ui:257 mouse.ui:314
-#: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Window menu"
-msgstr "視窗選單"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:331 actions.ui:411 actions.ui:491 actions.ui:541 advanced.ui:108
-#: mouse.ui:78 mouse.ui:125 mouse.ui:262 mouse.ui:319 mouse.ui:367 mouse.ui:424
-#: mouse.ui:472 mouse.ui:529
-#, kde-format
-msgid "Do nothing"
-msgstr "無動作"
-
-#. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:339
-#, kde-format
-msgid "Middle &click:"
-msgstr "中鍵(&C)："
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
-#: actions.ui:352
-#, kde-format
-msgid ""
-"In this row you can customize middle click behavior when clicking into the "
-"titlebar or the frame."
-msgstr "在這一列您可以自訂當中鍵按在標題列或邊框時的行為。"
-
-#. i18n: ectx: property (text), widget (QLabel, label_9)
-#. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:419 mouse.ui:647
-#, kde-format
-msgid "Right clic&k:"
-msgstr "右鍵(&K)："
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:432
-#, kde-format
-msgid ""
-"In this row you can customize right click behavior when clicking into the "
-"titlebar or the frame."
-msgstr "在這一列您可以自訂當右鍵按在標題列或邊框時的行為。"
-
-#. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:499
-#, kde-format
-msgid "Mo&use wheel:"
-msgstr "滑鼠滾輪(&U)："
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
-#: actions.ui:512
-#, kde-format
-msgid ""
-"Here you can customize KDE's behavior when scrolling with the mouse wheel in "
-"a window while pressing the modifier key."
-msgstr "在這裡您可以自訂 [同時按住輔助鍵並使用滑鼠滾輪] 時 KDE 的行為。"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:516 mouse.ui:100
-#, kde-format
-msgid "Raise/lower"
-msgstr "移至上/下層"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:521 mouse.ui:105
-#, kde-format
-msgid "Maximize/restore"
-msgstr "最大化/復原"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:526 mouse.ui:110
-#, kde-format
-msgid "Keep above/below"
-msgstr "保持在頂層/底層"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:531 mouse.ui:115
-#, kde-format
-msgid "Move to previous/next desktop"
-msgstr "移至上/下一個桌面"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:536 mouse.ui:120
-#, kde-format
-msgid "Change opacity"
-msgstr "變更不透明度"
-
-#. i18n: ectx: property (text), widget (QLabel, windowPlacementLabel)
-#: advanced.ui:20
-#, kde-format
-msgid "Window &placement:"
-msgstr "視窗放置(&P)："
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
-#: advanced.ui:30
-#, kde-format
-msgid ""
-"<html><head/><body><p>The placement policy determines where a new window "
-"will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-bottom: "
-"0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" "
-"margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-"\">Smart</span> will try to achieve a minimum overlap of windows</li><li "
-"style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">Maximizing</span> will try to maximize every window to fill the "
-"whole screen. It might be useful to selectively affect placement of some "
-"windows using the window-specific settings.</li><li style=\" margin-top:0px; "
-"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
-"text-indent:0px;\"><span style=\" font-style:italic;\">Random</span> will "
-"use a random position</li><li style=\" margin-top:0px; margin-bottom:0px; "
-"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
-"\"><span style=\" font-style:italic;\">Centered</span> will place the window "
-"centered</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">Zero-cornered</span> will place the window in "
-"the top-left corner</li><li style=\" margin-top:0px; margin-bottom:12px; "
-"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
-"\"><span style=\" font-style:italic;\">Under mouse</span> will place the "
-"window under the pointer</li></ul></body></html>"
-msgstr ""
-"<html><head/><body><p>放置策略會決定新視窗在桌面上顯示的位置。</p><ul style="
-"\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -"
-"qt-list-indent: 1;\"><li style=\" margin-top:12px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">智慧型</span> 會盡可能不覆蓋視窗</li><li style="
-"\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">最大化"
-"</span> 會嘗試將視窗最大化到貼合整個螢幕。這可能會在使用視窗指定設定選擇性地"
-"影響部份視窗的擺放位置時很有用。</li><li style=\" margin-top:0px; margin-"
-"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">隨機</span> 會使用隨機位置"
-"</li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">置中</span> 會置中擺放視窗</li><li style=\" margin-top:0px; margin-"
-"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">無角落</span> 會將視窗擺放"
-"在左上角</li><li style=\" margin-top:0px; margin-bottom:12px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">游標下</span> 會將視窗擺放在游標下</li></ul></"
-"body></html>"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:34
-#, kde-format
-msgid "Minimal Overlapping"
-msgstr "儘量降低重疊"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:39
-#, kde-format
-msgid "Maximized"
-msgstr "最大化"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:44
-#, kde-format
-msgid "Random"
-msgstr "隨機放置"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:49
-#, kde-format
-msgid "Centered"
-msgstr "置中"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:54
-#, kde-format
-msgid "In Top-Left Corner"
-msgstr "在左上角"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:59
-#, kde-format
-msgid "Under mouse"
-msgstr "游標下"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
-#: advanced.ui:67
-#, kde-format
-msgid ""
-"When turned on, apps which are able to remember the positions of their "
-"windows are allowed to do so. This will override the window placement mode "
-"defined above."
-msgstr ""
-"開啟時，能夠記住其位置的應用程式就會這麼作。這將會覆寫您在上方定義的視窗放置"
-"模式。"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
-#: advanced.ui:70
-#, kde-format
-msgid ""
-"Allow apps to remember the positions of their own windows, if they support it"
-msgstr "讓應用程式可以記住其視窗的位置（若其支援）"
-
-#. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
-#: advanced.ui:77
-#, kde-format
-msgid "Virtual Desktop behavior:"
-msgstr "虛擬桌面行為："
-
-#. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
-#: advanced.ui:87
-#, kde-format
-msgid "When activating a window on a different Virtual Desktop:"
-msgstr "將另一個虛擬桌面上的視窗設為作用中時："
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:94
-#, kde-format
-msgid ""
-"<html><head/><body><p>This setting controls what happens when an open window "
-"located on a Virtual Desktop other than the current one is activated. </"
-"p><p><span style=\" font-style:italic;\">Switch to that Virtual Desktop</"
-"span> will switch to the Virtual Desktop where the window is currently "
-"located. </p><p><span style=\" font-style:italic;\">Bring window to current "
-"Virtual Desktop</span> will cause the window to jump to the active Virtual "
-"Desktop. </p></body></html>"
-msgstr ""
-"<html><head/><body><p>這個設定控制將開在非目前的虛擬桌面上的視窗設為作用中時"
-"會發生什麼。</p><p><span style=\" font-style:italic;\">切換至該虛擬桌面</"
-"span>會切換到該視窗目前所在的虛擬桌面。</p><p><span style=\" font-style:"
-"italic;\">將視窗移至目前的虛擬桌面</span>會讓該視窗跳到作用中的虛擬桌面。</"
-"p></body></html>"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:98
-#, kde-format
-msgid "Switch to that Virtual Desktop"
-msgstr "切換至該虛擬桌面"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:103
-#, kde-format
-msgid "Bring window to current Virtual Desktop"
-msgstr "將視窗移至目前的虛擬桌面"
-
-#. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
-#: focus.ui:22
-#, kde-format
-msgid "Window &activation policy:"
+#: ui/Focus.qml:22
+#, fuzzy, kde-format
+#| msgid "Window &activation policy:"
+msgctxt "@label:listbox"
+msgid "Window focus policy:"
 msgstr "視窗作用策略(&A)："
 
-#. i18n: ectx: property (whatsThis), widget (QComboBox, windowFocusPolicy)
-#: focus.ui:32
-#, kde-format
-msgid "With this option you can specify how and when windows will be focused."
-msgstr "您可使用此選項指定何時或如何使視窗變成焦點。"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
-#: focus.ui:36
-#, kde-format
-msgctxt "sassa asas"
+#: ui/Focus.qml:46
+#, fuzzy, kde-format
+#| msgctxt "sassa asas"
+#| msgid "Click to focus"
+msgctxt "@item:inlistbox Window focus policy"
 msgid "Click to focus"
 msgstr "按一下取得焦點"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
-#: focus.ui:41
+#: ui/Focus.qml:47
 #, kde-format
-msgid "Click to focus (mouse precedence)"
-msgstr "按一下取得焦點 (滑鼠優先)"
+msgctxt "@info:tooltip Window focus policy"
+msgid "Window becomes focused when clicked."
+msgstr ""
 
-#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
-#: focus.ui:46
-#, kde-format
-msgid "Focus follows mouse"
+#: ui/Focus.qml:51
+#, fuzzy, kde-format
+#| msgid "Focus follows mouse"
+msgctxt "@item:inlistbox Window focus policy"
+msgid "Focus follows pointer"
 msgstr "將焦點設為滑鼠所在位置"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
-#: focus.ui:51
+#: ui/Focus.qml:52
 #, kde-format
-msgid "Focus follows mouse (mouse precedence)"
-msgstr "將焦點設為滑鼠所在位置 (滑鼠優先)"
+msgctxt "@info:tooltip Window focus policy"
+msgid ""
+"As the pointer moves, windows under it become focused after a configurable "
+"delay."
+msgstr ""
 
-#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
-#: focus.ui:56
-#, kde-format
-msgid "Focus under mouse"
+#: ui/Focus.qml:56
+#, fuzzy, kde-format
+#| msgid "Focus under mouse"
+msgctxt "@item:inlistbox Window focus policy"
+msgid "Focus under pointer"
 msgstr "將游標下位置設為焦點"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
-#: focus.ui:61
+#: ui/Focus.qml:57
 #, kde-format
-msgid "Focus strictly under mouse"
-msgstr "嚴格將游標下位置設為焦點"
+msgctxt "@info:tooltip Window focus policy"
+msgid "Window under pointer receives focus, even if the pointer has not moved."
+msgstr ""
 
-#. i18n: ectx: property (text), widget (QLabel, delayFocusOnLabel)
-#: focus.ui:69
+#: ui/Focus.qml:75
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"Selecting <interface>Focus under pointer</interface> will prevent focus on "
+"some windows appearing on screen. This can lead to assigning focus to "
+"unwanted windows. Use with caution."
+msgstr ""
+
+#: ui/Focus.qml:81
+#, kde-format
+msgctxt "@option:radio After closing a window, move focus to:"
+msgid "Last focused window"
+msgstr ""
+
+#: ui/Focus.qml:83
+#, kde-format
+msgctxt "@title:group"
+msgid "After closing a window, move focus to:"
+msgstr ""
+
+#: ui/Focus.qml:86
+#, fuzzy, kde-format
+#| msgid "&Window snap zone:"
+msgctxt "@option:radio After closing a window, move focus to:"
+msgid "Window under pointer"
+msgstr "視窗貼齊區域(&W):"
+
+#: ui/Focus.qml:115
 #, kde-format
 msgid "&Delay focus by:"
 msgstr "延遲取焦時間(&D)："
 
-#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_DelayFocusInterval)
-#: focus.ui:82
+#: ui/Focus.qml:124 ui/Focus.qml:250
 #, kde-format
-msgid ""
-"This is the delay after which the window the mouse pointer is over will "
-"automatically receive focus."
-msgstr "這是滑鼠游標停在視窗上超過而自動取得焦點的延遲時間。"
+msgctxt "short for millisecond(s)"
+msgid "%1 ms"
+msgstr ""
 
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
-#: focus.ui:85 focus.ui:181
-#, kde-format
-msgid " ms"
+#: ui/Focus.qml:128 ui/Focus.qml:254
+#, fuzzy, kde-format
+#| msgid " ms"
+msgctxt "short for millisecond(s)"
+msgid "ms"
 msgstr " 毫秒"
 
-#. i18n: ectx: property (text), widget (QLabel, focusStealingLabel)
-#: focus.ui:101
+#: ui/Focus.qml:146
 #, kde-format
 msgid "Focus &stealing prevention:"
 msgstr "防止盜取焦點(&S)："
 
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
-#: focus.ui:114
-#, kde-format
-msgid ""
-"<html><head/><body><p>This option specifies how much KWin will try to "
-"prevent unwanted focus stealing caused by unexpected activation of new "
-"windows. (Note: This feature does not work with the <span style=\" font-"
-"style:italic;\">Focus under mouse</span> or <span style=\" font-style:italic;"
-"\">Focus strictly under mouse</span> focus policies.) </p><ul style=\"margin-"
-"top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-"
-"indent: 1;\"><li style=\" margin-top:12px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">None:</span> Prevention is turned off and new "
-"windows always become activated.</li><li style=\" margin-top:0px; margin-"
-"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">Low:</span> Prevention is "
-"enabled; when some window does not have support for the underlying mechanism "
-"and KWin cannot reliably decide whether to activate the window or not, it "
-"will be activated. This setting may have both worse and better results than "
-"the medium level, depending on the applications.</li><li style=\" margin-"
-"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Medium:</"
-"span> Prevention is enabled.</li><li style=\" margin-top:0px; margin-"
-"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">High:</span> New windows "
-"get activated only if no window is currently active or if they belong to the "
-"currently active application. This setting is probably not really usable "
-"when not using mouse focus policy.</li><li style=\" margin-top:0px; margin-"
-"bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">Extreme:</span> All "
-"windows must be explicitly activated by the user.</li></ul><p>Windows that "
-"are prevented from stealing focus are marked as demanding attention, which "
-"by default means their taskbar entry will be highlighted. This can be "
-"changed in the Notifications control module.</p></body></html>"
-msgstr ""
-"<html><head/><body><p>此選項指定KWin要多強烈地防止焦點意外被突然啟用的新視窗"
-"盜取。（注意：本功能與「將游標下位置設為焦點」及「嚴格將游標下位置設為焦點」"
-"焦點策略不相容。）</p><ul style=\"margin-top:0px;margin-bottom:0px;margin-"
-"left:0px;margin-right:0px;-qt-list-indent:1;\"><li style=\"margin-top:12px;"
-"margin-bottom:0px;margin-left:0px;margin-right:0px;-qt-block-indent:0;text-"
-"indent:0px;\"><span style=\"font-style:italic\">無</span>：不防止，新視窗一定"
-"會成為作用中。</li><li style=\"margin-top:0px;margin-bottom:0px;margin-"
-"left:0px;margin-right:0px;-qt-block-indent:0;text-indent:0px;\"><span style="
-"\"font-style:italic\">低</span>：啟用防止；如果一個視窗不支援底層的機制而KWin"
-"無法確定是否應該將其設為作用中，此選項將使KWin決定將其設為作用中。此選項依應"
-"用程式可能會比「中」設定好或不好。</li><li style=\"margin-top:0px;margin-"
-"bottom:0px;margin-left:0px;margin-right:0px;-qt-block-indent:0;text-"
-"indent:0px;\"><span style=\"font-style:italic\">中</span>：啟用防止。</"
-"li><li style=\"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-"
-"right:0px;-qt-block-indent:0;text-indent:0px;\"><span style=\"font-style:"
-"italic\">高</span>：新視窗只在沒有作用中視窗或跟作用中視窗來自相同應用程式的"
-"時候才會成為作用中。這個設定在使用滑鼠焦點策略的時候大概不會很能用。</li><li "
-"style=\"margin-top:0px;margin-bottom:12px;margin-left:0px;margin-right:0px;-"
-"qt-block-indent:0;text-indent:0px;\"><span style=\"font-style:italic\">最高</"
-"span>：沒有視窗會自動成為作用中。</li></ul><p>被防止盜取焦點的視窗會被標記為"
-"要求注意，而這預設代表它們在工作列上的項目會被突顯。這可以在「通知」設定模組"
-"進行變更。</p></body></html>"
-
-#. i18n: Focus Stealing Prevention Level
-#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
-#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_WindowSnapZone)
-#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_CenterSnapZone)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
-#: focus.ui:118 moving.ui:33 moving.ui:65 moving.ui:97
+#: ui/Focus.qml:150 ui/MovementAndPlacement.qml:30
+#: ui/MovementAndPlacement.qml:58 ui/MovementAndPlacement.qml:87
 #, kde-format
 msgid "None"
 msgstr "無"
 
-#. i18n: Focus Stealing Prevention Level
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
-#: focus.ui:123
+#: ui/Focus.qml:151
 #, kde-format
 msgid "Low"
 msgstr "低"
 
-#. i18n: Focus Stealing Prevention Level
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
-#: focus.ui:128
+#: ui/Focus.qml:152
 #, kde-format
 msgid "Medium"
 msgstr "中"
 
-#. i18n: Focus Stealing Prevention Level
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
-#: focus.ui:133
+#: ui/Focus.qml:153
 #, kde-format
 msgid "High"
 msgstr "高"
 
-#. i18n: Focus Stealing Prevention Level
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
-#: focus.ui:138
+#: ui/Focus.qml:154
 #, kde-format
 msgid "Extreme"
 msgstr "最高"
 
-#. i18n: ectx: property (text), widget (QLabel, raisingWindowsLabel)
-#: focus.ui:146
+#: ui/Focus.qml:171
+#, fuzzy, kde-format
+#| msgid "Switch to that Virtual Desktop"
+msgctxt "@option:radio When focusing a window on a different Virtual Desktop:"
+msgid "Switch to window’s Virtual Desktop"
+msgstr "切換至該虛擬桌面"
+
+#: ui/Focus.qml:173
+#, fuzzy, kde-format
+#| msgid "When activating a window on a different Virtual Desktop:"
+msgctxt "@title:group"
+msgid "When focusing a window on a different Virtual Desktop:"
+msgstr "將另一個虛擬桌面上的視窗設為作用中時："
+
+#: ui/Focus.qml:176
+#, kde-format
+msgid "Bring window to current Virtual Desktop"
+msgstr "將視窗移至目前的虛擬桌面"
+
+#: ui/Focus.qml:180 ui/TitlebarActions.qml:26 ui/TitlebarActions.qml:39
+#: ui/TitlebarActions.qml:64 ui/TitlebarActions.qml:87 ui/WindowActions.qml:38
+#: ui/WindowActions.qml:211
+#, kde-format
+msgid "Do nothing"
+msgstr "無動作"
+
+#: ui/Focus.qml:207
 #, kde-format
 msgid "Raising windows:"
 msgstr "移視窗至上層："
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ClickRaise)
-#: focus.ui:153
-#, kde-format
-msgid ""
-"When this option is enabled, the active window will be brought to the front "
-"when you click somewhere into the window contents. To change it for inactive "
-"windows, you need to change the settings in the Actions tab."
-msgstr ""
-"當此選項啟用，您點擊在視窗內容上，作用中視窗自動被帶到前景來。要將變更非作用"
-"中視窗的動作，您需要改變「動作」分頁中的設定。"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ClickRaise)
-#: focus.ui:156
-#, kde-format
-msgid "&Click raises active window"
+#: ui/Focus.qml:208
+#, fuzzy, kde-format
+#| msgid "&Click raises active window"
+msgid "&Click raises focused window"
 msgstr "按一下將作用中視窗移至上層(&C)"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AutoRaise)
-#: focus.ui:165
-#, kde-format
-msgid ""
-"When this option is enabled, a window in the background will automatically "
-"come to the front when the mouse pointer has been over it for some time."
-msgstr ""
-"假如 [自動前景] 啟動，當滑鼠游標停在上面一會兒，在背景的視窗會自動跑到前景"
-"來。"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AutoRaise)
-#: focus.ui:168
+#: ui/Focus.qml:228
 #, kde-format
 msgid "&Raise on hover, delayed by:"
 msgstr "懸停時將視窗移至上層的延遲時間(&R)："
 
-#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_AutoRaiseInterval)
-#: focus.ui:178
-#, kde-format
-msgid ""
-"This is the delay after which the window that the mouse pointer is over will "
-"automatically come to the front."
-msgstr "滑鼠游標停在視窗上超過這個延遲時間，視窗會自動跑到前景來。"
-
-#. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
-#: focus.ui:199
+#: ui/Focus.qml:272
 #, kde-format
 msgid "Multiscreen behavior:"
 msgstr "多螢幕行為："
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:206
-#, kde-format
-msgid ""
-"When this option is enabled, focus operations are limited only to the active "
-"screen"
-msgstr "當此選項啟用，焦點操作就會只限於目前作用中的螢幕"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:209
+#: ui/Focus.qml:273
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "分離螢幕焦點(&S)："
 
-#. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:222
-#, kde-format
-msgid "Window activation policy description"
-msgstr "視窗作用策略描述"
-
-#: main.cpp:48
+#: ui/main.qml:31
 #, kde-format
 msgid "&Focus"
 msgstr "焦點(&F)"
 
-#: main.cpp:53
+#: ui/main.qml:37
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "標題列動作(&C)"
 
-#: main.cpp:58
+#: ui/main.qml:43
 #, kde-format
 msgid "W&indow Actions"
 msgstr "視窗動作(&I)"
 
-#: main.cpp:63
-#, kde-format
-msgid "Mo&vement"
+#: ui/main.qml:49
+#, fuzzy, kde-format
+#| msgid "Mo&vement"
+msgid "Mo&vement & Placement"
 msgstr "移動(&V)"
 
-#: main.cpp:68
-#, kde-format
-msgid "Adva&nced"
-msgstr "進階(&N)"
+#: ui/MovementAndPlacement.qml:17
+#, fuzzy, kde-format
+#| msgid "Mo&vement"
+msgctxt "@title:group"
+msgid "Movement"
+msgstr "移動(&V)"
 
-#: main.cpp:74
-#, kde-format
-msgid "&Picture-in-picture"
-msgstr "子母畫面(&P)"
-
-#: main.cpp:165
-#, kde-format
-msgid "&Titlebar Actions"
-msgstr "標題列動作(&T)"
-
-#: main.cpp:175
-#, kde-format
-msgid "Window Actio&ns"
-msgstr "視窗動作(&N)"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
-#: mouse.ui:17
-#, kde-format
-msgid "Titlebar Actions"
-msgstr "標題列動作"
-
-#. i18n: ectx: property (text), widget (QLabel, label_1)
-#: mouse.ui:29
-#, kde-format
-msgid "&Double-click:"
-msgstr "雙擊(&D)："
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#: mouse.ui:39
-#, kde-format
-msgid "Behavior on <em>double</em> click into the titlebar."
-msgstr "按<em>兩下</em>標題列的行為。"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:43 mouse.ui:591 mouse.ui:626 mouse.ui:661
-#, kde-format
-msgid "Maximize"
-msgstr "最大化"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:48 mouse.ui:596 mouse.ui:631 mouse.ui:666
-#, kde-format
-msgid "Vertically maximize"
-msgstr "垂直最大化"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:53 mouse.ui:601 mouse.ui:636 mouse.ui:671
-#, kde-format
-msgid "Horizontally maximize"
-msgstr "水平最大化"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:68 mouse.ui:252 mouse.ui:309 mouse.ui:357 mouse.ui:414 mouse.ui:462
-#: mouse.ui:519
-#, kde-format
-msgid "Close"
-msgstr "關閉"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#: mouse.ui:73
-#, kde-format
-msgid "Show on all desktops"
-msgstr "在所有桌面顯示"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: mouse.ui:96
-#, kde-format
-msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
-msgstr "<em>滑鼠滾輪</em>捲動標題列時的行為。"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: mouse.ui:136
-#, kde-format
-msgid "Titlebar and Frame Actions"
-msgstr "標題列及邊框動作"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: mouse.ui:163
-#, kde-format
-msgid "Active"
-msgstr "作用中的"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: mouse.ui:186
-#, kde-format
-msgid "Inactive"
-msgstr "非作用中的"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#: mouse.ui:228 mouse.ui:333 mouse.ui:438
-#, kde-format
-msgid ""
-"Behavior on <em>left</em> click into the titlebar or frame of an <em>active</"
-"em> window."
-msgstr "在<em>作用中</em>的視窗標題列或邊框上按下滑鼠<em>左鍵</em>的行為。"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:270 mouse.ui:375 mouse.ui:480
-#, kde-format
-msgid ""
-"Behavior on <em>left</em> click into the titlebar or frame of an "
-"<em>inactive</em> window."
-msgstr "在<em>非作用中</em>的視窗標題列或邊框上按下滑鼠<em>左鍵</em>的行為。"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:279 mouse.ui:384 mouse.ui:489
-#, kde-format
-msgid "Activate and lower"
-msgstr "作用及移至下層"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DoubleClickBorderToMaximize)
-#: mouse.ui:537
-#, kde-format
-msgid "Maximize window by double clicking its frame"
-msgstr "雙擊視窗框架來將其最大化"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
-#: mouse.ui:562
-#, kde-format
-msgid "Maximize Button Actions"
-msgstr "最大化按鈕動作"
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label_8)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
-#: mouse.ui:574 mouse.ui:587
-#, kde-format
-msgid "Behavior on <em>left</em> click onto the maximize button."
-msgstr "<em>左</em>擊最大化按鈕的行為。"
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label_9)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
-#: mouse.ui:609 mouse.ui:622
-#, kde-format
-msgid "Behavior on <em>middle</em> click onto the maximize button."
-msgstr "以<em>中</em>鍵最大化按鈕的行為。"
-
-#. i18n: ectx: property (text), widget (QLabel, label_9)
-#: mouse.ui:612
-#, kde-format
-msgid "Middle c&lick:"
-msgstr "中鍵(&L)："
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label_10)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:644 mouse.ui:657
-#, kde-format
-msgid "Behavior on <em>right</em> click onto the maximize button."
-msgstr "<em>右</em>擊最大化按鈕的行為。"
-
-#. i18n: ectx: property (text), widget (QLabel, borderSnapLabel)
-#: moving.ui:20
+#: ui/MovementAndPlacement.qml:22
 #, kde-format
 msgid "Screen &edge snap zone:"
 msgstr "螢幕邊緣貼齊區域(&E)："
 
-#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_BorderSnapZone)
-#: moving.ui:30
+#: ui/MovementAndPlacement.qml:30 ui/MovementAndPlacement.qml:58
+#: ui/MovementAndPlacement.qml:87 ui/MovementAndPlacement.qml:183
 #, kde-format
-msgid ""
-"Here you can set the snap zone for screen edges, i.e. the 'strength' of the "
-"magnetic field which will make windows snap to the border when moved near it."
+msgctxt "short for pixel(s)"
+msgid "%1 px"
 msgstr ""
-"在這裡您可以為螢幕邊緣設定貼齊區域，換句話說，就是當視窗靠近時會讓視窗貼齊到"
-"邊框的磁場 '強度'。"
 
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_CenterSnapZone)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_PictureInPictureMargin)
-#: moving.ui:36 moving.ui:68 moving.ui:100 pip.ui:61
-#, kde-format
-msgid " px"
+#: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
+#: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
+#, fuzzy, kde-format
+#| msgid " px"
+msgctxt "short for pixel(s)"
+msgid "px"
 msgstr " 像素"
 
-#. i18n: ectx: property (text), widget (QLabel, windowSnapLabel)
-#: moving.ui:52
+#: ui/MovementAndPlacement.qml:50
 #, kde-format
 msgid "&Window snap zone:"
 msgstr "視窗貼齊區域(&W):"
 
-#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_WindowSnapZone)
-#: moving.ui:62
-#, kde-format
-msgid ""
-"Here you can set the snap zone for windows, i.e. the 'strength' of the "
-"magnetic field which will make windows snap to each other when they are "
-"moved near another window."
-msgstr ""
-"在這裡您可以為視窗設定黏貼區域，換句話說，就是當視窗彼此靠近時會讓視窗黏貼在"
-"一起的磁性 '強度'。"
-
-#. i18n: ectx: property (text), widget (QLabel, centerSnaplabel)
-#: moving.ui:84
+#: ui/MovementAndPlacement.qml:79
 #, kde-format
 msgid "&Center snap zone:"
 msgstr "中央貼齊區域 (&C):"
 
-#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_CenterSnapZone)
-#: moving.ui:94
-#, kde-format
-msgid ""
-"Here you can set the snap zone for the screen center, i.e. the 'strength' of "
-"the magnetic field which will make windows snap to the center of the screen "
-"when moved near it."
-msgstr ""
-"在這裡您可以為螢幕中央設定貼齊區域，換句話說，就是當視窗靠近時會讓視窗貼齊到"
-"中央的磁場 '強度'。"
-
-#. i18n: ectx: property (text), widget (QLabel, OverlapSnapLabel)
-#: moving.ui:113
+#: ui/MovementAndPlacement.qml:106
 #, kde-format
 msgid "&Snap windows:"
 msgstr "貼齊視窗(&S)："
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
-#: moving.ui:123
-#, kde-format
-msgid ""
-"Here you can set that windows will be only snapped if you try to overlap "
-"them, i.e. they will not be snapped if the windows comes only near another "
-"window or border."
-msgstr ""
-"在這裡您可以設定只有您試著重疊視窗時視窗才會黏貼，例如，視窗不會黏貼假如視窗"
-"只是靠近另一個視窗或邊框。"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
-#: moving.ui:126
+#: ui/MovementAndPlacement.qml:107
 #, kde-format
 msgid "Only when overlapping"
 msgstr "僅在重疊時"
 
-#. i18n: ectx: property (text), widget (QLabel, homeCornerLabel)
-#: pip.ui:20
+#: ui/MovementAndPlacement.qml:122
+#, kde-format
+msgctxt "@title:group"
+msgid "Placement"
+msgstr ""
+
+#: ui/MovementAndPlacement.qml:125
+#, kde-format
+msgid "Window &placement:"
+msgstr "視窗放置(&P)："
+
+#: ui/MovementAndPlacement.qml:129
+#, kde-format
+msgid "Minimal Overlapping"
+msgstr "儘量降低重疊"
+
+#: ui/MovementAndPlacement.qml:130
+#, kde-format
+msgid "Maximized"
+msgstr "最大化"
+
+#: ui/MovementAndPlacement.qml:131
+#, kde-format
+msgid "Random"
+msgstr "隨機放置"
+
+#: ui/MovementAndPlacement.qml:132
+#, kde-format
+msgid "Centered"
+msgstr "置中"
+
+#: ui/MovementAndPlacement.qml:133
+#, kde-format
+msgid "In Top-Left Corner"
+msgstr "在左上角"
+
+#: ui/MovementAndPlacement.qml:134
+#, kde-format
+msgid "Under mouse"
+msgstr "游標下"
+
+#: ui/MovementAndPlacement.qml:149
+#, fuzzy, kde-format
+#| msgid "&Picture-in-picture"
+msgctxt "@title:group"
+msgid "Picture-in-picture Placement"
+msgstr "子母畫面(&P)"
+
+#: ui/MovementAndPlacement.qml:152
 #, kde-format
 msgid "Open in screen corner:"
 msgstr "開啟於螢幕角落："
 
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
-#: pip.ui:31
+#: ui/MovementAndPlacement.qml:157
 #, kde-format
 msgid "Top-left"
 msgstr "左上角"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
-#: pip.ui:36
+#: ui/MovementAndPlacement.qml:158
 #, kde-format
 msgid "Top-right"
 msgstr "右上角"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
-#: pip.ui:41
+#: ui/MovementAndPlacement.qml:159
 #, kde-format
 msgid "Bottom-left"
 msgstr "左下角"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
-#: pip.ui:46
+#: ui/MovementAndPlacement.qml:160
 #, kde-format
 msgid "Bottom-right"
 msgstr "右下角"
 
-#. i18n: ectx: property (text), widget (QLabel, marginLabel)
-#: pip.ui:54
+#: ui/MovementAndPlacement.qml:173
 #, kde-format
 msgid "Margin:"
 msgstr "邊界："
 
-#: windows.cpp:92
+#: ui/TitlebarActions.qml:20 ui/TitlebarActions.qml:33 ui/WindowActions.qml:31
 #, kde-format
-msgid ""
-"<em>Click to focus:</em> A window becomes active when you click into it. "
-"This behavior is common on other operating systems and likely what you want."
-msgstr ""
-"<em>按一下成為焦點：</em>視窗將會在按下時作用。這個行為就如同其他作業系統，且"
-"通常就是您所想要的。"
+msgid "Raise"
+msgstr "前景"
 
-#: windows.cpp:95
+#: ui/TitlebarActions.qml:21 ui/TitlebarActions.qml:34
+#: ui/TitlebarActions.qml:61 ui/WindowActions.qml:32
 #, kde-format
-msgid ""
-"<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
-"focus</em>. If an active window has to be chosen by the system (eg. because "
-"the currently active one was closed) the window under the mouse is the "
-"preferred candidate. Unusual, but possible variant of <em>Click to focus</"
-"em>."
-msgstr ""
-"<em>按一下取得焦點 (滑鼠優先)：</em>幾乎跟 <em>按一下取得焦點</em> 一樣。如果"
-"系統要選取某個視窗成使用中（例如：因為目前的使用中視窗已被關閉），則滑鼠下方"
-"的視窗會第一順位使用。算是 <em>按一下取得焦點</em> 的變化型。"
+msgid "Lower"
+msgstr "背景"
 
-#: windows.cpp:98
+#: ui/TitlebarActions.qml:22 ui/TitlebarActions.qml:35
+#: ui/TitlebarActions.qml:82 ui/WindowActions.qml:33 ui/WindowActions.qml:206
 #, kde-format
-msgid ""
-"<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
-"it. Eg. windows randomly appearing under the mouse will not gain the focus. "
-"<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
-"to focus</em> just without having to actually click."
-msgstr ""
-"<em>將焦點設成滑鼠所在位置：</em>將會把某個滑鼠移動到的視窗設為焦點。例如：隨"
-"機出現在滑鼠底下的視窗不會取得焦點。<em>防止盜取焦點</em>仍然有效。可以想成 "
-"<em>按一下取得焦點</em>，但不用實際點選。"
+msgid "Raise/lower"
+msgstr "移至上/下層"
 
-#: windows.cpp:101
+#: ui/TitlebarActions.qml:23 ui/TitlebarActions.qml:36
+#: ui/TitlebarActions.qml:60 ui/WindowActions.qml:34
 #, kde-format
-msgid ""
-"This is mostly the same as <em>Focus follows mouse</em>. If an active window "
-"has to be chosen by the system (eg. because the currently active one was "
-"closed) the window under the mouse is the preferred candidate. Choose this, "
-"if you want a hover controlled focus."
-msgstr ""
-"這跟 <em>將焦點設成滑鼠所在位置</em> 幾乎相同。如果系統要選取某個視窗成使用中"
-"（例如：因為目前的使用中視窗已被關閉），則滑鼠下方的視窗會第一順位使用。如果"
-"你想要由懸停控制的焦點，請選擇。"
+msgid "Minimize"
+msgstr "最小化"
 
-#: windows.cpp:104
+#: ui/TitlebarActions.qml:24 ui/TitlebarActions.qml:37
+#: ui/TitlebarActions.qml:62
 #, kde-format
-msgid ""
-"<em>Focus under mouse:</em> The focus always remains on the window under the "
-"mouse.<br/><strong>Warning:</strong> <em>Focus stealing prevention</em> and "
-"the <em>tabbox ('Alt+Tab')</em> contradict the activation policy and will "
-"not work. You very likely want to use <em>Focus follows mouse (mouse "
-"precedence)</em> instead!"
-msgstr ""
-"<em>將游標下位置設為焦點：</em> 焦點將永遠維持在滑鼠下的視窗。<br/><strong>警"
-"告：</strong><em>防止盜取焦點</em> 及 <em>tabbox ('Alt+Tab')</em> 會與啟用策"
-"略相衝突，且不會運作。通常你可能會想用<em>將焦點設為滑鼠所在位置 (滑鼠優先)</"
-"em>代替！"
+msgid "Close"
+msgstr "關閉"
 
-#: windows.cpp:107
+#: ui/TitlebarActions.qml:25 ui/TitlebarActions.qml:38 ui/WindowActions.qml:37
 #, kde-format
-msgid ""
-"<em>Focus strictly under mouse:</em> The focus is always on the window under "
-"the mouse (in doubt nowhere) very much like the focus behavior in an "
-"unmanaged legacy X11 environment.<br/><strong>Warning:</strong> <em>Focus "
-"stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> contradict the "
-"activation policy and will not work. You very likely want to use <em>Focus "
-"follows mouse (mouse precedence)</em> instead!"
+msgid "Window menu"
+msgstr "視窗選單"
+
+#: ui/TitlebarActions.qml:30 ui/WindowActions.qml:23 ui/WindowActions.qml:54
+#, fuzzy, kde-format
+#| msgid "Focus under mouse"
+msgid "Focus and raise"
+msgstr "將游標下位置設為焦點"
+
+#: ui/TitlebarActions.qml:31
+#, fuzzy, kde-format
+#| msgid "Focus under mouse"
+msgid "Focus and lower"
+msgstr "將游標下位置設為焦點"
+
+#: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
+#, fuzzy, kde-format
+#| msgid "&Focus"
+msgid "Focus"
+msgstr "焦點(&F)"
+
+#: ui/TitlebarActions.qml:43 ui/TitlebarActions.qml:57
+#, kde-format
+msgid "Maximize"
+msgstr "最大化"
+
+#: ui/TitlebarActions.qml:44 ui/TitlebarActions.qml:58
+#, kde-format
+msgid "Vertically maximize"
+msgstr "垂直最大化"
+
+#: ui/TitlebarActions.qml:45 ui/TitlebarActions.qml:59
+#, kde-format
+msgid "Horizontally maximize"
+msgstr "水平最大化"
+
+#: ui/TitlebarActions.qml:49
+#, kde-format
+msgid "Titlebar Actions"
+msgstr "標題列動作"
+
+#: ui/TitlebarActions.qml:52
+#, kde-format
+msgid "&Double-click:"
+msgstr "雙擊(&D)："
+
+#: ui/TitlebarActions.qml:63
+#, kde-format
+msgid "Show on all desktops"
+msgstr "在所有桌面顯示"
+
+#: ui/TitlebarActions.qml:77 ui/WindowActions.qml:99
+#, kde-format
+msgid "Mouse &wheel:"
+msgstr "滑鼠滾輪(&W)："
+
+#: ui/TitlebarActions.qml:83 ui/WindowActions.qml:207
+#, kde-format
+msgid "Maximize/restore"
+msgstr "最大化/復原"
+
+#: ui/TitlebarActions.qml:84 ui/WindowActions.qml:208
+#, kde-format
+msgid "Keep above/below"
+msgstr "保持在頂層/底層"
+
+#: ui/TitlebarActions.qml:85 ui/WindowActions.qml:209
+#, kde-format
+msgid "Move to previous/next desktop"
+msgstr "移至上/下一個桌面"
+
+#: ui/TitlebarActions.qml:86 ui/WindowActions.qml:210
+#, kde-format
+msgid "Change opacity"
+msgstr "變更不透明度"
+
+#: ui/TitlebarActions.qml:102
+#, kde-format
+msgid "Titlebar and Frame Actions"
+msgstr "標題列及邊框動作"
+
+#: ui/TitlebarActions.qml:111
+#, fuzzy, kde-format
+#| msgid "&Focus"
+msgctxt ""
+"@label for a group of comboboxes Left/Middle/Right-Click for focused windows"
+msgid "Focused"
+msgstr "焦點(&F)"
+
+#: ui/TitlebarActions.qml:116
+#, kde-format
+msgctxt ""
+"@label for a group of comboboxes Left/Middle/Right-Click for unfocused "
+"windows"
+msgid "Unfocused"
 msgstr ""
-"<em>嚴格將游標下位置設為焦點：</em>焦點永遠在滑鼠下方的視窗（就算在不確定的地"
-"方），非常類似過去未管理之舊式 X11 環境的焦點行為。<br/><strong>警告：</"
-"strong><em>防止盜取焦點</em> 及 <em>tabbox ('Alt+Tab')</em> 會與啟用策略相衝"
-"突，且不會運作。通常你可能會想用<em>將焦點設為滑鼠所在位置 (滑鼠優先)</em>代"
-"替！"
+
+#: ui/TitlebarActions.qml:122 ui/WindowActions.qml:46
+#, kde-format
+msgid "&Left click:"
+msgstr "左鍵(&L)："
+
+#: ui/TitlebarActions.qml:128
+#, kde-format
+msgctxt "@label:listbox accessible name"
+msgid "Left click on a focused titlebar or frame"
+msgstr ""
+
+#: ui/TitlebarActions.qml:143
+#, kde-format
+msgctxt "@label:listbox accessible name"
+msgid "Left click on an unfocused titlebar or frame"
+msgstr ""
+
+#: ui/TitlebarActions.qml:160 ui/WindowActions.qml:68
+#, kde-format
+msgid "&Middle click:"
+msgstr "中鍵(&M)："
+
+#: ui/TitlebarActions.qml:165
+#, kde-format
+msgctxt "@label:listbox accessible name"
+msgid "Middle click on a focused titlebar or frame"
+msgstr ""
+
+#: ui/TitlebarActions.qml:179
+#, kde-format
+msgctxt "@label:listbox accessible name"
+msgid "Middle click on an unfocused titlebar or frame"
+msgstr ""
+
+#: ui/TitlebarActions.qml:196 ui/WindowActions.qml:83
+#, kde-format
+msgid "&Right click:"
+msgstr "右鍵(&R)："
+
+#: ui/TitlebarActions.qml:201
+#, kde-format
+msgctxt "@label:listbox accessible name"
+msgid "Right click on a focused titlebar or frame"
+msgstr ""
+
+#: ui/TitlebarActions.qml:215
+#, kde-format
+msgctxt "@label:listbox accessible name"
+msgid "Right click on an unfocused titlebar or frame"
+msgstr ""
+
+#: ui/TitlebarActions.qml:233
+#, kde-format
+msgid "Maximize window by double clicking its frame"
+msgstr "雙擊視窗框架來將其最大化"
+
+#: ui/TitlebarActions.qml:248
+#, kde-format
+msgid "Maximize Button Actions"
+msgstr "最大化按鈕動作"
+
+#: ui/TitlebarActions.qml:251 ui/WindowActions.qml:154
+#, kde-format
+msgid "L&eft click:"
+msgstr "左鍵(&E)："
+
+#: ui/TitlebarActions.qml:268
+#, kde-format
+msgid "Middle c&lick:"
+msgstr "中鍵(&L)："
+
+#: ui/TitlebarActions.qml:285 ui/WindowActions.qml:186
+#, kde-format
+msgid "Right clic&k:"
+msgstr "右鍵(&K)："
+
+#: ui/WindowActions.qml:20 ui/WindowActions.qml:51
+#, kde-format
+msgid "Focus, raise, and click through"
+msgstr ""
+
+#: ui/WindowActions.qml:21 ui/WindowActions.qml:52
+#, kde-format
+msgid "Focus and click through"
+msgstr ""
+
+#: ui/WindowActions.qml:27
+#, kde-format
+msgid "Move"
+msgstr "移動"
+
+#: ui/WindowActions.qml:28
+#, fuzzy, kde-format
+#| msgid "Activate, raise and move"
+msgid "Focus, raise, and move"
+msgstr "作用、移到上層及移動"
+
+#: ui/WindowActions.qml:29
+#, fuzzy, kde-format
+#| msgid "Activate, raise and resize"
+msgid "Focus, raise, and resize"
+msgstr "作用、移到上層及調整大小"
+
+#: ui/WindowActions.qml:30
+#, kde-format
+msgid "Resize"
+msgstr "改變視窗大小"
+
+#: ui/WindowActions.qml:35
+#, kde-format
+msgid "Decrease opacity"
+msgstr "降低不透明度"
+
+#: ui/WindowActions.qml:36
+#, kde-format
+msgid "Increase opacity"
+msgstr "增加不透明度"
+
+#: ui/WindowActions.qml:42
+#, fuzzy, kde-format
+#| msgid "Inactive Inner Window Actions"
+msgctxt "@title:group"
+msgid "Unfocused Inner Window Actions"
+msgstr "非作用中的內部視窗動作"
+
+# https://invent.kde.org/plasma/kwin/-/merge_requests/6555
+# activate (passing clicks), then on release, raise. The "on release" isn't for "activate".
+# --Kisaragi
+#: ui/WindowActions.qml:50
+#, fuzzy, kde-format
+#| msgid "Activate, pass click and raise on release"
+msgid "Focus, click through, and raise on release"
+msgstr "作用及點選，並在放開時移到上層"
+
+#: ui/WindowActions.qml:103
+#, kde-format
+msgid "Scroll"
+msgstr "捲軸"
+
+#: ui/WindowActions.qml:104
+#, fuzzy, kde-format
+#| msgid "Activate and scroll"
+msgid "Focus and scroll"
+msgstr "作用及滾動"
+
+#: ui/WindowActions.qml:105
+#, fuzzy, kde-format
+#| msgid "Activate, raise and scroll"
+msgid "Focus, raise, and scroll"
+msgstr "作用、移到上層及滾動"
+
+#: ui/WindowActions.qml:120
+#, fuzzy, kde-format
+#| msgid "Inner Window, Titlebar and Frame Actions"
+msgid "Inner Window, Titlebar, and Frame Actions"
+msgstr "內部視窗、標題列及邊框動作"
+
+#: ui/WindowActions.qml:123
+#, kde-format
+msgid "Mo&difier key:"
+msgstr "組合鍵(&D)："
+
+#: ui/WindowActions.qml:131
+#, kde-format
+msgid "Meta"
+msgstr "Meta"
+
+#: ui/WindowActions.qml:132
+#, kde-format
+msgid "Alt"
+msgstr "ALT"
+
+#: ui/WindowActions.qml:170
+#, kde-format
+msgid "Middle &click:"
+msgstr "中鍵(&C)："
+
+#: ui/WindowActions.qml:202
+#, kde-format
+msgid "Mo&use wheel:"
+msgstr "滑鼠滾輪(&U)："
+
+#~ msgid ""
+#~ "In this row you can customize left click behavior when clicking into an "
+#~ "inactive inner window ('inner' means: not titlebar, not frame)."
+#~ msgstr ""
+#~ "在這一列您可以自訂當左鍵在非作用中的內部視窗按下的行為（「內部」表示：非標"
+#~ "題列、非邊框）。"
+
+#~ msgid "Activate, raise and pass click"
+#~ msgstr "作用、移到上層及點選"
+
+#~ msgid "Activate and pass click"
+#~ msgstr "作用及點選"
+
+#~ msgid "Activate"
+#~ msgstr "作用"
+
+#~ msgid "Activate and raise"
+#~ msgstr "作用及移到上層"
+
+#~ msgid ""
+#~ "In this row you can customize middle click behavior when clicking into an "
+#~ "inactive inner window ('inner' means: not titlebar, not frame)."
+#~ msgstr ""
+#~ "在這一列您可以自訂當中鍵在非作用中的內部視窗按下的行為('內部'代表: 非標題"
+#~ "列,非邊框)。"
+
+#~ msgid ""
+#~ "In this row you can customize right click behavior when clicking into an "
+#~ "inactive inner window ('inner' means: not titlebar, not frame)."
+#~ msgstr ""
+#~ "在這一列您可以自訂當右鍵在非作用中的內部視窗按下的行為('內部'代表: 非標題"
+#~ "列,非邊框)。"
+
+#~ msgid ""
+#~ "In this row you can customize behavior when scrolling into an inactive "
+#~ "inner window ('inner' means: not titlebar, not frame)."
+#~ msgstr ""
+#~ "在這一列您可以自訂在非作用中的內部視窗捲軸的行為('內部'代表: 非標題列,非邊"
+#~ "框)。"
+
+#~ msgid ""
+#~ "Here you select whether holding the Meta key or Alt key will allow you to "
+#~ "perform the following actions."
+#~ msgstr "在這裡您可以選擇當按住 Meta 或是 ALT 讓您執行的行為。"
+
+#~ msgid "  + "
+#~ msgstr "  + "
+
+#~ msgid ""
+#~ "In this row you can customize left click behavior when clicking into the "
+#~ "titlebar or the frame."
+#~ msgstr "在這一列您可以自訂當左鍵按在標題列或邊框時的行為。"
+
+#~ msgid "Toggle raise and lower"
+#~ msgstr "移至上下層"
+
+#~ msgid ""
+#~ "In this row you can customize middle click behavior when clicking into "
+#~ "the titlebar or the frame."
+#~ msgstr "在這一列您可以自訂當中鍵按在標題列或邊框時的行為。"
+
+#~ msgid ""
+#~ "In this row you can customize right click behavior when clicking into the "
+#~ "titlebar or the frame."
+#~ msgstr "在這一列您可以自訂當右鍵按在標題列或邊框時的行為。"
+
+#~ msgid ""
+#~ "Here you can customize KDE's behavior when scrolling with the mouse wheel "
+#~ "in a window while pressing the modifier key."
+#~ msgstr "在這裡您可以自訂 [同時按住輔助鍵並使用滑鼠滾輪] 時 KDE 的行為。"
+
+#~ msgid ""
+#~ "<html><head/><body><p>The placement policy determines where a new window "
+#~ "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-"
+#~ "bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"
+#~ "\"><li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; "
+#~ "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
+#~ "font-style:italic;\">Smart</span> will try to achieve a minimum overlap "
+#~ "of windows</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+#~ "style=\" font-style:italic;\">Maximizing</span> will try to maximize "
+#~ "every window to fill the whole screen. It might be useful to selectively "
+#~ "affect placement of some windows using the window-specific settings.</"
+#~ "li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
+#~ "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
+#~ "font-style:italic;\">Random</span> will use a random position</li><li "
+#~ "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">Centered</span> will place the window centered</li><li "
+#~ "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">Zero-cornered</span> will place the window in the top-"
+#~ "left corner</li><li style=\" margin-top:0px; margin-bottom:12px; margin-"
+#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+#~ "style=\" font-style:italic;\">Under mouse</span> will place the window "
+#~ "under the pointer</li></ul></body></html>"
+#~ msgstr ""
+#~ "<html><head/><body><p>放置策略會決定新視窗在桌面上顯示的位置。</p><ul "
+#~ "style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-"
+#~ "right: 0px; -qt-list-indent: 1;\"><li style=\" margin-top:12px; margin-"
+#~ "bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+#~ "indent:0px;\"><span style=\" font-style:italic;\">智慧型</span> 會盡可能不"
+#~ "覆蓋視窗</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+#~ "style=\" font-style:italic;\">最大化</span> 會嘗試將視窗最大化到貼合整個螢"
+#~ "幕。這可能會在使用視窗指定設定選擇性地影響部份視窗的擺放位置時很有用。</"
+#~ "li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
+#~ "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
+#~ "font-style:italic;\">隨機</span> 會使用隨機位置</li><li style=\" margin-"
+#~ "top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+#~ "indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">置中</"
+#~ "span> 會置中擺放視窗</li><li style=\" margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"><span style=\" font-style:italic;\">無角落</span> 會將視窗擺放在左上角"
+#~ "</li><li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; "
+#~ "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
+#~ "font-style:italic;\">游標下</span> 會將視窗擺放在游標下</li></ul></body></"
+#~ "html>"
+
+#~ msgid ""
+#~ "When turned on, apps which are able to remember the positions of their "
+#~ "windows are allowed to do so. This will override the window placement "
+#~ "mode defined above."
+#~ msgstr ""
+#~ "開啟時，能夠記住其位置的應用程式就會這麼作。這將會覆寫您在上方定義的視窗放"
+#~ "置模式。"
+
+#~ msgid ""
+#~ "Allow apps to remember the positions of their own windows, if they "
+#~ "support it"
+#~ msgstr "讓應用程式可以記住其視窗的位置（若其支援）"
+
+#~ msgid "Virtual Desktop behavior:"
+#~ msgstr "虛擬桌面行為："
+
+#~ msgid ""
+#~ "<html><head/><body><p>This setting controls what happens when an open "
+#~ "window located on a Virtual Desktop other than the current one is "
+#~ "activated. </p><p><span style=\" font-style:italic;\">Switch to that "
+#~ "Virtual Desktop</span> will switch to the Virtual Desktop where the "
+#~ "window is currently located. </p><p><span style=\" font-style:italic;"
+#~ "\">Bring window to current Virtual Desktop</span> will cause the window "
+#~ "to jump to the active Virtual Desktop. </p></body></html>"
+#~ msgstr ""
+#~ "<html><head/><body><p>這個設定控制將開在非目前的虛擬桌面上的視窗設為作用中"
+#~ "時會發生什麼。</p><p><span style=\" font-style:italic;\">切換至該虛擬桌面"
+#~ "</span>會切換到該視窗目前所在的虛擬桌面。</p><p><span style=\" font-style:"
+#~ "italic;\">將視窗移至目前的虛擬桌面</span>會讓該視窗跳到作用中的虛擬桌面。"
+#~ "</p></body></html>"
+
+#~ msgid ""
+#~ "With this option you can specify how and when windows will be focused."
+#~ msgstr "您可使用此選項指定何時或如何使視窗變成焦點。"
+
+#~ msgid "Click to focus (mouse precedence)"
+#~ msgstr "按一下取得焦點 (滑鼠優先)"
+
+#~ msgid "Focus follows mouse (mouse precedence)"
+#~ msgstr "將焦點設為滑鼠所在位置 (滑鼠優先)"
+
+#~ msgid "Focus strictly under mouse"
+#~ msgstr "嚴格將游標下位置設為焦點"
+
+#~ msgid ""
+#~ "This is the delay after which the window the mouse pointer is over will "
+#~ "automatically receive focus."
+#~ msgstr "這是滑鼠游標停在視窗上超過而自動取得焦點的延遲時間。"
+
+#~ msgid ""
+#~ "<html><head/><body><p>This option specifies how much KWin will try to "
+#~ "prevent unwanted focus stealing caused by unexpected activation of new "
+#~ "windows. (Note: This feature does not work with the <span style=\" font-"
+#~ "style:italic;\">Focus under mouse</span> or <span style=\" font-style:"
+#~ "italic;\">Focus strictly under mouse</span> focus policies.) </p><ul "
+#~ "style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-"
+#~ "right: 0px; -qt-list-indent: 1;\"><li style=\" margin-top:12px; margin-"
+#~ "bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+#~ "indent:0px;\"><span style=\" font-style:italic;\">None:</span> Prevention "
+#~ "is turned off and new windows always become activated.</li><li style=\" "
+#~ "margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
+#~ "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+#~ "\">Low:</span> Prevention is enabled; when some window does not have "
+#~ "support for the underlying mechanism and KWin cannot reliably decide "
+#~ "whether to activate the window or not, it will be activated. This setting "
+#~ "may have both worse and better results than the medium level, depending "
+#~ "on the applications.</li><li style=\" margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"><span style=\" font-style:italic;\">Medium:</span> Prevention is "
+#~ "enabled.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+#~ "style=\" font-style:italic;\">High:</span> New windows get activated only "
+#~ "if no window is currently active or if they belong to the currently "
+#~ "active application. This setting is probably not really usable when not "
+#~ "using mouse focus policy.</li><li style=\" margin-top:0px; margin-"
+#~ "bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+#~ "indent:0px;\"><span style=\" font-style:italic;\">Extreme:</span> All "
+#~ "windows must be explicitly activated by the user.</li></ul><p>Windows "
+#~ "that are prevented from stealing focus are marked as demanding attention, "
+#~ "which by default means their taskbar entry will be highlighted. This can "
+#~ "be changed in the Notifications control module.</p></body></html>"
+#~ msgstr ""
+#~ "<html><head/><body><p>此選項指定KWin要多強烈地防止焦點意外被突然啟用的新視"
+#~ "窗盜取。（注意：本功能與「將游標下位置設為焦點」及「嚴格將游標下位置設為焦"
+#~ "點」焦點策略不相容。）</p><ul style=\"margin-top:0px;margin-bottom:0px;"
+#~ "margin-left:0px;margin-right:0px;-qt-list-indent:1;\"><li style=\"margin-"
+#~ "top:12px;margin-bottom:0px;margin-left:0px;margin-right:0px;-qt-block-"
+#~ "indent:0;text-indent:0px;\"><span style=\"font-style:italic\">無</span>："
+#~ "不防止，新視窗一定會成為作用中。</li><li style=\"margin-top:0px;margin-"
+#~ "bottom:0px;margin-left:0px;margin-right:0px;-qt-block-indent:0;text-"
+#~ "indent:0px;\"><span style=\"font-style:italic\">低</span>：啟用防止；如果"
+#~ "一個視窗不支援底層的機制而KWin無法確定是否應該將其設為作用中，此選項將使"
+#~ "KWin決定將其設為作用中。此選項依應用程式可能會比「中」設定好或不好。</"
+#~ "li><li style=\"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-"
+#~ "right:0px;-qt-block-indent:0;text-indent:0px;\"><span style=\"font-style:"
+#~ "italic\">中</span>：啟用防止。</li><li style=\"margin-top:0px;margin-"
+#~ "bottom:0px;margin-left:0px;margin-right:0px;-qt-block-indent:0;text-"
+#~ "indent:0px;\"><span style=\"font-style:italic\">高</span>：新視窗只在沒有"
+#~ "作用中視窗或跟作用中視窗來自相同應用程式的時候才會成為作用中。這個設定在使"
+#~ "用滑鼠焦點策略的時候大概不會很能用。</li><li style=\"margin-top:0px;"
+#~ "margin-bottom:12px;margin-left:0px;margin-right:0px;-qt-block-indent:0;"
+#~ "text-indent:0px;\"><span style=\"font-style:italic\">最高</span>：沒有視窗"
+#~ "會自動成為作用中。</li></ul><p>被防止盜取焦點的視窗會被標記為要求注意，而"
+#~ "這預設代表它們在工作列上的項目會被突顯。這可以在「通知」設定模組進行變更。"
+#~ "</p></body></html>"
+
+#~ msgid ""
+#~ "When this option is enabled, the active window will be brought to the "
+#~ "front when you click somewhere into the window contents. To change it for "
+#~ "inactive windows, you need to change the settings in the Actions tab."
+#~ msgstr ""
+#~ "當此選項啟用，您點擊在視窗內容上，作用中視窗自動被帶到前景來。要將變更非作"
+#~ "用中視窗的動作，您需要改變「動作」分頁中的設定。"
+
+#~ msgid ""
+#~ "When this option is enabled, a window in the background will "
+#~ "automatically come to the front when the mouse pointer has been over it "
+#~ "for some time."
+#~ msgstr ""
+#~ "假如 [自動前景] 啟動，當滑鼠游標停在上面一會兒，在背景的視窗會自動跑到前景"
+#~ "來。"
+
+#~ msgid ""
+#~ "This is the delay after which the window that the mouse pointer is over "
+#~ "will automatically come to the front."
+#~ msgstr "滑鼠游標停在視窗上超過這個延遲時間，視窗會自動跑到前景來。"
+
+#~ msgid ""
+#~ "When this option is enabled, focus operations are limited only to the "
+#~ "active screen"
+#~ msgstr "當此選項啟用，焦點操作就會只限於目前作用中的螢幕"
+
+#~ msgid "Window activation policy description"
+#~ msgstr "視窗作用策略描述"
+
+#~ msgid "Adva&nced"
+#~ msgstr "進階(&N)"
+
+#~ msgid "&Titlebar Actions"
+#~ msgstr "標題列動作(&T)"
+
+#~ msgid "Window Actio&ns"
+#~ msgstr "視窗動作(&N)"
+
+#~ msgid "Behavior on <em>double</em> click into the titlebar."
+#~ msgstr "按<em>兩下</em>標題列的行為。"
+
+#~ msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
+#~ msgstr "<em>滑鼠滾輪</em>捲動標題列時的行為。"
+
+#~ msgid "Active"
+#~ msgstr "作用中的"
+
+#~ msgid "Inactive"
+#~ msgstr "非作用中的"
+
+#~ msgid ""
+#~ "Behavior on <em>left</em> click into the titlebar or frame of an "
+#~ "<em>active</em> window."
+#~ msgstr "在<em>作用中</em>的視窗標題列或邊框上按下滑鼠<em>左鍵</em>的行為。"
+
+#~ msgid ""
+#~ "Behavior on <em>left</em> click into the titlebar or frame of an "
+#~ "<em>inactive</em> window."
+#~ msgstr ""
+#~ "在<em>非作用中</em>的視窗標題列或邊框上按下滑鼠<em>左鍵</em>的行為。"
+
+#~ msgid "Activate and lower"
+#~ msgstr "作用及移至下層"
+
+#~ msgid "Behavior on <em>left</em> click onto the maximize button."
+#~ msgstr "<em>左</em>擊最大化按鈕的行為。"
+
+#~ msgid "Behavior on <em>middle</em> click onto the maximize button."
+#~ msgstr "以<em>中</em>鍵最大化按鈕的行為。"
+
+#~ msgid "Behavior on <em>right</em> click onto the maximize button."
+#~ msgstr "<em>右</em>擊最大化按鈕的行為。"
+
+#~ msgid ""
+#~ "Here you can set the snap zone for screen edges, i.e. the 'strength' of "
+#~ "the magnetic field which will make windows snap to the border when moved "
+#~ "near it."
+#~ msgstr ""
+#~ "在這裡您可以為螢幕邊緣設定貼齊區域，換句話說，就是當視窗靠近時會讓視窗貼齊"
+#~ "到邊框的磁場 '強度'。"
+
+#~ msgid ""
+#~ "Here you can set the snap zone for windows, i.e. the 'strength' of the "
+#~ "magnetic field which will make windows snap to each other when they are "
+#~ "moved near another window."
+#~ msgstr ""
+#~ "在這裡您可以為視窗設定黏貼區域，換句話說，就是當視窗彼此靠近時會讓視窗黏貼"
+#~ "在一起的磁性 '強度'。"
+
+#~ msgid ""
+#~ "Here you can set the snap zone for the screen center, i.e. the 'strength' "
+#~ "of the magnetic field which will make windows snap to the center of the "
+#~ "screen when moved near it."
+#~ msgstr ""
+#~ "在這裡您可以為螢幕中央設定貼齊區域，換句話說，就是當視窗靠近時會讓視窗貼齊"
+#~ "到中央的磁場 '強度'。"
+
+#~ msgid ""
+#~ "Here you can set that windows will be only snapped if you try to overlap "
+#~ "them, i.e. they will not be snapped if the windows comes only near "
+#~ "another window or border."
+#~ msgstr ""
+#~ "在這裡您可以設定只有您試著重疊視窗時視窗才會黏貼，例如，視窗不會黏貼假如視"
+#~ "窗只是靠近另一個視窗或邊框。"
+
+#~ msgid ""
+#~ "<em>Click to focus:</em> A window becomes active when you click into it. "
+#~ "This behavior is common on other operating systems and likely what you "
+#~ "want."
+#~ msgstr ""
+#~ "<em>按一下成為焦點：</em>視窗將會在按下時作用。這個行為就如同其他作業系"
+#~ "統，且通常就是您所想要的。"
+
+#~ msgid ""
+#~ "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click "
+#~ "to focus</em>. If an active window has to be chosen by the system (eg. "
+#~ "because the currently active one was closed) the window under the mouse "
+#~ "is the preferred candidate. Unusual, but possible variant of <em>Click to "
+#~ "focus</em>."
+#~ msgstr ""
+#~ "<em>按一下取得焦點 (滑鼠優先)：</em>幾乎跟 <em>按一下取得焦點</em> 一樣。"
+#~ "如果系統要選取某個視窗成使用中（例如：因為目前的使用中視窗已被關閉），則滑"
+#~ "鼠下方的視窗會第一順位使用。算是 <em>按一下取得焦點</em> 的變化型。"
+
+#~ msgid ""
+#~ "<em>Focus follows mouse:</em> Moving the mouse onto a window will "
+#~ "activate it. Eg. windows randomly appearing under the mouse will not gain "
+#~ "the focus. <em>Focus stealing prevention</em> takes place as usual. Think "
+#~ "as <em>Click to focus</em> just without having to actually click."
+#~ msgstr ""
+#~ "<em>將焦點設成滑鼠所在位置：</em>將會把某個滑鼠移動到的視窗設為焦點。例"
+#~ "如：隨機出現在滑鼠底下的視窗不會取得焦點。<em>防止盜取焦點</em>仍然有效。"
+#~ "可以想成 <em>按一下取得焦點</em>，但不用實際點選。"
+
+#~ msgid ""
+#~ "This is mostly the same as <em>Focus follows mouse</em>. If an active "
+#~ "window has to be chosen by the system (eg. because the currently active "
+#~ "one was closed) the window under the mouse is the preferred candidate. "
+#~ "Choose this, if you want a hover controlled focus."
+#~ msgstr ""
+#~ "這跟 <em>將焦點設成滑鼠所在位置</em> 幾乎相同。如果系統要選取某個視窗成使"
+#~ "用中（例如：因為目前的使用中視窗已被關閉），則滑鼠下方的視窗會第一順位使"
+#~ "用。如果你想要由懸停控制的焦點，請選擇。"
+
+#~ msgid ""
+#~ "<em>Focus under mouse:</em> The focus always remains on the window under "
+#~ "the mouse.<br/><strong>Warning:</strong> <em>Focus stealing prevention</"
+#~ "em> and the <em>tabbox ('Alt+Tab')</em> contradict the activation policy "
+#~ "and will not work. You very likely want to use <em>Focus follows mouse "
+#~ "(mouse precedence)</em> instead!"
+#~ msgstr ""
+#~ "<em>將游標下位置設為焦點：</em> 焦點將永遠維持在滑鼠下的視窗。<br/"
+#~ "><strong>警告：</strong><em>防止盜取焦點</em> 及 <em>tabbox ('Alt+Tab')</"
+#~ "em> 會與啟用策略相衝突，且不會運作。通常你可能會想用<em>將焦點設為滑鼠所在"
+#~ "位置 (滑鼠優先)</em>代替！"
+
+#~ msgid ""
+#~ "<em>Focus strictly under mouse:</em> The focus is always on the window "
+#~ "under the mouse (in doubt nowhere) very much like the focus behavior in "
+#~ "an unmanaged legacy X11 environment.<br/><strong>Warning:</strong> "
+#~ "<em>Focus stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> "
+#~ "contradict the activation policy and will not work. You very likely want "
+#~ "to use <em>Focus follows mouse (mouse precedence)</em> instead!"
+#~ msgstr ""
+#~ "<em>嚴格將游標下位置設為焦點：</em>焦點永遠在滑鼠下方的視窗（就算在不確定"
+#~ "的地方），非常類似過去未管理之舊式 X11 環境的焦點行為。<br/><strong>警告："
+#~ "</strong><em>防止盜取焦點</em> 及 <em>tabbox ('Alt+Tab')</em> 會與啟用策略"
+#~ "相衝突，且不會運作。通常你可能會想用<em>將焦點設為滑鼠所在位置 (滑鼠優"
+#~ "先)</em>代替！"
 
 #~ msgid ""
 #~ "Note that \"Activate, pass click and raise on release\" doesn't work on "

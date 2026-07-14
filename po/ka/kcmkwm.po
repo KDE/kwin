@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-18 00:45+0000\n"
+"POT-Creation-Date: 2026-07-14 00:45+0000\n"
 "PO-Revision-Date: 2026-06-18 05:30+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -18,1255 +18,1078 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.9\n"
 
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
-#: actions.ui:20
-#, kde-format
-msgid "Inactive Inner Window Actions"
-msgstr "არააქტიური შიდა ფანჯრის ქმედებები"
-
-#. i18n: ectx: property (text), widget (QLabel, label_1)
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: actions.ui:29 mouse.ui:173
-#, kde-format
-msgid "&Left click:"
-msgstr "&მარცხენა-წკაპი:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow1)
-#: actions.ui:42
-#, kde-format
-msgid ""
-"In this row you can customize left click behavior when clicking into an "
-"inactive inner window ('inner' means: not titlebar, not frame)."
-msgstr ""
-"ამ მწკრივში შეგიძლიათ არააქტიურ შიდა ფანჯარაზე თაგუნას მარცხენა წკაპის "
-"ქმედება განსაზღვროთ ('შიდა' ნიშნავს: სათაური ზოლისა და ჩარჩოს გარეშე)."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
-#: actions.ui:46
-#, kde-format
-msgid "Activate, pass click and raise on release"
-msgstr "გააქტიურება, წკაპის გადაცემა და აწევა გაშვებისას"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:51 actions.ui:91 actions.ui:131
-#, kde-format
-msgid "Activate, raise and pass click"
-msgstr "გააქტიურება, აწევა და წკაპის გადაცემა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:56 actions.ui:96 actions.ui:136
-#, kde-format
-msgid "Activate and pass click"
-msgstr "გააქტიურება და წკაპის გადაცემა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:61 actions.ui:101 actions.ui:141 mouse.ui:284 mouse.ui:389
-#: mouse.ui:494
-#, kde-format
-msgid "Activate"
-msgstr "გააქტიურება"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:66 actions.ui:106 actions.ui:146 mouse.ui:274 mouse.ui:379
-#: mouse.ui:484
-#, kde-format
-msgid "Activate and raise"
-msgstr "გააქტიურება და აწევა"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-#: actions.ui:74 mouse.ui:196
-#, kde-format
-msgid "&Middle click:"
-msgstr "&შუა-წკაპი:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
-#: actions.ui:87
-#, kde-format
-msgid ""
-"In this row you can customize middle click behavior when clicking into an "
-"inactive inner window ('inner' means: not titlebar, not frame)."
-msgstr ""
-"ამ მწკრივში შეგიძლიათ არააქტიურ შიდა ფანჯარაზე თაგუნას შუა წკაპის ქმედება "
-"განსაზღვროთ ('შიდა' ნიშნავს: სათაური ზოლისა და ჩარჩოს გარეშე)."
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-#: actions.ui:114 mouse.ui:209
-#, kde-format
-msgid "&Right click:"
-msgstr "&მარჯვენა წკაპი:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:127
-#, kde-format
-msgid ""
-"In this row you can customize right click behavior when clicking into an "
-"inactive inner window ('inner' means: not titlebar, not frame)."
-msgstr ""
-"ამ მწკრივში შეგიძლიათ არააქტიურ შიდა ფანჯარაზე თაგუნას მარჯვენა წკაპის "
-"ქმედება განსაზღვროთ ('შიდა' ნიშნავს: სათაური ზოლისა და ჩარჩოს გარეშე)."
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: actions.ui:154 mouse.ui:86
-#, kde-format
-msgid "Mouse &wheel:"
-msgstr "თაგუნას &რგოლი:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:167
-#, kde-format
-msgid ""
-"In this row you can customize behavior when scrolling into an inactive inner "
-"window ('inner' means: not titlebar, not frame)."
-msgstr ""
-"ამ მწკრივში შეგიძლიათ არააქტიურ შიდა ფანჯარაზე თაგუნათი გადახვევის ქმედება "
-"განსაზღვროთ ('შიდა' ნიშნავს: სათაური ზოლისა და ჩარჩოს გარეშე)."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:171
-#, kde-format
-msgid "Scroll"
-msgstr "ჩამოქაჩვა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:176
-#, kde-format
-msgid "Activate and scroll"
-msgstr "გააქტიურება და გადახვევა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:181
-#, kde-format
-msgid "Activate, raise and scroll"
-msgstr "გააქტიურება, აწევა და გადახვევა"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: actions.ui:195
-#, kde-format
-msgid "Inner Window, Titlebar and Frame Actions"
-msgstr "შიდა ფანჯრის, სათაურის ზოლისა და ჩარჩოს ქმედებები"
-
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: actions.ui:206
-#, kde-format
-msgid "Mo&difier key:"
-msgstr "მოტიფიკატორი ღილაკი:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:216
-#, kde-format
-msgid ""
-"Here you select whether holding the Meta key or Alt key will allow you to "
-"perform the following actions."
-msgstr ""
-"აქ შეგიძლიათ აირჩიოთ, Meta/Alt ღილაკების დაჭერისას რომელი ქმედებების არჩევა "
-"შეგიძლიათ."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:220
-#, kde-format
-msgid "Meta"
-msgstr "Meta"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:225
-#, kde-format
-msgid "Alt"
-msgstr "Alt"
-
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-#: actions.ui:247
-#, kde-format
-msgid "  + "
-msgstr "  + "
-
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-#. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:259 mouse.ui:577
-#, kde-format
-msgid "L&eft click:"
-msgstr "მარცხენა წკაპი:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll1)
-#: actions.ui:272
-#, kde-format
-msgid ""
-"In this row you can customize left click behavior when clicking into the "
-"titlebar or the frame."
-msgstr ""
-"ამ მწკრივში სათაურის ზოლში ან ჩარჩოზე დაჭერისას თაგუნას მარცხენა წკაპის "
-"ქცევა შეგიძლიათ მოირგოთ."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:276 actions.ui:356 actions.ui:436
-#, kde-format
-msgid "Move"
-msgstr "გადაადგილება"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:281 actions.ui:361 actions.ui:441
-#, kde-format
-msgid "Activate, raise and move"
-msgstr "გააქტიურება, აწევა და გადატანა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:286 actions.ui:366 actions.ui:446
-#, kde-format
-msgid "Activate, raise and resize"
-msgstr "გააქტიურება, აწევა და ზომის შეცვლა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:291 actions.ui:371 actions.ui:451 mouse.ui:242 mouse.ui:299
-#: mouse.ui:347 mouse.ui:404 mouse.ui:452 mouse.ui:509
-#, kde-format
-msgid "Toggle raise and lower"
-msgstr "აწევისა და დაწევის გადართვა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:296 actions.ui:376 actions.ui:456
-#, kde-format
-msgid "Resize"
-msgstr "ზომის შეცვლა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:301 actions.ui:381 actions.ui:461 mouse.ui:232 mouse.ui:289
-#: mouse.ui:337 mouse.ui:394 mouse.ui:442 mouse.ui:499
-#, kde-format
-msgid "Raise"
-msgstr "აწევა"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:306 actions.ui:386 actions.ui:466 mouse.ui:63 mouse.ui:237
-#: mouse.ui:294 mouse.ui:342 mouse.ui:399 mouse.ui:447 mouse.ui:504
-#, kde-format
-msgid "Lower"
-msgstr "დაწევა"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:311 actions.ui:391 actions.ui:471 mouse.ui:58 mouse.ui:247
-#: mouse.ui:304 mouse.ui:352 mouse.ui:409 mouse.ui:457 mouse.ui:514
-#, kde-format
-msgid "Minimize"
-msgstr "ჩაკეცვა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:316 actions.ui:396 actions.ui:476
-#, kde-format
-msgid "Decrease opacity"
-msgstr "გაუმჭვირვალობის დაწევა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:321 actions.ui:401 actions.ui:481
-#, kde-format
-msgid "Increase opacity"
-msgstr "გაუმჭვირვალობის აწევა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:326 actions.ui:406 actions.ui:486 mouse.ui:257 mouse.ui:314
-#: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Window menu"
-msgstr "ფანჯრის მენიუ"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:331 actions.ui:411 actions.ui:491 actions.ui:541 advanced.ui:108
-#: mouse.ui:78 mouse.ui:125 mouse.ui:262 mouse.ui:319 mouse.ui:367 mouse.ui:424
-#: mouse.ui:472 mouse.ui:529
-#, kde-format
-msgid "Do nothing"
-msgstr "არაფერი"
-
-#. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:339
-#, kde-format
-msgid "Middle &click:"
-msgstr "შუა-წკაპი:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
-#: actions.ui:352
-#, kde-format
-msgid ""
-"In this row you can customize middle click behavior when clicking into the "
-"titlebar or the frame."
-msgstr ""
-"ამ მწკრივში სათაურის ზოლში ან ჩარჩოზე დაჭერისას თაგუნას შუა წკაპის ქცევა "
-"შეგიძლიათ მოირგოთ."
-
-#. i18n: ectx: property (text), widget (QLabel, label_9)
-#. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:419 mouse.ui:647
-#, kde-format
-msgid "Right clic&k:"
-msgstr "მარჯვენა წკაპი:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:432
-#, kde-format
-msgid ""
-"In this row you can customize right click behavior when clicking into the "
-"titlebar or the frame."
-msgstr ""
-"ამ მწკრივში სათაურის ზოლში ან ჩარჩოზე დაჭერისას თაგუნას მარჯვენა წკაპის "
-"ქცევა შეგიძლიათ მოირგოთ."
-
-#. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:499
-#, kde-format
-msgid "Mo&use wheel:"
-msgstr "&თაგუნას ბორბალი:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
-#: actions.ui:512
-#, kde-format
-msgid ""
-"Here you can customize KDE's behavior when scrolling with the mouse wheel in "
-"a window while pressing the modifier key."
-msgstr ""
-"აქ შეგიძლიათ მოირგოთ KDE-ის ქცევა თაგუნას ბორბლით ფანჯარაში გადახვევისას "
-"მაშინ, როცა მოდიფიკატორ ღილაკზე თითი გიკავიათ."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:516 mouse.ui:100
-#, kde-format
-msgid "Raise/lower"
-msgstr "აწევა/დაწევა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:521 mouse.ui:105
-#, kde-format
-msgid "Maximize/restore"
-msgstr "გადიდება/ჩაკეცვა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:526 mouse.ui:110
-#, kde-format
-msgid "Keep above/below"
-msgstr "ზემოდან დატოვება/ფანჯრის ქვემოთ ჩატანა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:531 mouse.ui:115
-#, kde-format
-msgid "Move to previous/next desktop"
-msgstr "წინა/შემდეგ სამუშაო მაგიდაზე გადატანა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:536 mouse.ui:120
-#, kde-format
-msgid "Change opacity"
-msgstr "გაუმჭვირვალობის შეცვლა"
-
-#. i18n: ectx: property (text), widget (QLabel, windowPlacementLabel)
-#: advanced.ui:20
-#, kde-format
-msgid "Window &placement:"
-msgstr "ფანჯრის &მდებარეობა:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
-#: advanced.ui:30
-#, kde-format
-msgid ""
-"<html><head/><body><p>The placement policy determines where a new window "
-"will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-bottom: "
-"0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" "
-"margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-"\">Smart</span> will try to achieve a minimum overlap of windows</li><li "
-"style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">Maximizing</span> will try to maximize every window to fill the "
-"whole screen. It might be useful to selectively affect placement of some "
-"windows using the window-specific settings.</li><li style=\" margin-top:0px; "
-"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
-"text-indent:0px;\"><span style=\" font-style:italic;\">Random</span> will "
-"use a random position</li><li style=\" margin-top:0px; margin-bottom:0px; "
-"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
-"\"><span style=\" font-style:italic;\">Centered</span> will place the window "
-"centered</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">Zero-cornered</span> will place the window in "
-"the top-left corner</li><li style=\" margin-top:0px; margin-bottom:12px; "
-"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
-"\"><span style=\" font-style:italic;\">Under mouse</span> will place the "
-"window under the pointer</li></ul></body></html>"
-msgstr ""
-"<html><head/><body><p>განლაგების პოლიტიკა განსაზღვრავს, სად გამოჩნდება ახალი "
-"ფანჯრები.</p><ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: "
-"0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" margin-top:12px; "
-"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
-"text-indent:0px;\"><span style=\" font-style:italic;\">ჭკვიანი</span> "
-"ეცდება, ფანჯრებმა ერთმანეთი რაც შეიძლება ნაკლებად გადაფარონ</li><li style=\" "
-"margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-"\">გადიდებული</span> ეცდება, ყველა ფანჯარა მთელ ეკრანზე გაშალოს. შეიძლება "
-"სასარგებლო იყოს ფანჯრების არჩევითად განლაგებისთვის კონკრეტული ტიპის "
-"ფანჯრებისთვის.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">შემთხვევითი</span> შემთხვევით მდებარეობას "
-"აირჩევს.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">ცენტრში</span> ფანჯარას ცენტრში განათავსებს</"
-"li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">ნულოვანი-კუთხით</span> ფანჯარას ზედა-მარცენა კუთხეში მოათავსებს</"
-"li><li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">თაგუნას ქვეშ</span> ფანჯარას კურსორის ქვეშ მოათავსებს</li></ul></"
-"body></html>"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:34
-#, kde-format
-msgid "Minimal Overlapping"
-msgstr "მინიმალური გადაფარვა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:39
-#, kde-format
-msgid "Maximized"
-msgstr "გაშლილი"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:44
-#, kde-format
-msgid "Random"
-msgstr "შემთხვევითი"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:49
-#, kde-format
-msgid "Centered"
-msgstr "შუაზე გასწორებული"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:54
-#, kde-format
-msgid "In Top-Left Corner"
-msgstr "ზედა მარცხენა კუთხეში"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:59
-#, kde-format
-msgid "Under mouse"
-msgstr "თაგუნას ქვეშ"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
-#: advanced.ui:67
-#, kde-format
-msgid ""
-"When turned on, apps which are able to remember the positions of their "
-"windows are allowed to do so. This will override the window placement mode "
-"defined above."
-msgstr ""
-"როცა ჩართულია, აპებს, რომლებსაც აქვთ საშუალება, დაიმახსოვრონ თავიანთი "
-"ფანჯრის მდებარეობები, ამისი უფლება მიეცემათ. ეს გადაფარავს ფანჯრების "
-"მოთავსების რეჟიმს, რომელიც ზემოთ აირჩიეთ."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
-#: advanced.ui:70
-#, kde-format
-msgid ""
-"Allow apps to remember the positions of their own windows, if they support it"
-msgstr ""
-"აპებისთვის, მათში ამის მხარდაჭერის არსებობის შემთხვევაში, საკუთრი ფანჯრების "
-"მდებარეობის დამახსოვრების უფლების მიცემა"
-
-#. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
-#: advanced.ui:77
-#, kde-format
-msgid "Virtual Desktop behavior:"
-msgstr "ვირტუალური სამუშაო მაგიდის ქცევა:"
-
-#. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
-#: advanced.ui:87
-#, kde-format
-msgid "When activating a window on a different Virtual Desktop:"
-msgstr "ფანჯრის სხვა ვირტუალურ სამუშაო მაგიდაზე აქტივაციისას:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:94
-#, kde-format
-msgid ""
-"<html><head/><body><p>This setting controls what happens when an open window "
-"located on a Virtual Desktop other than the current one is activated. </"
-"p><p><span style=\" font-style:italic;\">Switch to that Virtual Desktop</"
-"span> will switch to the Virtual Desktop where the window is currently "
-"located. </p><p><span style=\" font-style:italic;\">Bring window to current "
-"Virtual Desktop</span> will cause the window to jump to the active Virtual "
-"Desktop. </p></body></html>"
-msgstr ""
-"<html><head/><body><p>ეს პარამეტრი აკონტროლებს, რა მოხდება, როცა აქტიურდება "
-"ღია ფანჯარა, რომელიც მიმდინარე ვირტუალური სამუშაო მაგიდის გარდა ნებისმიერ "
-"სხვაზე მდებარეობს. </p><p><span style=\" font-style:italic;\">ვირტუალურ "
-"სამუშაო მაგიდაზე გადართვა</span> გადართავს ვირტუალურ სამუშაო მაგიდას იქ, "
-"სადაც ფანჯარა ახლა მდებარეობს. </p><p><span style=\" font-style:italic;"
-"\">ფანჯრის მიმდინარე ვირტუალურ ფანჯარაზე გადმოტანა</span> ფანჯრის აქტიურ "
-"ვირტუალურ სამუშაო მაგიდაზე გადმოტანას გამოიწვევს. </p></body></html>"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:98
-#, kde-format
-msgid "Switch to that Virtual Desktop"
-msgstr "იმ ვირტუალურ სამუშაო მაგიდაზე გადართვა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:103
-#, kde-format
-msgid "Bring window to current Virtual Desktop"
-msgstr "ფანჯრის მიმდინარე ვირტუალურ სამუშაო მაგიდაზე გადმოტანა"
-
-#. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
-#: focus.ui:22
-#, kde-format
-msgid "Window &activation policy:"
+#: ui/Focus.qml:22
+#, fuzzy, kde-format
+#| msgid "Window &activation policy:"
+msgctxt "@label:listbox"
+msgid "Window focus policy:"
 msgstr "ფანჯრის &აქტივაციის პოლიტიკა:"
 
-#. i18n: ectx: property (whatsThis), widget (QComboBox, windowFocusPolicy)
-#: focus.ui:32
-#, kde-format
-msgid "With this option you can specify how and when windows will be focused."
-msgstr ""
-"ამ პარამეტრით შეგიძლიათ მიუთითოთ, ამ ფანჯრის ფოკუსირდება როგორ და როდის "
-"მოხდება."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
-#: focus.ui:36
-#, kde-format
-msgctxt "sassa asas"
+#: ui/Focus.qml:46
+#, fuzzy, kde-format
+#| msgctxt "sassa asas"
+#| msgid "Click to focus"
+msgctxt "@item:inlistbox Window focus policy"
 msgid "Click to focus"
 msgstr "წკაპი ფოკუსისთვის"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
-#: focus.ui:41
+#: ui/Focus.qml:47
 #, kde-format
-msgid "Click to focus (mouse precedence)"
-msgstr "წკაპი ფოკუსისთვის (თაგუნა უპირატესია)"
+msgctxt "@info:tooltip Window focus policy"
+msgid "Window becomes focused when clicked."
+msgstr ""
 
-#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
-#: focus.ui:46
-#, kde-format
-msgid "Focus follows mouse"
+#: ui/Focus.qml:51
+#, fuzzy, kde-format
+#| msgid "Focus follows mouse"
+msgctxt "@item:inlistbox Window focus policy"
+msgid "Focus follows pointer"
 msgstr "ფოკუსი მიყვება თაგუნას"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
-#: focus.ui:51
+#: ui/Focus.qml:52
 #, kde-format
-msgid "Focus follows mouse (mouse precedence)"
-msgstr "ფოკუსი მიყვება თაგუნას (თაგუნა უპირატესია)"
+msgctxt "@info:tooltip Window focus policy"
+msgid ""
+"As the pointer moves, windows under it become focused after a configurable "
+"delay."
+msgstr ""
 
-#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
-#: focus.ui:56
-#, kde-format
-msgid "Focus under mouse"
+#: ui/Focus.qml:56
+#, fuzzy, kde-format
+#| msgid "Focus under mouse"
+msgctxt "@item:inlistbox Window focus policy"
+msgid "Focus under pointer"
 msgstr "ფოკუსი თაგუნას ქვეშ"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
-#: focus.ui:61
+#: ui/Focus.qml:57
 #, kde-format
-msgid "Focus strictly under mouse"
-msgstr "ფოკუსი მხოლოდ თაგუნას ქვეშ"
+msgctxt "@info:tooltip Window focus policy"
+msgid "Window under pointer receives focus, even if the pointer has not moved."
+msgstr ""
 
-#. i18n: ectx: property (text), widget (QLabel, delayFocusOnLabel)
-#: focus.ui:69
+#: ui/Focus.qml:75
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"Selecting <interface>Focus under pointer</interface> will prevent focus on "
+"some windows appearing on screen. This can lead to assigning focus to "
+"unwanted windows. Use with caution."
+msgstr ""
+
+#: ui/Focus.qml:81
+#, kde-format
+msgctxt "@option:radio After closing a window, move focus to:"
+msgid "Last focused window"
+msgstr ""
+
+#: ui/Focus.qml:83
+#, kde-format
+msgctxt "@title:group"
+msgid "After closing a window, move focus to:"
+msgstr ""
+
+#: ui/Focus.qml:86
+#, fuzzy, kde-format
+#| msgid "&Window snap zone:"
+msgctxt "@option:radio After closing a window, move focus to:"
+msgid "Window under pointer"
+msgstr "&ფანჯრის მიმაგრების ზონა:"
+
+#: ui/Focus.qml:115
 #, kde-format
 msgid "&Delay focus by:"
 msgstr "&ფოკუსის დაყოვნება:"
 
-#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_DelayFocusInterval)
-#: focus.ui:82
+#: ui/Focus.qml:124 ui/Focus.qml:250
 #, kde-format
-msgid ""
-"This is the delay after which the window the mouse pointer is over will "
-"automatically receive focus."
+msgctxt "short for millisecond(s)"
+msgid "%1 ms"
 msgstr ""
-"პაუზა, რომლის გავლის შემდეგაც ფანჯარა, რომელზეც თაგუნას კურსორი მიუთითებს, "
-"ფოკუსს ავტომატურად მიიღებს."
 
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
-#: focus.ui:85 focus.ui:181
-#, kde-format
-msgid " ms"
+#: ui/Focus.qml:128 ui/Focus.qml:254
+#, fuzzy, kde-format
+#| msgid " ms"
+msgctxt "short for millisecond(s)"
+msgid "ms"
 msgstr " მწმ"
 
-#. i18n: ectx: property (text), widget (QLabel, focusStealingLabel)
-#: focus.ui:101
+#: ui/Focus.qml:146
 #, kde-format
 msgid "Focus &stealing prevention:"
 msgstr "ფოკუსის &მოპარვის აცილება:"
 
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
-#: focus.ui:114
-#, kde-format
-msgid ""
-"<html><head/><body><p>This option specifies how much KWin will try to "
-"prevent unwanted focus stealing caused by unexpected activation of new "
-"windows. (Note: This feature does not work with the <span style=\" font-"
-"style:italic;\">Focus under mouse</span> or <span style=\" font-style:italic;"
-"\">Focus strictly under mouse</span> focus policies.) </p><ul style=\"margin-"
-"top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-"
-"indent: 1;\"><li style=\" margin-top:12px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">None:</span> Prevention is turned off and new "
-"windows always become activated.</li><li style=\" margin-top:0px; margin-"
-"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">Low:</span> Prevention is "
-"enabled; when some window does not have support for the underlying mechanism "
-"and KWin cannot reliably decide whether to activate the window or not, it "
-"will be activated. This setting may have both worse and better results than "
-"the medium level, depending on the applications.</li><li style=\" margin-"
-"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Medium:</"
-"span> Prevention is enabled.</li><li style=\" margin-top:0px; margin-"
-"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">High:</span> New windows "
-"get activated only if no window is currently active or if they belong to the "
-"currently active application. This setting is probably not really usable "
-"when not using mouse focus policy.</li><li style=\" margin-top:0px; margin-"
-"bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">Extreme:</span> All "
-"windows must be explicitly activated by the user.</li></ul><p>Windows that "
-"are prevented from stealing focus are marked as demanding attention, which "
-"by default means their taskbar entry will be highlighted. This can be "
-"changed in the Notifications control module.</p></body></html>"
-msgstr ""
-"<html><head/><body><p>ეს პარამეტრი მიუთითებს, რა ძალიან ეცდება KWin, ახალი "
-"ფანჯრების მიერ ფოკუსის მოპარვა თავიდან აიცილოს. (შენიშვნა: ეს ფუნქცია არ "
-"მუშაობს, როცა <span style=\" font-style:italic;\">ფოკუსი თაგუნას ქვეშ</span> "
-"ან <span style=\" font-style:italic;\">ფოკუსი მხოლოდ თაგუნას ქვეშ</span> "
-"პარამეტრები ჩართულია.) </p><ul style=\"margin-top: 0px; margin-bottom: 0px; "
-"margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" "
-"margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-"\">არაფერი:</span> თავიდან აცილება გამორთულია და ახალი ფანჯრები ყოველთვის "
-"აქტიურია.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">დაბალი:</span> დაცვა ჩართულია. როცა რომელიმე "
-"ფანჯარას ამ მექანიზმის მხარდაჭერა არ გააჩნია და KWin-ს არ შეუძლია, "
-"გადაწყვიტოს, გაააქტიუროს ფანჯარა, თუ არა, ის გააქტიურდება.ამ პარამეტრს, "
-"აპლიკაციაზე დამოკიდებულებით, შეიძლება კარგი შედეგიც ჰქონდეს და ცუდიც.</"
-"li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">საშუალო:</span>თავიდან აცილება ჩართულია.</li><li style=\" margin-"
-"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">მაღალი:</"
-"span>ახალი ფანჯრები მხლოდ მაშინ გააქტიურდება, თუ ისინი ამჟამად აქტიურ "
-"აპლიკაციას ეკუთვნიან. ეს პარამეტრი ალბათ არც ისე სასარგებლოა, თუ თაგუნას "
-"ფოკუსის პოლიტიკას არ იყენებთ.</li><li style=\" margin-top:0px; margin-"
-"bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">ექსტრემალური:</span> ყველა "
-"ფანჯარა მომხმარებლის მიერ უნდა გააქტიურდეს.</li></ul><p>ფანჯრები, რომლებსაც "
-"ფოკუსის გადატანა აეკრძალათ, მოინიშნებიან, როგორც აპლიკაციები, რომლებსაც "
-"ყურადღების მიქცევა სჭირდებათ. ეს კი ნაგულისხმევად გამოკვეთას ნიშნავს. ამისი "
-"შეცვლა გაფრთხილებების კონტროლის მოდულიდან შეგიძლიათ.</p></body></html>"
-
-#. i18n: Focus Stealing Prevention Level
-#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
-#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_WindowSnapZone)
-#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_CenterSnapZone)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
-#: focus.ui:118 moving.ui:33 moving.ui:65 moving.ui:97
+#: ui/Focus.qml:150 ui/MovementAndPlacement.qml:30
+#: ui/MovementAndPlacement.qml:58 ui/MovementAndPlacement.qml:87
 #, kde-format
 msgid "None"
 msgstr "არაფერი"
 
-#. i18n: Focus Stealing Prevention Level
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
-#: focus.ui:123
+#: ui/Focus.qml:151
 #, kde-format
 msgid "Low"
 msgstr "დაბალი"
 
-#. i18n: Focus Stealing Prevention Level
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
-#: focus.ui:128
+#: ui/Focus.qml:152
 #, kde-format
 msgid "Medium"
 msgstr "საშუალო"
 
-#. i18n: Focus Stealing Prevention Level
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
-#: focus.ui:133
+#: ui/Focus.qml:153
 #, kde-format
 msgid "High"
 msgstr "მაღალი"
 
-#. i18n: Focus Stealing Prevention Level
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
-#: focus.ui:138
+#: ui/Focus.qml:154
 #, kde-format
 msgid "Extreme"
 msgstr "ექსტრემალური"
 
-#. i18n: ectx: property (text), widget (QLabel, raisingWindowsLabel)
-#: focus.ui:146
+#: ui/Focus.qml:171
+#, fuzzy, kde-format
+#| msgid "Switch to that Virtual Desktop"
+msgctxt "@option:radio When focusing a window on a different Virtual Desktop:"
+msgid "Switch to window’s Virtual Desktop"
+msgstr "იმ ვირტუალურ სამუშაო მაგიდაზე გადართვა"
+
+#: ui/Focus.qml:173
+#, fuzzy, kde-format
+#| msgid "When activating a window on a different Virtual Desktop:"
+msgctxt "@title:group"
+msgid "When focusing a window on a different Virtual Desktop:"
+msgstr "ფანჯრის სხვა ვირტუალურ სამუშაო მაგიდაზე აქტივაციისას:"
+
+#: ui/Focus.qml:176
+#, kde-format
+msgid "Bring window to current Virtual Desktop"
+msgstr "ფანჯრის მიმდინარე ვირტუალურ სამუშაო მაგიდაზე გადმოტანა"
+
+#: ui/Focus.qml:180 ui/TitlebarActions.qml:26 ui/TitlebarActions.qml:39
+#: ui/TitlebarActions.qml:64 ui/TitlebarActions.qml:87 ui/WindowActions.qml:38
+#: ui/WindowActions.qml:211
+#, kde-format
+msgid "Do nothing"
+msgstr "არაფერი"
+
+#: ui/Focus.qml:207
 #, kde-format
 msgid "Raising windows:"
 msgstr "ფანჯრების ამოწევა:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ClickRaise)
-#: focus.ui:153
-#, kde-format
-msgid ""
-"When this option is enabled, the active window will be brought to the front "
-"when you click somewhere into the window contents. To change it for inactive "
-"windows, you need to change the settings in the Actions tab."
-msgstr ""
-"თუ ეს პარამეტრი ჩართულია, აქტიურ ფანჯარა წინ გადმოვა, როცა მის შემცველობაში "
-"სადმე დააწკაპუნეთ. ამის არააქტიური ფანჯრებისთვის შესაცვლელად შეგიძლიათ "
-"ქმედებების ჩანართში პარამეტრი ჩართოთ."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ClickRaise)
-#: focus.ui:156
-#, kde-format
-msgid "&Click raises active window"
+#: ui/Focus.qml:208
+#, fuzzy, kde-format
+#| msgid "&Click raises active window"
+msgid "&Click raises focused window"
 msgstr "&წკაპი ამოწევს ფანჯარას"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AutoRaise)
-#: focus.ui:165
-#, kde-format
-msgid ""
-"When this option is enabled, a window in the background will automatically "
-"come to the front when the mouse pointer has been over it for some time."
-msgstr ""
-"თუ ეს პარამეტრი ჩართულია, თუ თაგუნას კურსორს ფონურ ფანჯარაზე ცოტა ხანს "
-"გააჩერებთ, ის წინ გადმოვა."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AutoRaise)
-#: focus.ui:168
+#: ui/Focus.qml:228
 #, kde-format
 msgid "&Raise on hover, delayed by:"
 msgstr "&გადატარებისას ამოწევა. დაყოვნების ხანგრძლივობა:"
 
-#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_AutoRaiseInterval)
-#: focus.ui:178
-#, kde-format
-msgid ""
-"This is the delay after which the window that the mouse pointer is over will "
-"automatically come to the front."
-msgstr ""
-"პაუზა, რომლის გავლის შემდეგაც ფანჯარა, რომელზეც თაგუნას კურსორი მიუთითებს, "
-"წინ ავტომატურად გამოვა."
-
-#. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
-#: focus.ui:199
+#: ui/Focus.qml:272
 #, kde-format
 msgid "Multiscreen behavior:"
 msgstr "ქცევა ერთზე მეტი ეკრანის ქონისას:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:206
-#, kde-format
-msgid ""
-"When this option is enabled, focus operations are limited only to the active "
-"screen"
-msgstr "თუ ეს პარამეტრი ჩართულია, ფოკუსის ოპერაცები აქტიური ეკრანით შეიზღუდება"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:209
+#: ui/Focus.qml:273
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "&თითოეული ეკრანის ცალცალკე ფოკუსი"
 
-#. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:222
-#, kde-format
-msgid "Window activation policy description"
-msgstr "ფანჯრის აქტივაციის პოლიტიკის აღწერა"
-
-#: main.cpp:48
+#: ui/main.qml:31
 #, kde-format
 msgid "&Focus"
 msgstr "&ფოკუსი"
 
-#: main.cpp:53
+#: ui/main.qml:37
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "ქუდის ზოლის &ქმედებები"
 
-#: main.cpp:58
+#: ui/main.qml:43
 #, kde-format
 msgid "W&indow Actions"
 msgstr "&ფანჯრის ქმედებები"
 
-#: main.cpp:63
-#, kde-format
-msgid "Mo&vement"
+#: ui/main.qml:49
+#, fuzzy, kde-format
+#| msgid "Mo&vement"
+msgid "Mo&vement & Placement"
 msgstr "&გადაადგილება"
 
-#: main.cpp:68
-#, kde-format
-msgid "Adva&nced"
-msgstr "&დამატებით"
+#: ui/MovementAndPlacement.qml:17
+#, fuzzy, kde-format
+#| msgid "Mo&vement"
+msgctxt "@title:group"
+msgid "Movement"
+msgstr "&გადაადგილება"
 
-#: main.cpp:74
-#, kde-format
-msgid "&Picture-in-picture"
-msgstr "სურათი ს&ურათში"
-
-#: main.cpp:165
-#, kde-format
-msgid "&Titlebar Actions"
-msgstr "&სათაურის პანელის ქმედებები"
-
-#: main.cpp:175
-#, kde-format
-msgid "Window Actio&ns"
-msgstr "ფანჯრის &ქმედებები"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
-#: mouse.ui:17
-#, kde-format
-msgid "Titlebar Actions"
-msgstr "ქუდის ქმედებები"
-
-#. i18n: ectx: property (text), widget (QLabel, label_1)
-#: mouse.ui:29
-#, kde-format
-msgid "&Double-click:"
-msgstr "&ორმაგი წკაპი:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#: mouse.ui:39
-#, kde-format
-msgid "Behavior on <em>double</em> click into the titlebar."
-msgstr "<em>ორმაგი</em> წკაპის ქცევა ფანჯრის სათაურის ზოლზე."
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:43 mouse.ui:591 mouse.ui:626 mouse.ui:661
-#, kde-format
-msgid "Maximize"
-msgstr "გადიდება"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:48 mouse.ui:596 mouse.ui:631 mouse.ui:666
-#, kde-format
-msgid "Vertically maximize"
-msgstr "ვერტიკალურად გადიდება"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:53 mouse.ui:601 mouse.ui:636 mouse.ui:671
-#, kde-format
-msgid "Horizontally maximize"
-msgstr "ჰორიზონტალურად გადიდება"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:68 mouse.ui:252 mouse.ui:309 mouse.ui:357 mouse.ui:414 mouse.ui:462
-#: mouse.ui:519
-#, kde-format
-msgid "Close"
-msgstr "დახურვა"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#: mouse.ui:73
-#, kde-format
-msgid "Show on all desktops"
-msgstr "ყველა სამუშაო მაგიდაზე ჩვენება"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: mouse.ui:96
-#, kde-format
-msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
-msgstr "<em>თაგუნას ბორბლის</em> ქცევა სათაურის ზოლზე დატრიალებისას."
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: mouse.ui:136
-#, kde-format
-msgid "Titlebar and Frame Actions"
-msgstr "სათაურის პანელის და ჩარჩოს ქმედებები"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: mouse.ui:163
-#, kde-format
-msgid "Active"
-msgstr "აქტიური"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: mouse.ui:186
-#, kde-format
-msgid "Inactive"
-msgstr "არააქტიური"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#: mouse.ui:228 mouse.ui:333 mouse.ui:438
-#, kde-format
-msgid ""
-"Behavior on <em>left</em> click into the titlebar or frame of an <em>active</"
-"em> window."
-msgstr ""
-"თაგუნას <em>მარცხენა</em> ღილაკის ქცევა <em>აქტიური</em> ფანჯრის სათაურის "
-"ზოლზე ან ჩარჩოზე დაწკაპუნებისას."
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:270 mouse.ui:375 mouse.ui:480
-#, kde-format
-msgid ""
-"Behavior on <em>left</em> click into the titlebar or frame of an "
-"<em>inactive</em> window."
-msgstr ""
-"თაგუნას <em>მარცხენა</em> ღილაკის ქცევა <em>არააქტიური</em> ფანჯრის სათაურის "
-"ზოლზე ან ჩარჩოზე დაწკაპუნებისას."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:279 mouse.ui:384 mouse.ui:489
-#, kde-format
-msgid "Activate and lower"
-msgstr "გააქტიურება და დაწევა"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DoubleClickBorderToMaximize)
-#: mouse.ui:537
-#, kde-format
-msgid "Maximize window by double clicking its frame"
-msgstr "ფანჯრის გაშლა მის ჩარჩოზე ორჯერ დაწკაპუნებით"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
-#: mouse.ui:562
-#, kde-format
-msgid "Maximize Button Actions"
-msgstr "მთელ ეკრანზე გაშლის ღილაკის ქმედებები"
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label_8)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
-#: mouse.ui:574 mouse.ui:587
-#, kde-format
-msgid "Behavior on <em>left</em> click onto the maximize button."
-msgstr "<em>მარცხენა</em> ღილაკის ქცევა გადიდების ღილაკზე.."
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label_9)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
-#: mouse.ui:609 mouse.ui:622
-#, kde-format
-msgid "Behavior on <em>middle</em> click onto the maximize button."
-msgstr "<em>შუა</em> ღილაკის ქცევა გადიდების ღილაკზე.."
-
-#. i18n: ectx: property (text), widget (QLabel, label_9)
-#: mouse.ui:612
-#, kde-format
-msgid "Middle c&lick:"
-msgstr "შუა &წკაპი:"
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label_10)
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:644 mouse.ui:657
-#, kde-format
-msgid "Behavior on <em>right</em> click onto the maximize button."
-msgstr "<em>მარჯვენა</em> წკაპის ქცევა გადიდების ღილაკზე."
-
-#. i18n: ectx: property (text), widget (QLabel, borderSnapLabel)
-#: moving.ui:20
+#: ui/MovementAndPlacement.qml:22
 #, kde-format
 msgid "Screen &edge snap zone:"
 msgstr "ეკრანის &წიბოს მიმაგრების ზონა:"
 
-#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_BorderSnapZone)
-#: moving.ui:30
+#: ui/MovementAndPlacement.qml:30 ui/MovementAndPlacement.qml:58
+#: ui/MovementAndPlacement.qml:87 ui/MovementAndPlacement.qml:183
 #, kde-format
-msgid ""
-"Here you can set the snap zone for screen edges, i.e. the 'strength' of the "
-"magnetic field which will make windows snap to the border when moved near it."
+msgctxt "short for pixel(s)"
+msgid "%1 px"
 msgstr ""
-"აქ შეგიძლიათ დააყენოთ მიბმის ზონა ეკრანის კუთხეებისთვის, ანუ მაგნიტური ველის "
-"'სიძლიერე', რომლებიც ფანჯრებს ერთმანეთს მიამაგრებს, როცა ახლოს მიიტანთ."
 
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_CenterSnapZone)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_PictureInPictureMargin)
-#: moving.ui:36 moving.ui:68 moving.ui:100 pip.ui:61
-#, kde-format
-msgid " px"
+#: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
+#: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
+#, fuzzy, kde-format
+#| msgid " px"
+msgctxt "short for pixel(s)"
+msgid "px"
 msgstr " px"
 
-#. i18n: ectx: property (text), widget (QLabel, windowSnapLabel)
-#: moving.ui:52
+#: ui/MovementAndPlacement.qml:50
 #, kde-format
 msgid "&Window snap zone:"
 msgstr "&ფანჯრის მიმაგრების ზონა:"
 
-#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_WindowSnapZone)
-#: moving.ui:62
-#, kde-format
-msgid ""
-"Here you can set the snap zone for windows, i.e. the 'strength' of the "
-"magnetic field which will make windows snap to each other when they are "
-"moved near another window."
-msgstr ""
-"აქ შეგიძლია ფანჯრების მიბმის ზონა დააყენთ, ანუ მაგნიტური ველის \"სიძლიერე\", "
-"რომელიც ფანჯრებს ერთმანეთს აწებებს, თუ ისინი ახლოს არიან ერთმანეთთან."
-
-#. i18n: ectx: property (text), widget (QLabel, centerSnaplabel)
-#: moving.ui:84
+#: ui/MovementAndPlacement.qml:79
 #, kde-format
 msgid "&Center snap zone:"
 msgstr "&ცენტრში მიმაგრების ზონა:"
 
-#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_CenterSnapZone)
-#: moving.ui:94
-#, kde-format
-msgid ""
-"Here you can set the snap zone for the screen center, i.e. the 'strength' of "
-"the magnetic field which will make windows snap to the center of the screen "
-"when moved near it."
-msgstr ""
-"აქ შეგიძლიათ დააყენოთ მიბმის ზონა ეკრანის ცენტრისთვის, ანუ იმ მაგნიტური "
-"ველის \"ძალა\", რომელიც ფანჯრებს ეკრანის ცენტრზე მიამაგრებს, როცა ახლის "
-"გადაიტანთ."
-
-#. i18n: ectx: property (text), widget (QLabel, OverlapSnapLabel)
-#: moving.ui:113
+#: ui/MovementAndPlacement.qml:106
 #, kde-format
 msgid "&Snap windows:"
 msgstr "ფანჯრების &მიმაგრება:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
-#: moving.ui:123
-#, kde-format
-msgid ""
-"Here you can set that windows will be only snapped if you try to overlap "
-"them, i.e. they will not be snapped if the windows comes only near another "
-"window or border."
-msgstr ""
-"აქ შეგიძლიათ დააყენოთ, რომ ფანჯრები მხოლოდ მაშინ მიებმება, როცა ერთმანეთს "
-"გადაადებთ. ანუ, ისინი არ მიებმება, თუ ფანჯარა სხვა ფანჯარასთან ან საზღვართან "
-"ახლოს მივა."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
-#: moving.ui:126
+#: ui/MovementAndPlacement.qml:107
 #, kde-format
 msgid "Only when overlapping"
 msgstr "მხოლოდ გადაფარვისას"
 
-#. i18n: ectx: property (text), widget (QLabel, homeCornerLabel)
-#: pip.ui:20
+#: ui/MovementAndPlacement.qml:122
+#, kde-format
+msgctxt "@title:group"
+msgid "Placement"
+msgstr ""
+
+#: ui/MovementAndPlacement.qml:125
+#, kde-format
+msgid "Window &placement:"
+msgstr "ფანჯრის &მდებარეობა:"
+
+#: ui/MovementAndPlacement.qml:129
+#, kde-format
+msgid "Minimal Overlapping"
+msgstr "მინიმალური გადაფარვა"
+
+#: ui/MovementAndPlacement.qml:130
+#, kde-format
+msgid "Maximized"
+msgstr "გაშლილი"
+
+#: ui/MovementAndPlacement.qml:131
+#, kde-format
+msgid "Random"
+msgstr "შემთხვევითი"
+
+#: ui/MovementAndPlacement.qml:132
+#, kde-format
+msgid "Centered"
+msgstr "შუაზე გასწორებული"
+
+#: ui/MovementAndPlacement.qml:133
+#, kde-format
+msgid "In Top-Left Corner"
+msgstr "ზედა მარცხენა კუთხეში"
+
+#: ui/MovementAndPlacement.qml:134
+#, kde-format
+msgid "Under mouse"
+msgstr "თაგუნას ქვეშ"
+
+#: ui/MovementAndPlacement.qml:149
+#, fuzzy, kde-format
+#| msgid "&Picture-in-picture"
+msgctxt "@title:group"
+msgid "Picture-in-picture Placement"
+msgstr "სურათი ს&ურათში"
+
+#: ui/MovementAndPlacement.qml:152
 #, kde-format
 msgid "Open in screen corner:"
 msgstr "გახსნა ეკრანის კუთხეში:"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
-#: pip.ui:31
+#: ui/MovementAndPlacement.qml:157
 #, kde-format
 msgid "Top-left"
 msgstr "ზედა მარცხენა"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
-#: pip.ui:36
+#: ui/MovementAndPlacement.qml:158
 #, kde-format
 msgid "Top-right"
 msgstr "ზედა მარჯვენა"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
-#: pip.ui:41
+#: ui/MovementAndPlacement.qml:159
 #, kde-format
 msgid "Bottom-left"
 msgstr "ქვედა მარცხენა"
 
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
-#: pip.ui:46
+#: ui/MovementAndPlacement.qml:160
 #, kde-format
 msgid "Bottom-right"
 msgstr "ქვედა მარჯვენა"
 
-#. i18n: ectx: property (text), widget (QLabel, marginLabel)
-#: pip.ui:54
+#: ui/MovementAndPlacement.qml:173
 #, kde-format
 msgid "Margin:"
 msgstr "მინდორი:"
 
-#: windows.cpp:92
+#: ui/TitlebarActions.qml:20 ui/TitlebarActions.qml:33 ui/WindowActions.qml:31
 #, kde-format
-msgid ""
-"<em>Click to focus:</em> A window becomes active when you click into it. "
-"This behavior is common on other operating systems and likely what you want."
-msgstr ""
-"<em>ფოკუსისთვის დააწკაპუნეთ:</em> ფანჯარა აქტიური მაშინ გახდება, როცა ზედ "
-"დააწკაპუნეთ. ეს ქცევა საერთოა ოპერაციულ სისტემებს შორის და როგორც წესი ისაა, "
-"რაც თქვენ გჭირდებათ."
+msgid "Raise"
+msgstr "აწევა"
 
-#: windows.cpp:95
+#: ui/TitlebarActions.qml:21 ui/TitlebarActions.qml:34
+#: ui/TitlebarActions.qml:61 ui/WindowActions.qml:32
 #, kde-format
-msgid ""
-"<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
-"focus</em>. If an active window has to be chosen by the system (eg. because "
-"the currently active one was closed) the window under the mouse is the "
-"preferred candidate. Unusual, but possible variant of <em>Click to focus</"
-"em>."
-msgstr ""
-"<em>წკაპი ფოკუსისთვის (თაგუნას უპირატესობა):</em> ძირითადად იგივეა, რაც "
-"<em>წკაპი ფოკუსისთვის</em>. თუ აქტიური ფანჯარა სისტემის მიერ იქნა არჩეული "
-"(მაგ იმიტომ, რომ ამჟამად აქტიური დაიხურა), ფანჯარა, რომელიც თაგუნას კურსორის "
-"ქვეშაა, სასურველი კანდიდატი ხდება. <em>წკაპი ფოკუსისთვის</em>-ის უცნაური, "
-"მაგრამ შესაძლო ვარიანტი."
+msgid "Lower"
+msgstr "დაწევა"
 
-#: windows.cpp:98
+#: ui/TitlebarActions.qml:22 ui/TitlebarActions.qml:35
+#: ui/TitlebarActions.qml:82 ui/WindowActions.qml:33 ui/WindowActions.qml:206
 #, kde-format
-msgid ""
-"<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
-"it. Eg. windows randomly appearing under the mouse will not gain the focus. "
-"<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
-"to focus</em> just without having to actually click."
-msgstr ""
-"<em>ფოკუსი დაყვება თაგუნას:</em> თაგუნას კურსორის შეტანა ფანჯრის შიგნით "
-"გაააქტიურებს მას. მაგ: ფანჯრები, რომლებიც თაგუნას კურსორის ქვეშ გაჩნდებიან, "
-"ფოკუსს ვერ მიიღებენ. როგორც ყოველთვის, <em>ფოკუსის მოპარვის თავიდან აცილება</"
-"em> ხდება. იფიქრეთ ამაზ, როგორც <em>დააწკაპუნეთ კურსორისთვის</em>-ზე, "
-"დაწკაპუნების საჭიროების გარეშე."
+msgid "Raise/lower"
+msgstr "აწევა/დაწევა"
 
-#: windows.cpp:101
+#: ui/TitlebarActions.qml:23 ui/TitlebarActions.qml:36
+#: ui/TitlebarActions.qml:60 ui/WindowActions.qml:34
 #, kde-format
-msgid ""
-"This is mostly the same as <em>Focus follows mouse</em>. If an active window "
-"has to be chosen by the system (eg. because the currently active one was "
-"closed) the window under the mouse is the preferred candidate. Choose this, "
-"if you want a hover controlled focus."
-msgstr ""
-"ეს თითქმის იგივეა, რაც <em>ფოკუსი თაგუნას დაყვება</em>. თუ აქტიური ფანჯარა, "
-"რომელიც სისტემამ აირჩია (მაგ: იმიტომ, რომ აქტიური ფანჯარა დახურეთ), ფანჯარა, "
-"რომელიც თაგუნა კურსორის ქვეშ იმყოფება, ფოკუსის მისაღებად სასურველი კანდიდატი "
-"გახდება. აირჩიეთ, თუ გადატარებით მართვადი ფოკუსი გჭირდებათ."
+msgid "Minimize"
+msgstr "ჩაკეცვა"
 
-#: windows.cpp:104
+#: ui/TitlebarActions.qml:24 ui/TitlebarActions.qml:37
+#: ui/TitlebarActions.qml:62
 #, kde-format
-msgid ""
-"<em>Focus under mouse:</em> The focus always remains on the window under the "
-"mouse.<br/><strong>Warning:</strong> <em>Focus stealing prevention</em> and "
-"the <em>tabbox ('Alt+Tab')</em> contradict the activation policy and will "
-"not work. You very likely want to use <em>Focus follows mouse (mouse "
-"precedence)</em> instead!"
-msgstr ""
-"<em>ფოკუსი თაგუნას ქვეშ:</em> ფოკუსი ყოველთვის თაგუნას კურსორის ქვეშ მდებარე "
-"ფანჯარაზე იქნება. <br/><strong>გაფრთხილება:</strong> <em>ფოკუსის მოპარვის "
-"თავიდან აცილება</em> და <em>tabbox ('Alt+Tab')</em> ეწინააღმდეგება "
-"აქტივაციის ამ პოლიტიკას და არ იმუშავებენ. ალბათ, სჯობს, <em>ფოკუსი დასდევს "
-"თაგუნას (თაგუნას უპირატესობა)</em> აირჩიოთ!"
+msgid "Close"
+msgstr "დახურვა"
 
-#: windows.cpp:107
+#: ui/TitlebarActions.qml:25 ui/TitlebarActions.qml:38 ui/WindowActions.qml:37
 #, kde-format
-msgid ""
-"<em>Focus strictly under mouse:</em> The focus is always on the window under "
-"the mouse (in doubt nowhere) very much like the focus behavior in an "
-"unmanaged legacy X11 environment.<br/><strong>Warning:</strong> <em>Focus "
-"stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> contradict the "
-"activation policy and will not work. You very likely want to use <em>Focus "
-"follows mouse (mouse precedence)</em> instead!"
+msgid "Window menu"
+msgstr "ფანჯრის მენიუ"
+
+#: ui/TitlebarActions.qml:30 ui/WindowActions.qml:23 ui/WindowActions.qml:54
+#, fuzzy, kde-format
+#| msgid "Focus under mouse"
+msgid "Focus and raise"
+msgstr "ფოკუსი თაგუნას ქვეშ"
+
+#: ui/TitlebarActions.qml:31
+#, fuzzy, kde-format
+#| msgid "Focus under mouse"
+msgid "Focus and lower"
+msgstr "ფოკუსი თაგუნას ქვეშ"
+
+#: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
+#, fuzzy, kde-format
+#| msgid "&Focus"
+msgid "Focus"
+msgstr "&ფოკუსი"
+
+#: ui/TitlebarActions.qml:43 ui/TitlebarActions.qml:57
+#, kde-format
+msgid "Maximize"
+msgstr "გადიდება"
+
+#: ui/TitlebarActions.qml:44 ui/TitlebarActions.qml:58
+#, kde-format
+msgid "Vertically maximize"
+msgstr "ვერტიკალურად გადიდება"
+
+#: ui/TitlebarActions.qml:45 ui/TitlebarActions.qml:59
+#, kde-format
+msgid "Horizontally maximize"
+msgstr "ჰორიზონტალურად გადიდება"
+
+#: ui/TitlebarActions.qml:49
+#, kde-format
+msgid "Titlebar Actions"
+msgstr "ქუდის ქმედებები"
+
+#: ui/TitlebarActions.qml:52
+#, kde-format
+msgid "&Double-click:"
+msgstr "&ორმაგი წკაპი:"
+
+#: ui/TitlebarActions.qml:63
+#, kde-format
+msgid "Show on all desktops"
+msgstr "ყველა სამუშაო მაგიდაზე ჩვენება"
+
+#: ui/TitlebarActions.qml:77 ui/WindowActions.qml:99
+#, kde-format
+msgid "Mouse &wheel:"
+msgstr "თაგუნას &რგოლი:"
+
+#: ui/TitlebarActions.qml:83 ui/WindowActions.qml:207
+#, kde-format
+msgid "Maximize/restore"
+msgstr "გადიდება/ჩაკეცვა"
+
+#: ui/TitlebarActions.qml:84 ui/WindowActions.qml:208
+#, kde-format
+msgid "Keep above/below"
+msgstr "ზემოდან დატოვება/ფანჯრის ქვემოთ ჩატანა"
+
+#: ui/TitlebarActions.qml:85 ui/WindowActions.qml:209
+#, kde-format
+msgid "Move to previous/next desktop"
+msgstr "წინა/შემდეგ სამუშაო მაგიდაზე გადატანა"
+
+#: ui/TitlebarActions.qml:86 ui/WindowActions.qml:210
+#, kde-format
+msgid "Change opacity"
+msgstr "გაუმჭვირვალობის შეცვლა"
+
+#: ui/TitlebarActions.qml:102
+#, kde-format
+msgid "Titlebar and Frame Actions"
+msgstr "სათაურის პანელის და ჩარჩოს ქმედებები"
+
+#: ui/TitlebarActions.qml:111
+#, fuzzy, kde-format
+#| msgid "&Focus"
+msgctxt ""
+"@label for a group of comboboxes Left/Middle/Right-Click for focused windows"
+msgid "Focused"
+msgstr "&ფოკუსი"
+
+#: ui/TitlebarActions.qml:116
+#, kde-format
+msgctxt ""
+"@label for a group of comboboxes Left/Middle/Right-Click for unfocused "
+"windows"
+msgid "Unfocused"
 msgstr ""
-"<em>ფოკუსი ყოველთვის მხოლოდ თაგუნას ქვეშაა:</em> ფოკუსი ყოველთვის "
-"ფანჯარაზეა, რომელიც თაგუნას ქვეშაა, რაც ძალიან წააგავს უმართავ მოძველებულ "
-"X11 გარემოს.<br/><strong>გაფრთხილება:</strong> <em>ფოკუსის მოპარვის თავიდან "
-"აცილება</em> და <em>ამოცანების გადართვა ('Alt+Tab')</em> ხელს უშლიან "
-"აქტივაციის პოლიტიკას და არ იმუშავებენ. ალბათ <em>ფოკუსი თაგუნას დაყვება</em> "
-"პოლიტიკა გირჩევნიათ!"
+
+#: ui/TitlebarActions.qml:122 ui/WindowActions.qml:46
+#, kde-format
+msgid "&Left click:"
+msgstr "&მარცხენა-წკაპი:"
+
+#: ui/TitlebarActions.qml:128
+#, kde-format
+msgctxt "@label:listbox accessible name"
+msgid "Left click on a focused titlebar or frame"
+msgstr ""
+
+#: ui/TitlebarActions.qml:143
+#, kde-format
+msgctxt "@label:listbox accessible name"
+msgid "Left click on an unfocused titlebar or frame"
+msgstr ""
+
+#: ui/TitlebarActions.qml:160 ui/WindowActions.qml:68
+#, kde-format
+msgid "&Middle click:"
+msgstr "&შუა-წკაპი:"
+
+#: ui/TitlebarActions.qml:165
+#, kde-format
+msgctxt "@label:listbox accessible name"
+msgid "Middle click on a focused titlebar or frame"
+msgstr ""
+
+#: ui/TitlebarActions.qml:179
+#, kde-format
+msgctxt "@label:listbox accessible name"
+msgid "Middle click on an unfocused titlebar or frame"
+msgstr ""
+
+#: ui/TitlebarActions.qml:196 ui/WindowActions.qml:83
+#, kde-format
+msgid "&Right click:"
+msgstr "&მარჯვენა წკაპი:"
+
+#: ui/TitlebarActions.qml:201
+#, kde-format
+msgctxt "@label:listbox accessible name"
+msgid "Right click on a focused titlebar or frame"
+msgstr ""
+
+#: ui/TitlebarActions.qml:215
+#, kde-format
+msgctxt "@label:listbox accessible name"
+msgid "Right click on an unfocused titlebar or frame"
+msgstr ""
+
+#: ui/TitlebarActions.qml:233
+#, kde-format
+msgid "Maximize window by double clicking its frame"
+msgstr "ფანჯრის გაშლა მის ჩარჩოზე ორჯერ დაწკაპუნებით"
+
+#: ui/TitlebarActions.qml:248
+#, kde-format
+msgid "Maximize Button Actions"
+msgstr "მთელ ეკრანზე გაშლის ღილაკის ქმედებები"
+
+#: ui/TitlebarActions.qml:251 ui/WindowActions.qml:154
+#, kde-format
+msgid "L&eft click:"
+msgstr "მარცხენა წკაპი:"
+
+#: ui/TitlebarActions.qml:268
+#, kde-format
+msgid "Middle c&lick:"
+msgstr "შუა &წკაპი:"
+
+#: ui/TitlebarActions.qml:285 ui/WindowActions.qml:186
+#, kde-format
+msgid "Right clic&k:"
+msgstr "მარჯვენა წკაპი:"
+
+#: ui/WindowActions.qml:20 ui/WindowActions.qml:51
+#, kde-format
+msgid "Focus, raise, and click through"
+msgstr ""
+
+#: ui/WindowActions.qml:21 ui/WindowActions.qml:52
+#, kde-format
+msgid "Focus and click through"
+msgstr ""
+
+#: ui/WindowActions.qml:27
+#, kde-format
+msgid "Move"
+msgstr "გადაადგილება"
+
+#: ui/WindowActions.qml:28
+#, fuzzy, kde-format
+#| msgid "Activate, raise and move"
+msgid "Focus, raise, and move"
+msgstr "გააქტიურება, აწევა და გადატანა"
+
+#: ui/WindowActions.qml:29
+#, fuzzy, kde-format
+#| msgid "Activate, raise and resize"
+msgid "Focus, raise, and resize"
+msgstr "გააქტიურება, აწევა და ზომის შეცვლა"
+
+#: ui/WindowActions.qml:30
+#, kde-format
+msgid "Resize"
+msgstr "ზომის შეცვლა"
+
+#: ui/WindowActions.qml:35
+#, kde-format
+msgid "Decrease opacity"
+msgstr "გაუმჭვირვალობის დაწევა"
+
+#: ui/WindowActions.qml:36
+#, kde-format
+msgid "Increase opacity"
+msgstr "გაუმჭვირვალობის აწევა"
+
+#: ui/WindowActions.qml:42
+#, fuzzy, kde-format
+#| msgid "Inactive Inner Window Actions"
+msgctxt "@title:group"
+msgid "Unfocused Inner Window Actions"
+msgstr "არააქტიური შიდა ფანჯრის ქმედებები"
+
+#: ui/WindowActions.qml:50
+#, fuzzy, kde-format
+#| msgid "Activate, pass click and raise on release"
+msgid "Focus, click through, and raise on release"
+msgstr "გააქტიურება, წკაპის გადაცემა და აწევა გაშვებისას"
+
+#: ui/WindowActions.qml:103
+#, kde-format
+msgid "Scroll"
+msgstr "ჩამოქაჩვა"
+
+#: ui/WindowActions.qml:104
+#, fuzzy, kde-format
+#| msgid "Activate and scroll"
+msgid "Focus and scroll"
+msgstr "გააქტიურება და გადახვევა"
+
+#: ui/WindowActions.qml:105
+#, fuzzy, kde-format
+#| msgid "Activate, raise and scroll"
+msgid "Focus, raise, and scroll"
+msgstr "გააქტიურება, აწევა და გადახვევა"
+
+#: ui/WindowActions.qml:120
+#, fuzzy, kde-format
+#| msgid "Inner Window, Titlebar and Frame Actions"
+msgid "Inner Window, Titlebar, and Frame Actions"
+msgstr "შიდა ფანჯრის, სათაურის ზოლისა და ჩარჩოს ქმედებები"
+
+#: ui/WindowActions.qml:123
+#, kde-format
+msgid "Mo&difier key:"
+msgstr "მოტიფიკატორი ღილაკი:"
+
+#: ui/WindowActions.qml:131
+#, kde-format
+msgid "Meta"
+msgstr "Meta"
+
+#: ui/WindowActions.qml:132
+#, kde-format
+msgid "Alt"
+msgstr "Alt"
+
+#: ui/WindowActions.qml:170
+#, kde-format
+msgid "Middle &click:"
+msgstr "შუა-წკაპი:"
+
+#: ui/WindowActions.qml:202
+#, kde-format
+msgid "Mo&use wheel:"
+msgstr "&თაგუნას ბორბალი:"
+
+#~ msgid ""
+#~ "In this row you can customize left click behavior when clicking into an "
+#~ "inactive inner window ('inner' means: not titlebar, not frame)."
+#~ msgstr ""
+#~ "ამ მწკრივში შეგიძლიათ არააქტიურ შიდა ფანჯარაზე თაგუნას მარცხენა წკაპის "
+#~ "ქმედება განსაზღვროთ ('შიდა' ნიშნავს: სათაური ზოლისა და ჩარჩოს გარეშე)."
+
+#~ msgid "Activate, raise and pass click"
+#~ msgstr "გააქტიურება, აწევა და წკაპის გადაცემა"
+
+#~ msgid "Activate and pass click"
+#~ msgstr "გააქტიურება და წკაპის გადაცემა"
+
+#~ msgid "Activate"
+#~ msgstr "გააქტიურება"
+
+#~ msgid "Activate and raise"
+#~ msgstr "გააქტიურება და აწევა"
+
+#~ msgid ""
+#~ "In this row you can customize middle click behavior when clicking into an "
+#~ "inactive inner window ('inner' means: not titlebar, not frame)."
+#~ msgstr ""
+#~ "ამ მწკრივში შეგიძლიათ არააქტიურ შიდა ფანჯარაზე თაგუნას შუა წკაპის ქმედება "
+#~ "განსაზღვროთ ('შიდა' ნიშნავს: სათაური ზოლისა და ჩარჩოს გარეშე)."
+
+#~ msgid ""
+#~ "In this row you can customize right click behavior when clicking into an "
+#~ "inactive inner window ('inner' means: not titlebar, not frame)."
+#~ msgstr ""
+#~ "ამ მწკრივში შეგიძლიათ არააქტიურ შიდა ფანჯარაზე თაგუნას მარჯვენა წკაპის "
+#~ "ქმედება განსაზღვროთ ('შიდა' ნიშნავს: სათაური ზოლისა და ჩარჩოს გარეშე)."
+
+#~ msgid ""
+#~ "In this row you can customize behavior when scrolling into an inactive "
+#~ "inner window ('inner' means: not titlebar, not frame)."
+#~ msgstr ""
+#~ "ამ მწკრივში შეგიძლიათ არააქტიურ შიდა ფანჯარაზე თაგუნათი გადახვევის "
+#~ "ქმედება განსაზღვროთ ('შიდა' ნიშნავს: სათაური ზოლისა და ჩარჩოს გარეშე)."
+
+#~ msgid ""
+#~ "Here you select whether holding the Meta key or Alt key will allow you to "
+#~ "perform the following actions."
+#~ msgstr ""
+#~ "აქ შეგიძლიათ აირჩიოთ, Meta/Alt ღილაკების დაჭერისას რომელი ქმედებების "
+#~ "არჩევა შეგიძლიათ."
+
+#~ msgid "  + "
+#~ msgstr "  + "
+
+#~ msgid ""
+#~ "In this row you can customize left click behavior when clicking into the "
+#~ "titlebar or the frame."
+#~ msgstr ""
+#~ "ამ მწკრივში სათაურის ზოლში ან ჩარჩოზე დაჭერისას თაგუნას მარცხენა წკაპის "
+#~ "ქცევა შეგიძლიათ მოირგოთ."
+
+#~ msgid "Toggle raise and lower"
+#~ msgstr "აწევისა და დაწევის გადართვა"
+
+#~ msgid ""
+#~ "In this row you can customize middle click behavior when clicking into "
+#~ "the titlebar or the frame."
+#~ msgstr ""
+#~ "ამ მწკრივში სათაურის ზოლში ან ჩარჩოზე დაჭერისას თაგუნას შუა წკაპის ქცევა "
+#~ "შეგიძლიათ მოირგოთ."
+
+#~ msgid ""
+#~ "In this row you can customize right click behavior when clicking into the "
+#~ "titlebar or the frame."
+#~ msgstr ""
+#~ "ამ მწკრივში სათაურის ზოლში ან ჩარჩოზე დაჭერისას თაგუნას მარჯვენა წკაპის "
+#~ "ქცევა შეგიძლიათ მოირგოთ."
+
+#~ msgid ""
+#~ "Here you can customize KDE's behavior when scrolling with the mouse wheel "
+#~ "in a window while pressing the modifier key."
+#~ msgstr ""
+#~ "აქ შეგიძლიათ მოირგოთ KDE-ის ქცევა თაგუნას ბორბლით ფანჯარაში გადახვევისას "
+#~ "მაშინ, როცა მოდიფიკატორ ღილაკზე თითი გიკავიათ."
+
+#~ msgid ""
+#~ "<html><head/><body><p>The placement policy determines where a new window "
+#~ "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-"
+#~ "bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"
+#~ "\"><li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; "
+#~ "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
+#~ "font-style:italic;\">Smart</span> will try to achieve a minimum overlap "
+#~ "of windows</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+#~ "style=\" font-style:italic;\">Maximizing</span> will try to maximize "
+#~ "every window to fill the whole screen. It might be useful to selectively "
+#~ "affect placement of some windows using the window-specific settings.</"
+#~ "li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
+#~ "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
+#~ "font-style:italic;\">Random</span> will use a random position</li><li "
+#~ "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">Centered</span> will place the window centered</li><li "
+#~ "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">Zero-cornered</span> will place the window in the top-"
+#~ "left corner</li><li style=\" margin-top:0px; margin-bottom:12px; margin-"
+#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+#~ "style=\" font-style:italic;\">Under mouse</span> will place the window "
+#~ "under the pointer</li></ul></body></html>"
+#~ msgstr ""
+#~ "<html><head/><body><p>განლაგების პოლიტიკა განსაზღვრავს, სად გამოჩნდება "
+#~ "ახალი ფანჯრები.</p><ul style=\"margin-top: 0px; margin-bottom: 0px; "
+#~ "margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" "
+#~ "margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -"
+#~ "qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+#~ "\">ჭკვიანი</span> ეცდება, ფანჯრებმა ერთმანეთი რაც შეიძლება ნაკლებად "
+#~ "გადაფარონ</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+#~ "style=\" font-style:italic;\">გადიდებული</span> ეცდება, ყველა ფანჯარა "
+#~ "მთელ ეკრანზე გაშალოს. შეიძლება სასარგებლო იყოს ფანჯრების არჩევითად "
+#~ "განლაგებისთვის კონკრეტული ტიპის ფანჯრებისთვის.</li><li style=\" margin-"
+#~ "top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+#~ "indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+#~ "\">შემთხვევითი</span> შემთხვევით მდებარეობას აირჩევს.</li><li style=\" "
+#~ "margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
+#~ "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+#~ "\">ცენტრში</span> ფანჯარას ცენტრში განათავსებს</li><li style=\" margin-"
+#~ "top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+#~ "indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">ნულოვანი-"
+#~ "კუთხით</span> ფანჯარას ზედა-მარცენა კუთხეში მოათავსებს</li><li style=\" "
+#~ "margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -"
+#~ "qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+#~ "\">თაგუნას ქვეშ</span> ფანჯარას კურსორის ქვეშ მოათავსებს</li></ul></"
+#~ "body></html>"
+
+#~ msgid ""
+#~ "When turned on, apps which are able to remember the positions of their "
+#~ "windows are allowed to do so. This will override the window placement "
+#~ "mode defined above."
+#~ msgstr ""
+#~ "როცა ჩართულია, აპებს, რომლებსაც აქვთ საშუალება, დაიმახსოვრონ თავიანთი "
+#~ "ფანჯრის მდებარეობები, ამისი უფლება მიეცემათ. ეს გადაფარავს ფანჯრების "
+#~ "მოთავსების რეჟიმს, რომელიც ზემოთ აირჩიეთ."
+
+#~ msgid ""
+#~ "Allow apps to remember the positions of their own windows, if they "
+#~ "support it"
+#~ msgstr ""
+#~ "აპებისთვის, მათში ამის მხარდაჭერის არსებობის შემთხვევაში, საკუთრი "
+#~ "ფანჯრების მდებარეობის დამახსოვრების უფლების მიცემა"
+
+#~ msgid "Virtual Desktop behavior:"
+#~ msgstr "ვირტუალური სამუშაო მაგიდის ქცევა:"
+
+#~ msgid ""
+#~ "<html><head/><body><p>This setting controls what happens when an open "
+#~ "window located on a Virtual Desktop other than the current one is "
+#~ "activated. </p><p><span style=\" font-style:italic;\">Switch to that "
+#~ "Virtual Desktop</span> will switch to the Virtual Desktop where the "
+#~ "window is currently located. </p><p><span style=\" font-style:italic;"
+#~ "\">Bring window to current Virtual Desktop</span> will cause the window "
+#~ "to jump to the active Virtual Desktop. </p></body></html>"
+#~ msgstr ""
+#~ "<html><head/><body><p>ეს პარამეტრი აკონტროლებს, რა მოხდება, როცა "
+#~ "აქტიურდება ღია ფანჯარა, რომელიც მიმდინარე ვირტუალური სამუშაო მაგიდის "
+#~ "გარდა ნებისმიერ სხვაზე მდებარეობს. </p><p><span style=\" font-style:"
+#~ "italic;\">ვირტუალურ სამუშაო მაგიდაზე გადართვა</span> გადართავს ვირტუალურ "
+#~ "სამუშაო მაგიდას იქ, სადაც ფანჯარა ახლა მდებარეობს. </p><p><span style=\" "
+#~ "font-style:italic;\">ფანჯრის მიმდინარე ვირტუალურ ფანჯარაზე გადმოტანა</"
+#~ "span> ფანჯრის აქტიურ ვირტუალურ სამუშაო მაგიდაზე გადმოტანას გამოიწვევს. </"
+#~ "p></body></html>"
+
+#~ msgid ""
+#~ "With this option you can specify how and when windows will be focused."
+#~ msgstr ""
+#~ "ამ პარამეტრით შეგიძლიათ მიუთითოთ, ამ ფანჯრის ფოკუსირდება როგორ და როდის "
+#~ "მოხდება."
+
+#~ msgid "Click to focus (mouse precedence)"
+#~ msgstr "წკაპი ფოკუსისთვის (თაგუნა უპირატესია)"
+
+#~ msgid "Focus follows mouse (mouse precedence)"
+#~ msgstr "ფოკუსი მიყვება თაგუნას (თაგუნა უპირატესია)"
+
+#~ msgid "Focus strictly under mouse"
+#~ msgstr "ფოკუსი მხოლოდ თაგუნას ქვეშ"
+
+#~ msgid ""
+#~ "This is the delay after which the window the mouse pointer is over will "
+#~ "automatically receive focus."
+#~ msgstr ""
+#~ "პაუზა, რომლის გავლის შემდეგაც ფანჯარა, რომელზეც თაგუნას კურსორი "
+#~ "მიუთითებს, ფოკუსს ავტომატურად მიიღებს."
+
+#~ msgid ""
+#~ "<html><head/><body><p>This option specifies how much KWin will try to "
+#~ "prevent unwanted focus stealing caused by unexpected activation of new "
+#~ "windows. (Note: This feature does not work with the <span style=\" font-"
+#~ "style:italic;\">Focus under mouse</span> or <span style=\" font-style:"
+#~ "italic;\">Focus strictly under mouse</span> focus policies.) </p><ul "
+#~ "style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-"
+#~ "right: 0px; -qt-list-indent: 1;\"><li style=\" margin-top:12px; margin-"
+#~ "bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+#~ "indent:0px;\"><span style=\" font-style:italic;\">None:</span> Prevention "
+#~ "is turned off and new windows always become activated.</li><li style=\" "
+#~ "margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
+#~ "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+#~ "\">Low:</span> Prevention is enabled; when some window does not have "
+#~ "support for the underlying mechanism and KWin cannot reliably decide "
+#~ "whether to activate the window or not, it will be activated. This setting "
+#~ "may have both worse and better results than the medium level, depending "
+#~ "on the applications.</li><li style=\" margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"><span style=\" font-style:italic;\">Medium:</span> Prevention is "
+#~ "enabled.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+#~ "style=\" font-style:italic;\">High:</span> New windows get activated only "
+#~ "if no window is currently active or if they belong to the currently "
+#~ "active application. This setting is probably not really usable when not "
+#~ "using mouse focus policy.</li><li style=\" margin-top:0px; margin-"
+#~ "bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+#~ "indent:0px;\"><span style=\" font-style:italic;\">Extreme:</span> All "
+#~ "windows must be explicitly activated by the user.</li></ul><p>Windows "
+#~ "that are prevented from stealing focus are marked as demanding attention, "
+#~ "which by default means their taskbar entry will be highlighted. This can "
+#~ "be changed in the Notifications control module.</p></body></html>"
+#~ msgstr ""
+#~ "<html><head/><body><p>ეს პარამეტრი მიუთითებს, რა ძალიან ეცდება KWin, "
+#~ "ახალი ფანჯრების მიერ ფოკუსის მოპარვა თავიდან აიცილოს. (შენიშვნა: ეს "
+#~ "ფუნქცია არ მუშაობს, როცა <span style=\" font-style:italic;\">ფოკუსი "
+#~ "თაგუნას ქვეშ</span> ან <span style=\" font-style:italic;\">ფოკუსი მხოლოდ "
+#~ "თაგუნას ქვეშ</span> პარამეტრები ჩართულია.) </p><ul style=\"margin-top: "
+#~ "0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-"
+#~ "indent: 1;\"><li style=\" margin-top:12px; margin-bottom:0px; margin-"
+#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+#~ "style=\" font-style:italic;\">არაფერი:</span> თავიდან აცილება გამორთულია "
+#~ "და ახალი ფანჯრები ყოველთვის აქტიურია.</li><li style=\" margin-top:0px; "
+#~ "margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
+#~ "text-indent:0px;\"><span style=\" font-style:italic;\">დაბალი:</span> "
+#~ "დაცვა ჩართულია. როცა რომელიმე ფანჯარას ამ მექანიზმის მხარდაჭერა არ "
+#~ "გააჩნია და KWin-ს არ შეუძლია, გადაწყვიტოს, გაააქტიუროს ფანჯარა, თუ არა, "
+#~ "ის გააქტიურდება.ამ პარამეტრს, აპლიკაციაზე დამოკიდებულებით, შეიძლება კარგი "
+#~ "შედეგიც ჰქონდეს და ცუდიც.</li><li style=\" margin-top:0px; margin-"
+#~ "bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+#~ "indent:0px;\"><span style=\" font-style:italic;\">საშუალო:</span>თავიდან "
+#~ "აცილება ჩართულია.</li><li style=\" margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"><span style=\" font-style:italic;\">მაღალი:</span>ახალი ფანჯრები მხლოდ "
+#~ "მაშინ გააქტიურდება, თუ ისინი ამჟამად აქტიურ აპლიკაციას ეკუთვნიან. ეს "
+#~ "პარამეტრი ალბათ არც ისე სასარგებლოა, თუ თაგუნას ფოკუსის პოლიტიკას არ "
+#~ "იყენებთ.</li><li style=\" margin-top:0px; margin-bottom:12px; margin-"
+#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+#~ "style=\" font-style:italic;\">ექსტრემალური:</span> ყველა ფანჯარა "
+#~ "მომხმარებლის მიერ უნდა გააქტიურდეს.</li></ul><p>ფანჯრები, რომლებსაც "
+#~ "ფოკუსის გადატანა აეკრძალათ, მოინიშნებიან, როგორც აპლიკაციები, რომლებსაც "
+#~ "ყურადღების მიქცევა სჭირდებათ. ეს კი ნაგულისხმევად გამოკვეთას ნიშნავს. "
+#~ "ამისი შეცვლა გაფრთხილებების კონტროლის მოდულიდან შეგიძლიათ.</p></body></"
+#~ "html>"
+
+#~ msgid ""
+#~ "When this option is enabled, the active window will be brought to the "
+#~ "front when you click somewhere into the window contents. To change it for "
+#~ "inactive windows, you need to change the settings in the Actions tab."
+#~ msgstr ""
+#~ "თუ ეს პარამეტრი ჩართულია, აქტიურ ფანჯარა წინ გადმოვა, როცა მის "
+#~ "შემცველობაში სადმე დააწკაპუნეთ. ამის არააქტიური ფანჯრებისთვის შესაცვლელად "
+#~ "შეგიძლიათ ქმედებების ჩანართში პარამეტრი ჩართოთ."
+
+#~ msgid ""
+#~ "When this option is enabled, a window in the background will "
+#~ "automatically come to the front when the mouse pointer has been over it "
+#~ "for some time."
+#~ msgstr ""
+#~ "თუ ეს პარამეტრი ჩართულია, თუ თაგუნას კურსორს ფონურ ფანჯარაზე ცოტა ხანს "
+#~ "გააჩერებთ, ის წინ გადმოვა."
+
+#~ msgid ""
+#~ "This is the delay after which the window that the mouse pointer is over "
+#~ "will automatically come to the front."
+#~ msgstr ""
+#~ "პაუზა, რომლის გავლის შემდეგაც ფანჯარა, რომელზეც თაგუნას კურსორი "
+#~ "მიუთითებს, წინ ავტომატურად გამოვა."
+
+#~ msgid ""
+#~ "When this option is enabled, focus operations are limited only to the "
+#~ "active screen"
+#~ msgstr ""
+#~ "თუ ეს პარამეტრი ჩართულია, ფოკუსის ოპერაცები აქტიური ეკრანით შეიზღუდება"
+
+#~ msgid "Window activation policy description"
+#~ msgstr "ფანჯრის აქტივაციის პოლიტიკის აღწერა"
+
+#~ msgid "Adva&nced"
+#~ msgstr "&დამატებით"
+
+#~ msgid "&Titlebar Actions"
+#~ msgstr "&სათაურის პანელის ქმედებები"
+
+#~ msgid "Window Actio&ns"
+#~ msgstr "ფანჯრის &ქმედებები"
+
+#~ msgid "Behavior on <em>double</em> click into the titlebar."
+#~ msgstr "<em>ორმაგი</em> წკაპის ქცევა ფანჯრის სათაურის ზოლზე."
+
+#~ msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
+#~ msgstr "<em>თაგუნას ბორბლის</em> ქცევა სათაურის ზოლზე დატრიალებისას."
+
+#~ msgid "Active"
+#~ msgstr "აქტიური"
+
+#~ msgid "Inactive"
+#~ msgstr "არააქტიური"
+
+#~ msgid ""
+#~ "Behavior on <em>left</em> click into the titlebar or frame of an "
+#~ "<em>active</em> window."
+#~ msgstr ""
+#~ "თაგუნას <em>მარცხენა</em> ღილაკის ქცევა <em>აქტიური</em> ფანჯრის სათაურის "
+#~ "ზოლზე ან ჩარჩოზე დაწკაპუნებისას."
+
+#~ msgid ""
+#~ "Behavior on <em>left</em> click into the titlebar or frame of an "
+#~ "<em>inactive</em> window."
+#~ msgstr ""
+#~ "თაგუნას <em>მარცხენა</em> ღილაკის ქცევა <em>არააქტიური</em> ფანჯრის "
+#~ "სათაურის ზოლზე ან ჩარჩოზე დაწკაპუნებისას."
+
+#~ msgid "Activate and lower"
+#~ msgstr "გააქტიურება და დაწევა"
+
+#~ msgid "Behavior on <em>left</em> click onto the maximize button."
+#~ msgstr "<em>მარცხენა</em> ღილაკის ქცევა გადიდების ღილაკზე.."
+
+#~ msgid "Behavior on <em>middle</em> click onto the maximize button."
+#~ msgstr "<em>შუა</em> ღილაკის ქცევა გადიდების ღილაკზე.."
+
+#~ msgid "Behavior on <em>right</em> click onto the maximize button."
+#~ msgstr "<em>მარჯვენა</em> წკაპის ქცევა გადიდების ღილაკზე."
+
+#~ msgid ""
+#~ "Here you can set the snap zone for screen edges, i.e. the 'strength' of "
+#~ "the magnetic field which will make windows snap to the border when moved "
+#~ "near it."
+#~ msgstr ""
+#~ "აქ შეგიძლიათ დააყენოთ მიბმის ზონა ეკრანის კუთხეებისთვის, ანუ მაგნიტური "
+#~ "ველის 'სიძლიერე', რომლებიც ფანჯრებს ერთმანეთს მიამაგრებს, როცა ახლოს "
+#~ "მიიტანთ."
+
+#~ msgid ""
+#~ "Here you can set the snap zone for windows, i.e. the 'strength' of the "
+#~ "magnetic field which will make windows snap to each other when they are "
+#~ "moved near another window."
+#~ msgstr ""
+#~ "აქ შეგიძლია ფანჯრების მიბმის ზონა დააყენთ, ანუ მაგნიტური ველის \"სიძლიერე"
+#~ "\", რომელიც ფანჯრებს ერთმანეთს აწებებს, თუ ისინი ახლოს არიან ერთმანეთთან."
+
+#~ msgid ""
+#~ "Here you can set the snap zone for the screen center, i.e. the 'strength' "
+#~ "of the magnetic field which will make windows snap to the center of the "
+#~ "screen when moved near it."
+#~ msgstr ""
+#~ "აქ შეგიძლიათ დააყენოთ მიბმის ზონა ეკრანის ცენტრისთვის, ანუ იმ მაგნიტური "
+#~ "ველის \"ძალა\", რომელიც ფანჯრებს ეკრანის ცენტრზე მიამაგრებს, როცა ახლის "
+#~ "გადაიტანთ."
+
+#~ msgid ""
+#~ "Here you can set that windows will be only snapped if you try to overlap "
+#~ "them, i.e. they will not be snapped if the windows comes only near "
+#~ "another window or border."
+#~ msgstr ""
+#~ "აქ შეგიძლიათ დააყენოთ, რომ ფანჯრები მხოლოდ მაშინ მიებმება, როცა ერთმანეთს "
+#~ "გადაადებთ. ანუ, ისინი არ მიებმება, თუ ფანჯარა სხვა ფანჯარასთან ან "
+#~ "საზღვართან ახლოს მივა."
+
+#~ msgid ""
+#~ "<em>Click to focus:</em> A window becomes active when you click into it. "
+#~ "This behavior is common on other operating systems and likely what you "
+#~ "want."
+#~ msgstr ""
+#~ "<em>ფოკუსისთვის დააწკაპუნეთ:</em> ფანჯარა აქტიური მაშინ გახდება, როცა ზედ "
+#~ "დააწკაპუნეთ. ეს ქცევა საერთოა ოპერაციულ სისტემებს შორის და როგორც წესი "
+#~ "ისაა, რაც თქვენ გჭირდებათ."
+
+#~ msgid ""
+#~ "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click "
+#~ "to focus</em>. If an active window has to be chosen by the system (eg. "
+#~ "because the currently active one was closed) the window under the mouse "
+#~ "is the preferred candidate. Unusual, but possible variant of <em>Click to "
+#~ "focus</em>."
+#~ msgstr ""
+#~ "<em>წკაპი ფოკუსისთვის (თაგუნას უპირატესობა):</em> ძირითადად იგივეა, რაც "
+#~ "<em>წკაპი ფოკუსისთვის</em>. თუ აქტიური ფანჯარა სისტემის მიერ იქნა არჩეული "
+#~ "(მაგ იმიტომ, რომ ამჟამად აქტიური დაიხურა), ფანჯარა, რომელიც თაგუნას "
+#~ "კურსორის ქვეშაა, სასურველი კანდიდატი ხდება. <em>წკაპი ფოკუსისთვის</em>-ის "
+#~ "უცნაური, მაგრამ შესაძლო ვარიანტი."
+
+#~ msgid ""
+#~ "<em>Focus follows mouse:</em> Moving the mouse onto a window will "
+#~ "activate it. Eg. windows randomly appearing under the mouse will not gain "
+#~ "the focus. <em>Focus stealing prevention</em> takes place as usual. Think "
+#~ "as <em>Click to focus</em> just without having to actually click."
+#~ msgstr ""
+#~ "<em>ფოკუსი დაყვება თაგუნას:</em> თაგუნას კურსორის შეტანა ფანჯრის შიგნით "
+#~ "გაააქტიურებს მას. მაგ: ფანჯრები, რომლებიც თაგუნას კურსორის ქვეშ "
+#~ "გაჩნდებიან, ფოკუსს ვერ მიიღებენ. როგორც ყოველთვის, <em>ფოკუსის მოპარვის "
+#~ "თავიდან აცილება</em> ხდება. იფიქრეთ ამაზ, როგორც <em>დააწკაპუნეთ "
+#~ "კურსორისთვის</em>-ზე, დაწკაპუნების საჭიროების გარეშე."
+
+#~ msgid ""
+#~ "This is mostly the same as <em>Focus follows mouse</em>. If an active "
+#~ "window has to be chosen by the system (eg. because the currently active "
+#~ "one was closed) the window under the mouse is the preferred candidate. "
+#~ "Choose this, if you want a hover controlled focus."
+#~ msgstr ""
+#~ "ეს თითქმის იგივეა, რაც <em>ფოკუსი თაგუნას დაყვება</em>. თუ აქტიური "
+#~ "ფანჯარა, რომელიც სისტემამ აირჩია (მაგ: იმიტომ, რომ აქტიური ფანჯარა "
+#~ "დახურეთ), ფანჯარა, რომელიც თაგუნა კურსორის ქვეშ იმყოფება, ფოკუსის "
+#~ "მისაღებად სასურველი კანდიდატი გახდება. აირჩიეთ, თუ გადატარებით მართვადი "
+#~ "ფოკუსი გჭირდებათ."
+
+#~ msgid ""
+#~ "<em>Focus under mouse:</em> The focus always remains on the window under "
+#~ "the mouse.<br/><strong>Warning:</strong> <em>Focus stealing prevention</"
+#~ "em> and the <em>tabbox ('Alt+Tab')</em> contradict the activation policy "
+#~ "and will not work. You very likely want to use <em>Focus follows mouse "
+#~ "(mouse precedence)</em> instead!"
+#~ msgstr ""
+#~ "<em>ფოკუსი თაგუნას ქვეშ:</em> ფოკუსი ყოველთვის თაგუნას კურსორის ქვეშ "
+#~ "მდებარე ფანჯარაზე იქნება. <br/><strong>გაფრთხილება:</strong> <em>ფოკუსის "
+#~ "მოპარვის თავიდან აცილება</em> და <em>tabbox ('Alt+Tab')</em> "
+#~ "ეწინააღმდეგება აქტივაციის ამ პოლიტიკას და არ იმუშავებენ. ალბათ, სჯობს, "
+#~ "<em>ფოკუსი დასდევს თაგუნას (თაგუნას უპირატესობა)</em> აირჩიოთ!"
+
+#~ msgid ""
+#~ "<em>Focus strictly under mouse:</em> The focus is always on the window "
+#~ "under the mouse (in doubt nowhere) very much like the focus behavior in "
+#~ "an unmanaged legacy X11 environment.<br/><strong>Warning:</strong> "
+#~ "<em>Focus stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> "
+#~ "contradict the activation policy and will not work. You very likely want "
+#~ "to use <em>Focus follows mouse (mouse precedence)</em> instead!"
+#~ msgstr ""
+#~ "<em>ფოკუსი ყოველთვის მხოლოდ თაგუნას ქვეშაა:</em> ფოკუსი ყოველთვის "
+#~ "ფანჯარაზეა, რომელიც თაგუნას ქვეშაა, რაც ძალიან წააგავს უმართავ მოძველებულ "
+#~ "X11 გარემოს.<br/><strong>გაფრთხილება:</strong> <em>ფოკუსის მოპარვის "
+#~ "თავიდან აცილება</em> და <em>ამოცანების გადართვა ('Alt+Tab')</em> ხელს "
+#~ "უშლიან აქტივაციის პოლიტიკას და არ იმუშავებენ. ალბათ <em>ფოკუსი თაგუნას "
+#~ "დაყვება</em> პოლიტიკა გირჩევნიათ!"
