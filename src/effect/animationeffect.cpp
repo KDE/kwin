@@ -14,6 +14,7 @@
 #include "effect/effecthandler.h"
 #include "opengl/glshader.h"
 #include "opengl/glshadermanager.h"
+#include "scene/transformitem.h"
 #include "scene/windowitem.h"
 
 #include <QDateTime>
@@ -35,16 +36,14 @@ QElapsedTimer AnimationEffect::s_clock;
 class AnimationEffectPrivate
 {
 public:
-    AnimationEffectPrivate()
-    {
-        m_animationsTouched = m_isInitialized = false;
-        m_justEndedAnimation = 0;
-    }
     AnimationEffect::AniMap m_animations;
     static quint64 m_animCounter;
-    quint64 m_justEndedAnimation; // protect against cancel
+    quint64 m_justEndedAnimation = 0; // protect against cancel
     std::weak_ptr<FullScreenEffectLock> m_fullScreenEffectLock;
-    bool m_needSceneRepaint, m_animationsTouched, m_isInitialized;
+    bool m_needSceneRepaint = false;
+    bool m_animationsTouched = false;
+    bool m_isInitialized = false;
+    std::unordered_map<EffectWindow *, std::weak_ptr<TransformItem>> m_items;
 };
 
 quint64 AnimationEffectPrivate::m_animCounter = 0;
@@ -262,7 +261,16 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, std:
     animation.timeLine.setEasingCurve(curve);
     animation.timeLine.setSourceRedirectMode(TimeLine::RedirectMode::Strict);
     animation.timeLine.setTargetRedirectMode(TimeLine::RedirectMode::Relaxed);
-    animation.itemEffect = ItemEffect(w->windowItem());
+    if (a == Attribute::Opacity || a == Attribute::Clip || a == Attribute::Translation || a == Attribute::Position) {
+        auto &item = d->m_items[w];
+        animation.transformItem = item.lock();
+        if (!animation.transformItem) {
+            animation.transformItem = std::make_shared<TransformItem>(w);
+            item = animation.transformItem;
+        }
+    } else {
+        animation.itemEffect = ItemEffect(w->windowItem());
+    }
 
     animation.terminationFlags = TerminateAtSource;
     if (!keepAtTarget) {
@@ -406,6 +414,7 @@ bool AnimationEffect::cancel(quint64 animationId)
             if (animations.empty()) { // no other animations on the window, release it.
                 disconnect(window, &EffectWindow::windowExpandedGeometryChanged,
                            this, &AnimationEffect::_windowExpandedGeometryChanged);
+                d->m_items.erase(window);
                 d->m_animations.erase(window);
             }
             d->m_animationsTouched = true; // could be called from animationEnded
@@ -472,6 +481,10 @@ void AnimationEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPr
     if (entry != d->m_animations.end()) {
         auto &[window, pair] = *entry;
         auto &[list, rect] = pair;
+
+        QPointF translation;
+        std::optional<RectF> clip;
+        double opacity = 1.0;
         for (auto &anim : list) {
             if (anim.startTime > clock() && !anim.waitAtSource) {
                 continue;
@@ -481,11 +494,55 @@ void AnimationEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPr
                 anim.timeLine.advance(view);
             }
 
-            if (anim.attribute == Opacity || anim.attribute == CrossFadePrevious) {
+            switch (anim.attribute) {
+            case Attribute::Opacity:
+                opacity *= interpolated(anim);
+                break;
+            case Attribute::Clip:
+                if (clip) {
+                    clip = *clip & clipRect(w->expandedGeometry().toAlignedRect(), anim);
+                } else {
+                    clip = clipRect(w->expandedGeometry().toAlignedRect(), anim);
+                }
+                break;
+            case Translation:
+                translation += QPointF(interpolated(anim, 0), interpolated(anim, 1));
+                break;
+            case Position: {
+                const RectF geo = w->frameGeometry();
+                const float prgrs = progress(anim);
+                if (anim.from[0] >= 0.0 && anim.to[0] >= 0.0) {
+                    float dest = interpolated(anim, 0);
+                    const std::array x{
+                        xCoord(geo, metaData(SourceAnchor, anim.meta)),
+                        xCoord(geo, metaData(TargetAnchor, anim.meta)),
+                    };
+                    translation.rx() += dest - (x[0] + prgrs * (x[1] - x[0]));
+                }
+                if (anim.from[1] >= 0.0 && anim.to[1] >= 0.0) {
+                    float dest = interpolated(anim, 1);
+                    const std::array y{
+                        yCoord(geo, metaData(SourceAnchor, anim.meta)),
+                        yCoord(geo, metaData(TargetAnchor, anim.meta)),
+                    };
+                    translation.ry() += dest - (y[0] + prgrs * (y[1] - y[0]));
+                }
+                break;
+            }
+            case Attribute::CrossFadePrevious:
                 data.setTranslucent();
-            } else if (!(anim.attribute == Brightness || anim.attribute == Saturation)) {
+                break;
+            case Attribute::Brightness:
+            case Attribute::Saturation:
+                break;
+            default:
                 data.setTransformed();
             }
+        }
+        if (auto item = d->m_items[window].lock()) {
+            item->setOpacity(opacity);
+            item->setPosition(translation);
+            item->setGlobalClipRect(clip);
         }
     }
     effects->prePaintWindow(view, w, data);
@@ -517,9 +574,6 @@ bool AnimationEffect::paintWindow(const RenderTarget &renderTarget, const Render
         }
 
         switch (anim.attribute) {
-        case Opacity:
-            data.multiplyOpacity(interpolated(anim));
-            break;
         case Brightness:
             data.multiplyBrightness(interpolated(anim));
             break;
@@ -547,12 +601,6 @@ bool AnimationEffect::paintWindow(const RenderTarget &renderTarget, const Render
             }
             break;
         }
-        case Clip:
-            effectiveDeviceRegion &= viewport.mapToDeviceCoordinatesAligned(clipRect(w->expandedGeometry().toAlignedRect(), anim));
-            break;
-        case Translation:
-            data += QPointF(interpolated(anim, 0), interpolated(anim, 1));
-            break;
         case Size: {
             FPx2 dest = anim.from + progress(anim) * (anim.to - anim.from);
             const QSizeF sz = w->frameGeometry().size();
@@ -566,23 +614,6 @@ bool AnimationEffect::paintWindow(const RenderTarget &renderTarget, const Render
                 f = dest[1] / sz.height();
                 data.translate(0.0, geometryCompensation(anim.meta & AnimationEffect::Vertical, f) * sz.height());
                 data.setYScale(data.yScale() * f);
-            }
-            break;
-        }
-        case Position: {
-            const RectF geo = w->frameGeometry();
-            const float prgrs = progress(anim);
-            if (anim.from[0] >= 0.0 && anim.to[0] >= 0.0) {
-                float dest = interpolated(anim, 0);
-                const qreal x[2] = {xCoord(geo, metaData(SourceAnchor, anim.meta)),
-                                    xCoord(geo, metaData(TargetAnchor, anim.meta))};
-                data.translate(dest - (x[0] + prgrs * (x[1] - x[0])));
-            }
-            if (anim.from[1] >= 0.0 && anim.to[1] >= 0.0) {
-                float dest = interpolated(anim, 1);
-                const qreal y[2] = {yCoord(geo, metaData(SourceAnchor, anim.meta)),
-                                    yCoord(geo, metaData(TargetAnchor, anim.meta))};
-                data.translate(0.0, dest - (y[0] + prgrs * (y[1] - y[0])));
             }
             break;
         }
@@ -681,6 +712,7 @@ void AnimationEffect::postPaintScreen()
                        this, &AnimationEffect::_windowExpandedGeometryChanged);
             effects->addRepaint(entry->second.second);
             entry = d->m_animations.erase(entry);
+            d->m_items.erase(window);
         } else {
             if (invalidateLayerRect) {
                 entry->second.second = RectF(); // invalidate
@@ -702,7 +734,11 @@ void AnimationEffect::postPaintScreen()
                     continue;
                 }
                 if (!anim.timeLine.done()) {
-                    window->addLayerRepaint(rect);
+                    if (anim.transformItem) {
+                        anim.transformItem->scheduleFrameRecursive();
+                    } else {
+                        window->addLayerRepaint(rect);
+                    }
                     break;
                 }
             }
@@ -833,7 +869,6 @@ void AnimationEffect::updateLayerRepaints()
                 continue;
             }
             switch (anim.attribute) {
-            case Opacity:
             case Brightness:
             case Saturation:
             case CrossFadePrevious:
@@ -848,35 +883,6 @@ void AnimationEffect::updateLayerRepaints()
             case Generic:
                 d->m_needSceneRepaint = true; // we don't know whether this will change visual stacking order
                 return; // sic! no need to do anything else
-            case Translation:
-            case Position: {
-                createRegion = true;
-                RectF r = window->frameGeometry();
-                qreal x[2] = {0, 0};
-                qreal y[2] = {0, 0};
-                if (anim.attribute == Translation) {
-                    x[0] = anim.from[0];
-                    x[1] = anim.to[0];
-                    y[0] = anim.from[1];
-                    y[1] = anim.to[1];
-                } else {
-                    if (anim.from[0] >= 0.0 && anim.to[0] >= 0.0) {
-                        x[0] = anim.from[0] - xCoord(r, metaData(SourceAnchor, anim.meta));
-                        x[1] = anim.to[0] - xCoord(r, metaData(TargetAnchor, anim.meta));
-                    }
-                    if (anim.from[1] >= 0.0 && anim.to[1] >= 0.0) {
-                        y[0] = anim.from[1] - yCoord(r, metaData(SourceAnchor, anim.meta));
-                        y[1] = anim.to[1] - yCoord(r, metaData(TargetAnchor, anim.meta));
-                    }
-                }
-                r = window->expandedGeometry();
-                rects.push_back(r.translated(x[0], y[0]));
-                rects.push_back(r.translated(x[1], y[1]));
-                break;
-            }
-            case Clip:
-                createRegion = true;
-                break;
             case Size:
             case Scale: {
                 createRegion = true;
@@ -906,10 +912,15 @@ void AnimationEffect::updateLayerRepaints()
                 }
                 break;
             }
+            case Translation:
+            case Position:
+            case Opacity:
+            case Clip:
+                break;
             }
         }
         if (createRegion) {
-            const RectF geo = window->expandedGeometry();
+            const RectF geo = window->windowItem()->mapToScene(window->windowItem()->boundingRect());
             if (rects.empty()) {
                 rects.push_back(geo);
             }
@@ -960,6 +971,7 @@ void AnimationEffect::_windowClosed(EffectWindow *w)
 void AnimationEffect::_windowDeleted(EffectWindow *w)
 {
     d->m_animations.erase(w);
+    d->m_items.erase(w);
 }
 
 QString AnimationEffect::debug(const QString &parameter) const
