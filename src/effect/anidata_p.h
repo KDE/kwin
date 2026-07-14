@@ -20,6 +20,8 @@
 namespace KWin
 {
 
+class TransformItem;
+
 /**
  * Wraps effects->setActiveFullScreenEffect for the duration of it's lifespan
  */
@@ -66,6 +68,7 @@ public:
     AnimationEffect::TerminationFlags terminationFlags;
     GLShader *shader{nullptr};
     ItemEffect itemEffect;
+    std::shared_ptr<TransformItem> transformItem;
 };
 
 } // namespace
