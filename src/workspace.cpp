@@ -573,6 +573,7 @@ void Workspace::requestDpmsState(DpmsState state)
         applyOutputConfiguration(cfg);
         m_dpmsFilter.reset();
         m_dpmsTimer.stop();
+        m_sleepInhibitor.reset();
     } else {
         applyOutputConfiguration(cfg);
         m_dpmsFilter = std::make_unique<DpmsInputEventFilter>();
