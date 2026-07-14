@@ -569,7 +569,17 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         blurShape.translate(data.xTranslation(), data.yTranslation());
     }
 
-    blurShape.translate(w->windowItem()->effectContainer()->mapToScene(QPointF()));
+    for (Item *item = w->windowItem()->effectContainer(); item; item = item->parentItem()) {
+        if (!item->transform().isIdentity()) {
+            QList<RectF> rects;
+            for (const RectF &rect : blurShape.rects()) {
+                rects.push_back(item->transform().mapRect(rect));
+            }
+            blurShape = RegionF::fromUnsortedRects(rects);
+        }
+        const QPointF devicePosition = (item->position() * viewport.scale()).toPoint();
+        blurShape.translate(devicePosition / viewport.scale());
+    }
 
     const Rect backgroundRect = blurShape.boundingRect().rounded();
     const Rect scaledBackgroundRect = backgroundRect.scaled(viewport.scale()).rounded();
