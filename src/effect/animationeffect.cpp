@@ -261,7 +261,7 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, std:
     animation.timeLine.setEasingCurve(curve);
     animation.timeLine.setSourceRedirectMode(TimeLine::RedirectMode::Strict);
     animation.timeLine.setTargetRedirectMode(TimeLine::RedirectMode::Relaxed);
-    if (a == Attribute::Opacity || a == Attribute::Clip || a == Attribute::Translation || a == Attribute::Position) {
+    if (a == Attribute::Opacity || a == Attribute::Clip || a == Attribute::Translation || a == Attribute::Position || a == Attribute::Scale || a == Attribute::Size) {
         auto &item = d->m_items[w];
         animation.transformItem = item.lock();
         if (!animation.transformItem) {
@@ -475,6 +475,17 @@ Rect AnimationEffect::clipRect(const Rect &geo, const AniData &anim) const
     return clip;
 }
 
+static inline float geometryCompensation(int flags, float v)
+{
+    if (flags & (AnimationEffect::Left | AnimationEffect::Top)) {
+        return 0.0; // no compensation required
+    }
+    if (flags & (AnimationEffect::Right | AnimationEffect::Bottom)) {
+        return 1.0 - v; // full compensation
+    }
+    return 0.5 * (1.0 - v); // half compensation
+}
+
 void AnimationEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data)
 {
     auto entry = d->m_animations.find(w);
@@ -483,6 +494,8 @@ void AnimationEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPr
         auto &[list, rect] = pair;
 
         QPointF translation;
+        double scaleX = 1.0;
+        double scaleY = 1.0;
         std::optional<RectF> clip;
         double opacity = 1.0;
         for (auto &anim : list) {
@@ -529,6 +542,46 @@ void AnimationEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPr
                 }
                 break;
             }
+            case Scale: {
+                const QSizeF sz = w->frameGeometry().size();
+                float f1 = 1.0;
+                float f2 = 0.0;
+
+                if (anim.from[0] >= 0.0 && anim.to[0] >= 0.0) { // scale x
+                    f1 = interpolated(anim, 0);
+                    f2 = geometryCompensation(anim.meta & AnimationEffect::Horizontal, f1);
+                    translation.rx() += f2 * sz.width();
+                    scaleX *= f1;
+                }
+                if (anim.from[1] >= 0.0 && anim.to[1] >= 0.0) { // scale y
+                    if (!anim.isOneDimensional()) {
+                        f1 = interpolated(anim, 1);
+                        f2 = geometryCompensation(anim.meta & AnimationEffect::Vertical, f1);
+                    } else if (((anim.meta & AnimationEffect::Vertical) >> 1) != (anim.meta & AnimationEffect::Horizontal)) {
+                        f2 = geometryCompensation(anim.meta & AnimationEffect::Vertical, f1);
+                    }
+                    translation.ry() += f2 * sz.height();
+                    scaleY *= f1;
+                }
+                break;
+            }
+            case Size: {
+                FPx2 dest = anim.from + progress(anim) * (anim.to - anim.from);
+                const QSizeF sz = w->frameGeometry().size();
+                float f;
+
+                if (anim.from[0] >= 0.0 && anim.to[0] >= 0.0) { // resize x
+                    f = dest[0] / sz.width();
+                    translation.setX(geometryCompensation(anim.meta & AnimationEffect::Horizontal, f) * sz.width());
+                    scaleX *= f;
+                }
+                if (anim.from[1] >= 0.0 && anim.to[1] >= 0.0) { // resize y
+                    f = dest[1] / sz.height();
+                    translation.setY(geometryCompensation(anim.meta & AnimationEffect::Vertical, f) * sz.height());
+                    scaleY *= f;
+                }
+                break;
+            }
             case Attribute::CrossFadePrevious:
                 data.setTranslucent();
                 break;
@@ -542,21 +595,11 @@ void AnimationEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPr
         if (auto item = d->m_items[window].lock()) {
             item->setOpacity(opacity);
             item->setPosition(translation);
+            item->setTransform(QTransform::fromScale(scaleX, scaleY));
             item->setGlobalClipRect(clip);
         }
     }
     effects->prePaintWindow(view, w, data);
-}
-
-static inline float geometryCompensation(int flags, float v)
-{
-    if (flags & (AnimationEffect::Left | AnimationEffect::Top)) {
-        return 0.0; // no compensation required
-    }
-    if (flags & (AnimationEffect::Right | AnimationEffect::Bottom)) {
-        return 1.0 - v; // full compensation
-    }
-    return 0.5 * (1.0 - v); // half compensation
 }
 
 bool AnimationEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
@@ -580,43 +623,6 @@ bool AnimationEffect::paintWindow(const RenderTarget &renderTarget, const Render
         case Saturation:
             data.multiplySaturation(interpolated(anim));
             break;
-        case Scale: {
-            const QSizeF sz = w->frameGeometry().size();
-            float f1(1.0), f2(0.0);
-            if (anim.from[0] >= 0.0 && anim.to[0] >= 0.0) { // scale x
-                f1 = interpolated(anim, 0);
-                f2 = geometryCompensation(anim.meta & AnimationEffect::Horizontal, f1);
-                data.translate(f2 * sz.width());
-                data.setXScale(data.xScale() * f1);
-            }
-            if (anim.from[1] >= 0.0 && anim.to[1] >= 0.0) { // scale y
-                if (!anim.isOneDimensional()) {
-                    f1 = interpolated(anim, 1);
-                    f2 = geometryCompensation(anim.meta & AnimationEffect::Vertical, f1);
-                } else if (((anim.meta & AnimationEffect::Vertical) >> 1) != (anim.meta & AnimationEffect::Horizontal)) {
-                    f2 = geometryCompensation(anim.meta & AnimationEffect::Vertical, f1);
-                }
-                data.translate(0.0, f2 * sz.height());
-                data.setYScale(data.yScale() * f1);
-            }
-            break;
-        }
-        case Size: {
-            FPx2 dest = anim.from + progress(anim) * (anim.to - anim.from);
-            const QSizeF sz = w->frameGeometry().size();
-            float f;
-            if (anim.from[0] >= 0.0 && anim.to[0] >= 0.0) { // resize x
-                f = dest[0] / sz.width();
-                data.translate(geometryCompensation(anim.meta & AnimationEffect::Horizontal, f) * sz.width());
-                data.setXScale(data.xScale() * f);
-            }
-            if (anim.from[1] >= 0.0 && anim.to[1] >= 0.0) { // resize y
-                f = dest[1] / sz.height();
-                data.translate(0.0, geometryCompensation(anim.meta & AnimationEffect::Vertical, f) * sz.height());
-                data.setYScale(data.yScale() * f);
-            }
-            break;
-        }
         case Rotation: {
             data.setRotationAxis((Qt::Axis)metaData(Axis, anim.meta));
             const float prgrs = progress(anim);
@@ -834,24 +840,6 @@ void AnimationEffect::triggerRepaint()
     }
 }
 
-static float fixOvershoot(float f, const AniData &d, short int dir, float s = 1.1)
-{
-    switch (d.timeLine.easingCurve().type()) {
-    case QEasingCurve::InOutElastic:
-    case QEasingCurve::InOutBack:
-        return f * s;
-    case QEasingCurve::InElastic:
-    case QEasingCurve::OutInElastic:
-    case QEasingCurve::OutBack:
-        return (dir & 2) ? f * s : f;
-    case QEasingCurve::OutElastic:
-    case QEasingCurve::InBack:
-        return (dir & 1) ? f * s : f;
-    default:
-        return f;
-    }
-}
-
 void AnimationEffect::updateLayerRepaints()
 {
     d->m_needSceneRepaint = false;
@@ -860,8 +848,6 @@ void AnimationEffect::updateLayerRepaints()
         if (!rect.isNull()) {
             continue;
         }
-        float f[2] = {1.0, 1.0};
-        float t[2] = {0.0, 0.0};
         bool createRegion = false;
         QList<RectF> rects;
         for (auto &anim : data) {
@@ -884,34 +870,7 @@ void AnimationEffect::updateLayerRepaints()
                 d->m_needSceneRepaint = true; // we don't know whether this will change visual stacking order
                 return; // sic! no need to do anything else
             case Size:
-            case Scale: {
-                createRegion = true;
-                const QSizeF sz = window->frameGeometry().size();
-                float fx = std::max(fixOvershoot(anim.from[0], anim, 1), fixOvershoot(anim.to[0], anim, 2));
-                //                     float fx = std::max(interpolated(*anim,0), anim.to[0]);
-                if (fx >= 0.0) {
-                    if (anim.attribute == Size) {
-                        fx /= sz.width();
-                    }
-                    f[0] *= fx;
-                    t[0] += geometryCompensation(anim.meta & AnimationEffect::Horizontal, fx) * sz.width();
-                }
-                //                     float fy = std::max(interpolated(*anim,1), anim.to[1]);
-                float fy = std::max(fixOvershoot(anim.from[1], anim, 1), fixOvershoot(anim.to[1], anim, 2));
-                if (fy >= 0.0) {
-                    if (anim.attribute == Size) {
-                        fy /= sz.height();
-                    }
-                    if (!anim.isOneDimensional()) {
-                        f[1] *= fy;
-                        t[1] += geometryCompensation(anim.meta & AnimationEffect::Vertical, fy) * sz.height();
-                    } else if (((anim.meta & AnimationEffect::Vertical) >> 1) != (anim.meta & AnimationEffect::Horizontal)) {
-                        f[1] *= fx;
-                        t[1] += geometryCompensation(anim.meta & AnimationEffect::Vertical, fx) * sz.height();
-                    }
-                }
-                break;
-            }
+            case Scale:
             case Translation:
             case Position:
             case Opacity:
@@ -924,19 +883,7 @@ void AnimationEffect::updateLayerRepaints()
             if (rects.empty()) {
                 rects.push_back(geo);
             }
-            for (auto &r : rects) { // transform
-                r.setSize(QSizeF(r.width() * f[0], r.height() * f[1]));
-                r.translate(t[0], t[1]); // "const_cast" - don't do that at home, kids ;-)
-            }
             rect = rects.at(0);
-            if (rects.count() > 1) {
-                for (const auto &r : rects | std::views::drop(1)) { // unite
-                    rect |= r;
-                }
-                const qreal dx = 110 * (rect.width() - geo.width()) / 100 + 1 - rect.width() + geo.width();
-                const qreal dy = 110 * (rect.height() - geo.height()) / 100 + 1 - rect.height() + geo.height();
-                rect.adjust(-dx, -dy, dx, dy); // fix pot. overshoot
-            }
         }
     }
 }
