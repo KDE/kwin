@@ -10,6 +10,7 @@
 
 #include "effect/anidata_p.h"
 #include "effect/effecthandler.h"
+#include "scene/transformitem.h"
 
 namespace KWin
 {
