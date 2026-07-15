@@ -376,10 +376,9 @@ msgid "Focus and lower"
 msgstr ""
 
 #: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgid "Focus"
-msgstr "&Fohkus"
+msgstr "Fohkus"
 
 #: ui/TitlebarActions.qml:43 ui/TitlebarActions.qml:57
 #, kde-format
@@ -629,119 +628,3 @@ msgstr ""
 #, kde-format
 msgid "Mo&use wheel:"
 msgstr ""
-
-#~ msgid ""
-#~ "In this row you can customize left click behavior when clicking into an "
-#~ "inactive inner window ('inner' means: not titlebar, not frame)."
-#~ msgstr ""
-#~ "Dán čuolddas sáhtát heivehit mii dáhpáhuvvá go gurutcoahkkalat ii-"
-#~ "aktivvalaš siskkillásiid («siskkil» máksá: ii namahusholga dahje rámma)."
-
-#~ msgid "Activate"
-#~ msgstr "Aktivere"
-
-#~ msgid ""
-#~ "In this row you can customize middle click behavior when clicking into an "
-#~ "inactive inner window ('inner' means: not titlebar, not frame)."
-#~ msgstr ""
-#~ "Dán gurgadusas sáhtát heivehit mii dáhpáhuvvá go coahkkalat "
-#~ "guovddášboaluin ii-aktiivvalaš siskkillásii («siskkil» máksá: ii "
-#~ "namahusholga dahje rámma)."
-
-#~ msgid ""
-#~ "In this row you can customize right click behavior when clicking into an "
-#~ "inactive inner window ('inner' means: not titlebar, not frame)."
-#~ msgstr ""
-#~ "Dán gurgadusas sáhtát heivehit mii dáhpáhuvvá go olgešcoahkkalat ii-"
-#~ "aktivvalaš siskkillásiid («siskkil» máksá: ii namahusholga dahje rámma)."
-
-#~ msgid ""
-#~ "Here you select whether holding the Meta key or Alt key will allow you to "
-#~ "perform the following actions."
-#~ msgstr "Dás válljet mii dáhpáhuvvá go deaddilat Alt dahje Meta boaluid."
-
-#~ msgid ""
-#~ "In this row you can customize left click behavior when clicking into the "
-#~ "titlebar or the frame."
-#~ msgstr ""
-#~ "Dán gurgadusas sáhtát heivehit gurutcoahkkaleapmi namahusholggas dahje "
-#~ "rámmas."
-
-#~ msgid ""
-#~ "In this row you can customize middle click behavior when clicking into "
-#~ "the titlebar or the frame."
-#~ msgstr ""
-#~ "Dán gurgadusas sáhtát heivehit guovddáš coahkkaleapmi namahusholggas "
-#~ "dahje rámmas."
-
-#~ msgid ""
-#~ "In this row you can customize right click behavior when clicking into the "
-#~ "titlebar or the frame."
-#~ msgstr ""
-#~ "Dán gurgadusas sáhtát heivehit olgešcoahkkaleapmi namahusholggas dahje "
-#~ "rámmas."
-
-#~ msgid ""
-#~ "This is the delay after which the window the mouse pointer is over will "
-#~ "automatically receive focus."
-#~ msgstr ""
-#~ "Vállje man guhkká sieván galgá čujuhit lásii ovdal go automáhtalaččat "
-#~ "oažžu fohkus."
-
-#~ msgid ""
-#~ "When this option is enabled, the active window will be brought to the "
-#~ "front when you click somewhere into the window contents. To change it for "
-#~ "inactive windows, you need to change the settings in the Actions tab."
-#~ msgstr ""
-#~ "Dát molssaeaktu mearrida jus aktiivvalaš láse loktana go coahkkalat dasa "
-#~ "sáhpániin. Jus hálidat rievdadit heivehusaid ii-aktiivvalaš lásiid várás, "
-#~ "mana de «Doaimmat» gilkorii."
-
-#~ msgid ""
-#~ "When this option is enabled, a window in the background will "
-#~ "automatically come to the front when the mouse pointer has been over it "
-#~ "for some time."
-#~ msgstr ""
-#~ "Jus auto-lokte lea jođus, de láse duogážis automáhtalaččat loktana go "
-#~ "sieván lea čujuhan dasa dihto áiggi."
-
-#~ msgid ""
-#~ "This is the delay after which the window that the mouse pointer is over "
-#~ "will automatically come to the front."
-#~ msgstr ""
-#~ "Sieván ferte ná guhkká čujuhit lásiid ovdal go automáhtalaččat loktana."
-
-#~ msgid "&Titlebar Actions"
-#~ msgstr "&Namahusholgadoaimmat"
-
-#~ msgid "Behavior on <em>double</em> click into the titlebar."
-#~ msgstr "Láhtten go <em>duppalcoahkkalat</em> namahusholgga."
-
-#~ msgid "Active"
-#~ msgstr "Aktiivalaš"
-
-#~ msgid "Inactive"
-#~ msgstr "Inaktiiva"
-
-#~ msgid ""
-#~ "Behavior on <em>left</em> click into the titlebar or frame of an "
-#~ "<em>active</em> window."
-#~ msgstr ""
-#~ "Láhtten go <em>gurutcoahkkala aktiivvalaš</em> láse namahusholgga dahje "
-#~ "rámma."
-
-#~ msgid ""
-#~ "Behavior on <em>left</em> click into the titlebar or frame of an "
-#~ "<em>inactive</em> window."
-#~ msgstr ""
-#~ "Láhtten go <em>gurutcoahkkala ii-aktiivvalaš</em> láse namahusholgga "
-#~ "dahje rámma."
-
-#~ msgid "Behavior on <em>left</em> click onto the maximize button."
-#~ msgstr "Láhtten go <em>gurutcoahkkalat</em> maksimerenboalu."
-
-#~ msgid "Behavior on <em>middle</em> click onto the maximize button."
-#~ msgstr "Láhtten go <em>guovddášcoahkkalat</em> maksimerenboalu."
-
-#~ msgid "Behavior on <em>right</em> click onto the maximize button."
-#~ msgstr "Láhtten go <em>olgešcoahkkalat</em> maksimerenboalu."

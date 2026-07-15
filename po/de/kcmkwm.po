@@ -394,7 +394,8 @@ msgid "Focus and lower"
 msgstr "Aktivierung unter Mauszeiger"
 
 #: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Focus"
 msgid "Focus"
 msgstr "Aktivierung"
 

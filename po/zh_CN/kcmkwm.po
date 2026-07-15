@@ -18,19 +18,16 @@ msgstr ""
 "X-Crowdin-File-ID: 42723\n"
 
 #: ui/Focus.qml:22
-#, fuzzy, kde-format
-#| msgid "Window &activation policy:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Window focus policy:"
-msgstr "窗口激活策略(&A)："
+msgstr ""
 
 #: ui/Focus.qml:46
-#, fuzzy, kde-format
-#| msgctxt "sassa asas"
-#| msgid "Click to focus"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Click to focus"
-msgstr "点击聚焦"
+msgstr ""
 
 #: ui/Focus.qml:47
 #, kde-format
@@ -39,11 +36,10 @@ msgid "Window becomes focused when clicked."
 msgstr ""
 
 #: ui/Focus.qml:51
-#, fuzzy, kde-format
-#| msgid "Focus follows mouse"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus follows pointer"
-msgstr "焦点跟随鼠标"
+msgstr ""
 
 #: ui/Focus.qml:52
 #, kde-format
@@ -54,11 +50,10 @@ msgid ""
 msgstr ""
 
 #: ui/Focus.qml:56
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus under pointer"
-msgstr "焦点位于鼠标下方"
+msgstr ""
 
 #: ui/Focus.qml:57
 #, kde-format
@@ -88,11 +83,10 @@ msgid "After closing a window, move focus to:"
 msgstr ""
 
 #: ui/Focus.qml:86
-#, fuzzy, kde-format
-#| msgid "&Window snap zone:"
+#, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Window under pointer"
-msgstr "窗口吸附区域(&W)："
+msgstr ""
 
 #: ui/Focus.qml:115
 #, kde-format
@@ -106,11 +100,10 @@ msgid "%1 ms"
 msgstr ""
 
 #: ui/Focus.qml:128 ui/Focus.qml:254
-#, fuzzy, kde-format
-#| msgid " ms"
+#, kde-format
 msgctxt "short for millisecond(s)"
 msgid "ms"
-msgstr " 毫秒"
+msgstr ""
 
 #: ui/Focus.qml:146
 #, kde-format
@@ -144,18 +137,16 @@ msgid "Extreme"
 msgstr "彻底"
 
 #: ui/Focus.qml:171
-#, fuzzy, kde-format
-#| msgid "Switch to that Virtual Desktop"
+#, kde-format
 msgctxt "@option:radio When focusing a window on a different Virtual Desktop:"
 msgid "Switch to window’s Virtual Desktop"
-msgstr "切换到该虚拟桌面"
+msgstr ""
 
 #: ui/Focus.qml:173
-#, fuzzy, kde-format
-#| msgid "When activating a window on a different Virtual Desktop:"
+#, kde-format
 msgctxt "@title:group"
 msgid "When focusing a window on a different Virtual Desktop:"
-msgstr "激活位于其他虚拟桌面中的窗口时："
+msgstr ""
 
 #: ui/Focus.qml:176
 #, kde-format
@@ -175,10 +166,9 @@ msgid "Raising windows:"
 msgstr "提升窗口："
 
 #: ui/Focus.qml:208
-#, fuzzy, kde-format
-#| msgid "&Click raises active window"
+#, kde-format
 msgid "&Click raises focused window"
-msgstr "点击提升活动窗口(&C)"
+msgstr ""
 
 #: ui/Focus.qml:228
 #, kde-format
@@ -211,17 +201,15 @@ msgid "W&indow Actions"
 msgstr "窗口操作(&I)"
 
 #: ui/main.qml:49
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgid "Mo&vement & Placement"
-msgstr "移动(&V)"
+msgstr ""
 
 #: ui/MovementAndPlacement.qml:17
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgctxt "@title:group"
 msgid "Movement"
-msgstr "移动(&V)"
+msgstr ""
 
 #: ui/MovementAndPlacement.qml:22
 #, kde-format
@@ -237,11 +225,10 @@ msgstr ""
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
 #: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
-#, fuzzy, kde-format
-#| msgid " px"
+#, kde-format
 msgctxt "short for pixel(s)"
 msgid "px"
-msgstr " 像素"
+msgstr ""
 
 #: ui/MovementAndPlacement.qml:50
 #, kde-format
@@ -305,11 +292,10 @@ msgid "Under mouse"
 msgstr "鼠标下方"
 
 #: ui/MovementAndPlacement.qml:149
-#, fuzzy, kde-format
-#| msgid "&Picture-in-picture"
+#, kde-format
 msgctxt "@title:group"
 msgid "Picture-in-picture Placement"
-msgstr "画中画(&P)"
+msgstr ""
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
@@ -376,22 +362,19 @@ msgid "Window menu"
 msgstr "窗口菜单"
 
 #: ui/TitlebarActions.qml:30 ui/WindowActions.qml:23 ui/WindowActions.qml:54
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and raise"
-msgstr "焦点位于鼠标下方"
+msgstr ""
 
 #: ui/TitlebarActions.qml:31
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and lower"
-msgstr "焦点位于鼠标下方"
+msgstr ""
 
 #: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgid "Focus"
-msgstr "焦点(&F)"
+msgstr ""
 
 #: ui/TitlebarActions.qml:43 ui/TitlebarActions.qml:57
 #, kde-format
@@ -454,12 +437,11 @@ msgid "Titlebar and Frame Actions"
 msgstr "标题栏和边框操作"
 
 #: ui/TitlebarActions.qml:111
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for focused windows"
 msgid "Focused"
-msgstr "焦点(&F)"
+msgstr ""
 
 #: ui/TitlebarActions.qml:116
 #, kde-format
@@ -561,16 +543,14 @@ msgid "Move"
 msgstr "移动"
 
 #: ui/WindowActions.qml:28
-#, fuzzy, kde-format
-#| msgid "Activate, raise and move"
+#, kde-format
 msgid "Focus, raise, and move"
-msgstr "激活，提升，移动"
+msgstr ""
 
 #: ui/WindowActions.qml:29
-#, fuzzy, kde-format
-#| msgid "Activate, raise and resize"
+#, kde-format
 msgid "Focus, raise, and resize"
-msgstr "激活，提升，调整大小"
+msgstr ""
 
 #: ui/WindowActions.qml:30
 #, kde-format
@@ -588,17 +568,15 @@ msgid "Increase opacity"
 msgstr "提高不透明度"
 
 #: ui/WindowActions.qml:42
-#, fuzzy, kde-format
-#| msgid "Inactive Inner Window Actions"
+#, kde-format
 msgctxt "@title:group"
 msgid "Unfocused Inner Window Actions"
-msgstr "非活动窗口内部操作"
+msgstr ""
 
 #: ui/WindowActions.qml:50
-#, fuzzy, kde-format
-#| msgid "Activate, pass click and raise on release"
+#, kde-format
 msgid "Focus, click through, and raise on release"
-msgstr "激活，提升，传递点击 (松开时)"
+msgstr ""
 
 #: ui/WindowActions.qml:103
 #, kde-format
@@ -606,22 +584,19 @@ msgid "Scroll"
 msgstr "滚动"
 
 #: ui/WindowActions.qml:104
-#, fuzzy, kde-format
-#| msgid "Activate and scroll"
+#, kde-format
 msgid "Focus and scroll"
-msgstr "激活，滚动"
+msgstr ""
 
 #: ui/WindowActions.qml:105
-#, fuzzy, kde-format
-#| msgid "Activate, raise and scroll"
+#, kde-format
 msgid "Focus, raise, and scroll"
-msgstr "激活，提升，滚动"
+msgstr ""
 
 #: ui/WindowActions.qml:120
-#, fuzzy, kde-format
-#| msgid "Inner Window, Titlebar and Frame Actions"
+#, kde-format
 msgid "Inner Window, Titlebar, and Frame Actions"
-msgstr "窗口内部、标题栏和边框操作"
+msgstr ""
 
 #: ui/WindowActions.qml:123
 #, kde-format
@@ -647,400 +622,3 @@ msgstr "中键点击(&C)："
 #, kde-format
 msgid "Mo&use wheel:"
 msgstr "鼠标滚轮(&U)："
-
-#~ msgid ""
-#~ "In this row you can customize left click behavior when clicking into an "
-#~ "inactive inner window ('inner' means: not titlebar, not frame)."
-#~ msgstr ""
-#~ "您可以在这一行自定义鼠标左键点击非活动窗口内部 (窗口的标题栏和边框以外的部"
-#~ "分) 的行为。"
-
-#~ msgid "Activate, raise and pass click"
-#~ msgstr "激活，提升，传递点击"
-
-#~ msgid "Activate and pass click"
-#~ msgstr "激活，传递点击"
-
-#~ msgid "Activate"
-#~ msgstr "激活"
-
-#~ msgid "Activate and raise"
-#~ msgstr "激活，提升"
-
-#~ msgid ""
-#~ "In this row you can customize middle click behavior when clicking into an "
-#~ "inactive inner window ('inner' means: not titlebar, not frame)."
-#~ msgstr ""
-#~ "您可以在这一行自定义鼠标中键点击非活动窗口内部 (窗口的标题栏和边框以外的部"
-#~ "分) 的行为。"
-
-#~ msgid ""
-#~ "In this row you can customize right click behavior when clicking into an "
-#~ "inactive inner window ('inner' means: not titlebar, not frame)."
-#~ msgstr ""
-#~ "您可以在这一行自定义鼠标右键点击非活动窗口内部 (窗口的标题栏和边框以外的部"
-#~ "分) 的行为。"
-
-#~ msgid ""
-#~ "In this row you can customize behavior when scrolling into an inactive "
-#~ "inner window ('inner' means: not titlebar, not frame)."
-#~ msgstr ""
-#~ "您可以在这一行自定义鼠标滚轮滚动在非活动窗口内部 (窗口的标题栏和边框以外的"
-#~ "部分) 的行为。"
-
-#~ msgid ""
-#~ "Here you select whether holding the Meta key or Alt key will allow you to "
-#~ "perform the following actions."
-#~ msgstr "在此选择按住 Meta 键或者 Alt 键时是否能执行下面的操作。"
-
-#~ msgid "  + "
-#~ msgstr "  + "
-
-#~ msgid ""
-#~ "In this row you can customize left click behavior when clicking into the "
-#~ "titlebar or the frame."
-#~ msgstr "您可以在这一行自定义鼠标左键点击标题栏或者边框时的窗口行为。"
-
-#~ msgid "Toggle raise and lower"
-#~ msgstr "切换提升/降低"
-
-#~ msgid ""
-#~ "In this row you can customize middle click behavior when clicking into "
-#~ "the titlebar or the frame."
-#~ msgstr "您可以在这一行自定义鼠标中键点击标题栏或者边框时的窗口行为。"
-
-#~ msgid ""
-#~ "In this row you can customize right click behavior when clicking into the "
-#~ "titlebar or the frame."
-#~ msgstr "您可以在这一行自定义鼠标右键点击标题栏或者边框时的窗口行为。"
-
-#~ msgid ""
-#~ "Here you can customize KDE's behavior when scrolling with the mouse wheel "
-#~ "in a window while pressing the modifier key."
-#~ msgstr "您可以在此自定义在窗口内部按住修饰键滚动鼠标滚轮时 KDE 软件的行为。"
-
-#~ msgid ""
-#~ "<html><head/><body><p>The placement policy determines where a new window "
-#~ "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-"
-#~ "bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"
-#~ "\"><li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; "
-#~ "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
-#~ "font-style:italic;\">Smart</span> will try to achieve a minimum overlap "
-#~ "of windows</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-#~ "style=\" font-style:italic;\">Maximizing</span> will try to maximize "
-#~ "every window to fill the whole screen. It might be useful to selectively "
-#~ "affect placement of some windows using the window-specific settings.</"
-#~ "li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
-#~ "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
-#~ "font-style:italic;\">Random</span> will use a random position</li><li "
-#~ "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-#~ "style:italic;\">Centered</span> will place the window centered</li><li "
-#~ "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-#~ "style:italic;\">Zero-cornered</span> will place the window in the top-"
-#~ "left corner</li><li style=\" margin-top:0px; margin-bottom:12px; margin-"
-#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-#~ "style=\" font-style:italic;\">Under mouse</span> will place the window "
-#~ "under the pointer</li></ul></body></html>"
-#~ msgstr ""
-#~ "<html><head/><body><p>窗口放置策略决定了一个窗口将出现在桌面的哪个位置。</"
-#~ "p><ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; "
-#~ "margin-right: 0px; -qt-list-indent: 1;\"><li style=\" margin-top:12px; "
-#~ "margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
-#~ "text-indent:0px;\"><span style=\" font-style:italic;\">智能</span>：尝试将"
-#~ "窗口的相互重叠现象降到最小</li><li style=\" margin-top:0px; margin-"
-#~ "bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-#~ "indent:0px;\"><span style=\" font-style:italic;\">最大化</span>：尝试将所"
-#~ "有窗口最大化以填满整个屏幕。您也可以通过特定窗口设置来选择性的影响某些窗口"
-#~ "的放置方式。</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-#~ "style=\" font-style:italic;\">随机</span>：在随机位置放置窗口</li><li "
-#~ "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-#~ "style:italic;\">居中</span>：居中放置窗口</li><li style=\" margin-"
-#~ "top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-#~ "indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">左上角</"
-#~ "span>：在左上角放置窗口</li><li style=\" margin-top:0px; margin-"
-#~ "bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-#~ "indent:0px;\"><span style=\" font-style:italic;\">鼠标下方</span>：在鼠标"
-#~ "指针下方放置窗口</li></ul></body></html>"
-
-#~ msgid ""
-#~ "When turned on, apps which are able to remember the positions of their "
-#~ "windows are allowed to do so. This will override the window placement "
-#~ "mode defined above."
-#~ msgstr ""
-#~ "启用后，将允许支持窗口位置记忆的应用程序记忆其窗口位置。这会覆盖上面定义的"
-#~ "窗口放置模式。"
-
-#~ msgid ""
-#~ "Allow apps to remember the positions of their own windows, if they "
-#~ "support it"
-#~ msgstr "允许应用程序记忆其窗口位置 (如果程序支持)"
-
-#~ msgid "Virtual Desktop behavior:"
-#~ msgstr "虚拟桌面行为："
-
-#~ msgid ""
-#~ "<html><head/><body><p>This setting controls what happens when an open "
-#~ "window located on a Virtual Desktop other than the current one is "
-#~ "activated. </p><p><span style=\" font-style:italic;\">Switch to that "
-#~ "Virtual Desktop</span> will switch to the Virtual Desktop where the "
-#~ "window is currently located. </p><p><span style=\" font-style:italic;"
-#~ "\">Bring window to current Virtual Desktop</span> will cause the window "
-#~ "to jump to the active Virtual Desktop. </p></body></html>"
-#~ msgstr ""
-#~ "<html><head/><body><p>此设置控制激活位于非当前虚拟桌面的已打开窗口时的行"
-#~ "为。</p><p><span style=\" font-style:italic;\">切换到该虚拟桌面</span>将切"
-#~ "换到被激活窗口所在的虚拟桌面。</p><p><span style=\" font-style:italic;\">"
-#~ "移动窗口到当前虚拟桌面</span>将把被激活窗口移动到当前虚拟桌面。</p></"
-#~ "body></html>"
-
-#~ msgid ""
-#~ "With this option you can specify how and when windows will be focused."
-#~ msgstr "您可以通过此选项指定窗口取得焦点的时机和方式。"
-
-#~ msgid "Click to focus (mouse precedence)"
-#~ msgstr "点击聚焦 (鼠标优先)"
-
-#~ msgid "Focus follows mouse (mouse precedence)"
-#~ msgstr "焦点跟随鼠标 (鼠标优先)"
-
-#~ msgid "Focus strictly under mouse"
-#~ msgstr "焦点位于鼠标下方 (严格)"
-
-#~ msgid ""
-#~ "This is the delay after which the window the mouse pointer is over will "
-#~ "automatically receive focus."
-#~ msgstr "鼠标移动到窗口上方后，经过此延迟时间之后，窗口将自动取得焦点。"
-
-#~ msgid ""
-#~ "<html><head/><body><p>This option specifies how much KWin will try to "
-#~ "prevent unwanted focus stealing caused by unexpected activation of new "
-#~ "windows. (Note: This feature does not work with the <span style=\" font-"
-#~ "style:italic;\">Focus under mouse</span> or <span style=\" font-style:"
-#~ "italic;\">Focus strictly under mouse</span> focus policies.) </p><ul "
-#~ "style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-"
-#~ "right: 0px; -qt-list-indent: 1;\"><li style=\" margin-top:12px; margin-"
-#~ "bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-#~ "indent:0px;\"><span style=\" font-style:italic;\">None:</span> Prevention "
-#~ "is turned off and new windows always become activated.</li><li style=\" "
-#~ "margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-#~ "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-#~ "\">Low:</span> Prevention is enabled; when some window does not have "
-#~ "support for the underlying mechanism and KWin cannot reliably decide "
-#~ "whether to activate the window or not, it will be activated. This setting "
-#~ "may have both worse and better results than the medium level, depending "
-#~ "on the applications.</li><li style=\" margin-top:0px; margin-bottom:0px; "
-#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
-#~ "\"><span style=\" font-style:italic;\">Medium:</span> Prevention is "
-#~ "enabled.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-#~ "style=\" font-style:italic;\">High:</span> New windows get activated only "
-#~ "if no window is currently active or if they belong to the currently "
-#~ "active application. This setting is probably not really usable when not "
-#~ "using mouse focus policy.</li><li style=\" margin-top:0px; margin-"
-#~ "bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-#~ "indent:0px;\"><span style=\" font-style:italic;\">Extreme:</span> All "
-#~ "windows must be explicitly activated by the user.</li></ul><p>Windows "
-#~ "that are prevented from stealing focus are marked as demanding attention, "
-#~ "which by default means their taskbar entry will be highlighted. This can "
-#~ "be changed in the Notifications control module.</p></body></html>"
-#~ msgstr ""
-#~ "<html><head/><body><p>此选项用于指定在意外激活新窗口时 KWin 防止意外焦点抢"
-#~ "占的积极程度。(注意：此功能不适用于<span style=\" font-style:italic;\">焦"
-#~ "点位于鼠标下方</span>和<span style=\" font-style:italic;\">焦点位于鼠标下"
-#~ "方 (严格)</span>。) </p><ul style=\"margin-top: 0px; margin-bottom: 0px; "
-#~ "margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" "
-#~ "margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -"
-#~ "qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">"
-#~ "无：</span>关闭焦点抢占防止机制，新窗口总是激活。</li><li style=\" margin-"
-#~ "top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-#~ "indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">低：</"
-#~ "span>启用焦点抢占防止机制；当某个窗口不支持该机制，且 KWin 无法可靠地确定"
-#~ "是否激活该窗口时，它将被激活。应用程序的具体情况将影响此选项的执行效果，可"
-#~ "能造成好于或者坏于“中”选项的效果。</li><li style=\" margin-top:0px; "
-#~ "margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
-#~ "text-indent:0px;\"><span style=\" font-style:italic;\">中：</span> 启用焦"
-#~ "点抢占防止机制。</li><li style=\" margin-top:0px; margin-bottom:0px; "
-#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
-#~ "\"><span style=\" font-style:italic;\">高：</span>仅在当前没有活动窗口、或"
-#~ "者新窗口属于当前活动程序时才激活新窗口。此设置在不使用鼠标焦点策略时可能无"
-#~ "法正常工作。</li><li style=\" margin-top:0px; margin-bottom:12px; margin-"
-#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-#~ "style=\" font-style:italic;\">彻底：</span> 所有窗口必须由用户明确激活。</"
-#~ "li></ul><p>被阻止了焦点抢占的窗口将被标记为需要关注，默认行为是高亮显示它"
-#~ "的任务栏项。您可以在通知控制模块中更改相关行为。</p></body></html>"
-
-#~ msgid ""
-#~ "When this option is enabled, the active window will be brought to the "
-#~ "front when you click somewhere into the window contents. To change it for "
-#~ "inactive windows, you need to change the settings in the Actions tab."
-#~ msgstr ""
-#~ "启用此选项后，当您点击活动窗口中的内容时，该窗口将被提升到最前面。要更改非"
-#~ "活动窗口的对应特性，您需要在“操作”标签页中更改设置。"
-
-#~ msgid ""
-#~ "When this option is enabled, a window in the background will "
-#~ "automatically come to the front when the mouse pointer has been over it "
-#~ "for some time."
-#~ msgstr ""
-#~ "启用此选项后，当鼠标指针移动到后台窗口上方一段时间后，该窗口将自动被提升到"
-#~ "最前面。"
-
-#~ msgid ""
-#~ "This is the delay after which the window that the mouse pointer is over "
-#~ "will automatically come to the front."
-#~ msgstr ""
-#~ "当鼠标移动到窗口上方，经过在此设置的延迟时间后，窗口将自动被提升到最前面。"
-
-#~ msgid ""
-#~ "When this option is enabled, focus operations are limited only to the "
-#~ "active screen"
-#~ msgstr "启用此项时，聚焦操作将只在活动屏幕中发生"
-
-#~ msgid "Window activation policy description"
-#~ msgstr "窗口激活策略描述"
-
-#~ msgid "Adva&nced"
-#~ msgstr "高级(&N)"
-
-#~ msgid "&Titlebar Actions"
-#~ msgstr "标题栏操作(&T)"
-
-#~ msgid "Window Actio&ns"
-#~ msgstr "窗口操作(&N)"
-
-#~ msgid "Behavior on <em>double</em> click into the titlebar."
-#~ msgstr "<em>双击</em>标题栏时的行为。"
-
-#~ msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
-#~ msgstr "<em>鼠标滚轮</em>在标题栏滚动时的行为。"
-
-#~ msgid "Active"
-#~ msgstr "活动窗口"
-
-#~ msgid "Inactive"
-#~ msgstr "非活动窗口"
-
-#~ msgid ""
-#~ "Behavior on <em>left</em> click into the titlebar or frame of an "
-#~ "<em>active</em> window."
-#~ msgstr "<em>左键</em>点击<em>活动</em>窗口的标题栏或者边框时的行为。"
-
-#~ msgid ""
-#~ "Behavior on <em>left</em> click into the titlebar or frame of an "
-#~ "<em>inactive</em> window."
-#~ msgstr "<em>左键</em>点击<em>非活动</em>窗口的标题栏或者边框时的行为。"
-
-#~ msgid "Activate and lower"
-#~ msgstr "激活，降低"
-
-#~ msgid "Behavior on <em>left</em> click onto the maximize button."
-#~ msgstr "<em>左键</em>点击最大化按钮时的行为。"
-
-#~ msgid "Behavior on <em>middle</em> click onto the maximize button."
-#~ msgstr "<em>中键</em>点击最大化按钮时的行为。"
-
-#~ msgid "Behavior on <em>right</em> click onto the maximize button."
-#~ msgstr "<em>右键</em>点击最大化按钮时的行为。"
-
-#~ msgid ""
-#~ "Here you can set the snap zone for screen edges, i.e. the 'strength' of "
-#~ "the magnetic field which will make windows snap to the border when moved "
-#~ "near it."
-#~ msgstr ""
-#~ "您可以在此处设置屏幕边缘的吸附区域，它如同一个磁场那样，会将移动到它附近的"
-#~ "窗口吸附到屏幕的边缘。"
-
-#~ msgid ""
-#~ "Here you can set the snap zone for windows, i.e. the 'strength' of the "
-#~ "magnetic field which will make windows snap to each other when they are "
-#~ "moved near another window."
-#~ msgstr ""
-#~ "您可以在此处设置窗口的吸附区域，它如同一个磁场那样，当窗口被移动到另一个窗"
-#~ "口附近时，它们将彼此吸附到一起。"
-
-#~ msgid ""
-#~ "Here you can set the snap zone for the screen center, i.e. the 'strength' "
-#~ "of the magnetic field which will make windows snap to the center of the "
-#~ "screen when moved near it."
-#~ msgstr ""
-#~ "您可以再次设置屏幕中央的吸附区域，它如同一个磁场那样，会将移动到它附近的窗"
-#~ "口吸附到屏幕的中央。"
-
-#~ msgid ""
-#~ "Here you can set that windows will be only snapped if you try to overlap "
-#~ "them, i.e. they will not be snapped if the windows comes only near "
-#~ "another window or border."
-#~ msgstr ""
-#~ "您可以在此处设置窗口的吸附方式。当设置为“仅在重叠时吸附”时，窗口将不会在相"
-#~ "互靠近或者靠近边框时立即吸附。"
-
-#~ msgid ""
-#~ "<em>Click to focus:</em> A window becomes active when you click into it. "
-#~ "This behavior is common on other operating systems and likely what you "
-#~ "want."
-#~ msgstr ""
-#~ "<em>点击聚焦：</em>窗口在您点击它时被激活。此模式普遍被其他操作系统采用，"
-#~ "可能是您想要的行为。"
-
-#~ msgid ""
-#~ "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click "
-#~ "to focus</em>. If an active window has to be chosen by the system (eg. "
-#~ "because the currently active one was closed) the window under the mouse "
-#~ "is the preferred candidate. Unusual, but possible variant of <em>Click to "
-#~ "focus</em>."
-#~ msgstr ""
-#~ "<em>点击聚焦 (鼠标优先)：</em>大致与 <em>点击聚焦</em> 相同。如果活动窗口"
-#~ "必须由系统选择时 (例如，由于当前活动窗口被关闭时)，位于鼠标下方的窗口将是"
-#~ "优先候选。可以将此视作 <em>点击聚焦</em> 模式的一种不常见，但可能存在的变"
-#~ "种版本。"
-
-#~ msgid ""
-#~ "<em>Focus follows mouse:</em> Moving the mouse onto a window will "
-#~ "activate it. Eg. windows randomly appearing under the mouse will not gain "
-#~ "the focus. <em>Focus stealing prevention</em> takes place as usual. Think "
-#~ "as <em>Click to focus</em> just without having to actually click."
-#~ msgstr ""
-#~ "<em>焦点跟随鼠标：</em>将鼠标移动到窗口的上方时将激活该窗口。随机出现在鼠"
-#~ "标下方的窗口将不会获得焦点。<em>阻止焦点抢占</em>机制将正常生效。可以将此"
-#~ "模式视作无需点击的 <em>点击聚焦</em> 的变种版本。"
-
-#~ msgid ""
-#~ "This is mostly the same as <em>Focus follows mouse</em>. If an active "
-#~ "window has to be chosen by the system (eg. because the currently active "
-#~ "one was closed) the window under the mouse is the preferred candidate. "
-#~ "Choose this, if you want a hover controlled focus."
-#~ msgstr ""
-#~ "大致与 <em>焦点跟随鼠标</em> 相同。如果活动窗口必须由系统选择时 (例如，由"
-#~ "于当前活动窗口被关闭时)，位于鼠标下方的窗口将是优先候选。如果您想通过鼠标"
-#~ "悬停控制焦点，请选择此项。"
-
-#~ msgid ""
-#~ "<em>Focus under mouse:</em> The focus always remains on the window under "
-#~ "the mouse.<br/><strong>Warning:</strong> <em>Focus stealing prevention</"
-#~ "em> and the <em>tabbox ('Alt+Tab')</em> contradict the activation policy "
-#~ "and will not work. You very likely want to use <em>Focus follows mouse "
-#~ "(mouse precedence)</em> instead!"
-#~ msgstr ""
-#~ "<em>焦点位于鼠标下方：</em>位于鼠标下方的窗口将总是取得焦点。<br/><strong>"
-#~ "警告：</strong><em>阻止焦点抢占</em> 和 <em>任务切换器 (Alt+Tab)</em> 与本"
-#~ "策略冲突，它们将不会生效。您很可能并不需要使用此模式，而是 <em>焦点跟随鼠"
-#~ "标 (鼠标优先)</em> 模式。"
-
-#~ msgid ""
-#~ "<em>Focus strictly under mouse:</em> The focus is always on the window "
-#~ "under the mouse (in doubt nowhere) very much like the focus behavior in "
-#~ "an unmanaged legacy X11 environment.<br/><strong>Warning:</strong> "
-#~ "<em>Focus stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> "
-#~ "contradict the activation policy and will not work. You very likely want "
-#~ "to use <em>Focus follows mouse (mouse precedence)</em> instead!"
-#~ msgstr ""
-#~ "<em>焦点位于鼠标下方 (严格)：</em>位于鼠标下方的窗口将总是取得焦点 (鼠标离"
-#~ "开窗口后不保留焦点)，类似于不受 kwin 管理的传统 X11 环境。<br/><strong>警"
-#~ "告：</strong><em>阻止焦点抢占</em> 和 <em>任务切换器 (Alt+Tab)</em> 与本策"
-#~ "略冲突，它们将不会生效。您很可能并不需要使用此模式，而是 <em>焦点跟随鼠标 "
-#~ "(鼠标优先)</em> 模式。"

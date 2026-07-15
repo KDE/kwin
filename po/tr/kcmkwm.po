@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-14 00:45+0000\n"
-"PO-Revision-Date: 2026-06-18 19:03+0300\n"
+"PO-Revision-Date: 2026-07-14 20:45+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -29,16 +29,13 @@ msgstr ""
 "X-Generator: Lokalize 26.04.2\n"
 
 #: ui/Focus.qml:22
-#, fuzzy, kde-format
-#| msgid "Window &activation policy:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Window focus policy:"
-msgstr "Pencere &etkinleştirme politikası:"
+msgstr "Pencere odağı politikası:"
 
 #: ui/Focus.qml:46
-#, fuzzy, kde-format
-#| msgctxt "sassa asas"
-#| msgid "Click to focus"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Click to focus"
 msgstr "Odak için tıkla"
@@ -47,14 +44,13 @@ msgstr "Odak için tıkla"
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window becomes focused when clicked."
-msgstr ""
+msgstr "Pencere, tıklandığında odağa sahip olur."
 
 #: ui/Focus.qml:51
-#, fuzzy, kde-format
-#| msgid "Focus follows mouse"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus follows pointer"
-msgstr "Odak fareyi izler"
+msgstr "Odak işaretçiyi izler"
 
 #: ui/Focus.qml:52
 #, kde-format
@@ -63,19 +59,22 @@ msgid ""
 "As the pointer moves, windows under it become focused after a configurable "
 "delay."
 msgstr ""
+"İşaretçi hareket ettikçe, altındaki pencereler yapılandırılabilir bir "
+"gecikme sonrası odağa sahip olurlar."
 
 #: ui/Focus.qml:56
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus under pointer"
-msgstr "Odak farenin altında"
+msgstr "Odak işaretçinin altında"
 
 #: ui/Focus.qml:57
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window under pointer receives focus, even if the pointer has not moved."
 msgstr ""
+"İşaretçi hareket etmemiş olsa bile, işaretçi altındaki pencere odağa sahip "
+"olur."
 
 #: ui/Focus.qml:75
 #, kde-kuit-format
@@ -85,25 +84,28 @@ msgid ""
 "some windows appearing on screen. This can lead to assigning focus to "
 "unwanted windows. Use with caution."
 msgstr ""
+"<interface>Odak işaretçinin altında</interface> seçeneğini seçmek, ekranda "
+"görünen bazı pencerelerin odağa sahip olmasını engeller. Bu, odağın "
+"istenmeyen pencerelere taşınmasına neden olabilir. Bu özelliği dikkatli "
+"kullanın."
 
 #: ui/Focus.qml:81
 #, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Last focused window"
-msgstr ""
+msgstr "Son odaklı pencereye"
 
 #: ui/Focus.qml:83
 #, kde-format
 msgctxt "@title:group"
 msgid "After closing a window, move focus to:"
-msgstr ""
+msgstr "Pencere kapattıktan sonra odağı şuraya taşı:"
 
 #: ui/Focus.qml:86
-#, fuzzy, kde-format
-#| msgid "&Window snap zone:"
+#, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Window under pointer"
-msgstr "&Pencere tutturma bölgesi:"
+msgstr "İşaretçi altındaki pencereye"
 
 #: ui/Focus.qml:115
 #, kde-format
@@ -114,11 +116,10 @@ msgstr "O&dak gecikmesi:"
 #, kde-format
 msgctxt "short for millisecond(s)"
 msgid "%1 ms"
-msgstr ""
+msgstr "%1 ms"
 
 #: ui/Focus.qml:128 ui/Focus.qml:254
-#, fuzzy, kde-format
-#| msgid " ms"
+#, kde-format
 msgctxt "short for millisecond(s)"
 msgid "ms"
 msgstr " ms"
@@ -155,23 +156,21 @@ msgid "Extreme"
 msgstr "Çok Yüksek"
 
 #: ui/Focus.qml:171
-#, fuzzy, kde-format
-#| msgid "Switch to that Virtual Desktop"
+#, kde-format
 msgctxt "@option:radio When focusing a window on a different Virtual Desktop:"
 msgid "Switch to window’s Virtual Desktop"
-msgstr "Söz konusu Sanal Masaüstü’ne geç"
+msgstr "Pencerenin sanal masaüstüne geç"
 
 #: ui/Focus.qml:173
-#, fuzzy, kde-format
-#| msgid "When activating a window on a different Virtual Desktop:"
+#, kde-format
 msgctxt "@title:group"
 msgid "When focusing a window on a different Virtual Desktop:"
-msgstr "Başka bir Sanal Masaüstü’nde bir pencereyi etkinleştirirken:"
+msgstr "Başka bir sanal masaüstündeki pencereye odaklanırken:"
 
 #: ui/Focus.qml:176
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr "Pencereyi geçerli Sanal Masaüstü’ne getir"
+msgstr "Pencereyi geçerli sanal masaüstüne getir"
 
 #: ui/Focus.qml:180 ui/TitlebarActions.qml:26 ui/TitlebarActions.qml:39
 #: ui/TitlebarActions.qml:64 ui/TitlebarActions.qml:87 ui/WindowActions.qml:38
@@ -186,10 +185,9 @@ msgid "Raising windows:"
 msgstr "Pencereleri yükseltme:"
 
 #: ui/Focus.qml:208
-#, fuzzy, kde-format
-#| msgid "&Click raises active window"
+#, kde-format
 msgid "&Click raises focused window"
-msgstr "Tık&lama etkin pencereyi yükseltir"
+msgstr "Tık&lama, odaklı pencereyi yükseltir"
 
 #: ui/Focus.qml:228
 #, kde-format
@@ -222,17 +220,15 @@ msgid "W&indow Actions"
 msgstr "Pencere &Eylemleri"
 
 #: ui/main.qml:49
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgid "Mo&vement & Placement"
-msgstr "&Hareket"
+msgstr "&Hareket ve Yerleştirme"
 
 #: ui/MovementAndPlacement.qml:17
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgctxt "@title:group"
 msgid "Movement"
-msgstr "&Hareket"
+msgstr "Hareket"
 
 #: ui/MovementAndPlacement.qml:22
 #, kde-format
@@ -244,12 +240,11 @@ msgstr "Ekran &kenarı tutturma bölgesi:"
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "%1 px"
-msgstr ""
+msgstr "%1 pks"
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
 #: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
-#, fuzzy, kde-format
-#| msgid " px"
+#, kde-format
 msgctxt "short for pixel(s)"
 msgid "px"
 msgstr " pks"
@@ -278,7 +273,7 @@ msgstr "Yalnızca örtüştüğünde"
 #, kde-format
 msgctxt "@title:group"
 msgid "Placement"
-msgstr ""
+msgstr "Yerleştirme"
 
 #: ui/MovementAndPlacement.qml:125
 #, kde-format
@@ -316,11 +311,10 @@ msgid "Under mouse"
 msgstr "Farenin altında"
 
 #: ui/MovementAndPlacement.qml:149
-#, fuzzy, kde-format
-#| msgid "&Picture-in-picture"
+#, kde-format
 msgctxt "@title:group"
 msgid "Picture-in-picture Placement"
-msgstr "&Resim İçinde Resim"
+msgstr "&Resim İçinde Resim yerleşimi"
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
@@ -387,22 +381,19 @@ msgid "Window menu"
 msgstr "Pencere Menüsü"
 
 #: ui/TitlebarActions.qml:30 ui/WindowActions.qml:23 ui/WindowActions.qml:54
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and raise"
-msgstr "Odak farenin altında"
+msgstr "Odaklan ve yükselt"
 
 #: ui/TitlebarActions.qml:31
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and lower"
-msgstr "Odak farenin altında"
+msgstr "Odaklan ve alçalt"
 
 #: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgid "Focus"
-msgstr "&Odak"
+msgstr "Odak"
 
 #: ui/TitlebarActions.qml:43 ui/TitlebarActions.qml:57
 #, kde-format
@@ -465,12 +456,11 @@ msgid "Titlebar and Frame Actions"
 msgstr "Başlık Çubuğu ve Çerçeve Eylemleri"
 
 #: ui/TitlebarActions.qml:111
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for focused windows"
 msgid "Focused"
-msgstr "&Odak"
+msgstr "Odaklı"
 
 #: ui/TitlebarActions.qml:116
 #, kde-format
@@ -478,7 +468,7 @@ msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for unfocused "
 "windows"
 msgid "Unfocused"
-msgstr ""
+msgstr "Odaksız"
 
 #: ui/TitlebarActions.qml:122 ui/WindowActions.qml:46
 #, kde-format
@@ -489,13 +479,13 @@ msgstr "&Sol tık:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on a focused titlebar or frame"
-msgstr ""
+msgstr "Odaklı başlık çubuğuna veya çerçeveye sol tık"
 
 #: ui/TitlebarActions.qml:143
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "Odaksız başlık çubuğuna veya çerçeveye sol tık"
 
 #: ui/TitlebarActions.qml:160 ui/WindowActions.qml:68
 #, kde-format
@@ -506,13 +496,13 @@ msgstr "&Orta tık:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on a focused titlebar or frame"
-msgstr ""
+msgstr "Odaklı başlık çubuğuna veya çerçeveye orta tık"
 
 #: ui/TitlebarActions.qml:179
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "Odaksız başlık çubuğuna veya çerçeveye orta tık"
 
 #: ui/TitlebarActions.qml:196 ui/WindowActions.qml:83
 #, kde-format
@@ -523,13 +513,13 @@ msgstr "Sa&ğ tık:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on a focused titlebar or frame"
-msgstr ""
+msgstr "Odaklı başlık çubuğuna veya çerçeveye sağ tık"
 
 #: ui/TitlebarActions.qml:215
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "Odaksız başlık çubuğuna veya çerçeveye sağ tık"
 
 #: ui/TitlebarActions.qml:233
 #, kde-format
@@ -559,12 +549,12 @@ msgstr "Sağ tı&k:"
 #: ui/WindowActions.qml:20 ui/WindowActions.qml:51
 #, kde-format
 msgid "Focus, raise, and click through"
-msgstr ""
+msgstr "Odaklan, yükselt ve tıklat"
 
 #: ui/WindowActions.qml:21 ui/WindowActions.qml:52
 #, kde-format
 msgid "Focus and click through"
-msgstr ""
+msgstr "Odaklan ve tıklat"
 
 #: ui/WindowActions.qml:27
 #, kde-format
@@ -572,16 +562,14 @@ msgid "Move"
 msgstr "Taşı"
 
 #: ui/WindowActions.qml:28
-#, fuzzy, kde-format
-#| msgid "Activate, raise and move"
+#, kde-format
 msgid "Focus, raise, and move"
-msgstr "Etkinleştir, yükselt ve taşı"
+msgstr "Odaklan, yükselt ve taşı"
 
 #: ui/WindowActions.qml:29
-#, fuzzy, kde-format
-#| msgid "Activate, raise and resize"
+#, kde-format
 msgid "Focus, raise, and resize"
-msgstr "Etkinleştir, yükselt ve yeniden boyutlandır"
+msgstr "Odaklan, yükselt ve yeniden boyutlandır"
 
 #: ui/WindowActions.qml:30
 #, kde-format
@@ -599,17 +587,15 @@ msgid "Increase opacity"
 msgstr "Matlığı artır"
 
 #: ui/WindowActions.qml:42
-#, fuzzy, kde-format
-#| msgid "Inactive Inner Window Actions"
+#, kde-format
 msgctxt "@title:group"
 msgid "Unfocused Inner Window Actions"
-msgstr "Etkin Olmayan İç Pencere Eylemleri"
+msgstr "Odaksız İç Pencere Eylemleri"
 
 #: ui/WindowActions.qml:50
-#, fuzzy, kde-format
-#| msgid "Activate, pass click and raise on release"
+#, kde-format
 msgid "Focus, click through, and raise on release"
-msgstr "Etkinleştir, tıklamayı geçir ve bırakınca yükselt"
+msgstr "Odaklan, tıklat ve bırakınca yükselt"
 
 #: ui/WindowActions.qml:103
 #, kde-format
@@ -617,20 +603,17 @@ msgid "Scroll"
 msgstr "Sar"
 
 #: ui/WindowActions.qml:104
-#, fuzzy, kde-format
-#| msgid "Activate and scroll"
+#, kde-format
 msgid "Focus and scroll"
-msgstr "Etkinleştir ve sar"
+msgstr "Odaklan ve sar"
 
 #: ui/WindowActions.qml:105
-#, fuzzy, kde-format
-#| msgid "Activate, raise and scroll"
+#, kde-format
 msgid "Focus, raise, and scroll"
-msgstr "Etkinleştir, yükselt ve sar"
+msgstr "Odaklan, yükselt ve sar"
 
 #: ui/WindowActions.qml:120
-#, fuzzy, kde-format
-#| msgid "Inner Window, Titlebar and Frame Actions"
+#, kde-format
 msgid "Inner Window, Titlebar, and Frame Actions"
 msgstr "İç Pencere, Başlık Çubuğu ve Çerçeve Eylemleri"
 

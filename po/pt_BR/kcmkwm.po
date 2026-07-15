@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-14 00:45+0000\n"
-"PO-Revision-Date: 2026-06-18 06:17-0300\n"
+"PO-Revision-Date: 2026-07-14 07:55-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -26,19 +26,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 26.04.2\n"
+"X-Generator: Lokalize 26.04.3\n"
 
 #: ui/Focus.qml:22
-#, fuzzy, kde-format
-#| msgid "Window &activation policy:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Window focus policy:"
-msgstr "Política de &ativação da janela:"
+msgstr "Política de foco da janela:"
 
 #: ui/Focus.qml:46
-#, fuzzy, kde-format
-#| msgctxt "sassa asas"
-#| msgid "Click to focus"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Click to focus"
 msgstr "Clicar para obter o foco"
@@ -47,14 +44,13 @@ msgstr "Clicar para obter o foco"
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window becomes focused when clicked."
-msgstr ""
+msgstr "A janela recebe o foco ao ser clicada."
 
 #: ui/Focus.qml:51
-#, fuzzy, kde-format
-#| msgid "Focus follows mouse"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus follows pointer"
-msgstr "Foco segue o mouse"
+msgstr "Foco segue o ponteiro"
 
 #: ui/Focus.qml:52
 #, kde-format
@@ -63,19 +59,22 @@ msgid ""
 "As the pointer moves, windows under it become focused after a configurable "
 "delay."
 msgstr ""
+"À medida que o ponteiro se move, as janelas sob ele recebem o foco após um "
+"atraso configurável."
 
 #: ui/Focus.qml:56
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus under pointer"
-msgstr "Foco sob o mouse"
+msgstr "Foco sob o ponteiro"
 
 #: ui/Focus.qml:57
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window under pointer receives focus, even if the pointer has not moved."
 msgstr ""
+"A janela sob o ponteiro recebe o foco, mesmo que o ponteiro não tenha se "
+"movido."
 
 #: ui/Focus.qml:75
 #, kde-kuit-format
@@ -85,25 +84,27 @@ msgid ""
 "some windows appearing on screen. This can lead to assigning focus to "
 "unwanted windows. Use with caution."
 msgstr ""
+"Selecionar <interface>Foco sob o ponteiro</interface> impedirá que o foco "
+"seja aplicado a algumas janelas que aparecem na tela. Isso pode fazer com "
+"que o foco seja atribuído a janelas indesejadas. Use com cautela."
 
 #: ui/Focus.qml:81
 #, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Last focused window"
-msgstr ""
+msgstr "Última janela em foco"
 
 #: ui/Focus.qml:83
 #, kde-format
 msgctxt "@title:group"
 msgid "After closing a window, move focus to:"
-msgstr ""
+msgstr "Após fechar uma janela, mover o foco para:"
 
 #: ui/Focus.qml:86
-#, fuzzy, kde-format
-#| msgid "&Window snap zone:"
+#, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Window under pointer"
-msgstr "Á&rea de encaixe da janela:"
+msgstr "Janela sob o ponteiro"
 
 #: ui/Focus.qml:115
 #, kde-format
@@ -114,14 +115,13 @@ msgstr "&Atrasar o foco em:"
 #, kde-format
 msgctxt "short for millisecond(s)"
 msgid "%1 ms"
-msgstr ""
+msgstr "%1 ms"
 
 #: ui/Focus.qml:128 ui/Focus.qml:254
-#, fuzzy, kde-format
-#| msgid " ms"
+#, kde-format
 msgctxt "short for millisecond(s)"
 msgid "ms"
-msgstr " ms"
+msgstr "ms"
 
 #: ui/Focus.qml:146
 #, kde-format
@@ -155,18 +155,16 @@ msgid "Extreme"
 msgstr "Extremo"
 
 #: ui/Focus.qml:171
-#, fuzzy, kde-format
-#| msgid "Switch to that Virtual Desktop"
+#, kde-format
 msgctxt "@option:radio When focusing a window on a different Virtual Desktop:"
 msgid "Switch to window’s Virtual Desktop"
-msgstr "Mudar para essa área de trabalho virtual"
+msgstr "Mudar para janela da área de trabalho virtual"
 
 #: ui/Focus.qml:173
-#, fuzzy, kde-format
-#| msgid "When activating a window on a different Virtual Desktop:"
+#, kde-format
 msgctxt "@title:group"
 msgid "When focusing a window on a different Virtual Desktop:"
-msgstr "Ao ativar uma janela em uma área de trabalho virtual diferente:"
+msgstr "Ao focar uma janela em uma área de trabalho virtual diferente:"
 
 #: ui/Focus.qml:176
 #, kde-format
@@ -186,10 +184,9 @@ msgid "Raising windows:"
 msgstr "Elevar as janelas:"
 
 #: ui/Focus.qml:208
-#, fuzzy, kde-format
-#| msgid "&Click raises active window"
+#, kde-format
 msgid "&Click raises focused window"
-msgstr "E&levar a janela ativa ao clicar"
+msgstr "E&levar a janela focada ao clicar"
 
 #: ui/Focus.qml:228
 #, kde-format
@@ -222,17 +219,15 @@ msgid "W&indow Actions"
 msgstr "Ações da ja&nela"
 
 #: ui/main.qml:49
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgid "Mo&vement & Placement"
-msgstr "Mo&vimento"
+msgstr "Mo&vimento & posicionamento"
 
 #: ui/MovementAndPlacement.qml:17
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgctxt "@title:group"
 msgid "Movement"
-msgstr "Mo&vimento"
+msgstr "Movimento"
 
 #: ui/MovementAndPlacement.qml:22
 #, kde-format
@@ -244,15 +239,14 @@ msgstr "Área de &encaixe do canto da tela:"
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "%1 px"
-msgstr ""
+msgstr "%1 px"
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
 #: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
-#, fuzzy, kde-format
-#| msgid " px"
+#, kde-format
 msgctxt "short for pixel(s)"
 msgid "px"
-msgstr " px"
+msgstr "px"
 
 #: ui/MovementAndPlacement.qml:50
 #, kde-format
@@ -278,7 +272,7 @@ msgstr "Apenas quando sobrepostas"
 #, kde-format
 msgctxt "@title:group"
 msgid "Placement"
-msgstr ""
+msgstr "Posicionamento"
 
 #: ui/MovementAndPlacement.qml:125
 #, kde-format
@@ -316,11 +310,10 @@ msgid "Under mouse"
 msgstr "Sob o mouse"
 
 #: ui/MovementAndPlacement.qml:149
-#, fuzzy, kde-format
-#| msgid "&Picture-in-picture"
+#, kde-format
 msgctxt "@title:group"
 msgid "Picture-in-picture Placement"
-msgstr "&Picture-in-picture"
+msgstr "Posicionamento Picture-in-picture"
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
@@ -387,22 +380,19 @@ msgid "Window menu"
 msgstr "Menu da janela"
 
 #: ui/TitlebarActions.qml:30 ui/WindowActions.qml:23 ui/WindowActions.qml:54
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and raise"
-msgstr "Foco sob o mouse"
+msgstr "Focar e elevar"
 
 #: ui/TitlebarActions.qml:31
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and lower"
-msgstr "Foco sob o mouse"
+msgstr "Focar e abaixar"
 
 #: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgid "Focus"
-msgstr "&Foco"
+msgstr "Focar"
 
 #: ui/TitlebarActions.qml:43 ui/TitlebarActions.qml:57
 #, kde-format
@@ -465,12 +455,11 @@ msgid "Titlebar and Frame Actions"
 msgstr "Ações da barra de título e moldura"
 
 #: ui/TitlebarActions.qml:111
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for focused windows"
 msgid "Focused"
-msgstr "&Foco"
+msgstr "Focado"
 
 #: ui/TitlebarActions.qml:116
 #, kde-format
@@ -478,7 +467,7 @@ msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for unfocused "
 "windows"
 msgid "Unfocused"
-msgstr ""
+msgstr "Não focado"
 
 #: ui/TitlebarActions.qml:122 ui/WindowActions.qml:46
 #, kde-format
@@ -489,13 +478,14 @@ msgstr "C&lique esquerdo:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on a focused titlebar or frame"
-msgstr ""
+msgstr "Clique com o botão esquerdo em uma barra de título ou moldura focada"
 
 #: ui/TitlebarActions.qml:143
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on an unfocused titlebar or frame"
 msgstr ""
+"Clique com o botão esquerdo em uma barra de título ou moldura não focada"
 
 #: ui/TitlebarActions.qml:160 ui/WindowActions.qml:68
 #, kde-format
@@ -506,13 +496,14 @@ msgstr "Clique do &meio:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on a focused titlebar or frame"
-msgstr ""
+msgstr "Clique com o botão do meio em uma barra de título ou moldura focada"
 
 #: ui/TitlebarActions.qml:179
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on an unfocused titlebar or frame"
 msgstr ""
+"Clique com o botão do meio em uma barra de título ou moldura não focada"
 
 #: ui/TitlebarActions.qml:196 ui/WindowActions.qml:83
 #, kde-format
@@ -523,13 +514,14 @@ msgstr "Clique di&reito:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on a focused titlebar or frame"
-msgstr ""
+msgstr "Clique com o botão direito em uma barra de título ou moldura focada"
 
 #: ui/TitlebarActions.qml:215
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on an unfocused titlebar or frame"
 msgstr ""
+"Clique com o botão direito em uma barra de título ou moldura não focada"
 
 #: ui/TitlebarActions.qml:233
 #, kde-format
@@ -559,12 +551,12 @@ msgstr "Clique di&reito:"
 #: ui/WindowActions.qml:20 ui/WindowActions.qml:51
 #, kde-format
 msgid "Focus, raise, and click through"
-msgstr ""
+msgstr "Focar, elevar e passar clique"
 
 #: ui/WindowActions.qml:21 ui/WindowActions.qml:52
 #, kde-format
 msgid "Focus and click through"
-msgstr ""
+msgstr "Focar e passar clique"
 
 #: ui/WindowActions.qml:27
 #, kde-format
@@ -572,16 +564,14 @@ msgid "Move"
 msgstr "Mover"
 
 #: ui/WindowActions.qml:28
-#, fuzzy, kde-format
-#| msgid "Activate, raise and move"
+#, kde-format
 msgid "Focus, raise, and move"
-msgstr "Ativar, elevar e mover"
+msgstr "Focar, elevar e mover"
 
 #: ui/WindowActions.qml:29
-#, fuzzy, kde-format
-#| msgid "Activate, raise and resize"
+#, kde-format
 msgid "Focus, raise, and resize"
-msgstr "Ativar, elevar e redimensionar"
+msgstr "Focar, elevar e redimensionar"
 
 #: ui/WindowActions.qml:30
 #, kde-format
@@ -599,17 +589,15 @@ msgid "Increase opacity"
 msgstr "Aumentar opacidade"
 
 #: ui/WindowActions.qml:42
-#, fuzzy, kde-format
-#| msgid "Inactive Inner Window Actions"
+#, kde-format
 msgctxt "@title:group"
 msgid "Unfocused Inner Window Actions"
-msgstr "Ações da janela interna inativa"
+msgstr "Ações da janela interna não focada"
 
 #: ui/WindowActions.qml:50
-#, fuzzy, kde-format
-#| msgid "Activate, pass click and raise on release"
+#, kde-format
 msgid "Focus, click through, and raise on release"
-msgstr "Ativar, passar clique e levantar ao soltar"
+msgstr "Focar, passar clique e levantar ao soltar"
 
 #: ui/WindowActions.qml:103
 #, kde-format
@@ -617,22 +605,19 @@ msgid "Scroll"
 msgstr "Deslocar"
 
 #: ui/WindowActions.qml:104
-#, fuzzy, kde-format
-#| msgid "Activate and scroll"
+#, kde-format
 msgid "Focus and scroll"
-msgstr "Ativar e deslocar"
+msgstr "Focar e deslocar"
 
 #: ui/WindowActions.qml:105
-#, fuzzy, kde-format
-#| msgid "Activate, raise and scroll"
+#, kde-format
 msgid "Focus, raise, and scroll"
-msgstr "Ativar, elevar e deslocar"
+msgstr "Focar, elevar e deslocar"
 
 #: ui/WindowActions.qml:120
-#, fuzzy, kde-format
-#| msgid "Inner Window, Titlebar and Frame Actions"
+#, kde-format
 msgid "Inner Window, Titlebar, and Frame Actions"
-msgstr "Janela interna, barra de título e ações do contorno"
+msgstr "Janela interna, barra de título e ações da moldura"
 
 #: ui/WindowActions.qml:123
 #, kde-format
