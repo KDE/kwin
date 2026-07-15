@@ -43,7 +43,6 @@ public:
      */
     GraphicsBuffer *buffer() const;
 
-    void releaseBuffer();
     bool isReadable();
 
     const FileDescriptor &syncFd() const;

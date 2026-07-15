@@ -42,7 +42,7 @@ DrmVirtualOutput::DrmVirtualOutput(DrmBackend *backend, const QString &name, con
         .currentMode = mode,
     });
 
-    recreateSurface();
+    createLayer();
 }
 
 DrmVirtualOutput::~DrmVirtualOutput()
@@ -74,9 +74,14 @@ DrmOutputLayer *DrmVirtualOutput::primaryLayer() const
     return m_layer.get();
 }
 
-void DrmVirtualOutput::recreateSurface()
+void DrmVirtualOutput::createLayer()
 {
     m_layer = m_backend->renderBackend()->createLayer(this);
+}
+
+void DrmVirtualOutput::destroyLayer()
+{
+    m_layer.reset();
 }
 
 void DrmVirtualOutput::applyChanges(const OutputConfiguration &config)

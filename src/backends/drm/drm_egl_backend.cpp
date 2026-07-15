@@ -35,7 +35,7 @@ EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend, RenderDevice *device)
 
 EglGbmBackend::~EglGbmBackend()
 {
-    m_backend->releaseBuffers();
+    m_backend->destroyLayers();
     cleanup();
     m_backend->setRenderBackend(nullptr);
 }

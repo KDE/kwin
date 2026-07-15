@@ -59,7 +59,7 @@ public:
     DrmRenderBackend *renderBackend() const;
 
     void createLayers();
-    void releaseBuffers();
+    void destroyLayers();
     void updateOutputs(DrmGpu *onlyUpdate = nullptr);
 
     const std::vector<std::unique_ptr<DrmGpu>> &gpus() const;

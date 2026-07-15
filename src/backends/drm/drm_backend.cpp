@@ -397,17 +397,17 @@ void DrmBackend::createLayers()
         gpu->createLayers();
     }
     for (DrmVirtualOutput *virt : std::as_const(m_virtualOutputs)) {
-        virt->recreateSurface();
+        virt->createLayer();
     }
 }
 
-void DrmBackend::releaseBuffers()
+void DrmBackend::destroyLayers()
 {
     for (const auto &gpu : m_gpus) {
-        gpu->releaseBuffers();
+        gpu->destroyLayers();
     }
-    for (const DrmVirtualOutput *virt : std::as_const(m_virtualOutputs)) {
-        virt->primaryLayer()->releaseBuffers();
+    for (DrmVirtualOutput *virt : std::as_const(m_virtualOutputs)) {
+        virt->destroyLayer();
     }
 }
 

@@ -48,7 +48,6 @@ public:
 
     std::shared_ptr<DrmFramebuffer> currentBuffer() const;
     void setCurrentBuffer(const std::shared_ptr<DrmFramebuffer> &b);
-    void releaseCurrentBuffer();
 
     void set(DrmAtomicCommit *commit, const Rect &src, const Rect &dst);
 

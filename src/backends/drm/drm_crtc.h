@@ -40,7 +40,6 @@ public:
 
     std::shared_ptr<DrmFramebuffer> current() const;
     void setCurrent(const std::shared_ptr<DrmFramebuffer> &buffer);
-    void releaseCurrentBuffer();
 
     DrmProperty modeId;
     DrmProperty active;

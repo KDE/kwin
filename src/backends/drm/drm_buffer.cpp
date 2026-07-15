@@ -80,11 +80,6 @@ GraphicsBuffer *DrmFramebuffer::buffer() const
     return *m_bufferRef;
 }
 
-void DrmFramebuffer::releaseBuffer()
-{
-    m_bufferRef = nullptr;
-}
-
 const FileDescriptor &DrmFramebuffer::syncFd() const
 {
     return m_syncFd;

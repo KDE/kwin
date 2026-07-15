@@ -125,11 +125,4 @@ void DrmCrtc::disable(DrmAtomicCommit *commit)
     commit->addProperty(modeId, 0);
 }
 
-void DrmCrtc::releaseCurrentBuffer()
-{
-    if (m_currentBuffer) {
-        m_currentBuffer->releaseBuffer();
-    }
-}
-
 }

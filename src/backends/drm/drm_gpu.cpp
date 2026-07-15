@@ -892,18 +892,16 @@ QSize DrmGpu::cursorSize() const
     return m_cursorSize;
 }
 
-void DrmGpu::releaseBuffers()
+void DrmGpu::destroyLayers()
 {
     for (DrmPipeline *pipeline : std::as_const(m_pipelines)) {
         pipeline->setLayers({});
         pipeline->applyPendingChanges();
     }
     for (const auto &plane : std::as_const(m_planes)) {
-        plane->releaseCurrentBuffer();
         m_planeLayerMap.erase(plane.get());
     }
     for (const auto &crtc : std::as_const(m_crtcs)) {
-        crtc->releaseCurrentBuffer();
         m_legacyLayerMap.erase(crtc.get());
         m_legacyCursorLayerMap.erase(crtc.get());
     }

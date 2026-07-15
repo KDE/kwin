@@ -117,8 +117,8 @@ public:
     void maybeModeset(DrmPipeline *pipeline, const std::shared_ptr<OutputFrame> &frame);
 
     std::shared_ptr<DrmFramebuffer> importBuffer(GraphicsBuffer *buffer, FileDescriptor &&explicitFence);
-    void forgetBuffer(GraphicsBuffer *buf);
-    void releaseBuffers();
+    void forgetBuffer(GraphicsBuffer *buffer);
+    void destroyLayers();
     void createLayers();
     QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) const;
 
