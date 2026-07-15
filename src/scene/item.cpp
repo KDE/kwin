@@ -283,13 +283,12 @@ void Item::setTransform(const QTransform &transform)
 
 void Item::updateItemToSceneTransform()
 {
-    m_itemToSceneTransform = m_transform;
-    if (!m_position.isNull()) {
-        m_itemToSceneTransform *= QTransform::fromTranslate(m_position.x(), m_position.y());
-    }
+    m_itemToSceneTransform = QTransform();
     if (m_parentItem) {
         m_itemToSceneTransform *= m_parentItem->m_itemToSceneTransform;
     }
+    m_itemToSceneTransform.translate(m_position.x(), m_position.y());
+    m_itemToSceneTransform *= m_transform;
     m_sceneToItemTransform = m_itemToSceneTransform.inverted();
 
     for (Item *childItem : std::as_const(m_childItems)) {
