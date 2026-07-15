@@ -593,7 +593,7 @@ msgstr "您可以通过此选项指定窗口取得焦点的时机和方式。"
 #, kde-format
 msgctxt "sassa asas"
 msgid "Click to focus"
-msgstr "点击聚焦"
+msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:41
