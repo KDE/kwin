@@ -32,7 +32,7 @@ class GraphicsBufferReleasePoint;
 class KWIN_EXPORT EglSwapchainSlot
 {
 public:
-    EglSwapchainSlot(GraphicsBuffer *buffer, std::unique_ptr<GLFramebuffer> &&framebuffer, const std::shared_ptr<GLTexture> &texture);
+    EglSwapchainSlot(std::shared_ptr<GraphicsBuffer> &&buffer, std::unique_ptr<GLFramebuffer> &&framebuffer, const std::shared_ptr<GLTexture> &texture);
     ~EglSwapchainSlot();
 
     GraphicsBuffer *buffer() const;
@@ -42,12 +42,12 @@ public:
     const FileDescriptor &releaseFd() const;
     std::shared_ptr<SyncReleasePoint> releasePoint();
 
-    static std::shared_ptr<EglSwapchainSlot> create(EglContext *context, GraphicsBuffer *buffer);
+    static std::shared_ptr<EglSwapchainSlot> create(EglContext *context, std::shared_ptr<GraphicsBuffer> &&buffer);
 
 private:
     bool isBusy() const;
 
-    GraphicsBuffer *m_buffer;
+    std::shared_ptr<GraphicsBuffer> m_buffer;
     std::unique_ptr<GLFramebuffer> m_framebuffer;
     std::shared_ptr<GLTexture> m_texture;
     int m_age = 0;

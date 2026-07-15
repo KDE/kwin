@@ -7,6 +7,7 @@
 
 #include "display.h"
 #include "utils/common.h"
+#include "wayland/clientconnection.h"
 
 #include <drm_fourcc.h>
 
@@ -28,7 +29,7 @@ void SinglePixelBufferManagerV1::wp_single_pixel_buffer_manager_v1_destroy(Resou
 
 void SinglePixelBufferManagerV1::wp_single_pixel_buffer_manager_v1_create_u32_rgba_buffer(Resource *resource, uint32_t id, uint32_t r, uint32_t g, uint32_t b, uint32_t a)
 {
-    new SinglePixelClientBuffer(r, g, b, a, resource->client(), id);
+    ClientConnection::get(resource->client())->addBuffer(std::make_shared<SinglePixelClientBuffer>(r, g, b, a, resource->client(), id));
 }
 
 const struct wl_buffer_interface SinglePixelClientBuffer::implementation{
@@ -50,7 +51,9 @@ SinglePixelClientBuffer::SinglePixelClientBuffer(uint32_t r, uint32_t g, uint32_
 
 void SinglePixelClientBuffer::released()
 {
-    wl_buffer_send_release(m_resource);
+    if (m_resource) {
+        wl_buffer_send_release(m_resource);
+    }
 }
 
 GraphicsBuffer::Map SinglePixelClientBuffer::map(MapFlags flags)
@@ -86,7 +89,7 @@ void SinglePixelClientBuffer::buffer_destroy_resource(wl_resource *resource)
 {
     const auto buffer = get(resource);
     buffer->m_resource = nullptr;
-    buffer->drop();
+    ClientConnection::get(wl_resource_get_client(resource))->removeBuffer(buffer);
 }
 
 void SinglePixelClientBuffer::buffer_destroy(wl_client *client, wl_resource *resource)

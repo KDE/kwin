@@ -74,7 +74,7 @@ Swapchain *Window::swapchain(const std::shared_ptr<EglContext> &context, const F
                 if (!buffer) {
                     continue;
                 }
-                m_swapchain = std::make_unique<Swapchain>(allocator, options, buffer);
+                m_swapchain = std::make_unique<Swapchain>(allocator, options, std::move(buffer));
                 m_eglContext = context;
                 break;
             }

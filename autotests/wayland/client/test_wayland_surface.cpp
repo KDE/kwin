@@ -402,7 +402,7 @@ void TestWaylandSurface::testAttachBuffer()
 
     // now the ServerSurface should have the black image attached as a buffer
     KWin::GraphicsBuffer *buffer = serverSurface->buffer();
-    buffer->ref();
+    KWin::GraphicsBufferRef ref1 = buffer;
     {
         KWin::GraphicsBufferView view(buffer);
         QVERIFY(view.image());
@@ -420,7 +420,7 @@ void TestWaylandSurface::testAttachBuffer()
     QCOMPARE(mappedSpy.count(), 1);
     QVERIFY(unmappedSpy.isEmpty());
     KWin::GraphicsBuffer *buffer2 = serverSurface->buffer();
-    buffer2->ref();
+    KWin::GraphicsBufferRef ref2 = buffer2;
     {
         KWin::GraphicsBufferView view(buffer2);
         QVERIFY(view.image());
@@ -433,7 +433,7 @@ void TestWaylandSurface::testAttachBuffer()
             }
         }
     }
-    buffer2->unref();
+    ref2.reset();
     QVERIFY(buffer2->isReferenced());
     QVERIFY(!redBuffer.data()->isReleased());
 
@@ -457,7 +457,7 @@ void TestWaylandSurface::testAttachBuffer()
     QVERIFY(redBuffer.data()->isReleased());
 
     KWin::GraphicsBuffer *buffer3 = serverSurface->buffer();
-    buffer3->ref();
+    KWin::GraphicsBufferRef ref3 = buffer3;
     {
         KWin::GraphicsBufferView view(buffer3);
         QVERIFY(view.image());
@@ -470,7 +470,7 @@ void TestWaylandSurface::testAttachBuffer()
             }
         }
     }
-    buffer3->unref();
+    ref3.reset();
     QVERIFY(buffer3->isReferenced());
 
     serverSurface->frameRendered(1);
@@ -504,7 +504,7 @@ void TestWaylandSurface::testAttachBuffer()
     QVERIFY(!serverSurface->isMapped());
 
     // TODO: add signal test on release
-    buffer->unref();
+    ref1.reset();
 }
 
 void TestWaylandSurface::testOpaque()
@@ -754,7 +754,7 @@ void TestWaylandSurface::testDestroyAttachedBuffer()
     // Let's try to destroy it
     delete m_shm;
     m_shm = nullptr;
-    QTRY_VERIFY(serverSurface->buffer()->isDropped());
+    QTRY_VERIFY(!serverSurface->client()->hasBuffer(serverSurface->buffer()));
 }
 
 void TestWaylandSurface::testDestroyWithPendingCallback()

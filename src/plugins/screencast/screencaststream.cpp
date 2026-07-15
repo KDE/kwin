@@ -887,7 +887,7 @@ std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(
         return std::nullopt;
     }
 
-    GraphicsBuffer *buffer = backend->renderDevice()->allocator()->allocate(GraphicsBufferOptions{
+    auto buffer = backend->renderDevice()->allocator()->allocate(GraphicsBufferOptions{
         .size = size,
         .format = format,
         .modifiers = modifiers,
@@ -896,9 +896,6 @@ std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(
     if (!buffer) {
         return std::nullopt;
     }
-    auto drop = qScopeGuard([&buffer]() {
-        buffer->drop();
-    });
 
     const DmaBufAttributes *attrs = buffer->dmabufAttributes();
     if (!attrs) {

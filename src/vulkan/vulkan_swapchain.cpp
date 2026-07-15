@@ -17,7 +17,7 @@
 namespace KWin
 {
 
-VulkanSwapchainSlot::VulkanSwapchainSlot(GraphicsBuffer *buffer, std::shared_ptr<VulkanTexture> &&texture)
+VulkanSwapchainSlot::VulkanSwapchainSlot(std::shared_ptr<GraphicsBuffer> &&buffer, std::shared_ptr<VulkanTexture> &&texture)
     : m_buffer(buffer)
     , m_texture(std::move(texture))
     , m_releasePoint(std::make_shared<GraphicsBufferReleasePoint>())
@@ -27,12 +27,11 @@ VulkanSwapchainSlot::VulkanSwapchainSlot(GraphicsBuffer *buffer, std::shared_ptr
 VulkanSwapchainSlot::~VulkanSwapchainSlot()
 {
     m_releasePoint->setBuffer(m_buffer);
-    m_buffer->drop();
 }
 
 GraphicsBuffer *VulkanSwapchainSlot::buffer() const
 {
-    return m_buffer;
+    return m_buffer.get();
 }
 
 VulkanTexture *VulkanSwapchainSlot::texture() const
@@ -102,17 +101,17 @@ std::shared_ptr<VulkanSwapchainSlot> VulkanSwapchain::acquire()
         }
     }
 
-    GraphicsBuffer *buffer = m_allocator->allocate(m_options);
+    auto buffer = m_allocator->allocate(m_options);
     if (!buffer) {
         qCWarning(KWIN_VULKAN) << "Failed to allocate a vulkan swapchain buffer";
         return nullptr;
     }
 
-    auto texture = m_device->importBuffer(buffer, VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT);
+    auto texture = m_device->importBuffer(buffer.get(), VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT);
     if (!texture) {
         return nullptr;
     }
-    auto slot = std::make_shared<VulkanSwapchainSlot>(buffer, std::move(texture));
+    auto slot = std::make_shared<VulkanSwapchainSlot>(std::move(buffer), std::move(texture));
     m_slots.push_back(slot);
     return slot;
 }
@@ -138,17 +137,17 @@ void VulkanSwapchain::resetBufferAge()
 
 std::unique_ptr<VulkanSwapchain> VulkanSwapchain::create(VulkanDevice *device, GraphicsBufferAllocator *allocator, GraphicsBufferOptions options)
 {
-    GraphicsBuffer *buffer = allocator->allocate(options);
+    auto buffer = allocator->allocate(options);
     if (!buffer) {
         qCWarning(KWIN_VULKAN) << "Failed to allocate a graphics buffer for a Vulkan swapchain";
         return nullptr;
     }
-    auto texture = device->importBuffer(buffer, VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT);
+    auto texture = device->importBuffer(buffer.get(), VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT);
     if (!texture) {
         return nullptr;
     }
     options.modifiers = {buffer->dmabufAttributes()->modifier};
-    auto slot = std::make_shared<VulkanSwapchainSlot>(buffer, std::move(texture));
+    auto slot = std::make_shared<VulkanSwapchainSlot>(std::move(buffer), std::move(texture));
     return std::make_unique<VulkanSwapchain>(device, allocator, options, std::move(slot));
 }
 

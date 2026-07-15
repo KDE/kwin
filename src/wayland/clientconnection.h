@@ -19,6 +19,7 @@ namespace KWin
 
 class ClientConnectionPrivate;
 class Display;
+class GraphicsBuffer;
 
 /**
  * @brief Convenient Class which represents a wl_client.
@@ -135,6 +136,10 @@ public:
 
     void setSecurityContextAppId(const QString &appId);
     QString securityContextAppId() const;
+
+    void addBuffer(std::shared_ptr<GraphicsBuffer> &&buffer);
+    void removeBuffer(GraphicsBuffer *buffer);
+    bool hasBuffer(GraphicsBuffer *buffer) const;
 
     /**
      * Returns the associated client connection object for the specified @a native wl_client object.

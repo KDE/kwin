@@ -72,6 +72,7 @@ public:
     qreal scaleOverride = 1.0;
     bool sandboxed = false;
     bool tearingDown = false;
+    std::unordered_set<std::shared_ptr<GraphicsBuffer>> buffers;
 
 private:
     static void destroyListenerCallback(wl_listener *listener, void *data);
@@ -197,6 +198,24 @@ void ClientConnection::setSecurityContextAppId(const QString &appId)
 QString ClientConnection::securityContextAppId() const
 {
     return d->securityContextAppId;
+}
+
+void ClientConnection::addBuffer(std::shared_ptr<GraphicsBuffer> &&buffer)
+{
+    d->buffers.insert(std::move(buffer));
+}
+
+void ClientConnection::removeBuffer(GraphicsBuffer *buffer)
+{
+    auto it = std::ranges::find(d->buffers, buffer, &std::shared_ptr<GraphicsBuffer>::get);
+    if (it != d->buffers.end()) {
+        d->buffers.erase(it);
+    }
+}
+
+bool ClientConnection::hasBuffer(GraphicsBuffer *buffer) const
+{
+    return std::ranges::contains(d->buffers, buffer, &std::shared_ptr<GraphicsBuffer>::get);
 }
 
 ClientConnection *ClientConnection::get(wl_client *native)

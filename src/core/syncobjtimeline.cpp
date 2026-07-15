@@ -79,7 +79,7 @@ GraphicsBufferReleasePoint::~GraphicsBufferReleasePoint()
     }
 }
 
-void GraphicsBufferReleasePoint::setBuffer(GraphicsBuffer *buffer)
+void GraphicsBufferReleasePoint::setBuffer(const std::shared_ptr<GraphicsBuffer> &buffer)
 {
     m_bufferRef = buffer;
 }

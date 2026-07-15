@@ -175,22 +175,22 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create(Resource *resource, 
     m_attrs.height = height;
     m_attrs.format = format;
 
-    auto clientBuffer = new LinuxDmaBufV1ClientBuffer(std::move(m_attrs));
-    if (!renderBackend->testImportBuffer(clientBuffer)) {
+    auto clientBuffer = std::make_shared<LinuxDmaBufV1ClientBuffer>(std::move(m_attrs));
+    if (!renderBackend->testImportBuffer(clientBuffer.get())) {
         send_failed(resource->handle);
-        clientBuffer->drop();
         return;
     }
 
     wl_resource *bufferResource = wl_resource_create(resource->client(), &wl_buffer_interface, 1, 0);
     if (!bufferResource) {
         wl_resource_post_no_memory(resource->handle);
-        clientBuffer->drop();
         return;
     }
 
     clientBuffer->initialize(bufferResource);
     send_created(resource->handle, bufferResource);
+
+    ClientConnection::get(resource->client())->addBuffer(std::move(clientBuffer));
 }
 
 void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *resource,
@@ -226,21 +226,20 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *reso
     m_attrs.height = height;
     m_attrs.format = format;
 
-    auto clientBuffer = new LinuxDmaBufV1ClientBuffer(std::move(m_attrs));
-    if (!renderBackend->testImportBuffer(clientBuffer)) {
+    auto clientBuffer = std::make_shared<LinuxDmaBufV1ClientBuffer>(std::move(m_attrs));
+    if (!renderBackend->testImportBuffer(clientBuffer.get())) {
         wl_resource_post_error(resource->handle, error_invalid_wl_buffer, "importing the supplied dmabufs failed");
-        clientBuffer->drop();
         return;
     }
 
     wl_resource *bufferResource = wl_resource_create(resource->client(), &wl_buffer_interface, 1, buffer_id);
     if (!bufferResource) {
         wl_resource_post_no_memory(resource->handle);
-        clientBuffer->drop();
         return;
     }
 
     clientBuffer->initialize(bufferResource);
+    ClientConnection::get(resource->client())->addBuffer(std::move(clientBuffer));
 }
 
 bool LinuxDmaBufParamsV1::test(Resource *resource, uint32_t width, uint32_t height)
@@ -371,7 +370,7 @@ void LinuxDmaBufV1ClientBuffer::buffer_destroy_resource(wl_resource *resource)
 {
     if (LinuxDmaBufV1ClientBuffer *buffer = LinuxDmaBufV1ClientBuffer::get(resource)) {
         buffer->m_resource = nullptr;
-        buffer->drop();
+        ClientConnection::get(wl_resource_get_client(resource))->removeBuffer(buffer);
     }
 }
 
@@ -398,7 +397,9 @@ void LinuxDmaBufV1ClientBuffer::initialize(wl_resource *resource)
 
 void LinuxDmaBufV1ClientBuffer::released()
 {
-    wl_buffer_send_release(m_resource);
+    if (m_resource) {
+        wl_buffer_send_release(m_resource);
+    }
 }
 
 const DmaBufAttributes *LinuxDmaBufV1ClientBuffer::dmabufAttributes() const

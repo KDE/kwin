@@ -683,9 +683,7 @@ WaylandBuffer::WaylandBuffer(wl_buffer *handle, GraphicsBuffer *graphicsBuffer)
 WaylandBuffer::~WaylandBuffer()
 {
     m_graphicsBuffer->disconnect(this);
-    if (m_locked) {
-        m_graphicsBuffer->unref();
-    }
+    m_lock.reset();
     wl_buffer_destroy(m_handle);
 }
 
@@ -696,18 +694,12 @@ wl_buffer *WaylandBuffer::handle() const
 
 void WaylandBuffer::lock()
 {
-    if (!m_locked) {
-        m_locked = true;
-        m_graphicsBuffer->ref();
-    }
+    m_lock = m_graphicsBuffer;
 }
 
 void WaylandBuffer::unlock()
 {
-    if (m_locked) {
-        m_locked = false;
-        m_graphicsBuffer->unref();
-    }
+    m_lock.reset();
 }
 }
 

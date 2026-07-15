@@ -11,6 +11,7 @@
 
 #include <QObject>
 #include <QSize>
+#include <mutex>
 #include <sys/types.h>
 #include <utility>
 
@@ -57,20 +58,20 @@ struct SinglePixelAttributes
  * references are dropped. You can use the isDropped() function to check whether the
  * buffer has been marked as destroyed.
  */
-class KWIN_EXPORT GraphicsBuffer : public QObject
+class KWIN_EXPORT GraphicsBuffer : public QObject, public std::enable_shared_from_this<GraphicsBuffer>
 {
     Q_OBJECT
 
 public:
-    explicit GraphicsBuffer(QObject *parent = nullptr);
+    explicit GraphicsBuffer();
     ~GraphicsBuffer() override;
 
+    /**
+     * NOTE this assumes that once the buffer is no longer referenced,
+     * only the caller of this method will reference it again.
+     * Otherwise, calling this may be racy with multi-threading.
+     */
     bool isReferenced() const;
-    bool isDropped() const;
-
-    void ref();
-    void unref();
-    void drop();
 
     enum MapFlag {
         Read = 0x1,
@@ -102,14 +103,19 @@ public:
     static bool alphaChannelFromDrmFormat(uint32_t format);
 
 protected:
+    friend class GraphicsBufferRef;
+
+    void ref();
+    void unref();
+
     /**
      * called the first time the buffer is referenced after it's created or released
      */
     virtual void referenced();
     virtual void released();
 
-    int m_refCount = 0;
-    bool m_dropped = false;
+    std::atomic<int> m_references = 0;
+    std::mutex m_mutex;
     std::vector<std::shared_ptr<SyncReleasePoint>> m_releasePoints;
 };
 
@@ -126,6 +132,16 @@ public:
     }
 
     GraphicsBufferRef(GraphicsBuffer *buffer)
+        : GraphicsBufferRef(buffer ? buffer->shared_from_this() : nullptr)
+    {
+    }
+
+    GraphicsBufferRef(const std::weak_ptr<GraphicsBuffer> &buffer)
+        : GraphicsBufferRef(buffer.lock())
+    {
+    }
+
+    GraphicsBufferRef(const std::shared_ptr<GraphicsBuffer> &buffer)
         : m_buffer(buffer)
     {
         if (m_buffer) {
@@ -157,7 +173,7 @@ public:
     {
         if (m_buffer) {
             m_buffer->unref();
-            m_buffer = nullptr;
+            m_buffer.reset();
         }
     }
 
@@ -184,12 +200,22 @@ public:
 
     GraphicsBufferRef &operator=(GraphicsBuffer *buffer)
     {
+        return operator=(buffer ? buffer->shared_from_this() : nullptr);
+    }
+
+    GraphicsBufferRef &operator=(const std::weak_ptr<GraphicsBuffer> &buffer)
+    {
+        return operator=(buffer.lock());
+    }
+
+    GraphicsBufferRef &operator=(const std::shared_ptr<GraphicsBuffer> &buffer)
+    {
         if (m_buffer != buffer) {
-            if (m_buffer) {
-                m_buffer->unref();
-            }
             if (buffer) {
                 buffer->ref();
+            }
+            if (m_buffer) {
+                m_buffer->unref();
             }
             m_buffer = buffer;
         }
@@ -198,26 +224,26 @@ public:
 
     inline GraphicsBuffer *buffer() const
     {
-        return m_buffer;
+        return m_buffer.get();
     }
 
     inline GraphicsBuffer *operator*() const
     {
-        return m_buffer;
+        return m_buffer.get();
     }
 
     inline GraphicsBuffer *operator->() const
     {
-        return m_buffer;
+        return m_buffer.get();
     }
 
     inline operator bool() const
     {
-        return m_buffer;
+        return m_buffer != nullptr;
     }
 
 private:
-    GraphicsBuffer *m_buffer;
+    std::shared_ptr<GraphicsBuffer> m_buffer;
 };
 
 } // namespace KWin

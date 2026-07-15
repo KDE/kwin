@@ -12,6 +12,7 @@
 #include "config-kwin.h"
 
 // KWin
+#include "core/graphicsbuffer.h"
 #include "core/inputbackend.h"
 #include "core/inputdevice.h"
 #include "core/outputbackend.h"
@@ -48,7 +49,6 @@ class SubSurface;
 namespace KWin
 {
 
-class GraphicsBuffer;
 class DrmDevice;
 class RenderDevice;
 
@@ -187,7 +187,7 @@ Q_SIGNALS:
 private:
     GraphicsBuffer *m_graphicsBuffer;
     wl_buffer *m_handle;
-    bool m_locked = false;
+    GraphicsBufferRef m_lock;
 };
 
 struct WaylandBackendOptions

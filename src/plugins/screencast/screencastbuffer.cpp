@@ -15,18 +15,17 @@
 namespace KWin
 {
 
-ScreenCastBuffer::ScreenCastBuffer(GraphicsBuffer *buffer)
-    : m_buffer(buffer)
+ScreenCastBuffer::ScreenCastBuffer(std::shared_ptr<GraphicsBuffer> &&buffer)
+    : m_buffer(std::move(buffer))
 {
 }
 
 ScreenCastBuffer::~ScreenCastBuffer()
 {
-    m_buffer->drop();
 }
 
-DmaBufScreenCastBuffer::DmaBufScreenCastBuffer(GraphicsBuffer *buffer, std::shared_ptr<GLTexture> &&texture, std::unique_ptr<GLFramebuffer> &&framebuffer, std::unique_ptr<SyncTimeline> &&synctimeline)
-    : ScreenCastBuffer(buffer)
+DmaBufScreenCastBuffer::DmaBufScreenCastBuffer(std::shared_ptr<GraphicsBuffer> &&buffer, std::shared_ptr<GLTexture> &&texture, std::unique_ptr<GLFramebuffer> &&framebuffer, std::unique_ptr<SyncTimeline> &&synctimeline)
+    : ScreenCastBuffer(std::move(buffer))
     , texture(std::move(texture))
     , framebuffer(std::move(framebuffer))
     , synctimeline(std::move(synctimeline))
@@ -40,20 +39,18 @@ DmaBufScreenCastBuffer *DmaBufScreenCastBuffer::create(pw_buffer *pwBuffer, cons
         return nullptr;
     }
 
-    GraphicsBuffer *buffer = backend->renderDevice()->allocator()->allocate(options);
+    auto buffer = backend->renderDevice()->allocator()->allocate(options);
     if (!buffer) {
         return nullptr;
     }
 
     const DmaBufAttributes *attrs = buffer->dmabufAttributes();
     if (!attrs) {
-        buffer->drop();
         return nullptr;
     }
 
     const void *syncTimelineMeta = spa_buffer_find_meta_data(pwBuffer->buffer, SPA_META_SyncTimeline, sizeof(spa_meta_sync_timeline));
     if (pwBuffer->buffer->n_datas != uint32_t(attrs->planeCount + (syncTimelineMeta ? 2 : 0))) {
-        buffer->drop();
         return nullptr;
     }
 
@@ -61,13 +58,11 @@ DmaBufScreenCastBuffer *DmaBufScreenCastBuffer::create(pw_buffer *pwBuffer, cons
 
     auto texture = backend->importDmaBufAsTexture(*attrs);
     if (!texture) {
-        buffer->drop();
         return nullptr;
     }
 
     auto framebuffer = std::make_unique<GLFramebuffer>(texture.get());
     if (!framebuffer->valid()) {
-        buffer->drop();
         return nullptr;
     }
 
@@ -90,7 +85,6 @@ DmaBufScreenCastBuffer *DmaBufScreenCastBuffer::create(pw_buffer *pwBuffer, cons
         synctimeline = std::make_unique<SyncTimeline>(backend->renderDevice()->drmDevice()->fileDescriptor());
         const FileDescriptor &syncobjfd = synctimeline->fileDescriptor();
         if (!syncobjfd.isValid()) {
-            buffer->drop();
             return nullptr;
         }
 
@@ -108,25 +102,24 @@ DmaBufScreenCastBuffer *DmaBufScreenCastBuffer::create(pw_buffer *pwBuffer, cons
         releaseData.fd = syncobjfd.get();
     }
 
-    return new DmaBufScreenCastBuffer(buffer, std::move(texture), std::move(framebuffer), std::move(synctimeline));
+    return new DmaBufScreenCastBuffer(std::move(buffer), std::move(texture), std::move(framebuffer), std::move(synctimeline));
 }
 
-MemFdScreenCastBuffer::MemFdScreenCastBuffer(GraphicsBuffer *buffer, GraphicsBufferView &&view)
-    : ScreenCastBuffer(buffer)
+MemFdScreenCastBuffer::MemFdScreenCastBuffer(std::shared_ptr<GraphicsBuffer> &&buffer, GraphicsBufferView &&view)
+    : ScreenCastBuffer(std::move(buffer))
     , view(std::move(view))
 {
 }
 
 MemFdScreenCastBuffer *MemFdScreenCastBuffer::create(pw_buffer *pwBuffer, const GraphicsBufferOptions &options)
 {
-    GraphicsBuffer *buffer = ShmGraphicsBufferAllocator().allocate(options);
+    auto buffer = ShmGraphicsBufferAllocator().allocate(options);
     if (!buffer) {
         return nullptr;
     }
 
-    GraphicsBufferView view(buffer, GraphicsBuffer::Read | GraphicsBuffer::Write);
+    GraphicsBufferView view(buffer.get(), GraphicsBuffer::Read | GraphicsBuffer::Write);
     if (view.isNull()) {
-        buffer->drop();
         return nullptr;
     }
 
@@ -144,7 +137,7 @@ MemFdScreenCastBuffer *MemFdScreenCastBuffer::create(pw_buffer *pwBuffer, const 
     spaData->chunk->stride = attributes->stride;
     spaData->chunk->flags = SPA_CHUNK_FLAG_NONE;
 
-    return new MemFdScreenCastBuffer(buffer, std::move(view));
+    return new MemFdScreenCastBuffer(std::move(buffer), std::move(view));
 }
 
 } // namespace KWin

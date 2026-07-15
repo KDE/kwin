@@ -64,18 +64,12 @@ xcb_pixmap_t X11WindowedBuffer::pixmap() const
 
 void X11WindowedBuffer::lock()
 {
-    if (!m_locked) {
-        m_locked = true;
-        m_buffer->ref();
-    }
+    m_lock = m_buffer;
 }
 
 void X11WindowedBuffer::unlock()
 {
-    if (m_locked) {
-        m_locked = false;
-        m_buffer->unref();
-    }
+    m_lock.reset();
 }
 
 X11WindowedCursor::X11WindowedCursor(X11WindowedOutput *output)

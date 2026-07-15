@@ -77,7 +77,7 @@ const ShmAttributes *ShmGraphicsBuffer::shmAttributes() const
     return &m_attributes;
 }
 
-GraphicsBuffer *ShmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
+std::shared_ptr<GraphicsBuffer> ShmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
 {
     if (!options.software) {
         return nullptr;
@@ -139,7 +139,7 @@ GraphicsBuffer *ShmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions
         return nullptr;
     }
 
-    return new ShmGraphicsBuffer(std::move(attributes), std::move(memoryMap));
+    return std::make_shared<ShmGraphicsBuffer>(std::move(attributes), std::move(memoryMap));
 }
 
 } // namespace KWin

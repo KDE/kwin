@@ -9,7 +9,8 @@
 #pragma once
 
 #include "core/backendoutput.h"
-#include <kwin_export.h>
+#include "core/graphicsbuffer.h"
+#include "kwin_export.h"
 
 #include <QObject>
 #include <QSize>
@@ -25,7 +26,6 @@ class NETWinInfo;
 namespace KWin
 {
 
-class GraphicsBuffer;
 class X11WindowedBackend;
 class X11WindowedOutput;
 class OutputFrame;
@@ -53,8 +53,8 @@ Q_SIGNALS:
 private:
     X11WindowedOutput *m_output;
     GraphicsBuffer *m_buffer;
+    GraphicsBufferRef m_lock;
     xcb_pixmap_t m_pixmap;
-    bool m_locked = false;
 };
 
 class X11WindowedCursor

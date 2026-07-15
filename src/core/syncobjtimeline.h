@@ -59,7 +59,7 @@ public:
     explicit GraphicsBufferReleasePoint();
     ~GraphicsBufferReleasePoint() override;
 
-    void setBuffer(GraphicsBuffer *buffer);
+    void setBuffer(const std::shared_ptr<GraphicsBuffer> &buffer);
     void addReleaseFence(const FileDescriptor &fd) override;
     const FileDescriptor &releaseFd() const;
 

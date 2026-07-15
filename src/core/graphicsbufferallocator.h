@@ -44,7 +44,7 @@ public:
     GraphicsBufferAllocator();
     virtual ~GraphicsBufferAllocator();
 
-    virtual GraphicsBuffer *allocate(const GraphicsBufferOptions &options) = 0;
+    virtual std::shared_ptr<GraphicsBuffer> allocate(const GraphicsBufferOptions &options) = 0;
 };
 
 } // namespace KWin

@@ -21,7 +21,7 @@ public:
     explicit GbmGraphicsBufferAllocator(DrmDevice *device);
     ~GbmGraphicsBufferAllocator() override;
 
-    GraphicsBuffer *allocate(const GraphicsBufferOptions &options) override;
+    std::shared_ptr<GraphicsBuffer> allocate(const GraphicsBufferOptions &options) override;
 
 private:
     DrmDevice *const m_device;

@@ -110,7 +110,7 @@ UDmabufAllocator::UDmabufAllocator()
 {
 }
 
-GraphicsBuffer *UDmabufAllocator::allocate(const GraphicsBufferOptions &options)
+std::shared_ptr<GraphicsBuffer> UDmabufAllocator::allocate(const GraphicsBufferOptions &options)
 {
     if (!options.modifiers.contains(DRM_FORMAT_MOD_LINEAR)) {
         return nullptr;
@@ -118,7 +118,7 @@ GraphicsBuffer *UDmabufAllocator::allocate(const GraphicsBufferOptions &options)
     return allocate(options.format, options.size);
 }
 
-GraphicsBuffer *UDmabufAllocator::allocate(uint32_t format, const QSize &size)
+std::shared_ptr<GraphicsBuffer> UDmabufAllocator::allocate(uint32_t format, const QSize &size)
 {
 #if HAVE_MEMFD && defined(Q_OS_LINUX)
     if (!GpuManager::self()->udmabuf().isValid()) {
@@ -163,7 +163,7 @@ GraphicsBuffer *UDmabufAllocator::allocate(uint32_t format, const QSize &size)
     if (!dmabufAttributes) {
         return nullptr;
     }
-    return new UdmabufGraphicsBuffer(std::move(*dmabufAttributes), std::move(memoryMap));
+    return std::make_shared<UdmabufGraphicsBuffer>(std::move(*dmabufAttributes), std::move(memoryMap));
 #else
     return nullptr;
 #endif

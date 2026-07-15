@@ -8,6 +8,7 @@
 
 #include "core/drm_formats.h"
 #include "core/gpumanager.h"
+#include "wayland/clientconnection.h"
 #include "wayland/display.h"
 #include "wayland/shmclientbuffer.h"
 #include "wayland/shmclientbuffer_p.h"
@@ -143,7 +144,7 @@ void ShmPool::shm_pool_create_buffer(Resource *resource, uint32_t id, int32_t of
         .format = drmFormat,
     };
 
-    new ShmClientBuffer(this, std::move(attributes), resource->client(), id);
+    ClientConnection::get(resource->client())->addBuffer(std::make_shared<ShmClientBuffer>(this, std::move(attributes), resource->client(), id));
 }
 
 void ShmPool::shm_pool_resize(Resource *resource, int32_t size)
@@ -165,7 +166,7 @@ void ShmClientBuffer::buffer_destroy_resource(wl_resource *resource)
 {
     if (ShmClientBuffer *buffer = ShmClientBuffer::get(resource)) {
         buffer->m_resource = nullptr;
-        buffer->drop();
+        ClientConnection::get(wl_resource_get_client(resource))->removeBuffer(buffer);
     }
 }
 
@@ -229,7 +230,9 @@ void ShmClientBuffer::released()
         ioctl(m_udmabufAttributes->fd[0].get(), DMA_BUF_IOCTL_SYNC, &sync);
     }
 #endif
-    wl_buffer_send_release(m_resource);
+    if (m_resource) {
+        wl_buffer_send_release(m_resource);
+    }
 }
 
 QSize ShmClientBuffer::size() const

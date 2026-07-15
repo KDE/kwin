@@ -18,7 +18,7 @@ namespace QPA
 class Swapchain
 {
 public:
-    Swapchain(GraphicsBufferAllocator *allocator, const GraphicsBufferOptions &options, GraphicsBuffer *initialBuffer);
+    Swapchain(GraphicsBufferAllocator *allocator, const GraphicsBufferOptions &options, std::shared_ptr<GraphicsBuffer> &&initialBuffer);
     ~Swapchain();
 
     QSize size() const;
@@ -30,7 +30,7 @@ public:
 private:
     GraphicsBufferAllocator *m_allocator;
     GraphicsBufferOptions m_allocationOptions;
-    QList<GraphicsBuffer *> m_buffers;
+    QList<std::shared_ptr<GraphicsBuffer>> m_buffers;
 };
 
 }

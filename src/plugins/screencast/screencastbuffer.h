@@ -22,13 +22,13 @@ struct GraphicsBufferOptions;
 class ScreenCastBuffer
 {
 public:
-    explicit ScreenCastBuffer(GraphicsBuffer *buffer);
+    explicit ScreenCastBuffer(std::shared_ptr<GraphicsBuffer> &&buffer);
     virtual ~ScreenCastBuffer();
 
     int m_age = 0;
 
 private:
-    GraphicsBuffer *m_buffer;
+    std::shared_ptr<GraphicsBuffer> m_buffer;
 };
 
 class DmaBufScreenCastBuffer : public ScreenCastBuffer
@@ -41,7 +41,7 @@ public:
     std::unique_ptr<SyncTimeline> synctimeline;
 
 private:
-    DmaBufScreenCastBuffer(GraphicsBuffer *buffer, std::shared_ptr<GLTexture> &&texture, std::unique_ptr<GLFramebuffer> &&framebuffer, std::unique_ptr<SyncTimeline> &&synctimeline);
+    DmaBufScreenCastBuffer(std::shared_ptr<GraphicsBuffer> &&buffer, std::shared_ptr<GLTexture> &&texture, std::unique_ptr<GLFramebuffer> &&framebuffer, std::unique_ptr<SyncTimeline> &&synctimeline);
 };
 
 class MemFdScreenCastBuffer : public ScreenCastBuffer
@@ -52,7 +52,7 @@ public:
     GraphicsBufferView view;
 
 private:
-    MemFdScreenCastBuffer(GraphicsBuffer *buffer, GraphicsBufferView &&view);
+    MemFdScreenCastBuffer(std::shared_ptr<GraphicsBuffer> &&buffer, GraphicsBufferView &&view);
 };
 
 } // namespace KWin

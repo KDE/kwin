@@ -14,56 +14,43 @@
 namespace KWin
 {
 
-GraphicsBuffer::GraphicsBuffer(QObject *parent)
-    : QObject(parent)
+GraphicsBuffer::GraphicsBuffer()
 {
 }
 
 GraphicsBuffer::~GraphicsBuffer()
 {
-    Q_ASSERT(m_dropped);
 }
 
 bool GraphicsBuffer::isReferenced() const
 {
-    return m_refCount > 0;
-}
-
-bool GraphicsBuffer::isDropped() const
-{
-    return m_dropped;
+    return m_references > 0;
 }
 
 void GraphicsBuffer::ref()
 {
-    Q_ASSERT(QCoreApplication::instance()->thread() == thread());
-    ++m_refCount;
-    if (m_refCount == 1) {
-        referenced();
+    const int r = ++m_references;
+    if (r == 1) {
+        std::unique_lock lock(m_mutex);
+        // two threads could race to increment and decrement
+        // m_references at the same time, so we need to check again
+        if (m_references == 1) {
+            referenced();
+        }
     }
 }
 
 void GraphicsBuffer::unref()
 {
-    Q_ASSERT(QCoreApplication::instance()->thread() == thread());
-    Q_ASSERT(m_refCount > 0);
-    --m_refCount;
-    if (!m_refCount) {
-        if (m_dropped) {
-            delete this;
-        } else {
+    const int r = --m_references;
+    if (r == 0) {
+        std::unique_lock lock(m_mutex);
+        // two threads could race to increment and decrement
+        // m_references at the same time, so we need to check again
+        if (m_references == 0) {
             m_releasePoints.clear();
             released();
         }
-    }
-}
-
-void GraphicsBuffer::drop()
-{
-    m_dropped = true;
-
-    if (!m_refCount) {
-        delete this;
     }
 }
 

@@ -11,18 +11,15 @@ namespace KWin
 namespace QPA
 {
 
-Swapchain::Swapchain(GraphicsBufferAllocator *allocator, const GraphicsBufferOptions &options, GraphicsBuffer *initialBuffer)
+Swapchain::Swapchain(GraphicsBufferAllocator *allocator, const GraphicsBufferOptions &options, std::shared_ptr<GraphicsBuffer> &&initialBuffer)
     : m_allocator(allocator)
     , m_allocationOptions(options)
 {
-    m_buffers.push_back(initialBuffer);
+    m_buffers.push_back(std::move(initialBuffer));
 }
 
 Swapchain::~Swapchain()
 {
-    for (GraphicsBuffer *buffer : std::as_const(m_buffers)) {
-        buffer->drop();
-    }
 }
 
 QSize Swapchain::size() const
@@ -32,19 +29,19 @@ QSize Swapchain::size() const
 
 GraphicsBuffer *Swapchain::acquire()
 {
-    for (GraphicsBuffer *buffer : std::as_const(m_buffers)) {
+    for (const auto &buffer : std::as_const(m_buffers)) {
         if (!buffer->isReferenced()) {
-            return buffer;
+            return buffer.get();
         }
     }
 
-    GraphicsBuffer *buffer = m_allocator->allocate(m_allocationOptions);
+    auto buffer = m_allocator->allocate(m_allocationOptions);
     if (!buffer) {
         return nullptr;
     }
 
     m_buffers.append(buffer);
-    return buffer;
+    return buffer.get();
 }
 
 uint32_t Swapchain::format() const
