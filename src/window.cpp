@@ -1471,19 +1471,15 @@ std::optional<QPointF> Window::confineInteractiveResize(const RectF &geometry, G
         case Gravity::TopLeft:
         case Gravity::Top:
         case Gravity::TopRight:
+        case Gravity::BottomLeft:
+        case Gravity::Bottom:
+        case Gravity::BottomRight:
             constrainedRect.setBottom(std::min(constrainedRect.bottom(), geometry.bottom() - minFrameSize.height()));
             constrainedRect.setTop(std::max(constrainedRect.top(), geometry.bottom() - maxFrameSize.height()));
             break;
 
         case Gravity::Left:
         case Gravity::Right:
-            break;
-
-        case Gravity::BottomLeft:
-        case Gravity::Bottom:
-        case Gravity::BottomRight:
-            constrainedRect.setTop(std::max(constrainedRect.top(), geometry.top() + minFrameSize.height()));
-            constrainedRect.setBottom(std::min(constrainedRect.bottom(), geometry.top() + maxFrameSize.height()));
             break;
 
         case Gravity::None:
