@@ -601,6 +601,8 @@ void X11Window::shapeNotifyEvent(xcb_shape_notify_event_t *e)
         return;
     }
 
+    detectShape();
+
     switch (e->shape_kind) {
     case XCB_SHAPE_SK_BOUNDING:
     case XCB_SHAPE_SK_CLIP:

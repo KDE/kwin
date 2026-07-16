@@ -325,6 +325,7 @@ bool X11Window::track(xcb_window_t w)
     if (Xcb::Extensions::self()->isShapeAvailable()) {
         xcb_shape_select_input(kwinApp()->x11Connection(), w, true);
     }
+    detectShape();
     updateShapeRegion();
     getWmOpaqueRegion();
     getSkipCloseAnimation();
@@ -397,6 +398,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     if (Xcb::Extensions::self()->isShapeAvailable()) {
         xcb_shape_select_input(kwinApp()->x11Connection(), window(), true);
     }
+    detectShape();
     updateShapeRegion();
     detectNoBorder();
     fetchIconicName();
@@ -3975,6 +3977,11 @@ void X11Window::getSkipCloseAnimation()
 {
     Xcb::Property property = fetchSkipCloseAnimation();
     readSkipCloseAnimation(property);
+}
+
+void X11Window::detectShape()
+{
+    is_shape = Xcb::Extensions::self()->hasShape(window());
 }
 
 //********************************************
