@@ -8,6 +8,7 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "backends/virtual/virtual_backend.h"
 #include "core/output.h"
 #include "core/outputconfiguration.h"
 #include "cursor.h"
@@ -109,6 +110,7 @@ private Q_SLOTS:
     void testTabletNoCursorSync();
     void testTabletCursorSync();
     void testTabletCursorSyncRelative();
+    void testXwaylandScaling();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -2101,6 +2103,84 @@ void PointerInputTest::testTabletCursorSyncRelative()
 
     // Reset
     tablet->setTabletToolIsRelative(false);
+}
+
+void PointerInputTest::testXwaylandScaling()
+{
+    // This test verifies that mouse clicks don't pass through maximized
+    // X11 windows with unfortunate scaling setups
+
+    const auto outputBackend = qobject_cast<VirtualBackend *>(kwinApp()->outputBackend());
+    outputBackend->setVirtualOutputs({
+        VirtualBackend::OutputInfo{
+            .size = QSize(2560, 1440),
+        },
+        VirtualBackend::OutputInfo{
+            .size = QSize(1920, 1080),
+        },
+    });
+    auto outputs = kwinApp()->outputBackend()->outputs();
+
+    OutputConfiguration cfg;
+    cfg.changeSet(outputs[0])->scale = 1.25;
+    cfg.changeSet(outputs[0])->pos = QPoint(0, 391);
+
+    cfg.changeSet(outputs[1])->scale = 1.0;
+    cfg.changeSet(outputs[1])->pos = QPoint(2048, 0);
+    cfg.changeSet(outputs[1])->manualTransform = OutputTransform::Rotate270;
+    cfg.changeSet(outputs[1])->transform = OutputTransform::Rotate270;
+
+    QCOMPARE(workspace()->applyOutputConfiguration(cfg), OutputConfigurationError::None);
+
+    kwinApp()->setXwaylandScale(1.25);
+
+    // make sure Xwayland is aware of the scale before the X11 window is created
+    Xcb::sync();
+
+    uint32_t time = 0;
+    Test::pointerMotion(QPointF(1000, 391), time++);
+
+    auto pointer = m_seat->createPointer(m_seat);
+    QSignalSpy button(pointer, &KWayland::Client::Pointer::buttonStateChanged);
+
+    Test::XdgToplevelWindow waylandWindow;
+    QVERIFY(waylandWindow.show(QSize(2560 / 1.25, 1440 / 1.25)));
+
+    Test::pointerButtonPressed(BTN_LEFT, time++);
+    QVERIFY(button.wait(100));
+    Test::pointerButtonReleased(BTN_LEFT, time++);
+    QVERIFY(button.wait(100));
+    QCOMPARE(button.count(), 2);
+
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    const Rect windowGeometry(0, std::round(391 * 1.25), 2560, 1440);
+    xcb_window_t windowId = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+                      windowGeometry.x(),
+                      windowGeometry.y(),
+                      windowGeometry.width(),
+                      windowGeometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_size_hints_t hints = {};
+    xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
+    xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+
+    // maximize the window
+    NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+    info.setState(NET::Max, NET::Max);
+
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    QVERIFY(windowCreatedSpy.wait());
+
+    Test::pointerButtonPressed(BTN_LEFT, time++);
+    QVERIFY(!button.wait(50));
+    Test::pointerButtonReleased(BTN_LEFT, time++);
+    QVERIFY(!button.wait(50));
+    QCOMPARE(button.count(), 2);
 }
 
 }
