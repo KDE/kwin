@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-15 00:47+0000\n"
+"POT-Creation-Date: 2026-07-17 00:45+0000\n"
 "PO-Revision-Date: 2023-12-02 20:09+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -81,7 +81,7 @@ msgstr "Stlačením pravého klávesu Control zachytíte vstup"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Compositor"
 
-#: compositor.cpp:749
+#: compositor.cpp:750
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Efekty plochy boli reštartované kvôli grafickému vynulovaniu"
@@ -1579,12 +1579,12 @@ msgstr "Xaver Hugl"
 msgid "Disable configuration options"
 msgstr "Zakázať možnosti nastavenia"
 
-#: main_wayland.cpp:327
+#: main_wayland.cpp:328
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Spustí rootless Xwayland server."
 
-#: main_wayland.cpp:330
+#: main_wayland.cpp:331
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1592,49 +1592,49 @@ msgstr ""
 "Názov Wayland socketu, kde počúvať. Ak nie je nastavené, použije sa "
 "\"wayland-0\"."
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:335
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "X11 obrazovka pre režim v okne na platforme X11."
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:339
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "Wayland obrazovka pre režim v okne na platforme Wayland."
 
-#: main_wayland.cpp:340
+#: main_wayland.cpp:341
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Renderovať na virtuálny framebuffer."
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:343
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Šírka pre režim v okne. Predvolená šírka je 1024."
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:347
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Výška pre režim v okne. Predvolená výška je 768."
 
-#: main_wayland.cpp:351
+#: main_wayland.cpp:352
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
 msgstr "Či sa má režim v okne prepnúť na celú obrazovku"
 
-#: main_wayland.cpp:355
+#: main_wayland.cpp:356
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Mierka pre režim v okne. Predvolená hodnota je 1."
 
-#: main_wayland.cpp:360
+#: main_wayland.cpp:361
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
 "Počet okien na otvorenie ako výstupov v režime okna. Predvolená hodnota je 1"
 
-#: main_wayland.cpp:365
+#: main_wayland.cpp:366
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1643,7 +1643,7 @@ msgstr ""
 "Wayland socket na použitie pre prichádzajúce spojenia. To je možné "
 "skombinovať s --socket na pomenovanie socketu"
 
-#: main_wayland.cpp:369
+#: main_wayland.cpp:370
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1652,12 +1652,12 @@ msgstr ""
 "XWayland socket na použitie pre prichádzajúce pripojenia Xwayland. Toto je "
 "možné nastaviť viackrát"
 
-#: main_wayland.cpp:373
+#: main_wayland.cpp:374
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Názov vopred nastaveného displeja xwayland"
 
-#: main_wayland.cpp:377
+#: main_wayland.cpp:378
 #, fuzzy, kde-format
 #| msgid ""
 #| "XWayland socket to use for Xwayland's incoming connections. This can be "
@@ -1667,67 +1667,67 @@ msgstr ""
 "XWayland socket na použitie pre prichádzajúce pripojenia Xwayland. Toto je "
 "možné nastaviť viackrát"
 
-#: main_wayland.cpp:381
+#: main_wayland.cpp:382
 #, fuzzy, kde-format
 #| msgid "Name of the xwayland display that has been pre-set up"
 msgid "Name of the xwayland init display that has been pre-set up"
 msgstr "Názov vopred nastaveného displeja xwayland"
 
-#: main_wayland.cpp:385
+#: main_wayland.cpp:386
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Názov súboru xauthority "
 
-#: main_wayland.cpp:389
+#: main_wayland.cpp:390
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Ukončí túto inštanciu, aby ju bolo možné reštartovať pomocou "
 "kwin_wayland_wrapper."
 
-#: main_wayland.cpp:391
+#: main_wayland.cpp:392
 #, kde-format
 msgid "Render through drm node."
 msgstr "Renderovať cez režim drm."
 
-#: main_wayland.cpp:392
+#: main_wayland.cpp:393
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 "Získať informácie o lokalizácii z locale1 a nie z konfigurácie používateľa"
 
-#: main_wayland.cpp:421
+#: main_wayland.cpp:422
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Vstupná metóda, ktorú KWin spustí."
 
-#: main_wayland.cpp:427
+#: main_wayland.cpp:428
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Spustí sedenie v zamknutom režime."
 
-#: main_wayland.cpp:431
+#: main_wayland.cpp:432
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Spustí sedenie bez podpory zaknutia obrazovky."
 
-#: main_wayland.cpp:436
+#: main_wayland.cpp:437
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Spustí sedenie bez podpory globálnych skratiek."
 
-#: main_wayland.cpp:441
+#: main_wayland.cpp:442
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Zakázať integrácoi KActivities."
 
-#: main_wayland.cpp:446
+#: main_wayland.cpp:447
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Ukončiť po použití sedenia, ktoré je spustené Kwin, zatvorené."
 
-#: main_wayland.cpp:451
+#: main_wayland.cpp:452
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Aplikácie na jedno spustenie servera Wayland a Xwayland sú spustené"
@@ -3467,157 +3467,170 @@ msgid "Fullscreen rule type"
 msgstr "Celá obrazovka typ pravidla"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:307
+#: rulesettings.kcfg:311
 #, kde-format
 msgid "No titlebar and frame"
 msgstr "Bez záhlavia a rámu"
 
 #. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:311
+#: rulesettings.kcfg:315
 #, kde-format
 msgid "No titlebar rule type"
 msgstr "Typ pravidla pre žiadne záhlavie"
 
+#. i18n: ectx: label, entry (decorationpolicy), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:322
+#, kde-format
+msgid "Decoration policy"
+msgstr ""
+
+#. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:332
+#, fuzzy, kde-format
+#| msgid "Active opacity rule type"
+msgid "Decoration policy rule type"
+msgstr "Typ pravidla pre krytie aktívneho okna"
+
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:318
+#: rulesettings.kcfg:339
 #, kde-format
 msgid "Titlebar color and scheme"
 msgstr "Farba a schéma záhlavia"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:321
+#: rulesettings.kcfg:342
 #, kde-format
 msgid "Titlebar color rule type"
 msgstr "Typ pravidla pre farbu záhlavia"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:326
+#: rulesettings.kcfg:347
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "Úroveň prevencie kradnutia zamerania"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:332
+#: rulesettings.kcfg:353
 #, kde-format
 msgid "Focus stealing prevention rule type"
 msgstr "Prevencia odobratia zamerania typ pravidla"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:337
+#: rulesettings.kcfg:358
 #, kde-format
 msgid "Focus protection"
 msgstr "Ochrana zamerania"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:343
+#: rulesettings.kcfg:364
 #, kde-format
 msgid "Focus protection rule type"
 msgstr "Ochrana zamerania typ pravidla"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:348
+#: rulesettings.kcfg:369
 #, kde-format
 msgid "Accept Focus"
 msgstr "Akceptovať zameranie"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:352
+#: rulesettings.kcfg:373
 #, kde-format
 msgid "Accept Focus rule type"
 msgstr "Prijať zameranie typ pravidla"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:357
+#: rulesettings.kcfg:378
 #, kde-format
 msgid "Closeable"
 msgstr "Zatvoriteľné"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:361
+#: rulesettings.kcfg:382
 #, kde-format
 msgid "Closeable rule type"
 msgstr "Typ pravidla pre umožnenie zatvorenia"
 
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:366
+#: rulesettings.kcfg:387
 #, kde-format
 msgid "Shortcut"
 msgstr "Skratka"
 
 #. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:369
+#: rulesettings.kcfg:390
 #, kde-format
 msgid "Shortcut rule type"
 msgstr "Typ pravidla pre skratku"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:376
+#: rulesettings.kcfg:397
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Ignorovať globálne skratky"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:380
+#: rulesettings.kcfg:401
 #, kde-format
 msgid "Ignore global shortcuts rule type"
 msgstr "Typ pravidla pre ignorovanie globálnych skratiek"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:385
+#: rulesettings.kcfg:406
 #, kde-format
 msgid "Desktop file name"
 msgstr "Názov súboru pracovnej plochy"
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:388
+#: rulesettings.kcfg:409
 #, kde-format
 msgid "Desktop file name rule type"
 msgstr "Typ pravidla pre názov súboru pracovnej plochy"
 
 #. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:395
+#: rulesettings.kcfg:416
 #, kde-format
 msgid "Layer"
 msgstr "Vrstva"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:411
+#: rulesettings.kcfg:432
 #, kde-format
 msgid "Layer rule type"
 msgstr "Zrolovaný typ pravidla"
 
 #. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:416
+#: rulesettings.kcfg:437
 #, kde-format
 msgid "AdaptiveSync"
 msgstr "AdaptiveSync"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:420
+#: rulesettings.kcfg:441
 #, kde-format
 msgid "AdaptiveSync rule type"
 msgstr "Typ pravidla pre aktivitu"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:425
+#: rulesettings.kcfg:446
 #, kde-format
 msgid "Allow Tearing"
 msgstr "Povoliť rotáciu"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
+#: rulesettings.kcfg:450
 #, kde-format
 msgid "Tearing rule type"
 msgstr "Zrolovaný typ pravidla"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:434
+#: rulesettings.kcfg:455
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
 msgstr "Skryť pred snímkami a nahrávkami obrazovky"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:438
+#: rulesettings.kcfg:459
 #, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr "Skryť pred snímkami a nahrávkami obrazovky, typ pravidla"

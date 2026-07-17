@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1741383 $
+# Version: $Revision: 1741552 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011-2026 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-15 00:47+0000\n"
+"POT-Creation-Date: 2026-07-17 00:45+0000\n"
 "PO-Revision-Date: 2026-05-09 16:01+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -80,7 +80,7 @@ msgstr "Naciśnij prawy przycisk Ctrl, aby przechwycić wprowadzanie"
 msgid "KDE Wayland Compositor"
 msgstr "Kompozytor KDE Wayland"
 
-#: compositor.cpp:749
+#: compositor.cpp:750
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Wczytano efekty pulpitu na nowo po wyłączeniu grafiki"
@@ -1584,12 +1584,12 @@ msgstr "Xaver Hugl"
 msgid "Disable configuration options"
 msgstr "Wyłącz możliwość ustawiania"
 
-#: main_wayland.cpp:327
+#: main_wayland.cpp:328
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Uruchom serwer Xwayland bez uprawnień administratora."
 
-#: main_wayland.cpp:330
+#: main_wayland.cpp:331
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1597,42 +1597,42 @@ msgstr ""
 "Nazwa gniazda Waylanda, na którym nasłuchiwać. Jeśli nieustawione, to "
 "używane jest \"wayland-0\"."
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:335
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "Wyświetlacz X11 do użycia w trybie okien na platformie X11."
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:339
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "Wyświetlacz Wayland do użycia w trybie okien na platformie Wayland."
 
-#: main_wayland.cpp:340
+#: main_wayland.cpp:341
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Wyświetlaj w wirtualnym buforze klatek."
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:343
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Szerokość dla trybu okien. Domyślna szerokość to 1024."
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:347
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Wysokość dla trybu okien. Domyślna wysokość to 768."
 
-#: main_wayland.cpp:351
+#: main_wayland.cpp:352
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
 msgstr "Określa czy uczynić tryb okienkowy trybem pełnoekranowym"
 
-#: main_wayland.cpp:355
+#: main_wayland.cpp:356
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Podziałka trybu okna. Domyślna wartość to 1."
 
-#: main_wayland.cpp:360
+#: main_wayland.cpp:361
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1640,7 +1640,7 @@ msgstr ""
 "Liczba okien do otwarcia jako okna wynikowe w trybie okien. Domyślna wartość "
 "to 1"
 
-#: main_wayland.cpp:365
+#: main_wayland.cpp:366
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1649,7 +1649,7 @@ msgstr ""
 "Gniazdo Wayland do połączeń przychodzących. Można to połączyć z --socket aby "
 "nazwać gniazdo"
 
-#: main_wayland.cpp:369
+#: main_wayland.cpp:370
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1658,12 +1658,12 @@ msgstr ""
 "Gniazdo XWayland do połączeń przychodzących Xwayland. Można to ustawić wiele "
 "razy"
 
-#: main_wayland.cpp:373
+#: main_wayland.cpp:374
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Nazwa wyświetlacza xwayland, która została nastawiona"
 
-#: main_wayland.cpp:377
+#: main_wayland.cpp:378
 #, fuzzy, kde-format
 #| msgid ""
 #| "XWayland socket to use for Xwayland's incoming connections. This can be "
@@ -1673,67 +1673,67 @@ msgstr ""
 "Gniazdo XWayland do połączeń przychodzących Xwayland. Można to ustawić wiele "
 "razy"
 
-#: main_wayland.cpp:381
+#: main_wayland.cpp:382
 #, fuzzy, kde-format
 #| msgid "Name of the xwayland display that has been pre-set up"
 msgid "Name of the xwayland init display that has been pre-set up"
 msgstr "Nazwa wyświetlacza xwayland, która została nastawiona"
 
-#: main_wayland.cpp:385
+#: main_wayland.cpp:386
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Nazwa pliku xauthority"
 
-#: main_wayland.cpp:389
+#: main_wayland.cpp:390
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Kończy wystąpienie tak, aby można je było ponownie rozpocząć poprzez "
 "kwin_wayland_wrapper."
 
-#: main_wayland.cpp:391
+#: main_wayland.cpp:392
 #, kde-format
 msgid "Render through drm node."
 msgstr "Wyświetl przez węzeł drm."
 
-#: main_wayland.cpp:392
+#: main_wayland.cpp:393
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr "Wydobądź dane językowe z locale1, a nie z ustawień użytkownika"
 
-#: main_wayland.cpp:421
+#: main_wayland.cpp:422
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Metoda wprowadzania, którą uruchamia KWin."
 
-#: main_wayland.cpp:427
+#: main_wayland.cpp:428
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Rozpoczyna sesję w trybie zablokowanym"
 
-#: main_wayland.cpp:431
+#: main_wayland.cpp:432
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Rozpoczyna sesję bez obsługi blokowania ekranu."
 
-#: main_wayland.cpp:436
+#: main_wayland.cpp:437
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Rozpoczyna sesję bez obsługi globalnych skrótów."
 
-#: main_wayland.cpp:441
+#: main_wayland.cpp:442
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Wyłącz integrację KActivities."
 
-#: main_wayland.cpp:446
+#: main_wayland.cpp:447
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr ""
 "Wyjdź po zamknięciu aplikacji sesji, która została uruchomiona przez KWin."
 
-#: main_wayland.cpp:451
+#: main_wayland.cpp:452
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Aplikacja do uruchomienia po uruchomieniu Waylanda oraz Xwaylanda"
@@ -3483,158 +3483,171 @@ msgid "Fullscreen rule type"
 msgstr "Rodzaj zasady pełnego ekranu"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:307
+#: rulesettings.kcfg:311
 #, kde-format
 msgid "No titlebar and frame"
 msgstr "Bez paska nazwy i obramowania"
 
 #. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:311
+#: rulesettings.kcfg:315
 #, kde-format
 msgid "No titlebar rule type"
 msgstr "Rodzaj zasady bez paska nazwy"
 
+#. i18n: ectx: label, entry (decorationpolicy), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:322
+#, kde-format
+msgid "Decoration policy"
+msgstr ""
+
+#. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:332
+#, fuzzy, kde-format
+#| msgid "Active opacity rule type"
+msgid "Decoration policy rule type"
+msgstr "Rodzaj zasady nieprzezroczystości uaktywnionego"
+
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:318
+#: rulesettings.kcfg:339
 #, kde-format
 msgid "Titlebar color and scheme"
 msgstr "Zestaw barw paska nazwy"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:321
+#: rulesettings.kcfg:342
 #, kde-format
 msgid "Titlebar color rule type"
 msgstr "Rodzaj zasady barwy paska nazwy"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:326
+#: rulesettings.kcfg:347
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "Ochrona przed zmianą uaktywnienia"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:332
+#: rulesettings.kcfg:353
 #, kde-format
 msgid "Focus stealing prevention rule type"
 msgstr "Rodzaj zasady ochrony przed zmianą uaktywnienia"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:337
+#: rulesettings.kcfg:358
 #, kde-format
 msgid "Focus protection"
 msgstr "Ochrona uaktywnienia"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:343
+#: rulesettings.kcfg:364
 #, kde-format
 msgid "Focus protection rule type"
 msgstr "Rodzaj zasady ochrony uaktywnienia"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:348
+#: rulesettings.kcfg:369
 #, kde-format
 msgid "Accept Focus"
 msgstr "Zezwól na uaktywnienie"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:352
+#: rulesettings.kcfg:373
 #, kde-format
 msgid "Accept Focus rule type"
 msgstr "Rodzaj zasady zezwalania na uaktywnienie"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:357
+#: rulesettings.kcfg:378
 #, kde-format
 msgid "Closeable"
 msgstr "Zamykalne"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:361
+#: rulesettings.kcfg:382
 #, kde-format
 msgid "Closeable rule type"
 msgstr "Rodzaj zasady zamykalności"
 
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:366
+#: rulesettings.kcfg:387
 #, kde-format
 msgid "Shortcut"
 msgstr "Skrót"
 
 #. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:369
+#: rulesettings.kcfg:390
 #, kde-format
 msgid "Shortcut rule type"
 msgstr "Rodzaj zasady skrótu"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:376
+#: rulesettings.kcfg:397
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Pomiń skróty globalne"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:380
+#: rulesettings.kcfg:401
 #, kde-format
 msgid "Ignore global shortcuts rule type"
 msgstr "Rodzaj zasady pomijania skrótów globalnych"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:385
+#: rulesettings.kcfg:406
 #, kde-format
 msgid "Desktop file name"
 msgstr "Nazwa plik pulpitu"
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:388
+#: rulesettings.kcfg:409
 #, kde-format
 msgid "Desktop file name rule type"
 msgstr "Rodzaj zasady nazwy pliku pulpitu"
 
 #. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:395
+#: rulesettings.kcfg:416
 #, kde-format
 msgid "Layer"
 msgstr "Warstwa"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:411
+#: rulesettings.kcfg:432
 #, kde-format
 msgid "Layer rule type"
 msgstr "Rodzaj zasady warstwy"
 
 #. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:416
+#: rulesettings.kcfg:437
 #, kde-format
 msgid "AdaptiveSync"
 msgstr "Dostosowująca się synchronizacja"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:420
+#: rulesettings.kcfg:441
 #, kde-format
 msgid "AdaptiveSync rule type"
 msgstr "Rodzaj zasady dostosowującej się synchronizacji"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:425
+#: rulesettings.kcfg:446
 #, kde-format
 msgid "Allow Tearing"
 msgstr "Zezwól na cięcia"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
+#: rulesettings.kcfg:450
 #, kde-format
 msgid "Tearing rule type"
 msgstr "Rodzaj zasady cięcia"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:434
+#: rulesettings.kcfg:455
 #, fuzzy, kde-format
 #| msgid "Hide from screencast rule type"
 msgid "Hide from screenshots and screen recordings"
 msgstr "Zasada ukryci z udostępnienia ekranu"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:438
+#: rulesettings.kcfg:459
 #, fuzzy, kde-format
 #| msgid "Hide from screencast rule type"
 msgid "Hide from screenshots and screen recordings rule type"

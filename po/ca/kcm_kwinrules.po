@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-10 00:46+0000\n"
+"POT-Creation-Date: 2026-07-17 00:45+0000\n"
 "PO-Revision-Date: 2026-05-14 10:46+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -307,7 +307,7 @@ msgstr "Activitats"
 msgid "Screen"
 msgstr "Pantalla"
 
-#: rulesmodel.cpp:524 rulesmodel.cpp:923
+#: rulesmodel.cpp:524 rulesmodel.cpp:924
 #, kde-format
 msgid "Fullscreen"
 msgstr "Pantalla completa"
@@ -417,38 +417,38 @@ msgstr "Drecera"
 
 #: rulesmodel.cpp:600
 #, kde-format
-msgid "No titlebar and frame"
-msgstr "Sense barra de títol ni marc"
+msgid "Window manager draws titlebar, frame, and shadows"
+msgstr ""
 
-#: rulesmodel.cpp:600 rulesmodel.cpp:605 rulesmodel.cpp:611 rulesmodel.cpp:616
-#: rulesmodel.cpp:622 rulesmodel.cpp:649 rulesmodel.cpp:677 rulesmodel.cpp:683
-#: rulesmodel.cpp:695 rulesmodel.cpp:700 rulesmodel.cpp:705 rulesmodel.cpp:711
-#: rulesmodel.cpp:716 rulesmodel.cpp:721
+#: rulesmodel.cpp:600 rulesmodel.cpp:606 rulesmodel.cpp:612 rulesmodel.cpp:617
+#: rulesmodel.cpp:623 rulesmodel.cpp:650 rulesmodel.cpp:678 rulesmodel.cpp:684
+#: rulesmodel.cpp:696 rulesmodel.cpp:701 rulesmodel.cpp:706 rulesmodel.cpp:712
+#: rulesmodel.cpp:717 rulesmodel.cpp:722
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "Aparença i esmenes"
 
-#: rulesmodel.cpp:605
+#: rulesmodel.cpp:606
 #, kde-format
 msgid "Titlebar color scheme"
 msgstr "Esquema de color de la barra de títol"
 
-#: rulesmodel.cpp:611
+#: rulesmodel.cpp:612
 #, kde-format
 msgid "Active opacity"
 msgstr "Opacitat activa"
 
-#: rulesmodel.cpp:616
+#: rulesmodel.cpp:617
 #, kde-format
 msgid "Inactive opacity"
 msgstr "Opacitat inactiva"
 
-#: rulesmodel.cpp:622
+#: rulesmodel.cpp:623
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "Prevenció de robatori de focus"
 
-#: rulesmodel.cpp:624
+#: rulesmodel.cpp:625
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -488,12 +488,12 @@ msgstr ""
 "strong='true'>Extrema:</emphasis> La finestra mai s'elevarà ni prendrà el "
 "focus.</item></list>"
 
-#: rulesmodel.cpp:649
+#: rulesmodel.cpp:650
 #, kde-format
 msgid "Focus protection"
 msgstr "Protecció del focus"
 
-#: rulesmodel.cpp:651
+#: rulesmodel.cpp:652
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -536,22 +536,22 @@ msgstr ""
 "item><item><emphasis strong='true'>Extrema:</emphasis> Les finestres obertes "
 "recentment mai s'elevaran ni prendran el focus.</item></list>"
 
-#: rulesmodel.cpp:677
+#: rulesmodel.cpp:678
 #, kde-format
 msgid "Accept focus"
 msgstr "Accepta el focus"
 
-#: rulesmodel.cpp:679
+#: rulesmodel.cpp:680
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
 msgstr "Controla si la finestra prendrà el focus o no quan s'hi fa clic."
 
-#: rulesmodel.cpp:683
+#: rulesmodel.cpp:684
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Ignora les dreceres globals"
 
-#: rulesmodel.cpp:685
+#: rulesmodel.cpp:686
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -569,42 +569,42 @@ msgstr ""
 "+Tab</shortcut> fora de la finestra o utilitzar altres dreceres globals com "
 "<shortcut>Alt+Espai</shortcut> per a activar el KRunner."
 
-#: rulesmodel.cpp:695
+#: rulesmodel.cpp:696
 #, kde-format
 msgid "Closeable"
 msgstr "Es pot tancar"
 
-#: rulesmodel.cpp:700
+#: rulesmodel.cpp:701
 #, kde-format
 msgid "Desktop file name"
 msgstr "Nom de fitxer «desktop»"
 
-#: rulesmodel.cpp:705
+#: rulesmodel.cpp:706
 #, kde-format
 msgid "Layer"
 msgstr "Capa"
 
-#: rulesmodel.cpp:711
+#: rulesmodel.cpp:712
 #, kde-format
 msgid "Adaptive sync"
 msgstr "Sincronització adaptativa"
 
-#: rulesmodel.cpp:716
+#: rulesmodel.cpp:717
 #, kde-format
 msgid "Allow tearing"
 msgstr "Permet l'esquinçament"
 
-#: rulesmodel.cpp:721
+#: rulesmodel.cpp:722
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
 msgstr "Oculta de les captures de pantalla i enregistraments de pantalla"
 
-#: rulesmodel.cpp:774
+#: rulesmodel.cpp:775
 #, kde-format
 msgid "Window class not available"
 msgstr "Classe de finestra no disponible"
 
-#: rulesmodel.cpp:775
+#: rulesmodel.cpp:776
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -619,190 +619,214 @@ msgstr ""
 "com el títol de la finestra.<nl/><nl/>Considereu informar d'aquest error als "
 "desenvolupadors de l'aplicació."
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:810
 #, kde-format
 msgid "All window types"
 msgstr "Tots els tipus de finestra"
 
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "Normal window"
 msgstr "Finestra normal"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:812
 #, kde-format
 msgid "Dialog window"
 msgstr "Finestra de diàleg"
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:813
 #, kde-format
 msgid "Utility window"
 msgstr "Finestra d'utilitat"
 
-#: rulesmodel.cpp:813
+#: rulesmodel.cpp:814
 #, kde-format
 msgid "Dock (panel)"
 msgstr "Acoblador (plafó)"
 
-#: rulesmodel.cpp:814
+#: rulesmodel.cpp:815
 #, kde-format
 msgid "Toolbar"
 msgstr "Barra d'eines"
 
-#: rulesmodel.cpp:815
+#: rulesmodel.cpp:816
 #, kde-format
 msgid "Torn-off menu"
 msgstr "Menú separable"
 
-#: rulesmodel.cpp:816
+#: rulesmodel.cpp:817
 #, kde-format
 msgid "Splash screen"
 msgstr "Pantalla de presentació"
 
-#: rulesmodel.cpp:817 rulesmodel.cpp:918
+#: rulesmodel.cpp:818 rulesmodel.cpp:919
 #, kde-format
 msgid "Desktop"
 msgstr "Escriptori"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:819
+#: rulesmodel.cpp:820
 #, kde-format
 msgid "Standalone menubar"
 msgstr "Barra de menús autònoma"
 
-#: rulesmodel.cpp:820 rulesmodel.cpp:926
+#: rulesmodel.cpp:821 rulesmodel.cpp:927
 #, kde-format
 msgid "On-screen display"
 msgstr "Visualització en pantalla"
 
-#: rulesmodel.cpp:830
+#: rulesmodel.cpp:831
 #, kde-format
 msgid "All desktops"
 msgstr "Tots els escriptoris"
 
-#: rulesmodel.cpp:832
+#: rulesmodel.cpp:833
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "Fa que la finestra estigui disponible en tots els escriptoris"
 
-#: rulesmodel.cpp:851
+#: rulesmodel.cpp:852
 #, kde-format
 msgid "All activities"
 msgstr "Totes les activitats"
 
-#: rulesmodel.cpp:853
+#: rulesmodel.cpp:854
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "Fa que la finestra estigui disponible en totes les activitats"
 
-#: rulesmodel.cpp:874
+#: rulesmodel.cpp:875
 #, kde-format
 msgid "Default"
 msgstr "Omissió"
 
-#: rulesmodel.cpp:875
+#: rulesmodel.cpp:876
 #, kde-format
 msgid "No placement"
 msgstr "Sense emplaçament"
 
-#: rulesmodel.cpp:876
+#: rulesmodel.cpp:877
 #, kde-format
 msgid "Minimal overlapping"
 msgstr "Superposició mínima"
 
-#: rulesmodel.cpp:877
+#: rulesmodel.cpp:878
 #, kde-format
 msgid "Maximized"
 msgstr "Maximitzada"
 
-#: rulesmodel.cpp:878
+#: rulesmodel.cpp:879
 #, kde-format
 msgid "Centered"
 msgstr "Centrada"
 
-#: rulesmodel.cpp:879
+#: rulesmodel.cpp:880
 #, kde-format
 msgid "Random"
 msgstr "Aleatòria"
 
-#: rulesmodel.cpp:880
+#: rulesmodel.cpp:881
 #, kde-format
 msgid "In top-left corner"
 msgstr "A la cantonada superior esquerra"
 
-#: rulesmodel.cpp:881
+#: rulesmodel.cpp:882
 #, kde-format
 msgid "Under mouse"
 msgstr "Sota el ratolí"
 
-#: rulesmodel.cpp:882
+#: rulesmodel.cpp:883
 #, kde-format
 msgid "On main window"
 msgstr "A la finestra principal"
 
-#: rulesmodel.cpp:889
+#: rulesmodel.cpp:890
 #, kde-format
 msgid "None"
 msgstr "Sense"
 
-#: rulesmodel.cpp:890
+#: rulesmodel.cpp:891
 #, kde-format
 msgid "Low"
 msgstr "Baixa"
 
-#: rulesmodel.cpp:891 rulesmodel.cpp:920
+#: rulesmodel.cpp:892 rulesmodel.cpp:921
 #, kde-format
 msgid "Normal"
 msgstr "Normal"
 
-#: rulesmodel.cpp:892
+#: rulesmodel.cpp:893
 #, kde-format
 msgid "High"
 msgstr "Alta"
 
-#: rulesmodel.cpp:893
+#: rulesmodel.cpp:894
 #, kde-format
 msgid "Extreme"
 msgstr "Extrema"
 
-#: rulesmodel.cpp:919
+#: rulesmodel.cpp:920
 #, kde-format
 msgid "Below"
 msgstr "Sota"
 
-#: rulesmodel.cpp:921
+#: rulesmodel.cpp:922
 #, kde-format
 msgid "Above"
 msgstr "Damunt"
 
-#: rulesmodel.cpp:922
+#: rulesmodel.cpp:923
 #, kde-format
 msgid "Notification"
 msgstr "Notificació"
 
-#: rulesmodel.cpp:924
+#: rulesmodel.cpp:925
 #, kde-format
 msgid "Popup"
 msgstr "Emergent"
 
-#: rulesmodel.cpp:925
+#: rulesmodel.cpp:926
 #, kde-format
 msgid "Critical notification"
 msgstr "Notificació crítica"
 
-#: rulesmodel.cpp:927
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Overlay"
 msgstr "Superposició"
 
-#: rulesmodel.cpp:952
+#: rulesmodel.cpp:936
+#, kde-format
+msgctxt "Never draw a server side decoration"
+msgid "Never"
+msgstr ""
+
+#: rulesmodel.cpp:937
+#, kde-format
+msgctxt "Draw a server side decoration if the application asks for it"
+msgid "If the application asks"
+msgstr ""
+
+#: rulesmodel.cpp:938
+#, kde-format
+msgctxt "Always draw a server side decoration"
+msgid "Always"
+msgstr ""
+
+#: rulesmodel.cpp:939
+#, kde-format
+msgctxt "Always draw a server side drop shadow"
+msgid "Only shadow"
+msgstr ""
+
+#: rulesmodel.cpp:964
 #, kde-format
 msgid "Unmanaged window"
 msgstr "Finestra no gestionada"
 
-#: rulesmodel.cpp:953
+#: rulesmodel.cpp:965
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
@@ -998,6 +1022,9 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
+
+#~ msgid "No titlebar and frame"
+#~ msgstr "Sense barra de títol ni marc"
 
 #~ msgid "Obey geometry restrictions"
 #~ msgstr "Obeeix les restriccions de geometria"

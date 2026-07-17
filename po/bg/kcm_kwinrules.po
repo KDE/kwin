@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-10 00:46+0000\n"
+"POT-Creation-Date: 2026-07-17 00:45+0000\n"
 "PO-Revision-Date: 2026-05-28 18:26+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -304,7 +304,7 @@ msgstr "Дейности"
 msgid "Screen"
 msgstr "Екран"
 
-#: rulesmodel.cpp:524 rulesmodel.cpp:923
+#: rulesmodel.cpp:524 rulesmodel.cpp:924
 #, kde-format
 msgid "Fullscreen"
 msgstr "Цял екран"
@@ -417,38 +417,38 @@ msgstr "Бърз клавиш"
 
 #: rulesmodel.cpp:600
 #, kde-format
-msgid "No titlebar and frame"
-msgstr "Без заглавна лента и рамка"
+msgid "Window manager draws titlebar, frame, and shadows"
+msgstr ""
 
-#: rulesmodel.cpp:600 rulesmodel.cpp:605 rulesmodel.cpp:611 rulesmodel.cpp:616
-#: rulesmodel.cpp:622 rulesmodel.cpp:649 rulesmodel.cpp:677 rulesmodel.cpp:683
-#: rulesmodel.cpp:695 rulesmodel.cpp:700 rulesmodel.cpp:705 rulesmodel.cpp:711
-#: rulesmodel.cpp:716 rulesmodel.cpp:721
+#: rulesmodel.cpp:600 rulesmodel.cpp:606 rulesmodel.cpp:612 rulesmodel.cpp:617
+#: rulesmodel.cpp:623 rulesmodel.cpp:650 rulesmodel.cpp:678 rulesmodel.cpp:684
+#: rulesmodel.cpp:696 rulesmodel.cpp:701 rulesmodel.cpp:706 rulesmodel.cpp:712
+#: rulesmodel.cpp:717 rulesmodel.cpp:722
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "Външен вид и корекции"
 
-#: rulesmodel.cpp:605
+#: rulesmodel.cpp:606
 #, kde-format
 msgid "Titlebar color scheme"
 msgstr "Цветова схема на заглавната лента"
 
-#: rulesmodel.cpp:611
+#: rulesmodel.cpp:612
 #, kde-format
 msgid "Active opacity"
 msgstr "Активна непрозрачност"
 
-#: rulesmodel.cpp:616
+#: rulesmodel.cpp:617
 #, kde-format
 msgid "Inactive opacity"
 msgstr "Неактивна непрозрачност"
 
-#: rulesmodel.cpp:622
+#: rulesmodel.cpp:623
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "Предотвратяване на отнемане на фокус"
 
-#: rulesmodel.cpp:624
+#: rulesmodel.cpp:625
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -487,12 +487,12 @@ msgstr ""
 "</emphasis> Прозорецът никога няма да бъде повдигнат и фокусиран.</item></"
 "list>"
 
-#: rulesmodel.cpp:649
+#: rulesmodel.cpp:650
 #, kde-format
 msgid "Focus protection"
 msgstr "Защита на фокуса"
 
-#: rulesmodel.cpp:651
+#: rulesmodel.cpp:652
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -535,22 +535,22 @@ msgstr ""
 "item><item><emphasis strong='true'>Екстремна:</emphasis>Новооткритите "
 "прозорци никога не се повдигат и не поемат фокус.</item></list>"
 
-#: rulesmodel.cpp:677
+#: rulesmodel.cpp:678
 #, kde-format
 msgid "Accept focus"
 msgstr "Приемане на фокус"
 
-#: rulesmodel.cpp:679
+#: rulesmodel.cpp:680
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
 msgstr "Определя дали прозорецът се фокусира при кликване върху него."
 
-#: rulesmodel.cpp:683
+#: rulesmodel.cpp:684
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Пренебрегване на общите бързи клавиши"
 
-#: rulesmodel.cpp:685
+#: rulesmodel.cpp:686
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -569,42 +569,42 @@ msgstr ""
 "други глобални преки пътища, като например <shortcut>Alt+Space</shortcut>, "
 "за да да активирате KRunner."
 
-#: rulesmodel.cpp:695
+#: rulesmodel.cpp:696
 #, kde-format
 msgid "Closeable"
 msgstr "Може да бъде затворен"
 
-#: rulesmodel.cpp:700
+#: rulesmodel.cpp:701
 #, kde-format
 msgid "Desktop file name"
 msgstr "Име на файла за работния плот"
 
-#: rulesmodel.cpp:705
+#: rulesmodel.cpp:706
 #, kde-format
 msgid "Layer"
 msgstr "Слой"
 
-#: rulesmodel.cpp:711
+#: rulesmodel.cpp:712
 #, kde-format
 msgid "Adaptive sync"
 msgstr "Адаптивно синхронизиране"
 
-#: rulesmodel.cpp:716
+#: rulesmodel.cpp:717
 #, kde-format
 msgid "Allow tearing"
 msgstr "Разрешаване на разкъсването"
 
-#: rulesmodel.cpp:721
+#: rulesmodel.cpp:722
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
 msgstr "Скриване от екранни снимки и записи на екрана"
 
-#: rulesmodel.cpp:774
+#: rulesmodel.cpp:775
 #, kde-format
 msgid "Window class not available"
 msgstr "Не е наличен клас на прозорец"
 
-#: rulesmodel.cpp:775
+#: rulesmodel.cpp:776
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -619,190 +619,214 @@ msgstr ""
 "свойства като заглавието на прозореца.<nl/><nl/>Моля, помислете дали да не "
 "съобщите за тази грешка на разработчиците на приложението."
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:810
 #, kde-format
 msgid "All window types"
 msgstr "Всички типове прозорци"
 
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "Normal window"
 msgstr "Обикновен прозорец"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:812
 #, kde-format
 msgid "Dialog window"
 msgstr "Диалогов прозорец"
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:813
 #, kde-format
 msgid "Utility window"
 msgstr "Прозорец с инструменти"
 
-#: rulesmodel.cpp:813
+#: rulesmodel.cpp:814
 #, kde-format
 msgid "Dock (panel)"
 msgstr "Системен панел"
 
-#: rulesmodel.cpp:814
+#: rulesmodel.cpp:815
 #, kde-format
 msgid "Toolbar"
 msgstr "Лента с инструменти"
 
-#: rulesmodel.cpp:815
+#: rulesmodel.cpp:816
 #, kde-format
 msgid "Torn-off menu"
 msgstr "Откачено меню"
 
-#: rulesmodel.cpp:816
+#: rulesmodel.cpp:817
 #, kde-format
 msgid "Splash screen"
 msgstr "Начален екран"
 
-#: rulesmodel.cpp:817 rulesmodel.cpp:918
+#: rulesmodel.cpp:818 rulesmodel.cpp:919
 #, kde-format
 msgid "Desktop"
 msgstr "Работен плот"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:819
+#: rulesmodel.cpp:820
 #, kde-format
 msgid "Standalone menubar"
 msgstr "Независимо меню"
 
-#: rulesmodel.cpp:820 rulesmodel.cpp:926
+#: rulesmodel.cpp:821 rulesmodel.cpp:927
 #, kde-format
 msgid "On-screen display"
 msgstr "Екранни надписи"
 
-#: rulesmodel.cpp:830
+#: rulesmodel.cpp:831
 #, kde-format
 msgid "All desktops"
 msgstr "Всички работни плотове"
 
-#: rulesmodel.cpp:832
+#: rulesmodel.cpp:833
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "Наличност на прозореца на всички работни плотове"
 
-#: rulesmodel.cpp:851
+#: rulesmodel.cpp:852
 #, kde-format
 msgid "All activities"
 msgstr "Всички дейности"
 
-#: rulesmodel.cpp:853
+#: rulesmodel.cpp:854
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "Наличност на прозореца на всички дейности"
 
-#: rulesmodel.cpp:874
+#: rulesmodel.cpp:875
 #, kde-format
 msgid "Default"
 msgstr "По подразбиране"
 
-#: rulesmodel.cpp:875
+#: rulesmodel.cpp:876
 #, kde-format
 msgid "No placement"
 msgstr "Без разположение"
 
-#: rulesmodel.cpp:876
+#: rulesmodel.cpp:877
 #, kde-format
 msgid "Minimal overlapping"
 msgstr "Минимално припокриване"
 
-#: rulesmodel.cpp:877
+#: rulesmodel.cpp:878
 #, kde-format
 msgid "Maximized"
 msgstr "Максимизиран"
 
-#: rulesmodel.cpp:878
+#: rulesmodel.cpp:879
 #, kde-format
 msgid "Centered"
 msgstr "Центрирано"
 
-#: rulesmodel.cpp:879
+#: rulesmodel.cpp:880
 #, kde-format
 msgid "Random"
 msgstr "Случайно"
 
-#: rulesmodel.cpp:880
+#: rulesmodel.cpp:881
 #, kde-format
 msgid "In top-left corner"
 msgstr "В горния ляв ъгъл"
 
-#: rulesmodel.cpp:881
+#: rulesmodel.cpp:882
 #, kde-format
 msgid "Under mouse"
 msgstr "Под мишката"
 
-#: rulesmodel.cpp:882
+#: rulesmodel.cpp:883
 #, kde-format
 msgid "On main window"
 msgstr "В главния прозорец"
 
-#: rulesmodel.cpp:889
+#: rulesmodel.cpp:890
 #, kde-format
 msgid "None"
 msgstr "Без"
 
-#: rulesmodel.cpp:890
+#: rulesmodel.cpp:891
 #, kde-format
 msgid "Low"
 msgstr "Слабо"
 
-#: rulesmodel.cpp:891 rulesmodel.cpp:920
+#: rulesmodel.cpp:892 rulesmodel.cpp:921
 #, kde-format
 msgid "Normal"
 msgstr "Нормално"
 
-#: rulesmodel.cpp:892
+#: rulesmodel.cpp:893
 #, kde-format
 msgid "High"
 msgstr "Силно"
 
-#: rulesmodel.cpp:893
+#: rulesmodel.cpp:894
 #, kde-format
 msgid "Extreme"
 msgstr "Крайно"
 
-#: rulesmodel.cpp:919
+#: rulesmodel.cpp:920
 #, kde-format
 msgid "Below"
 msgstr "Отдолу"
 
-#: rulesmodel.cpp:921
+#: rulesmodel.cpp:922
 #, kde-format
 msgid "Above"
 msgstr "Отгоре"
 
-#: rulesmodel.cpp:922
+#: rulesmodel.cpp:923
 #, kde-format
 msgid "Notification"
 msgstr "Известие"
 
-#: rulesmodel.cpp:924
+#: rulesmodel.cpp:925
 #, kde-format
 msgid "Popup"
 msgstr "Изскачащ прозорец"
 
-#: rulesmodel.cpp:925
+#: rulesmodel.cpp:926
 #, kde-format
 msgid "Critical notification"
 msgstr "Критични известия"
 
-#: rulesmodel.cpp:927
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Overlay"
 msgstr "Припокриване"
 
-#: rulesmodel.cpp:952
+#: rulesmodel.cpp:936
+#, kde-format
+msgctxt "Never draw a server side decoration"
+msgid "Never"
+msgstr ""
+
+#: rulesmodel.cpp:937
+#, kde-format
+msgctxt "Draw a server side decoration if the application asks for it"
+msgid "If the application asks"
+msgstr ""
+
+#: rulesmodel.cpp:938
+#, kde-format
+msgctxt "Always draw a server side decoration"
+msgid "Always"
+msgstr ""
+
+#: rulesmodel.cpp:939
+#, kde-format
+msgctxt "Always draw a server side drop shadow"
+msgid "Only shadow"
+msgstr ""
+
+#: rulesmodel.cpp:964
 #, kde-format
 msgid "Unmanaged window"
 msgstr "Неуправляван прозорец"
 
-#: rulesmodel.cpp:953
+#: rulesmodel.cpp:965
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
@@ -999,6 +1023,9 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "х"
+
+#~ msgid "No titlebar and frame"
+#~ msgstr "Без заглавна лента и рамка"
 
 #~ msgid "Obey geometry restrictions"
 #~ msgstr "Спазване на геометричните ограничения"

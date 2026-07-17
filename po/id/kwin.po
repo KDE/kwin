@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-15 00:47+0000\n"
+"POT-Creation-Date: 2026-07-17 00:45+0000\n"
 "PO-Revision-Date: 2023-12-03 14:01+0700\n"
 "Last-Translator: Linerly <linerly@linerly.xyz>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -73,7 +73,7 @@ msgstr "Tekan tombol Ctrl kanan untuk melepaskan masukan"
 msgid "KDE Wayland Compositor"
 msgstr "Kompositor Wayland KDE"
 
-#: compositor.cpp:749
+#: compositor.cpp:750
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Efek desktop telah dijalankan ulang karena reset grafis"
@@ -1643,12 +1643,12 @@ msgstr "Xaver Hugl"
 msgid "Disable configuration options"
 msgstr "Nonfungsikan opsi konfigurasi"
 
-#: main_wayland.cpp:327
+#: main_wayland.cpp:328
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Jalankan sebuah server Xwayland tanpa root."
 
-#: main_wayland.cpp:330
+#: main_wayland.cpp:331
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1656,45 +1656,45 @@ msgstr ""
 "Nama pada soket Wayland untuk dicantumkan. Jika tidak, set \"wayland-0\" "
 "akan digunakan."
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:335
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr ""
 "Display X11 yang akan digunakan dalam mode perjendelaan pada platform X11."
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:339
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "Display Wayland yang akan digunakan dalam mode perjendelaan pada platform "
 "Wayland."
 
-#: main_wayland.cpp:340
+#: main_wayland.cpp:341
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Render untuk framebuffer virtual."
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:343
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Lebar untuk mode perjendelaan. Lebar bakunya adalah 1024."
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:347
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Tinggi untuk mode perjendelaan. Tinggi bakunya adalah 768."
 
-#: main_wayland.cpp:351
+#: main_wayland.cpp:352
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
 msgstr ""
 
-#: main_wayland.cpp:355
+#: main_wayland.cpp:356
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Skala untuk mode perjendelaan. Skala bakunya adalah 1."
 
-#: main_wayland.cpp:360
+#: main_wayland.cpp:361
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1702,7 +1702,7 @@ msgstr ""
 "Jumlah jendela yang akan dibuka sebagai output dalam mode perjendelaan. "
 "Nilai bakunya adalah 1"
 
-#: main_wayland.cpp:365
+#: main_wayland.cpp:366
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1711,7 +1711,7 @@ msgstr ""
 "Soket XWayland digunakan untuk koneksi masuk. Ini bisa dikombinasikan dengan "
 "--soket untuk menamai soket"
 
-#: main_wayland.cpp:369
+#: main_wayland.cpp:370
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1720,12 +1720,12 @@ msgstr ""
 "Soket XWayland digunakan untuk koneksi masuk Xwayland. Ini bisa diatur "
 "berkali-kali"
 
-#: main_wayland.cpp:373
+#: main_wayland.cpp:374
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Nama pada display xwayland telah diatur sebelumnya"
 
-#: main_wayland.cpp:377
+#: main_wayland.cpp:378
 #, fuzzy, kde-format
 #| msgid ""
 #| "XWayland socket to use for Xwayland's incoming connections. This can be "
@@ -1735,68 +1735,68 @@ msgstr ""
 "Soket XWayland digunakan untuk koneksi masuk Xwayland. Ini bisa diatur "
 "berkali-kali"
 
-#: main_wayland.cpp:381
+#: main_wayland.cpp:382
 #, fuzzy, kde-format
 #| msgid "Name of the xwayland display that has been pre-set up"
 msgid "Name of the xwayland init display that has been pre-set up"
 msgstr "Nama pada display xwayland telah diatur sebelumnya"
 
-#: main_wayland.cpp:385
+#: main_wayland.cpp:386
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Nama pada file xauthority"
 
-#: main_wayland.cpp:389
+#: main_wayland.cpp:390
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Mengeluarkan instasi ini sehingga ia bisa dimulai ulang berdasarkan "
 "kwin_wayland_wrapper."
 
-#: main_wayland.cpp:391
+#: main_wayland.cpp:392
 #, kde-format
 msgid "Render through drm node."
 msgstr "Render melalui node drm."
 
-#: main_wayland.cpp:392
+#: main_wayland.cpp:393
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 "Ekstrak informasi lokalisasi dari locale1 daripada konfigurasi pengguna."
 
-#: main_wayland.cpp:421
+#: main_wayland.cpp:422
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Metode input yang menjalankan KWin."
 
-#: main_wayland.cpp:427
+#: main_wayland.cpp:428
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Menjalankan sesi dalam mode terkunci."
 
-#: main_wayland.cpp:431
+#: main_wayland.cpp:432
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Menjalankan sesi tanpa dukungan layar kunci."
 
-#: main_wayland.cpp:436
+#: main_wayland.cpp:437
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Menjalankan sesi tanpa dukungan pintasan global."
 
-#: main_wayland.cpp:441
+#: main_wayland.cpp:442
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Nonfungsikan integrasi KActivities."
 
-#: main_wayland.cpp:446
+#: main_wayland.cpp:447
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr ""
 "Keluarkan sesudah aplikasi sesi, yang dijalankan oleh KWin, yang ditutup."
 
-#: main_wayland.cpp:451
+#: main_wayland.cpp:452
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
@@ -3696,162 +3696,175 @@ msgid "Fullscreen rule type"
 msgstr "Tipe aturan layar penuh"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:307
+#: rulesettings.kcfg:311
 #, kde-format
 msgid "No titlebar and frame"
 msgstr "Tanpa bilah judul dan kerangka"
 
 #. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:311
+#: rulesettings.kcfg:315
 #, kde-format
 msgid "No titlebar rule type"
 msgstr "Tipe aturan tanpa bilah judul"
 
+#. i18n: ectx: label, entry (decorationpolicy), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:322
+#, kde-format
+msgid "Decoration policy"
+msgstr ""
+
+#. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:332
+#, fuzzy, kde-format
+#| msgid "Active opacity rule type"
+msgid "Decoration policy rule type"
+msgstr "Tipe aturan opasitas aktif"
+
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:318
+#: rulesettings.kcfg:339
 #, kde-format
 msgid "Titlebar color and scheme"
 msgstr "Skema dan warna bilah judul"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:321
+#: rulesettings.kcfg:342
 #, kde-format
 msgid "Titlebar color rule type"
 msgstr "Tipe aturan warna bilah judul"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:326
+#: rulesettings.kcfg:347
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "Pencegahan pencurian fokus"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:332
+#: rulesettings.kcfg:353
 #, kde-format
 msgid "Focus stealing prevention rule type"
 msgstr "Tipe aturan pencegahan pencurian fokus"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:337
+#: rulesettings.kcfg:358
 #, kde-format
 msgid "Focus protection"
 msgstr "Proteksi fokus"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:343
+#: rulesettings.kcfg:364
 #, kde-format
 msgid "Focus protection rule type"
 msgstr "Tipe aturan proteksi fokus"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:348
+#: rulesettings.kcfg:369
 #, kde-format
 msgid "Accept Focus"
 msgstr "Terima Fokus"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:352
+#: rulesettings.kcfg:373
 #, kde-format
 msgid "Accept Focus rule type"
 msgstr "Tipe aturan Terima Fokus"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:357
+#: rulesettings.kcfg:378
 #, kde-format
 msgid "Closeable"
 msgstr "Bisa ditutup"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:361
+#: rulesettings.kcfg:382
 #, kde-format
 msgid "Closeable rule type"
 msgstr "Tipe aturan bisa ditutup"
 
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:366
+#: rulesettings.kcfg:387
 #, kde-format
 msgid "Shortcut"
 msgstr "Pintasan"
 
 #. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:369
+#: rulesettings.kcfg:390
 #, kde-format
 msgid "Shortcut rule type"
 msgstr "Tipe aturan pintasan"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:376
+#: rulesettings.kcfg:397
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Abaikan pintasan global"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:380
+#: rulesettings.kcfg:401
 #, kde-format
 msgid "Ignore global shortcuts rule type"
 msgstr "Tipe aturan abaikan pintasan global"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:385
+#: rulesettings.kcfg:406
 #, kde-format
 msgid "Desktop file name"
 msgstr "Nama file desktop"
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:388
+#: rulesettings.kcfg:409
 #, kde-format
 msgid "Desktop file name rule type"
 msgstr "Tipe aturan nama file desktop"
 
 #. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:395
+#: rulesettings.kcfg:416
 #, kde-format
 msgid "Layer"
 msgstr ""
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:411
+#: rulesettings.kcfg:432
 #, fuzzy, kde-format
 #| msgid "Shaded rule type"
 msgid "Layer rule type"
 msgstr "Tipe aturan ditiraikan"
 
 #. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:416
+#: rulesettings.kcfg:437
 #, kde-format
 msgid "AdaptiveSync"
 msgstr ""
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:420
+#: rulesettings.kcfg:441
 #, fuzzy, kde-format
 #| msgid "Activity rule type"
 msgid "AdaptiveSync rule type"
 msgstr "Tipe aturan aktivitas"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:425
+#: rulesettings.kcfg:446
 #, fuzzy, kde-format
 #| msgid "Allow Rotation"
 msgid "Allow Tearing"
 msgstr "Memungkinkan Perotasian"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
+#: rulesettings.kcfg:450
 #, fuzzy, kde-format
 #| msgid "Shaded rule type"
 msgid "Tearing rule type"
 msgstr "Tipe aturan ditiraikan"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:434
+#: rulesettings.kcfg:455
 #, fuzzy, kde-format
 #| msgid "Fullscreen rule type"
 msgid "Hide from screenshots and screen recordings"
 msgstr "Tipe aturan layar penuh"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:438
+#: rulesettings.kcfg:459
 #, fuzzy, kde-format
 #| msgid "Fullscreen rule type"
 msgid "Hide from screenshots and screen recordings rule type"

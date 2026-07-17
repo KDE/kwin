@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-15 00:47+0000\n"
+"POT-Creation-Date: 2026-07-17 00:45+0000\n"
 "PO-Revision-Date: 2026-02-06 14:38+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -76,7 +76,7 @@ msgstr "Lai paņemtu ievadi, spiediet labo „Ctr“ taustiņu"
 msgid "KDE Wayland Compositor"
 msgstr "KDE „Wayland“ kompozitors"
 
-#: compositor.cpp:749
+#: compositor.cpp:750
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Darbvirsmas efekti ir pārstartēti grafikas atiestatīšanas rezultātā"
@@ -1600,12 +1600,12 @@ msgstr "Xaver Hugl"
 msgid "Disable configuration options"
 msgstr "Atslēgt konfigurācijas opcijas"
 
-#: main_wayland.cpp:327
+#: main_wayland.cpp:328
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Sākt „XWayland“ serveri bez saknes lietotāja privilēģijām"
 
-#: main_wayland.cpp:330
+#: main_wayland.cpp:331
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1613,48 +1613,48 @@ msgstr ""
 "„Wayland“ ligzdas nosaukums, ko klausīties. Ja nav norādīts, izmanto "
 "„wayland-0“."
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:335
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "X11 displejs, ko izmanto logu režīmā X11 platformā"
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:339
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "„Wayland“ displejs, ko izmantot logu režīmā „Wayland“ platformā."
 
-#: main_wayland.cpp:340
+#: main_wayland.cpp:341
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Atveidot virtuālā kadru atjaunošanas buferī."
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:343
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Logu režīma platums. Noklusējums ir 1024."
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:347
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Logu režīma augstums. Noklusējums ir 768."
 
-#: main_wayland.cpp:351
+#: main_wayland.cpp:352
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
 msgstr "Vai izveidot loga režīma pilnekrānu"
 
-#: main_wayland.cpp:355
+#: main_wayland.cpp:356
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Loga režīma mērogs. Noklusējuma vērtība ir 1."
 
-#: main_wayland.cpp:360
+#: main_wayland.cpp:361
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr "Kā izejas logu režīmā atveramo logu skaits. Noklusējuma vērtība ir 1."
 
-#: main_wayland.cpp:365
+#: main_wayland.cpp:366
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1663,7 +1663,7 @@ msgstr ""
 "„Wayland“ ligzda ienākošiem savienojumiem. To iespējams kombinēt ar -- "
 "ligzdu, lai nosauktu ligzdu"
 
-#: main_wayland.cpp:369
+#: main_wayland.cpp:370
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1672,12 +1672,12 @@ msgstr ""
 "„XWayland“ ligzda „XWayland“ ienākošiem savienojumiem. To iespējams iestatīt "
 "vairākas reizes"
 
-#: main_wayland.cpp:373
+#: main_wayland.cpp:374
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Iepriekš definētais „XWayland“ displeja nosaukums"
 
-#: main_wayland.cpp:377
+#: main_wayland.cpp:378
 #, fuzzy, kde-format
 #| msgid ""
 #| "XWayland socket to use for Xwayland's incoming connections. This can be "
@@ -1687,66 +1687,66 @@ msgstr ""
 "„XWayland“ ligzda „XWayland“ ienākošiem savienojumiem. To iespējams iestatīt "
 "vairākas reizes"
 
-#: main_wayland.cpp:381
+#: main_wayland.cpp:382
 #, fuzzy, kde-format
 #| msgid "Name of the xwayland display that has been pre-set up"
 msgid "Name of the xwayland init display that has been pre-set up"
 msgstr "Iepriekš definētais „XWayland“ displeja nosaukums"
 
-#: main_wayland.cpp:385
+#: main_wayland.cpp:386
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "„xauthority“ datnes nosaukums"
 
-#: main_wayland.cpp:389
+#: main_wayland.cpp:390
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Iziet no šīs instances, lai to varētu pārstartēt „kwin_wayland_wrapper“."
 
-#: main_wayland.cpp:391
+#: main_wayland.cpp:392
 #, kde-format
 msgid "Render through drm node."
 msgstr "Renderēt caur drm režīmu."
 
-#: main_wayland.cpp:392
+#: main_wayland.cpp:393
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 "Izvilkt lokāles informāciju no locale1, bet ne lietotāja konfigurācijas"
 
-#: main_wayland.cpp:421
+#: main_wayland.cpp:422
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Ievades metode, kuru palaiž „KWin“."
 
-#: main_wayland.cpp:427
+#: main_wayland.cpp:428
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Sāk sesiju slēgtā režīmā."
 
-#: main_wayland.cpp:431
+#: main_wayland.cpp:432
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Sāk sesiju bez ekrāna slēgšanas atbalsta."
 
-#: main_wayland.cpp:436
+#: main_wayland.cpp:437
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Sāk sesiju bez globālo taustiņu kombināciju atbalsta."
 
-#: main_wayland.cpp:441
+#: main_wayland.cpp:442
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Izslēdz „KActivities“ integrāciju."
 
-#: main_wayland.cpp:446
+#: main_wayland.cpp:447
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Iziet pēc „KWin“ uzsāktās sesijas programmas aizvēršanas."
 
-#: main_wayland.cpp:451
+#: main_wayland.cpp:452
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Palaižamās programmas pēc „Wayland“ un „XWayland“ palaišanas"
@@ -3493,158 +3493,171 @@ msgid "Fullscreen rule type"
 msgstr "Pilnekrāna noteikuma tips"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:307
+#: rulesettings.kcfg:311
 #, kde-format
 msgid "No titlebar and frame"
 msgstr "Bez virsrakstjoslas un ietvara"
 
 #. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:311
+#: rulesettings.kcfg:315
 #, kde-format
 msgid "No titlebar rule type"
 msgstr "Bez virsrakstjoslas un ietvara noteikuma tips"
 
+#. i18n: ectx: label, entry (decorationpolicy), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:322
+#, kde-format
+msgid "Decoration policy"
+msgstr ""
+
+#. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:332
+#, fuzzy, kde-format
+#| msgid "Active opacity rule type"
+msgid "Decoration policy rule type"
+msgstr "Aktīvās necaurspīdības noteikuma tips"
+
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:318
+#: rulesettings.kcfg:339
 #, kde-format
 msgid "Titlebar color and scheme"
 msgstr "Virsrakstjoslas krāsa un shēma"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:321
+#: rulesettings.kcfg:342
 #, kde-format
 msgid "Titlebar color rule type"
 msgstr "Virsrakstjoslas krāsas noteikuma tips"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:326
+#: rulesettings.kcfg:347
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "Fokusa zaudēšanas novēršana"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:332
+#: rulesettings.kcfg:353
 #, kde-format
 msgid "Focus stealing prevention rule type"
 msgstr "Fokusa zaudēšanas novēršanas noteikuma tips"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:337
+#: rulesettings.kcfg:358
 #, kde-format
 msgid "Focus protection"
 msgstr "Fokusa aizsardzība"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:343
+#: rulesettings.kcfg:364
 #, kde-format
 msgid "Focus protection rule type"
 msgstr "Fokusa aizsardzības noteikuma tips"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:348
+#: rulesettings.kcfg:369
 #, kde-format
 msgid "Accept Focus"
 msgstr "Pieņemt fokusu"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:352
+#: rulesettings.kcfg:373
 #, kde-format
 msgid "Accept Focus rule type"
 msgstr "Fokusa pieņemšanas noteikuma tips"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:357
+#: rulesettings.kcfg:378
 #, kde-format
 msgid "Closeable"
 msgstr "Aizverams"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:361
+#: rulesettings.kcfg:382
 #, kde-format
 msgid "Closeable rule type"
 msgstr "Aizveramā stāvokļa noteikuma tips"
 
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:366
+#: rulesettings.kcfg:387
 #, kde-format
 msgid "Shortcut"
 msgstr "Saīsne"
 
 #. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:369
+#: rulesettings.kcfg:390
 #, kde-format
 msgid "Shortcut rule type"
 msgstr "Saīsnes noteikuma tips"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:376
+#: rulesettings.kcfg:397
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Ignorēt globālās saīsnes"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:380
+#: rulesettings.kcfg:401
 #, kde-format
 msgid "Ignore global shortcuts rule type"
 msgstr "Globālo saīšņu ignorēšanas noteikuma tips"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:385
+#: rulesettings.kcfg:406
 #, kde-format
 msgid "Desktop file name"
 msgstr "Darbvirsmas datnes nosaukums"
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:388
+#: rulesettings.kcfg:409
 #, kde-format
 msgid "Desktop file name rule type"
 msgstr "Darbvirsmas datnes nosaukuma noteikuma tips"
 
 #. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:395
+#: rulesettings.kcfg:416
 #, kde-format
 msgid "Layer"
 msgstr "Slānis"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:411
+#: rulesettings.kcfg:432
 #, kde-format
 msgid "Layer rule type"
 msgstr "Slāņa noteikuma tips"
 
 #. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:416
+#: rulesettings.kcfg:437
 #, kde-format
 msgid "AdaptiveSync"
 msgstr "Adaptīvā sinhronizācija"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:420
+#: rulesettings.kcfg:441
 #, kde-format
 msgid "AdaptiveSync rule type"
 msgstr "Adaptīvās sinhronizācijas noteikumu tips"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:425
+#: rulesettings.kcfg:446
 #, kde-format
 msgid "Allow Tearing"
 msgstr "Atļaut ekrāna pārraušanu"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
+#: rulesettings.kcfg:450
 #, kde-format
 msgid "Tearing rule type"
 msgstr "Pārraušanas noteikumu veids"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:434
+#: rulesettings.kcfg:455
 #, fuzzy, kde-format
 #| msgid "&Hide from Screencast"
 msgid "Hide from screenshots and screen recordings"
 msgstr "&Slēpt no ekrāna ierakstīšanas"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:438
+#: rulesettings.kcfg:459
 #, fuzzy, kde-format
 #| msgid "&Hide from Screencast"
 msgid "Hide from screenshots and screen recordings rule type"

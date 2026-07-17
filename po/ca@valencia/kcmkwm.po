@@ -8,50 +8,46 @@
 # SPDX-FileCopyrightText: 2005 Albert Astals Cid <aacid@kde.org>
 # SPDX-FileCopyrightText: 2009 Manuel Tortosa Moreno <manutortosa@chakra-project.org>
 # SPDX-FileCopyrightText: 2019 Empar Montoro Martín <montoro_mde@gva.es>
-# SPDX-FileCopyrightText: 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026 Josep M. Ferrer <txemaq@gmail.com>
+# SPDX-FileCopyrightText: 2007-2013, 2015-2026 Josep M. Ferrer <txemaq@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-14 00:45+0000\n"
-"PO-Revision-Date: 2026-06-18 09:40+0200\n"
+"PO-Revision-Date: 2026-07-14 17:08+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.04.0\n"
+"X-Generator: Lokalize 26.04.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 
 #: ui/Focus.qml:22
-#, fuzzy, kde-format
-#| msgid "Window &activation policy:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Window focus policy:"
-msgstr "Política d'&activació de les finestres:"
+msgstr "Política de focus de les finestres:"
 
 #: ui/Focus.qml:46
-#, fuzzy, kde-format
-#| msgctxt "sassa asas"
-#| msgid "Click to focus"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Click to focus"
-msgstr "Clic damunt del focus"
+msgstr "Click to focus"
 
 #: ui/Focus.qml:47
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window becomes focused when clicked."
-msgstr ""
+msgstr "Les finestres prenen el focus quan s'ha clica."
 
 #: ui/Focus.qml:51
-#, fuzzy, kde-format
-#| msgid "Focus follows mouse"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus follows pointer"
-msgstr "El focus seguix el ratolí"
+msgstr "El focus seguix el punter"
 
 #: ui/Focus.qml:52
 #, kde-format
@@ -60,19 +56,22 @@ msgid ""
 "As the pointer moves, windows under it become focused after a configurable "
 "delay."
 msgstr ""
+"A mesura que es mou el punter, les finestres que hi ha davall seu s'enfoquen "
+"després d'un retard configurable."
 
 #: ui/Focus.qml:56
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus under pointer"
-msgstr "Focus davall el ratolí"
+msgstr "Focus davall el punter"
 
 #: ui/Focus.qml:57
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window under pointer receives focus, even if the pointer has not moved."
 msgstr ""
+"La finestra davall el punter rep el focus, fins i tot si el punter no s'ha "
+"mogut."
 
 #: ui/Focus.qml:75
 #, kde-kuit-format
@@ -82,25 +81,27 @@ msgid ""
 "some windows appearing on screen. This can lead to assigning focus to "
 "unwanted windows. Use with caution."
 msgstr ""
+"En seleccionar <interface>Focus davall el punter</interface> s'evitarà el "
+"focus en algunes finestres que apareguen a la pantalla. Açò pot conduir a "
+"assignar el focus a finestres no desitjades. Utilitzeu amb precaució."
 
 #: ui/Focus.qml:81
 #, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Last focused window"
-msgstr ""
+msgstr "Última finestra amb focus"
 
 #: ui/Focus.qml:83
 #, kde-format
 msgctxt "@title:group"
 msgid "After closing a window, move focus to:"
-msgstr ""
+msgstr "Després de tancar una finestra, ou el focus a:"
 
 #: ui/Focus.qml:86
-#, fuzzy, kde-format
-#| msgid "&Window snap zone:"
+#, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Window under pointer"
-msgstr "Zona d'a&tracció de la finestra:"
+msgstr "Finestra davall el punter"
 
 #: ui/Focus.qml:115
 #, kde-format
@@ -111,14 +112,13 @@ msgstr "Retar&d del focus en:"
 #, kde-format
 msgctxt "short for millisecond(s)"
 msgid "%1 ms"
-msgstr ""
+msgstr "%1 ms"
 
 #: ui/Focus.qml:128 ui/Focus.qml:254
-#, fuzzy, kde-format
-#| msgid " ms"
+#, kde-format
 msgctxt "short for millisecond(s)"
 msgid "ms"
-msgstr " ms"
+msgstr "ms"
 
 #: ui/Focus.qml:146
 #, kde-format
@@ -152,18 +152,16 @@ msgid "Extreme"
 msgstr "Extrema"
 
 #: ui/Focus.qml:171
-#, fuzzy, kde-format
-#| msgid "Switch to that Virtual Desktop"
+#, kde-format
 msgctxt "@option:radio When focusing a window on a different Virtual Desktop:"
 msgid "Switch to window’s Virtual Desktop"
-msgstr "Canvia a aquell escriptori virtual"
+msgstr "Canvia a la finestra de l'escriptori virtual"
 
 #: ui/Focus.qml:173
-#, fuzzy, kde-format
-#| msgid "When activating a window on a different Virtual Desktop:"
+#, kde-format
 msgctxt "@title:group"
 msgid "When focusing a window on a different Virtual Desktop:"
-msgstr "En activar una finestra en un escriptori virtual diferent:"
+msgstr "En enfocar una finestra en un escriptori virtual diferent:"
 
 #: ui/Focus.qml:176
 #, kde-format
@@ -183,10 +181,9 @@ msgid "Raising windows:"
 msgstr "Eleva les finestres:"
 
 #: ui/Focus.qml:208
-#, fuzzy, kde-format
-#| msgid "&Click raises active window"
+#, kde-format
 msgid "&Click raises focused window"
-msgstr "Eleva la finestra activa amb un &clic"
+msgstr "Eleva la finestra enfocada amb un &clic"
 
 #: ui/Focus.qml:228
 #, kde-format
@@ -219,17 +216,15 @@ msgid "W&indow Actions"
 msgstr "Accions de la f&inestra"
 
 #: ui/main.qml:49
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgid "Mo&vement & Placement"
-msgstr "Mo&viment"
+msgstr "Mo&viment i emplaçament"
 
 #: ui/MovementAndPlacement.qml:17
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgctxt "@title:group"
 msgid "Movement"
-msgstr "Mo&viment"
+msgstr "Moviment"
 
 #: ui/MovementAndPlacement.qml:22
 #, kde-format
@@ -241,15 +236,14 @@ msgstr "Zona d'atracció de la &vora de la pantalla:"
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "%1 px"
-msgstr ""
+msgstr "%1 px"
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
 #: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
-#, fuzzy, kde-format
-#| msgid " px"
+#, kde-format
 msgctxt "short for pixel(s)"
 msgid "px"
-msgstr " px"
+msgstr "px"
 
 #: ui/MovementAndPlacement.qml:50
 #, kde-format
@@ -275,7 +269,7 @@ msgstr "Només en encavallar-se"
 #, kde-format
 msgctxt "@title:group"
 msgid "Placement"
-msgstr ""
+msgstr "Emplaçament"
 
 #: ui/MovementAndPlacement.qml:125
 #, kde-format
@@ -313,11 +307,10 @@ msgid "Under mouse"
 msgstr "Davall el ratolí"
 
 #: ui/MovementAndPlacement.qml:149
-#, fuzzy, kde-format
-#| msgid "&Picture-in-picture"
+#, kde-format
 msgctxt "@title:group"
 msgid "Picture-in-picture Placement"
-msgstr "&Imatge en la imatge"
+msgstr "Emplaçament de la imatge en la imatge"
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
@@ -384,22 +377,19 @@ msgid "Window menu"
 msgstr "Menú de la finestra"
 
 #: ui/TitlebarActions.qml:30 ui/WindowActions.qml:23 ui/WindowActions.qml:54
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and raise"
-msgstr "Focus davall el ratolí"
+msgstr "Focus i eleva"
 
 #: ui/TitlebarActions.qml:31
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and lower"
-msgstr "Focus davall el ratolí"
+msgstr "Focus i abaixa"
 
 #: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgid "Focus"
-msgstr "&Focus"
+msgstr "Focus"
 
 #: ui/TitlebarActions.qml:43 ui/TitlebarActions.qml:57
 #, kde-format
@@ -462,12 +452,11 @@ msgid "Titlebar and Frame Actions"
 msgstr "Accions de la barra de títol i el marc"
 
 #: ui/TitlebarActions.qml:111
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for focused windows"
 msgid "Focused"
-msgstr "&Focus"
+msgstr "Amb focus"
 
 #: ui/TitlebarActions.qml:116
 #, kde-format
@@ -475,7 +464,7 @@ msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for unfocused "
 "windows"
 msgid "Unfocused"
-msgstr ""
+msgstr "Sense focus"
 
 #: ui/TitlebarActions.qml:122 ui/WindowActions.qml:46
 #, kde-format
@@ -486,13 +475,13 @@ msgstr "Clic &esquerre:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on a focused titlebar or frame"
-msgstr ""
+msgstr "Clic esquerre damunt d'una barra de títol o marc amb focus"
 
 #: ui/TitlebarActions.qml:143
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "Clic esquerre damunt d'una barra de títol o marc sense focus"
 
 #: ui/TitlebarActions.qml:160 ui/WindowActions.qml:68
 #, kde-format
@@ -503,13 +492,13 @@ msgstr "Clic del &mig:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on a focused titlebar or frame"
-msgstr ""
+msgstr "Clic del mig damunt d'una barra de títol o marc amb focus"
 
 #: ui/TitlebarActions.qml:179
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "Clic del mig damunt d'una barra de títol o marc sense focus"
 
 #: ui/TitlebarActions.qml:196 ui/WindowActions.qml:83
 #, kde-format
@@ -520,13 +509,13 @@ msgstr "Clic &dret:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on a focused titlebar or frame"
-msgstr ""
+msgstr "Clic dret damunt d'una barra de títol o marc amb focus"
 
 #: ui/TitlebarActions.qml:215
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "Clic dret damunt d'una barra de títol o marc sense focus"
 
 #: ui/TitlebarActions.qml:233
 #, kde-format
@@ -556,12 +545,12 @@ msgstr "Clic dre&t:"
 #: ui/WindowActions.qml:20 ui/WindowActions.qml:51
 #, kde-format
 msgid "Focus, raise, and click through"
-msgstr ""
+msgstr "Focus, eleva i passa un clic"
 
 #: ui/WindowActions.qml:21 ui/WindowActions.qml:52
 #, kde-format
 msgid "Focus and click through"
-msgstr ""
+msgstr "Focus i passa un clic"
 
 #: ui/WindowActions.qml:27
 #, kde-format
@@ -569,16 +558,14 @@ msgid "Move"
 msgstr "Mou"
 
 #: ui/WindowActions.qml:28
-#, fuzzy, kde-format
-#| msgid "Activate, raise and move"
+#, kde-format
 msgid "Focus, raise, and move"
-msgstr "Activa, eleva i mou"
+msgstr "Focus, eleva i mou"
 
 #: ui/WindowActions.qml:29
-#, fuzzy, kde-format
-#| msgid "Activate, raise and resize"
+#, kde-format
 msgid "Focus, raise, and resize"
-msgstr "Activa, eleva i redimensiona"
+msgstr "Focus, eleva i redimensiona"
 
 #: ui/WindowActions.qml:30
 #, kde-format
@@ -596,17 +583,15 @@ msgid "Increase opacity"
 msgstr "Augmenta l'opacitat"
 
 #: ui/WindowActions.qml:42
-#, fuzzy, kde-format
-#| msgid "Inactive Inner Window Actions"
+#, kde-format
 msgctxt "@title:group"
 msgid "Unfocused Inner Window Actions"
-msgstr "Accions de finestra interior inactiva"
+msgstr "Accions de finestra interior sense focus"
 
 #: ui/WindowActions.qml:50
-#, fuzzy, kde-format
-#| msgid "Activate, pass click and raise on release"
+#, kde-format
 msgid "Focus, click through, and raise on release"
-msgstr "Activa, passa el clic i eleva en alliberar"
+msgstr "Focus, passa un clic i eleva en alliberar"
 
 #: ui/WindowActions.qml:103
 #, kde-format
@@ -614,20 +599,17 @@ msgid "Scroll"
 msgstr "Desplaçament"
 
 #: ui/WindowActions.qml:104
-#, fuzzy, kde-format
-#| msgid "Activate and scroll"
+#, kde-format
 msgid "Focus and scroll"
-msgstr "Activa i desplaça"
+msgstr "Focus i desplaça"
 
 #: ui/WindowActions.qml:105
-#, fuzzy, kde-format
-#| msgid "Activate, raise and scroll"
+#, kde-format
 msgid "Focus, raise, and scroll"
-msgstr "Activa, eleva i desplaça"
+msgstr "Focus, eleva i desplaça"
 
 #: ui/WindowActions.qml:120
-#, fuzzy, kde-format
-#| msgid "Inner Window, Titlebar and Frame Actions"
+#, kde-format
 msgid "Inner Window, Titlebar, and Frame Actions"
 msgstr "Accions de finestra interior, barra de títol i marc"
 
@@ -655,461 +637,3 @@ msgstr "&Clic del mig:"
 #, kde-format
 msgid "Mo&use wheel:"
 msgstr "R&oda del ratolí:"
-
-#~ msgid ""
-#~ "In this row you can customize left click behavior when clicking into an "
-#~ "inactive inner window ('inner' means: not titlebar, not frame)."
-#~ msgstr ""
-#~ "En esta fila podeu personalitzar el comportament quan es fa clic esquerre "
-#~ "dins d'una finestra inactiva interna («interna» significa: ni la barra de "
-#~ "títol, ni el marc)."
-
-#~ msgid "Activate, raise and pass click"
-#~ msgstr "Activa, eleva i passa el clic"
-
-#~ msgid "Activate and pass click"
-#~ msgstr "Activa i passa el clic"
-
-#~ msgid "Activate"
-#~ msgstr "Activa"
-
-#~ msgid "Activate and raise"
-#~ msgstr "Activa i eleva"
-
-#~ msgid ""
-#~ "In this row you can customize middle click behavior when clicking into an "
-#~ "inactive inner window ('inner' means: not titlebar, not frame)."
-#~ msgstr ""
-#~ "En esta fila podeu personalitzar el comportament quan es fa clic del mig "
-#~ "dins d'una finestra inactiva interna («interna» significa: ni la barra de "
-#~ "títol, ni el marc)."
-
-#~ msgid ""
-#~ "In this row you can customize right click behavior when clicking into an "
-#~ "inactive inner window ('inner' means: not titlebar, not frame)."
-#~ msgstr ""
-#~ "En esta fila podeu personalitzar el comportament quan es fa clic dret "
-#~ "dins d'una finestra inactiva interna («interna» significa: ni la barra de "
-#~ "títol, ni el marc)."
-
-#~ msgid ""
-#~ "In this row you can customize behavior when scrolling into an inactive "
-#~ "inner window ('inner' means: not titlebar, not frame)."
-#~ msgstr ""
-#~ "En esta fila podeu personalitzar el comportament del desplaçament en una "
-#~ "finestra interna inactiva («interna» significa: ni la barra de títol, ni "
-#~ "el marc)."
-
-#~ msgid ""
-#~ "Here you select whether holding the Meta key or Alt key will allow you to "
-#~ "perform the following actions."
-#~ msgstr ""
-#~ "Ací seleccioneu si en mantindre les tecles «Meta» o «Alt» podreu efectuar "
-#~ "les accions següents."
-
-#~ msgid "  + "
-#~ msgstr "  + "
-
-#~ msgid ""
-#~ "In this row you can customize left click behavior when clicking into the "
-#~ "titlebar or the frame."
-#~ msgstr ""
-#~ "En esta fila podeu personalitzar el comportament quan es fa clic esquerre "
-#~ "dins de la barra de títol o en el marc."
-
-#~ msgid "Toggle raise and lower"
-#~ msgstr "Canvia entre elevar i abaixar"
-
-#~ msgid ""
-#~ "In this row you can customize middle click behavior when clicking into "
-#~ "the titlebar or the frame."
-#~ msgstr ""
-#~ "En esta fila podeu personalitzar el comportament quan es fa clic del mig "
-#~ "dins de la barra de títol o en el marc."
-
-#~ msgid ""
-#~ "In this row you can customize right click behavior when clicking into the "
-#~ "titlebar or the frame."
-#~ msgstr ""
-#~ "En esta fila podeu personalitzar el comportament quan es fa clic dret "
-#~ "dins de la barra de títol o en el marc."
-
-#~ msgid ""
-#~ "Here you can customize KDE's behavior when scrolling with the mouse wheel "
-#~ "in a window while pressing the modifier key."
-#~ msgstr ""
-#~ "Ací podeu personalitzar el comportament de KDE en desplaçar-se amb la "
-#~ "roda del ratolí dins d'una finestra mentre premeu la tecla modificadora."
-
-#~ msgid ""
-#~ "<html><head/><body><p>The placement policy determines where a new window "
-#~ "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-"
-#~ "bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"
-#~ "\"><li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; "
-#~ "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
-#~ "font-style:italic;\">Smart</span> will try to achieve a minimum overlap "
-#~ "of windows</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-#~ "style=\" font-style:italic;\">Maximizing</span> will try to maximize "
-#~ "every window to fill the whole screen. It might be useful to selectively "
-#~ "affect placement of some windows using the window-specific settings.</"
-#~ "li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
-#~ "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
-#~ "font-style:italic;\">Random</span> will use a random position</li><li "
-#~ "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-#~ "style:italic;\">Centered</span> will place the window centered</li><li "
-#~ "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-#~ "style:italic;\">Zero-cornered</span> will place the window in the top-"
-#~ "left corner</li><li style=\" margin-top:0px; margin-bottom:12px; margin-"
-#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-#~ "style=\" font-style:italic;\">Under mouse</span> will place the window "
-#~ "under the pointer</li></ul></body></html>"
-#~ msgstr ""
-#~ "<html><head/><body><p>La política de col·locació determina a on "
-#~ "apareixerà una finestra nova en l'escriptori.</p><ul style=\"margin-top: "
-#~ "0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-"
-#~ "indent: 1;\"><li style=\" margin-top:12px; margin-bottom:0px; margin-"
-#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-#~ "style=\" font-style:italic;\">Intel·ligent</span> intentarà aconseguir "
-#~ "una superposició mínima de les finestres</li><li style=\" margin-top:0px; "
-#~ "margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
-#~ "text-indent:0px;\"><span style=\" font-style:italic;\">Maximitzada</span> "
-#~ "intentarà maximitzar cada finestra per a omplir tota la pantalla. Pot ser "
-#~ "útil perquè afecte selectivament la col·locació de finestres utilitzant "
-#~ "la configuració específica de la finestra. </li><li style=\" margin-"
-#~ "top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-#~ "indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-#~ "\">Aleatòria</span> utilitzarà una posició aleatòria</li><li style=\" "
-#~ "margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-#~ "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-#~ "\">Centrada</span> col·locarà la finestra centrada</li><li style=\" "
-#~ "margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-#~ "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-#~ "\">Arraconada</span> col·locarà la finestra en el cantó superior "
-#~ "esquerre</li><li style=\" margin-top:0px; margin-bottom:12px; margin-"
-#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-#~ "style=\" font-style:italic;\">Davall el ratolí</span> col·locarà la "
-#~ "finestra davall el punter</li></ul></body></html>"
-
-#~ msgid ""
-#~ "When turned on, apps which are able to remember the positions of their "
-#~ "windows are allowed to do so. This will override the window placement "
-#~ "mode defined above."
-#~ msgstr ""
-#~ "Quan es marca, les aplicacions que poden recordar les posicions de les "
-#~ "seues finestres tindran permés fer-ho. Açò substituirà el mode definit "
-#~ "més amunt de col·locació de les finestres."
-
-#~ msgid ""
-#~ "Allow apps to remember the positions of their own windows, if they "
-#~ "support it"
-#~ msgstr ""
-#~ "Permet que les aplicacions recorden la posició de les seues pròpies "
-#~ "finestres"
-
-#~ msgid "Virtual Desktop behavior:"
-#~ msgstr "Comportament dels escriptoris virtuals:"
-
-# NdT: "Switch to that Virtual Desktop" vol dir que es canvia a l'altre escriptori virtual (no a l'actual com implica «aquest»), per això, ho tradueixo com a «aquell». En cas de canviar-ho, també cal canviar la doc (kcontrol_windowbehavior.po).
-#~ msgid ""
-#~ "<html><head/><body><p>This setting controls what happens when an open "
-#~ "window located on a Virtual Desktop other than the current one is "
-#~ "activated. </p><p><span style=\" font-style:italic;\">Switch to that "
-#~ "Virtual Desktop</span> will switch to the Virtual Desktop where the "
-#~ "window is currently located. </p><p><span style=\" font-style:italic;"
-#~ "\">Bring window to current Virtual Desktop</span> will cause the window "
-#~ "to jump to the active Virtual Desktop. </p></body></html>"
-#~ msgstr ""
-#~ "<html><head/><body><p>Este paràmetre controla què passa quan s'activa una "
-#~ "finestra oberta en un escriptori virtual diferent de l'actual. </"
-#~ "p><p><span style=\" font-style:italic;\">Canvia a aquell escriptori "
-#~ "virtual</span> canviarà a l'escriptori virtual on es troba actualment la "
-#~ "finestra. </p><p><span style=\" font-style:italic;\">Trasllada la "
-#~ "finestra a l'escriptori virtual actual</span> farà que la finestra vaja a "
-#~ "l'escriptori virtual actiu. </p></body></html>"
-
-#~ msgid ""
-#~ "With this option you can specify how and when windows will be focused."
-#~ msgstr ""
-#~ "Amb esta opció es pot especificar com i quan les finestres tindran el "
-#~ "focus."
-
-#~ msgid "Click to focus (mouse precedence)"
-#~ msgstr "Clic damunt del focus (prioritat al ratolí)"
-
-#~ msgid "Focus follows mouse (mouse precedence)"
-#~ msgstr "El focus seguix el ratolí (prioritat al ratolí)"
-
-#~ msgid "Focus strictly under mouse"
-#~ msgstr "Focus estrictament davall el ratolí"
-
-#~ msgid ""
-#~ "This is the delay after which the window the mouse pointer is over will "
-#~ "automatically receive focus."
-#~ msgstr ""
-#~ "Este és el retard després del qual rebrà automàticament el focus la "
-#~ "finestra damunt de la qual hi ha el punter del ratolí."
-
-#~ msgid ""
-#~ "<html><head/><body><p>This option specifies how much KWin will try to "
-#~ "prevent unwanted focus stealing caused by unexpected activation of new "
-#~ "windows. (Note: This feature does not work with the <span style=\" font-"
-#~ "style:italic;\">Focus under mouse</span> or <span style=\" font-style:"
-#~ "italic;\">Focus strictly under mouse</span> focus policies.) </p><ul "
-#~ "style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-"
-#~ "right: 0px; -qt-list-indent: 1;\"><li style=\" margin-top:12px; margin-"
-#~ "bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-#~ "indent:0px;\"><span style=\" font-style:italic;\">None:</span> Prevention "
-#~ "is turned off and new windows always become activated.</li><li style=\" "
-#~ "margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-#~ "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-#~ "\">Low:</span> Prevention is enabled; when some window does not have "
-#~ "support for the underlying mechanism and KWin cannot reliably decide "
-#~ "whether to activate the window or not, it will be activated. This setting "
-#~ "may have both worse and better results than the medium level, depending "
-#~ "on the applications.</li><li style=\" margin-top:0px; margin-bottom:0px; "
-#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
-#~ "\"><span style=\" font-style:italic;\">Medium:</span> Prevention is "
-#~ "enabled.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-#~ "style=\" font-style:italic;\">High:</span> New windows get activated only "
-#~ "if no window is currently active or if they belong to the currently "
-#~ "active application. This setting is probably not really usable when not "
-#~ "using mouse focus policy.</li><li style=\" margin-top:0px; margin-"
-#~ "bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-#~ "indent:0px;\"><span style=\" font-style:italic;\">Extreme:</span> All "
-#~ "windows must be explicitly activated by the user.</li></ul><p>Windows "
-#~ "that are prevented from stealing focus are marked as demanding attention, "
-#~ "which by default means their taskbar entry will be highlighted. This can "
-#~ "be changed in the Notifications control module.</p></body></html>"
-#~ msgstr ""
-#~ "<html><head/><body><p>Esta opció especifica quan KWin provarà d'evitar un "
-#~ "robatori de focus no desitjat causat per una activació inesperada de "
-#~ "finestres noves. (Nota: Esta característica no funciona amb les "
-#~ "polítiques <span style=\" font-style:italic;\">Focus davall el ratolí</"
-#~ "span> o <span style=\" font-style:italic;\">Focus estrictament davall el "
-#~ "ratolí</span>).</p><ul style=\"margin-top: 0px; margin-bottom: 0px; "
-#~ "margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" "
-#~ "margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -"
-#~ "qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-#~ "\">Sense:</span> La prevenció està apagada i les finestres noves sempre "
-#~ "s'activen.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-#~ "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-#~ "style=\" font-style:italic;\">Baixa:</span> La prevenció està activada; "
-#~ "quan una finestra determinada no admet el mecanisme subjacent i KWin no "
-#~ "pot decidir de manera fiable si activar la finestra o no, s'activarà. "
-#~ "Este valor pot empitjorar o millorar els resultats del nivell mitjà, "
-#~ "depenent de les aplicacions.</li><li style=\" margin-top:0px; margin-"
-#~ "bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-#~ "indent:0px;\"><span style=\" font-style:italic;\">Mitjana:</span> La "
-#~ "prevenció està habilitada.</li><li style=\" margin-top:0px; margin-"
-#~ "bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-#~ "indent:0px;\"><span style=\" font-style:italic;\">Alta:</span> Les "
-#~ "finestres noves s'activen només si no hi ha cap finestra activa "
-#~ "actualment o si pertanyen a l'aplicació activa. Esta configuració "
-#~ "probablement no és realment utilitzable si no s'utilitza la política de "
-#~ "focus al ratolí.</li><li style=\" margin-top:0px; margin-bottom:12px; "
-#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
-#~ "\"><span style=\" font-style:italic;\">Extrema:</span> Totes les "
-#~ "finestres s'han d'activar explícitament per l'usuari.</li></ul><p>Les "
-#~ "finestres a les quals s'impedix que roben el focus es marquen com a "
-#~ "sol·licitants d'atenció, el que significa que, de manera predeterminada, "
-#~ "es ressaltarà la seua entrada en la barra de tasques. Açò es pot canviar "
-#~ "al mòdul de control de Notificacions.</p></body></html>"
-
-#~ msgid ""
-#~ "When this option is enabled, the active window will be brought to the "
-#~ "front when you click somewhere into the window contents. To change it for "
-#~ "inactive windows, you need to change the settings in the Actions tab."
-#~ msgstr ""
-#~ "Quan es marca esta opció, la finestra activa es passarà a primer pla quan "
-#~ "cliqueu damunt de qualsevol lloc del contingut de la finestra. Per a "
-#~ "canviar-ho per a finestres inactives, heu de canviar la configuració de "
-#~ "la pestanya d'accions."
-
-#~ msgid ""
-#~ "When this option is enabled, a window in the background will "
-#~ "automatically come to the front when the mouse pointer has been over it "
-#~ "for some time."
-#~ msgstr ""
-#~ "Quan es marca esta opció, una finestra del fons passarà a primer pla "
-#~ "automàticament quan el punter del ratolí hi estiga damunt durant un temps."
-
-#~ msgid ""
-#~ "This is the delay after which the window that the mouse pointer is over "
-#~ "will automatically come to the front."
-#~ msgstr ""
-#~ "Este és el retard després del qual la finestra damunt de la qual hi ha el "
-#~ "punter del ratolí, passarà a primer pla automàticament."
-
-#~ msgid ""
-#~ "When this option is enabled, focus operations are limited only to the "
-#~ "active screen"
-#~ msgstr ""
-#~ "Quan es marca esta opció, les operacions del focus es limiten a la "
-#~ "pantalla activa"
-
-#~ msgid "Window activation policy description"
-#~ msgstr "Descripció de la política d'activació de les finestres"
-
-#~ msgid "Adva&nced"
-#~ msgstr "Ava&nçat"
-
-#~ msgid "&Titlebar Actions"
-#~ msgstr "Accions de la barra de &títol"
-
-#~ msgid "Window Actio&ns"
-#~ msgstr "Accio&ns de la finestra"
-
-#~ msgid "Behavior on <em>double</em> click into the titlebar."
-#~ msgstr "Comportament del <em>doble</em> clic dins de la barra de títol."
-
-#~ msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
-#~ msgstr ""
-#~ "Comportament del desplaçament de la <em>roda del ratolí</em> sobre la "
-#~ "barra de títol."
-
-#~ msgid "Active"
-#~ msgstr "Actiu"
-
-#~ msgid "Inactive"
-#~ msgstr "Inactiu"
-
-#~ msgid ""
-#~ "Behavior on <em>left</em> click into the titlebar or frame of an "
-#~ "<em>active</em> window."
-#~ msgstr ""
-#~ "Comportament quan es faça clic <em>esquerre</em> a dins de la barra de "
-#~ "títol o en el marc d'una finestra <em>activa</em>."
-
-#~ msgid ""
-#~ "Behavior on <em>left</em> click into the titlebar or frame of an "
-#~ "<em>inactive</em> window."
-#~ msgstr ""
-#~ "Comportament quan es faça clic <em>esquerre</em> a dins de la barra de "
-#~ "títol o en el marc d'una finestra <em>inactiva</em>."
-
-#~ msgid "Activate and lower"
-#~ msgstr "Activa i abaixa"
-
-#~ msgid "Behavior on <em>left</em> click onto the maximize button."
-#~ msgstr "Comportament del clic <em>esquerre</em> en el botó maximitza."
-
-#~ msgid "Behavior on <em>middle</em> click onto the maximize button."
-#~ msgstr "Comportament del clic <em>central</em> en el botó maximitza."
-
-#~ msgid "Behavior on <em>right</em> click onto the maximize button."
-#~ msgstr "Comportament del clic <em>dret</em> en el botó maximitza."
-
-#~ msgid ""
-#~ "Here you can set the snap zone for screen edges, i.e. the 'strength' of "
-#~ "the magnetic field which will make windows snap to the border when moved "
-#~ "near it."
-#~ msgstr ""
-#~ "Ací podeu establir la zona d'atracció per a les vores de la pantalla, la "
-#~ "«força» del camp magnètic que fa que les finestres s'apeguen a la vora "
-#~ "quan es mouen a prop."
-
-#~ msgid ""
-#~ "Here you can set the snap zone for windows, i.e. the 'strength' of the "
-#~ "magnetic field which will make windows snap to each other when they are "
-#~ "moved near another window."
-#~ msgstr ""
-#~ "Ací podeu establir la zona d'atracció per a les finestres, la «força» del "
-#~ "camp magnètic que fa que les finestres s'apeguen entre elles quan es "
-#~ "mouen a prop d'una altra finestra."
-
-#~ msgid ""
-#~ "Here you can set the snap zone for the screen center, i.e. the 'strength' "
-#~ "of the magnetic field which will make windows snap to the center of the "
-#~ "screen when moved near it."
-#~ msgstr ""
-#~ "Ací podeu establir la zona d'atracció per al centre de la pantalla, la "
-#~ "«força» del camp magnètic que fa que les finestres s'apeguen al centre "
-#~ "quan es mouen a prop."
-
-#~ msgid ""
-#~ "Here you can set that windows will be only snapped if you try to overlap "
-#~ "them, i.e. they will not be snapped if the windows comes only near "
-#~ "another window or border."
-#~ msgstr ""
-#~ "Ací podeu establir que les finestres només s'ajustaran si proveu "
-#~ "d'encavallar-les, no s'ajustaran si només estan a prop d'una altra "
-#~ "finestra o vora."
-
-#~ msgid ""
-#~ "<em>Click to focus:</em> A window becomes active when you click into it. "
-#~ "This behavior is common on other operating systems and likely what you "
-#~ "want."
-#~ msgstr ""
-#~ "<em>Clic damunt del focus:</em> Una finestra esdevé activa quan hi "
-#~ "cliqueu. Este comportament és comú en altres sistemes operatius i "
-#~ "segurament és el que voldreu."
-
-#~ msgid ""
-#~ "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click "
-#~ "to focus</em>. If an active window has to be chosen by the system (eg. "
-#~ "because the currently active one was closed) the window under the mouse "
-#~ "is the preferred candidate. Unusual, but possible variant of <em>Click to "
-#~ "focus</em>."
-#~ msgstr ""
-#~ "<em>Clic damunt del focus (prioritat al ratolí):</em> En general, és "
-#~ "similar a <em>Clic damunt del focus</em>. Si el sistema ha de seleccionar "
-#~ "una finestra activa (p. ex., perquè l'actualment activa s'ha tancat) la "
-#~ "candidata preferida serà la finestra que hi ha davall el ratolí. No és "
-#~ "habitual, però és una possible variació de <em>Clic damunt del focus</em>."
-
-#~ msgid ""
-#~ "<em>Focus follows mouse:</em> Moving the mouse onto a window will "
-#~ "activate it. Eg. windows randomly appearing under the mouse will not gain "
-#~ "the focus. <em>Focus stealing prevention</em> takes place as usual. Think "
-#~ "as <em>Click to focus</em> just without having to actually click."
-#~ msgstr ""
-#~ "<em>El focus seguix el ratolí:</em> Movent el ratolí dins una finestra, "
-#~ "esta s'activarà. P. ex., les finestres que apareguen a l'atzar davall el "
-#~ "ratolí no obtindran el focus. La <em>Prevenció de robatori de focus</em> "
-#~ "funciona com és habitual. Penseu en <em>Clic damunt del focus</em> però "
-#~ "sense que calga clicar."
-
-#~ msgid ""
-#~ "This is mostly the same as <em>Focus follows mouse</em>. If an active "
-#~ "window has to be chosen by the system (eg. because the currently active "
-#~ "one was closed) the window under the mouse is the preferred candidate. "
-#~ "Choose this, if you want a hover controlled focus."
-#~ msgstr ""
-#~ "En general és similar a <em>El focus seguix el ratolí</em>. Si el sistema "
-#~ "ha de seleccionar una finestra activa (p. ex., perquè l'actualment activa "
-#~ "s'ha tancat) la candidata preferida serà la finestra que hi ha davall el "
-#~ "ratolí. Trieu esta si voleu un focus controlat en passar-hi per damunt."
-
-#~ msgid ""
-#~ "<em>Focus under mouse:</em> The focus always remains on the window under "
-#~ "the mouse.<br/><strong>Warning:</strong> <em>Focus stealing prevention</"
-#~ "em> and the <em>tabbox ('Alt+Tab')</em> contradict the activation policy "
-#~ "and will not work. You very likely want to use <em>Focus follows mouse "
-#~ "(mouse precedence)</em> instead!"
-#~ msgstr ""
-#~ "<em>Focus davall el ratolí:</em> El focus sempre roman en la finestra "
-#~ "davall el ratolí.<br/><strong>Avís:</strong> La <em>prevenció de robatori "
-#~ "de focus</em> i la <em>caixa de pestanyes («Alt+Tab»)</em> entren en "
-#~ "contradicció amb la política i no funcionaran. En el seu lloc, segurament "
-#~ "voldreu utilitzar <em>El focus seguix el ratolí (prioritat al ratolí)</"
-#~ "em>."
-
-#~ msgid ""
-#~ "<em>Focus strictly under mouse:</em> The focus is always on the window "
-#~ "under the mouse (in doubt nowhere) very much like the focus behavior in "
-#~ "an unmanaged legacy X11 environment.<br/><strong>Warning:</strong> "
-#~ "<em>Focus stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> "
-#~ "contradict the activation policy and will not work. You very likely want "
-#~ "to use <em>Focus follows mouse (mouse precedence)</em> instead!"
-#~ msgstr ""
-#~ "<em>Focus estrictament davall el ratolí:</em> El focus sempre està en la "
-#~ "finestra davall el ratolí (en cas de dubte, no està enlloc) molt "
-#~ "pareixent al comportament del focus en un entorn X11 antic no gestionat."
-#~ "<br/><strong>Avís:</strong> La <em>prevenció de robatori de focus</em> i "
-#~ "el <em>quadro de pestanyes («Alt+Tab»)</em> entren en contradicció amb la "
-#~ "política i no funcionaran. En el seu lloc, segurament voldreu utilitzar "
-#~ "el <em>Focus seguix el ratolí (prioritat al ratolí)</em>."

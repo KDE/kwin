@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-10 00:46+0000\n"
+"POT-Creation-Date: 2026-07-17 00:45+0000\n"
 "PO-Revision-Date: 2024-01-28 17:58-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -288,7 +288,7 @@ msgstr "ਸਰਗਰਮੀਆਂ"
 msgid "Screen"
 msgstr "ਸਕਰੀਨ"
 
-#: rulesmodel.cpp:524 rulesmodel.cpp:923
+#: rulesmodel.cpp:524 rulesmodel.cpp:924
 #, kde-format
 msgid "Fullscreen"
 msgstr "ਪੂਰੀ ਸਕਰੀਨ"
@@ -389,38 +389,38 @@ msgstr "ਸ਼ਾਰਟਕੱਟ"
 
 #: rulesmodel.cpp:600
 #, kde-format
-msgid "No titlebar and frame"
-msgstr "ਕੋਈ ਟਾਈਟਲ-ਪੱਟੀ ਅਤੇ ਫਰੇਮ ਨਹੀਂ"
+msgid "Window manager draws titlebar, frame, and shadows"
+msgstr ""
 
-#: rulesmodel.cpp:600 rulesmodel.cpp:605 rulesmodel.cpp:611 rulesmodel.cpp:616
-#: rulesmodel.cpp:622 rulesmodel.cpp:649 rulesmodel.cpp:677 rulesmodel.cpp:683
-#: rulesmodel.cpp:695 rulesmodel.cpp:700 rulesmodel.cpp:705 rulesmodel.cpp:711
-#: rulesmodel.cpp:716 rulesmodel.cpp:721
+#: rulesmodel.cpp:600 rulesmodel.cpp:606 rulesmodel.cpp:612 rulesmodel.cpp:617
+#: rulesmodel.cpp:623 rulesmodel.cpp:650 rulesmodel.cpp:678 rulesmodel.cpp:684
+#: rulesmodel.cpp:696 rulesmodel.cpp:701 rulesmodel.cpp:706 rulesmodel.cpp:712
+#: rulesmodel.cpp:717 rulesmodel.cpp:722
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "ਦਿੱਖ ਅਤੇ ਸੁਧਾਰ"
 
-#: rulesmodel.cpp:605
+#: rulesmodel.cpp:606
 #, kde-format
 msgid "Titlebar color scheme"
 msgstr "ਟਾਈਟਲ-ਪੱਟੀ ਰੰਗ ਸਕੀਮ"
 
-#: rulesmodel.cpp:611
+#: rulesmodel.cpp:612
 #, kde-format
 msgid "Active opacity"
 msgstr "ਸਰਗਰਮ ਪਾਰਦਰਸ਼ਤਾ"
 
-#: rulesmodel.cpp:616
+#: rulesmodel.cpp:617
 #, kde-format
 msgid "Inactive opacity"
 msgstr "ਨਾ-ਸਰਗਰਮ ਪਾਰਦਰਸ਼ਤਾ"
 
-#: rulesmodel.cpp:622
+#: rulesmodel.cpp:623
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "ਫੋਕਸ ਲੈਣ ਤੋਂ ਬਚਾਓ"
 
-#: rulesmodel.cpp:624
+#: rulesmodel.cpp:625
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -442,12 +442,12 @@ msgid ""
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
 
-#: rulesmodel.cpp:649
+#: rulesmodel.cpp:650
 #, kde-format
 msgid "Focus protection"
 msgstr "ਫੋਕਸ ਬਚਾਓ"
 
-#: rulesmodel.cpp:651
+#: rulesmodel.cpp:652
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -471,22 +471,22 @@ msgid ""
 "item></list>"
 msgstr ""
 
-#: rulesmodel.cpp:677
+#: rulesmodel.cpp:678
 #, kde-format
 msgid "Accept focus"
 msgstr "ਫੋਕਸ ਮਨਜ਼ੂਰ"
 
-#: rulesmodel.cpp:679
+#: rulesmodel.cpp:680
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
 msgstr ""
 
-#: rulesmodel.cpp:683
+#: rulesmodel.cpp:684
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "ਗਲੋਬਲ ਸ਼ਾਰਟਕੱਟ ਅਣਡਿੱਠੇ"
 
-#: rulesmodel.cpp:685
+#: rulesmodel.cpp:686
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -498,42 +498,42 @@ msgid ""
 "activate KRunner."
 msgstr ""
 
-#: rulesmodel.cpp:695
+#: rulesmodel.cpp:696
 #, kde-format
 msgid "Closeable"
 msgstr "ਬੰਦ ਹੋਣਯੋਗ"
 
-#: rulesmodel.cpp:700
+#: rulesmodel.cpp:701
 #, kde-format
 msgid "Desktop file name"
 msgstr "ਡੈਸਕਟਾਪ ਫਾਇਲ ਦਾ ਨਾਂ"
 
-#: rulesmodel.cpp:705
+#: rulesmodel.cpp:706
 #, kde-format
 msgid "Layer"
 msgstr "ਲੇਅਰ"
 
-#: rulesmodel.cpp:711
+#: rulesmodel.cpp:712
 #, kde-format
 msgid "Adaptive sync"
 msgstr ""
 
-#: rulesmodel.cpp:716
+#: rulesmodel.cpp:717
 #, kde-format
 msgid "Allow tearing"
 msgstr ""
 
-#: rulesmodel.cpp:721
+#: rulesmodel.cpp:722
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
 msgstr ""
 
-#: rulesmodel.cpp:774
+#: rulesmodel.cpp:775
 #, kde-format
 msgid "Window class not available"
 msgstr "ਵਿੰਡੋ ਕਲਾਸ ਮੌਜੂਦ ਨਹੀਂ ਹੈ"
 
-#: rulesmodel.cpp:775
+#: rulesmodel.cpp:776
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -543,205 +543,229 @@ msgid ""
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:810
 #, fuzzy, kde-format
 #| msgid "All Window Types"
 msgid "All window types"
 msgstr "ਸਭ ਵਿੰਡੋ ਕਿਸਮਾਂ"
 
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:811
 #, fuzzy, kde-format
 #| msgid "Normal Window"
 msgid "Normal window"
 msgstr "ਸਧਾਰਨ ਵਿੰਡੋ"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:812
 #, fuzzy, kde-format
 #| msgid "Dialog Window"
 msgid "Dialog window"
 msgstr "ਡਾਈਲਾਗ ਵਿੰਡੋ"
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:813
 #, fuzzy, kde-format
 #| msgid "Utility Window"
 msgid "Utility window"
 msgstr "ਸਹੂਲਤ ਵਿੰਡੋ"
 
-#: rulesmodel.cpp:813
+#: rulesmodel.cpp:814
 #, kde-format
 msgid "Dock (panel)"
 msgstr "ਡੋਕ (ਪੈਨਲ)"
 
-#: rulesmodel.cpp:814
+#: rulesmodel.cpp:815
 #, kde-format
 msgid "Toolbar"
 msgstr "ਟੂਲਬਾਰ"
 
-#: rulesmodel.cpp:815
+#: rulesmodel.cpp:816
 #, fuzzy, kde-format
 #| msgid "Torn-Off Menu"
 msgid "Torn-off menu"
 msgstr "ਮੇਨੂ ਬੰਦ"
 
-#: rulesmodel.cpp:816
+#: rulesmodel.cpp:817
 #, fuzzy, kde-format
 #| msgid "Splash Screen"
 msgid "Splash screen"
 msgstr "ਸਪਲੇਸ ਸਕਰੀਨ"
 
-#: rulesmodel.cpp:817 rulesmodel.cpp:918
+#: rulesmodel.cpp:818 rulesmodel.cpp:919
 #, kde-format
 msgid "Desktop"
 msgstr "ਡੈਸਕਟਾਪ"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:819
+#: rulesmodel.cpp:820
 #, fuzzy, kde-format
 #| msgid "Standalone Menubar"
 msgid "Standalone menubar"
 msgstr "ਇੱਕਲੀ ਮੇਨੂ-ਪੱਟੀ"
 
-#: rulesmodel.cpp:820 rulesmodel.cpp:926
+#: rulesmodel.cpp:821 rulesmodel.cpp:927
 #, fuzzy, kde-format
 #| msgid "On Screen Display"
 msgid "On-screen display"
 msgstr "ਆਨ ਸਕਰੀਨ ਡਿਸਪਲੇਅ"
 
-#: rulesmodel.cpp:830
+#: rulesmodel.cpp:831
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgid "All desktops"
 msgstr "ਸਭ ਡੈਸਕਟਾਪ"
 
-#: rulesmodel.cpp:832
+#: rulesmodel.cpp:833
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਸਭ ਡੈਸਕਟਾਪ ਵਿੱਚ ਉਪਲੱਬਧ ਕਰਵਾਓ"
 
-#: rulesmodel.cpp:851
+#: rulesmodel.cpp:852
 #, fuzzy, kde-format
 #| msgid "All Activities"
 msgid "All activities"
 msgstr "ਸਭ ਸਰਗਰਮੀਆਂ"
 
-#: rulesmodel.cpp:853
+#: rulesmodel.cpp:854
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਸਭ ਸਰਗਰਮੀਆਂ ਵਿੱਚ ਉਪਲੱਬਧ ਕਰਵਾਓ"
 
-#: rulesmodel.cpp:874
+#: rulesmodel.cpp:875
 #, kde-format
 msgid "Default"
 msgstr "ਡਿਫਾਲਟ"
 
-#: rulesmodel.cpp:875
+#: rulesmodel.cpp:876
 #, fuzzy, kde-format
 #| msgid "No Placement"
 msgid "No placement"
 msgstr "ਕੋਈ ਥਾਂ ਨਹੀਂ"
 
-#: rulesmodel.cpp:876
+#: rulesmodel.cpp:877
 #, kde-format
 msgid "Minimal overlapping"
 msgstr ""
 
-#: rulesmodel.cpp:877
+#: rulesmodel.cpp:878
 #, kde-format
 msgid "Maximized"
 msgstr "ਵੱਧ ਤੋਂ ਵੱਧ ਕੀਤੇ"
 
-#: rulesmodel.cpp:878
+#: rulesmodel.cpp:879
 #, kde-format
 msgid "Centered"
 msgstr "ਸੈਂਟਰਡ"
 
-#: rulesmodel.cpp:879
+#: rulesmodel.cpp:880
 #, kde-format
 msgid "Random"
 msgstr "ਰਲਵਾਂ"
 
-#: rulesmodel.cpp:880
+#: rulesmodel.cpp:881
 #, fuzzy, kde-format
 #| msgid "In Top-Left Corner"
 msgid "In top-left corner"
 msgstr "ਉੱਤੇ-ਖੱਬੇ ਕੋਨੇ ਵਿੱਚ"
 
-#: rulesmodel.cpp:881
+#: rulesmodel.cpp:882
 #, fuzzy, kde-format
 #| msgid "Under Mouse"
 msgid "Under mouse"
 msgstr "ਮਾਊਸ ਹੇਠਾਂ"
 
-#: rulesmodel.cpp:882
+#: rulesmodel.cpp:883
 #, fuzzy, kde-format
 #| msgid "On Main Window"
 msgid "On main window"
 msgstr "ਮੁੱਖ ਵਿੰਡੋ ਉੱਤੇ"
 
-#: rulesmodel.cpp:889
+#: rulesmodel.cpp:890
 #, kde-format
 msgid "None"
 msgstr "ਕੋਈ ਨਹੀਂ"
 
-#: rulesmodel.cpp:890
+#: rulesmodel.cpp:891
 #, kde-format
 msgid "Low"
 msgstr "ਘੱਟ"
 
-#: rulesmodel.cpp:891 rulesmodel.cpp:920
+#: rulesmodel.cpp:892 rulesmodel.cpp:921
 #, kde-format
 msgid "Normal"
 msgstr "ਸਧਾਰਨ"
 
-#: rulesmodel.cpp:892
+#: rulesmodel.cpp:893
 #, kde-format
 msgid "High"
 msgstr "ਜ਼ਿਆਦਾ"
 
-#: rulesmodel.cpp:893
+#: rulesmodel.cpp:894
 #, kde-format
 msgid "Extreme"
 msgstr "ਬਹੁਤ ਅਧਿਕ"
 
-#: rulesmodel.cpp:919
+#: rulesmodel.cpp:920
 #, kde-format
 msgid "Below"
 msgstr "ਹੇਠਾਂ"
 
-#: rulesmodel.cpp:921
+#: rulesmodel.cpp:922
 #, kde-format
 msgid "Above"
 msgstr "ਉੱਤੇ"
 
-#: rulesmodel.cpp:922
+#: rulesmodel.cpp:923
 #, kde-format
 msgid "Notification"
 msgstr "ਨੋਟੀਫਿਕੇਸ਼ਨ"
 
-#: rulesmodel.cpp:924
+#: rulesmodel.cpp:925
 #, kde-format
 msgid "Popup"
 msgstr "ਪੌਪਅੱਪ"
 
-#: rulesmodel.cpp:925
+#: rulesmodel.cpp:926
 #, fuzzy, kde-format
 #| msgid "Critical Notification"
 msgid "Critical notification"
 msgstr "ਨਾਜ਼ੁਕ ਨੋਟੀਫਿਕੇਸ਼ਨ"
 
-#: rulesmodel.cpp:927
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Overlay"
 msgstr "ਓਵਰ-ਲੇਅ"
 
-#: rulesmodel.cpp:952
+#: rulesmodel.cpp:936
+#, kde-format
+msgctxt "Never draw a server side decoration"
+msgid "Never"
+msgstr ""
+
+#: rulesmodel.cpp:937
+#, kde-format
+msgctxt "Draw a server side decoration if the application asks for it"
+msgid "If the application asks"
+msgstr ""
+
+#: rulesmodel.cpp:938
+#, kde-format
+msgctxt "Always draw a server side decoration"
+msgid "Always"
+msgstr ""
+
+#: rulesmodel.cpp:939
+#, kde-format
+msgctxt "Always draw a server side drop shadow"
+msgid "Only shadow"
+msgstr ""
+
+#: rulesmodel.cpp:964
 #, kde-format
 msgid "Unmanaged window"
 msgstr "ਨਾ-ਪਰਬੰਧ ਅਧੀਨ ਵਿੰਡੋ"
 
-#: rulesmodel.cpp:953
+#: rulesmodel.cpp:965
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
@@ -936,6 +960,9 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
+
+#~ msgid "No titlebar and frame"
+#~ msgstr "ਕੋਈ ਟਾਈਟਲ-ਪੱਟੀ ਅਤੇ ਫਰੇਮ ਨਹੀਂ"
 
 #~ msgid "Obey geometry restrictions"
 #~ msgstr "ਜੁਮੈਟਰੀ ਪਾਬੰਦੀਆਂ ਦੀ ਪਾਲਨਾ ਕਰੋ"

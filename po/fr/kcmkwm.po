@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-14 00:45+0000\n"
-"PO-Revision-Date: 2026-06-19 08:27+0200\n"
+"PO-Revision-Date: 2026-07-15 11:18+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Accelerator-Marker: &\n"
 "X-Environment: kde\n"
-"X-Generator: Lokalize 26.04.1\n"
+"X-Generator: Lokalize 26.04.3\n"
 "X-Text-Markup: kde4\n"
 
 #: ui/Focus.qml:22
@@ -42,9 +42,7 @@ msgid "Window focus policy:"
 msgstr "Politique d'&activation des fenêtres :"
 
 #: ui/Focus.qml:46
-#, fuzzy, kde-format
-#| msgctxt "sassa asas"
-#| msgid "Click to focus"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Click to focus"
 msgstr "Cliquer pour avoir le focus"
@@ -120,14 +118,13 @@ msgstr "Temporiser le &focus de :"
 #, kde-format
 msgctxt "short for millisecond(s)"
 msgid "%1 ms"
-msgstr ""
+msgstr "%1 ms"
 
 #: ui/Focus.qml:128 ui/Focus.qml:254
-#, fuzzy, kde-format
-#| msgid " ms"
+#, kde-format
 msgctxt "short for millisecond(s)"
 msgid "ms"
-msgstr " msec"
+msgstr "ms"
 
 #: ui/Focus.qml:146
 #, kde-format
@@ -234,11 +231,10 @@ msgid "Mo&vement & Placement"
 msgstr "Dé&placement"
 
 #: ui/MovementAndPlacement.qml:17
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgctxt "@title:group"
 msgid "Movement"
-msgstr "Dé&placement"
+msgstr "Déplacement"
 
 #: ui/MovementAndPlacement.qml:22
 #, kde-format
@@ -250,15 +246,14 @@ msgstr "Zone d'attraction des &bords de l'écran :"
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "%1 px"
-msgstr ""
+msgstr "%1 px"
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
 #: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
-#, fuzzy, kde-format
-#| msgid " px"
+#, kde-format
 msgctxt "short for pixel(s)"
 msgid "px"
-msgstr " px"
+msgstr "px"
 
 #: ui/MovementAndPlacement.qml:50
 #, kde-format
@@ -284,7 +279,7 @@ msgstr "Uniquement en cas de chevauchement"
 #, kde-format
 msgctxt "@title:group"
 msgid "Placement"
-msgstr ""
+msgstr "Placement"
 
 #: ui/MovementAndPlacement.qml:125
 #, kde-format
@@ -405,10 +400,9 @@ msgid "Focus and lower"
 msgstr "Le focus est sous la souris"
 
 #: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgid "Focus"
-msgstr "Donner le &focus"
+msgstr "Donner le focus"
 
 #: ui/TitlebarActions.qml:43 ui/TitlebarActions.qml:57
 #, kde-format
@@ -471,12 +465,11 @@ msgid "Titlebar and Frame Actions"
 msgstr "Actions sur la barre de titre et le cadre"
 
 #: ui/TitlebarActions.qml:111
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for focused windows"
 msgid "Focused"
-msgstr "Donner le &focus"
+msgstr "Ayant le focus"
 
 #: ui/TitlebarActions.qml:116
 #, kde-format
@@ -484,7 +477,7 @@ msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for unfocused "
 "windows"
 msgid "Unfocused"
-msgstr ""
+msgstr "Perte du focus"
 
 #: ui/TitlebarActions.qml:122 ui/WindowActions.qml:46
 #, kde-format
