@@ -88,6 +88,12 @@ public:
     bool isReadyFor(std::chrono::steady_clock::time_point pageflipTarget) const;
     bool isTearing() const;
 
+    /**
+     * NOTE if this is called multiple times, the pageflip event is only submitted
+     *      to the last crtc
+     */
+    void requestPageflipEvent(uint32_t crtcId);
+
 private:
     bool doCommit(uint32_t flags);
 
@@ -101,6 +107,7 @@ private:
     std::optional<bool> m_vrr;
     std::unordered_map<uint32_t /* object */, std::unordered_map<uint32_t /* property */, uint64_t /* value */>> m_properties;
     bool m_modeset = false;
+    std::optional<uint32_t> m_crtc;
     PresentationMode m_mode = PresentationMode::VSync;
 };
 

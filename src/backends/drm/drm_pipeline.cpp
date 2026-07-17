@@ -68,6 +68,7 @@ DrmPipeline::Error DrmPipeline::present(const QList<OutputLayer *> &layersToUpda
         // NOTE that this assumes testPresentation has been called before and succeeded
         // only give the actual state update to the commit thread, so that it can potentially reorder the commits
         auto partialUpdate = std::make_unique<DrmAtomicCommit>(gpu(), QList{this});
+        partialUpdate->requestPageflipEvent(m_pending.crtc->id());
         if (Error err = prepareAtomicPresentation(partialUpdate.get(), frame); err != Error::None) {
             return err;
         }
@@ -492,6 +493,7 @@ bool DrmPipeline::presentAsync(OutputLayer *layer, std::optional<std::chrono::na
         }
         // only give the actual state update to the commit thread, so that it can potentially reorder the commits
         auto partialUpdate = std::make_unique<DrmAtomicCommit>(gpu(), QList{this});
+        partialUpdate->requestPageflipEvent(m_pending.crtc->id());
         prepareAtomicPlane(partialUpdate.get(), drmLayer->plane(), drmLayer, nullptr);
         partialUpdate->setAllowedVrrDelay(allowedVrrDelay);
         m_commitThread->addCommit(std::move(partialUpdate));
