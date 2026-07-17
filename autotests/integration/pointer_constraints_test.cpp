@@ -201,6 +201,7 @@ void TestPointerConstraints::testConfinedPointer()
 
     // reconfine pointer (this time with persistent life time)
     confinedPointer.reset(Test::waylandPointerConstraints()->confinePointer(surface.get(), pointer.get(), nullptr, KWayland::Client::PointerConstraints::LifeTime::Persistent));
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QSignalSpy confinedSpy2(confinedPointer.get(), &KWayland::Client::ConfinedPointer::confined);
     QSignalSpy unconfinedSpy2(confinedPointer.get(), &KWayland::Client::ConfinedPointer::unconfined);
 
@@ -243,9 +244,10 @@ void TestPointerConstraints::testConfinedPointer()
 
     // delete pointer confine
     confinedPointer.reset(nullptr);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
     Test::flushWaylandConnection();
 
-    QSignalSpy constraintsChangedSpy(input()->pointer()->focus()->surface(), &SurfaceInterface::pointerConstraintsChanged);
+    QSignalSpy constraintsChangedSpy(input()->pointer()->focus()->surface(), &SurfaceInterface::confinedPointerRegionChanged);
     QVERIFY(constraintsChangedSpy.wait());
 
     // should be unconfined
@@ -253,6 +255,7 @@ void TestPointerConstraints::testConfinedPointer()
 
     // confine again
     confinedPointer.reset(Test::waylandPointerConstraints()->confinePointer(surface.get(), pointer.get(), nullptr, KWayland::Client::PointerConstraints::LifeTime::Persistent));
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QSignalSpy confinedSpy3(confinedPointer.get(), &KWayland::Client::ConfinedPointer::confined);
     QVERIFY(confinedSpy3.wait());
     QCOMPARE(input()->pointer()->isConstrained(), true);
@@ -303,6 +306,7 @@ void TestPointerConstraints::testLockedPointer()
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), window->frameGeometry().center() + QPoint(1, 1));
 
     lockedPointer.reset(Test::waylandPointerConstraints()->lockPointer(surface.get(), pointer.get(), nullptr, KWayland::Client::PointerConstraints::LifeTime::Persistent));
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QSignalSpy lockedSpy2(lockedPointer.get(), &KWayland::Client::LockedPointer::locked);
 
     // activate the window again, this should lock again
@@ -317,9 +321,10 @@ void TestPointerConstraints::testLockedPointer()
 
     // delete pointer lock
     lockedPointer.reset(nullptr);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
     Test::flushWaylandConnection();
 
-    QSignalSpy constraintsChangedSpy(input()->pointer()->focus()->surface(), &SurfaceInterface::pointerConstraintsChanged);
+    QSignalSpy constraintsChangedSpy(input()->pointer()->focus()->surface(), &SurfaceInterface::lockedPointerRegionChanged);
     QVERIFY(constraintsChangedSpy.wait());
 
     // moving cursor should be allowed again

@@ -178,7 +178,6 @@ private:
     qreal edgeBarrier(EdgeBarrierType type) const;
     QPointF applyPointerConfinement(const QPointF &pos) const;
     void disconnectConfinedPointerRegionConnection();
-    void disconnectLockedPointerAboutToBeUnboundConnection();
     void disconnectPointerConstraintsConnection();
     void breakPointerConstraints(SurfaceInterface *surface);
     CursorImage *m_cursor;
@@ -186,14 +185,13 @@ private:
     QHash<uint32_t, PointerButtonState> m_buttons;
     Qt::MouseButtons m_qtButtons;
     QMetaObject::Connection m_focusGeometryConnection;
-    QMetaObject::Connection m_constraintsConnection;
     QMetaObject::Connection m_constraintsActivatedConnection;
-    QMetaObject::Connection m_confinedPointerRegionConnection;
-    QMetaObject::Connection m_lockedPointerAboutToBeUnboundConnection;
+    QMetaObject::Connection m_surfaceCommittedConnection;
     QMetaObject::Connection m_decorationGeometryConnection;
     QMetaObject::Connection m_decorationDestroyedConnection;
     QMetaObject::Connection m_decorationClosedConnection;
     bool m_confined = false;
+    QPointer<SurfaceInterface> m_constrainedSurface;
     bool m_locked = false;
     bool m_enableConstraints = true;
     bool m_lastOutputWasPlaceholder = true;

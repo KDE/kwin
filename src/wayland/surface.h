@@ -38,6 +38,11 @@ enum class ColorDescriptionType {
     Windows,
 };
 
+enum class PointerConstraintLifetime : uint {
+    OneShot = 1,
+    Persistent = 2,
+};
+
 /**
  * The SurfaceRole class represents a role assigned to a wayland surface.
  */
@@ -385,6 +390,12 @@ public:
 
     QPointF mapToMainSurface(const QPointF &localPoint) const;
 
+    std::optional<RegionF> confinedPointerRegion() const;
+    std::optional<RegionF> lockedPointerRegion() const;
+    std::optional<QPointF> lockedPointerHint() const;
+    void setPointerConfined(bool confined);
+    void setPointerLocked(bool locked);
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the underlying wl_surface resource is about to be freed.
@@ -441,16 +452,8 @@ Q_SIGNALS:
      */
     void childSubSurfacesChanged();
 
-    /**
-     * Emitted whenever a pointer constraint get (un)installed on this SurfaceInterface.
-     *
-     * The pointer constraint does not get activated, the compositor needs to activate
-     * the lock/confinement.
-     *
-     * @see confinedPointer
-     * @see lockedPointer
-     */
-    void pointerConstraintsChanged();
+    void confinedPointerRegionChanged();
+    void lockedPointerRegionChanged();
 
     /**
      * Emitted whenever the SurfaceInterface starts/ends to inhibit idle.

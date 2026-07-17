@@ -9,6 +9,7 @@
 
 #include "core/region.h"
 #include "kwin_export.h"
+#include "wayland/surface.h"
 
 #include <QObject>
 #include <memory>
@@ -65,42 +66,7 @@ class KWIN_EXPORT LockedPointerV1Interface : public QObject
 public:
     ~LockedPointerV1Interface() override;
 
-    enum class LifeTime : uint {
-        OneShot = 1,
-        Persistent = 2,
-    };
-
-    LifeTime lifeTime() const;
-
-    /**
-     * The intersection of this region and the input region of the SurfaceInterface is used
-     * to determine where the pointer must be in order for the lock to activate.
-     * It is up to the compositor whether to warp the pointer or require some kind of
-     * user interaction for the lock to activate.
-     *
-     * If the region is empty the SurfaceInterface input region is used.
-     *
-     * @see regionChanged
-     * @see SurfaceInterface::input
-     */
-    RegionF region() const;
-
-    /**
-     * Indicates where the mouse cursor should be positioned after it has been unlocked again.
-     * The compositor can warp the cursor at this moment to the position. For that it
-     * will not Q_EMIT any relative motion events. The hint is relative to the top-left
-     * corner of the surface the lock was applied to. Only non-negative x and y values
-     * are allowed. Otherwise the hint is invalid and should be ignored by the compositor.
-     *
-     * In case the client never set the hint, an invalid one will be returned.
-     *
-     * This function should be called when the compositor decides to break the lock or the
-     * client unbinds the resource. To set the position in this case the compositor should
-     * call this function when the aboutToBeUnbound signal has been emitted.
-     *
-     * @see cursorPositionHintChanged
-     */
-    QPointF cursorPositionHint() const;
+    PointerConstraintLifetime lifeTime() const;
 
     /**
      * Whether the Compositor set this pointer lock to be active.
@@ -125,24 +91,6 @@ public:
     void setLocked(bool locked);
 
 Q_SIGNALS:
-    /**
-     * This is signal is emitted when the locked pointer is about to be destroyed.
-     */
-    void aboutToBeDestroyed();
-
-    /**
-     * Emitted whenever the region changes.
-     * This happens when the parent SurfaceInterface gets committed
-     * @see region
-     */
-    void regionChanged();
-
-    /**
-     * Emitted whenever the cursor position hint changes.
-     * This happens when the parent SurfaceInterface gets committed
-     * @see cursorPositionHint
-     */
-    void cursorPositionHintChanged();
 
     /**
      * Emitted whenever the {@link isLocked} state changes.
@@ -152,7 +100,7 @@ Q_SIGNALS:
     void lockedChanged();
 
 private:
-    LockedPointerV1Interface(SurfaceInterface *surface, LifeTime lifeTime, const RegionF &region, ::wl_resource *resource);
+    LockedPointerV1Interface(SurfaceInterface *surface, PointerConstraintLifetime lifeTime, const RegionF &region, ::wl_resource *resource);
     std::unique_ptr<LockedPointerV1InterfacePrivate> d;
     friend class LockedPointerV1InterfacePrivate;
     friend class PointerConstraintsV1InterfacePrivate;
@@ -181,25 +129,7 @@ class KWIN_EXPORT ConfinedPointerV1Interface : public QObject
 public:
     ~ConfinedPointerV1Interface() override;
 
-    enum class LifeTime : uint {
-        OneShot = 1,
-        Persistent = 2,
-    };
-
-    LifeTime lifeTime() const;
-
-    /**
-     * The intersection of this region and the input region of the SurfaceInterface is used
-     * to determine where the pointer must be in order for the confinement to activate.
-     * It is up to the compositor whether to warp the pointer or require some kind of
-     * user interaction for the confinement to activate.
-     *
-     * If the region is empty the SurfaceInterface input region is used.
-     *
-     * @see regionChanged
-     * @see SurfaceInterface::input
-     */
-    RegionF region() const;
+    PointerConstraintLifetime lifeTime() const;
 
     /**
      * Whether the Compositor set this pointer confinement to be active.
@@ -222,12 +152,6 @@ public:
     void setConfined(bool confined);
 
 Q_SIGNALS:
-    /**
-     * Emitted whenever the region changes.
-     * This happens when the parent SurfaceInterface gets committed
-     * @see region
-     */
-    void regionChanged();
 
     /**
      * Emitted whenever the {@link isConfined} state changes.
@@ -237,7 +161,7 @@ Q_SIGNALS:
     void confinedChanged();
 
 private:
-    ConfinedPointerV1Interface(SurfaceInterface *surface, LifeTime lifeTime, const RegionF &region, ::wl_resource *resource);
+    ConfinedPointerV1Interface(SurfaceInterface *surface, PointerConstraintLifetime lifeTime, const RegionF &region, ::wl_resource *resource);
     std::unique_ptr<ConfinedPointerV1InterfacePrivate> d;
     friend class ConfinedPointerV1InterfacePrivate;
     friend class PointerConstraintsV1InterfacePrivate;

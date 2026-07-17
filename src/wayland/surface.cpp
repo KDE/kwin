@@ -185,62 +185,6 @@ void SurfaceInterfacePrivate::setSlide(const QPointer<SlideInterface> &slide)
     pending->committed |= SurfaceState::Field::Slide;
 }
 
-void SurfaceInterfacePrivate::installPointerConstraint(LockedPointerV1Interface *lock)
-{
-    Q_ASSERT(!lockedPointer);
-    Q_ASSERT(!confinedPointer);
-
-    lockedPointer = lock;
-
-    auto cleanUp = [this]() {
-        lockedPointer = nullptr;
-        QObject::disconnect(constrainsOneShotConnection);
-        constrainsOneShotConnection = QMetaObject::Connection();
-        QObject::disconnect(constrainsUnboundConnection);
-        constrainsUnboundConnection = QMetaObject::Connection();
-        Q_EMIT q->pointerConstraintsChanged();
-    };
-
-    if (lock->lifeTime() == LockedPointerV1Interface::LifeTime::OneShot) {
-        constrainsOneShotConnection = QObject::connect(lock, &LockedPointerV1Interface::lockedChanged, q, [this, cleanUp] {
-            if (lockedPointer->isLocked()) {
-                return;
-            }
-            cleanUp();
-        });
-    }
-    constrainsUnboundConnection = QObject::connect(lock, &LockedPointerV1Interface::destroyed, q, cleanUp);
-    Q_EMIT q->pointerConstraintsChanged();
-}
-
-void SurfaceInterfacePrivate::installPointerConstraint(ConfinedPointerV1Interface *confinement)
-{
-    Q_ASSERT(!lockedPointer);
-    Q_ASSERT(!confinedPointer);
-
-    confinedPointer = confinement;
-
-    auto cleanUp = [this]() {
-        confinedPointer = nullptr;
-        QObject::disconnect(constrainsOneShotConnection);
-        constrainsOneShotConnection = QMetaObject::Connection();
-        QObject::disconnect(constrainsUnboundConnection);
-        constrainsUnboundConnection = QMetaObject::Connection();
-        Q_EMIT q->pointerConstraintsChanged();
-    };
-
-    if (confinement->lifeTime() == ConfinedPointerV1Interface::LifeTime::OneShot) {
-        constrainsOneShotConnection = QObject::connect(confinement, &ConfinedPointerV1Interface::confinedChanged, q, [this, cleanUp] {
-            if (confinedPointer->isConfined()) {
-                return;
-            }
-            cleanUp();
-        });
-    }
-    constrainsUnboundConnection = QObject::connect(confinement, &ConfinedPointerV1Interface::destroyed, q, cleanUp);
-    Q_EMIT q->pointerConstraintsChanged();
-}
-
 void SurfaceInterfacePrivate::recursivelyEmitIdleInhibitChanged()
 {
     Q_EMIT q->inhibitsIdleChanged();
@@ -647,6 +591,15 @@ void SurfaceState::mergeInto(SurfaceState *target)
     target->range = range;
     target->presentationFeedback = std::move(presentationFeedback);
     target->blurRegion = blurRegion;
+    if (committed & SurfaceState::Field::PointerConfinementRegion) {
+        target->pointerConfinementRegion = pointerConfinementRegion;
+        target->confinementLifetime = confinementLifetime;
+    }
+    if (committed & SurfaceState::Field::PointerLockRegion) {
+        target->pointerLockRegion = pointerLockRegion;
+        target->confinementLifetime = confinementLifetime;
+    }
+    target->pointerLockHint = pointerLockHint;
 
     auto previousExtensions = std::exchange(target->extensions, {});
     for (const auto &[extension, sourceState] : extensions) {
@@ -681,10 +634,14 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const bool bufferReleasePointChanged = (next->committed & SurfaceState::Field::Buffer) && current->releasePoint != next->releasePoint;
     const bool alphaMultiplierChanged = (next->committed & SurfaceState::Field::AlphaMultiplier);
     const bool yuvCoefficientsChanged = (next->committed & SurfaceState::Field::YuvCoefficients) && (current->yuvCoefficients != next->yuvCoefficients);
+    const bool pointerLockRegionChanged = (next->committed & SurfaceState::Field::PointerLockRegion) && (current->pointerLockRegion != next->pointerLockRegion);
+    const bool pointerConfinementRegionChanged = (next->committed & SurfaceState::Field::PointerConfinementRegion) && (current->pointerConfinementRegion != next->pointerConfinementRegion);
 
     const QSizeF oldSurfaceSize = surfaceSize;
     const RectF oldBufferSourceBox = bufferSourceBox;
     const RegionF oldInputRegion = inputRegion;
+    const std::optional<RegionF> oldEffectivePointerLock = effectivePointerLock;
+    const std::optional<RegionF> oldEffectivePointerConfinement = effectivePointerConfinement;
 
     next->mergeInto(current.get());
     bufferRef = current->buffer;
@@ -738,10 +695,30 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         fifoFallbackTimer.start();
     }
 
+    const bool inputRegionChanged = oldInputRegion != inputRegion;
+    if (inputRegionChanged || pointerLockRegionChanged) {
+        effectivePointerLock = current->pointerLockRegion.transform([this](const RegionF &region) {
+            if (region.isEmpty()) {
+                return inputRegion;
+            } else {
+                return region & inputRegion;
+            }
+        });
+    }
+    if (inputRegionChanged || pointerConfinementRegionChanged) {
+        effectivePointerConfinement = current->pointerConfinementRegion.transform([this](const RegionF &region) {
+            if (region.isEmpty()) {
+                return inputRegion;
+            } else {
+                return region & inputRegion;
+            }
+        });
+    }
+
     if (opaqueRegionChanged) {
         Q_EMIT q->opaqueChanged(opaqueRegion);
     }
-    if (oldInputRegion != inputRegion) {
+    if (inputRegionChanged) {
         Q_EMIT q->inputChanged(inputRegion);
     }
     if (transformChanged) {
@@ -783,6 +760,12 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     }
     if (!bufferDamage.isEmpty()) {
         Q_EMIT q->damaged(bufferDamage);
+    }
+    if (oldEffectivePointerLock != effectivePointerLock) {
+        Q_EMIT q->lockedPointerRegionChanged();
+    }
+    if (oldEffectivePointerConfinement != effectivePointerConfinement) {
+        Q_EMIT q->confinedPointerRegionChanged();
     }
 
     // The position of a sub-surface is applied when its parent is committed.
@@ -1337,6 +1320,45 @@ void SurfaceInterface::handleFifoFallback()
 bool SurfaceInterface::hasFifoBarrier() const
 {
     return d->current->fifoBarrier;
+}
+
+std::optional<RegionF> SurfaceInterface::confinedPointerRegion() const
+{
+    return d->effectivePointerConfinement;
+}
+
+std::optional<RegionF> SurfaceInterface::lockedPointerRegion() const
+{
+    return d->effectivePointerLock;
+}
+
+std::optional<QPointF> SurfaceInterface::lockedPointerHint() const
+{
+    return d->current->pointerLockHint;
+}
+
+void SurfaceInterface::setPointerConfined(bool confined)
+{
+    if (!confined && d->current->confinementLifetime == PointerConstraintLifetime::OneShot) {
+        // oneshot confinement has to be reset even if the confinement object is already deleted
+        d->current->pointerConfinementRegion.reset();
+        d->effectivePointerConfinement.reset();
+    }
+    if (d->confinedPointer) {
+        d->confinedPointer->setConfined(confined);
+    }
+}
+
+void SurfaceInterface::setPointerLocked(bool locked)
+{
+    if (!locked && d->current->confinementLifetime == PointerConstraintLifetime::OneShot) {
+        // oneshot confinement has to be reset even if the confinement object is already deleted
+        d->current->pointerLockRegion.reset();
+        d->effectivePointerLock.reset();
+    }
+    if (d->lockedPointer) {
+        d->lockedPointer->setLocked(locked);
+    }
 }
 
 } // namespace KWin

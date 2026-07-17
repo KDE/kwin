@@ -650,8 +650,6 @@ void PointerInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
         waylandServer()->seat()->setFocusedPointerSurfaceTransformation(focus()->inputTransformation());
     });
 
-    m_constraintsConnection = connect(focusNow->surface(), &SurfaceInterface::pointerConstraintsChanged,
-                                      this, &PointerInputRedirection::updatePointerConstraints);
     m_constraintsActivatedConnection = connect(workspace(), &Workspace::windowActivated,
                                                this, &PointerInputRedirection::updatePointerConstraints);
     updatePointerConstraints();
@@ -677,21 +675,12 @@ void PointerInputRedirection::breakPointerConstraints(SurfaceInterface *surface)
 
 void PointerInputRedirection::disconnectConfinedPointerRegionConnection()
 {
-    disconnect(m_confinedPointerRegionConnection);
-    m_confinedPointerRegionConnection = QMetaObject::Connection();
-}
-
-void PointerInputRedirection::disconnectLockedPointerAboutToBeUnboundConnection()
-{
-    disconnect(m_lockedPointerAboutToBeUnboundConnection);
-    m_lockedPointerAboutToBeUnboundConnection = QMetaObject::Connection();
+    disconnect(m_surfaceCommittedConnection);
+    m_surfaceCommittedConnection = QMetaObject::Connection();
 }
 
 void PointerInputRedirection::disconnectPointerConstraintsConnection()
 {
-    disconnect(m_constraintsConnection);
-    m_constraintsConnection = QMetaObject::Connection();
-
     disconnect(m_constraintsActivatedConnection);
     m_constraintsActivatedConnection = QMetaObject::Connection();
 }
@@ -707,118 +696,70 @@ void PointerInputRedirection::setEnableConstraints(bool set)
 
 void PointerInputRedirection::updatePointerConstraints()
 {
-    if (!focus()) {
-        return;
-    }
-    const auto s = focus()->surface();
-    if (!s) {
-        return;
-    }
-    if (s != waylandServer()->seat()->focusedPointerSurface()) {
-        return;
-    }
     if (!supportsWarping()) {
         return;
     }
-    const bool canConstrain = m_enableConstraints && focus() == workspace()->activeWindow();
-    const auto cf = s->confinedPointer();
-    if (cf) {
-        if (cf->isConfined()) {
-            if (!canConstrain) {
-                cf->setConfined(false);
-                m_confined = false;
-                disconnectConfinedPointerRegionConnection();
-            }
-            return;
-        }
-        if (canConstrain && cf->region().contains(focus()->mapToLocal(m_pos))) {
-            cf->setConfined(true);
-            m_confined = true;
-            m_confinedPointerRegionConnection = connect(cf, &ConfinedPointerV1Interface::regionChanged, this, [this]() {
-                if (!focus()) {
-                    return;
-                }
-                const auto s = focus()->surface();
-                if (!s) {
-                    return;
-                }
-                const auto cf = s->confinedPointer();
-                if (!cf->region().contains(focus()->mapToLocal(m_pos))) {
-                    // pointer no longer in confined region, break the confinement
-                    cf->setConfined(false);
-                    m_confined = false;
-                } else {
-                    if (!cf->isConfined()) {
-                        cf->setConfined(true);
-                        m_confined = true;
-                    }
-                }
-            });
-            return;
-        }
-    } else {
-        m_confined = false;
+    const bool canConstrain = m_enableConstraints
+        && focus()
+        && focus()->surface()
+        && focus() == workspace()->activeWindow()
+        && focus()->surface() == waylandServer()->seat()->focusedPointerSurface();
+    if (!canConstrain || focus()->surface() != m_constrainedSurface) {
         disconnectConfinedPointerRegionConnection();
-    }
-    const auto lock = s->lockedPointer();
-    if (lock) {
-        if (lock->isLocked()) {
-            if (!canConstrain) {
-                const auto hint = lock->cursorPositionHint();
-                lock->setLocked(false);
-                m_locked = false;
-                disconnectLockedPointerAboutToBeUnboundConnection();
-                if (hint.x() >= 0 && hint.y() >= 0 && focus() && hint.x() < focus()->width() && hint.y() < focus()->height()) {
-                    processWarp(focus()->mapFromLocal(hint), waylandServer()->seat()->timestamp());
-                }
-            }
-            return;
-        }
-        if (canConstrain && lock->region().contains(focus()->mapToLocal(m_pos))) {
-            lock->setLocked(true);
-            m_locked = true;
-
-            // The client might cancel pointer locking from its side by unbinding the LockedPointerInterface.
-            // In this case the cached cursor position hint must be fetched before the resource goes away
-            m_lockedPointerAboutToBeUnboundConnection = connect(lock, &LockedPointerV1Interface::aboutToBeDestroyed, this, [this, lock]() {
-                const auto hint = lock->cursorPositionHint();
-                if (hint.x() < 0 || hint.y() < 0 || !focus() || hint.x() >= focus()->width() || hint.y() >= focus()->height()) {
-                    return;
-                }
-                auto globalHint = focus()->mapFromLocal(hint);
-
-                // When the resource finally goes away, reposition the cursor according to the hint
-                connect(lock, &LockedPointerV1Interface::destroyed, this, [this, globalHint]() {
-                    processWarp(globalHint, waylandServer()->seat()->timestamp());
-                });
-            });
-            // TODO: connect to region change - is it needed at all? If the pointer is locked it's always in the region
-        }
-    } else {
+        m_confined = false;
         m_locked = false;
-        disconnectLockedPointerAboutToBeUnboundConnection();
+        if (m_constrainedSurface) {
+            m_constrainedSurface->setPointerConfined(false);
+            m_constrainedSurface->setPointerLocked(false);
+            m_constrainedSurface = nullptr;
+        }
+    }
+    if (!canConstrain) {
+        return;
+    }
+
+    SurfaceInterface *s = focus()->surface();
+    m_constrainedSurface = s;
+    if (!m_surfaceCommittedConnection) {
+        m_surfaceCommittedConnection = connect(s, &SurfaceInterface::committed,
+                                               this, &PointerInputRedirection::updatePointerConstraints);
+    }
+
+    // NOTE the lifetime of the confined pointer interfaces
+    // don't necessarily match the confinement region,
+    // since Wayland commits are applied asynchronously
+
+    const bool shouldConfine = s->confinedPointerRegion()
+        && s->confinedPointerRegion()->contains(focus()->mapToLocal(m_pos));
+    if (m_confined != shouldConfine) {
+        m_confined = shouldConfine;
+        s->setPointerConfined(m_confined);
+    }
+
+    const bool shouldLock = s->lockedPointerRegion()
+        && s->lockedPointerRegion()->contains(focus()->mapToLocal(m_pos));
+    if (m_locked != shouldLock) {
+        m_locked = shouldLock;
+        s->setPointerLocked(m_locked);
+        if (!shouldLock) {
+            const auto hint = s->lockedPointerHint();
+            if (hint && hint->x() >= 0 && hint->y() >= 0 && focus() && hint->x() < focus()->width() && hint->y() < focus()->height()) {
+                processWarp(focus()->mapFromLocal(*hint), waylandServer()->seat()->timestamp());
+            }
+        }
     }
 }
 
 QPointF PointerInputRedirection::applyPointerConfinement(const QPointF &pos) const
 {
-    if (!focus()) {
+    if (!m_confined || !focus() || !focus()->surface() || !focus()->surface()->confinedPointerRegion()) {
         return pos;
     }
-    auto s = focus()->surface();
-    if (!s) {
-        return pos;
-    }
-    auto cf = s->confinedPointer();
-    if (!cf) {
-        return pos;
-    }
-    if (!cf->isConfined()) {
-        return pos;
-    }
+    const auto s = focus()->surface();
+    const RegionF region = *s->confinedPointerRegion();
 
     const QPointF localPos = focus()->mapToLocal(pos);
-    if (cf->region().contains(localPos)) {
+    if (region.contains(localPos)) {
         return pos;
     }
 
@@ -826,12 +767,12 @@ QPointF PointerInputRedirection::applyPointerConfinement(const QPointF &pos) con
 
     // allow either x or y to pass
     QPointF p(currentPos.x(), localPos.y());
-    if (cf->region().contains(p)) {
+    if (region.contains(p)) {
         return focus()->mapFromLocal(p);
     }
 
     p = QPointF(localPos.x(), currentPos.y());
-    if (cf->region().contains(p)) {
+    if (region.contains(p)) {
         return focus()->mapFromLocal(p);
     }
 

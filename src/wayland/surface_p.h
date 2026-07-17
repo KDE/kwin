@@ -66,6 +66,9 @@ struct SurfaceState
         YuvCoefficients = 1 << 15,
         SourceGeometry = 1 << 16,
         DestinationSize = 1 << 17,
+        PointerLockHint = 1 << 18,
+        PointerLockRegion = 1 << 19,
+        PointerConfinementRegion = 1 << 20,
     };
     Q_DECLARE_FLAGS(Fields, Field)
 
@@ -101,6 +104,10 @@ struct SurfaceState
     bool fifoBarrier = false;
     bool hasFifoWaitCondition = false;
     RegionF blurRegion;
+    std::optional<QPointF> pointerLockHint;
+    std::optional<RegionF> pointerLockRegion;
+    std::optional<RegionF> pointerConfinementRegion;
+    PointerConstraintLifetime confinementLifetime = PointerConstraintLifetime::Persistent;
 
     struct
     {
@@ -139,8 +146,6 @@ public:
     bool lowerChild(SubSurfaceInterface *subsurface, SurfaceInterface *anchor);
     void setShadow(const QPointer<ShadowInterface> &shadow);
     void setSlide(const QPointer<SlideInterface> &slide);
-    void installPointerConstraint(LockedPointerV1Interface *lock);
-    void installPointerConstraint(ConfinedPointerV1Interface *confinement);
     void installIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
     void removeIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
     void recursivelyEmitIdleInhibitChanged();
@@ -168,6 +173,8 @@ public:
     QSizeF surfaceSize = QSizeF(0, 0);
 
     RegionF inputRegion;
+    std::optional<RegionF> effectivePointerLock;
+    std::optional<RegionF> effectivePointerConfinement;
     RegionF opaqueRegion;
     GraphicsBufferRef bufferRef;
     Region bufferDamage;
