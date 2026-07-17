@@ -273,12 +273,14 @@ private:
     void loadBuiltInEffects(const KConfigGroup &kwinConfig);
     void loadJavascriptEffects(const KConfigGroup &kwinConfig);
     void loadPluginEffects(const KConfigGroup &kwinConfig);
+    bool isEnabledSystemWide(KConfigGroup &config, const QString &key) const;
 
     QList<EffectData> m_effects;
     QList<EffectData> m_pendingEffects;
     QStringList m_excludeExclusiveGroups;
     QStringList m_excludeEffects;
     int m_lastSerial = -1;
+    KSharedConfig::Ptr m_config;
 
     Q_DISABLE_COPY(EffectsModel)
 };
