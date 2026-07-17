@@ -824,13 +824,16 @@ void InputMethod::updateInputPanelState()
     t->setInputPanelState(m_panel && m_panel->isShown(), overlap.toRect());
 }
 
-void InputMethod::setInputMethodCommand(const QString &command)
+void InputMethod::setInputMethodCommand(const QString &command, const QString &flatpakAppId)
 {
-    if (m_inputMethodCommand == command) {
+    if (m_inputMethodCommand == command && m_inputMethodFlatpakAppId == flatpakAppId) {
         return;
     }
 
+    stopInputMethod();
+
     m_inputMethodCommand = command;
+    m_inputMethodFlatpakAppId = flatpakAppId;
 
     startInputMethod();
     Q_EMIT availableChanged();
@@ -842,6 +845,12 @@ void InputMethod::stopInputMethod()
         return;
     }
     disconnect(m_inputMethodProcess, nullptr, this, nullptr);
+
+    if (!m_inputMethodFlatpakAppId.isEmpty()) {
+        QProcess flatpakKill;
+        flatpakKill.start(QStringLiteral("flatpak"), {QStringLiteral("kill"), m_inputMethodFlatpakAppId});
+        flatpakKill.waitForFinished();
+    }
 
     m_inputMethodProcess->terminate();
     if (!m_inputMethodProcess->waitForFinished()) {
@@ -856,7 +865,6 @@ void InputMethod::stopInputMethod()
 
 void InputMethod::startInputMethod()
 {
-    stopInputMethod();
     if (m_inputMethodCommand.isEmpty() || kwinApp()->isTerminating()) {
         return;
     }

@@ -72,7 +72,7 @@ public:
 
     InputPanelV1Window *panel() const;
     void setPanel(InputPanelV1Window *panel);
-    void setInputMethodCommand(const QString &path);
+    void setInputMethodCommand(const QString &path, const QString &flatpakAppId = QString());
 
     InputMethodGrabV1 *keyboardGrab();
     bool shouldShowOnActive() const;
@@ -166,6 +166,14 @@ private:
     QTimer m_inputMethodCrashTimer;
     uint m_inputMethodCrashes = 0;
     QString m_inputMethodCommand;
+
+    /**
+     * The flatpak app id of the input method, if it is a flatpak app.
+     *
+     * This is used to kill the input method properly if it is a flatpak, since simply
+     * killing the parent process would leave the wrapped input method process running.
+     */
+    QString m_inputMethodFlatpakAppId;
 
     InternalInputMethodContext *m_internalContext = nullptr;
     bool m_hasPendingModifiers = false;

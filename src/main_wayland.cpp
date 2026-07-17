@@ -185,7 +185,9 @@ void ApplicationWayland::refreshSettings(const KConfigGroup &group, const QByteA
 {
     if (group.name() == "Wayland" && names.contains("InputMethod")) {
         KDesktopFile file(group.readPathEntry("InputMethod", QString()));
-        kwinApp()->inputMethod()->setInputMethodCommand(file.desktopGroup().readEntry("Exec", QString()));
+        const QString exec = file.desktopGroup().readEntry("Exec", QString());
+        const QString flatpakId = file.desktopGroup().readEntry("X-Flatpak", QString());
+        kwinApp()->inputMethod()->setInputMethodCommand(exec, flatpakId);
     }
 }
 
