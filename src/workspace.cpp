@@ -684,7 +684,7 @@ void Workspace::updateOutputConfiguration()
             // can't do anything, have to wait for a VT switch
             break;
         }
-    } while (error == OutputConfigurationError::TooManyEnabledOutputs && !toEnable.isEmpty() && !alreadyHaveEnabledOutputs);
+    } while (error != OutputConfigurationError::NotActive && !toEnable.isEmpty() && !alreadyHaveEnabledOutputs);
 
     qCCritical(KWIN_CORE, "Applying output configuration failed!");
     // Update the output order to a fallback list, to avoid dangling pointers
