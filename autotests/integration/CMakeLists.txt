@@ -218,8 +218,11 @@ if (KWIN_BUILD_EIS)
     integrationTest(NAME testInputCapture SRCS input_capture_test.cpp  LIBS PkgConfig::PKG_libei PROPERTIES RUN_SERIAL TRUE)
     integrationTest(NAME testLibeiInput SRCS libei_test.cpp LIBS PkgConfig::PKG_libei PROPERTIES RUN_SERIAL TRUE)
     if (PKG_libei_VERSION VERSION_GREATER_EQUAL "1.6")
-        target_compile_definitions(testLibeiInput PRIVATE -DEIS_HAVE_16=1)
+        set(EIS_HAVE_16 1)
+    else()
+        set(EIS_HAVE_16 0)
     endif()
+    target_compile_definitions(testLibeiInput PRIVATE -DEIS_HAVE_16=${EIS_HAVE_16})
 endif()
 
 
