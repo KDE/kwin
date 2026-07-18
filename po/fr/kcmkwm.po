@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-12 00:46+0000\n"
-"PO-Revision-Date: 2026-01-03 18:05+0100\n"
+"PO-Revision-Date: 2026-07-15 14:54+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -701,7 +701,7 @@ msgstr ""
 #: focus.ui:85 focus.ui:181
 #, kde-format
 msgid " ms"
-msgstr " msec"
+msgstr " ms"
 
 #. i18n: ectx: property (text), widget (QLabel, focusStealingLabel)
 #: focus.ui:101
