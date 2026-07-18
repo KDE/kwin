@@ -11,6 +11,7 @@
 #include "config-kwin.h"
 
 #include "backends/libinput/libinputbackend.h"
+#include "core/gpumanager.h"
 #include "core/outputconfiguration.h"
 #include "core/renderdevice.h"
 #include "core/session.h"
@@ -51,28 +52,6 @@ using namespace std::chrono_literals;
 namespace KWin
 {
 
-static QStringList splitPathList(const QString &input, const QChar delimiter)
-{
-    QStringList ret;
-    QString tmp;
-    for (int i = 0; i < input.size(); i++) {
-        if (input[i] == delimiter) {
-            if (i > 0 && input[i - 1] == '\\') {
-                tmp[tmp.size() - 1] = delimiter;
-            } else if (!tmp.isEmpty()) {
-                ret.append(tmp);
-                tmp = QString();
-            }
-        } else {
-            tmp.append(input[i]);
-        }
-    }
-    if (!tmp.isEmpty()) {
-        ret.append(tmp);
-    }
-    return ret;
-}
-
 DrmBackend::DrmBackend(Session *session, QObject *parent)
     : OutputBackend(parent)
     , m_udev(std::make_unique<Udev>())
@@ -95,7 +74,7 @@ QList<BackendOutput *> DrmBackend::outputs() const
 
 bool DrmBackend::initialize()
 {
-    m_explicitGpus = splitPathList(qEnvironmentVariable("KWIN_DRM_DEVICES"), ':');
+    m_explicitGpus = GpuManager::splitPathList(qEnvironmentVariable("KWIN_DRM_DEVICES"));
 
     connect(m_session, &Session::devicePaused, this, [this](dev_t deviceId) {
         if (const auto gpu = findGpu(deviceId)) {
