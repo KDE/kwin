@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2026-06-14 16:22+0900\n"
+"PO-Revision-Date: 2026-07-14 19:52+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
 "Language: ja\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 26.04.2\n"
+"X-Generator: Lokalize 26.04.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -44,7 +44,7 @@ msgstr ""
 #: composite.cpp:646
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
-msgstr ""
+msgstr "グラフィックスのリセットにより、デスクトップ効果が再起動しました"
 
 #: composite.cpp:875
 #, kde-format
@@ -1198,10 +1198,11 @@ msgstr ""
 msgid "Touchpad"
 msgstr ""
 
+# おそらく内部ログ用の文字列
 #: keyboard_layout.cpp:45
 #, kde-format
 msgid "Keyboard Layout Switcher"
-msgstr ""
+msgstr "Keyboard Layout Switcher"
 
 #: killwindow.cpp:32
 #, kde-format
@@ -1209,6 +1210,8 @@ msgid ""
 "Select window to force close with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"左クリックや Enter で強制終了するウィンドウを選択してください。\n"
+"Esc や右クリックでキャンセルできます。"
 
 #: main.cpp:179
 #, kde-format
@@ -1269,59 +1272,61 @@ msgstr "Vlad Zahorodnii"
 #: main.cpp:201
 #, kde-format
 msgid "Disable configuration options"
-msgstr "設定オプションを無効にする"
+msgstr "設定オプションを無効化"
 
 #: main.cpp:202
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
-msgstr "KWin が最近 n 回クラッシュしたことを示す"
+msgstr "KWin の直近のクラッシュ回数を表示"
 
 #: main_wayland.cpp:314
 #, kde-format
 msgid "Start a rootless Xwayland server."
-msgstr ""
+msgstr "ルートレス XWayland を開始"
 
 #: main_wayland.cpp:316
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
+"リッスンする Wayland ソケット名 (未指定の場合 \"wayland-0\" が使用されます)"
 
 #: main_wayland.cpp:319
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
-msgstr ""
+msgstr "X11 プラットフォームのウィンドウモードで使用する X11 ディスプレイ"
 
 #: main_wayland.cpp:322
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
+"Wayland プラットフォームのウィンドウモードで使用する Wayland ディスプレイ"
 
 #: main_wayland.cpp:324
 #, kde-format
 msgid "Render to a virtual framebuffer."
-msgstr ""
+msgstr "仮想フレームバッファにレンダリングする"
 
 #: main_wayland.cpp:326
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
-msgstr ""
+msgstr "ウィンドウモードの幅 (デフォルトは 1024 です)"
 
 #: main_wayland.cpp:330
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
-msgstr ""
+msgstr "ウィンドウモードの高さ (デフォルトは 768 です)"
 
 #: main_wayland.cpp:335
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
-msgstr ""
+msgstr "ウィンドウモードのスケール (デフォルトは 1 です)"
 
 #: main_wayland.cpp:340
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
-msgstr ""
+msgstr "ウィンドウモードで出力先として開くウィンドウ数 (デフォルトは 1 です)"
 
 #: main_wayland.cpp:345
 #, kde-format
@@ -1329,6 +1334,8 @@ msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
+"Wayland の着信接続に使用するソケット (--socket と組み合わせてソケットに名前を"
+"つけることができます)"
 
 #: main_wayland.cpp:349
 #, kde-format
@@ -1336,67 +1343,69 @@ msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
+"XWayland の着信接続に使用するソケット名 (このオプションは複数回使用できます)"
 
 #: main_wayland.cpp:353
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
-msgstr ""
+msgstr "セットアップ済みの XWayland ディスプレイの名前"
 
 #: main_wayland.cpp:357
 #, kde-format
 msgid "Name of the xauthority file "
-msgstr ""
+msgstr "Xauthority ファイルの名前"
 
 #: main_wayland.cpp:361
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
-msgstr ""
+msgstr "kwin_wayland_wrapper によって再起動できるようこのインスタンスを終了"
 
 #: main_wayland.cpp:363
 #, kde-format
 msgid "Render through drm node."
-msgstr ""
+msgstr "DRM ノードを通してレンダリングする"
 
 #: main_wayland.cpp:364
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
-msgstr ""
+msgstr "ロケール情報を抽出する際、ユーザー設定よりも locale1 を優先する"
 
 #: main_wayland.cpp:386
 #, kde-format
 msgid "Input method that KWin starts."
-msgstr ""
+msgstr "KWin が開始する入力メゾット"
 
 #: main_wayland.cpp:392
 #, kde-format
 msgid "Starts the session in locked mode."
-msgstr ""
+msgstr "ロック状態でセッションを開始"
 
 #: main_wayland.cpp:396
 #, kde-format
 msgid "Starts the session without lock screen support."
-msgstr ""
+msgstr "ロック画面に未対応のセッションを開始"
 
 #: main_wayland.cpp:401
 #, kde-format
 msgid "Starts the session without global shortcuts support."
-msgstr ""
+msgstr "グローバルショートカットに未対応のセッションを開始"
 
 #: main_wayland.cpp:406 main_x11.cpp:418
 #, kde-format
 msgid "Disable KActivities integration."
-msgstr ""
+msgstr "KActivities の統合を無効化"
 
 #: main_wayland.cpp:411
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
-msgstr ""
+msgstr "KWin が開始したセッションアプリが閉じたら終了する"
 
 #: main_wayland.cpp:416
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
+"Wayland と XWayland サーバーの開始後に起動するアプリケーション (複数選択可)"
 
 #: main_x11.cpp:67
 #, kde-format
@@ -1613,242 +1622,223 @@ msgstr ""
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
 msgid "Total rules count (legacy)"
-msgstr ""
+msgstr "ルール総数 (レガシー)"
 
 #. i18n: ectx: label, entry (ruleGroupList), group (General)
 #: rulebooksettingsbase.kcfg:13
 #, kde-format
 msgid "Ordered list of rules groups"
-msgstr ""
+msgstr "ルールグループの順序リスト"
 
 #. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:10
 #, kde-format
 msgid "Rule description"
-msgstr ""
+msgstr "ルールの説明"
 
 #. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:13
 #, kde-format
 msgid "Rule description (legacy)"
-msgstr ""
+msgstr "ルールの説明 (レガシー)"
 
 #. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:16
 #, kde-format
 msgid "Delete this rule (for use in imports)"
-msgstr ""
+msgstr "このルールを削除 (インポート時に使用)"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:20
-#, fuzzy, kde-format
-#| msgid "Window Operations Menu"
+#, kde-format
 msgid "Window class (application)"
-msgstr "ウィンドウ操作メニュー"
+msgstr "ウィンドウクラス (アプリケーション)"
 
 #. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:23
 #, kde-format
 msgid "Window class string match type"
-msgstr ""
+msgstr "ウィンドウクラス文字列のマッチタイプ"
 
 #. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:29
 #, kde-format
 msgid "Match whole window class"
-msgstr ""
+msgstr "すべてのウィンドウクラスにマッチ"
 
 #. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:34
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window role"
-msgstr "ウィンドウ"
+msgstr "ウィンドウの役割"
 
 #. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:37
 #, kde-format
 msgid "Window role string match type"
-msgstr ""
+msgstr "ウィンドウロール文字列のマッチタイプ"
 
 #. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:44
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window title"
-msgstr "ウィンドウ"
+msgstr "ウィンドウタイトル"
 
 #. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:47
 #, kde-format
 msgid "Window title string match type"
-msgstr ""
+msgstr "ウィンドウタイトル文字列のマッチタイプ"
 
 #. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:54
 #, kde-format
 msgid "Machine (hostname)"
-msgstr ""
+msgstr "マシン (ホスト名)"
 
 #. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:57
 #, kde-format
 msgid "Machine string match type"
-msgstr ""
+msgstr "マシン文字列のマッチタイプ"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:64
 #, kde-format
 msgid "Window types that match"
-msgstr ""
+msgstr "一致するウィンドウタイプ"
 
 #. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:69
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Initial placement"
-msgstr "フルスクリーン(&F)"
+msgstr "初期配置"
 
 #. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:74
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Initial placement rule type"
-msgstr "フルスクリーン(&F)"
+msgstr "初期配置ルールタイプ"
 
 #. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:79
-#, fuzzy, kde-format
-#| msgid "Window Operations Menu"
+#, kde-format
 msgid "Window position"
-msgstr "ウィンドウ操作メニュー"
+msgstr "ウィンドウの位置"
 
 #. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:83
-#, fuzzy, kde-format
-#| msgid "Window Operations Menu"
+#, kde-format
 msgid "Window position rule type"
-msgstr "ウィンドウ操作メニュー"
+msgstr "ウィンドウ位置ルールタイプ"
 
 #. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:90
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window size"
-msgstr "ウィンドウ"
+msgstr "ウィンドウのサイズ"
 
 #. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:93
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window size rule type"
-msgstr "ウィンドウ"
+msgstr "ウィンドウのサイズのルールタイプ"
 
 #. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:100
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window minimum size"
-msgstr "ウィンドウ"
+msgstr "ウィンドウの最小サイズ"
 
 #. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:104
 #, kde-format
 msgid "Window minimum size rule type"
-msgstr ""
+msgstr "ウィンドウの最小サイズのルールタイプ"
 
 #. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:109
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window maximum size"
-msgstr "ウィンドウ"
+msgstr "ウィンドウの最大サイズ"
 
 #. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:113
 #, kde-format
 msgid "Window maximum size rule type"
-msgstr ""
+msgstr "ウィンドウの最大サイズのルールタイプ"
 
 #. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:118
-#, fuzzy, kde-format
-#| msgid "&All Activities"
+#, kde-format
 msgid "Active opacity"
-msgstr "すべてのアクティビティ(&A)"
+msgstr "アクティブの不透明度"
 
 #. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:124
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Active opacity rule type"
-msgstr "フルスクリーン(&F)"
+msgstr "アクティブの不透明度のルールタイプ"
 
 #. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:129
 #, kde-format
 msgid "Inactive opacity"
-msgstr ""
+msgstr "非アクティブの不透明度"
 
 #. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:135
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Inactive opacity rule type"
-msgstr "フルスクリーン(&F)"
+msgstr "非アクティブの不透明度のルールタイプ"
 
 #. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:140
 #, kde-format
 msgid "Ignore requested geometry"
-msgstr ""
+msgstr "要求されたジオメトリを無視"
 
 #. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:144
 #, kde-format
 msgid "Ignore requested geometry rule type"
-msgstr ""
+msgstr "要求されたジオメトリを無視のルールタイプ"
 
 #. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:151
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop 1"
+#, kde-format
 msgid "List of Desktop Ids"
-msgstr "デスクトップ 1 に切り替え"
+msgstr "デスクトップ ID のリスト"
 
 #. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:155
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Desktop Ids rule type"
-msgstr "常に最前面に表示(&A)"
+msgstr "デスクトップ ID のルールタイプ"
 
 #. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:162
 #, kde-format
 msgid "Screen number"
-msgstr ""
+msgstr "スクリーン番号"
 
 #. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:166
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Screen number rule type"
-msgstr "フルスクリーン(&F)"
+msgstr "スクリーン番号のルールタイプ"
 
 #. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:173
-#, fuzzy, kde-format
-#| msgid "&All Activities"
+#, kde-format
 msgid "Activity"
-msgstr "すべてのアクティビティ(&A)"
+msgstr "アクティビティ"
 
 #. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:176
-#, fuzzy, kde-format
-#| msgid "&All Activities"
+#, kde-format
 msgid "Activity rule type"
-msgstr "すべてのアクティビティ(&A)"
+msgstr "アクティビティのルールタイプ"
 
 #. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:183
@@ -1859,52 +1849,45 @@ msgstr "ウィンドウショートカットの設定"
 
 #. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:189
-#, fuzzy, kde-format
-#| msgid "Setup Window Shortcut"
+#, kde-format
 msgid "Set window type rule type"
-msgstr "ウィンドウショートカットの設定"
+msgstr "ウィンドウタイプを設定のルールタイプ"
 
 #. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:194
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Maximized vertically"
-msgstr "ウィンドウを縦に最大化"
+msgstr "縦に最大化"
 
 #. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:198
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Maximized vertically rule type"
-msgstr "ウィンドウを縦に最大化"
+msgstr "縦に最大化のルールタイプ"
 
 #. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:205
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Maximized horizontally"
-msgstr "ウィンドウを横に最大化"
+msgstr "横に最大化"
 
 #. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:209
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Maximized horizontally rule type"
-msgstr "ウィンドウを横に最大化"
+msgstr "横に最大化のルールタイプ"
 
 #. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:216
-#, fuzzy, kde-format
-#| msgid "Mi&nimize"
+#, kde-format
 msgid "Minimized"
-msgstr "最小化(&N)"
+msgstr "最小化"
 
 #. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:220
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Minimized rule type"
-msgstr "ウィンドウを縦に最大化"
+msgstr "最小化のルールタイプ"
 
 #. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:227
@@ -1924,84 +1907,73 @@ msgstr "常に最前面に表示(&A)"
 #: rulesettings.kcfg:238
 #, kde-format
 msgid "Skip taskbar"
-msgstr ""
+msgstr "タスクバーをスキップ"
 
 #. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:242
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Skip taskbar rule type"
-msgstr "常に最前面に表示(&A)"
+msgstr "タスクバーをスキップのルールタイプ"
 
 #. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:249
-#, fuzzy, kde-format
-#| msgid "Switch to Tab"
+#, kde-format
 msgid "Skip pager"
-msgstr "ウィンドウのタブを切り替え"
+msgstr "ページャをスキップ"
 
 #. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:253
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Skip pager rule type"
-msgstr "常に最前面に表示(&A)"
+msgstr "ページャをスキップのルールタイプ"
 
 #. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:260
-#, fuzzy, kde-format
-#| msgid "Switch to Tab"
+#, kde-format
 msgid "Skip switcher"
-msgstr "ウィンドウのタブを切り替え"
+msgstr "スイッチャーをスキップ"
 
 #. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:264
-#, fuzzy, kde-format
-#| msgid "Switch to Tab"
+#, kde-format
 msgid "Skip switcher rule type"
-msgstr "ウィンドウのタブを切り替え"
+msgstr "スイッチャーをスキップのルールタイプ"
 
 #. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:271
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Keep above"
-msgstr "常に最前面に表示(&A)"
+msgstr "常に最前面に表示"
 
 #. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:275
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Keep above rule type"
-msgstr "常に最前面に表示(&A)"
+msgstr "常に最前面に表示のルールタイプ"
 
 #. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:282
-#, fuzzy, kde-format
-#| msgid "Keep &Below Others"
+#, kde-format
 msgid "Keep below"
-msgstr "常に最背面に表示(&B)"
+msgstr "常に最背面に表示"
 
 #. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:286
-#, fuzzy, kde-format
-#| msgid "Keep &Below Others"
+#, kde-format
 msgid "Keep below rule type"
-msgstr "常に最背面に表示(&B)"
+msgstr "常に最背面に表示のルールタイプ"
 
 #. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:293
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen"
-msgstr "フルスクリーン(&F)"
+msgstr "フルスクリーン"
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:297
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen rule type"
-msgstr "フルスクリーン(&F)"
+msgstr "フルスクリーンのルールタイプ"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:304
@@ -2013,174 +1985,163 @@ msgstr "タイトルバーとフレームを消す"
 #: rulesettings.kcfg:308
 #, kde-format
 msgid "No titlebar rule type"
-msgstr ""
+msgstr "タイトルバーを消すのルールタイプ"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:315
 #, kde-format
 msgid "Titlebar color and scheme"
-msgstr ""
+msgstr "タイトルバーの色とスキーム"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:318
-#, fuzzy, kde-format
-#| msgid "Keep &Below Others"
+#, kde-format
 msgid "Titlebar color rule type"
-msgstr "常に最背面に表示(&B)"
+msgstr "タイトルバーの色のルールタイプ"
 
 #. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:323
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Block Compositing"
-msgstr "コンポジティングを一時停止"
+msgstr "コンポジットをブロック"
 
 #. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:327
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Block Compositing rule type"
-msgstr "コンポジティングを一時停止"
+msgstr "コンポジットをブロックのルールタイプ"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr ""
+msgstr "フォーカスの移動を防止"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:338
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Focus stealing prevention rule type"
-msgstr "フルスクリーン(&F)"
+msgstr "フォーカスの移動を防止のルールタイプ"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:343
 #, kde-format
 msgid "Focus protection"
-msgstr ""
+msgstr "フォーカス保護"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:349
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Focus protection rule type"
-msgstr "フルスクリーン(&F)"
+msgstr "フォーカス保護のルールタイプ"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:354
 #, kde-format
 msgid "Accept Focus"
-msgstr ""
+msgstr "フォーカスを受け付ける"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:358
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Accept Focus rule type"
-msgstr "常に最前面に表示(&A)"
+msgstr "フォーカスを受け付けるのルールタイプ"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:363
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Closeable"
-msgstr "閉じる(&C)"
+msgstr "閉じることが可能"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:367
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Closeable rule type"
-msgstr "常に最前面に表示(&A)"
+msgstr "閉じることが可能のルールタイプ"
 
 #. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:372
 #, kde-format
 msgid "Autogroup with identical"
-msgstr ""
+msgstr "同一オブジェクトによる自動グループ化"
 
 #. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:376
 #, kde-format
 msgid "Autogroup with identical rule type"
-msgstr ""
+msgstr "同一オブジェクトによる自動グループ化のルールタイプ"
 
 #. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:381
 #, kde-format
 msgid "Autogroup in foreground"
-msgstr ""
+msgstr "フォアグラウンドで自動グループ化"
 
 #. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:385
 #, kde-format
 msgid "Autogroup in foreground rule type"
-msgstr ""
+msgstr "フォアグラウンドで自動グループ化のルールタイプ"
 
 #. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:390
 #, kde-format
 msgid "Autogroup by ID"
-msgstr ""
+msgstr "ID による自動グループ化"
 
 #. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:393
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Autogroup by ID rule type"
-msgstr "常に最前面に表示(&A)"
+msgstr "ID による自動グループ化のルールタイプ"
 
 #. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:398
 #, kde-format
 msgid "Obey geometry restrictions"
-msgstr ""
+msgstr "座標の制限に従う"
 
 #. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:402
 #, kde-format
 msgid "Obey geometry restrictions rule type"
-msgstr ""
+msgstr "座標の制限に従うのルールタイプ"
 
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:407
 #, kde-format
 msgid "Shortcut"
-msgstr ""
+msgstr "ショートカット"
 
 #. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:410
 #, kde-format
 msgid "Shortcut rule type"
-msgstr ""
+msgstr "ショートカットのルールタイプ"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:417
 #, kde-format
 msgid "Ignore global shortcuts"
-msgstr ""
+msgstr "グローバルショートカットを無視"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:421
 #, kde-format
 msgid "Ignore global shortcuts rule type"
-msgstr ""
+msgstr "グローバルショートカットを無視のルールタイプ"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:426
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Desktop file name"
-msgstr "常に最前面に表示(&A)"
+msgstr "デスクトップファイルの名前"
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:429
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Desktop file name rule type"
-msgstr "常に最前面に表示(&A)"
+msgstr "デスクトップファイルの名前のルールタイプ"
 
 #: scripting/genericscriptedconfig.cpp:70
 #, kde-format
@@ -2283,9 +2244,9 @@ msgid ""
 "keyboard shortcut."
 msgstr ""
 "ウィンドウの枠を消しました。\n"
-"枠なしでは、マウスを使って枠を再び表示させることはできません。キーボード"
-"ショートカットの %1 を使ってウィンドウ操作メニューを表示し、そこから設定して"
-"ください。"
+"枠を消すと、マウスを使って枠を再び表示させることができなくなります。キーボー"
+"ドショートカットの %1 で ウィンドウ操作メニューを表示し、そこから設定してくだ"
+"さい。"
 
 #: useractions.cpp:168
 #, kde-format
@@ -2297,8 +2258,8 @@ msgid ""
 msgstr ""
 "ウィンドウをフルスクリーンにしました。\n"
 "アプリケーションにフルスクリーンモードを解除する機能がない場合、マウスを使っ"
-"てフルスクリーンモードを解除することはできません。その場合、キーボードショー"
-"トカットの %1 を使ってウィンドウ操作メニューを表示し、そこから解除してくださ"
+"てフルスクリーンモードを解除することができなくなります。その場合、キーボード"
+"ショートカットの %1 でウィンドウ操作メニューを表示し、そこから解除してくださ"
 "い。"
 
 #: useractions.cpp:238
@@ -2878,3 +2839,13 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
+"KWin サポート情報\n"
+"以下の情報は https://forum.kde.org などでサポートを依頼する際に使用するための"
+"ものです。\n"
+"この情報には現在実行中のインスタンスに関する情報、使用されているオプション"
+"や\n"
+"実行中の OpenGL ドライバ、デスクトップ効果の情報が含まれています。\n"
+"サポートスレッドに直接貼り付けるのではなく、この説明テキストの下に表示されて"
+"いる情報を\n"
+"https://paste.kde.org などのテキスト共有サービスに投稿してリンクを共有してく"
+"ださい。\n"
