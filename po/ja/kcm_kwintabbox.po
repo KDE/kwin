@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-14 00:45+0000\n"
-"PO-Revision-Date: 2026-06-14 17:51+0900\n"
+"PO-Revision-Date: 2026-07-14 19:23+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
 "Language: ja\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 26.04.2\n"
+"X-Generator: Lokalize 26.04.3\n"
 
 #: layoutpreview.cpp:28
 #, kde-format
@@ -81,10 +81,9 @@ msgid "Alternative"
 msgstr "代替"
 
 #: main.cpp:77
-#, fuzzy, kde-format
-#| msgid "Get New Task Switchers..."
+#, kde-format
 msgid "Get New Task Switcher Styles…"
-msgstr "新しいタスクスイッチャーを入手..."
+msgstr "新しいタスクスイッチャースタイルを入手..."
 
 #: main.cpp:95
 #, kde-format

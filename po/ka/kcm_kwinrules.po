@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-17 00:45+0000\n"
-"PO-Revision-Date: 2026-05-14 04:36+0200\n"
+"PO-Revision-Date: 2026-07-17 05:25+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -414,7 +414,7 @@ msgstr "მალსახმობი"
 #: rulesmodel.cpp:600
 #, kde-format
 msgid "Window manager draws titlebar, frame, and shadows"
-msgstr ""
+msgstr "ფანჯრების მმართველი ხატავს სათაურის ზოლს, ჩარჩოს და ჩრდილებს"
 
 #: rulesmodel.cpp:600 rulesmodel.cpp:606 rulesmodel.cpp:612 rulesmodel.cpp:617
 #: rulesmodel.cpp:623 rulesmodel.cpp:650 rulesmodel.cpp:678 rulesmodel.cpp:684
@@ -793,25 +793,25 @@ msgstr "დადება"
 #, kde-format
 msgctxt "Never draw a server side decoration"
 msgid "Never"
-msgstr ""
+msgstr "არასდროს"
 
 #: rulesmodel.cpp:937
 #, kde-format
 msgctxt "Draw a server side decoration if the application asks for it"
 msgid "If the application asks"
-msgstr ""
+msgstr "თუ აპლიკაცია ითხოვს"
 
 #: rulesmodel.cpp:938
 #, kde-format
 msgctxt "Always draw a server side decoration"
 msgid "Always"
-msgstr ""
+msgstr "ყოველთვის"
 
 #: rulesmodel.cpp:939
 #, kde-format
 msgctxt "Always draw a server side drop shadow"
 msgid "Only shadow"
-msgstr ""
+msgstr "მხოლოდ ჩრდილი"
 
 #: rulesmodel.cpp:964
 #, kde-format

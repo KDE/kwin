@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-17 00:45+0000\n"
-"PO-Revision-Date: 2026-07-01 16:54+0200\n"
+"PO-Revision-Date: 2026-07-17 15:44+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -3476,14 +3476,13 @@ msgstr "Typo de regula necun barra de titulo"
 #: rulesettings.kcfg:322
 #, kde-format
 msgid "Decoration policy"
-msgstr ""
+msgstr "Politica de decoration"
 
 #. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
-#, fuzzy, kde-format
-#| msgid "Active opacity rule type"
+#, kde-format
 msgid "Decoration policy rule type"
-msgstr "Typo de regula de opacitate active"
+msgstr "Typo de regula de politica de decoration"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:339
@@ -4220,13 +4219,13 @@ msgstr "Occide  fenestra"
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Focused Window"
-msgstr ""
+msgstr "Centrar le puntator in le fenestra focusate"
 
 #: useractions.cpp:1018
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Screen"
-msgstr ""
+msgstr "Centrar le puntator in le schermo"
 
 #: useractions.cpp:1083
 #, kde-format
@@ -4284,6 +4283,8 @@ msgid ""
 "Setting custom modes with too old kde-output-management-v2 protocol versions "
 "is unsupported"
 msgstr ""
+"Configurar modos personalisate con versiones troppo antique del protocollo  "
+"kde-output-management-v2 non es supportate."
 
 #: wayland/outputmanagement_v2.cpp:575
 #, kde-format

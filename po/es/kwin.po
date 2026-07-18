@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-17 00:45+0000\n"
-"PO-Revision-Date: 2026-07-07 23:43+0100\n"
+"PO-Revision-Date: 2026-07-17 11:37+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -3493,14 +3493,13 @@ msgstr "Tipo de regla para sin barra de título ni marco"
 #: rulesettings.kcfg:322
 #, kde-format
 msgid "Decoration policy"
-msgstr ""
+msgstr "Política de decoración"
 
 #. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
-#, fuzzy, kde-format
-#| msgid "Active opacity rule type"
+#, kde-format
 msgid "Decoration policy rule type"
-msgstr "Tipo de regla para opacidad de ventana activa"
+msgstr "Tipo de regla para política de decoración"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:339
@@ -4422,33 +4421,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ha fallado"
-
-#~ msgid "Block Compositing"
-#~ msgstr "Bloquear la composición"
-
-#~ msgid "Block Compositing rule type"
-#~ msgstr "Tipo de regla para bloquear la composición"
-
-#~ msgid "Autogroup with identical"
-#~ msgstr "Agrupar automáticamente con idénticas"
-
-#~ msgid "Autogroup with identical rule type"
-#~ msgstr "Tipo de regla para agrupar automáticamente con idénticas"
-
-#~ msgid "Autogroup in foreground"
-#~ msgstr "Agrupar automáticamente en primer plano"
-
-#~ msgid "Autogroup in foreground rule type"
-#~ msgstr "Tipo de regla para agrupar automáticamente en primer plano"
-
-#~ msgid "Autogroup by ID"
-#~ msgstr "Agrupar automáticamente por ID"
-
-#~ msgid "Autogroup by ID rule type"
-#~ msgstr "Tipo de regla para agrupar automáticamente por ID"
-
-#~ msgid "Obey geometry restrictions"
-#~ msgstr "Obedecer restricciones de geometría"
-
-#~ msgid "Obey geometry restrictions rule type"
-#~ msgstr "Tipo de regla para obedecer restricciones de geometría"

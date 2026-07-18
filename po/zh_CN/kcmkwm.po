@@ -21,25 +21,25 @@ msgstr ""
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window focus policy:"
-msgstr ""
+msgstr "窗口焦点策略："
 
 #: ui/Focus.qml:46
 #, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Click to focus"
-msgstr ""
+msgstr "点击聚焦"
 
 #: ui/Focus.qml:47
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window becomes focused when clicked."
-msgstr ""
+msgstr "窗口在点击时取得焦点。"
 
 #: ui/Focus.qml:51
 #, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus follows pointer"
-msgstr ""
+msgstr "焦点跟随指针移动"
 
 #: ui/Focus.qml:52
 #, kde-format
@@ -47,19 +47,19 @@ msgctxt "@info:tooltip Window focus policy"
 msgid ""
 "As the pointer moves, windows under it become focused after a configurable "
 "delay."
-msgstr ""
+msgstr "随着指针移动，位于它下方的窗口在可配置的延迟后取得焦点。"
 
 #: ui/Focus.qml:56
 #, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus under pointer"
-msgstr ""
+msgstr "焦点位于指针之下"
 
 #: ui/Focus.qml:57
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window under pointer receives focus, even if the pointer has not moved."
-msgstr ""
+msgstr "位于指针之下的窗口取得焦点，即使指针没有移动。"
 
 #: ui/Focus.qml:75
 #, kde-kuit-format
@@ -69,24 +69,26 @@ msgid ""
 "some windows appearing on screen. This can lead to assigning focus to "
 "unwanted windows. Use with caution."
 msgstr ""
+"选择 <interface>焦点位于指针之下</interface> 可能造成屏幕显示的某些窗口无法取"
+"得焦点，系统会将焦点分配到错误的窗口。请谨慎使用。"
 
 #: ui/Focus.qml:81
 #, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Last focused window"
-msgstr ""
+msgstr "上一个聚焦的窗口"
 
 #: ui/Focus.qml:83
 #, kde-format
 msgctxt "@title:group"
 msgid "After closing a window, move focus to:"
-msgstr ""
+msgstr "关闭窗口后，焦点移动到："
 
 #: ui/Focus.qml:86
 #, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Window under pointer"
-msgstr ""
+msgstr "指针之下的窗口"
 
 #: ui/Focus.qml:115
 #, kde-format
@@ -97,13 +99,13 @@ msgstr "聚焦延迟(&D)："
 #, kde-format
 msgctxt "short for millisecond(s)"
 msgid "%1 ms"
-msgstr ""
+msgstr "%1 毫秒"
 
 #: ui/Focus.qml:128 ui/Focus.qml:254
 #, kde-format
 msgctxt "short for millisecond(s)"
 msgid "ms"
-msgstr ""
+msgstr "毫秒"
 
 #: ui/Focus.qml:146
 #, kde-format
@@ -140,13 +142,13 @@ msgstr "彻底"
 #, kde-format
 msgctxt "@option:radio When focusing a window on a different Virtual Desktop:"
 msgid "Switch to window’s Virtual Desktop"
-msgstr ""
+msgstr "切换到窗口所在的虚拟桌面"
 
 #: ui/Focus.qml:173
 #, kde-format
 msgctxt "@title:group"
 msgid "When focusing a window on a different Virtual Desktop:"
-msgstr ""
+msgstr "聚焦其他虚拟桌面的窗口时："
 
 #: ui/Focus.qml:176
 #, kde-format
@@ -168,7 +170,7 @@ msgstr "提升窗口："
 #: ui/Focus.qml:208
 #, kde-format
 msgid "&Click raises focused window"
-msgstr ""
+msgstr "点击提升焦点所在窗口(&C)"
 
 #: ui/Focus.qml:228
 #, kde-format
@@ -203,13 +205,13 @@ msgstr "窗口操作(&I)"
 #: ui/main.qml:49
 #, kde-format
 msgid "Mo&vement & Placement"
-msgstr ""
+msgstr "移动和放置(&V)"
 
 #: ui/MovementAndPlacement.qml:17
 #, kde-format
 msgctxt "@title:group"
 msgid "Movement"
-msgstr ""
+msgstr "移动"
 
 #: ui/MovementAndPlacement.qml:22
 #, kde-format
@@ -221,14 +223,14 @@ msgstr "屏幕边缘吸附区域(&E)："
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "%1 px"
-msgstr ""
+msgstr "%1 像素"
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
 #: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "px"
-msgstr ""
+msgstr "像素"
 
 #: ui/MovementAndPlacement.qml:50
 #, kde-format
@@ -254,7 +256,7 @@ msgstr "仅在重叠时吸附"
 #, kde-format
 msgctxt "@title:group"
 msgid "Placement"
-msgstr ""
+msgstr "放置"
 
 #: ui/MovementAndPlacement.qml:125
 #, kde-format
@@ -295,7 +297,7 @@ msgstr "鼠标下方"
 #, kde-format
 msgctxt "@title:group"
 msgid "Picture-in-picture Placement"
-msgstr ""
+msgstr "画中画放置"
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
@@ -364,17 +366,17 @@ msgstr "窗口菜单"
 #: ui/TitlebarActions.qml:30 ui/WindowActions.qml:23 ui/WindowActions.qml:54
 #, kde-format
 msgid "Focus and raise"
-msgstr ""
+msgstr "聚焦并提升"
 
 #: ui/TitlebarActions.qml:31
 #, kde-format
 msgid "Focus and lower"
-msgstr ""
+msgstr "聚焦并降低"
 
 #: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
 #, kde-format
 msgid "Focus"
-msgstr ""
+msgstr "聚焦"
 
 #: ui/TitlebarActions.qml:43 ui/TitlebarActions.qml:57
 #, kde-format
@@ -441,7 +443,7 @@ msgstr "标题栏和边框操作"
 msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for focused windows"
 msgid "Focused"
-msgstr ""
+msgstr "聚焦的窗口"
 
 #: ui/TitlebarActions.qml:116
 #, kde-format
@@ -449,7 +451,7 @@ msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for unfocused "
 "windows"
 msgid "Unfocused"
-msgstr ""
+msgstr "未聚焦的窗口"
 
 #: ui/TitlebarActions.qml:122 ui/WindowActions.qml:46
 #, kde-format
@@ -460,13 +462,13 @@ msgstr "左键点击(&L)："
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on a focused titlebar or frame"
-msgstr ""
+msgstr "左键单击聚焦的标题栏或帧"
 
 #: ui/TitlebarActions.qml:143
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "左键单击未聚焦的标题栏或帧"
 
 #: ui/TitlebarActions.qml:160 ui/WindowActions.qml:68
 #, kde-format
@@ -477,13 +479,13 @@ msgstr "中键点击(&M)："
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on a focused titlebar or frame"
-msgstr ""
+msgstr "中键单击聚焦的标题栏或帧"
 
 #: ui/TitlebarActions.qml:179
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "中键单击未聚焦的标题栏或帧"
 
 #: ui/TitlebarActions.qml:196 ui/WindowActions.qml:83
 #, kde-format
@@ -494,13 +496,13 @@ msgstr "右键点击(&R)："
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on a focused titlebar or frame"
-msgstr ""
+msgstr "右键单击聚焦的标题栏或帧"
 
 #: ui/TitlebarActions.qml:215
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "右键单击未聚焦的标题栏或帧"
 
 #: ui/TitlebarActions.qml:233
 #, kde-format
@@ -530,12 +532,12 @@ msgstr "右键点击(&K)："
 #: ui/WindowActions.qml:20 ui/WindowActions.qml:51
 #, kde-format
 msgid "Focus, raise, and click through"
-msgstr ""
+msgstr "聚焦、提升并点击穿透"
 
 #: ui/WindowActions.qml:21 ui/WindowActions.qml:52
 #, kde-format
 msgid "Focus and click through"
-msgstr ""
+msgstr "聚焦并点击穿透"
 
 #: ui/WindowActions.qml:27
 #, kde-format
@@ -545,12 +547,12 @@ msgstr "移动"
 #: ui/WindowActions.qml:28
 #, kde-format
 msgid "Focus, raise, and move"
-msgstr ""
+msgstr "聚焦、提升并移动"
 
 #: ui/WindowActions.qml:29
 #, kde-format
 msgid "Focus, raise, and resize"
-msgstr ""
+msgstr "聚焦、提升并调整大小"
 
 #: ui/WindowActions.qml:30
 #, kde-format
@@ -571,12 +573,12 @@ msgstr "提高不透明度"
 #, kde-format
 msgctxt "@title:group"
 msgid "Unfocused Inner Window Actions"
-msgstr ""
+msgstr "未聚焦窗口的内部操作"
 
 #: ui/WindowActions.qml:50
 #, kde-format
 msgid "Focus, click through, and raise on release"
-msgstr ""
+msgstr "聚焦并点击穿透，释放时提升"
 
 #: ui/WindowActions.qml:103
 #, kde-format
@@ -586,17 +588,17 @@ msgstr "滚动"
 #: ui/WindowActions.qml:104
 #, kde-format
 msgid "Focus and scroll"
-msgstr ""
+msgstr "聚焦并滚动"
 
 #: ui/WindowActions.qml:105
 #, kde-format
 msgid "Focus, raise, and scroll"
-msgstr ""
+msgstr "聚焦、提升并滚动"
 
 #: ui/WindowActions.qml:120
 #, kde-format
 msgid "Inner Window, Titlebar, and Frame Actions"
-msgstr ""
+msgstr "内部窗口、标题栏与边框操作"
 
 #: ui/WindowActions.qml:123
 #, kde-format

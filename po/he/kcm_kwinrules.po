@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-17 00:45+0000\n"
-"PO-Revision-Date: 2026-05-14 08:58+0300\n"
+"PO-Revision-Date: 2026-07-17 12:22+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 26.04.0\n"
+"X-Generator: Lokalize 26.04.1\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -402,7 +402,7 @@ msgstr "קיצור דרך"
 #: rulesmodel.cpp:600
 #, kde-format
 msgid "Window manager draws titlebar, frame, and shadows"
-msgstr ""
+msgstr "מנהל החלונות מצייר שורת כותרת, מסגרת וצלליות"
 
 #: rulesmodel.cpp:600 rulesmodel.cpp:606 rulesmodel.cpp:612 rulesmodel.cpp:617
 #: rulesmodel.cpp:623 rulesmodel.cpp:650 rulesmodel.cpp:678 rulesmodel.cpp:684
@@ -771,25 +771,25 @@ msgstr "שכבת על"
 #, kde-format
 msgctxt "Never draw a server side decoration"
 msgid "Never"
-msgstr ""
+msgstr "אף פעם לא"
 
 #: rulesmodel.cpp:937
 #, kde-format
 msgctxt "Draw a server side decoration if the application asks for it"
 msgid "If the application asks"
-msgstr ""
+msgstr "אם היישום מבקש"
 
 #: rulesmodel.cpp:938
 #, kde-format
 msgctxt "Always draw a server side decoration"
 msgid "Always"
-msgstr ""
+msgstr "תמיד"
 
 #: rulesmodel.cpp:939
 #, kde-format
 msgctxt "Always draw a server side drop shadow"
 msgid "Only shadow"
-msgstr ""
+msgstr "צל בלבד"
 
 #: rulesmodel.cpp:964
 #, kde-format

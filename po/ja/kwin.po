@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-17 00:45+0000\n"
-"PO-Revision-Date: 2026-06-14 16:22+0900\n"
+"PO-Revision-Date: 2026-07-14 19:52+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
 "Language: ja\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 26.04.2\n"
+"X-Generator: Lokalize 26.04.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -44,127 +44,129 @@ msgstr ""
 #: backends/wayland/wayland_output.cpp:474
 #, kde-format
 msgid "Press right control to ungrab pointer"
-msgstr ""
+msgstr "右 Ctrl でポインタのキャプチャを解除します"
 
 #: backends/wayland/wayland_output.cpp:476
 #, kde-format
 msgid "Press right control key to grab pointer"
-msgstr ""
+msgstr "右 Ctrl でポインタをキャプチャします"
 
 #: backends/wayland/wayland_output.cpp:480
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr ""
+msgstr "KDE Wayland コンポジター %1"
 
 #: backends/wayland/wayland_output.cpp:483
 #, kde-format
 msgid "- Output disabled"
-msgstr ""
+msgstr "- 出力を無効化済み"
 
 #: backends/wayland/wayland_output.cpp:485
 #, kde-format
 msgid "- Output dimmed"
-msgstr ""
+msgstr "- 出力をスリープ中"
 
 #: backends/x11/x11_windowed_backend.cpp:500
 #, kde-format
 msgid "Press right control to ungrab input"
-msgstr ""
+msgstr "右 Ctrl で入力のキャプチャを解除します"
 
 #: backends/x11/x11_windowed_backend.cpp:500
 #, kde-format
 msgid "Press right control key to grab input"
-msgstr ""
+msgstr "右 Ctrl で入力をキャプチャします"
 
 #: backends/x11/x11_windowed_backend.cpp:501
 #, kde-format
 msgid "KDE Wayland Compositor"
-msgstr ""
+msgstr "KDE Wayland コンポジター"
 
 #: compositor.cpp:750
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
-msgstr ""
+msgstr "グラフィックスのリセットにより、デスクトップ効果が再起動しました"
 
 #: core/iccprofile.cpp:396
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "ICC プロファイル \"%1\" を開けませんでした"
 
 #: core/iccprofile.cpp:398
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr ""
+msgstr "ICC プロファイル \"%1\" は存在しません"
 
 #: core/iccprofile.cpp:402
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "ICC プロファイル \"%1\" はディスプレイに使用できません"
 
 #: core/iccprofile.cpp:405
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
+"ICC プロファイル \"%1\" の接続色空間には対応していません (XYZ のみ対応)"
 
 #: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
+"ICC プロファイル \"%1\" は壊れています (入出力色空間が RGB ではありません)"
 
 #: core/iccprofile.cpp:421
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "ICC プロファイル \"%1\" は壊れています (白色点がありません)"
 
 #: core/iccprofile.cpp:424
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "ICC プロファイル \"%1\" は壊れています (白色点が無効です)"
 
 #: core/iccprofile.cpp:437
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
-msgstr ""
+msgstr "ICC プロファイル \"%1\" は壊れています (色順応行列の解析に失敗)"
 
 #: core/iccprofile.cpp:442
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
-msgstr ""
+msgstr "ICC プロファイル \"%1\" は壊れています (色順応行列の反転に失敗)"
 
 #: core/iccprofile.cpp:455
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "ICC プロファイル \"%1\" は壊れています (原色データがありません)"
 
 #: core/iccprofile.cpp:470
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr ""
+msgstr "ICC プロファイル \"%1\" は壊れています (原色データを計算できません)"
 
 #: core/iccprofile.cpp:479
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr ""
+msgstr "ICC プロファイル \"%1\" は壊れています (原色データが無効です)"
 
 #: core/iccprofile.cpp:495
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr ""
+msgstr "BToD タグのみを持つ ICC プロファイル \"%1\" には対応していません"
 
 #: core/iccprofile.cpp:533
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "カラープロファイルに TRC タグがありません"
 
 #: core/iccprofile.cpp:540
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr ""
+msgstr "ICC プロファイル \"%1\" のトーンカーブを反転できませんでした"
 
 #: debug_console.cpp:86
 #, kde-format
@@ -1102,11 +1104,10 @@ msgstr "ウィンドウ"
 
 #. i18n: ectx: property (text), widget (QPushButton, pickWindowButton)
 #: debug_console.ui:43
-#, fuzzy, kde-format
-#| msgid "Lower Window"
+#, kde-format
 msgctxt "@action:button"
 msgid "Pick Window…"
-msgstr "ウィンドウを背面に"
+msgstr "ウィンドウを選ぶ…"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:54
@@ -1295,13 +1296,7 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "このヘルパーユーティリティは、直接実行されるものではありません。"
 
 #: helpers/dialoghelper/dialoghelper.cpp:79
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1310,9 +1305,8 @@ msgid ""
 msgstr ""
 "ウィンドウをフルスクリーンにしました。\n"
 "アプリケーションにフルスクリーンモードを解除する機能がない場合、マウスを使っ"
-"てフルスクリーンモードを解除することはできません。その場合、キーボードショー"
-"トカットの %1 を使ってウィンドウ操作メニューを表示し、そこから解除してくださ"
-"い。"
+"てフルスクリーンモードを解除することができなくなります。その場合、キーボード"
+"ショートカットの %1 で解除してください。"
 
 #: helpers/dialoghelper/dialoghelper.cpp:85
 #, kde-format
@@ -1324,17 +1318,11 @@ msgid ""
 msgstr ""
 "ウィンドウをフルスクリーンにしました。\n"
 "アプリケーションにフルスクリーンモードを解除する機能がない場合、マウスを使っ"
-"てフルスクリーンモードを解除することはできません。その場合、キーボードショー"
-"トカットの %1 を使ってウィンドウメニューを表示し、そこから解除してください。"
+"てフルスクリーンモードを解除することができなくなります。その場合、キーボード"
+"ショートカットの %1 でウィンドウメニューを表示し、そこから解除してください。"
 
 #: helpers/dialoghelper/dialoghelper.cpp:93
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1342,33 +1330,24 @@ msgid ""
 msgstr ""
 "ウィンドウをフルスクリーンにしました。\n"
 "アプリケーションにフルスクリーンモードを解除する機能がない場合、マウスを使っ"
-"てフルスクリーンモードを解除することはできません。その場合、キーボードショー"
-"トカットの %1 を使ってウィンドウ操作メニューを表示し、そこから解除してくださ"
-"い。"
+"てフルスクリーンモードを解除することができなくなります。"
 
 #: helpers/dialoghelper/dialoghelper.cpp:98
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
-msgstr "フルスクリーン(&F)"
+msgstr "フルスクリーンをやめる"
 
 #: helpers/dialoghelper/dialoghelper.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse: use the %1 keyboard shortcut instead."
 msgstr ""
 "ウィンドウの枠を消しました。\n"
-"枠なしでは、マウスを使って枠を再び表示させることはできません。キーボード"
-"ショートカットの %1 を使ってウィンドウ操作メニューを表示し、そこから設定して"
-"ください。"
+"枠を消すと、マウスを使って枠を再び表示させることができなくなります。キーボー"
+"ドショートカットの %1 を使用してください。"
 
 #: helpers/dialoghelper/dialoghelper.cpp:106
 #, kde-format
@@ -1379,45 +1358,33 @@ msgid ""
 "shortcut."
 msgstr ""
 "ウィンドウの枠を消しました。\n"
-"枠なしでは、マウスを使って枠を再び表示させることはできません。キーボード"
-"ショートカットの %1 を使ってウィンドウメニューを表示し、そこから設定してくだ"
-"さい。"
+"枠を消すと、マウスを使って枠を再び表示させることができなくなります。キーボー"
+"ドショートカットの %1 でウィンドウメニューを表示し、そこから設定してくださ"
+"い。"
 
 #: helpers/dialoghelper/dialoghelper.cpp:112
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse."
 msgstr ""
 "ウィンドウの枠を消しました。\n"
-"枠なしでは、マウスを使って枠を再び表示させることはできません。キーボード"
-"ショートカットの %1 を使ってウィンドウ操作メニューを表示し、そこから設定して"
-"ください。"
+"枠を消すと、マウスを使って枠を再び表示させることができなくなります。"
 
 #: helpers/dialoghelper/dialoghelper.cpp:116
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
-msgstr ""
+msgstr "枠をもどす"
 
 #: helpers/dialoghelper/dialoghelper.cpp:133
 #, kde-format
 msgid "Do not show again"
-msgstr ""
+msgstr "再度表示しない"
 
 #: helpers/killer/killdialog.cpp:37
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<p>Do you want to terminate this application?</p><p><warning>Terminating "
-#| "the application will close all of its child windows. Any unsaved data "
-#| "will be lost.</warning></p>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
@@ -1425,17 +1392,13 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<p>このアプリケーションを強制終了しますか？</p><p><warning>アプリケーションを"
-"強制終了するとすべての子ウィンドウが閉じられ、未保存のデータはすべて失われま"
-"す</warning></p>"
+"<para><application>%1</application> が応答していません。このアプリケーション"
+"を強制終了しますか？</para><para><emphasis strong='true'>強制終了するとアプリ"
+"ケーションのすべてのウィンドウが閉じられ、保存していないデータは失われます。"
+"</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:41
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<p>Do you want to terminate this application?</p><p><warning>Terminating "
-#| "the application will close all of its child windows. Any unsaved data "
-#| "will be lost.</warning></p>"
+#, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
@@ -1443,56 +1406,52 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<p>このアプリケーションを強制終了しますか？</p><p><warning>アプリケーションを"
-"強制終了するとすべての子ウィンドウが閉じられ、未保存のデータはすべて失われま"
-"す</warning></p>"
+"<para><application>%2</application> の \"%1\" が応答していません。このアプリ"
+"ケーションを強制終了しますか？</para><para><emphasis strong='true'>強制終了す"
+"るとアプリケーションのすべてのウィンドウが閉じられ、保存していないデータは失"
+"われます。</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "&Terminate Application %1"
+#, kde-format
 msgid "Terminating %1…"
-msgstr "アプリケーション %1 を強制終了(&T)"
+msgstr "%1 を強制終了中…"
 
 #: helpers/killer/killdialog.cpp:69
-#, fuzzy, kde-format
-#| msgid "&Terminate Application %1"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "アプリケーション %1 を強制終了(&T)"
+msgstr "%1 を強制終了(&T)"
 
 #: helpers/killer/killdialog.cpp:72
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "待機する"
+msgstr "待機する(&W)"
 
 #: helpers/killer/killdialog.cpp:84
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "プロセス ID: %1"
 
 #: helpers/killer/killdialog.cpp:91
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr ""
+msgstr "ホスト名: %1"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, KillDialog)
 #: helpers/killer/killdialog.ui:14
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(応答なし)"
+msgstr "応答なし"
 
 #. i18n: ectx: property (title), widget (KCollapsibleGroupBox, kcollapsiblegroupbox)
 #: helpers/killer/killdialog.ui:53
 #, kde-format
 msgid "&Details"
-msgstr ""
+msgstr "詳細(&D)"
 
 #: helpers/killer/killer.cpp:134
 #, kde-format
@@ -1534,10 +1493,11 @@ msgstr "強制終了させるアプリケーションの名前"
 msgid "name"
 msgstr ""
 
+# おそらく内部ログ用の文字列
 #: keyboard_layout.cpp:46 keyboard_layout.cpp:54 keyboard_layout.cpp:136
 #, kde-format
 msgid "Keyboard Layout Switcher"
-msgstr ""
+msgstr "Keyboard Layout Switcher"
 
 #: killwindow.cpp:31
 #, kde-format
@@ -1545,6 +1505,8 @@ msgid ""
 "Select window to force close with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"左クリックや Enter で強制終了するウィンドウを選択してください。\n"
+"Esc や右クリックでキャンセルできます。"
 
 #: main.cpp:150 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
@@ -1616,59 +1578,61 @@ msgstr "Xaver Hugl"
 #: main.cpp:172
 #, kde-format
 msgid "Disable configuration options"
-msgstr "設定オプションを無効にする"
+msgstr "設定オプションを無効化"
 
 #: main_wayland.cpp:328
 #, kde-format
 msgid "Start a rootless Xwayland server."
-msgstr ""
+msgstr "ルートレス XWayland を開始"
 
 #: main_wayland.cpp:331
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
+"リッスンする Wayland ソケット名 (未指定の場合 \"wayland-0\" が使用されます)"
 
 #: main_wayland.cpp:335
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
-msgstr ""
+msgstr "X11 プラットフォームのウィンドウモードで使用する X11 ディスプレイ"
 
 #: main_wayland.cpp:339
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
+"Wayland プラットフォームのウィンドウモードで使用する Wayland ディスプレイ"
 
 #: main_wayland.cpp:341
 #, kde-format
 msgid "Render to a virtual framebuffer."
-msgstr ""
+msgstr "仮想フレームバッファにレンダリングする"
 
 #: main_wayland.cpp:343
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
-msgstr ""
+msgstr "ウィンドウモードの幅 (デフォルトは 1024 です)"
 
 #: main_wayland.cpp:347
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
-msgstr ""
+msgstr "ウィンドウモードの高さ (デフォルトは 768 です)"
 
 #: main_wayland.cpp:352
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "ウィンドウモードをフルスクリーンにするかどうか"
 
 #: main_wayland.cpp:356
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
-msgstr ""
+msgstr "ウィンドウモードのスケール (デフォルトは 1 です)"
 
 #: main_wayland.cpp:361
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
-msgstr ""
+msgstr "ウィンドウモードで出力先として開くウィンドウ数 (デフォルトは 1 です)"
 
 #: main_wayland.cpp:366
 #, kde-format
@@ -1676,6 +1640,8 @@ msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
+"Wayland の着信接続に使用するソケット (--socket と組み合わせてソケットに名前を"
+"つけることができます)"
 
 #: main_wayland.cpp:370
 #, kde-format
@@ -1683,77 +1649,79 @@ msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
+"XWayland の着信接続に使用するソケット名 (このオプションは複数回使用できます)"
 
 #: main_wayland.cpp:374
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
-msgstr ""
+msgstr "セットアップ済みの XWayland ディスプレイの名前"
 
 #: main_wayland.cpp:378
 #, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
-msgstr ""
+msgstr "XWayland の初期接続に使用する XWayland ソケットの名前"
 
 #: main_wayland.cpp:382
 #, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
-msgstr ""
+msgstr "セットアップ済みの XWayland 初期ディスプレイの名前"
 
 #: main_wayland.cpp:386
 #, kde-format
 msgid "Name of the xauthority file "
-msgstr ""
+msgstr "Xauthority ファイルの名前"
 
 #: main_wayland.cpp:390
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
-msgstr ""
+msgstr "kwin_wayland_wrapper によって再起動できるようこのインスタンスを終了"
 
 #: main_wayland.cpp:392
 #, kde-format
 msgid "Render through drm node."
-msgstr ""
+msgstr "DRM ノードを通してレンダリングする"
 
 #: main_wayland.cpp:393
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
-msgstr ""
+msgstr "ロケール情報を抽出する際、ユーザー設定よりも locale1 を優先する"
 
 #: main_wayland.cpp:422
 #, kde-format
 msgid "Input method that KWin starts."
-msgstr ""
+msgstr "KWin が開始する入力メゾット"
 
 #: main_wayland.cpp:428
 #, kde-format
 msgid "Starts the session in locked mode."
-msgstr ""
+msgstr "ロック状態でセッションを開始"
 
 #: main_wayland.cpp:432
 #, kde-format
 msgid "Starts the session without lock screen support."
-msgstr ""
+msgstr "ロック画面に未対応のセッションを開始"
 
 #: main_wayland.cpp:437
 #, kde-format
 msgid "Starts the session without global shortcuts support."
-msgstr ""
+msgstr "グローバルショートカットに未対応のセッションを開始"
 
 #: main_wayland.cpp:442
 #, kde-format
 msgid "Disable KActivities integration."
-msgstr ""
+msgstr "KActivities の統合を無効化"
 
 #: main_wayland.cpp:447
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
-msgstr ""
+msgstr "KWin が開始したセッションアプリが閉じたら終了する"
 
 #: main_wayland.cpp:452
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
+"Wayland と XWayland サーバーの開始後に起動するアプリケーション (複数選択可)"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: plugins/blur/blur_config.ui:17
@@ -1803,6 +1771,8 @@ msgid ""
 "Select a position for color picking with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"左クリックや Enter で色を取得する位置を選択してください。\n"
+"Esc や右クリックでキャンセルできます。"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: plugins/diminactive/diminactive_config.ui:17
@@ -1853,18 +1823,16 @@ msgid "Disable Active Input Capture"
 msgstr "実行中の操作キャプチャを無効化"
 
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "Control"
+msgstr "リモート操作"
 
 #: plugins/eis/eisprompter.cpp:52
 #, kde-kuit-format
 msgctxt "@info"
 msgid "<application>%1</application> is asking to control input devices"
-msgstr ""
+msgstr "<application>%1</application> が入力デバイスの制御を要求しています"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
@@ -1872,7 +1840,7 @@ msgctxt ""
 "@option:check, %1 is the application name. This option always allow apps "
 "claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "%1 を名乗るアプリは常に許可"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -1883,18 +1851,22 @@ msgid ""
 "revoke this permission later on <application>System Settings</application>’ "
 "“Legacy X11 App Support” page."
 msgstr ""
+"古い X11 アプリが本物かどうか検証することはできません。そのため <application>"
+"%1</application> を名乗るすべてのアプリが入力デバイスを制御できるようになりま"
+"す。後から <application>システム設定</application> の「レガシー X11 アプリ"
+"ケーションのサポート」で権限を削除することができます。"
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
 msgctxt "@action:button Allow control of input devices"
 msgid "Allow"
-msgstr ""
+msgstr "許可"
 
 #: plugins/eis/eisprompter.cpp:70
 #, kde-format
 msgctxt "@action:button Deny control of input devices"
 msgid "Deny"
-msgstr ""
+msgstr "拒否"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -1928,72 +1900,64 @@ msgstr " ミリ秒"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: plugins/glide/glide_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Window Operations Menu"
+#, kde-format
 msgid "Window Open Animation"
-msgstr "ウィンドウ操作メニュー"
+msgstr "ウィンドウを開くアニメーション"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
 #: plugins/glide/glide_config.ui:56 plugins/glide/glide_config.ui:154
-#, fuzzy, kde-format
-#| msgid "Rotation duration:"
+#, kde-format
 msgid "Rotation edge:"
-msgstr "回転の長さ:"
+msgstr "グライドの軸:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/glide/glide_config.ui:70 plugins/glide/glide_config.ui:168
-#, fuzzy, kde-format
-#| msgid "Top"
+#, kde-format
 msgid "Top"
 msgstr "上"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
-#, fuzzy, kde-format
-#| msgid "Right"
+#, kde-format
 msgid "Right"
 msgstr "右"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/glide/glide_config.ui:80 plugins/glide/glide_config.ui:178
-#, fuzzy, kde-format
-#| msgid "Bottom"
+#, kde-format
 msgid "Bottom"
 msgstr "下"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
-#, fuzzy, kde-format
-#| msgid "Left"
+#, kde-format
 msgid "Left"
 msgstr "左"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
 #: plugins/glide/glide_config.ui:93 plugins/glide/glide_config.ui:191
-#, fuzzy, kde-format
-#| msgid "Rotation duration:"
+#, kde-format
 msgid "Rotation angle:"
-msgstr "回転の長さ:"
+msgstr "グライドの角度:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
 #: plugins/glide/glide_config.ui:119 plugins/glide/glide_config.ui:198
 #, kde-format
 msgid "Distance:"
-msgstr ""
+msgstr "距離:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
 #: plugins/glide/glide_config.ui:148
-#, fuzzy, kde-format
-#| msgid "Window Operations Menu"
+#, kde-format
 msgid "Window Close Animation"
-msgstr "ウィンドウ操作メニュー"
+msgstr "ウィンドウを閉じるアニメーション"
 
 #: plugins/hidecursor/hidecursor_config.cpp:56
 #, kde-format
@@ -2021,91 +1985,89 @@ msgid "Hide pointer on typing"
 msgstr "タイピング中ポインタを非表示"
 
 #: plugins/invert/invert.cpp:44
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgid "Toggle Invert Effect"
-msgstr "色調反転効果をオン/オフ"
+msgstr "色相反転をオン/オフ"
 
 #: plugins/invert/invert.cpp:51
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect on Window"
+#, kde-format
 msgid "Toggle Invert Effect on Window"
-msgstr "ウィンドウの色調反転効果をオン/オフ"
+msgstr "ウィンドウごとの色相反転をオン/オフ"
 
 #: plugins/invert/invert.cpp:57
 #, kde-format
 msgid "Invert Screen Colors"
-msgstr ""
+msgstr "画面の色を反転する"
 
 #: plugins/keynotification/keynotification.cpp:45
 #, kde-format
 msgid "The Caps Lock key has been activated"
-msgstr ""
+msgstr "Caps Lock キーがアクティブになりました"
 
 #: plugins/keynotification/keynotification.cpp:49
 #, kde-format
 msgid "The Caps Lock key is now inactive"
-msgstr ""
+msgstr "Caps Lock キーが非アクティブになりました"
 
 #: plugins/keynotification/keynotification.cpp:53
 #, kde-format
 msgid "The Num Lock key has been activated"
-msgstr ""
+msgstr "Num Lock キーがアクティブになりました"
 
 #: plugins/keynotification/keynotification.cpp:57
 #, kde-format
 msgid "The Num Lock key is now inactive"
-msgstr ""
+msgstr "Num Lock キーが非アクティブになりました"
 
 #: plugins/keynotification/keynotification.cpp:61
 #, kde-format
 msgid "The Scroll Lock key has been activated"
-msgstr ""
+msgstr "Scroll Lock キーがアクティブになりました"
 
 #: plugins/keynotification/keynotification.cpp:65
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
-msgstr ""
+msgstr "Scroll Lock キーが非アクティブになりました"
 
 #: plugins/keynotification/keynotification.cpp:78
 #, kde-format
 msgid "The Shift key is now active."
-msgstr ""
+msgstr "Shift キーがアクティブになりました。"
 
 #: plugins/keynotification/keynotification.cpp:82
 #, kde-format
 msgid "The Shift key is now inactive."
-msgstr ""
+msgstr "Shift キーが非アクティブになりました。"
 
 #: plugins/keynotification/keynotification.cpp:86
 #, kde-format
 msgid "The Control key is now active."
-msgstr ""
+msgstr "Control キーがアクティブになりました。"
 
 #: plugins/keynotification/keynotification.cpp:90
 #, kde-format
 msgid "The Control key is now inactive."
-msgstr ""
+msgstr "Control キーが非アクティブになりました。"
 
 #: plugins/keynotification/keynotification.cpp:94
 #, kde-format
 msgid "The Alt key is now active."
-msgstr ""
+msgstr "Alt キーがアクティブになりました。"
 
 #: plugins/keynotification/keynotification.cpp:98
 #, kde-format
 msgid "The Alt key is now inactive."
-msgstr ""
+msgstr "Alt キーが非アクティブになりました。"
 
 #: plugins/keynotification/keynotification.cpp:102
 #, kde-format
 msgid "The Meta key is now active."
-msgstr ""
+msgstr "Meta キーがアクティブになりました。"
 
 #: plugins/keynotification/keynotification.cpp:106
 #, kde-format
 msgid "The Meta key is now inactive."
-msgstr ""
+msgstr "Meta キーが非アクティブになりました。"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:41
 #, fuzzy, kde-format
@@ -2573,10 +2535,9 @@ msgid "Add Virtual Desktop"
 msgstr "仮想デスクトップを追加"
 
 #: plugins/overview/qml/DesktopBar.qml:262
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgid "Virtual Desktop limit reached"
-msgstr "仮想デスクトップを追加"
+msgstr "仮想デスクトップ数の上限に達しました"
 
 #: plugins/overview/qml/Main.qml:427
 #, kde-format
@@ -2608,8 +2569,7 @@ msgid "Drag Down To Close"
 msgstr ""
 
 #: plugins/private/qml/WindowHeapDelegate.qml:373
-#, fuzzy, kde-format
-#| msgid "Close Window"
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "ウィンドウを閉じる"
@@ -2694,33 +2654,31 @@ msgstr ""
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
-msgstr ""
+msgstr "このデスクトップ効果はベンチマークではありません"
 
 #: plugins/showfps/qml/Main.qml:110
-#, fuzzy, kde-format
-#| msgid "Fading duration:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr "フェードの長さ:"
+msgstr "描画時間"
 
 #: plugins/showfps/qml/Main.qml:162
 #, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
-msgstr ""
+msgstr "描画量"
 
 #: plugins/showfps/qml/Main.qml:175
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr ""
+msgstr "現在の FPS"
 
 #: plugins/showfps/qml/Main.qml:184
-#, fuzzy, kde-format
-#| msgid "Maximum &width:"
+#, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "最大幅(&W):"
+msgstr "最大 FPS"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
 #: plugins/slide/slide_config.ui:17
@@ -2821,52 +2779,46 @@ msgid "Toggle Tiles Editor"
 msgstr "タイルエディタの表示を切り替え"
 
 #: plugins/tileseditor/qml/Main.qml:153
-#, fuzzy, kde-format
-#| msgid "Padding:"
+#, kde-format
 msgid "Padding:"
 msgstr "余白:"
 
 #: plugins/tileseditor/qml/Main.qml:163
-#, fuzzy, kde-format
-#| msgid "Load Layout..."
+#, kde-format
 msgid "Load Layout…"
-msgstr "レイアウトを読み込む..."
+msgstr "レイアウトを読み込む…"
 
 #: plugins/tileseditor/qml/Main.qml:270
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Close"
-msgstr "閉じる(&C)"
+msgstr "閉じる"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr ""
+msgstr "左右に分割"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr ""
+msgstr "上下に分割"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
-#, fuzzy, kde-format
-#| msgid "Add Floating Tile"
+#, kde-format
 msgid "Add Floating Tile"
 msgstr "フロートタイルを追加"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:191
-#, fuzzy, kde-format
-#| msgid "Delete"
+#, kde-format
 msgid "Delete"
 msgstr "削除"
 
 #: plugins/trackmouse/trackmouse.cpp:70
 #: plugins/trackmouse/trackmouse_config.cpp:49
-#, fuzzy, kde-format
-#| msgid "Track mouse"
+#, kde-format
 msgid "Track mouse"
-msgstr "マウスを捕捉"
+msgstr "マウスを追跡"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/trackmouse/trackmouse_config.ui:26
@@ -2978,19 +2930,19 @@ msgstr "切り離しメニュー:"
 #: plugins/videowall/package/contents/ui/config.ui:14
 #, kde-format
 msgid "Video Wall"
-msgstr ""
+msgstr "ビデオウォール"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ApplyTo)
 #: plugins/videowall/package/contents/ui/config.ui:20
 #, kde-format
 msgid "Apply to"
-msgstr ""
+msgstr "適用先:"
 
 #. i18n: ectx: property (text), widget (QLineEdit, kcfg_Whitelist)
 #: plugins/videowall/package/contents/ui/config.ui:32
 #, kde-format
 msgid "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
-msgstr ""
+msgstr "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
 
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Whitelist)
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Blacklist)
@@ -2998,19 +2950,19 @@ msgstr ""
 #: plugins/videowall/package/contents/ui/config.ui:66
 #, kde-format
 msgid "Comma separated list of window classes"
-msgstr ""
+msgstr "コンマ区切りでウィンドウクラスを指定"
 
 #. i18n: ectx: property (text), widget (QLabel, applyLabel)
 #: plugins/videowall/package/contents/ui/config.ui:45
 #, kde-format
 msgid "All"
-msgstr ""
+msgstr "すべて"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
 #: plugins/videowall/package/contents/ui/config.ui:54
 #, kde-format
 msgid "Ignore"
-msgstr ""
+msgstr "無視"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:41
 #: plugins/windowview/windowvieweffect.cpp:48
@@ -3045,22 +2997,19 @@ msgid "Ignore &minimized windows"
 msgstr "ウィンドウを最小化"
 
 #: plugins/windowview/qml/Main.qml:107
-#, fuzzy, kde-format
-#| msgid "No Matches"
+#, kde-format
 msgid "No Matches"
-msgstr "一致なし"
+msgstr "マッチするものがありません"
 
 #: plugins/windowview/qml/Main.qml:107
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "No Windows"
-msgstr "ウィンドウ"
+msgstr "ウィンドウはありません"
 
 #: plugins/windowview/qml/Main.qml:122
-#, fuzzy, kde-format
-#| msgid "Lower Window"
+#, kde-format
 msgid "Filter windows…"
-msgstr "ウィンドウを背面に"
+msgstr "ウィンドウを検索…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:20
@@ -3146,106 +3095,103 @@ msgstr "拡大エリアを下に移動"
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
 msgid "Total rules count (legacy)"
-msgstr ""
+msgstr "ルール総数 (レガシー)"
 
 #. i18n: ectx: label, entry (ruleGroupList), group (General)
 #: rulebooksettingsbase.kcfg:13
 #, kde-format
 msgid "Ordered list of rules groups"
-msgstr ""
+msgstr "ルールグループの順序リスト"
 
 #. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:10
 #, kde-format
 msgid "Rule description"
-msgstr ""
+msgstr "ルールの説明"
 
 #. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:13
 #, kde-format
 msgid "Rule description (legacy)"
-msgstr ""
+msgstr "ルールの説明 (レガシー)"
 
 #. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:16
 #, kde-format
 msgid "Delete this rule (for use in imports)"
-msgstr ""
+msgstr "このルールを削除 (インポート時に使用)"
 
 #. i18n: ectx: label, entry (enabled), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "This rule is enabled"
-msgstr ""
+msgstr "このルールは有効です"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:24
 #, kde-format
 msgid "Window class (application)"
-msgstr ""
+msgstr "ウィンドウクラス (アプリケーション)"
 
 #. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:27
 #, kde-format
 msgid "Window class string match type"
-msgstr ""
+msgstr "ウィンドウクラス文字列のマッチタイプ"
 
 #. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:33
 #, kde-format
 msgid "Match whole window class"
-msgstr ""
+msgstr "すべてのウィンドウクラスにマッチ"
 
 #. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:38
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window role"
-msgstr "ウィンドウ"
+msgstr "ウィンドウの役割"
 
 #. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:41
 #, kde-format
 msgid "Window role string match type"
-msgstr ""
+msgstr "ウィンドウロール文字列のマッチタイプ"
 
 #. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:48
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window title"
-msgstr "ウィンドウ"
+msgstr "ウィンドウタイトル"
 
 #. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:51
 #, kde-format
 msgid "Window title string match type"
-msgstr ""
+msgstr "ウィンドウタイトル文字列のマッチタイプ"
 
 #. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:58
 #, kde-format
 msgid "Machine (hostname)"
-msgstr ""
+msgstr "マシン (ホスト名)"
 
 #. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:61
 #, kde-format
 msgid "Machine string match type"
-msgstr ""
+msgstr "マシン文字列のマッチタイプ"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "KDE window manager"
+#, kde-format
 msgid "Window tag"
-msgstr "KDE ウィンドウマネージャ"
+msgstr "ウィンドウのタグ"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
 #, kde-format
 msgid "Window tag string match type"
-msgstr ""
+msgstr "ウィンドウのタグ文字列のマッチタイプ"
 
 #. i18n: ectx: label, entry (hastransientparent), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
@@ -3257,271 +3203,253 @@ msgstr "親ウィンドウが存在"
 #: rulesettings.kcfg:82
 #, kde-format
 msgid "Has parent window match type"
-msgstr ""
+msgstr "親ウィンドウが存在のマッチタイプ"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:89
 #, kde-format
 msgid "Window types that match"
-msgstr ""
+msgstr "一致するウィンドウタイプ"
 
 #. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:94
 #, kde-format
 msgid "Initial placement"
-msgstr ""
+msgstr "初期配置"
 
 #. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:99
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Initial placement rule type"
-msgstr "フルスクリーン(&F)"
+msgstr "初期配置ルールタイプ"
 
 #. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:104
-#, fuzzy, kde-format
-#| msgid "Window Operations Menu"
+#, kde-format
 msgid "Window position"
-msgstr "ウィンドウ操作メニュー"
+msgstr "ウィンドウの位置"
 
 #. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:108
 #, kde-format
 msgid "Window position rule type"
-msgstr ""
+msgstr "ウィンドウ位置ルールタイプ"
 
 #. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:115
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window size"
-msgstr "ウィンドウ"
+msgstr "ウィンドウのサイズ"
 
 #. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:118
 #, kde-format
 msgid "Window size rule type"
-msgstr ""
+msgstr "ウィンドウのサイズのルールタイプ"
 
 #. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:125
 #, kde-format
 msgid "Window minimum size"
-msgstr ""
+msgstr "ウィンドウの最小サイズ"
 
 #. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:129
 #, kde-format
 msgid "Window minimum size rule type"
-msgstr ""
+msgstr "ウィンドウの最小サイズのルールタイプ"
 
 #. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:134
 #, kde-format
 msgid "Window maximum size"
-msgstr ""
+msgstr "ウィンドウの最大サイズ"
 
 #. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:138
 #, kde-format
 msgid "Window maximum size rule type"
-msgstr ""
+msgstr "ウィンドウの最大サイズのルールタイプ"
 
 #. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:143
 #, kde-format
 msgid "Active opacity"
-msgstr ""
+msgstr "アクティブの不透明度"
 
 #. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:149
 #, kde-format
 msgid "Active opacity rule type"
-msgstr ""
+msgstr "アクティブの不透明度のルールタイプ"
 
 #. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:154
 #, kde-format
 msgid "Inactive opacity"
-msgstr ""
+msgstr "非アクティブの不透明度"
 
 #. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:160
 #, kde-format
 msgid "Inactive opacity rule type"
-msgstr ""
+msgstr "非アクティブの不透明度のルールタイプ"
 
 #. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:165
 #, kde-format
 msgid "Ignore requested geometry"
-msgstr ""
+msgstr "要求されたジオメトリを無視"
 
 #. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:169
 #, kde-format
 msgid "Ignore requested geometry rule type"
-msgstr ""
+msgstr "要求されたジオメトリを無視のルールタイプ"
 
 #. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:176
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop 1"
+#, kde-format
 msgid "List of Desktop Ids"
-msgstr "デスクトップ 1 に切り替え"
+msgstr "デスクトップ ID のリスト"
 
 #. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:180
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Desktop Ids rule type"
-msgstr "常に最前面に表示(&A)"
+msgstr "デスクトップ ID のルールタイプ"
 
 #. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:187
 #, kde-format
 msgid "Screen number"
-msgstr ""
+msgstr "スクリーン番号"
 
 #. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:191
 #, kde-format
 msgid "Screen number rule type"
-msgstr ""
+msgstr "スクリーン番号のルールタイプ"
 
 #. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:198
-#, fuzzy, kde-format
-#| msgid "&All Activities"
+#, kde-format
 msgid "Activity"
-msgstr "すべてのアクティビティ(&A)"
+msgstr "アクティビティ"
 
 #. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:201
 #, kde-format
 msgid "Activity rule type"
-msgstr ""
+msgstr "アクティビティのルールタイプ"
 
 #. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:208
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Maximized vertically"
-msgstr "ウィンドウを縦に最大化"
+msgstr "縦に最大化"
 
 #. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:212
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Maximized vertically rule type"
-msgstr "ウィンドウを縦に最大化"
+msgstr "縦に最大化のルールタイプ"
 
 #. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:219
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Maximized horizontally"
-msgstr "ウィンドウを横に最大化"
+msgstr "横に最大化"
 
 #. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:223
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Maximized horizontally rule type"
-msgstr "ウィンドウを横に最大化"
+msgstr "横に最大化のルールタイプ"
 
 #. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:230
-#, fuzzy, kde-format
-#| msgid "Mi&nimize"
+#, kde-format
 msgid "Minimized"
-msgstr "最小化(&N)"
+msgstr "最小化"
 
 #. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:234
 #, kde-format
 msgid "Minimized rule type"
-msgstr ""
+msgstr "最小化のルールタイプ"
 
 #. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:241
 #, kde-format
 msgid "Skip taskbar"
-msgstr ""
+msgstr "タスクバーをスキップ"
 
 #. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:245
 #, kde-format
 msgid "Skip taskbar rule type"
-msgstr ""
+msgstr "タスクバーをスキップのルールタイプ"
 
 #. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:252
 #, kde-format
 msgid "Skip pager"
-msgstr ""
+msgstr "ページャをスキップ"
 
 #. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:256
 #, kde-format
 msgid "Skip pager rule type"
-msgstr ""
+msgstr "ページャをスキップのルールタイプ"
 
 #. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:263
-#, fuzzy, kde-format
-#| msgid "Switch to Tab"
+#, kde-format
 msgid "Skip switcher"
-msgstr "ウィンドウのタブを切り替え"
+msgstr "スイッチャーをスキップ"
 
 #. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:267
 #, kde-format
 msgid "Skip switcher rule type"
-msgstr ""
+msgstr "スイッチャーをスキップのルールタイプ"
 
 #. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:274
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Keep above"
-msgstr "常に最前面に表示(&A)"
+msgstr "常に最前面に表示"
 
 #. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:278
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Keep above rule type"
-msgstr "常に最前面に表示(&A)"
+msgstr "常に最前面に表示のルールタイプ"
 
 #. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:285
-#, fuzzy, kde-format
-#| msgid "Keep &Below Others"
+#, kde-format
 msgid "Keep below"
-msgstr "常に最背面に表示(&B)"
+msgstr "常に最背面に表示"
 
 #. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:289
-#, fuzzy, kde-format
-#| msgid "Keep &Below Others"
+#, kde-format
 msgid "Keep below rule type"
-msgstr "常に最背面に表示(&B)"
+msgstr "常に最背面に表示のルールタイプ"
 
 #. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:296
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen"
-msgstr "フルスクリーン(&F)"
+msgstr "フルスクリーン"
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:300
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen rule type"
-msgstr "フルスクリーン(&F)"
+msgstr "フルスクリーンのルールタイプ"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:311
@@ -3533,7 +3461,7 @@ msgstr "タイトルバーとフレームを消す"
 #: rulesettings.kcfg:315
 #, kde-format
 msgid "No titlebar rule type"
-msgstr ""
+msgstr "タイトルバーを消すのルールタイプ"
 
 #. i18n: ectx: label, entry (decorationpolicy), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:322
@@ -3552,151 +3480,145 @@ msgstr "常に最前面に表示(&A)"
 #: rulesettings.kcfg:339
 #, kde-format
 msgid "Titlebar color and scheme"
-msgstr ""
+msgstr "タイトルバーの色とスキーム"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:342
 #, kde-format
 msgid "Titlebar color rule type"
-msgstr ""
+msgstr "タイトルバーの色のルールタイプ"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:347
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr ""
+msgstr "フォーカスの移動を防止"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:353
 #, kde-format
 msgid "Focus stealing prevention rule type"
-msgstr ""
+msgstr "フォーカスの移動を防止のルールタイプ"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:358
 #, kde-format
 msgid "Focus protection"
-msgstr ""
+msgstr "フォーカス保護"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:364
 #, kde-format
 msgid "Focus protection rule type"
-msgstr ""
+msgstr "フォーカス保護のルールタイプ"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:369
 #, kde-format
 msgid "Accept Focus"
-msgstr ""
+msgstr "フォーカスを受け付ける"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:373
 #, kde-format
 msgid "Accept Focus rule type"
-msgstr ""
+msgstr "フォーカスを受け付けるのルールタイプ"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:378
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Closeable"
-msgstr "閉じる(&C)"
+msgstr "閉じることが可能"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:382
 #, kde-format
 msgid "Closeable rule type"
-msgstr ""
+msgstr "閉じることが可能のルールタイプ"
 
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:387
 #, kde-format
 msgid "Shortcut"
-msgstr ""
+msgstr "ショートカット"
 
 #. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:390
 #, kde-format
 msgid "Shortcut rule type"
-msgstr ""
+msgstr "ショートカットのルールタイプ"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:397
 #, kde-format
 msgid "Ignore global shortcuts"
-msgstr ""
+msgstr "グローバルショートカットを無視"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:401
 #, kde-format
 msgid "Ignore global shortcuts rule type"
-msgstr ""
+msgstr "グローバルショートカットを無視のルールタイプ"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:406
 #, kde-format
 msgid "Desktop file name"
-msgstr ""
+msgstr "デスクトップファイルの名前"
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:409
 #, kde-format
 msgid "Desktop file name rule type"
-msgstr ""
+msgstr "デスクトップファイルの名前のルールタイプ"
 
 #. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:416
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "レイヤー"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:432
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Layer rule type"
-msgstr "常に最前面に表示(&A)"
+msgstr "レイヤーのルールタイプ"
 
 #. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:437
 #, kde-format
 msgid "AdaptiveSync"
-msgstr ""
+msgstr "AdaptiveSync"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:441
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "AdaptiveSync rule type"
-msgstr "常に最前面に表示(&A)"
+msgstr "AdaptiveSync のルールタイプ"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:446
 #, kde-format
 msgid "Allow Tearing"
-msgstr ""
+msgstr "ティアリングを許可"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:450
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Tearing rule type"
-msgstr "常に最前面に表示(&A)"
+msgstr "ティアリングのルールタイプ"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:455
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr "フルスクリーン(&F)"
+msgstr "画面撮影と録画から消す"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
-msgstr "フルスクリーン(&F)"
+msgstr "画面撮影と録画から消すのルールタイプ"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3714,13 +3636,13 @@ msgstr ""
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "ログアウトをキャンセル"
 
 #: sm.cpp:422
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "強制ログアウト"
 
 #: sm.cpp:468
 #, kde-format
@@ -3729,6 +3651,9 @@ msgid ""
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
+"以下のアプリケーションを閉じることができません。\n"
+"%1\n"
+"2分後に強制的にログアウトします。"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
@@ -3824,7 +3749,7 @@ msgstr "タイトルバーとフレームを消す(&N)"
 #: useractions.cpp:248
 #, kde-format
 msgid "&Hide from Screenshots and Screen Recordings"
-msgstr ""
+msgstr "画面撮影と録画から消す(&H)"
 
 #: useractions.cpp:256
 #, kde-format
@@ -4348,61 +4273,63 @@ msgid ""
 "Setting custom modes with too old kde-output-management-v2 protocol versions "
 "is unsupported"
 msgstr ""
+"古すぎる kde-output-management-v2 protocol のバージョンでカスタムモードを設定"
+"する動作は対応していません"
 
 #: wayland/outputmanagement_v2.cpp:575
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
-msgstr ""
+msgstr "abm レベルが最大値 (4) よりも大きいです: %1"
 
 #: wayland/outputmanagement_v2.cpp:673
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "関連する出力の一つが使用できなくなっています"
 
 #: wayland/outputmanagement_v2.cpp:691
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
-msgstr ""
+msgstr "設定変更によってすべての出力を無効にすることは許可されていません"
 
 #: wayland/outputmanagement_v2.cpp:701
 #, kde-format
 msgid "%1 cannot mirror itself"
-msgstr ""
+msgstr "%1 はそれ自体をミラーできません"
 
 #: wayland/outputmanagement_v2.cpp:708
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
-msgstr ""
+msgstr "サイズが空のカスタムモードは追加できません"
 
 #: wayland/outputmanagement_v2.cpp:712
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
-msgstr ""
+msgstr "リフレッシュレートが 0Hz のカスタムモードは追加できません"
 
 #: wayland/outputmanagement_v2.cpp:723
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
-msgstr ""
+msgstr "出力 %1 の位置の負の値が大きすぎます (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:726
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
-msgstr ""
+msgstr "有効な出力 %1 の位置が負の値です (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:730
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
-msgstr ""
+msgstr "出力 %1 の位置が大きすぎます (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:747
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "ドライバーが出力設定を拒否しました"
 
 #: wayland/outputmanagement_v2.cpp:750
 #, kde-format
 msgid "The session is not active"
-msgstr ""
+msgstr "セッションが非アクティブです"
 
 #: window.cpp:3166
 #, kde-format
@@ -4447,19 +4374,18 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
+"KWin サポート情報\n"
+"以下の情報は https://discuss.kde.org などでサポートを依頼する際に使用するため"
+"のものです。\n"
+"この情報には現在実行中のインスタンスに関する情報、使用されているオプション"
+"や\n"
+"実行中の OpenGL ドライバ、デスクトップ効果の情報が含まれています。\n"
+"サポートスレッドに直接貼り付けるのではなく、この説明テキストの下に表示されて"
+"いる情報を\n"
+"https://paste.kde.org などのテキスト共有サービスに投稿してリンクを共有してく"
+"ださい。\n"
 
 #: xwayland/xwaylandlauncher.cpp:323
 #, kde-format
 msgid "Xwayland has crashed"
-msgstr ""
-
-#, fuzzy
-#~| msgid "Suspend Compositing"
-#~ msgid "Block Compositing"
-#~ msgstr "コンポジティングを一時停止"
-
-#~ msgid "Move Mouse to Focus"
-#~ msgstr "フォーカス中のウィンドウにマウスを移動"
-
-#~ msgid "Move Mouse to Center"
-#~ msgstr "中央にマウスを移動"
+msgstr "Xwayland がクラッシュしました"

@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-17 00:45+0000\n"
-"PO-Revision-Date: 2026-07-07 08:22+0300\n"
+"PO-Revision-Date: 2026-07-17 19:38+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -3462,14 +3462,13 @@ msgstr "Başlık çubuğu yok kuralı türü"
 #: rulesettings.kcfg:322
 #, kde-format
 msgid "Decoration policy"
-msgstr ""
+msgstr "Dekorasyon politikası"
 
 #. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
-#, fuzzy, kde-format
-#| msgid "Active opacity rule type"
+#, kde-format
 msgid "Decoration policy rule type"
-msgstr "Etkin matlık kuralı türü"
+msgstr "Dekorasyon politikası kuralı türü"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:339

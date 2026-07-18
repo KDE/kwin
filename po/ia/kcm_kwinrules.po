@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-17 00:45+0000\n"
-"PO-Revision-Date: 2026-05-14 11:43+0200\n"
+"PO-Revision-Date: 2026-07-17 12:33+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -413,6 +413,7 @@ msgstr "Via Breve"
 #, kde-format
 msgid "Window manager draws titlebar, frame, and shadows"
 msgstr ""
+"Le gerente de fenestras designa le barra de titulo, le quadro e le umbras."
 
 #: rulesmodel.cpp:600 rulesmodel.cpp:606 rulesmodel.cpp:612 rulesmodel.cpp:617
 #: rulesmodel.cpp:623 rulesmodel.cpp:650 rulesmodel.cpp:678 rulesmodel.cpp:684
@@ -794,25 +795,25 @@ msgstr "Superposition"
 #, kde-format
 msgctxt "Never draw a server side decoration"
 msgid "Never"
-msgstr ""
+msgstr "Jammais"
 
 #: rulesmodel.cpp:937
 #, kde-format
 msgctxt "Draw a server side decoration if the application asks for it"
 msgid "If the application asks"
-msgstr ""
+msgstr "si le application demanda"
 
 #: rulesmodel.cpp:938
 #, kde-format
 msgctxt "Always draw a server side decoration"
 msgid "Always"
-msgstr ""
+msgstr "Sempre"
 
 #: rulesmodel.cpp:939
 #, kde-format
 msgctxt "Always draw a server side drop shadow"
 msgid "Only shadow"
-msgstr ""
+msgstr "Solmente umbra"
 
 #: rulesmodel.cpp:964
 #, kde-format

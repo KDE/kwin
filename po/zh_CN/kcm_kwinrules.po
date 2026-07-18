@@ -979,6 +979,3 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
-
-#~ msgid "No titlebar and frame"
-#~ msgstr "无标题栏和边框"

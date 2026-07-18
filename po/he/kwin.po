@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-17 00:45+0000\n"
-"PO-Revision-Date: 2026-07-07 09:01+0300\n"
+"PO-Revision-Date: 2026-07-17 12:21+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -3452,14 +3452,13 @@ msgstr "סוג כלל אין שורת כותרת"
 #: rulesettings.kcfg:322
 #, kde-format
 msgid "Decoration policy"
-msgstr ""
+msgstr "מדיניות עיטור"
 
 #. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
-#, fuzzy, kde-format
-#| msgid "Active opacity rule type"
+#, kde-format
 msgid "Decoration policy rule type"
-msgstr "סוג כלל אטימות לפעילים"
+msgstr "סוג כלל מדיניות עיטור"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:339

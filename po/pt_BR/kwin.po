@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-17 00:45+0000\n"
-"PO-Revision-Date: 2026-07-07 08:02-0300\n"
+"PO-Revision-Date: 2026-07-17 07:28-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -3490,14 +3490,13 @@ msgstr "Tipo de regra de não ter barra de título"
 #: rulesettings.kcfg:322
 #, kde-format
 msgid "Decoration policy"
-msgstr ""
+msgstr "Política de decoração"
 
 #. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
-#, fuzzy, kde-format
-#| msgid "Active opacity rule type"
+#, kde-format
 msgid "Decoration policy rule type"
-msgstr "Tipo de regra de opacidade ativa"
+msgstr "Tipo de regra de política de decoração"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:339

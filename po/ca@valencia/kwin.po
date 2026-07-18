@@ -7,20 +7,20 @@
 # SPDX-FileCopyrightText: 1999, 2000, 2001, 2002, 2004, 2005, 2006 Sebastià Pla i Sanz <sps@sastia.com>
 # SPDX-FileCopyrightText: 2005 Albert Astals Cid <aacid@kde.org>
 # SPDX-FileCopyrightText: 2019 Alfredo Vicente <alviboi@gmail.com>
-# SPDX-FileCopyrightText: 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026 Josep M. Ferrer <txemaq@gmail.com>
+# SPDX-FileCopyrightText: 2007-2026 Josep M. Ferrer <txemaq@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-17 00:45+0000\n"
-"PO-Revision-Date: 2026-07-07 10:10+0200\n"
+"PO-Revision-Date: 2026-07-17 11:54+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.04.0\n"
+"X-Generator: Lokalize 26.04.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 
@@ -3490,14 +3490,13 @@ msgstr "Tipus de regla de sense barra de títol"
 #: rulesettings.kcfg:322
 #, kde-format
 msgid "Decoration policy"
-msgstr ""
+msgstr "Política de decoració"
 
 #. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
-#, fuzzy, kde-format
-#| msgid "Active opacity rule type"
+#, kde-format
 msgid "Decoration policy rule type"
-msgstr "Tipus de regla d'opacitat activa"
+msgstr "Tipus de regla de política de decoració"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:339
@@ -4417,33 +4416,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
-
-#~ msgid "Block Compositing"
-#~ msgstr "Bloqueja la composició"
-
-#~ msgid "Block Compositing rule type"
-#~ msgstr "Tipus de regla de bloquejar la composició"
-
-#~ msgid "Autogroup with identical"
-#~ msgstr "Agrupa automàticament com a idèntiques"
-
-#~ msgid "Autogroup with identical rule type"
-#~ msgstr "Tipus de regla d'agrupar automàticament com a idèntiques"
-
-#~ msgid "Autogroup in foreground"
-#~ msgstr "Agrupa automàticament en primer pla"
-
-#~ msgid "Autogroup in foreground rule type"
-#~ msgstr "Tipus de regla d'agrupar automàticament en primer pla"
-
-#~ msgid "Autogroup by ID"
-#~ msgstr "Agrupa automàticament per ID"
-
-#~ msgid "Autogroup by ID rule type"
-#~ msgstr "Tipus de regla d'agrupar automàticament per ID"
-
-#~ msgid "Obey geometry restrictions"
-#~ msgstr "Obeïx les restriccions de geometria"
-
-#~ msgid "Obey geometry restrictions rule type"
-#~ msgstr "Tipus de regla d'obeir les restriccions de geometria"

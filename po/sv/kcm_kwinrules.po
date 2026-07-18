@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-17 00:45+0000\n"
-"PO-Revision-Date: 2026-07-07 21:37+0200\n"
+"PO-Revision-Date: 2026-07-17 08:53+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -408,7 +408,7 @@ msgstr "Genväg"
 #: rulesmodel.cpp:600
 #, kde-format
 msgid "Window manager draws titlebar, frame, and shadows"
-msgstr ""
+msgstr "Fönsterhanteraren ritar namnlist, ram och skuggor"
 
 #: rulesmodel.cpp:600 rulesmodel.cpp:606 rulesmodel.cpp:612 rulesmodel.cpp:617
 #: rulesmodel.cpp:623 rulesmodel.cpp:650 rulesmodel.cpp:678 rulesmodel.cpp:684
@@ -789,25 +789,25 @@ msgstr "Överlagring"
 #, kde-format
 msgctxt "Never draw a server side decoration"
 msgid "Never"
-msgstr ""
+msgstr "Aldrig"
 
 #: rulesmodel.cpp:937
 #, kde-format
 msgctxt "Draw a server side decoration if the application asks for it"
 msgid "If the application asks"
-msgstr ""
+msgstr "Om programmet önskar det"
 
 #: rulesmodel.cpp:938
 #, kde-format
 msgctxt "Always draw a server side decoration"
 msgid "Always"
-msgstr ""
+msgstr "Alltid"
 
 #: rulesmodel.cpp:939
 #, kde-format
 msgctxt "Always draw a server side drop shadow"
 msgid "Only shadow"
-msgstr ""
+msgstr "Bara skuggor"
 
 #: rulesmodel.cpp:964
 #, kde-format

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-17 00:45+0000\n"
-"PO-Revision-Date: 2026-05-14 07:40+0200\n"
+"PO-Revision-Date: 2026-07-17 09:26+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -411,7 +411,7 @@ msgstr "Bližnjica"
 #: rulesmodel.cpp:600
 #, kde-format
 msgid "Window manager draws titlebar, frame, and shadows"
-msgstr ""
+msgstr "Upravitelj oken riše naslovno vrstico, okvir in sence"
 
 #: rulesmodel.cpp:600 rulesmodel.cpp:606 rulesmodel.cpp:612 rulesmodel.cpp:617
 #: rulesmodel.cpp:623 rulesmodel.cpp:650 rulesmodel.cpp:678 rulesmodel.cpp:684
@@ -791,25 +791,25 @@ msgstr "Prekritje"
 #, kde-format
 msgctxt "Never draw a server side decoration"
 msgid "Never"
-msgstr ""
+msgstr "Nikoli"
 
 #: rulesmodel.cpp:937
 #, kde-format
 msgctxt "Draw a server side decoration if the application asks for it"
 msgid "If the application asks"
-msgstr ""
+msgstr "Če aplikacija to zahteva"
 
 #: rulesmodel.cpp:938
 #, kde-format
 msgctxt "Always draw a server side decoration"
 msgid "Always"
-msgstr ""
+msgstr "Vedno"
 
 #: rulesmodel.cpp:939
 #, kde-format
 msgctxt "Always draw a server side drop shadow"
 msgid "Only shadow"
-msgstr ""
+msgstr "Samo senca"
 
 #: rulesmodel.cpp:964
 #, kde-format
