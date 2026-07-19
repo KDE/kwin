@@ -45,6 +45,7 @@ protected:
 
 private:
     void updateResourceName();
+    void updateCutouts();
 
     QString m_captionNormal;
     QString m_captionSuffix;

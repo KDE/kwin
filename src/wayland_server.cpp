@@ -88,6 +88,7 @@
 #include "wayland/xdgtopleveldrag_v1.h"
 #include "wayland/xdgtoplevelicon_v1.h"
 #include "wayland/xdgtopleveltag_v1.h"
+#include "wayland/xx_cutouts_v1.h"
 #include "workspace.h"
 #include "xdgactivationv1.h"
 #include "xdgshellintegration.h"
@@ -489,6 +490,7 @@ bool WaylandServer::init()
     m_colorRepresentation = new ColorRepresentationManagerV1(m_display, m_display);
     m_pointerWarp = new PointerWarpV1(m_display, m_display);
     m_backgroundEffect = new ExtBackgroundEffectManagerV1(m_display, m_display);
+    m_cutouts = new CutoutsManagerV1(m_display, m_display);
     return true;
 }
 
