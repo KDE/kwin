@@ -1391,6 +1391,11 @@ std::optional<std::chrono::steady_clock::time_point> SurfaceInterface::requested
     }
 }
 
+CutoutsV1 *SurfaceInterface::cutouts() const
+{
+    return d->cutouts;
+}
+
 } // namespace KWin
 
 #include "moc_surface.cpp"

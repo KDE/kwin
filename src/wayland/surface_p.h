@@ -218,6 +218,7 @@ public:
 
     QTimer fallbackTimer;
     std::chrono::nanoseconds fifoRefreshRate = std::chrono::nanoseconds(1'000'000'000) / 20;
+    CutoutsV1 *cutouts = nullptr;
 
     struct
     {
