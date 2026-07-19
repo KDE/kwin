@@ -12,6 +12,7 @@
 #include "wayland/clientconnection.h"
 #include "wayland/display.h"
 #include "wayland/surface.h"
+#include "wayland/xx_cutouts_v1.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -43,6 +44,10 @@ WaylandWindow::WaylandWindow(SurfaceInterface *surface)
     connect(this, &WaylandWindow::frameGeometryChanged,
             this, &WaylandWindow::updateClientOutputs);
     connect(workspace(), &Workspace::outputsChanged, this, &WaylandWindow::updateClientOutputs);
+    connect(surface, &SurfaceInterface::cutoutsCreated,
+            this, &WaylandWindow::updateCutouts);
+    connect(this, &Window::borderRadiusChanged,
+            this, &WaylandWindow::updateCutouts);
 
     updateResourceName();
     updateShadow();
@@ -259,6 +264,14 @@ void WaylandWindow::markAsMapped()
         setupItem();
         setReadyForPainting();
     }
+}
+
+void WaylandWindow::updateCutouts()
+{
+    if (!m_surface->cutouts()) {
+        return;
+    }
+    m_surface->cutouts()->setCutouts({}, m_borderRadius);
 }
 
 } // namespace KWin
