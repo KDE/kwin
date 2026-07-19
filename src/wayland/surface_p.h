@@ -214,6 +214,7 @@ public:
     ExtBlurSurfaceV1 *extBlur = nullptr;
     ExtBackgroundEffectSurfaceV1 *extBackgroundeffect = nullptr;
     QTimer fifoFallbackTimer;
+    CutoutsV1 *cutouts = nullptr;
 
     struct
     {

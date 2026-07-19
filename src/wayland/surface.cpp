@@ -1361,6 +1361,11 @@ void SurfaceInterface::setPointerLocked(bool locked)
     }
 }
 
+CutoutsV1 *SurfaceInterface::cutouts() const
+{
+    return d->cutouts;
+}
+
 } // namespace KWin
 
 #include "moc_surface.cpp"

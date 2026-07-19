@@ -32,6 +32,7 @@ class Transaction;
 class SyncReleasePoint;
 class RawSurfaceAttachedState;
 class RawSurfaceExtension;
+class CutoutsV1;
 
 enum class ColorDescriptionType {
     Normal,
@@ -396,6 +397,8 @@ public:
     void setPointerConfined(bool confined);
     void setPointerLocked(bool locked);
 
+    CutoutsV1 *cutouts() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the underlying wl_surface resource is about to be freed.
@@ -473,6 +476,12 @@ Q_SIGNALS:
      * for this commit are emitted.
      */
     void committed();
+
+    /**
+     * Emitted when a cutouts object is created for the window,
+     * which should be updated with cutouts information in response.
+     */
+    void cutoutsCreated();
 
 private:
     void handleFifoFallback();

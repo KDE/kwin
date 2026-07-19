@@ -34,6 +34,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/zkde-screencast-unstable-v1.xml
 
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/wlr-layer-shell-unstable-v1.xml
+        ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-cutouts-v1.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-fractional-scale-v2.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-pip-v1.xml
 
@@ -171,6 +172,7 @@ target_sources(kwin PRIVATE
     xdgtopleveltag_v1.cpp
     xwaylandkeyboardgrab_v1.cpp
     xwaylandshell_v1.cpp
+    xx_cutouts_v1.cpp
     xxpip_v1.cpp
 )
 
@@ -257,6 +259,7 @@ install(FILES
     xdgtopleveltag_v1.h
     xwaylandkeyboardgrab_v1.h
     xwaylandshell_v1.h
+    xx_cutouts_v1.h
 
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-alpha-modifier-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-color-management-v1.h
