@@ -215,6 +215,7 @@ public:
     ColorRepresentationSurfaceV1 *colorRepresentation = nullptr;
     ExtBackgroundEffectSurfaceV1 *extBackgroundeffect = nullptr;
     CommitTimingSurfaceV1 *commitTiming = nullptr;
+    CutoutsV1 *cutouts = nullptr;
 
     QTimer fallbackTimer;
     std::chrono::nanoseconds fifoRefreshRate = std::chrono::nanoseconds(1'000'000'000) / 20;
