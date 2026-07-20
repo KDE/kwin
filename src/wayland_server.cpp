@@ -147,6 +147,10 @@ public:
             return false;
         }
 
+        if (client != waylandServer()->inputMethodConnection() && inputmethodInterfaces.contains(interfaceName)) {
+            return false;
+        }
+
         if (client->isSandboxed()) {
             return !restrictedInterfaces.contains(interfaceName);
         }
