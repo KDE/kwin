@@ -55,6 +55,10 @@ public:
     bool setUniform(int location, const QVector4D &value);
     bool setUniform(int location, const QMatrix3x3 &value);
     bool setUniform(int location, const QMatrix4x4 &value);
+
+    /**
+     * The RGB values will be pre-multiplied with the alpha value.
+     */
     bool setUniform(int location, const QColor &value);
 
     int attributeLocation(const char *name);
@@ -134,6 +138,10 @@ public:
     bool setUniform(FloatUniform uniform, float value);
     bool setUniform(IntUniform uniform, int value);
     bool setUniform(ColorUniform uniform, const QVector4D &value);
+
+    /**
+     * The RGB values will be pre-multiplied with the alpha value.
+     */
     bool setUniform(ColorUniform uniform, const QColor &value);
 
     void setColorspaceUniforms(const std::shared_ptr<ColorDescription> &src, const std::shared_ptr<ColorDescription> &dst, RenderingIntent intent);

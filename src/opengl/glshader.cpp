@@ -461,7 +461,14 @@ bool GLShader::setUniform(int location, const QMatrix4x4 &value)
 bool GLShader::setUniform(int location, const QColor &color)
 {
     if (location >= 0) {
-        glUniform4f(location, color.redF(), color.greenF(), color.blueF(), color.alphaF());
+        // Pre-multiply RGB values with the alpha channel. The blend equation that we often
+        // use assumes that colors are pre-multiplied by the alpha value.
+        const float alpha = color.alphaF();
+        const float red = color.redF() * alpha;
+        const float green = color.greenF() * alpha;
+        const float blue = color.blueF() * alpha;
+
+        glUniform4f(location, red, green, blue, alpha);
     }
     return (location >= 0);
 }
