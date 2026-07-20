@@ -147,7 +147,9 @@ public:
             return false;
         }
 
-        if (client != waylandServer()->inputMethodConnection() && inputmethodInterfaces.contains(interfaceName)) {
+        if (client == waylandServer()->inputMethodConnection()) {
+            return true;
+        } else if (inputmethodInterfaces.contains(interfaceName)) {
             return false;
         }
 
