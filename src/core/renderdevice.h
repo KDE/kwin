@@ -14,6 +14,7 @@
 #include <QObject>
 #include <QSize>
 #include <memory>
+#include <sys/types.h>
 #include <vulkan/vulkan_raii.hpp>
 
 namespace KWin
