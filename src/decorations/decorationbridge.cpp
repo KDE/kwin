@@ -214,6 +214,8 @@ void DecorationBridge::loadMetaData(const QJsonObject &object)
                 m_supportedStyles.insert(KDecoration3::Style::Titled);
             } else if (style == QLatin1StringView("shadow")) {
                 m_supportedStyles.insert(KDecoration3::Style::Shadow);
+            } else if (style == QLatin1StringView("overlayed")) {
+                m_supportedStyles.insert(KDecoration3::Style::Overlayed);
             }
         }
     }

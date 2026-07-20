@@ -232,6 +232,10 @@ void WindowItem::updateSurfaceItem(std::unique_ptr<SurfaceItem> &&surfaceItem)
 
         updateSurfacePosition();
         updateBorderRadius();
+
+        if (m_decorationItem) {
+            m_decorationItem->stackAfter(m_surfaceItem.get());
+        }
     } else {
         disconnect(m_window, &Window::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
         disconnect(m_window, &Window::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
@@ -274,7 +278,7 @@ void WindowItem::updateDecorationItem()
     if (m_window->decoration()) {
         m_decorationItem = std::make_unique<DecorationItem>(m_window->decoration(), m_window, m_windowContainer.get());
         if (m_surfaceItem) {
-            m_decorationItem->stackBefore(m_surfaceItem.get());
+            m_decorationItem->stackAfter(m_surfaceItem.get());
         }
         connect(m_window->decoration(), &KDecoration3::Decoration::damaged, this, &WindowItem::markDamaged);
         markDamaged();

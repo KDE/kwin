@@ -29,7 +29,7 @@ namespace Decoration
 
 DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration3::DecoratedWindow *decoratedClient, KDecoration3::Decoration *decoration)
     : QObject()
-    , DecoratedWindowPrivateV4(decoratedClient, decoration)
+    , DecoratedWindowPrivateV5(decoratedClient, decoration)
     , m_window(window)
     , m_clientSize(window->clientSize())
 {
@@ -351,6 +351,11 @@ void DecoratedWindowImpl::popup(const KDecoration3::Positioner &positioner, QMen
     } else {
         menu->popup(position.toPoint());
     }
+}
+
+bool DecoratedWindowImpl::handlesCutouts() const
+{
+    return m_window->handlesCutouts();
 }
 
 }

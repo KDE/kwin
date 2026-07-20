@@ -98,6 +98,11 @@ enum class DecorationMode {
      * both the titlebar and the drop shadow.
      */
     Server,
+    /**
+     * The window decoration is drawn by the compositor. The compositor is responsible for drawing
+     * both the titlebar and the drop shadow, but the client may draw below the titlebar.
+     */
+    Overlayed,
 };
 
 class KWIN_EXPORT Window : public QObject
@@ -1395,6 +1400,9 @@ public:
 
     bool excludeFromCapture() const;
     void setExcludeFromCapture(bool newExcludeFromCapture);
+
+    bool handlesCutouts() const;
+    RegionF decorationInputRegion() const;
 
 public Q_SLOTS:
     virtual void closeWindow() = 0;

@@ -3680,7 +3680,8 @@ void InputDeviceHandler::updateDecoration()
     Decoration::DecoratedWindowImpl *decoration = nullptr;
     auto hover = m_hover.window.data();
     if (hover && hover->decoratedWindow()) {
-        if (!hover->clientGeometry().contains(position())) {
+        const QPointF relativePos = position() - hover->frameGeometry().topLeft();
+        if (hover->decorationInputRegion().contains(relativePos)) {
             // input device above decoration
             decoration = hover->decoratedWindow();
         }
