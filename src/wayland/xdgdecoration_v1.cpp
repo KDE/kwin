@@ -51,7 +51,7 @@ XdgDecorationManagerV1Interface::XdgDecorationManagerV1Interface(Display *displa
     : QObject(parent)
     , d(new XdgDecorationManagerV1InterfacePrivate(this))
 {
-    d->init(*display, 3);
+    d->init(*display, 4);
 }
 
 XdgDecorationManagerV1Interface::~XdgDecorationManagerV1Interface()
@@ -85,6 +85,9 @@ void XdgToplevelDecorationV1InterfacePrivate::zxdg_toplevel_decoration_v1_set_mo
         break;
     case mode_server_side_border:
         newMode = XdgToplevelDecorationV1Interface::Mode::ServerSideBorder;
+        break;
+    case mode_server_side_overlay:
+        newMode = XdgToplevelDecorationV1Interface::Mode::Overlay;
         break;
     default:
         newMode = XdgToplevelDecorationV1Interface::Mode::Undefined;
@@ -130,6 +133,13 @@ void XdgToplevelDecorationV1Interface::sendConfigure(Mode mode)
     switch (mode) {
     case Mode::Client:
         d->send_configure(QtWaylandServer::zxdg_toplevel_decoration_v1::mode_client_side);
+        break;
+    case Mode::Overlay:
+        if (d->interfaceVersion() >= ZXDG_TOPLEVEL_DECORATION_V1_MODE_SERVER_SIDE_OVERLAY_SINCE_VERSION) {
+            d->send_configure(QtWaylandServer::zxdg_toplevel_decoration_v1::mode_server_side_overlay);
+        } else {
+            d->send_configure(QtWaylandServer::zxdg_toplevel_decoration_v1::mode_server_side);
+        }
         break;
     case Mode::ServerSideBorder:
         if (d->interfaceVersion() >= ZXDG_TOPLEVEL_DECORATION_V1_MODE_SERVER_SIDE_BORDER_SINCE_VERSION) {

@@ -242,6 +242,9 @@ private:
     void processDecorationState(std::shared_ptr<KDecoration3::DecorationState> state);
     void updateCapabilities();
     void updateIcon();
+    void handleCutoutsCreated();
+    void updateCutouts();
+    void handleDecorationChanged();
 
     QPointer<AppMenuInterface> m_appMenuInterface;
     QPointer<ServerSideDecorationPaletteInterface> m_paletteInterface;

@@ -23,7 +23,7 @@ class Window;
 namespace Decoration
 {
 
-class DecoratedWindowImpl : public QObject, public KDecoration3::DecoratedWindowPrivateV4
+class DecoratedWindowImpl : public QObject, public KDecoration3::DecoratedWindowPrivateV5
 {
     Q_OBJECT
 
@@ -31,6 +31,7 @@ public:
     explicit DecoratedWindowImpl(Window *window, KDecoration3::DecoratedWindow *decoratedClient, KDecoration3::Decoration *decoration);
     ~DecoratedWindowImpl() override;
     QString caption() const override;
+    QString appName() const override;
     qreal height() const override;
     QIcon icon() const override;
     bool isActive() const override;
@@ -64,6 +65,7 @@ public:
 
     bool hasApplicationMenu() const override;
     bool isApplicationMenuActive() const override;
+    bool handlesCutouts() const override;
 
     void requestShowToolTip(const QString &text) override;
     void requestHideToolTip() override;
