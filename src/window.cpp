@@ -2710,6 +2710,11 @@ void Window::setDecoration(std::shared_ptr<KDecoration3::Decoration> decoration)
                 updateDecorationBorderRadius();
             }
         });
+        connect(decoration.get(), &KDecoration3::Decoration::cutoutsChanged, this, [this]() {
+            if (!isDeleted()) {
+                updateDecorationInputShape();
+            }
+        });
     }
     m_decoration.decoration = decoration;
     updateDecorationInputShape();
@@ -2727,10 +2732,17 @@ void Window::updateDecorationInputShape()
     const QMarginsF borders = decoration()->borders();
     const QMarginsF resizeBorders = decoration()->resizeOnlyBorders();
 
-    const RectF innerRect = RectF(QPointF(borderLeft(), borderTop()), decoratedWindow()->size());
+    RectF innerRect = RectF(QPointF(borderLeft(), borderTop()), decoratedWindow()->size());
+    if (decoration()->style() == KDecoration3::Style::Overlayed) {
+        innerRect.moveTopLeft(QPointF(0, 0));
+    }
     const RectF outerRect = innerRect + borders + resizeBorders;
 
     m_decoration.inputRegion = RegionF(outerRect) - innerRect;
+    if (decoration()->style() == KDecoration3::Style::Overlayed) {
+        m_decoration.inputRegion |= RegionF::fromUnsortedRects(decoration()->cutouts() | std::ranges::to<QList<RectF>>())
+                                        .translated(borderLeft(), borderTop() - decoration()->titleBar().height());
+    }
 }
 
 void Window::updateDecorationBorderRadius()
@@ -3348,6 +3360,9 @@ QPointF Window::framePosToClientPos(const QPointF &point) const
     QMarginsF borders;
     if (decoration()) {
         borders = decoration()->currentState()->borders();
+        if (decoration()->style() == KDecoration3::Style::Overlayed) {
+            borders.setTop(0);
+        }
     }
     return point + QPointF(borders.left(), borders.top());
 }
@@ -3357,6 +3372,9 @@ QPointF Window::nextFramePosToClientPos(const QPointF &point) const
     QMarginsF borders;
     if (auto decoration = nextDecoration()) {
         borders = decoration->nextState()->borders();
+        if (decoration->style() == KDecoration3::Style::Overlayed) {
+            borders.setTop(0);
+        }
     }
     return point + QPointF(borders.left(), borders.top());
 }
@@ -3366,6 +3384,9 @@ QPointF Window::clientPosToFramePos(const QPointF &point) const
     QMarginsF borders;
     if (decoration()) {
         borders = decoration()->currentState()->borders();
+        if (decoration()->style() == KDecoration3::Style::Overlayed) {
+            borders.setTop(0);
+        }
     }
     return point - QPointF(borders.left(), borders.top());
 }
@@ -3375,6 +3396,9 @@ QPointF Window::nextClientPosToFramePos(const QPointF &point) const
     QMarginsF borders;
     if (auto decoration = nextDecoration()) {
         borders = decoration->nextState()->borders();
+        if (decoration->style() == KDecoration3::Style::Overlayed) {
+            borders.setTop(0);
+        }
     }
     return point - QPointF(borders.left(), borders.top());
 }
@@ -3384,6 +3408,9 @@ QSizeF Window::frameSizeToClientSize(const QSizeF &size) const
     QMarginsF borders;
     if (decoration()) {
         borders = decoration()->currentState()->borders();
+        if (decoration()->style() == KDecoration3::Style::Overlayed) {
+            borders.setTop(0);
+        }
     }
     return size.shrunkBy(borders);
 }
@@ -3393,6 +3420,9 @@ QSizeF Window::nextFrameSizeToClientSize(const QSizeF &size) const
     QMarginsF borders;
     if (auto decoration = nextDecoration()) {
         borders = decoration->nextState()->borders();
+        if (decoration->style() == KDecoration3::Style::Overlayed) {
+            borders.setTop(0);
+        }
     }
     return size.shrunkBy(borders);
 }
@@ -3402,6 +3432,9 @@ QSizeF Window::clientSizeToFrameSize(const QSizeF &size) const
     QMarginsF borders;
     if (decoration()) {
         borders = decoration()->currentState()->borders();
+        if (decoration()->style() == KDecoration3::Style::Overlayed) {
+            borders.setTop(0);
+        }
     }
     return size.grownBy(borders);
 }
@@ -3411,6 +3444,9 @@ QSizeF Window::nextClientSizeToFrameSize(const QSizeF &size) const
     QMarginsF borders;
     if (auto decoration = nextDecoration()) {
         borders = decoration->nextState()->borders();
+        if (decoration->style() == KDecoration3::Style::Overlayed) {
+            borders.setTop(0);
+        }
     }
     return size.grownBy(borders);
 }
@@ -4661,6 +4697,16 @@ void Window::setExcludeFromCapture(bool newExcludeFromCapture)
     }
 
     Q_EMIT excludeFromCaptureChanged();
+}
+
+bool Window::handlesCutouts() const
+{
+    return m_surface && m_surface->cutouts();
+}
+
+RegionF Window::decorationInputRegion() const
+{
+    return m_decoration.inputRegion;
 }
 
 } // namespace KWin

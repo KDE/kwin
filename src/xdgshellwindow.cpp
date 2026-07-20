@@ -33,6 +33,7 @@
 #include "wayland/xdgdecoration_v1.h"
 #include "wayland/xdgdialog_v1.h"
 #include "wayland/xdgsession_v1.h"
+#include "wayland/xx_cutouts_v1.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -163,7 +164,10 @@ void XdgSurfaceWindow::moveResizeInternal(const RectF &rect, MoveResizeMode mode
 RectF XdgSurfaceWindow::frameRectToBufferRect(const RectF &rect) const
 {
     const qreal left = rect.left() + borderLeft() - m_windowGeometry.left();
-    const qreal top = rect.top() + borderTop() - m_windowGeometry.top();
+    qreal top = rect.top() - m_windowGeometry.top();
+    if (decoration() && decoration()->style() == KDecoration3::Style::Titled) {
+        top += borderTop();
+    }
     return RectF(QPointF(left, top), snapToPixels(surface()->size(), m_targetScale));
 }
 
@@ -338,6 +342,17 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
     connect(shellSurface, &XdgToplevelInterface::descriptionChanged, this, [this]() {
         setDescription(m_shellSurface->description());
     });
+
+    connect(surface(), &SurfaceInterface::cutoutsCreated,
+            this, &XdgToplevelWindow::handleCutoutsCreated);
+    connect(this, &Window::borderRadiusChanged,
+            this, &XdgToplevelWindow::updateCutouts);
+    connect(this, &Window::bufferGeometryChanged,
+            this, &XdgToplevelWindow::updateCutouts);
+    connect(this, &Window::frameGeometryChanged,
+            this, &XdgToplevelWindow::updateCutouts);
+    connect(this, &Window::decorationChanged,
+            this, &XdgToplevelWindow::updateCutouts);
 }
 
 XdgToplevelWindow::~XdgToplevelWindow()
@@ -575,7 +590,11 @@ XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure()
     if (m_nextDecoration) {
         const auto borders = m_nextDecorationState->borders();
         framePadding.setWidth(borders.left() + borders.right());
-        framePadding.setHeight(borders.top() + borders.bottom());
+        if (m_surface->cutouts()) {
+            framePadding.setHeight(borders.bottom());
+        } else {
+            framePadding.setHeight(borders.top() + borders.bottom());
+        }
     }
 
     QSizeF nextClientSize = snapToPixels(moveResizeGeometry().size(), nextTargetScale());
@@ -1397,11 +1416,16 @@ DecorationMode XdgToplevelWindow::preferredDecorationMode() const
         return DecorationMode::None;
     }
 
+    DecorationMode serverStyle = DecorationMode::Server;
+    if (handlesCutouts() && Decoration::DecorationBridge::supportedStyles().contains(KDecoration3::Style::Overlayed)) {
+        serverStyle = DecorationMode::Overlayed;
+    }
+
     switch (m_decorationPolicy) {
     case DecorationPolicy::None:
         return DecorationMode::None;
     case DecorationPolicy::Server:
-        return DecorationMode::Server;
+        return serverStyle;
     case DecorationPolicy::Shadow:
         if (Decoration::DecorationBridge::supportedStyles().contains(KDecoration3::Style::Shadow)) {
             return DecorationMode::Shadow;
@@ -1412,13 +1436,13 @@ DecorationMode XdgToplevelWindow::preferredDecorationMode() const
         if (m_xdgDecoration) {
             switch (m_xdgDecoration->preferredMode()) {
             case XdgToplevelDecorationV1Interface::Mode::Undefined:
-                return DecorationMode::Server;
+                return serverStyle;
             case XdgToplevelDecorationV1Interface::Mode::None:
                 return DecorationMode::None;
             case XdgToplevelDecorationV1Interface::Mode::Client:
                 return DecorationMode::Client;
             case XdgToplevelDecorationV1Interface::Mode::Server:
-                return DecorationMode::Server;
+                return serverStyle;
             case XdgToplevelDecorationV1Interface::Mode::ServerSideBorder:
                 return DecorationMode::Shadow;
             }
@@ -1431,7 +1455,7 @@ DecorationMode XdgToplevelWindow::preferredDecorationMode() const
             case ServerSideDecorationManagerInterface::Mode::Client:
                 return DecorationMode::Client;
             case ServerSideDecorationManagerInterface::Mode::Server:
-                return DecorationMode::Server;
+                return serverStyle;
             }
         }
 
@@ -1460,10 +1484,14 @@ void XdgToplevelWindow::configureDecoration()
         clearDecoration();
         break;
     case DecorationMode::Server:
-    case DecorationMode::Shadow: {
-        const auto style = decorationMode == DecorationMode::Server
-            ? KDecoration3::Style::Titled
-            : KDecoration3::Style::Shadow;
+    case DecorationMode::Shadow:
+    case DecorationMode::Overlayed: {
+        KDecoration3::Style style = KDecoration3::Style::Titled;
+        if (decorationMode == DecorationMode::Shadow) {
+            style = KDecoration3::Style::Shadow;
+        } else if (decorationMode == DecorationMode::Overlayed) {
+            style = KDecoration3::Style::Overlayed;
+        }
 
         if (!m_nextDecoration || m_nextDecoration->style() != style) {
             m_nextDecoration.reset(Workspace::self()->decorationBridge()->createDecoration(this, style));
@@ -1511,6 +1539,7 @@ void XdgToplevelWindow::configureXdgDecoration(DecorationMode decorationMode)
         m_xdgDecoration->sendConfigure(XdgToplevelDecorationV1Interface::Mode::Client);
         break;
     case DecorationMode::Server:
+    case DecorationMode::Overlayed:
         m_xdgDecoration->sendConfigure(XdgToplevelDecorationV1Interface::Mode::Server);
         break;
     case DecorationMode::Shadow:
@@ -1530,6 +1559,7 @@ void XdgToplevelWindow::configureServerDecoration(DecorationMode decorationMode)
         break;
     case DecorationMode::Server:
     case DecorationMode::Shadow:
+    case DecorationMode::Overlayed:
         m_serverDecoration->setMode(ServerSideDecorationManagerInterface::Mode::Server);
         break;
     }
@@ -1834,6 +1864,28 @@ void XdgToplevelWindow::maximize(MaximizeMode mode, const RectF &restore)
     markAsPlaced();
 
     doSetMaximized();
+}
+
+void XdgToplevelWindow::handleCutoutsCreated()
+{
+    // might change to overlayed mode
+    configureDecoration();
+    updateCutouts();
+}
+
+void XdgToplevelWindow::updateCutouts()
+{
+    if (!m_surface->cutouts()) {
+        if (nextDecoration() && nextDecoration()->style() == KDecoration3::Style::Overlayed) {
+            configureDecoration();
+        }
+        return;
+    }
+    if (nextDecoration() && nextDecoration()->style() == KDecoration3::Style::Overlayed) {
+        m_surface->cutouts()->setCutouts(nextDecoration()->cutouts() | std::ranges::to<QList<RectF>>(), m_borderRadius);
+    } else {
+        m_surface->cutouts()->setCutouts({}, m_borderRadius);
+    }
 }
 
 XdgPopupWindow::XdgPopupWindow(XdgPopupInterface *shellSurface)

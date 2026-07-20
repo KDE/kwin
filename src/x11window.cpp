@@ -1016,6 +1016,7 @@ void X11Window::updateDecoration(bool check_workspace_pos, bool force)
         createDecoration(KDecoration3::Style::Shadow, force);
         break;
     case DecorationMode::Server:
+    case DecorationMode::Overlayed:
         createDecoration(KDecoration3::Style::Titled, force);
         break;
     }
