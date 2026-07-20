@@ -69,6 +69,7 @@ public:
         Client,
         Server,
         ServerSideBorder,
+        Overlay,
     };
     Q_ENUM(Mode)
 

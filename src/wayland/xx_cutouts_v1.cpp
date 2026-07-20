@@ -52,6 +52,9 @@ void CutoutsV1::setCutouts(const QList<RectF> &cutouts, BorderRadius corners)
     uint32_t id = 1;
     for (const RectF &box : cutouts) {
         const Rect surfaceLocal = box.scaled(1 / m_surface->compositorToClientScale()).rounded();
+        if (surfaceLocal.isEmpty()) {
+            continue;
+        }
         send_cutout_box(surfaceLocal.x(), surfaceLocal.y(), surfaceLocal.width(), surfaceLocal.height(), type_cutout, id++);
     }
     if (corners.topLeft()) {
