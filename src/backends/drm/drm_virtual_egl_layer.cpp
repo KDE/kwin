@@ -40,7 +40,8 @@ VirtualEglGbmLayer::~VirtualEglGbmLayer()
 
 std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::doBeginFrame()
 {
-    // gbm surface
+    m_scanoutBuffer.reset();
+
     if (doesGbmSwapchainFit(m_gbmSwapchain.get())) {
         m_oldGbmSwapchain.reset();
         m_oldDamageJournal.clear();
