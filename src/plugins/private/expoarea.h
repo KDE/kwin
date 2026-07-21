@@ -41,7 +41,7 @@ Q_SIGNALS:
 private:
     void update();
 
-    QRectF m_rect;
+    RectF m_rect;
     LogicalOutput *m_screen = nullptr;
 };
 

@@ -61,7 +61,7 @@ void ExpoArea::update()
     if (!m_screen) {
         return;
     }
-    const QRectF oldRect = m_rect;
+    const RectF oldRect = m_rect;
 
     m_rect = workspace()->clientArea(MaximizeArea, m_screen);
 
