@@ -231,9 +231,9 @@ void ExpoCell::setNaturalHeight(qreal height)
     }
 }
 
-QRectF ExpoCell::naturalRect() const
+KWin::RectF ExpoCell::naturalRect() const
 {
-    return QRectF(m_naturalX, m_naturalY, m_naturalWidth, m_naturalHeight);
+    return KWin::RectF(m_naturalX, m_naturalY, m_naturalWidth, m_naturalHeight);
 }
 
 QMarginsF ExpoCell::margins() const
@@ -281,7 +281,7 @@ void ExpoCell::updateContentItemGeometry()
         return;
     }
 
-    QRectF rect = mapRectToItem(m_contentItem->parentItem(), boundingRect());
+    KWin::RectF rect = mapRectToItem(m_contentItem->parentItem(), boundingRect());
 
     rect = {
         rect.x() * m_partialActivationFactor + (m_naturalX + m_offsetX) * (1.0 - m_partialActivationFactor),
@@ -360,7 +360,7 @@ void ExpoLayout::geometryChange(const QRectF &newGeometry, const QRectF &oldGeom
 }
 
 // Move and scale rect to fit inside area
-static void moveToFit(QRectF &rect, const QRectF &area)
+static void moveToFit(KWin::RectF &rect, const KWin::RectF &area)
 {
     qreal scale = std::min(area.width() / rect.width(), area.height() / rect.height());
     rect.setWidth(rect.width() * scale);
@@ -375,7 +375,7 @@ void ExpoLayout::updatePolish()
         return;
     }
 
-    QRectF area = QRectF(0, 0, width(), height());
+    KWin::RectF area = KWin::RectF(0, 0, width(), height());
 
     std::sort(m_cells.begin(), m_cells.end(), [](const ExpoCell *a, const ExpoCell *b) {
         return a->persistentKey() < b->persistentKey();
@@ -390,7 +390,7 @@ void ExpoLayout::updatePolish()
     qreal scale = std::sqrt(availableArea / totalArea) * 0.7; // conservative estimate
     scale = std::clamp(scale, 0.1, 10.0); // don't go crazy
 
-    QList<QRectF> windowSizes;
+    QList<KWin::RectF> windowSizes;
     for (ExpoCell *cell : std::as_const(m_cells)) {
         const QMarginsF &margins = cell->margins();
         const QMarginsF scaledMargins(margins.left() / scale, margins.top() / scale, margins.right() / scale, margins.bottom() / scale);
@@ -399,14 +399,14 @@ void ExpoLayout::updatePolish()
     auto windowLayouts = ExpoLayout::layout(area, windowSizes);
     for (int i = 0; i < windowLayouts.size(); ++i) {
         ExpoCell *cell = m_cells[i];
-        QRectF target = windowLayouts[i];
+        KWin::RectF target = windowLayouts[i];
 
-        QRectF adjustedTarget = target.marginsRemoved(cell->margins());
+        KWin::RectF adjustedTarget = target.marginsRemoved(cell->margins());
         if (adjustedTarget.isValid()) {
             target = adjustedTarget; // Borders
         }
 
-        QRectF rect = cell->naturalRect();
+        KWin::RectF rect = cell->naturalRect();
         moveToFit(rect, target);
         if (m_ready) {
             // Use setProperty so the QML side can animate with Behavior
@@ -424,7 +424,7 @@ void ExpoLayout::updatePolish()
     setReady();
 }
 
-Layer::Layer(qreal maxWidth, const QList<QRectF> &windowSizes, const QList<size_t> &windowIds, size_t startPos, size_t endPos)
+Layer::Layer(qreal maxWidth, const QList<KWin::RectF> &windowSizes, const QList<size_t> &windowIds, size_t startPos, size_t endPos)
     : maxWidth(maxWidth)
     , maxHeight(windowSizes[windowIds[endPos - 1]].height())
     , ids(windowIds.begin() + startPos, windowIds.begin() + endPos)
@@ -440,7 +440,7 @@ qreal Layer::width() const
     return maxWidth - remainingWidth;
 }
 
-LayeredPacking::LayeredPacking(qreal maxWidth, const QList<QRectF> &windowSizes, const QList<size_t> &ids, const QList<size_t> &layerStartPos)
+LayeredPacking::LayeredPacking(qreal maxWidth, const QList<KWin::RectF> &windowSizes, const QList<size_t> &ids, const QList<size_t> &layerStartPos)
     : maxWidth(maxWidth)
     , width(0)
     , height(0)
@@ -650,9 +650,9 @@ static QMarginsF reflect(const QMarginsF &margins)
 {
     return QMarginsF(margins.top(), margins.right(), margins.bottom(), margins.left());
 }
-static QRectF reflect(const QRectF &rect)
+static KWin::RectF reflect(const KWin::RectF &rect)
 {
-    return QRectF(rect.y(), rect.x(), rect.height(), rect.width());
+    return KWin::RectF(rect.y(), rect.x(), rect.height(), rect.width());
 }
 static QPointF reflect(const QPointF &point)
 {
@@ -669,7 +669,7 @@ static QList<T> reflect(const QList<T> &v)
     return result;
 }
 
-QList<QRectF> ExpoLayout::layout(const QRectF &area, const QList<QRectF> &windowSizes)
+QList<KWin::RectF> ExpoLayout::layout(const KWin::RectF &area, const QList<KWin::RectF> &windowSizes)
 {
     const qreal shortSide = std::min(area.width(), area.height());
     const QMarginsF margins(shortSide * m_relativeMarginLeft,
@@ -677,21 +677,21 @@ QList<QRectF> ExpoLayout::layout(const QRectF &area, const QList<QRectF> &window
                             shortSide * m_relativeMarginRight,
                             shortSide * m_relativeMarginBottom);
     const qreal minLength = m_relativeMinLength * shortSide;
-    const QRectF minSize = QRectF(0, 0, minLength, minLength);
+    const KWin::RectF minSize = KWin::RectF(0, 0, minLength, minLength);
 
     QList<QPointF> centers;
-    for (const QRectF &windowSize : windowSizes) {
+    for (const KWin::RectF &windowSize : windowSizes) {
         centers.push_back(windowSize.center());
     }
 
     // windows bigger than 4x the area are considered ill-behaved and their sizes are clipped
-    const auto adjustedSizes = adjustSizes(minSize, QRectF(0, 0, 4 * area.width(), 4 * area.height()), margins, windowSizes);
+    const auto adjustedSizes = adjustSizes(minSize, KWin::RectF(0, 0, 4 * area.width(), 4 * area.height()), margins, windowSizes);
 
     if (placementMode() == PlacementMode::Rows) {
         LayeredPacking bestPacking = findGoodPacking(area, adjustedSizes, centers, m_idealWidthRatio, m_searchTolerance);
         return refineAndApplyPacking(area, margins, bestPacking, adjustedSizes, centers);
     } else {
-        QList<QRectF> adjustedSizesReflected(reflect(adjustedSizes));
+        QList<KWin::RectF> adjustedSizesReflected(reflect(adjustedSizes));
         QList<QPointF> centersReflected(reflect(centers));
 
         LayeredPacking bestPacking = findGoodPacking(area.transposed(), adjustedSizesReflected, centersReflected, m_idealWidthRatio, m_searchTolerance);
@@ -699,10 +699,10 @@ QList<QRectF> ExpoLayout::layout(const QRectF &area, const QList<QRectF> &window
     }
 }
 
-QList<QRectF> ExpoLayout::adjustSizes(const QRectF &minSize, const QRectF &maxSize, const QMarginsF &margins, const QList<QRectF> &windowSizes)
+QList<KWin::RectF> ExpoLayout::adjustSizes(const KWin::RectF &minSize, const KWin::RectF &maxSize, const QMarginsF &margins, const QList<KWin::RectF> &windowSizes)
 {
-    QList<QRectF> adjustedSizes;
-    for (QRectF windowSize : windowSizes) {
+    QList<KWin::RectF> adjustedSizes;
+    for (KWin::RectF windowSize : windowSizes) {
         windowSize.setWidth(std::clamp(windowSize.width(), minSize.width(), maxSize.width()));
         windowSize.setHeight(std::clamp(windowSize.height(), minSize.height(), maxSize.height()));
         windowSize += margins;
@@ -712,9 +712,9 @@ QList<QRectF> ExpoLayout::adjustSizes(const QRectF &minSize, const QRectF &maxSi
 }
 
 LayeredPacking
-ExpoLayout::findGoodPacking(const QRectF &area, const QList<QRectF> &windowSizes, const QList<QPointF> &centers, qreal idealWidthRatio, qreal tol)
+ExpoLayout::findGoodPacking(const KWin::RectF &area, const QList<KWin::RectF> &windowSizes, const QList<QPointF> &centers, qreal idealWidthRatio, qreal tol)
 {
-    QList<std::tuple<size_t, QRectF, QPointF>> windowSizesWithIds;
+    QList<std::tuple<size_t, KWin::RectF, QPointF>> windowSizesWithIds;
 
     for (int i = 0; i < windowSizes.size(); ++i) {
         windowSizesWithIds.emplace_back(i, windowSizes[i], centers[i]);
@@ -803,7 +803,7 @@ ExpoLayout::findGoodPacking(const QRectF &area, const QList<QRectF> &windowSizes
     }
 }
 
-QList<QRectF> ExpoLayout::refineAndApplyPacking(const QRectF &area, const QMarginsF &margins, const LayeredPacking &packing, const QList<QRectF> &windowSizes, const QList<QPointF> &centers)
+QList<KWin::RectF> ExpoLayout::refineAndApplyPacking(const KWin::RectF &area, const QMarginsF &margins, const LayeredPacking &packing, const QList<KWin::RectF> &windowSizes, const QList<QPointF> &centers)
 {
     // Scale packing to fit area
     qreal scale = std::min(area.width() / packing.width, area.height() / packing.height);
@@ -821,7 +821,7 @@ QList<QRectF> ExpoLayout::refineAndApplyPacking(const QRectF &area, const QMargi
     qreal gapY = std::min(maxGapY, extraY / (packing.layers.size() + 1));
     qreal y = area.y() + (extraY - gapY * (packing.layers.size() - 1)) / 2;
 
-    QList<QRectF> finalWindowLayouts(windowSizes);
+    QList<KWin::RectF> finalWindowLayouts(windowSizes);
     // smaller windows "float" to the top
     for (const auto &layer : packing.layers) {
         qreal extraX = area.width() - layer.width() * scale;
@@ -833,9 +833,9 @@ QList<QRectF> ExpoLayout::refineAndApplyPacking(const QRectF &area, const QMargi
             return centers[a].x() < centers[b].x(); // minimize horizontal movement
         });
         for (auto id : std::as_const(ids)) {
-            QRectF &windowLayout = finalWindowLayouts[id];
+            KWin::RectF &windowLayout = finalWindowLayouts[id];
             qreal newY = y + (layer.maxHeight - windowLayout.height()) * scale / 2; // center align y
-            windowLayout = QRectF(x, newY, windowLayout.width() * scale, windowLayout.height() * scale);
+            windowLayout = KWin::RectF(x, newY, windowLayout.width() * scale, windowLayout.height() * scale);
             x += windowLayout.width() + gapX;
             windowLayout -= scaledMargins;
         }

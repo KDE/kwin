@@ -7,12 +7,11 @@
 
 #pragma once
 
+#include "core/rect.h"
+
 #include <QList>
 #include <QObject>
 #include <QQuickItem>
-#include <QRect>
-
-#include <optional>
 
 class ExpoCell;
 struct Layer;
@@ -116,14 +115,14 @@ protected:
      *
      * This is the main entry point for the layout algorithm.
      */
-    QList<QRectF> layout(const QRectF &area, const QList<QRectF> &windowSizes);
+    QList<KWin::RectF> layout(const KWin::RectF &area, const QList<KWin::RectF> &windowSizes);
 
     /**
      * @brief First clip @param windowSizes to be between @param minSize and
      * @param maxSize. Then add @param margins to each window size, and @return
      * the adjusted window sizes.
      */
-    QList<QRectF> adjustSizes(const QRectF &minSize, const QRectF &maxSize, const QMarginsF &margins, const QList<QRectF> &windowSizes);
+    QList<KWin::RectF> adjustSizes(const KWin::RectF &minSize, const KWin::RectF &maxSize, const QMarginsF &margins, const QList<KWin::RectF> &windowSizes);
 
     /**
      * @brief Use binary search to find a good packing of the @param windowSizes
@@ -145,7 +144,7 @@ protected:
      * Since we clip the window size, this is just O(n log n log log n)
      */
     LayeredPacking
-    findGoodPacking(const QRectF &area, const QList<QRectF> &windowSizes, const QList<QPointF> &centers, qreal idealWidthRatio, qreal tol);
+    findGoodPacking(const KWin::RectF &area, const QList<KWin::RectF> &windowSizes, const QList<QPointF> &centers, qreal idealWidthRatio, qreal tol);
 
     /**
      * @brief LogicalOutput the final window layouts from the packing.
@@ -155,7 +154,7 @@ protected:
      * and @return the final layout.
      * In each layer, sort the windows by x coordinates of the @param centers.
      */
-    QList<QRectF> refineAndApplyPacking(const QRectF &area, const QMarginsF &margins, const LayeredPacking &packing, const QList<QRectF> &windowSizes, const QList<QPointF> &centers);
+    QList<KWin::RectF> refineAndApplyPacking(const KWin::RectF &area, const QMarginsF &margins, const LayeredPacking &packing, const QList<KWin::RectF> &windowSizes, const QList<QPointF> &centers);
 
 Q_SIGNALS:
     void placementModeChanged();
@@ -238,7 +237,7 @@ public:
     qreal naturalHeight() const;
     void setNaturalHeight(qreal height);
 
-    QRectF naturalRect() const;
+    KWin::RectF naturalRect() const;
     QMarginsF margins() const;
 
     QString persistentKey() const;
@@ -314,7 +313,7 @@ struct Layer
      * @param startPos windowIds[startPos] is the first window in this layer.
      * @param endPos windowIds[endPos-1] is the last window in this layer.
      */
-    Layer(qreal maxWidth, const QList<QRectF> &windowSizes, const QList<size_t> &windowIds, size_t startPos, size_t endPos);
+    Layer(qreal maxWidth, const QList<KWin::RectF> &windowSizes, const QList<size_t> &windowIds, size_t startPos, size_t endPos);
 
     /**
      * @brief The total width of all the windows in this layer.
@@ -344,5 +343,5 @@ struct LayeredPacking
      * @param layerStartPos Array of indices into ids that indicate the start
      * of a new layer. Must start with 0 and end with ids.size().
      */
-    LayeredPacking(qreal maxWidth, const QList<QRectF> &windowSizes, const QList<size_t> &ids, const QList<size_t> &layerStartPos);
+    LayeredPacking(qreal maxWidth, const QList<KWin::RectF> &windowSizes, const QList<size_t> &ids, const QList<size_t> &layerStartPos);
 };
