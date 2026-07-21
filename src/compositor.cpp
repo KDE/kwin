@@ -733,6 +733,30 @@ std::pair<QList<Compositor::LayerData>, bool> Compositor::setupLayers(SceneView 
         toUpdate.insert(layer);
     }
 
+    // If a single layer covers the whole output, try to move the trailing encode of its color
+    // pipeline (the panel OETF, which the plane's own gamma often can't represent) to the
+    // output's post blending stage, by re-targeting the layer at a linear intermediate
+    // colorspace. That keeps the layer on direct scanout instead of falling back to shader
+    // composition. It's only safe with a single layer though, as the post blending stage
+    // applies to the whole output
+    bool postBlendOffloaded = false;
+    if (layers.size() == 1 && layers[0].directScanout) {
+        RenderView *const view = layers[0].view;
+        SurfaceItem *const candidate = view->layer()->scanoutDevice() ? view->scanoutCandidate() : nullptr;
+        // note that layerBlendingColor may already be an intermediate from the last frame's offload
+        const auto baseBlend = backendOutput->blendingColor();
+        if (candidate && !ColorPipeline::create(candidate->colorDescription(), baseBlend, candidate->renderingIntent()).isIdentity()) {
+            const auto linearBlend = baseBlend->withTransferFunction(TransferFunction(TransferFunction::linear, 0, baseBlend->transferFunction().maxLuminance));
+            // the output merges this before its own post blending color management, so that the
+            // shared blend space encode cancels and the panel OETF ends up after blending
+            const auto postBlend = ColorPipeline::create(linearBlend, baseBlend, RenderingIntent::AbsoluteColorimetricNoAdaptation);
+            postBlendOffloaded = backendOutput->setPostBlendPipeline(postBlend, linearBlend);
+        }
+    }
+    if (!postBlendOffloaded) {
+        backendOutput->resetPostBlendPipeline();
+    }
+
     // import buffers and prepare rendering
     for (auto &layer : layers) {
         if (layer.directScanout && !prepareDirectScanout(layer.view, logicalOutput, backendOutput, frame)) {

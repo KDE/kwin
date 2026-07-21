@@ -24,6 +24,7 @@ class BrightnessDevice;
 class OutputFrame;
 class OutputLayer;
 class DrmDevice;
+class ColorPipeline;
 
 class KWIN_EXPORT AutoBrightnessCurve
 {
@@ -321,6 +322,22 @@ public:
      * has happened. May be different from layerBlendingColor.
      */
     const std::shared_ptr<ColorDescription> &colorDescription() const;
+
+    /**
+     * Offloads @p pipeline to run after blending, on the whole output, combined with the
+     * post blending color management the output does on its own. On success,
+     * layerBlendingColor() becomes @p newLayerBlendColor, so that the layers target the
+     * intermediate colorspace and @p pipeline finishes the encode after blending.
+     *
+     * This is only safe to use when a single layer covers the whole output.
+     *
+     * @returns whether or not the output accepted the offload. If it didn't, nothing changes
+     */
+    virtual bool setPostBlendPipeline(const ColorPipeline &pipeline, const std::shared_ptr<ColorDescription> &newLayerBlendColor);
+    /**
+     * undoes setPostBlendPipeline; does nothing if no offload is active
+     */
+    virtual void resetPostBlendPipeline();
 
     uint32_t priority() const;
     const AutoBrightnessCurve &autoBrightnessCurve() const;

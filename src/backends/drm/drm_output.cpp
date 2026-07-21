@@ -741,6 +741,12 @@ void DrmOutput::tryKmsColorOffloading(State &next)
 
     const auto repaints = qScopeGuard([this, &next]() {
         maybeScheduleRepaints(next);
+        // the base was just recomputed, so any offload is gone; the compositor requests it
+        // again every frame in Compositor::setupLayers
+        m_baseCrtcColorPipeline = m_pipeline->crtcColorPipeline();
+        m_baseLayerBlendingColor = next.layerBlendingColor;
+        m_appliedPostBlendPipeline = ColorPipeline{};
+        m_appliedLayerBlendingColor = nullptr;
     });
 
     constexpr TransferFunction::Type blendingSpace = TransferFunction::gamma22;
@@ -819,6 +825,55 @@ void DrmOutput::tryKmsColorOffloading(State &next)
     m_needsShadowBuffer = usesICC
         || next.colorDescription->transferFunction().type != blendingSpace
         || !colorPipeline.isIdentity();
+}
+
+bool DrmOutput::setPostBlendPipeline(const ColorPipeline &pipeline, const std::shared_ptr<ColorDescription> &newLayerBlendColor)
+{
+    // like in tryKmsColorOffloading, and additionally only when we're doing color management
+    // on the CRTC, instead of in the shadow buffer
+    if (!m_pipeline->activePending() || m_pipeline->layers().empty() || m_lease || m_needsShadowBuffer) {
+        return false;
+    }
+    // steady state: the same offload is already applied, don't re-test the commit every frame
+    if (pipeline == m_appliedPostBlendPipeline && newLayerBlendColor == m_appliedLayerBlendingColor) {
+        return true;
+    }
+
+    // the compositor's pipeline goes newLayerBlendColor -> layerBlendingColor, so merging it
+    // before the base pipeline (layerBlendingColor -> panel) yields newLayerBlendColor -> panel
+    const ColorPipeline combined = pipeline.merged(m_baseCrtcColorPipeline);
+    m_pipeline->setCrtcColorPipeline(combined);
+    if (DrmPipeline::commitPipelines({m_pipeline}, m_gpu, DrmPipeline::CommitMode::Test) != DrmPipeline::Error::None) {
+        // restore the base and let the caller fall back
+        m_pipeline->setCrtcColorPipeline(m_baseCrtcColorPipeline);
+        m_pipeline->applyPendingChanges();
+        return false;
+    }
+    m_pipeline->applyPendingChanges();
+
+    State next = m_state;
+    next.layerBlendingColor = newLayerBlendColor;
+    setState(next);
+
+    m_appliedPostBlendPipeline = pipeline;
+    m_appliedLayerBlendingColor = newLayerBlendColor;
+    return true;
+}
+
+void DrmOutput::resetPostBlendPipeline()
+{
+    if (!m_appliedLayerBlendingColor) {
+        return;
+    }
+    m_pipeline->setCrtcColorPipeline(m_baseCrtcColorPipeline);
+    m_pipeline->applyPendingChanges();
+
+    State next = m_state;
+    next.layerBlendingColor = m_baseLayerBlendingColor;
+    setState(next);
+
+    m_appliedPostBlendPipeline = ColorPipeline{};
+    m_appliedLayerBlendingColor = nullptr;
 }
 
 void DrmOutput::maybeScheduleRepaints(const State &next)

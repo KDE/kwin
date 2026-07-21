@@ -688,6 +688,15 @@ const std::shared_ptr<ColorDescription> &BackendOutput::layerBlendingColor() con
     return m_state.layerBlendingColor;
 }
 
+bool BackendOutput::setPostBlendPipeline(const ColorPipeline &, const std::shared_ptr<ColorDescription> &)
+{
+    return false;
+}
+
+void BackendOutput::resetPostBlendPipeline()
+{
+}
+
 uint32_t BackendOutput::priority() const
 {
     return m_state.priority;

@@ -103,6 +103,7 @@ public:
     void setOverscan(uint32_t overscan);
     void setRgbRange(BackendOutput::RgbRange range);
     void setCrtcColorPipeline(const ColorPipeline &pipeline);
+    const ColorPipeline &crtcColorPipeline() const;
     void setContentType(DrmConnector::DrmContentType type);
     void setIccProfile(const std::shared_ptr<IccProfile> &profile);
     void setHighDynamicRange(bool hdr);

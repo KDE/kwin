@@ -674,6 +674,11 @@ void DrmPipeline::setCrtcColorPipeline(const ColorPipeline &pipeline)
     m_pending.crtcColorPipeline = pipeline;
 }
 
+const ColorPipeline &DrmPipeline::crtcColorPipeline() const
+{
+    return m_pending.crtcColorPipeline;
+}
+
 void DrmPipeline::setHighDynamicRange(bool hdr)
 {
     m_pending.hdr = hdr;

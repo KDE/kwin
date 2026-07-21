@@ -64,6 +64,9 @@ public:
     void setChannelFactors(const QVector3D &rgb) override;
     void updateConnectorProperties();
 
+    bool setPostBlendPipeline(const ColorPipeline &pipeline, const std::shared_ptr<ColorDescription> &newLayerBlendColor) override;
+    void resetPostBlendPipeline() override;
+
     /**
      * @returns whether or not the renderer should apply channel factors
      */
@@ -97,6 +100,15 @@ private:
 
     QVector3D m_sRgbChannelFactors = {1, 1, 1};
     bool m_needsShadowBuffer = false;
+
+    // what tryKmsColorOffloading calculated, without any offload from the compositor.
+    // setPostBlendPipeline merges onto this base, resetPostBlendPipeline restores it
+    ColorPipeline m_baseCrtcColorPipeline;
+    std::shared_ptr<ColorDescription> m_baseLayerBlendingColor;
+    // the offload that's currently applied; both are set and cleared together, so a null
+    // m_appliedLayerBlendingColor means there is none
+    ColorPipeline m_appliedPostBlendPipeline;
+    std::shared_ptr<ColorDescription> m_appliedLayerBlendingColor;
     PresentationMode m_desiredPresentationMode = PresentationMode::VSync;
     bool m_autoRotateAvailable = false;
     bool m_autoBrightnessAvailable = false;
