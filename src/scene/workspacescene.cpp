@@ -78,6 +78,9 @@
 #include "window.h"
 #include "workspace.h"
 
+#include <KGlobalAccel>
+#include <KLocalizedString>
+#include <QAction>
 #include <QtMath>
 
 namespace KWin
@@ -105,6 +108,16 @@ WorkspaceScene::WorkspaceScene()
     connect(Cursors::self(), &Cursors::hiddenChanged, this, &WorkspaceScene::updateCursor);
     connect(Cursors::self(), &Cursors::positionChanged, this, &WorkspaceScene::updateCursor);
     updateCursor();
+
+    QAction *toggleAction = new QAction(this);
+    toggleAction->setProperty("componentName", QStringLiteral("kwin"));
+    toggleAction->setObjectName("Toggle Show Compositing");
+    toggleAction->setText(i18n("Toggle “Show Compositing” effect"));
+    KGlobalAccel::self()->setDefaultShortcut(toggleAction, QList<QKeySequence>());
+    KGlobalAccel::self()->setShortcut(toggleAction, QList<QKeySequence>());
+    connect(toggleAction, &QAction::triggered, this, [this]() {
+        setLayerDebugging(!m_layerDebugging);
+    });
 }
 
 WorkspaceScene::~WorkspaceScene()
