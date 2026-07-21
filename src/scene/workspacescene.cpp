@@ -843,10 +843,14 @@ bool WorkspaceScene::animationsSupported() const
 
 void WorkspaceScene::setLayerDebugging(bool enable)
 {
+    if (m_layerDebugging == enable) {
+        return;
+    }
     m_layerDebugging = enable;
     if (m_renderer) {
         m_renderer->setLayerDebugging(enable);
     }
+    addRepaintFull();
 }
 
 } // namespace
