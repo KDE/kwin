@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-17 00:45+0000\n"
+"POT-Creation-Date: 2026-07-21 00:45+0000\n"
 "PO-Revision-Date: 2026-07-18 10:37+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
@@ -4396,7 +4396,7 @@ msgstr "Le pilote a rejeté la configuration de sortie."
 msgid "The session is not active"
 msgstr "La session est inactive."
 
-#: window.cpp:3166
+#: window.cpp:3162
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
