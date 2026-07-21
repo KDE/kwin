@@ -227,7 +227,7 @@ void DecoratedWindowImpl::requestShowWindowMenu(const QRect &rect)
     if (m_window->isDeleted()) {
         return;
     }
-    Workspace::self()->showWindowMenu(QRectF(m_window->pos() + rect.topLeft(), m_window->pos() + rect.bottomRight()).toRect(), m_window);
+    Workspace::self()->showWindowMenu(RectF(m_window->pos() + rect.topLeft(), m_window->pos() + rect.bottomRight()).toRect(), m_window);
 }
 
 void DecoratedWindowImpl::requestShowApplicationMenu(const QRect &rect, int actionId)
@@ -341,7 +341,7 @@ QString DecoratedWindowImpl::applicationMenuObjectPath() const
 
 void DecoratedWindowImpl::popup(const KDecoration3::Positioner &positioner, QMenu *menu)
 {
-    const QRectF anchorRect = positioner.anchorRect().translated(m_window->pos());
+    const RectF anchorRect = positioner.anchorRect().translated(m_window->pos());
     const QPointF position = qGuiApp->layoutDirection() == Qt::RightToLeft
         ? QPointF(anchorRect.right() - menu->width(), anchorRect.bottom())
         : QPointF(anchorRect.left(), anchorRect.bottom());
