@@ -1183,12 +1183,12 @@ bool Device::supportsRotation() const
     return libinput_device_config_rotation_is_available(m_device);
 }
 
-uint32_t Device::rotation() const
+quint32 Device::rotation() const
 {
     return libinput_device_config_rotation_get_angle(m_device);
 }
 
-void Device::setRotation(uint32_t degrees_cw)
+void Device::setRotation(quint32 degrees_cw)
 {
     if (rotation() != degrees_cw && libinput_device_config_rotation_set_angle(m_device, degrees_cw) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
         writeEntry(ConfigKey::Rotation, degrees_cw);
@@ -1196,7 +1196,7 @@ void Device::setRotation(uint32_t degrees_cw)
     }
 }
 
-uint32_t Device::defaultRotation() const
+quint32 Device::defaultRotation() const
 {
     return libinput_device_config_rotation_get_default_angle(m_device);
 }
