@@ -532,9 +532,9 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             shader->setUniform(GLShader::Vec4Uniform::CornerRadius, QVector4D(0, 0, 0, 0));
             shader->setUniform(GLShader::IntUniform::Thickness, 10);
             if (renderNode.paintHole) {
-                shader->setUniform(GLShader::ColorUniform::Color, QColor(0, 50, 0, 50));
+                shader->setUniform(GLShader::ColorUniform::Color, QColor(0, 255, 0, 50));
             } else {
-                shader->setUniform(GLShader::ColorUniform::Color, QColor(50, 0, 0, 50));
+                shader->setUniform(GLShader::ColorUniform::Color, QColor(255, 0, 0, 50));
             }
             vbo->draw(scissorRegion, GL_TRIANGLES, renderNode.firstVertex,
                       renderNode.vertexCount, renderContext.hardwareClipping);
