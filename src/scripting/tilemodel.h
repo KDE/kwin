@@ -14,7 +14,6 @@
 
 #include <QAbstractItemModel>
 #include <QObject>
-#include <QRectF>
 
 #include <QJsonValue>
 

@@ -115,7 +115,7 @@ void WindowThumbnailSource::update()
     }
     Q_ASSERT(m_view);
 
-    const QRectF geometry = m_handle->visibleGeometry();
+    const RectF geometry = m_handle->visibleGeometry();
     const qreal devicePixelRatio = m_view->devicePixelRatio();
     const QSize textureSize = geometry.toAlignedRect().size() * devicePixelRatio;
 
@@ -394,24 +394,23 @@ void WindowThumbnailItem::updateImplicitSize()
     }
     setImplicitSize(frameSize.width(), frameSize.height());
 }
-
-QRectF WindowThumbnailItem::paintedRect() const
+RectF WindowThumbnailItem::paintedRect() const
 {
     if (!m_client) {
-        return QRectF();
+        return RectF();
     }
 
-    const QRectF visibleGeometry = m_client->visibleGeometry();
-    const QRectF frameGeometry = m_client->frameGeometry();
+    const RectF visibleGeometry = m_client->visibleGeometry();
+    const RectF frameGeometry = m_client->frameGeometry();
     const QSizeF scaled = QSizeF(frameGeometry.size()).scaled(boundingRect().size(), Qt::KeepAspectRatio);
 
     const qreal xScale = scaled.width() / frameGeometry.width();
     const qreal yScale = scaled.height() / frameGeometry.height();
 
-    QRectF paintedRect(boundingRect().x() + (boundingRect().width() - scaled.width()) / 2,
-                       boundingRect().y() + (boundingRect().height() - scaled.height()) / 2,
-                       visibleGeometry.width() * xScale,
-                       visibleGeometry.height() * yScale);
+    RectF paintedRect(boundingRect().x() + (boundingRect().width() - scaled.width()) / 2,
+                      boundingRect().y() + (boundingRect().height() - scaled.height()) / 2,
+                      visibleGeometry.width() * xScale,
+                      visibleGeometry.height() * yScale);
 
     paintedRect.moveLeft(paintedRect.x() + (visibleGeometry.x() - frameGeometry.x()) * xScale);
     paintedRect.moveTop(paintedRect.y() + (visibleGeometry.y() - frameGeometry.y()) * yScale);

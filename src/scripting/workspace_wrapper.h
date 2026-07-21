@@ -10,7 +10,10 @@
 
 #pragma once
 
-#include "effect/globals.h"
+#include "config-kwin.h"
+
+#include "core/rect.h"
+
 #include <QObject>
 #include <QQmlListProperty>
 #include <QRect>
@@ -415,7 +418,7 @@ public:
      *
      * \a desktop The desktop for which the area should be considered, in general there should not be a difference
      */
-    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, KWin::LogicalOutput *output, KWin::VirtualDesktop *desktop) const;
+    Q_SCRIPTABLE KWin::RectF clientArea(ClientAreaOption option, KWin::LogicalOutput *output, KWin::VirtualDesktop *desktop) const;
 
     /*!
      * \qmlmethod rect Workspace::clientArea(enumeration option, Window client)
@@ -424,8 +427,8 @@ public:
      *
      * \a client The Client for which the area should be retrieved
      */
-    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, KWin::Window *client) const;
-    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, const KWin::Window *client) const;
+    Q_SCRIPTABLE KWin::RectF clientArea(ClientAreaOption option, KWin::Window *client) const;
+    Q_SCRIPTABLE KWin::RectF clientArea(ClientAreaOption option, const KWin::Window *client) const;
 
     /*!
      * \qmlmethod void Workspace::clientArea(int position, string name)

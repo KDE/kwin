@@ -267,23 +267,23 @@ QSize WorkspaceWrapper::workspaceSize() const
     return QSize(workspaceWidth(), workspaceHeight());
 }
 
-QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, const KWin::Window *c) const
+RectF WorkspaceWrapper::clientArea(ClientAreaOption option, const KWin::Window *c) const
 {
     if (!c) {
-        return QRectF();
+        return RectF();
     }
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), c);
 }
 
-QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, KWin::Window *c) const
+RectF WorkspaceWrapper::clientArea(ClientAreaOption option, KWin::Window *c) const
 {
     if (!c) {
-        return QRectF();
+        return RectF();
     }
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), c);
 }
 
-QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, LogicalOutput *output, VirtualDesktop *desktop) const
+RectF WorkspaceWrapper::clientArea(ClientAreaOption option, LogicalOutput *output, VirtualDesktop *desktop) const
 {
     if (!output) {
         qCWarning(KWIN_SCRIPTING) << "clientArea needs a valid output:" << output << "argument";
