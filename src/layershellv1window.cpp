@@ -24,7 +24,7 @@ static WindowType scopeToType(const QString &scope)
     static const QHash<QString, WindowType> scopeToType{
         {QStringLiteral("desktop"), WindowType::Desktop},
         {QStringLiteral("dock"), WindowType::Dock},
-        {QStringLiteral("crititical-notification"), WindowType::CriticalNotification},
+        {QStringLiteral("critical-notification"), WindowType::CriticalNotification},
         {QStringLiteral("notification"), WindowType::Notification},
         {QStringLiteral("tooltip"), WindowType::Tooltip},
         {QStringLiteral("on-screen-display"), WindowType::OnScreenDisplay},
