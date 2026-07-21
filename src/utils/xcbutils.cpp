@@ -77,7 +77,7 @@ QList<QByteArray> randrOpCodes()
     return QList<QByteArray>({QByteArrayLiteral("QueryVersion"),
                               QByteArray(""), // doesn't exist
                               QByteArrayLiteral("SetScreenConfig"),
-                              QByteArray(""), // doesn't exits
+                              QByteArray(""), // doesn't exist
                               QByteArrayLiteral("SelectInput"),
                               QByteArrayLiteral("GetScreenInfo"),
                               QByteArrayLiteral("GetScreenSizeRange"),
@@ -89,7 +89,7 @@ QList<QByteArray> randrOpCodes()
                               QByteArrayLiteral("ConfigureOutputProperty"),
                               QByteArrayLiteral("ChangeOutputProperty"),
                               QByteArrayLiteral("DeleteOutputProperty"),
-                              QByteArrayLiteral("GetOutputproperty"),
+                              QByteArrayLiteral("GetOutputProperty"),
                               QByteArrayLiteral("CreateMode"),
                               QByteArrayLiteral("DestroyMode"),
                               QByteArrayLiteral("AddOutputMode"),
@@ -112,7 +112,7 @@ QList<QByteArray> randrOpCodes()
                               QByteArrayLiteral("SetProviderOutputSource"),
                               QByteArrayLiteral("ListProviderProperties"),
                               QByteArrayLiteral("QueryProviderProperty"),
-                              QByteArrayLiteral("ConfigureProviderroperty"),
+                              QByteArrayLiteral("ConfigureProviderProperty"),
                               QByteArrayLiteral("ChangeProviderProperty"),
                               QByteArrayLiteral("DeleteProviderProperty"),
                               QByteArrayLiteral("GetProviderProperty")});
