@@ -1100,7 +1100,7 @@ void CursorImage::updateDecorationCursor()
 {
     auto deco = m_pointer->decoration();
     if (Window *window = deco ? deco->window() : nullptr) {
-        m_decoration.cursor->setShape(window->cursor().name());
+        m_decoration.cursor->setShape(window->interactiveMoveResizeCursor().name());
     }
     reevaluteSource();
 }
@@ -1108,7 +1108,7 @@ void CursorImage::updateDecorationCursor()
 void CursorImage::updateMoveResize()
 {
     if (Window *window = workspace()->moveResizeWindow()) {
-        m_moveResizeCursor->setShape(window->cursor().name());
+        m_moveResizeCursor->setShape(window->interactiveMoveResizeCursor().name());
     }
     reevaluteSource();
 }

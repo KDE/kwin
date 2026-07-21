@@ -620,7 +620,7 @@ void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction directi
     if (isInteractiveMoveResize() && direction == NET::MoveResizeCancel) {
         finishInteractiveMoveResize(true);
         setInteractiveMoveResizePointerButtonDown(false);
-        updateCursor();
+        updateInteractiveMoveResizeCursor();
     } else if (direction == NET::Move || (direction >= NET::TopLeft && direction <= NET::Left)) {
         if (!button) {
             if (!input()->qtButtonStates() && !input()->touch()->touchPointCount()) {
@@ -663,7 +663,7 @@ void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction directi
             if (!startInteractiveMoveResize()) {
                 setInteractiveMoveResizePointerButtonDown(false);
             }
-            updateCursor();
+            updateInteractiveMoveResizeCursor();
         }
     } else if (direction == NET::KeyboardMove) {
         // ignore mouse coordinates given in the message, mouse position is used by the moving algorithm

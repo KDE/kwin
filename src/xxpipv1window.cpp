@@ -138,7 +138,7 @@ void XXPipV1Window::handleResizeRequested(SeatInterface *seat, Gravity gravity, 
     if (!startInteractiveMoveResize()) {
         setInteractiveMoveResizePointerButtonDown(false);
     }
-    updateCursor();
+    updateInteractiveMoveResizeCursor();
 }
 
 void XXPipV1Window::doSetNextTargetScale()

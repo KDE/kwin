@@ -1172,7 +1172,7 @@ public:
     /**
      * Cursor shape for move/resize mode.
      */
-    CursorShape cursor() const
+    CursorShape interactiveMoveResizeCursor() const
     {
         return m_interactiveMoveResize.cursor;
     }
@@ -1704,7 +1704,7 @@ protected:
     /**
      * Sets an appropriate cursor shape for the logical mouse position.
      */
-    void updateCursor();
+    void updateInteractiveMoveResizeCursor();
     void startDelayedInteractiveMoveResize();
     void stopDelayedInteractiveMoveResize();
     bool startInteractiveMoveResize();

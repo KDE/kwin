@@ -1123,7 +1123,7 @@ void Window::startDelayedInteractiveMoveResize()
         if (!startInteractiveMoveResize()) {
             setInteractiveMoveResizePointerButtonDown(false);
         }
-        updateCursor();
+        updateInteractiveMoveResizeCursor();
         stopDelayedInteractiveMoveResize();
     });
     m_interactiveMoveResize.delayedTimer->start(QApplication::startDragTime());
@@ -2149,7 +2149,7 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
         if (!startInteractiveMoveResize()) {
             setInteractiveMoveResizePointerButtonDown(false);
         }
-        updateCursor();
+        updateInteractiveMoveResizeCursor();
         break;
     }
     case Options::MouseActivateRaiseAndResize:
@@ -2189,7 +2189,7 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
         if (!startInteractiveMoveResize()) {
             setInteractiveMoveResizePointerButtonDown(false);
         }
-        updateCursor();
+        updateInteractiveMoveResizeCursor();
         break;
     }
     case Options::MouseNothing:
@@ -2388,7 +2388,7 @@ qreal Window::borderTop() const
     return isDecorated() ? decoration()->borderTop() : 0;
 }
 
-void Window::updateCursor()
+void Window::updateInteractiveMoveResizeCursor()
 {
     if (isDeleted()) {
         return;
@@ -2577,12 +2577,12 @@ void Window::keyPressEvent(QKeyCombination key_combination)
     case Qt::Key_Enter:
         setInteractiveMoveResizePointerButtonDown(false);
         finishInteractiveMoveResize(false);
-        updateCursor();
+        updateInteractiveMoveResizeCursor();
         break;
     case Qt::Key_Escape:
         setInteractiveMoveResizePointerButtonDown(false);
         finishInteractiveMoveResize(true);
-        updateCursor();
+        updateInteractiveMoveResizeCursor();
         break;
     default:
         return;
@@ -2639,7 +2639,7 @@ void Window::endInteractiveMoveResize()
         finishInteractiveMoveResize(false);
         setInteractiveMoveResizeGravity(mouseGravity());
     }
-    updateCursor();
+    updateInteractiveMoveResizeCursor();
 }
 
 void Window::cancelInteractiveMoveResize()
@@ -2650,7 +2650,7 @@ void Window::cancelInteractiveMoveResize()
         finishInteractiveMoveResize(true);
         setInteractiveMoveResizeGravity(mouseGravity());
     }
-    updateCursor();
+    updateInteractiveMoveResizeCursor();
 }
 
 void Window::setDecoration(std::shared_ptr<KDecoration3::Decoration> decoration)
@@ -2760,7 +2760,7 @@ void Window::processDecorationMove(const QPointF &localPos, const QPointF &globa
                 } else {
                     setInteractiveMoveResizePointerButtonDown(false);
                 }
-                updateCursor();
+                updateInteractiveMoveResizeCursor();
             }
         }
         return;
@@ -2770,7 +2770,7 @@ void Window::processDecorationMove(const QPointF &localPos, const QPointF &globa
     Gravity newGravity = mouseGravity();
     if (newGravity != interactiveMoveResizeGravity()) {
         setInteractiveMoveResizeGravity(newGravity);
-        updateCursor();
+        updateInteractiveMoveResizeCursor();
     }
 }
 
@@ -2840,7 +2840,7 @@ bool Window::processDecorationButtonPress(const QPointF &localPos, const QPointF
         setInteractiveMoveOffset(QPointF(qreal(localPos.x()) / width(), qreal(localPos.y()) / height()));
         setUnrestrictedInteractiveMoveResize(false);
         startDelayedInteractiveMoveResize();
-        updateCursor();
+        updateInteractiveMoveResizeCursor();
     }
     // In the new API the decoration may process the menu action to display an inactive tab's menu.
     // If the event is unhandled then the core will create one for the active window in the group.
@@ -2860,7 +2860,7 @@ void Window::processDecorationButtonRelease(Qt::MouseButton button)
             finishInteractiveMoveResize(false);
             setInteractiveMoveResizeGravity(mouseGravity());
         }
-        updateCursor();
+        updateInteractiveMoveResizeCursor();
     }
 }
 

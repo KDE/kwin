@@ -1073,7 +1073,7 @@ void XdgToplevelWindow::handleResizeRequested(SeatInterface *seat, Gravity gravi
     if (!startInteractiveMoveResize()) {
         setInteractiveMoveResizePointerButtonDown(false);
     }
-    updateCursor();
+    updateInteractiveMoveResizeCursor();
 }
 
 void XdgToplevelWindow::handleStatesAcknowledged(const XdgToplevelInterface::States &states)
