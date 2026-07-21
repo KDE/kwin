@@ -156,7 +156,7 @@ Rect RenderViewport::mapToRenderTarget(const Rect &logicalGeometry) const
 
 QPoint RenderViewport::mapToRenderTarget(const QPoint &logicalGeometry) const
 {
-    const QPoint devicePoint = snapToPixelGrid(QPointF(logicalGeometry) * m_scale) - m_scaledRenderRect.topLeft() + m_renderOffset;
+    const QPoint devicePoint = logicalGeometry * m_scale - m_scaledRenderRect.topLeft() + m_renderOffset;
     return m_transform.map(devicePoint, m_transformBounds);
 }
 
@@ -192,7 +192,7 @@ Rect RenderViewport::mapToRenderTargetTexture(const Rect &logicalGeometry) const
 
 QPoint RenderViewport::mapToRenderTargetTexture(const QPoint &logicalGeometry) const
 {
-    return snapToPixelGrid(QPointF(logicalGeometry) * m_scale) - m_scaledRenderRect.topLeft() + m_renderOffset;
+    return logicalGeometry * m_scale - m_scaledRenderRect.topLeft() + m_renderOffset;
 }
 
 QPointF RenderViewport::mapToRenderTargetTexture(const QPointF &logicalGeometry) const

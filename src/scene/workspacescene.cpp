@@ -621,9 +621,9 @@ static void addOpaqueRegionRecursive(SceneView *view, Item *item, const std::opt
     if (corner.has_value()) {
         opaque = corner->radius.clip(item->opaque(), corner->box);
     }
-    const Rect deviceRect = snapToPixelGrid(view->mapToDeviceCoordinates(item->mapToView(item->rect(), view)));
+    const Rect deviceRect = view->mapToDeviceCoordinates(item->mapToView(item->rect(), view)).rounded();
     for (const RectF &rect : opaque.rects()) {
-        ret |= snapToPixelGrid(view->mapToDeviceCoordinates(item->mapToView(rect, view))) & deviceRect;
+        ret |= view->mapToDeviceCoordinates(item->mapToView(rect, view)).rounded() & deviceRect;
     }
     const auto children = item->childItems();
     for (Item *child : children) {
