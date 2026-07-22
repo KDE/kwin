@@ -34,11 +34,28 @@ bool EglDisplay::shouldUseOpenGLES()
     return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
 }
 
+static void epoxyFailureWorkaround()
+{
+    // do nothing
+}
+
+static epoxy_resolver_stub_t epoxyFailureHandler(const char *functionName)
+{
+    // Since epoxy calls glGetString(GL_VERSION) when resolving functions, and
+    // glGetString fails after a GPU reset, failing to resolve functions is expected
+    // and there's nothing we can or should do about it other than log it and move on.
+    qCWarning(KWIN_OPENGL, "Failed to resolve OpenGL function %s", functionName);
+    return epoxyFailureWorkaround;
+}
+
 std::unique_ptr<EglDisplay> EglDisplay::create(::EGLDisplay display, DrmDevice *drmDevice)
 {
     if (!display) {
         return nullptr;
     }
+
+    epoxy_set_resolver_failure_handler(epoxyFailureHandler);
+
     EGLint major, minor;
     if (eglInitialize(display, &major, &minor) == EGL_FALSE) {
         qCWarning(KWIN_OPENGL) << "eglInitialize failed";
