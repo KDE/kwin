@@ -198,7 +198,7 @@ Kirigami.Form {
                 spacing: Kirigami.Units.smallSpacing
 
                 QQC2.ComboBox {
-                    Accessible.description: i18ndc("kcmkwm", "@label:listbox accessible name", "Right click on a focused titlebar or frame")
+                    Accessible.name: i18ndc("kcmkwm", "@label:listbox accessible name", "Right click on a focused titlebar or frame")
                     textRole: "text"
                     valueRole: "value"
                     model: root.commandActiveTitlebarModel
