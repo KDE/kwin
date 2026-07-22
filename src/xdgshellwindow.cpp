@@ -93,16 +93,9 @@ void XdgSurfaceWindow::sendConfigure()
 {
     XdgSurfaceConfigure *configureEvent = sendRoleConfigure();
 
-    // The configure event inherits configure flags from the previous event.
-    if (!m_configureEvents.isEmpty()) {
-        const XdgSurfaceConfigure *previousEvent = m_configureEvents.constLast();
-        configureEvent->flags = previousEvent->flags;
-    }
-
     configureEvent->gravity = m_nextGravity;
-    configureEvent->flags |= m_configureFlags;
     configureEvent->scale = m_nextTargetScale;
-    m_configureFlags = {};
+
     if (!isInteractiveMoveResize()) {
         m_nextGravity = Gravity::None;
     }
@@ -156,25 +149,6 @@ void XdgSurfaceWindow::handleRoleCommit()
 {
 }
 
-void XdgSurfaceWindow::maybeUpdateMoveResizeGeometry(const RectF &rect)
-{
-    // We are about to send a configure event, ignore the committed window geometry.
-    if (m_configureTimer->isActive()) {
-        return;
-    }
-
-    // If there are unacknowledged configure events that change the geometry, don't sync
-    // the move resize geometry in order to avoid rolling back to old state. When the last
-    // configure event is acknowledged, the move resize geometry will be synchronized.
-    for (int i = m_configureEvents.count() - 1; i >= 0; --i) {
-        if (m_configureEvents[i]->flags & XdgSurfaceConfigure::ConfigurePosition) {
-            return;
-        }
-    }
-
-    setMoveResizeGeometry(rect);
-}
-
 void XdgSurfaceWindow::handleNextWindowGeometry()
 {
     if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
@@ -185,9 +159,7 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
 
     RectF frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
     if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
-        if (configureEvent->flags & XdgSurfaceConfigure::ConfigurePosition) {
-            frameGeometry = configureEvent->gravity.apply(frameGeometry, configureEvent->bounds);
-        }
+        frameGeometry = configureEvent->gravity.apply(frameGeometry, configureEvent->bounds);
     }
 
     if (isInteractiveMove()) {
@@ -200,7 +172,10 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
         }
     }
 
-    maybeUpdateMoveResizeGeometry(frameGeometry);
+    if (!m_configureTimer->isActive() && m_configureEvents.isEmpty()) {
+        setMoveResizeGeometry(frameGeometry);
+    }
+
     updateGeometry(frameGeometry);
 }
 
@@ -235,15 +210,14 @@ void XdgSurfaceWindow::moveResizeInternal(const RectF &rect, MoveResizeMode mode
             const RectF snappedRect = RectF(rect.topLeft(), nextClientSizeToFrameSize(snapToPixels(roundedClientSize, nextTargetScale())));
             updateGeometry(m_nextGravity.apply(snappedRect, rect));
         } else {
-            m_configureFlags |= XdgSurfaceConfigure::ConfigurePosition;
             scheduleConfigure();
         }
     } else {
         // If the window is moved, cancel any queued window position updates.
         for (XdgSurfaceConfigure *configureEvent : std::as_const(m_configureEvents)) {
-            configureEvent->flags.setFlag(XdgSurfaceConfigure::ConfigurePosition, false);
+            configureEvent->bounds.moveTopLeft(rect.topLeft());
+            configureEvent->gravity = Gravity::BottomRight;
         }
-        m_configureFlags.setFlag(XdgSurfaceConfigure::ConfigurePosition, false);
         updateGeometry(RectF(rect.topLeft(), size()));
     }
 }

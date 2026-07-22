@@ -46,15 +46,9 @@ public:
     {
     }
 
-    enum ConfigureFlag {
-        ConfigurePosition = 0x1,
-    };
-    Q_DECLARE_FLAGS(ConfigureFlags, ConfigureFlag)
-
     RectF bounds;
     Gravity gravity;
     qreal serial;
-    ConfigureFlags flags;
     double scale;
 };
 
@@ -96,11 +90,9 @@ private:
     bool haveNextWindowGeometry() const;
     void setHaveNextWindowGeometry();
     void resetHaveNextWindowGeometry();
-    void maybeUpdateMoveResizeGeometry(const RectF &rect);
 
     XdgSurfaceInterface *m_shellSurface;
     QTimer *m_configureTimer;
-    XdgSurfaceConfigure::ConfigureFlags m_configureFlags;
     QQueue<XdgSurfaceConfigure *> m_configureEvents;
     std::unique_ptr<XdgSurfaceConfigure> m_lastAcknowledgedConfigure;
     std::optional<quint32> m_lastAcknowledgedConfigureSerial;
@@ -325,5 +317,3 @@ private:
 };
 
 } // namespace KWin
-
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::XdgSurfaceConfigure::ConfigureFlags)
