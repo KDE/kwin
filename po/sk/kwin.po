@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-21 00:45+0000\n"
+"POT-Creation-Date: 2026-07-22 00:46+0000\n"
 "PO-Revision-Date: 2023-12-02 20:09+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -3634,6 +3634,11 @@ msgstr "Skryť pred snímkami a nahrávkami obrazovky"
 #, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr "Skryť pred snímkami a nahrávkami obrazovky, typ pravidla"
+
+#: scene/workspacescene.cpp:115
+#, kde-format
+msgid "Toggle “Show Compositing” effect"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

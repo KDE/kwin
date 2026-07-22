@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-21 00:45+0000\n"
+"POT-Creation-Date: 2026-07-22 00:46+0000\n"
 "PO-Revision-Date: 2026-06-24 23:50+0200\n"
 "Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -3663,6 +3663,11 @@ msgstr "Скрыть на снимках экрана и в записях эк�
 #, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr "Тип правила «Скрыть из снимков экрана и записей экрана»"
+
+#: scene/workspacescene.cpp:115
+#, kde-format
+msgid "Toggle “Show Compositing” effect"
+msgstr ""
 
 # BUGME: should not be translatable --aspotashev
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)

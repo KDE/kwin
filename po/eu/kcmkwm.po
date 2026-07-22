@@ -1,57 +1,53 @@
 # Translation for kcmkwm.po to Euskara/Basque (eu).
-# Copyright (C) 2002-2025 This file is copyright:
+# Copyright (C) 2002-2026 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# SPDX-FileCopyrightText: 2024, 2025 KDE euskaratzeko proiektuaren arduraduna <xalba@ni.eus>
+# SPDX-FileCopyrightText: 2024-2026 KDE euskaratzeko proiektuaren arduraduna <xalba@ni.eus>
 #
 # Translators:
 # Marcos  <marcos@euskalgnu.org>, 2002, 2003, 2005, 2006, 2007, 2008.
 # Juan Irigoien <juanirigoien@irakasle.net>, 2004.
 # Ion Gaztañaga <igaztanaga@gmail.com>, 2005.
 # Asier Urio Larrea <asieriko@gmail.com>, 2008.
-# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2011, 2014, 2018, 2019, 2020, 2021, 2022, 2024, 2025.
+# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2011, 2014, 2018, 2019, 2020, 2021, 2022, 2024, 2025, 2026.
 # Hizkuntza Politikarako Sailburuordetza <hizpol@ej-gv.es>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-14 00:45+0000\n"
-"PO-Revision-Date: 2025-08-03 00:37+0200\n"
+"PO-Revision-Date: 2026-07-21 19:08+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.04.3\n"
+"X-Generator: Lokalize 26.04.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ui/Focus.qml:22
-#, fuzzy, kde-format
-#| msgid "Window &activation policy:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Window focus policy:"
-msgstr "Leihoak &aktibatzeko gidalerroa:"
+msgstr "Leihoen foku-gidalerroa:"
 
 #: ui/Focus.qml:46
-#, fuzzy, kde-format
-#| msgctxt "sassa asas"
-#| msgid "Click to focus"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Click to focus"
-msgstr "Klik egin fokua emateko"
+msgstr "Egin klik fokua emateko"
 
 #: ui/Focus.qml:47
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window becomes focused when clicked."
-msgstr ""
+msgstr "Leihoak fokua jasotzen du klik egiten zaionean."
 
 #: ui/Focus.qml:51
-#, fuzzy, kde-format
-#| msgid "Focus follows mouse"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus follows pointer"
-msgstr "Fokuak saguari jarraitzen dio"
+msgstr "Fokuak erakusleari jarraitzen dio"
 
 #: ui/Focus.qml:52
 #, kde-format
@@ -60,19 +56,21 @@ msgid ""
 "As the pointer moves, windows under it become focused after a configurable "
 "delay."
 msgstr ""
+"Erakuslea mugitzen den heinean, haren azpiko leihoak fokua jasoko dute "
+"konfigura daitekeen atzerapen baten ondoren."
 
 #: ui/Focus.qml:56
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus under pointer"
-msgstr "Fokua saguaren azpian"
+msgstr "Fokua erakuslearen azpian"
 
 #: ui/Focus.qml:57
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window under pointer receives focus, even if the pointer has not moved."
 msgstr ""
+"Erakuslearen azpiko leihoak fokua jasotzen du, erakuslea mugitu ez bada ere."
 
 #: ui/Focus.qml:75
 #, kde-kuit-format
@@ -82,48 +80,49 @@ msgid ""
 "some windows appearing on screen. This can lead to assigning focus to "
 "unwanted windows. Use with caution."
 msgstr ""
+"<interface>Fokua erakuslearen azpian</interface> hautatuz gero, pantailan "
+"agertzen diren leiho batzuei fokua ematea eragotziko da. Horren ondorioz, "
+"fokua nahi ez diren leihoei eman dakieke. Kontuz erabili."
 
 #: ui/Focus.qml:81
 #, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Last focused window"
-msgstr ""
+msgstr "Fokua jaso duen azken leihoa"
 
 #: ui/Focus.qml:83
 #, kde-format
 msgctxt "@title:group"
 msgid "After closing a window, move focus to:"
-msgstr ""
+msgstr "Leiho bat itxi ondoren, eraman fokua hona:"
 
 #: ui/Focus.qml:86
-#, fuzzy, kde-format
-#| msgid "&Window snap zone:"
+#, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Window under pointer"
-msgstr "Le&iho atxikitze eremua:"
+msgstr "Erakuslearen azpiko leihoa"
 
 #: ui/Focus.qml:115
 #, kde-format
 msgid "&Delay focus by:"
-msgstr "&Atzeratu fokua hainbestean:"
+msgstr "Fokua ematea at&zeratu:"
 
 #: ui/Focus.qml:124 ui/Focus.qml:250
 #, kde-format
 msgctxt "short for millisecond(s)"
 msgid "%1 ms"
-msgstr ""
+msgstr "%1 ms"
 
 #: ui/Focus.qml:128 ui/Focus.qml:254
-#, fuzzy, kde-format
-#| msgid " ms"
+#, kde-format
 msgctxt "short for millisecond(s)"
 msgid "ms"
-msgstr " mseg"
+msgstr "ms"
 
 #: ui/Focus.qml:146
 #, kde-format
 msgid "Focus &stealing prevention:"
-msgstr "Foku-&lapurtze prebentzioa:"
+msgstr "Fokua &lapurtzea saihestea:"
 
 #: ui/Focus.qml:150 ui/MovementAndPlacement.qml:30
 #: ui/MovementAndPlacement.qml:58 ui/MovementAndPlacement.qml:87
@@ -152,18 +151,16 @@ msgid "Extreme"
 msgstr "Muturrekoa"
 
 #: ui/Focus.qml:171
-#, fuzzy, kde-format
-#| msgid "Switch to that Virtual Desktop"
+#, kde-format
 msgctxt "@option:radio When focusing a window on a different Virtual Desktop:"
 msgid "Switch to window’s Virtual Desktop"
-msgstr "Aldatu alegiazko mahai horretara"
+msgstr "Aldatu leihoaren alegiazko mahaigainera"
 
 #: ui/Focus.qml:173
-#, fuzzy, kde-format
-#| msgid "When activating a window on a different Virtual Desktop:"
+#, kde-format
 msgctxt "@title:group"
 msgid "When focusing a window on a different Virtual Desktop:"
-msgstr "Alegiazko beste mahaigain batean leiho bat aktibatzean:"
+msgstr "Alegiazko beste mahaigain bateko leiho bati fokua ematean:"
 
 #: ui/Focus.qml:176
 #, kde-format
@@ -183,10 +180,9 @@ msgid "Raising windows:"
 msgstr "Leiho goratzea:"
 
 #: ui/Focus.qml:208
-#, fuzzy, kde-format
-#| msgid "&Click raises active window"
+#, kde-format
 msgid "&Click raises focused window"
-msgstr "&Klikak leiho aktiboa goratzen du"
+msgstr "&Klik egiteak fokua duen leihoa goratzen du"
 
 #: ui/Focus.qml:228
 #, kde-format
@@ -219,17 +215,15 @@ msgid "W&indow Actions"
 msgstr "Le&ihoetako ekintzak"
 
 #: ui/main.qml:49
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgid "Mo&vement & Placement"
-msgstr "M&ugimendua"
+msgstr "M&ugimendua eta kokapena"
 
 #: ui/MovementAndPlacement.qml:17
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgctxt "@title:group"
 msgid "Movement"
-msgstr "M&ugimendua"
+msgstr "Mugimendua"
 
 #: ui/MovementAndPlacement.qml:22
 #, kde-format
@@ -241,41 +235,40 @@ msgstr "Pantaila &ertzen atxikitze eremua:"
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "%1 px"
-msgstr ""
+msgstr "%1 px"
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
 #: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
-#, fuzzy, kde-format
-#| msgid " px"
+#, kde-format
 msgctxt "short for pixel(s)"
 msgid "px"
-msgstr " px"
+msgstr "px"
 
 #: ui/MovementAndPlacement.qml:50
 #, kde-format
 msgid "&Window snap zone:"
-msgstr "Le&iho atxikitze eremua:"
+msgstr "Le&ihoa atxikitzeko eremua:"
 
 #: ui/MovementAndPlacement.qml:79
 #, kde-format
 msgid "&Center snap zone:"
-msgstr "E&rdiguneko atxikitze eremua:"
+msgstr "E&rdigunea atxikitzeko eremua:"
 
 #: ui/MovementAndPlacement.qml:106
 #, kde-format
 msgid "&Snap windows:"
-msgstr "At&xiki leihoak:"
+msgstr "Leihoak at&xiki:"
 
 #: ui/MovementAndPlacement.qml:107
 #, kde-format
 msgid "Only when overlapping"
-msgstr "Soilik gainezartzen direnean"
+msgstr "Gainezartzen direnean bakarrik"
 
 #: ui/MovementAndPlacement.qml:122
 #, kde-format
 msgctxt "@title:group"
 msgid "Placement"
-msgstr ""
+msgstr "Kokapena"
 
 #: ui/MovementAndPlacement.qml:125
 #, kde-format
@@ -300,12 +293,12 @@ msgstr "Ausaz"
 #: ui/MovementAndPlacement.qml:132
 #, kde-format
 msgid "Centered"
-msgstr "Erdiratua"
+msgstr "Erdiratuta"
 
 #: ui/MovementAndPlacement.qml:133
 #, kde-format
 msgid "In Top-Left Corner"
-msgstr "Goi-ezkerreko izkinan"
+msgstr "Goiko ezkerreko izkinan"
 
 #: ui/MovementAndPlacement.qml:134
 #, kde-format
@@ -313,11 +306,10 @@ msgid "Under mouse"
 msgstr "Saguaren azpian"
 
 #: ui/MovementAndPlacement.qml:149
-#, fuzzy, kde-format
-#| msgid "&Picture-in-picture"
+#, kde-format
 msgctxt "@title:group"
 msgid "Picture-in-picture Placement"
-msgstr "&PIP (irudia irudian)"
+msgstr "Irudia-irudian kokapena"
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
@@ -384,22 +376,19 @@ msgid "Window menu"
 msgstr "Leihoaren menua"
 
 #: ui/TitlebarActions.qml:30 ui/WindowActions.qml:23 ui/WindowActions.qml:54
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and raise"
-msgstr "Fokua saguaren azpian"
+msgstr "Fokua eman eta goratu"
 
 #: ui/TitlebarActions.qml:31
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and lower"
-msgstr "Fokua saguaren azpian"
+msgstr "Fokua eman eta beheratu"
 
 #: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgid "Focus"
-msgstr "&Fokua"
+msgstr "Fokua"
 
 #: ui/TitlebarActions.qml:43 ui/TitlebarActions.qml:57
 #, kde-format
@@ -419,7 +408,7 @@ msgstr "Horizontalki maximizatu"
 #: ui/TitlebarActions.qml:49
 #, kde-format
 msgid "Titlebar Actions"
-msgstr "Titulu-barrako ekintzak"
+msgstr "Titulu-barraren ekintzak"
 
 #: ui/TitlebarActions.qml:52
 #, kde-format
@@ -462,12 +451,11 @@ msgid "Titlebar and Frame Actions"
 msgstr "Titulu-barrako eta markoko ekintzak"
 
 #: ui/TitlebarActions.qml:111
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for focused windows"
 msgid "Focused"
-msgstr "&Fokua"
+msgstr "Fokua dutenak"
 
 #: ui/TitlebarActions.qml:116
 #, kde-format
@@ -475,7 +463,7 @@ msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for unfocused "
 "windows"
 msgid "Unfocused"
-msgstr ""
+msgstr "Fokurik ez dutenak"
 
 #: ui/TitlebarActions.qml:122 ui/WindowActions.qml:46
 #, kde-format
@@ -486,13 +474,13 @@ msgstr "E&zkerreko klik:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on a focused titlebar or frame"
-msgstr ""
+msgstr "Fokua duen titulu-barran edo markoan ezkerreko klik"
 
 #: ui/TitlebarActions.qml:143
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "Fokurik ez duen titulu-barran edo markoan ezkerreko klik"
 
 #: ui/TitlebarActions.qml:160 ui/WindowActions.qml:68
 #, kde-format
@@ -503,13 +491,13 @@ msgstr "Er&diko klik:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on a focused titlebar or frame"
-msgstr ""
+msgstr "Fokua duen titulu-barran edo markoan erdiko klik"
 
 #: ui/TitlebarActions.qml:179
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "Fokurik ez duen titulu-barran edo markoan erdiko klik"
 
 #: ui/TitlebarActions.qml:196 ui/WindowActions.qml:83
 #, kde-format
@@ -520,13 +508,13 @@ msgstr "E&skuineko klik:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on a focused titlebar or frame"
-msgstr ""
+msgstr "Fokua duen titulu-barran edo markoan eskuineko klik"
 
 #: ui/TitlebarActions.qml:215
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "Fokurik ez duen titulu-barran edo markoan eskuineko klik"
 
 #: ui/TitlebarActions.qml:233
 #, kde-format
@@ -556,12 +544,12 @@ msgstr "Eskuineko kli&k:"
 #: ui/WindowActions.qml:20 ui/WindowActions.qml:51
 #, kde-format
 msgid "Focus, raise, and click through"
-msgstr ""
+msgstr "Fokua eman, goratu, eta klika helarazi"
 
 #: ui/WindowActions.qml:21 ui/WindowActions.qml:52
 #, kde-format
 msgid "Focus and click through"
-msgstr ""
+msgstr "Fokua eman eta klika helarazi"
 
 #: ui/WindowActions.qml:27
 #, kde-format
@@ -569,67 +557,60 @@ msgid "Move"
 msgstr "Mugitu"
 
 #: ui/WindowActions.qml:28
-#, fuzzy, kde-format
-#| msgid "Activate, raise and move"
+#, kde-format
 msgid "Focus, raise, and move"
-msgstr "Aktibatu, goratu eta mugitu"
+msgstr "Fokua eman, goratu eta mugitu"
 
 #: ui/WindowActions.qml:29
-#, fuzzy, kde-format
-#| msgid "Activate, raise and move"
+#, kde-format
 msgid "Focus, raise, and resize"
-msgstr "Aktibatu, goratu eta mugitu"
+msgstr "Fokua eman, goratu eta tamainaz aldatu"
 
 #: ui/WindowActions.qml:30
 #, kde-format
 msgid "Resize"
-msgstr "Aldatu tamaina"
+msgstr "Tamainaz aldatu"
 
 #: ui/WindowActions.qml:35
 #, kde-format
 msgid "Decrease opacity"
-msgstr "Txikitu opakutasuna"
+msgstr "Opakutasuna txikitu"
 
 #: ui/WindowActions.qml:36
 #, kde-format
 msgid "Increase opacity"
-msgstr "Handitu opakutasuna"
+msgstr "Opakutasuna handitu"
 
 #: ui/WindowActions.qml:42
-#, fuzzy, kde-format
-#| msgid "Inactive Inner Window Actions"
+#, kde-format
 msgctxt "@title:group"
 msgid "Unfocused Inner Window Actions"
-msgstr "Barneko leiho ez-aktiboaren ekintzak"
+msgstr "Fokurik ez duten barneko leihoen ekintzak"
 
 #: ui/WindowActions.qml:50
-#, fuzzy, kde-format
-#| msgid "Activate, pass click and raise on release"
+#, kde-format
 msgid "Focus, click through, and raise on release"
-msgstr "Aktibatu, klika pasatu eta goratu askatzean"
+msgstr "Fokua eman, klika helarazi eta askatzean goratu"
 
 #: ui/WindowActions.qml:103
 #, kde-format
 msgid "Scroll"
-msgstr "Labaindu"
+msgstr "Kiribildu"
 
 #: ui/WindowActions.qml:104
-#, fuzzy, kde-format
-#| msgid "Activate and scroll"
+#, kde-format
 msgid "Focus and scroll"
-msgstr "Aktibatu eta kiribildu"
+msgstr "Fokua eman eta kiribildu"
 
 #: ui/WindowActions.qml:105
-#, fuzzy, kde-format
-#| msgid "Activate, raise and scroll"
+#, kde-format
 msgid "Focus, raise, and scroll"
-msgstr "Aktibatu, goratu eta kiribildu"
+msgstr "Fokua eman, goratu eta kiribildu"
 
 #: ui/WindowActions.qml:120
-#, fuzzy, kde-format
-#| msgid "Inner Window, Titlebar and Frame Actions"
+#, kde-format
 msgid "Inner Window, Titlebar, and Frame Actions"
-msgstr "Barneko leihoko, titulu-barrako eta markoko ekintzak"
+msgstr "Barneko leihoaren, titulu-barraren eta markoaren ekintzak"
 
 #: ui/WindowActions.qml:123
 #, kde-format

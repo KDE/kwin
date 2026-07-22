@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-14 00:45+0000\n"
-"PO-Revision-Date: 2026-06-24 02:04+0300\n"
+"PO-Revision-Date: 2026-07-22 00:28+0300\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -21,16 +21,13 @@ msgstr ""
 "X-Generator: Poedit 3.9\n"
 
 #: ui/Focus.qml:22
-#, fuzzy, kde-format
-#| msgid "Window &activation policy:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Window focus policy:"
-msgstr "Langų &aktyvavimo politika:"
+msgstr "Langų fokusavimo politika:"
 
 #: ui/Focus.qml:46
-#, fuzzy, kde-format
-#| msgctxt "sassa asas"
-#| msgid "Click to focus"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Click to focus"
 msgstr "Spustelėti norint fokusuoti"
@@ -39,14 +36,13 @@ msgstr "Spustelėti norint fokusuoti"
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window becomes focused when clicked."
-msgstr ""
+msgstr "Langas fokusuojamas, kai ant jo spustelėjama."
 
 #: ui/Focus.qml:51
-#, fuzzy, kde-format
-#| msgid "Focus follows mouse"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus follows pointer"
-msgstr "Fokusavimas seka paskui pelę"
+msgstr "Fokusavimas seka paskui pelės rodyklę"
 
 #: ui/Focus.qml:52
 #, kde-format
@@ -55,19 +51,22 @@ msgid ""
 "As the pointer moves, windows under it become focused after a configurable "
 "delay."
 msgstr ""
+"Judinant pelės rodyklę, po ja esantys langai tampa fokusuoti po "
+"konfigūruojamos delsos."
 
 #: ui/Focus.qml:56
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus under pointer"
-msgstr "Fokusavimas po pele"
+msgstr "Fokusavimas po pelės rodykle"
 
 #: ui/Focus.qml:57
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window under pointer receives focus, even if the pointer has not moved."
 msgstr ""
+"Langas po pelės rodykle įgyja fokusavimą netgi tuo atveju, jei rodyklė "
+"nepajudėjo."
 
 #: ui/Focus.qml:75
 #, kde-kuit-format
@@ -77,25 +76,28 @@ msgid ""
 "some windows appearing on screen. This can lead to assigning focus to "
 "unwanted windows. Use with caution."
 msgstr ""
+"Pasirinkus <interface>Fokusavimą po pelės rodykle</interface> bus "
+"neleidžiama fokusuoti kai kurių ekrane atsirandančių langų. Dėl to, gali "
+"būti taip, kad fokusas bus priskiriamas nepageidaujamiems langams. Naudokite "
+"apdairiai."
 
 #: ui/Focus.qml:81
 #, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Last focused window"
-msgstr ""
+msgstr "Paskutinis fokusuotas langas"
 
 #: ui/Focus.qml:83
 #, kde-format
 msgctxt "@title:group"
 msgid "After closing a window, move focus to:"
-msgstr ""
+msgstr "Užvėrus langą perkelti fokusavimą į:"
 
 #: ui/Focus.qml:86
-#, fuzzy, kde-format
-#| msgid "&Window snap zone:"
+#, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Window under pointer"
-msgstr "&Lango pritraukimo zona:"
+msgstr "Langas po pelės rodykle"
 
 #: ui/Focus.qml:115
 #, kde-format
@@ -106,14 +108,13 @@ msgstr "Už&delsti fokusavimą:"
 #, kde-format
 msgctxt "short for millisecond(s)"
 msgid "%1 ms"
-msgstr ""
+msgstr "%1 ms"
 
 #: ui/Focus.qml:128 ui/Focus.qml:254
-#, fuzzy, kde-format
-#| msgid " ms"
+#, kde-format
 msgctxt "short for millisecond(s)"
 msgid "ms"
-msgstr " ms"
+msgstr "ms"
 
 #: ui/Focus.qml:146
 #, kde-format
@@ -147,18 +148,16 @@ msgid "Extreme"
 msgstr "Ekstremali"
 
 #: ui/Focus.qml:171
-#, fuzzy, kde-format
-#| msgid "Switch to that Virtual Desktop"
+#, kde-format
 msgctxt "@option:radio When focusing a window on a different Virtual Desktop:"
 msgid "Switch to window’s Virtual Desktop"
-msgstr "Perjungti į tą virtualų darbalaukį"
+msgstr "Perjungti į lango virtualų darbalaukį"
 
 #: ui/Focus.qml:173
-#, fuzzy, kde-format
-#| msgid "When activating a window on a different Virtual Desktop:"
+#, kde-format
 msgctxt "@title:group"
 msgid "When focusing a window on a different Virtual Desktop:"
-msgstr "Aktyvuojant langą kitame virtualiame darbalaukyje:"
+msgstr "Fokusuojant kitame virtualiame darbalaukyje esantį langą:"
 
 #: ui/Focus.qml:176
 #, kde-format
@@ -178,10 +177,9 @@ msgid "Raising windows:"
 msgstr "Langų iškėlimas į pirmą planą:"
 
 #: ui/Focus.qml:208
-#, fuzzy, kde-format
-#| msgid "&Click raises active window"
+#, kde-format
 msgid "&Click raises focused window"
-msgstr "&Spustelėjimas iškelia aktyvų langą į pirmą planą"
+msgstr "&Spustelėjimas iškelia fokusuotą langą į pirmą planą"
 
 #: ui/Focus.qml:228
 #, kde-format
@@ -214,17 +212,15 @@ msgid "W&indow Actions"
 msgstr "La&ngų veiksmai"
 
 #: ui/main.qml:49
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgid "Mo&vement & Placement"
-msgstr "Perkė&limas"
+msgstr "Perkė&limas ir išdėstymas"
 
 #: ui/MovementAndPlacement.qml:17
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgctxt "@title:group"
 msgid "Movement"
-msgstr "Perkė&limas"
+msgstr "Perkėlimas"
 
 #: ui/MovementAndPlacement.qml:22
 #, kde-format
@@ -236,15 +232,14 @@ msgstr "Ekrano kraš&to pritraukimo zona:"
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "%1 px"
-msgstr ""
+msgstr "%1 piks."
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
 #: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
-#, fuzzy, kde-format
-#| msgid " px"
+#, kde-format
 msgctxt "short for pixel(s)"
 msgid "px"
-msgstr " piks."
+msgstr "piks."
 
 #: ui/MovementAndPlacement.qml:50
 #, kde-format
@@ -270,7 +265,7 @@ msgstr "Tik kai persidengia"
 #, kde-format
 msgctxt "@title:group"
 msgid "Placement"
-msgstr ""
+msgstr "Išdėstymas"
 
 #: ui/MovementAndPlacement.qml:125
 #, kde-format
@@ -308,11 +303,10 @@ msgid "Under mouse"
 msgstr "Po pele"
 
 #: ui/MovementAndPlacement.qml:149
-#, fuzzy, kde-format
-#| msgid "&Picture-in-picture"
+#, kde-format
 msgctxt "@title:group"
 msgid "Picture-in-picture Placement"
-msgstr "&Vaizdas vaizde"
+msgstr "Vaizdo vaizde išdėstymas"
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
@@ -379,22 +373,19 @@ msgid "Window menu"
 msgstr "Lango meniu"
 
 #: ui/TitlebarActions.qml:30 ui/WindowActions.qml:23 ui/WindowActions.qml:54
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and raise"
-msgstr "Fokusavimas po pele"
+msgstr "Fokusuoti ir iškelti į pirmą planą"
 
 #: ui/TitlebarActions.qml:31
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and lower"
-msgstr "Fokusavimas po pele"
+msgstr "Fokusuoti ir nuleisti į antrą planą"
 
 #: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgid "Focus"
-msgstr "&Fokusavimas"
+msgstr "Fokusavimas"
 
 #: ui/TitlebarActions.qml:43 ui/TitlebarActions.qml:57
 #, kde-format
@@ -457,12 +448,11 @@ msgid "Titlebar and Frame Actions"
 msgstr "Antraštės juostos ir rėmelio veiksmai"
 
 #: ui/TitlebarActions.qml:111
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for focused windows"
 msgid "Focused"
-msgstr "&Fokusavimas"
+msgstr "Fokusuotas"
 
 #: ui/TitlebarActions.qml:116
 #, kde-format
@@ -470,7 +460,7 @@ msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for unfocused "
 "windows"
 msgid "Unfocused"
-msgstr ""
+msgstr "Nefokusuotas"
 
 #: ui/TitlebarActions.qml:122 ui/WindowActions.qml:46
 #, kde-format
@@ -482,12 +472,14 @@ msgstr "&Kairysis spustelėjimas:"
 msgctxt "@label:listbox accessible name"
 msgid "Left click on a focused titlebar or frame"
 msgstr ""
+"Kairiojo mygtuko spustelėjimas ant fokusuotos antraštės juostos ar rėmelio"
 
 #: ui/TitlebarActions.qml:143
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on an unfocused titlebar or frame"
 msgstr ""
+"Kairiojo mygtuko spustelėjimas ant nefokusuotos antraštės juostos ar rėmelio"
 
 #: ui/TitlebarActions.qml:160 ui/WindowActions.qml:68
 #, kde-format
@@ -499,12 +491,15 @@ msgstr "&Vidurinysis spustelėjimas:"
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on a focused titlebar or frame"
 msgstr ""
+"Viduriniojo mygtuko spustelėjimas ant fokusuotos antraštės juostos ar rėmelio"
 
 #: ui/TitlebarActions.qml:179
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on an unfocused titlebar or frame"
 msgstr ""
+"Viduriniojo mygtuko spustelėjimas ant nefokusuotos antraštės juostos ar "
+"rėmelio"
 
 #: ui/TitlebarActions.qml:196 ui/WindowActions.qml:83
 #, kde-format
@@ -516,12 +511,14 @@ msgstr "&Dešinysis spustelėjimas:"
 msgctxt "@label:listbox accessible name"
 msgid "Right click on a focused titlebar or frame"
 msgstr ""
+"Dešiniojo mygtuko spustelėjimas ant fokusuotos antraštės juostos ar rėmelio"
 
 #: ui/TitlebarActions.qml:215
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on an unfocused titlebar or frame"
 msgstr ""
+"Dešiniojo mygtuko spustelėjimas ant nefokusuotos antraštės juostos ar rėmelio"
 
 #: ui/TitlebarActions.qml:233
 #, kde-format
@@ -551,12 +548,12 @@ msgstr "Dešin&ysis spustelėjimas:"
 #: ui/WindowActions.qml:20 ui/WindowActions.qml:51
 #, kde-format
 msgid "Focus, raise, and click through"
-msgstr ""
+msgstr "Fokusuoti, iškelti į pirmą planą ir spustelėti"
 
 #: ui/WindowActions.qml:21 ui/WindowActions.qml:52
 #, kde-format
 msgid "Focus and click through"
-msgstr ""
+msgstr "Fokusuoti ir spustelėti"
 
 #: ui/WindowActions.qml:27
 #, kde-format
@@ -564,16 +561,14 @@ msgid "Move"
 msgstr "Perkelti"
 
 #: ui/WindowActions.qml:28
-#, fuzzy, kde-format
-#| msgid "Activate, raise and move"
+#, kde-format
 msgid "Focus, raise, and move"
-msgstr "Aktyvuoti, iškelti į pirmą planą ir perkelti"
+msgstr "Fokusuoti, iškelti į pirmą planą ir perkelti"
 
 #: ui/WindowActions.qml:29
-#, fuzzy, kde-format
-#| msgid "Activate, raise and resize"
+#, kde-format
 msgid "Focus, raise, and resize"
-msgstr "Aktyvuoti, iškelti į pirmą planą ir keisti dydį"
+msgstr "Fokusuoti, iškelti į pirmą planą ir keisti dydį"
 
 #: ui/WindowActions.qml:30
 #, kde-format
@@ -591,18 +586,15 @@ msgid "Increase opacity"
 msgstr "Padidinti nepermatomumą"
 
 #: ui/WindowActions.qml:42
-#, fuzzy, kde-format
-#| msgid "Inactive Inner Window Actions"
+#, kde-format
 msgctxt "@title:group"
 msgid "Unfocused Inner Window Actions"
-msgstr "Neaktyvaus vidinio lango veiksmai"
+msgstr "Nefokusuoto vidinio lango veiksmai"
 
 #: ui/WindowActions.qml:50
-#, fuzzy, kde-format
-#| msgid "Activate, pass click and raise on release"
+#, kde-format
 msgid "Focus, click through, and raise on release"
-msgstr ""
-"Aktyvuoti, perduoti pelės spustelėjimą ir, atleidus, iškelti į pirmą planą"
+msgstr "Fokusuoti, spustelėti ir, atleidus, iškelti į pirmą planą"
 
 #: ui/WindowActions.qml:103
 #, kde-format
@@ -610,20 +602,17 @@ msgid "Scroll"
 msgstr "Slinkti"
 
 #: ui/WindowActions.qml:104
-#, fuzzy, kde-format
-#| msgid "Activate and scroll"
+#, kde-format
 msgid "Focus and scroll"
-msgstr "Aktyvuoti ir slinkti"
+msgstr "Fokusuoti ir slinkti"
 
 #: ui/WindowActions.qml:105
-#, fuzzy, kde-format
-#| msgid "Activate, raise and scroll"
+#, kde-format
 msgid "Focus, raise, and scroll"
-msgstr "Aktyvuoti, iškelti į pirmą planą ir slinkti"
+msgstr "Fokusuoti, iškelti į pirmą planą ir slinkti"
 
 #: ui/WindowActions.qml:120
-#, fuzzy, kde-format
-#| msgid "Inner Window, Titlebar and Frame Actions"
+#, kde-format
 msgid "Inner Window, Titlebar, and Frame Actions"
 msgstr "Vidinio lango, antraštės juostos ir rėmelio veiksmai"
 

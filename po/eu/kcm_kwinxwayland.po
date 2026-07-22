@@ -1,16 +1,16 @@
 # Translation for kcm_kwinxwayland.po to Euskara/Basque (eu).
-# Copyright (C) 2022-2025 This file is copyright:
+# Copyright (C) 2022-2026 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# SPDX-FileCopyrightText: 2023, 2024, 2025 KDE euskaratzeko proiektuaren arduraduna <xalba@ni.eus>
+# SPDX-FileCopyrightText: 2023-2026 KDE euskaratzeko proiektuaren arduraduna <xalba@ni.eus>
 #
 # Translators:
-# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2022, 2023, 2024, 2025.
+# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2022, 2023, 2024, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-05 00:46+0000\n"
-"PO-Revision-Date: 2025-05-30 22:48+0200\n"
+"PO-Revision-Date: 2026-07-21 17:37+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.04.1\n"
+"X-Generator: Lokalize 26.04.3\n"
 
 #: ui/main.qml:28
 #, kde-kuit-format
@@ -30,7 +30,7 @@ msgid ""
 "balance of security and compatibility here."
 msgstr ""
 "Laster-tekla globalak eta atzeko planoan exekutatu bitartean atzitutako "
-"beste ezaugarri batzuk dituzten X11 aplikazioak, denbora guztian, tekla- "
+"beste ezaugarri batzuk dituzten X11 aplikazioak, denbora guztian, tekla-"
 "sakatzeak entzuteko  gai izan behar dira.<nl/><nl/>Aplikazio hauetako "
 "edozein erabiltzen baduzu, segurtasuna eta bateragarritasunaren arteko oreka "
 "hobetsia hemen aukera dezakezu."
@@ -145,20 +145,18 @@ msgid "Control of pointer and keyboard:"
 msgstr "Erakuslearen eta teklatuaren agintea:"
 
 #: ui/main.qml:146
-#, fuzzy, kde-format
-#| msgctxt "@option:radio Listening for mouse buttons is allowed"
-#| msgid "Allowed"
+#, kde-format
 msgctxt ""
 "@option:check Allowed control of pointer and keyboard without asking for "
 "permissions for allowed apps"
 msgid "Allowed apps"
-msgstr "Baimenduta"
+msgstr "Baimendutako aplikazioak"
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
-msgstr ""
+msgstr "Ikusi baimendutako aplikazioak…"
 
 #: ui/main.qml:163
 #, kde-format
@@ -168,13 +166,12 @@ msgid ""
 "will be able to take control of the computer, because XWayland-using apps’ "
 "identities can’t be verified"
 msgstr ""
+"Segurtasun ertaina; XWayland erabiltzen duten aplikazioek zerrenda honetako "
+"zerbait direla adierazten badute, ordenagailuaren kontrola hartu ahal izango "
+"dute, XWayland erabiltzen duten aplikazioen nortasuna ezin baita egiaztatu."
 
 #: ui/main.qml:169
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check Allow control of pointer and keyboard without asking for "
-#| "permission"
-#| msgid "Allow without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
 "permission"
@@ -186,7 +183,7 @@ msgstr "Baimenik eskatu gabe baimendu"
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr ""
-"Segurtasun txikienekoa; X11 aplikazio guztiak ordenagailuaren kontrola "
+"Segurtasun txikienekoa; X11 aplikazio guztiak ordenagailuaren agintea "
 "hartzeko gai izango dira"
 
 #: ui/main.qml:181
@@ -203,20 +200,19 @@ msgstr ""
 "eta onartzen duzula."
 
 #: ui/main.qml:189
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Control of pointer and keyboard:"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
 "button"
 msgid "Applications allowed to control the pointer and keyboard"
-msgstr "Erakuslearen eta teklatuaren agintea:"
+msgstr "Erakuslearen eta teklatuaren agintea hartzera baimendutako aplikazioak"
 
 #: ui/main.qml:209
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
 msgstr ""
+"Ez baimendu galdetu gabek %1(e)k erakuslearen eta teklatuaren agintea hartzea"
 
 #~ msgctxt "@info"
 #~ msgid "Changes will take effect the next time you log in."

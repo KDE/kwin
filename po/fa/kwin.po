@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-21 00:45+0000\n"
+"POT-Creation-Date: 2026-07-22 00:46+0000\n"
 "PO-Revision-Date: 2007-07-31 19:27+0330\n"
 "Last-Translator: Nazanin Kazemi <kazemi@itland.ir>\n"
 "Language-Team: Persian <kde-i18n-fa@kde.org>\n"
@@ -3718,6 +3718,12 @@ msgstr "&تمام پرده‌"
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr "&تمام پرده‌"
 
+#: scene/workspacescene.cpp:115
+#, fuzzy, kde-format
+#| msgid "Toggle Sharpen effect"
+msgid "Toggle “Show Compositing” effect"
+msgstr "زدن ضامن جلوه تیز کردن"
+
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
 #, fuzzy, kde-format
@@ -5249,9 +5255,6 @@ msgstr ""
 
 #~ msgid "Shadow fuzzyness:"
 #~ msgstr "نادقیقی سایه:"
-
-#~ msgid "Toggle Sharpen effect"
-#~ msgstr "زدن ضامن جلوه تیز کردن"
 
 #~ msgid "PID of the application to terminate."
 #~ msgstr "شناسه فرآیند کاربرد برای پایان دادن."
