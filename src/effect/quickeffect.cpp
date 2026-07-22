@@ -165,7 +165,9 @@ void QuickSceneView::resetDirty()
 void QuickSceneView::scheduleRepaint()
 {
     markDirty();
-    scheduleFrame();
+    if (isVisible()) {
+        scheduleFrame();
+    }
 }
 
 VirtualDesktop *QuickSceneView::currentDesktop() const

@@ -141,6 +141,7 @@ public:
 
 Q_SIGNALS:
     void geometryChanged(const KWin::Rect &oldGeometry, const KWin::Rect &newGeometry);
+    void visibleChanged(bool visible);
     void renderRequested();
     void sceneChanged();
 
