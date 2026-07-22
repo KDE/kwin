@@ -13,6 +13,8 @@
 #include "wayland/shmclientbuffer.h"
 #include "wayland/shmclientbuffer_p.h"
 
+#include <QThread>
+#include <QTimer>
 #include <drm_fourcc.h>
 #include <fcntl.h>
 #include <mutex>
@@ -230,8 +232,17 @@ void ShmClientBuffer::released()
         ioctl(m_udmabufAttributes->fd[0].get(), DMA_BUF_IOCTL_SYNC, &sync);
     }
 #endif
-    if (m_resource) {
+    if (!m_resource) {
+        return;
+    }
+    if (QThread::isMainThread()) {
         wl_buffer_send_release(m_resource);
+    } else {
+        QTimer::singleShot(0, [ref = shared_from_this(), this]() {
+            if (m_resource) {
+                wl_buffer_send_release(m_resource);
+            }
+        });
     }
 }
 

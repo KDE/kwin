@@ -19,6 +19,7 @@
 #include "surface_p.h"
 #include "utils/common.h"
 
+#include <QThread>
 #include <cstdint>
 #include <errno.h>
 #include <fcntl.h>
@@ -397,8 +398,17 @@ void LinuxDmaBufV1ClientBuffer::initialize(wl_resource *resource)
 
 void LinuxDmaBufV1ClientBuffer::released()
 {
-    if (m_resource) {
+    if (!m_resource) {
+        return;
+    }
+    if (QThread::isMainThread()) {
         wl_buffer_send_release(m_resource);
+    } else {
+        QTimer::singleShot(0, [ref = shared_from_this(), this]() {
+            if (m_resource) {
+                wl_buffer_send_release(m_resource);
+            }
+        });
     }
 }
 

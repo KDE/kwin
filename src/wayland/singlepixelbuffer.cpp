@@ -9,6 +9,8 @@
 #include "utils/common.h"
 #include "wayland/clientconnection.h"
 
+#include <QThread>
+#include <QTimer>
 #include <drm_fourcc.h>
 
 namespace KWin
@@ -51,8 +53,17 @@ SinglePixelClientBuffer::SinglePixelClientBuffer(uint32_t r, uint32_t g, uint32_
 
 void SinglePixelClientBuffer::released()
 {
-    if (m_resource) {
+    if (!m_resource) {
+        return;
+    }
+    if (QThread::isMainThread()) {
         wl_buffer_send_release(m_resource);
+    } else {
+        QTimer::singleShot(0, [ref = shared_from_this(), this]() {
+            if (m_resource) {
+                wl_buffer_send_release(m_resource);
+            }
+        });
     }
 }
 
