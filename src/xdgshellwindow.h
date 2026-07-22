@@ -96,7 +96,6 @@ private:
     bool haveNextWindowGeometry() const;
     void setHaveNextWindowGeometry();
     void resetHaveNextWindowGeometry();
-    void maybeUpdateMoveResizeGeometry(const RectF &rect);
 
     XdgSurfaceInterface *m_shellSurface;
     QTimer *m_configureTimer;

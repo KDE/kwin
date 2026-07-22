@@ -156,25 +156,6 @@ void XdgSurfaceWindow::handleRoleCommit()
 {
 }
 
-void XdgSurfaceWindow::maybeUpdateMoveResizeGeometry(const RectF &rect)
-{
-    // We are about to send a configure event, ignore the committed window geometry.
-    if (m_configureTimer->isActive()) {
-        return;
-    }
-
-    // If there are unacknowledged configure events that change the geometry, don't sync
-    // the move resize geometry in order to avoid rolling back to old state. When the last
-    // configure event is acknowledged, the move resize geometry will be synchronized.
-    for (int i = m_configureEvents.count() - 1; i >= 0; --i) {
-        if (m_configureEvents[i]->flags & XdgSurfaceConfigure::ConfigurePosition) {
-            return;
-        }
-    }
-
-    setMoveResizeGeometry(rect);
-}
-
 void XdgSurfaceWindow::handleNextWindowGeometry()
 {
     if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
@@ -200,7 +181,10 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
         }
     }
 
-    maybeUpdateMoveResizeGeometry(frameGeometry);
+    if (!m_configureTimer->isActive()) {
+        setMoveResizeGeometry(frameGeometry);
+    }
+
     updateGeometry(frameGeometry);
 }
 
