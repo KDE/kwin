@@ -5,6 +5,7 @@
 */
 
 #include "outputlocator.h"
+#include "core/backendoutput.h"
 #include "core/output.h"
 #include "effect/effecthandler.h"
 #include "effect/offscreenquickview.h"
@@ -71,6 +72,11 @@ void OutputLocatorEffect::show()
     // Sort screens in the same order as KScreen does
     QList<LogicalOutput *> sortedScreens = screens;
     std::sort(sortedScreens.begin(), sortedScreens.end(), [](LogicalOutput *a, LogicalOutput *b) {
+        const uint32_t priorityA = a->backendOutput()->priority();
+        const uint32_t priorityB = b->backendOutput()->priority();
+        if (priorityA != priorityB) {
+            return priorityA < priorityB;
+        }
         return QString::compare(a->name(), b->name(), Qt::CaseInsensitive) < 0;
     });
 
