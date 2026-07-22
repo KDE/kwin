@@ -67,7 +67,7 @@ find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Svg
 )
 
-find_package(Qt6GuiPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
+find_package(Qt6GuiPrivate ${QT_MIN_VERSION} REQUIRED NO_MODULE)
 
 find_package(Qt6Test ${QT_MIN_VERSION} CONFIG QUIET)
 set_package_properties(Qt6Test PROPERTIES
@@ -82,7 +82,7 @@ endif()
 if (BUILD_TESTING)
     find_package(KPipeWire)
 
-    find_package(Qt6WaylandClientPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
+    find_package(Qt6WaylandClientPrivate ${QT_MIN_VERSION} REQUIRED NO_MODULE)
 endif()
 
 # required frameworks by Core
