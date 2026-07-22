@@ -54,10 +54,12 @@ void ThumbnailAsideEffect::reconfigure(ReconfigureFlags)
     arrange();
 }
 
-void ThumbnailAsideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
+bool ThumbnailAsideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
     painted = Region();
-    effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
+    if (!effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen)) {
+        return false;
+    }
 
     for (const Data &d : std::as_const(windows)) {
         if (painted.intersects(viewport.mapToDeviceCoordinatesAligned(d.rect))) {
@@ -65,16 +67,19 @@ void ThumbnailAsideEffect::paintScreen(const RenderTarget &renderTarget, const R
             data.multiplyOpacity(opacity);
             Rect region;
             setPositionTransformations(data, region, d.window, d.rect, Qt::KeepAspectRatio);
-            effects->drawWindow(renderTarget, viewport, d.window, PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED,
-                                viewport.mapToDeviceCoordinatesAligned(region), data);
+            if (!effects->drawWindow(renderTarget, viewport, d.window, PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED,
+                                     viewport.mapToDeviceCoordinatesAligned(region), data)) {
+                return false;
+            }
         }
     }
+    return true;
 }
 
-void ThumbnailAsideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data)
+bool ThumbnailAsideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data)
 {
-    effects->paintWindow(renderTarget, viewport, w, mask, deviceGeometry, data);
     painted += deviceGeometry;
+    return effects->paintWindow(renderTarget, viewport, w, mask, deviceGeometry, data);
 }
 
 void ThumbnailAsideEffect::slotWindowDamaged(EffectWindow *w)

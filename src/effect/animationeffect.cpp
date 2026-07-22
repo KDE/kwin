@@ -502,12 +502,11 @@ static inline float geometryCompensation(int flags, float v)
     return 0.5 * (1.0 - v); // half compensation
 }
 
-void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
+bool AnimationEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
     auto it = d->m_animations.find(w);
     if (it == d->m_animations.end()) {
-        effects->paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
-        return;
+        return effects->paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
     }
     Region effectiveDeviceRegion = deviceRegion;
     auto &[window, pair] = *it;
@@ -629,7 +628,7 @@ void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const Render
             break;
         }
     }
-    effects->paintWindow(renderTarget, viewport, w, mask, effectiveDeviceRegion, data);
+    return effects->paintWindow(renderTarget, viewport, w, mask, effectiveDeviceRegion, data);
 }
 
 void AnimationEffect::postPaintScreen()

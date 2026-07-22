@@ -113,13 +113,13 @@ void TouchPointsEffect::prePaintScreen(ScreenPrePaintData &data)
     effects->prePaintScreen(data);
 }
 
-void TouchPointsEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
+bool TouchPointsEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
-    effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
-
-    if (effects->isOpenGLCompositing()) {
-        paintScreenSetupGl(renderTarget, viewport.projectionMatrix());
+    if (!effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen)) {
+        return false;
     }
+
+    paintScreenSetupGl(renderTarget, viewport.projectionMatrix());
     for (auto it = m_points.constBegin(), end = m_points.constEnd(); it != end; ++it) {
         for (int i = 0; i < m_ringCount; ++i) {
             float alpha = computeAlpha(it->time, i);
@@ -131,9 +131,8 @@ void TouchPointsEffect::paintScreen(const RenderTarget &renderTarget, const Rend
             }
         }
     }
-    if (effects->isOpenGLCompositing()) {
-        paintScreenFinishGl();
-    }
+    paintScreenFinishGl();
+    return true;
 }
 
 void TouchPointsEffect::postPaintScreen()

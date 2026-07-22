@@ -178,11 +178,13 @@ void MouseMarkEffect::endDrawings()
     effects->addRepaintFull();
 }
 
-void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
+bool MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
-    effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen); // paint normal screen
+    if (!effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen)) { // paint normal screen
+        return false;
+    }
     if (marks.isEmpty() && drawings.isEmpty()) {
-        return;
+        return true;
     }
     if (effects->openglContext()) {
         glLineWidth(width);
@@ -216,6 +218,7 @@ void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const Render
         }
         glLineWidth(1.0);
     }
+    return true;
 }
 
 bool MouseMarkEffect::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)

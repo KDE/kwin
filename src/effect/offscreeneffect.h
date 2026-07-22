@@ -41,7 +41,7 @@ public:
     static bool supported();
 
 protected:
-    void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data) override;
+    bool drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data) override;
 
     /**
      * This function must be called when the effect wants to animate the specified
@@ -104,7 +104,7 @@ public:
     explicit CrossFadeEffect(QObject *parent = nullptr);
     ~CrossFadeEffect() override;
 
-    void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data) override;
+    bool drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data) override;
 
     /**
      * This function must be called when the effect wants to animate the specified

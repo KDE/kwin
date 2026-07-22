@@ -572,6 +572,11 @@ bool EglContext::isFailed() const
     return m_failed;
 }
 
+void EglContext::setFailed()
+{
+    m_failed = true;
+}
+
 bool EglContext::isCompatibleWith(EglContext *other) const
 {
     // technically speaking, context sharing could be done

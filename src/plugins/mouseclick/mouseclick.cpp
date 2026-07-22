@@ -94,13 +94,13 @@ void MouseClickEffect::prePaintScreen(ScreenPrePaintData &data)
     effects->prePaintScreen(data);
 }
 
-void MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
+bool MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
-    effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
-
-    if (effects->isOpenGLCompositing()) {
-        paintScreenSetupGl(renderTarget, viewport.projectionMatrix());
+    if (!effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen)) {
+        return false;
     }
+
+    paintScreenSetupGl(renderTarget, viewport.projectionMatrix());
     for (const auto &click : m_clicks) {
         for (int i = 0; i < m_ringCount; ++i) {
             float alpha = computeAlpha(click.get(), i);
@@ -124,9 +124,8 @@ void MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const Rende
             drawCircle(viewport, tool.m_color, tool.m_globalPosition.x(), tool.m_globalPosition.y(), size);
         }
     }
-    if (effects->isOpenGLCompositing()) {
-        paintScreenFinishGl();
-    }
+    paintScreenFinishGl();
+    return true;
 }
 
 void MouseClickEffect::postPaintScreen()

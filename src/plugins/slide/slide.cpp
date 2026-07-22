@@ -183,12 +183,12 @@ void SlideEffectScreen::prePaintScreen(ScreenPrePaintData &data)
     data.mask |= Effect::PAINT_SCREEN_TRANSFORMED;
 }
 
-void SlideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
+bool SlideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
     if (SlideEffectScreen *slideScreen = getSlideEffectScreen(screen)) {
         slideScreen->paintScreen();
     }
-    effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
+    return effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
 }
 
 void SlideEffectScreen::paintScreen()
@@ -252,24 +252,23 @@ void SlideEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePai
     effects->prePaintWindow(view, w, data);
 }
 
-void SlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data)
+bool SlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data)
 {
     if (SlideEffectScreen *slideScreen = getSlideEffectScreen(w->screen())) {
-        slideScreen->paintWindow(renderTarget, viewport, w, mask, deviceGeometry, data);
+        return slideScreen->paintWindow(renderTarget, viewport, w, mask, deviceGeometry, data);
     } else {
-        effects->paintWindow(renderTarget, viewport, w, mask, deviceGeometry, data);
+        return effects->paintWindow(renderTarget, viewport, w, mask, deviceGeometry, data);
     }
 }
 
-void SlideEffectScreen::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data)
+bool SlideEffectScreen::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data)
 {
     if (!willBePainted(w)) {
-        return;
+        return true;
     }
 
     if (!isTranslated(w)) {
-        effects->paintWindow(renderTarget, viewport, w, mask, deviceGeometry, data);
-        return;
+        return effects->paintWindow(renderTarget, viewport, w, mask, deviceGeometry, data);
     }
 
     const int gridWidth = effects->desktopGridWidth();
@@ -304,16 +303,19 @@ void SlideEffectScreen::paintWindow(const RenderTarget &renderTarget, const Rend
             const Rect screenArea = screen->geometry();
             const Rect logicalDamage = screenArea.translated(drawTranslation).intersected(screenArea);
 
-            effects->paintWindow(
-                renderTarget, viewport, w, mask,
-                // Only paint the region that intersects the current screen and desktop.
-                deviceGeometry.intersected(viewport.mapToDeviceCoordinatesAligned(logicalDamage)),
-                data);
+            if (!effects->paintWindow(
+                    renderTarget, viewport, w, mask,
+                    // Only paint the region that intersects the current screen and desktop.
+                    deviceGeometry.intersected(viewport.mapToDeviceCoordinatesAligned(logicalDamage)),
+                    data)) {
+                return false;
+            }
 
             // Undo the translation for the next screen. I know, it hurts me too.
             data += QPoint(-drawTranslation.x(), -drawTranslation.y());
         }
     }
+    return true;
 }
 
 void SlideEffect::postPaintScreen()

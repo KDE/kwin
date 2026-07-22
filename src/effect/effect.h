@@ -705,8 +705,11 @@ public:
      *
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
+     *
+     * @returns if painting was successful or failed (for example because of a GPU reset).
+     *          If painting failed, effects should stop rendering immediately.
      */
-    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen);
+    [[nodiscard]] virtual bool paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen);
     /*!
      * Called after all the painting has been finished.
      *
@@ -717,8 +720,8 @@ public:
      *
      * You shouldn't paint anything here.
      *
-     * In OpenGL based compositing, the frameworks ensures that the context is current
-     * when this method is invoked.
+     * NOTE In the case of a GPU reset, there may not be an OpenGL context
+     *      current when this method is called!
      */
     virtual void postPaintScreen();
 
@@ -750,7 +753,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
+    [[nodiscard]] virtual bool paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
 
     /*!
      * Called on Transparent resizes.
@@ -781,7 +784,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
+    [[nodiscard]] virtual bool drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
 
     /*!
      * This function can be overriden to handle grabbed keyboard input.

@@ -90,6 +90,11 @@ public:
      *          or the context was reset
      */
     bool isFailed() const;
+    /**
+     * Mark the context as needing to be re-created. This can be useful
+     * for non-reset errors that can't be recovered from.
+     */
+    void setFailed();
 
     GLenum checkGraphicsResetStatus();
     void glReadnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei bufSize, GLvoid *data);

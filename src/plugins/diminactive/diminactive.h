@@ -37,7 +37,7 @@ public:
     void reconfigure(ReconfigureFlags flags) override;
 
     void prePaintScreen(ScreenPrePaintData &data) override;
-    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data) override;
+    bool paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data) override;
     void postPaintScreen() override;
 
     int requestedEffectChainPosition() const override;

@@ -199,12 +199,11 @@ static RectF lerp(const RectF &a, const RectF &b, qreal t)
     return ret;
 }
 
-void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
+bool ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
     auto it = m_states.find(screen);
     if (it == m_states.end() || m_currentView->backendOutput() != screen->backendOutput()) {
-        effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
-        return;
+        return effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
     }
 
     // Render the screen in an offscreen texture.
@@ -214,7 +213,8 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
         it->m_current.texture = GLTexture::allocate(renderTarget.texture()->internalFormat(), nativeSize);
         if (!it->m_current.texture) {
             m_states.remove(screen);
-            return;
+            EglContext::currentContext()->setFailed();
+            return false;
         }
         it->m_current.framebuffer = std::make_unique<GLFramebuffer>(it->m_current.texture.get());
     }
@@ -250,7 +250,8 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
 
     GLVertexBuffer *vbo = texturedRectVbo(lerp(it->m_oldGeometry, screenRect, blendFactor), scale);
     if (!vbo) {
-        return;
+        EglContext::currentContext()->setFailed();
+        return false;
     }
 
     ShaderManager *sm = ShaderManager::instance();
@@ -271,6 +272,7 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     it->m_current.texture->unbind();
 
     effects->addRepaintFull();
+    return true;
 }
 
 bool ScreenTransformEffect::isActive() const

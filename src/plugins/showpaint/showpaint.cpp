@@ -33,15 +33,16 @@ static const QList<QColor> s_colors{
 
 ShowPaintEffect::ShowPaintEffect() = default;
 
-void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
+bool ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
-    effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
-    if (effects->isOpenGLCompositing()) {
-        paintGL(renderTarget, viewport, deviceRegion);
+    if (!effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen)) {
+        return false;
     }
+    paintGL(renderTarget, viewport, deviceRegion);
     if (++m_colorIndex == s_colors.count()) {
         m_colorIndex = 0;
     }
+    return true;
 }
 
 void ShowPaintEffect::paintGL(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion)

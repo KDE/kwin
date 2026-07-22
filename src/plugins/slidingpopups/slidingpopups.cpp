@@ -123,12 +123,11 @@ void SlidingPopupsEffect::prePaintWindow(RenderView *view, EffectWindow *w, Wind
     effects->prePaintWindow(view, w, data);
 }
 
-void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data)
+bool SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data)
 {
     auto animationIt = m_animations.find(w);
     if (animationIt == m_animations.end()) {
-        effects->paintWindow(renderTarget, viewport, w, mask, deviceGeometry, data);
-        return;
+        return effects->paintWindow(renderTarget, viewport, w, mask, deviceGeometry, data);
     }
 
     const AnimationData &animData = m_animationsData[w];
@@ -167,7 +166,7 @@ void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
 
     effectiveRegion &= viewport.mapToDeviceCoordinatesAligned(damagedLogicalArea(w, animData));
 
-    effects->paintWindow(renderTarget, viewport, w, mask, effectiveRegion, data);
+    return effects->paintWindow(renderTarget, viewport, w, mask, effectiveRegion, data);
 }
 
 void SlidingPopupsEffect::postPaintScreen()

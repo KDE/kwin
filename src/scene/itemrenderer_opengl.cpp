@@ -150,12 +150,12 @@ static RenderGeometry clipQuads(const Item *item, const ItemRendererOpenGL::Rend
     return geometry;
 }
 
-void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
+bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
 {
     bool hole = false;
     if (filter && filter(item)) {
         if (!holeFilter || !holeFilter(item)) {
-            return;
+            return true;
         }
         hole = true;
     }
@@ -183,7 +183,9 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
             break;
         }
         if (childItem->explicitVisible()) {
-            createRenderNode(childItem, context, filter, holeFilter);
+            if (!createRenderNode(childItem, context, filter, holeFilter)) {
+                return false;
+            }
         }
     }
 
@@ -202,7 +204,12 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
         });
     }
 
+    // For multi-gpu copies, preprocess may change the active EGL context,
+    // and switching back can fail in the case of a GPU reset.
     item->preprocess();
+    if (!EglContext::currentContext()) {
+        return false;
+    }
 
     RenderGeometry geometry = clipQuads(item, context);
 
@@ -330,7 +337,9 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
             continue;
         }
         if (childItem->explicitVisible()) {
-            createRenderNode(childItem, context, filter, holeFilter);
+            if (!createRenderNode(childItem, context, filter, holeFilter)) {
+                return false;
+            }
         }
     }
 
@@ -339,6 +348,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
     if (!context->cornerStack.isEmpty()) {
         context->cornerStack.pop();
     }
+    return true;
 }
 
 void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion)
@@ -362,10 +372,10 @@ void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, cons
     }
 }
 
-void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
+bool ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
 {
     if (deviceRegion.isEmpty()) {
-        return;
+        return true;
     }
 
     RenderContext renderContext{
@@ -381,14 +391,16 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     renderContext.transformStack.push(QMatrix4x4());
     renderContext.opacityStack.push(data.opacity());
 
-    createRenderNode(item, &renderContext, filter, holeFilter);
+    if (!createRenderNode(item, &renderContext, filter, holeFilter)) {
+        return false;
+    }
 
     int totalVertexCount = 0;
     for (const RenderNode &node : std::as_const(renderContext.renderNodes)) {
         totalVertexCount += node.geometry.count();
     }
     if (totalVertexCount == 0) {
-        return;
+        return true;
     }
 
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
@@ -397,7 +409,8 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
     const auto map = vbo->map<GLVertex2D>(totalVertexCount);
     if (!map) {
-        return;
+        EglContext::currentContext()->isFailed();
+        return true;
     }
 
     for (int i = 0, v = 0; i < renderContext.renderNodes.count(); i++) {
@@ -557,6 +570,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     if (renderContext.hardwareClipping) {
         glDisable(GL_SCISSOR_TEST);
     }
+    return true;
 }
 
 void ItemRendererOpenGL::visualizeFractional(const RenderViewport &viewport, const Region &logicalRegion, const RenderContext &renderContext)

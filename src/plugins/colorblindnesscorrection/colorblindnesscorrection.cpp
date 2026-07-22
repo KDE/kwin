@@ -112,7 +112,7 @@ void ColorBlindnessCorrectionEffect::loadData()
     connect(effects, &EffectsHandler::windowAdded, this, &ColorBlindnessCorrectionEffect::correctColor);
 }
 
-void ColorBlindnessCorrectionEffect::drawWindow(const RenderTarget &renderTarget,
+bool ColorBlindnessCorrectionEffect::drawWindow(const RenderTarget &renderTarget,
                                                 const RenderViewport &viewport,
                                                 EffectWindow *w,
                                                 int mask,
@@ -124,7 +124,7 @@ void ColorBlindnessCorrectionEffect::drawWindow(const RenderTarget &renderTarget
         data.setSaturation(1.0f - m_intensity);
     }
 
-    OffscreenEffect::drawWindow(renderTarget, viewport, w, mask, logicalRegion, data);
+    return OffscreenEffect::drawWindow(renderTarget, viewport, w, mask, logicalRegion, data);
 }
 
 void ColorBlindnessCorrectionEffect::correctColor(KWin::EffectWindow *w)

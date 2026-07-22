@@ -100,29 +100,27 @@ void DimInactiveEffect::prePaintScreen(ScreenPrePaintData &data)
     effects->prePaintScreen(data);
 }
 
-void DimInactiveEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
+bool DimInactiveEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
     auto transitionIt = m_transitions.constFind(w);
     if (transitionIt != m_transitions.constEnd()) {
         const qreal transitionProgress = (*transitionIt).value();
         dimWindow(data, m_dimStrength * transitionProgress);
-        effects->paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
-        return;
+        return effects->paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
     }
 
     auto forceIt = m_forceDim.constFind(w);
     if (forceIt != m_forceDim.constEnd()) {
         const qreal forcedStrength = *forceIt;
         dimWindow(data, forcedStrength);
-        effects->paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
-        return;
+        return effects->paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
     }
 
     if (canDimWindow(w)) {
         dimWindow(data, m_dimStrength);
     }
 
-    effects->paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
+    return effects->paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
 }
 
 void DimInactiveEffect::postPaintScreen()

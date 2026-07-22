@@ -176,9 +176,11 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data)
     }
 }
 
-void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
+bool MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
-    effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen); // paint normal screen
+    if (!effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen)) { // paint normal screen)
+        return false;
+    }
     if (m_zoom != 1.0 && m_fbo) {
         // get the right area from the current rendered screen
         const Rect area = magnifierArea();
@@ -241,6 +243,7 @@ void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
             vbo->render(GL_TRIANGLES);
         }
     }
+    return true;
 }
 
 void MagnifierEffect::postPaintScreen()

@@ -241,7 +241,7 @@ void SlideBackEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPr
     effects->prePaintWindow(view, w, data);
 }
 
-void SlideBackEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data)
+bool SlideBackEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data)
 {
     if (motionManager.isManaging(w)) {
         motionManager.apply(w, data);
@@ -250,8 +250,8 @@ void SlideBackEffect::paintWindow(const RenderTarget &renderTarget, const Render
     for (const Region &r : std::as_const(clippedRegions)) {
         effectiveRegion = effectiveRegion.intersected(viewport.mapToDeviceCoordinatesAligned(r));
     }
-    effects->paintWindow(renderTarget, viewport, w, mask, effectiveRegion, data);
     clippedRegions.clear();
+    return effects->paintWindow(renderTarget, viewport, w, mask, effectiveRegion, data);
 }
 
 void SlideBackEffect::slotWindowDeleted(EffectWindow *w)

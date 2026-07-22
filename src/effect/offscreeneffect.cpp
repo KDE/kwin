@@ -29,7 +29,7 @@ public:
     void paint(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, const Region &deviceRegion,
                const WindowPaintData &data, const WindowQuadList &quads);
 
-    void maybeRender(EffectWindow *window);
+    [[nodiscard]] bool maybeRender(EffectWindow *window);
 
     std::unique_ptr<GLTexture> m_texture;
     std::unique_ptr<GLFramebuffer> m_fbo;
@@ -106,7 +106,7 @@ void OffscreenEffect::apply(EffectWindow *window, int mask, WindowPaintData &dat
 {
 }
 
-void OffscreenData::maybeRender(EffectWindow *window)
+bool OffscreenData::maybeRender(EffectWindow *window)
 {
     const qreal scale = window->screen()->scale();
     const RectF logicalGeometry = snapToPixels(window->expandedGeometry(), scale);
@@ -115,12 +115,12 @@ void OffscreenData::maybeRender(EffectWindow *window)
     if (textureSize.isEmpty()) {
         m_fbo.reset();
         m_texture.reset();
-        return;
+        return true;
     }
     if (!m_texture || m_texture->size() != textureSize) {
         m_texture = GLTexture::allocate(GL_RGBA8, textureSize);
         if (!m_texture) {
-            return;
+            return true;
         }
         m_texture->setFilter(GL_LINEAR);
         m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
@@ -139,11 +139,14 @@ void OffscreenData::maybeRender(EffectWindow *window)
         data.setOpacity(1.0);
 
         const int mask = Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_WINDOW_TRANSLUCENT;
-        effects->drawWindow(renderTarget, viewport, window, mask, Region::infinite(), data);
+        if (!effects->drawWindow(renderTarget, viewport, window, mask, Region::infinite(), data)) {
+            return false;
+        }
 
         GLFramebuffer::popFramebuffer();
         m_isDirty = false;
     }
+    return true;
 }
 
 OffscreenData::~OffscreenData()
@@ -233,12 +236,11 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     vbo->unbindArrays();
 }
 
-void OffscreenEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data)
+bool OffscreenEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
     const auto it = d->windows.find(window);
     if (it == d->windows.end()) {
-        effects->drawWindow(renderTarget, viewport, window, mask, deviceRegion, data);
-        return;
+        return effects->drawWindow(renderTarget, viewport, window, mask, deviceRegion, data);
     }
     OffscreenData *offscreenData = it->second.get();
 
@@ -257,8 +259,11 @@ void OffscreenEffect::drawWindow(const RenderTarget &renderTarget, const RenderV
     quads.append(quad);
     apply(window, mask, data, quads);
 
-    offscreenData->maybeRender(window);
+    if (!offscreenData->maybeRender(window)) {
+        return false;
+    }
     offscreenData->paint(renderTarget, viewport, window, deviceRegion, data, quads);
+    return true;
 }
 
 void OffscreenEffect::handleWindowDamaged(EffectWindow *window)
@@ -320,17 +325,19 @@ CrossFadeEffect::CrossFadeEffect(QObject *parent)
 
 CrossFadeEffect::~CrossFadeEffect() = default;
 
-void CrossFadeEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data)
+bool CrossFadeEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
     const auto it = d->windows.find(window);
 
     // paint the new window (if applicable) underneath
     if (data.crossFadeProgress() > 0 || it == d->windows.end()) {
-        Effect::drawWindow(renderTarget, viewport, window, mask, deviceRegion, data);
+        if (!Effect::drawWindow(renderTarget, viewport, window, mask, deviceRegion, data)) {
+            return false;
+        }
     }
 
     if (it == d->windows.end()) {
-        return;
+        return true;
     }
     CrossFadeWindowData *offscreenData = it->second.get();
 
@@ -368,6 +375,7 @@ void CrossFadeEffect::drawWindow(const RenderTarget &renderTarget, const RenderV
     WindowQuadList quads;
     quads.append(quad);
     offscreenData->paint(renderTarget, viewport, window, deviceRegion, previousWindowData, quads);
+    return true;
 }
 
 void CrossFadeEffect::redirect(EffectWindow *window)
@@ -392,7 +400,7 @@ void CrossFadeEffect::redirect(EffectWindow *window)
     window->setData(WindowForceBackgroundContrastRole, QVariant());
 
     effects->makeOpenGLContextCurrent();
-    offscreenData->maybeRender(window);
+    (void)offscreenData->maybeRender(window);
     offscreenData->frameGeometryAtCapture = window->frameGeometry();
 
     window->setData(WindowForceBlurRole, blurRole);

@@ -100,9 +100,11 @@ void ShowFpsEffect::prePaintScreen(ScreenPrePaintData &data)
     screenData->m_scene->setGeometry(QRect(rect.x() + rect.width() - 300, rect.y(), 300, 150));
 }
 
-void ShowFpsEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
+bool ShowFpsEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
-    effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
+    if (!effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen)) {
+        return false;
+    }
 
     auto &screenData = m_data[m_currentView];
     Region repaintRegion = deviceRegion & viewport.deviceRect();
@@ -111,6 +113,7 @@ void ShowFpsEffect::paintScreen(const RenderTarget &renderTarget, const RenderVi
     for (const Rect &rect : repaintRegion.rects()) {
         screenData->m_paintAmount += rect.width() * rect.height();
     }
+    return true;
 }
 
 void ShowFpsEffect::postPaintScreen()

@@ -449,7 +449,7 @@ void SlidingNotificationsEffect::prePaintWindow(RenderView *view, EffectWindow *
     effects->prePaintWindow(view, window, data);
 }
 
-void SlidingNotificationsEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceGeometry, WindowPaintData &data)
+bool SlidingNotificationsEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceGeometry, WindowPaintData &data)
 {
     const auto it = m_animations.find(window);
     if (it == m_animations.end()) {
@@ -468,7 +468,7 @@ void SlidingNotificationsEffect::paintWindow(const RenderTarget &renderTarget, c
         animation->displace->apply(data);
     }
 
-    effects->paintWindow(renderTarget, viewport, window, mask, clipped, data);
+    return effects->paintWindow(renderTarget, viewport, window, mask, clipped, data);
 }
 
 void SlidingNotificationsEffect::postPaintScreen()

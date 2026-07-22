@@ -358,18 +358,21 @@ GLShader *ZoomEffect::shaderForZoom(double zoom)
     return ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
 }
 
-void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
+bool ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
     OffscreenData *offscreenData = ensureOffscreenData(renderTarget, viewport, screen);
     if (!offscreenData) {
-        return;
+        EglContext::currentContext()->setFailed();
+        return false;
     }
 
     // Render the scene in an offscreen texture and then upscale it.
     RenderTarget offscreenRenderTarget(offscreenData->framebuffer.get(), renderTarget.colorDescription());
     RenderViewport offscreenViewport(viewport.renderRect(), viewport.scale(), offscreenRenderTarget, QPoint());
     GLFramebuffer::pushFramebuffer(offscreenData->framebuffer.get());
-    effects->paintScreen(offscreenRenderTarget, offscreenViewport, mask, deviceRegion, screen);
+    if (!effects->paintScreen(offscreenRenderTarget, offscreenViewport, mask, deviceRegion, screen)) {
+        return false;
+    }
     GLFramebuffer::popFramebuffer();
 
     const auto scale = viewport.scale();
@@ -395,6 +398,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
         offscreen.texture->render(offscreen.viewport.size() * scale);
     }
     ShaderManager::instance()->popShader();
+    return true;
 }
 
 void ZoomEffect::postPaintScreen()
