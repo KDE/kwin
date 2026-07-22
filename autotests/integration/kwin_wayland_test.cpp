@@ -187,7 +187,7 @@ void WaylandTestApplication::destroyVirtualInputDevices()
     if (m_virtualTabletPad) {
         input()->removeInputDevice(m_virtualTabletPad.get());
     }
-    if (m_virtualTabletTool) {
+    if (m_virtualTablet) {
         input()->removeInputDevice(m_virtualTablet.get());
     }
 }
