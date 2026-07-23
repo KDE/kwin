@@ -161,7 +161,7 @@ bool GameControllerManager::isHandledByLibinput(const QString &devNode)
         "input",
         QFileInfo(devNode).fileName().toUtf8().constData());
     if (!udevDevice) {
-        qCDebug(KWIN_GAMECONTROLLER) << "Could not get udev device for:" << devNode << ", assuming it is handled by libintput.";
+        qCDebug(KWIN_GAMECONTROLLER) << "Could not get udev device for:" << devNode << ", assuming it is handled by libinput.";
         return true;
     }
 
