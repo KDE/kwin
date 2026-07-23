@@ -30,21 +30,33 @@ VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::De
     , m_deviceLimits(m_physical.getProperties().limits)
 {
     m_memoryProperties = physicalDevice.getMemoryProperties();
-    getQueue();
+    getQueues();
 }
 
 VulkanDevice::~VulkanDevice()
 {
     Q_EMIT deviceLost();
     m_graphicsQueue.reset();
+    m_transferQueue.reset();
     m_importedTextures.clear();
     m_logical.clear();
 }
 
-void VulkanDevice::getQueue()
+void VulkanDevice::getQueues()
 {
+    // prefer the most minimal capabilities for the transfer queue
+    auto transfer = m_queueProperties | std::views::filter([](const VkQueueFamilyProperties &props) {
+        return props.queueFlags & VK_QUEUE_TRANSFER_BIT;
+    });
+    const auto transferIt = std::ranges::min_element(transfer, [](const VkQueueFamilyProperties &left, const VkQueueFamilyProperties &right) {
+        return std::popcount(left.queueFlags) < std::popcount(right.queueFlags);
+    });
+    if (transferIt != transfer.end()) {
+        m_transferQueue = VulkanQueue::create(this, std::distance(m_queueProperties.begin(), transferIt.base()));
+    }
+
     auto it = std::ranges::find_if(m_queueProperties, [](const VkQueueFamilyProperties &props) {
-        return props.queueFlags & VK_QUEUE_GRAPHICS_BIT;
+        return props.queueFlags & (VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_TRANSFER_BIT);
     });
     Q_ASSERT(it != m_queueProperties.end());
     m_graphicsQueue = VulkanQueue::create(this, std::distance(m_queueProperties.begin(), it));
@@ -333,6 +345,11 @@ const vk::raii::Device &VulkanDevice::logicalDevice() const
 VulkanQueue *VulkanDevice::graphicsQueue() const
 {
     return m_graphicsQueue.get();
+}
+
+VulkanQueue *VulkanDevice::transferQueue() const
+{
+    return m_transferQueue.get();
 }
 
 std::span<const VkQueueFamilyProperties> VulkanDevice::queueFamilyProperties() const

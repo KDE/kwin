@@ -85,6 +85,7 @@ public:
     const vk::raii::Device &logicalDevice() const;
 
     VulkanQueue *graphicsQueue() const;
+    VulkanQueue *transferQueue() const;
 
     std::span<const VkQueueFamilyProperties> queueFamilyProperties() const;
     float nanosecondsPerQueryTick() const;
@@ -127,7 +128,7 @@ Q_SIGNALS:
     void deviceLost();
 
 private:
-    void getQueue();
+    void getQueues();
     FormatModifierMap queryFormats(VkImageUsageFlags flags) const;
     std::optional<uint32_t> findMemoryType(uint32_t typeBits, vk::MemoryPropertyFlags memoryPropertyFlags) const;
     std::shared_ptr<VulkanTexture> importDmabuf(const DmaBufAttributes *attributes, VkImageUsageFlags usage);
@@ -141,6 +142,7 @@ private:
     vk::PhysicalDeviceLimits m_deviceLimits;
 
     std::unique_ptr<VulkanQueue> m_graphicsQueue;
+    std::unique_ptr<VulkanQueue> m_transferQueue;
 
     QHash<GraphicsBuffer *, std::shared_ptr<VulkanTexture>> m_importedTextures;
     bool m_lost = false;

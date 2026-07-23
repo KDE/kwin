@@ -177,7 +177,9 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
     }
 
     const auto copyVk = m_copyDevice->vulkanDevice();
-    const auto queue = copyVk->graphicsQueue();
+
+    const bool useTransferQueue = copyVk->transferQueue() && FormatInfo::get(src->dmabufAttributes()->format)->bitsPerPixel == FormatInfo::get(m_format)->bitsPerPixel;
+    const auto queue = useTransferQueue ? copyVk->transferQueue() : copyVk->graphicsQueue();
 
     const auto srcTexture = copyVk->importBuffer(src, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
     if (!srcTexture) {
@@ -243,35 +245,62 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
         memoryBarrier,
     });
 
-    const std::vector<vk::ImageBlit> regions = toRender.rects() | std::views::transform([&completeRect](const Rect &rect) {
-        return vk::ImageBlit{
-            // src
-            vk::ImageSubresourceLayers{
-                vk::ImageAspectFlagBits::eColor,
-                0,
-                0,
-                1,
-            },
-            std::array{
+    if (useTransferQueue) {
+        const std::vector<vk::ImageCopy> regions = toRender.rects() | std::views::transform([&completeRect](const Rect &rect) {
+            return vk::ImageCopy{
+                // src
+                vk::ImageSubresourceLayers{
+                    vk::ImageAspectFlagBits::eColor,
+                    0,
+                    0,
+                    1,
+                },
                 vk::Offset3D{rect.left(), completeRect.height() - rect.bottom(), 0},
-                vk::Offset3D{rect.right(), completeRect.height() - rect.top(), 1},
-            },
-            // dst
-            vk::ImageSubresourceLayers{
-                vk::ImageAspectFlagBits::eColor,
-                0,
-                0,
-                1,
-            },
-            std::array{
+                // dst
+                vk::ImageSubresourceLayers{
+                    vk::ImageAspectFlagBits::eColor,
+                    0,
+                    0,
+                    1,
+                },
                 vk::Offset3D{rect.left(), completeRect.height() - rect.bottom(), 0},
-                vk::Offset3D{rect.right(), completeRect.height() - rect.top(), 1},
-            },
-        };
-    }) | std::ranges::to<std::vector>();
-    commandBuffer.blitImage(srcTexture->handle(), vk::ImageLayout::eGeneral,
-                            m_currentVulkanSlot->texture()->handle(), vk::ImageLayout::eGeneral,
-                            regions, vk::Filter::eNearest);
+                vk::Extent3D{uint32_t(rect.width()), uint32_t(rect.height()), 1},
+            };
+        }) | std::ranges::to<std::vector>();
+        commandBuffer.copyImage(srcTexture->handle(), vk::ImageLayout::eGeneral,
+                                m_currentVulkanSlot->texture()->handle(), vk::ImageLayout::eGeneral,
+                                regions);
+    } else {
+        const std::vector<vk::ImageBlit> regions = toRender.rects() | std::views::transform([&completeRect](const Rect &rect) {
+            return vk::ImageBlit{
+                // src
+                vk::ImageSubresourceLayers{
+                    vk::ImageAspectFlagBits::eColor,
+                    0,
+                    0,
+                    1,
+                },
+                std::array{
+                    vk::Offset3D{rect.left(), completeRect.height() - rect.bottom(), 0},
+                    vk::Offset3D{rect.right(), completeRect.height() - rect.top(), 1},
+                },
+                // dst
+                vk::ImageSubresourceLayers{
+                    vk::ImageAspectFlagBits::eColor,
+                    0,
+                    0,
+                    1,
+                },
+                std::array{
+                    vk::Offset3D{rect.left(), completeRect.height() - rect.bottom(), 0},
+                    vk::Offset3D{rect.right(), completeRect.height() - rect.top(), 1},
+                },
+            };
+        }) | std::ranges::to<std::vector>();
+        commandBuffer.blitImage(srcTexture->handle(), vk::ImageLayout::eGeneral,
+                                m_currentVulkanSlot->texture()->handle(), vk::ImageLayout::eGeneral,
+                                regions, vk::Filter::eNearest);
+    }
 
     memoryBarrier.setSrcQueueFamilyIndex(queue->familyIndex());
     memoryBarrier.setDstQueueFamilyIndex(vk::QueueFamilyExternal);
