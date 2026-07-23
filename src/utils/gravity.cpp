@@ -34,21 +34,33 @@ RectF Gravity::apply(const RectF &rect, const RectF &bounds) const
         geometry.moveBottom(bounds.bottom());
         break;
     case Gravity::Top:
+        geometry.moveBottom(bounds.bottom());
+        geometry.moveHorizontalCenter(bounds.horizontalCenter());
+        break;
     case Gravity::TopRight:
         geometry.moveLeft(bounds.left());
         geometry.moveBottom(bounds.bottom());
         break;
     case Gravity::Right:
-    case Gravity::BottomRight:
-    case Gravity::Bottom:
+        geometry.moveLeft(bounds.left());
+        geometry.moveVerticalCenter(bounds.verticalCenter());
+        break;
     case Gravity::None:
+    case Gravity::BottomRight:
         geometry.moveLeft(bounds.left());
         geometry.moveTop(bounds.top());
         break;
+    case Gravity::Bottom:
+        geometry.moveHorizontalCenter(bounds.horizontalCenter());
+        geometry.moveTop(bounds.top());
+        break;
     case Gravity::BottomLeft:
-    case Gravity::Left:
         geometry.moveRight(bounds.right());
         geometry.moveTop(bounds.top());
+        break;
+    case Gravity::Left:
+        geometry.moveRight(bounds.right());
+        geometry.moveVerticalCenter(bounds.verticalCenter());
         break;
     }
 
