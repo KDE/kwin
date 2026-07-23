@@ -27,22 +27,17 @@ VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::De
     // and sample + color attachment + transfer_dst
     , m_formats(queryFormats(VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT))
     , m_queueProperties(std::move(queueProperties))
-    , m_graphicsQueue(nullptr)
-    , m_commandPool(nullptr)
     , m_deviceLimits(m_physical.getProperties().limits)
 {
     m_memoryProperties = physicalDevice.getMemoryProperties();
     getQueue();
-    createCommandPool();
 }
 
 VulkanDevice::~VulkanDevice()
 {
     Q_EMIT deviceLost();
-    m_graphicsQueue.waitIdle();
+    m_graphicsQueue.reset();
     m_importedTextures.clear();
-    m_submittedCommandBuffers.clear();
-    m_commandPool.clear();
     m_logical.clear();
 }
 
@@ -52,22 +47,7 @@ void VulkanDevice::getQueue()
         return props.queueFlags & VK_QUEUE_GRAPHICS_BIT;
     });
     Q_ASSERT(it != m_queueProperties.end());
-    m_queueFamilyIndex = std::distance(m_queueProperties.begin(), it);
-    m_graphicsQueue = m_logical.getQueue(m_queueFamilyIndex, 0);
-}
-
-void VulkanDevice::createCommandPool()
-{
-    // only one queue for now -> also only one command pool
-    auto [result, cmdPool] = m_logical.createCommandPool(vk::CommandPoolCreateInfo{
-        vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
-        m_queueFamilyIndex,
-    });
-    if (result != vk::Result::eSuccess) {
-        qCCritical(KWIN_VULKAN) << "creating a command pool failed:" << vk::to_string(result);
-        return;
-    }
-    m_commandPool = std::move(cmdPool);
+    m_graphicsQueue = VulkanQueue::create(this, std::distance(m_queueProperties.begin(), it));
 }
 
 std::shared_ptr<VulkanTexture> VulkanDevice::importBuffer(GraphicsBuffer *buffer, VkImageUsageFlags usage)
@@ -160,7 +140,10 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
         vk::ImageTiling::eDrmFormatModifierEXT,
         vk::ImageUsageFlags(usage),
         vk::SharingMode::eExclusive,
-        m_queueFamilyIndex,
+        // the queue family index is ignored with share mode exclusive,
+        // instead Vulkan implicitly assigns ownership to the first queue
+        // the image is used in.
+        0,
         vk::ImageLayout::eUndefined,
         &externalInfo,
     };
@@ -347,14 +330,9 @@ const vk::raii::Device &VulkanDevice::logicalDevice() const
     return m_logical;
 }
 
-const vk::raii::Queue &VulkanDevice::graphicsQueue() const
+VulkanQueue *VulkanDevice::graphicsQueue() const
 {
-    return m_graphicsQueue;
-}
-
-uint32_t VulkanDevice::graphicsQueueFamily() const
-{
-    return m_queueFamilyIndex;
+    return m_graphicsQueue.get();
 }
 
 std::span<const VkQueueFamilyProperties> VulkanDevice::queueFamilyProperties() const
@@ -365,31 +343,6 @@ std::span<const VkQueueFamilyProperties> VulkanDevice::queueFamilyProperties() c
 float VulkanDevice::nanosecondsPerQueryTick() const
 {
     return m_deviceLimits.timestampPeriod;
-}
-
-vk::raii::CommandBuffer VulkanDevice::createCommandBuffer()
-{
-    // clean up old command buffers first
-    for (auto it = m_submittedCommandBuffers.begin(); it != m_submittedCommandBuffers.end();) {
-        const SubmittedCommand &cmd = *it;
-        // TODO use a QSocketNotifier per submission to do this asynchronously?
-        if (cmd.completionSyncFd.isReadable()) {
-            it = m_submittedCommandBuffers.erase(it);
-        } else {
-            it++;
-        }
-    }
-
-    auto [result, buffers] = m_logical.allocateCommandBuffers(vk::CommandBufferAllocateInfo{
-        m_commandPool,
-        vk::CommandBufferLevel::ePrimary,
-        1,
-    });
-    if (result != vk::Result::eSuccess) {
-        qCWarning(KWIN_VULKAN) << "Failed to create a command buffer" << vk::to_string(result);
-        return nullptr;
-    }
-    return std::move(buffers.front());
 }
 
 std::optional<vk::raii::Semaphore> VulkanDevice::importSemaphore(FileDescriptor &&syncFd) const
@@ -415,54 +368,6 @@ std::optional<vk::raii::Semaphore> VulkanDevice::importSemaphore(FileDescriptor 
     // the driver takes ownership of the fd on successful import
     syncFd.take();
     return std::move(semaphore);
-}
-
-std::optional<FileDescriptor> VulkanDevice::submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd)
-{
-    vk::ExportFenceCreateInfo exportInfo{
-        vk::ExternalFenceHandleTypeFlagBits::eSyncFd,
-    };
-    auto [fenceResult, fence] = m_logical.createFence(vk::FenceCreateInfo{
-        vk::FenceCreateFlags{},
-        &exportInfo,
-    });
-    if (fenceResult != vk::Result::eSuccess) {
-        return std::nullopt;
-    }
-    std::vector<vk::Semaphore> waitSemaphores;
-    std::vector<vk::PipelineStageFlags> waitFlags;
-    auto waitSemaphore = importSemaphore(std::move(syncFd));
-    if (waitSemaphore.has_value()) {
-        waitSemaphores.push_back(*waitSemaphore);
-        waitFlags.push_back(vk::PipelineStageFlagBits::eAllCommands);
-    }
-    vk::Result result = m_graphicsQueue.submit(vk::SubmitInfo{
-                                                   waitSemaphores,
-                                                   waitFlags,
-                                                   *buffer,
-                                                   {},
-                                               },
-                                               fence);
-    if (result == vk::Result::eErrorDeviceLost) {
-        handleDeviceLoss();
-        return std::nullopt;
-    } else if (result != vk::Result::eSuccess) {
-        return std::nullopt;
-    }
-    const auto [fdResult, fd] = m_logical.getFenceFdKHR(vk::FenceGetFdInfoKHR{
-        fence,
-        vk::ExternalFenceHandleTypeFlagBits::eSyncFd,
-    });
-    if (fdResult != vk::Result::eSuccess) {
-        return std::nullopt;
-    }
-    FileDescriptor ret{fd};
-    m_submittedCommandBuffers.push_back(SubmittedCommand{
-        .waitSemaphore = waitSemaphore ? std::move(*waitSemaphore) : nullptr,
-        .buffer = std::move(buffer),
-        .completionSyncFd = ret.duplicate(),
-    });
-    return ret;
 }
 
 void VulkanDevice::handleDeviceLoss()
@@ -521,7 +426,123 @@ vk::raii::DeviceMemory VulkanDevice::allocateMemory(const vk::BufferCreateInfo &
 
 void VulkanDevice::waitIdle()
 {
-    m_graphicsQueue.waitIdle();
+    m_graphicsQueue->waitIdle();
+}
+
+VulkanQueue::VulkanQueue(VulkanDevice *device, uint32_t familyIndex, vk::raii::Queue &&handle, vk::raii::CommandPool &&commandPool)
+    : m_device(device)
+    , m_familyIndex(familyIndex)
+    , m_handle(std::move(handle))
+    , m_commandPool(std::move(commandPool))
+{
+}
+
+VulkanQueue::~VulkanQueue()
+{
+    m_handle.waitIdle();
+}
+
+uint32_t VulkanQueue::familyIndex() const
+{
+    return m_familyIndex;
+}
+
+const vk::raii::Queue &VulkanQueue::handle() const
+{
+    return m_handle;
+}
+
+vk::raii::CommandBuffer VulkanQueue::createCommandBuffer()
+{
+    // clean up old command buffers first
+    for (auto it = m_submittedCommandBuffers.begin(); it != m_submittedCommandBuffers.end();) {
+        const SubmittedCommand &cmd = *it;
+        // TODO use a QSocketNotifier per submission to do this asynchronously?
+        if (cmd.completionSyncFd.isReadable()) {
+            it = m_submittedCommandBuffers.erase(it);
+        } else {
+            it++;
+        }
+    }
+
+    auto [result, buffers] = m_device->logicalDevice().allocateCommandBuffers(vk::CommandBufferAllocateInfo{
+        m_commandPool,
+        vk::CommandBufferLevel::ePrimary,
+        1,
+    });
+    if (result != vk::Result::eSuccess) {
+        qCWarning(KWIN_VULKAN) << "Failed to create a command buffer" << vk::to_string(result);
+        return nullptr;
+    }
+    return std::move(buffers.front());
+}
+
+std::optional<FileDescriptor> VulkanQueue::submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd)
+{
+    vk::ExportFenceCreateInfo exportInfo{
+        vk::ExternalFenceHandleTypeFlagBits::eSyncFd,
+    };
+    auto [fenceResult, fence] = m_device->logicalDevice().createFence(vk::FenceCreateInfo{
+        vk::FenceCreateFlags{},
+        &exportInfo,
+    });
+    if (fenceResult != vk::Result::eSuccess) {
+        return std::nullopt;
+    }
+    std::vector<vk::Semaphore> waitSemaphores;
+    std::vector<vk::PipelineStageFlags> waitFlags;
+    auto waitSemaphore = m_device->importSemaphore(std::move(syncFd));
+    if (waitSemaphore.has_value()) {
+        waitSemaphores.push_back(*waitSemaphore);
+        waitFlags.push_back(vk::PipelineStageFlagBits::eAllCommands);
+    }
+    vk::Result result = m_handle.submit(vk::SubmitInfo{
+                                            waitSemaphores,
+                                            waitFlags,
+                                            *buffer,
+                                            {},
+                                        },
+                                        fence);
+    if (result == vk::Result::eErrorDeviceLost) {
+        m_device->handleDeviceLoss();
+        return std::nullopt;
+    } else if (result != vk::Result::eSuccess) {
+        return std::nullopt;
+    }
+    const auto [fdResult, fd] = m_device->logicalDevice().getFenceFdKHR(vk::FenceGetFdInfoKHR{
+        fence,
+        vk::ExternalFenceHandleTypeFlagBits::eSyncFd,
+    });
+    if (fdResult != vk::Result::eSuccess) {
+        return std::nullopt;
+    }
+    FileDescriptor ret{fd};
+    m_submittedCommandBuffers.push_back(SubmittedCommand{
+        .waitSemaphore = waitSemaphore ? std::move(*waitSemaphore) : nullptr,
+        .buffer = std::move(buffer),
+        .completionSyncFd = ret.duplicate(),
+    });
+    return ret;
+}
+
+void VulkanQueue::waitIdle()
+{
+    m_handle.waitIdle();
+}
+
+std::unique_ptr<VulkanQueue> VulkanQueue::create(VulkanDevice *device, uint32_t familyIndex)
+{
+    auto handle = device->logicalDevice().getQueue(familyIndex, 0);
+
+    auto [result, cmdPool] = device->logicalDevice().createCommandPool(vk::CommandPoolCreateInfo{
+        vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
+        familyIndex,
+    });
+    if (result != vk::Result::eSuccess) {
+        qCCritical(KWIN_VULKAN) << "creating a command pool failed:" << vk::to_string(result);
+        return nullptr;
+    }
+    return std::make_unique<VulkanQueue>(device, familyIndex, std::move(handle), std::move(cmdPool));
 }
 
 }

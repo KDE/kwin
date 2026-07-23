@@ -180,6 +180,8 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
     }
 
     const auto copyVk = m_copyDevice->vulkanDevice();
+    const auto queue = copyVk->graphicsQueue();
+
     const auto srcTexture = copyVk->importBuffer(src, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
     if (!srcTexture) {
         qCWarning(KWIN_VULKAN, "Could not import buffer for multi GPU copy!");
@@ -205,7 +207,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
     }
     m_journal.add(damage);
 
-    auto commandBuffer = copyVk->createCommandBuffer();
+    auto commandBuffer = queue->createCommandBuffer();
     vk::Result result = commandBuffer.begin(vk::CommandBufferBeginInfo{
         vk::CommandBufferUsageFlagBits::eOneTimeSubmit,
     });
@@ -216,7 +218,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
 
     std::unique_ptr<VulkanRenderTimeQuery> query;
     if (frame) {
-        query = VulkanRenderTimeQuery::begin(copyVk, commandBuffer, copyVk->graphicsQueueFamily());
+        query = VulkanRenderTimeQuery::begin(copyVk, commandBuffer, queue->familyIndex());
     }
 
     vk::ImageMemoryBarrier2 memoryBarrier{
@@ -227,7 +229,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
         vk::ImageLayout::eGeneral,
         vk::ImageLayout::eGeneral,
         vk::QueueFamilyExternal,
-        copyVk->graphicsQueueFamily(),
+        queue->familyIndex(),
         m_currentVulkanSlot->texture()->handle(),
         vk::ImageSubresourceRange{
             vk::ImageAspectFlagBits::eColor,
@@ -274,7 +276,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
                             m_currentVulkanSlot->texture()->handle(), vk::ImageLayout::eGeneral,
                             regions, vk::Filter::eNearest);
 
-    memoryBarrier.setSrcQueueFamilyIndex(copyVk->graphicsQueueFamily());
+    memoryBarrier.setSrcQueueFamilyIndex(queue->familyIndex());
     memoryBarrier.setDstQueueFamilyIndex(vk::QueueFamilyExternal);
     commandBuffer.pipelineBarrier2(vk::DependencyInfo{
         vk::DependencyFlags{},
@@ -293,7 +295,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
         m_journal.clear();
         return std::nullopt;
     }
-    auto completionFd = copyVk->submit(std::move(commandBuffer), std::move(sync));
+    auto completionFd = queue->submit(std::move(commandBuffer), std::move(sync));
     if (!completionFd.has_value()) {
         m_needsRecreation = true;
         return std::nullopt;

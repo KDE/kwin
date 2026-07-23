@@ -131,7 +131,7 @@ QImage VulkanTexture::download() const
     }
     stagingBuffer.bindMemory(stagingMemory, 0);
 
-    auto commandBuffer = m_device->createCommandBuffer();
+    auto commandBuffer = m_device->graphicsQueue()->createCommandBuffer();
     commandBuffer.begin(vk::CommandBufferBeginInfo{vk::CommandBufferUsageFlagBits::eOneTimeSubmit});
     vk::BufferImageCopy2 copyRegion{
         0,
@@ -154,8 +154,8 @@ QImage VulkanTexture::download() const
     });
     commandBuffer.end();
 
-    m_device->submit(std::move(commandBuffer), FileDescriptor{});
-    m_device->waitIdle();
+    m_device->graphicsQueue()->submit(std::move(commandBuffer), FileDescriptor{});
+    m_device->graphicsQueue()->waitIdle();
 
     // use mapMemory/unmapMemory (Vulkan 1.0) instead of mapMemory2/unmapMemory2 (Vulkan 1.4)
     // for compatibility with lavapipe and other drivers that don't support 1.4
@@ -200,7 +200,7 @@ bool VulkanTexture::update(const QImage &img, const Region &region, const QPoint
     std::memcpy(dataPtr, img.constBits(), img.sizeInBytes());
     stagingMemory.unmapMemory();
 
-    auto commandBuffer = m_device->createCommandBuffer();
+    auto commandBuffer = m_device->graphicsQueue()->createCommandBuffer();
     commandBuffer.begin(vk::CommandBufferBeginInfo{vk::CommandBufferUsageFlagBits::eOneTimeSubmit});
     const uint32_t bytesPerPixel = img.depth() / 8;
     const auto regions = region.rects() | std::views::transform([&img, &offset, bytesPerPixel](const Rect &rect) {
@@ -225,9 +225,9 @@ bool VulkanTexture::update(const QImage &img, const Region &region, const QPoint
         regions,
     });
     commandBuffer.end();
-    m_device->submit(std::move(commandBuffer), FileDescriptor{});
+    m_device->graphicsQueue()->submit(std::move(commandBuffer), FileDescriptor{});
 
-    m_device->waitIdle();
+    m_device->graphicsQueue()->waitIdle();
     return true;
 }
 
@@ -265,7 +265,7 @@ std::unique_ptr<VulkanTexture> VulkanTexture::allocate(VulkanDevice *device, vk:
 
     // we will only use the general image layout everywhere else,
     // so transition the image here once and then never again.
-    auto commandBuffer = device->createCommandBuffer();
+    auto commandBuffer = device->graphicsQueue()->createCommandBuffer();
     commandBuffer.begin(vk::CommandBufferBeginInfo{vk::CommandBufferUsageFlagBits::eOneTimeSubmit});
     vk::ImageMemoryBarrier toTransferSrc{
         vk::AccessFlags{},
@@ -279,11 +279,11 @@ std::unique_ptr<VulkanTexture> VulkanTexture::allocate(VulkanDevice *device, vk:
     };
     commandBuffer.pipelineBarrier(vk::PipelineStageFlagBits::eFragmentShader, vk::PipelineStageFlagBits::eTransfer, {}, {}, {}, toTransferSrc);
     commandBuffer.end();
-    device->submit(std::move(commandBuffer), FileDescriptor{});
+    device->graphicsQueue()->submit(std::move(commandBuffer), FileDescriptor{});
 
     // FIXME this is terrible. Instead, pass the command buffer in as
     // an argument, and leave synchronization up to the caller.
-    device->waitIdle();
+    device->graphicsQueue()->waitIdle();
 
     std::vector<vk::raii::DeviceMemory> mem;
     mem.push_back(std::move(memory));
