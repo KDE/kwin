@@ -23,10 +23,10 @@ namespace KWin
 class EffectWindow;
 class LogicalOutput;
 class PaintDataPrivate;
-class PointerAxisEvent;
+struct PointerAxisEvent;
 class RenderTarget;
-class PointerButtonEvent;
-class PointerMotionEvent;
+struct PointerButtonEvent;
+struct PointerMotionEvent;
 class RenderViewport;
 struct TabletToolProximityEvent;
 struct TabletToolTipEvent;
