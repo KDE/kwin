@@ -93,16 +93,9 @@ void XdgSurfaceWindow::sendConfigure()
 {
     XdgSurfaceConfigure *configureEvent = sendRoleConfigure();
 
-    // The configure event inherits configure flags from the previous event.
-    if (!m_configureEvents.isEmpty()) {
-        const XdgSurfaceConfigure *previousEvent = m_configureEvents.constLast();
-        configureEvent->flags = previousEvent->flags;
-    }
-
     configureEvent->gravity = m_nextGravity;
-    configureEvent->flags |= m_configureFlags;
     configureEvent->scale = m_nextTargetScale;
-    m_configureFlags = {};
+
     if (!isInteractiveMoveResize()) {
         m_nextGravity = Gravity::None;
     }
@@ -166,9 +159,7 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
 
     RectF frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
     if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
-        if (configureEvent->flags & XdgSurfaceConfigure::ConfigurePosition) {
-            frameGeometry = configureEvent->gravity.apply(frameGeometry, configureEvent->bounds);
-        }
+        frameGeometry = configureEvent->gravity.apply(frameGeometry, configureEvent->bounds);
     }
 
     if (isInteractiveMove()) {
@@ -219,15 +210,13 @@ void XdgSurfaceWindow::moveResizeInternal(const RectF &rect, MoveResizeMode mode
             const RectF snappedRect = RectF(rect.topLeft(), nextClientSizeToFrameSize(snapToPixels(roundedClientSize, nextTargetScale())));
             updateGeometry(m_nextGravity.apply(snappedRect, rect));
         } else {
-            m_configureFlags |= XdgSurfaceConfigure::ConfigurePosition;
             scheduleConfigure();
         }
     } else {
         // If the window is moved, cancel any queued window position updates.
         for (XdgSurfaceConfigure *configureEvent : std::as_const(m_configureEvents)) {
-            configureEvent->flags.setFlag(XdgSurfaceConfigure::ConfigurePosition, false);
+            configureEvent->bounds.moveTopLeft(rect.topLeft());
         }
-        m_configureFlags.setFlag(XdgSurfaceConfigure::ConfigurePosition, false);
         updateGeometry(RectF(rect.topLeft(), size()));
     }
 }
