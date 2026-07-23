@@ -115,7 +115,6 @@ private:
 
     QList<EffectWindow *> m_elevatedWindows;
     QHash<EffectWindow *, WindowData> m_windowData;
-    bool m_switchingActivity = false;
     SlideEffect *m_parent;
     LogicalOutput *m_screen;
 };

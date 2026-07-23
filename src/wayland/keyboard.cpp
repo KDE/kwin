@@ -300,7 +300,7 @@ qint32 KeyboardInterface::keyRepeatRate() const
 
 bool KeyboardInterface::clientUseCompositorRepetition(ClientConnection *client) const
 {
-    return std::ranges::any_of(d->keyboardsForClient(client), [client](KeyboardInterfacePrivate::Resource *keyboardResource) {
+    return std::ranges::any_of(d->keyboardsForClient(client), [](KeyboardInterfacePrivate::Resource *keyboardResource) {
         return keyboardResource->version() >= WL_KEYBOARD_KEY_STATE_REPEATED_SINCE_VERSION;
     });
 }

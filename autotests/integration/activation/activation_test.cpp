@@ -727,7 +727,7 @@ void ActivationTest::testXdgActivation()
     token->set_app_id("test_app_id_2");
     result = token->commitAndWait();
     {
-        Test::XdgToplevelWindow window{[&result](Test::XdgToplevel *toplevel) {
+        Test::XdgToplevelWindow window{[](Test::XdgToplevel *toplevel) {
             toplevel->set_app_id("test_app_id_2");
         }};
         QVERIFY(window.show());

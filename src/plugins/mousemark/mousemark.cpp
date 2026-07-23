@@ -28,11 +28,6 @@
 namespace KWin
 {
 
-static consteval QPoint nullPoint()
-{
-    return QPoint(-1, -1);
-}
-
 MouseMarkEffect::MouseMarkEffect()
 {
     MouseMarkConfig::instance(effects->config());
