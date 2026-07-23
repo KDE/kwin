@@ -26,6 +26,41 @@ class VulkanTexture;
 class GraphicsBuffer;
 struct DmaBufAttributes;
 class RenderDevice;
+class VulkanDevice;
+
+class KWIN_EXPORT VulkanQueue
+{
+public:
+    explicit VulkanQueue(VulkanDevice *device, uint32_t familyIndex, vk::raii::Queue &&handle, vk::raii::CommandPool &&commandPool);
+    ~VulkanQueue();
+
+    uint32_t familyIndex() const;
+    const vk::raii::Queue &handle() const;
+
+    vk::raii::CommandBuffer createCommandBuffer();
+    std::optional<FileDescriptor> submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd);
+
+    /**
+     * NOTE avoid using this if at all possible, it's obviously terrible for performance!
+     */
+    void waitIdle();
+
+    static std::unique_ptr<VulkanQueue> create(VulkanDevice *device, uint32_t familyIndex);
+
+private:
+    struct SubmittedCommand
+    {
+        vk::raii::Semaphore waitSemaphore;
+        vk::raii::CommandBuffer buffer;
+        FileDescriptor completionSyncFd;
+    };
+
+    VulkanDevice *const m_device;
+    const uint32_t m_familyIndex;
+    const vk::raii::Queue m_handle;
+    const vk::raii::CommandPool m_commandPool;
+    std::deque<SubmittedCommand> m_submittedCommandBuffers;
+};
 
 class KWIN_EXPORT VulkanDevice : public QObject
 {
@@ -49,15 +84,13 @@ public:
     const FormatModifierMap &supportedFormats() const;
     const vk::raii::Device &logicalDevice() const;
 
-    const vk::raii::Queue &graphicsQueue() const;
-    uint32_t graphicsQueueFamily() const;
+    VulkanQueue *graphicsQueue() const;
+
     std::span<const VkQueueFamilyProperties> queueFamilyProperties() const;
     float nanosecondsPerQueryTick() const;
 
-    vk::raii::CommandBuffer createCommandBuffer();
     std::optional<vk::raii::Semaphore> importSemaphore(FileDescriptor &&syncFd) const;
 
-    std::optional<FileDescriptor> submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd);
     /**
      * NOTE avoid using this if at all possible, it's obviously terrible for performance!
      */
@@ -95,7 +128,6 @@ Q_SIGNALS:
 
 private:
     void getQueue();
-    void createCommandPool();
     FormatModifierMap queryFormats(VkImageUsageFlags flags) const;
     std::optional<uint32_t> findMemoryType(uint32_t typeBits, vk::MemoryPropertyFlags memoryPropertyFlags) const;
     std::shared_ptr<VulkanTexture> importDmabuf(const DmaBufAttributes *attributes, VkImageUsageFlags usage);
@@ -105,18 +137,10 @@ private:
     vk::raii::Device m_logical;
     FormatModifierMap m_formats;
     std::vector<VkQueueFamilyProperties> m_queueProperties;
-    vk::raii::Queue m_graphicsQueue;
-    vk::raii::CommandPool m_commandPool;
-    uint32_t m_queueFamilyIndex;
     vk::PhysicalDeviceMemoryProperties m_memoryProperties;
-    struct SubmittedCommand
-    {
-        vk::raii::Semaphore waitSemaphore;
-        vk::raii::CommandBuffer buffer;
-        FileDescriptor completionSyncFd;
-    };
-    std::deque<SubmittedCommand> m_submittedCommandBuffers;
     vk::PhysicalDeviceLimits m_deviceLimits;
+
+    std::unique_ptr<VulkanQueue> m_graphicsQueue;
 
     QHash<GraphicsBuffer *, std::shared_ptr<VulkanTexture>> m_importedTextures;
     bool m_lost = false;
