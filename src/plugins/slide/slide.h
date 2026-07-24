@@ -57,8 +57,6 @@ public:
     void paintScreen();
     void postPaintScreen();
 
-    bool paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data);
-
     bool isActive() const;
     void desktopChanged(VirtualDesktop *old, VirtualDesktop *current, EffectWindow *with);
     void desktopChanging(VirtualDesktop *old, QPointF desktopOffset, EffectWindow *with);
@@ -79,6 +77,8 @@ private:
 
     void startAnimation(const QPointF &oldPos, VirtualDesktop *current, EffectWindow *movingWindow = nullptr);
     void prepareSwitching();
+
+    void prePaintItems();
 
 private:
     enum class State {
@@ -110,11 +110,12 @@ private:
 
     struct WindowData
     {
-        EffectWindowVisibleRef visibilityRef;
+        std::unique_ptr<Item> transformItem;
+        std::vector<std::unique_ptr<Item>> mirrorItems;
     };
 
     QList<EffectWindow *> m_elevatedWindows;
-    QHash<EffectWindow *, WindowData> m_windowData;
+    std::unordered_map<EffectWindow *, WindowData> m_windowData;
     SlideEffect *m_parent;
     LogicalOutput *m_screen;
 };
@@ -133,11 +134,7 @@ public:
     void reconfigure(ReconfigureFlags) override;
 
     void prePaintScreen(ScreenPrePaintData &data) override;
-    bool paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
     void postPaintScreen() override;
-
-    void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data) override;
-    bool paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data) override;
 
     bool isActive() const override;
     int requestedEffectChainPosition() const override;
@@ -165,7 +162,7 @@ private:
     bool m_slideBackground;
 
     bool m_switchingActivity = false;
-    QHash<LogicalOutput *, SlideEffectScreen> m_slideEffectScreens;
+    std::unordered_map<LogicalOutput *, SlideEffectScreen> m_slideEffectScreens;
 };
 
 inline int SlideEffect::horizontalGap() const
@@ -185,7 +182,7 @@ inline bool SlideEffect::slideBackground() const
 
 inline bool SlideEffect::isActive() const
 {
-    return std::ranges::any_of(m_slideEffectScreens, &SlideEffectScreen::isActive);
+    return std::ranges::any_of(m_slideEffectScreens | std::views::values, &SlideEffectScreen::isActive);
 }
 
 inline bool SlideEffectScreen::isActive() const
