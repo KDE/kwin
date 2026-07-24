@@ -35,6 +35,7 @@ bool VirtualKeyboardDBus::isActive() const
 
 void VirtualKeyboardDBus::setMode(int mode)
 {
+    qDebug() << "OSK: VirtualKeyboardDBus::setMode" << mode;
     m_inputMethod->setMode(static_cast<InputMethod::VirtualKeyboardVisibility>(mode));
 }
 
@@ -56,6 +57,15 @@ int VirtualKeyboardDBus::mode() const
 bool VirtualKeyboardDBus::isVisible() const
 {
     return m_inputMethod->isVisible();
+}
+
+void VirtualKeyboardDBus::setVisible(bool visible)
+{
+    if (visible) {
+        m_inputMethod->show();
+    } else {
+        m_inputMethod->hide();
+    }
 }
 
 bool VirtualKeyboardDBus::isAvailable() const

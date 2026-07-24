@@ -75,12 +75,14 @@ void InputPanelV1Window::allow()
 
 void InputPanelV1Window::show()
 {
+    qCDebug(KWIN_VIRTUALKEYBOARD) << "OSK: InputPanelV1Window::show";
     m_requestedToBeShown = true;
     maybeShow();
 }
 
 void InputPanelV1Window::hide()
 {
+    qCDebug(KWIN_VIRTUALKEYBOARD) << "OSK: InputPanelV1Window::hide";
     m_requestedToBeShown = false;
     if (readyForPainting() && m_mode != Mode::Overlay) {
         setHidden(true);
@@ -246,6 +248,7 @@ bool InputPanelV1Window::wasUnmapped() const
 void InputPanelV1Window::maybeShow()
 {
     const bool shouldShow = m_mode == Mode::Overlay || (m_mode == Mode::VirtualKeyboard && m_allowed && m_requestedToBeShown);
+    qDebug() << "OSK: InputPanelV1Window::maybeShow" << m_mode << m_allowed << m_requestedToBeShown << shouldShow;
     if (shouldShow && !isDeleted() && surface()->isMapped()) {
         resetPosition();
         markAsMapped();

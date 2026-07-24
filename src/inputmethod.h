@@ -3,12 +3,13 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2026 Kristen McWilliam <kristen@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
 
-#include "input_event.h"
+#include "core/inputdevice.h"
 #include "wayland/textinput_v2.h"
 
 #include <QObject>
@@ -29,8 +30,10 @@ class InputMethodGrabV1;
 class InternalInputMethodContext;
 
 /**
- * This class implements the zwp_input_method_unstable_v1, which is currently used to provide
- * the Virtual Keyboard using supported input method client (maliit-keyboard e.g.)
+ * This class implements the Wayland protocol zwp_input_method_unstable_v1.
+ *
+ * This is used to provide the virtual keyboard using supported input method
+ * clients (e.g. plasma-keyboard, maliit-keyboard, etc).
  **/
 class KWIN_EXPORT InputMethod : public QObject
 {
@@ -159,7 +162,12 @@ private:
     VirtualKeyboardVisibility m_virtualKeyboardVisibility = VirtualKeyboardVisibility::NonMouseInput;
     quint32 m_serial = 0;
     QPointer<InputPanelV1Window> m_panel;
+
+    /**
+     * The window that is currently focused and receiving input from the input method.
+     */
     QPointer<Window> m_trackedWindow;
+
     QPointer<InputMethodGrabV1> m_keyboardGrab;
 
     QProcess *m_inputMethodProcess = nullptr;

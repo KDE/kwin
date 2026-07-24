@@ -499,6 +499,8 @@ void InputMethodV1Interface::sendActivate()
         return;
     }
 
+    qCDebug(KWIN_CORE) << "InputMethodV1Interface::sendActivate: activating input method context";
+
     d->m_context.reset(new InputMethodContextV1Interface(this));
 
     for (auto resource : d->resourceMap()) {
@@ -512,6 +514,8 @@ void InputMethodV1Interface::sendDeactivate()
     if (!d->m_context) {
         return;
     }
+
+    qCDebug(KWIN_CORE) << "InputMethodV1Interface::sendDeactivate: deactivating input method context";
 
     for (auto resource : d->resourceMap()) {
         auto connection = d->m_context->d->resourceMap().value(resource->client());

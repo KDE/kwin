@@ -132,27 +132,36 @@ void InputMethod::init()
     connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this]() {
         m_hasPendingModifiers = true;
     });
+
+    connect(m_panel, &Window::hiddenChanged, this, [this]() {
+        qCDebug(KWIN_VIRTUALKEYBOARD) << "InputMethod::panel hidden state changed to" << m_panel->isHidden();
+    });
 }
 
 void InputMethod::show()
 {
+    qCDebug(KWIN_VIRTUALKEYBOARD) << "InputMethod::show: showing input panel";
+
     m_shouldShowPanel = true;
 
     // If the panel has something to display, show it (e.g. if we hid it from kwin rather than the IM hiding itself)
     // Otherwise, ensure the input context is current and the IM will see to having itself shown if there's something to show.
     // If there's no context available, then nothing will be shown
     if (m_panel && !m_panel->wasUnmapped()) {
+        qCDebug(KWIN_VIRTUALKEYBOARD) << "InputMethod::show: input panel not unmapped, showing it";
         m_panel->show();
         updateInputPanelState();
     } else {
         // making the input context current will trigger the IM
         // to show the panel (if there is something to show)
         if (!isActive()) {
+            qCDebug(KWIN_VIRTUALKEYBOARD) << "InputMethod::show: activating input method context";
             refreshActive();
         }
 
         // refreshActive affects the result of isActive
         if (isActive()) {
+            qCDebug(KWIN_VIRTUALKEYBOARD) << "InputMethod::show: adopting input method context";
             adoptInputMethodContext();
         }
     }
@@ -160,6 +169,8 @@ void InputMethod::show()
 
 void InputMethod::hide()
 {
+    qCDebug(KWIN_VIRTUALKEYBOARD) << "InputMethod::hide: hiding input panel";
+
     m_shouldShowPanel = false;
     if (m_panel) {
         m_panel->hide();
@@ -255,6 +266,7 @@ RectF InputMethod::cursorRectangle() const
 void InputMethod::setActive(bool active)
 {
     const bool wasActive = waylandServer()->inputMethod()->context();
+    qCDebug(KWIN_VIRTUALKEYBOARD) << "InputMethod::setActive: changing active state from" << wasActive << "to" << active;
     if (wasActive && !active) {
         waylandServer()->inputMethod()->sendDeactivate();
     }
@@ -280,6 +292,7 @@ InputPanelV1Window *InputMethod::panel() const
 
 void InputMethod::setPanel(InputPanelV1Window *panel)
 {
+    qCDebug(KWIN_VIRTUALKEYBOARD) << "InputMethod::setPanel";
     Q_ASSERT(panel->isInputMethod());
     if (m_panel) {
         qCDebug(KWIN_VIRTUALKEYBOARD) << "Replacing input panel" << m_panel << "with" << panel;
@@ -288,6 +301,7 @@ void InputMethod::setPanel(InputPanelV1Window *panel)
 
     m_panel = panel;
     connect(m_panel, &Window::closed, this, [this]() {
+        qCDebug(KWIN_VIRTUALKEYBOARD) << "InputMethod::setPanel: input panel closed, clearing m_panel";
         m_panel.clear();
         updateInputPanelState();
         Q_EMIT visibleChanged();
@@ -307,6 +321,9 @@ void InputMethod::setPanel(InputPanelV1Window *panel)
 
 void InputMethod::setTrackedWindow(Window *trackedWindow)
 {
+    auto mWindowCaption = m_trackedWindow ? m_trackedWindow->caption() : QStringLiteral("null");
+    auto tWindowCaption = trackedWindow ? trackedWindow->caption() : QStringLiteral("null");
+    qCDebug(KWIN_VIRTUALKEYBOARD) << "InputMethod::setTrackedWindow: changing tracked window from" << mWindowCaption << "to" << tWindowCaption;
     // Reset the old window virtual keyboard geom if necessary
     // Old and new windows could be the same if focus moves between subsurfaces
     if (m_trackedWindow == trackedWindow) {
@@ -454,6 +471,8 @@ void InputMethod::stateCommitted(uint32_t serial)
 
 void InputMethod::setMode(VirtualKeyboardVisibility newMode)
 {
+    qCDebug(KWIN_VIRTUALKEYBOARD) << "InputMethod::setMode: changing virtual keyboard mode from" << m_virtualKeyboardVisibility << "to" << newMode;
+
     if (m_virtualKeyboardVisibility == newMode) {
         return;
     }
@@ -802,6 +821,7 @@ void InputMethod::adoptInputMethodContext()
 
 void InputMethod::updateInputPanelState()
 {
+    qCDebug(KWIN_VIRTUALKEYBOARD) << "InputMethod::updateInputPanelState: updating input panel state";
     if (m_panel && shouldShowOnActive()) {
         m_panel->allow();
     }
@@ -974,7 +994,13 @@ bool InputMethod::activeClientSupportsTextInput() const
 
 void InputMethod::forceActivate()
 {
+    qCDebug(KWIN_VIRTUALKEYBOARD) << "InputMethod::forceActivate: forcing input method to be active. Panel is null? " << (m_panel == nullptr);
     setActive(true);
+    if (m_panel) {
+        m_panel->allow();
+    } else {
+        qCDebug(KWIN_VIRTUALKEYBOARD) << "InputMethod::forceActivate: no input panel available.";
+    }
     show();
 }
 

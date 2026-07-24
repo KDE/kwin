@@ -77,6 +77,7 @@ private Q_SLOTS:
     void testSendRepeatInfo();
     void testSendRepeatInfoV10();
     void testWindowNoIMActivation();
+    void testForceActivate();
 
 private:
     void touchNow()
@@ -1104,6 +1105,72 @@ void InputMethodTest::testWindowNoIMActivation()
     win.requestActivate();
 
     QVERIFY(!kwinApp()->inputMethod()->isActive());
+}
+
+/**
+ * Verify that forceActivate() shows the on-screen keyboard.
+ *
+ * forceActivate() should show the OSK whether the current window supports input method or
+ * not, since if it doesn't the OSK emulates hardware keyboard input.
+ */
+void InputMethodTest::testForceActivate()
+{
+    QVERIFY(!kwinApp()->inputMethod()->isActive());
+
+    // First, set up a Wayland surface with text input to create the IM panel.
+    // The panel must exist before we can test forceActivate() on a non-IM window.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(1280, 1024), Qt::red);
+    QVERIFY(window);
+    QVERIFY(window->isActive());
+
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
+    textInput->enable(surface.get());
+    QSignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
+    QVERIFY(paneladded.wait());
+    textInput->showInputPanel();
+    QVERIFY(windowAddedSpy.wait());
+    QVERIFY(kwinApp()->inputMethod()->isActive());
+
+    // Deactivate the IM to hide the panel, simulating a non-IM context
+    kwinApp()->inputMethod()->setActive(false);
+    QVERIFY(!kwinApp()->inputMethod()->isActive());
+
+    // Window without IM
+    QRasterWindow win;
+    win.setGeometry(0, 0, 200, 200);
+    win.show();
+    win.requestActivate();
+
+    // Force show the input method
+    kwinApp()->inputMethod()->forceActivate();
+
+    // Verify the OSK is visible
+    QVERIFY(kwinApp()->inputMethod()->isVisible());
+
+    // Switching to a window with IM should keep the IM active
+    WindowWithFocusObject winWithIM(true);
+    winWithIM.setGeometry(0, 0, 200, 200);
+    winWithIM.show();
+    winWithIM.requestActivate();
+
+    QVERIFY(kwinApp()->inputMethod()->isActive());
+
+    // Switching back to the plain window should still keep the IM active
+    win.requestActivate();
+
+    QVERIFY(kwinApp()->inputMethod()->isActive());
+
+    // Force deactivate the input method
+    kwinApp()->inputMethod()->setActive(false);
+
+    QVERIFY(!kwinApp()->inputMethod()->isActive());
+
+    // Destroy the test window.
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 WAYLANDTEST_MAIN(InputMethodTest)
