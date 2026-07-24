@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-22 00:46+0000\n"
+"POT-Creation-Date: 2026-07-24 00:46+0000\n"
 "PO-Revision-Date: 2025-03-15 10:38+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -2394,12 +2394,12 @@ msgstr "Tiparo:"
 msgid "Show Text:"
 msgstr "Montri Tekston:"
 
-#: plugins/mousemark/mousemark.cpp:41
+#: plugins/mousemark/mousemark.cpp:36
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Forigi Ĉiujn Musmarkojn"
 
-#: plugins/mousemark/mousemark.cpp:46 plugins/mousemark/mousemark_config.cpp:51
+#: plugins/mousemark/mousemark.cpp:41 plugins/mousemark/mousemark_config.cpp:51
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Forigi Lastan Musmarkon"

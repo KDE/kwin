@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-22 00:46+0000\n"
-"PO-Revision-Date: 2026-07-17 11:54+0200\n"
+"POT-Creation-Date: 2026-07-24 00:46+0000\n"
+"PO-Revision-Date: 2026-07-22 13:02+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -2348,12 +2348,12 @@ msgstr "Lletra:"
 msgid "Show Text:"
 msgstr "Mostra el text:"
 
-#: plugins/mousemark/mousemark.cpp:41
+#: plugins/mousemark/mousemark.cpp:36
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Neteja totes les marques de ratolí"
 
-#: plugins/mousemark/mousemark.cpp:46 plugins/mousemark/mousemark_config.cpp:51
+#: plugins/mousemark/mousemark.cpp:41 plugins/mousemark/mousemark_config.cpp:51
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Neteja l'última marca de ratolí"
@@ -3646,7 +3646,7 @@ msgstr ""
 #: scene/workspacescene.cpp:115
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
-msgstr ""
+msgstr "Canvia l'efecte «Mostra la composició»"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

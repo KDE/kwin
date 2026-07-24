@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-22 00:46+0000\n"
+"POT-Creation-Date: 2026-07-24 00:46+0000\n"
 "PO-Revision-Date: 2007-07-31 19:27+0330\n"
 "Last-Translator: Nazanin Kazemi <kazemi@itland.ir>\n"
 "Language-Team: Persian <kde-i18n-fa@kde.org>\n"
@@ -2374,13 +2374,13 @@ msgstr ""
 msgid "Show Text:"
 msgstr "نمایش توری رومیزی"
 
-#: plugins/mousemark/mousemark.cpp:41
+#: plugins/mousemark/mousemark.cpp:36
 #, fuzzy, kde-format
 #| msgid "Clear Mouse Marks"
 msgid "Clear All Mouse Marks"
 msgstr "پاک‌سازی نشان‌های موشی"
 
-#: plugins/mousemark/mousemark.cpp:46 plugins/mousemark/mousemark_config.cpp:51
+#: plugins/mousemark/mousemark.cpp:41 plugins/mousemark/mousemark_config.cpp:51
 #, fuzzy, kde-format
 #| msgid "Clear Mouse Marks"
 msgid "Clear Last Mouse Mark"

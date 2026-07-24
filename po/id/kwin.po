@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-22 00:46+0000\n"
+"POT-Creation-Date: 2026-07-24 00:46+0000\n"
 "PO-Revision-Date: 2023-12-03 14:01+0700\n"
 "Last-Translator: Linerly <linerly@linerly.xyz>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -2458,13 +2458,13 @@ msgstr "Font:"
 msgid "Show Text:"
 msgstr "Tampilkan Desktop"
 
-#: plugins/mousemark/mousemark.cpp:41
+#: plugins/mousemark/mousemark.cpp:36
 #, fuzzy, kde-format
 #| msgid "Clear All Mouse Marks"
 msgid "Clear All Mouse Marks"
 msgstr "Hapus Semua Tanda Mouse"
 
-#: plugins/mousemark/mousemark.cpp:46 plugins/mousemark/mousemark_config.cpp:51
+#: plugins/mousemark/mousemark.cpp:41 plugins/mousemark/mousemark_config.cpp:51
 #, fuzzy, kde-format
 #| msgid "Clear Last Mouse Mark"
 msgid "Clear Last Mouse Mark"

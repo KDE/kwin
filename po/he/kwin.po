@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-22 00:46+0000\n"
-"PO-Revision-Date: 2026-07-17 12:21+0300\n"
+"POT-Creation-Date: 2026-07-24 00:46+0000\n"
+"PO-Revision-Date: 2026-07-23 08:52+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -2322,12 +2322,12 @@ msgstr "גופן:"
 msgid "Show Text:"
 msgstr "הצגת טקסט:"
 
-#: plugins/mousemark/mousemark.cpp:41
+#: plugins/mousemark/mousemark.cpp:36
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "ניקוי כל סימוני העכבר"
 
-#: plugins/mousemark/mousemark.cpp:46 plugins/mousemark/mousemark_config.cpp:51
+#: plugins/mousemark/mousemark.cpp:41 plugins/mousemark/mousemark_config.cpp:51
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "ניקוי סימון העכבר האחרון"
@@ -3607,7 +3607,7 @@ msgstr "סוג כלל הסתרה מצילומי והסרטות מסך"
 #: scene/workspacescene.cpp:115
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
-msgstr ""
+msgstr "החלפת מצב אפקט „הצגת ניהול חלונאי”"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
