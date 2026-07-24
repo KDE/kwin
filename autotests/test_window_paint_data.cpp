@@ -25,7 +25,6 @@ class TestWindowPaintData : public QObject
 private Q_SLOTS:
     void testCtor();
     void testCopyCtor();
-    void testOperatorPlus();
     void testMultiplyOpacity();
     void testMultiplySaturation();
     void testMultiplyBrightness();
@@ -34,10 +33,6 @@ private Q_SLOTS:
 void TestWindowPaintData::testCtor()
 {
     WindowPaintData data;
-    QCOMPARE(data.xTranslation(), 0.0);
-    QCOMPARE(data.yTranslation(), 0.0);
-    QCOMPARE(data.zTranslation(), 0.0);
-    QCOMPARE(data.translation(), QVector3D());
     QCOMPARE(data.rotationAngle(), 0.0);
     QCOMPARE(data.rotationOrigin(), QVector3D());
     QCOMPARE(data.rotationAxis(), QVector3D(0.0, 0.0, 1.0));
@@ -51,10 +46,6 @@ void TestWindowPaintData::testCopyCtor()
     WindowPaintData data;
     WindowPaintData data2(data);
     // no value had been changed
-    QCOMPARE(data2.xTranslation(), 0.0);
-    QCOMPARE(data2.yTranslation(), 0.0);
-    QCOMPARE(data2.zTranslation(), 0.0);
-    QCOMPARE(data2.translation(), QVector3D());
     QCOMPARE(data2.rotationAngle(), 0.0);
     QCOMPARE(data2.rotationOrigin(), QVector3D());
     QCOMPARE(data2.rotationAxis(), QVector3D(0.0, 0.0, 1.0));
@@ -62,7 +53,6 @@ void TestWindowPaintData::testCopyCtor()
     QCOMPARE(data2.brightness(), 1.0);
     QCOMPARE(data2.saturation(), 1.0);
 
-    data2.translate(0.5, 2.0, 3.0);
     data2.setRotationAngle(45.0);
     data2.setRotationOrigin(QVector3D(1.0, 2.0, 3.0));
     data2.setRotationAxis(QVector3D(1.0, 1.0, 0.0));
@@ -71,37 +61,12 @@ void TestWindowPaintData::testCopyCtor()
     data2.setSaturation(0.4);
 
     WindowPaintData data3(data2);
-    QCOMPARE(data3.xTranslation(), 0.5);
-    QCOMPARE(data3.yTranslation(), 2.0);
-    QCOMPARE(data3.zTranslation(), 3.0);
-    QCOMPARE(data3.translation(), QVector3D(0.5, 2.0, 3.0));
     QCOMPARE(data3.rotationAngle(), 45.0);
     QCOMPARE(data3.rotationOrigin(), QVector3D(1.0, 2.0, 3.0));
     QCOMPARE(data3.rotationAxis(), QVector3D(1.0, 1.0, 0.0));
     QCOMPARE(data3.opacity(), 0.1);
     QCOMPARE(data3.brightness(), 0.3);
     QCOMPARE(data3.saturation(), 0.4);
-}
-
-void TestWindowPaintData::testOperatorPlus()
-{
-    WindowPaintData data;
-    QCOMPARE(data.xTranslation(), 0.0);
-    QCOMPARE(data.yTranslation(), 0.0);
-    QCOMPARE(data.zTranslation(), 0.0);
-    QCOMPARE(data.translation(), QVector3D());
-    // test with point
-    data += QPoint(1, 2);
-    QCOMPARE(data.translation(), QVector3D(1.0, 2.0, 0.0));
-    // test with pointf
-    data += QPointF(0.5, 0.75);
-    QCOMPARE(data.translation(), QVector3D(1.5, 2.75, 0.0));
-    // test with QVector2D
-    data += QVector2D(0.25, 1.5);
-    QCOMPARE(data.translation(), QVector3D(1.75, 4.25, 0.0));
-    // test with QVector3D
-    data += QVector3D(1.0, 2.0, 3.5);
-    QCOMPARE(data.translation(), QVector3D(2.75, 6.25, 3.5));
 }
 
 void TestWindowPaintData::testMultiplyBrightness()

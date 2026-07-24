@@ -36,7 +36,6 @@ public:
         , rotationAngle(0.)
     {
     }
-    QVector3D translation;
 
     QVector3D rotationAxis;
     QVector3D rotationOrigin;
@@ -49,51 +48,6 @@ PaintData::PaintData()
 }
 
 PaintData::~PaintData() = default;
-
-void PaintData::setXTranslation(qreal translate)
-{
-    d->translation.setX(translate);
-}
-
-void PaintData::setYTranslation(qreal translate)
-{
-    d->translation.setY(translate);
-}
-
-void PaintData::setZTranslation(qreal translate)
-{
-    d->translation.setZ(translate);
-}
-
-void PaintData::translate(qreal x, qreal y, qreal z)
-{
-    translate(QVector3D(x, y, z));
-}
-
-void PaintData::translate(const QVector3D &t)
-{
-    d->translation += t;
-}
-
-qreal PaintData::xTranslation() const
-{
-    return d->translation.x();
-}
-
-qreal PaintData::yTranslation() const
-{
-    return d->translation.y();
-}
-
-qreal PaintData::zTranslation() const
-{
-    return d->translation.z();
-}
-
-const QVector3D &PaintData::translation() const
-{
-    return d->translation;
-}
 
 qreal PaintData::rotationAngle() const
 {
@@ -143,9 +97,6 @@ void PaintData::setRotationOrigin(const QVector3D &origin)
 QMatrix4x4 PaintData::toMatrix(qreal deviceScale) const
 {
     QMatrix4x4 ret;
-    if (d->translation != QVector3D(0, 0, 0)) {
-        ret.translate(d->translation * deviceScale);
-    }
 
     if (d->rotationAngle != 0) {
         ret.translate(d->rotationOrigin * deviceScale);
@@ -179,7 +130,6 @@ WindowPaintData::WindowPaintData(const WindowPaintData &other)
     : PaintData()
     , d(std::make_unique<WindowPaintDataPrivate>())
 {
-    translate(other.translation());
     setRotationOrigin(other.rotationOrigin());
     setRotationAxis(other.rotationAxis());
     setRotationAngle(other.rotationAngle());
@@ -247,27 +197,6 @@ qreal WindowPaintData::multiplyBrightness(qreal factor)
 {
     d->brightness *= factor;
     return d->brightness;
-}
-
-WindowPaintData &WindowPaintData::operator+=(const QPointF &translation)
-{
-    return this->operator+=(QVector3D(translation));
-}
-
-WindowPaintData &WindowPaintData::operator+=(const QPoint &translation)
-{
-    return this->operator+=(QVector3D(translation));
-}
-
-WindowPaintData &WindowPaintData::operator+=(const QVector2D &translation)
-{
-    return this->operator+=(QVector3D(translation));
-}
-
-WindowPaintData &WindowPaintData::operator+=(const QVector3D &translation)
-{
-    translate(translation);
-    return *this;
 }
 
 Effect::Effect(QObject *parent)

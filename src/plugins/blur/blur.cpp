@@ -489,17 +489,7 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
         return false;
     }
 
-    if (w->isDesktop()) {
-        return false;
-    }
-
-    bool translated = data.xTranslation() || data.yTranslation();
-
-    if ((translated || (mask & PAINT_WINDOW_TRANSFORMED)) && !w->data(WindowForceBlurRole).toBool()) {
-        return false;
-    }
-
-    return true;
+    return !w->isDesktop();
 }
 
 bool BlurEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
@@ -561,9 +551,6 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
 
     // Compute the effective blur shape. Note that if the window is transformed, so will be the blur shape.
     RegionF blurShape = blurRegion(w);
-    if (data.xTranslation() || data.yTranslation()) {
-        blurShape.translate(data.xTranslation(), data.yTranslation());
-    }
 
     for (Item *item = w->windowItem()->effectContainer(); item; item = item->parentItem()) {
         if (!item->transform().isIdentity()) {
@@ -830,13 +817,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
                                   0.5 / read->colorAttachment()->height());
 
         Item *surfaceItem = w->windowItem()->surfaceItem();
-        const RectF rect = surfaceItem->mapToView(surfaceItem->rect(), m_currentView);
-        const RectF transformedRect = RectF{
-            rect.x() + data.xTranslation(),
-            rect.y() + data.yTranslation(),
-            rect.width(),
-            rect.height(),
-        };
+        const RectF transformedRect = surfaceItem->mapToView(surfaceItem->rect(), m_currentView);
         const RectF nativeBox = transformedRect
                                     .scaled(viewport.scale())
                                     .rounded()
