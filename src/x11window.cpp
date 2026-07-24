@@ -136,6 +136,8 @@ X11Window::X11Window()
 
     connect(clientMachine(), &ClientMachine::localhostChanged, this, &X11Window::updateCaption);
     connect(options, &Options::condensedTitleChanged, this, &X11Window::updateCaption);
+    connect(workspace(), &Workspace::dpmsStateChanged, this, &X11Window::updateVisibility);
+    connect(waylandServer(), &WaylandServer::lockStateChanged, this, &X11Window::updateVisibility);
 
     // SELI TODO: Initialize xsizehints??
 }
@@ -1234,13 +1236,13 @@ void X11Window::updateVisibility()
         return;
     }
     setSkipTaskbar(originalSkipTaskbar()); // Reset from 'hidden'
-    if (isMinimized()) {
+    if (isMinimized() || workspace()->dpmsState() != Workspace::DpmsState::On) {
         info->setState(NET::Hidden, NET::Hidden);
         internalHide();
         return;
     }
     info->setState(NET::States(), NET::Hidden);
-    if (!isOnCurrentDesktop()) {
+    if (!isOnCurrentDesktop() || waylandServer()->isScreenLocked()) {
         internalKeep();
         return;
     }
