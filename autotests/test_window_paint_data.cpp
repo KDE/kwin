@@ -25,7 +25,6 @@ class TestWindowPaintData : public QObject
 private Q_SLOTS:
     void testCtor();
     void testCopyCtor();
-    void testOperatorMultiplyAssign();
     void testOperatorPlus();
     void testMultiplyOpacity();
     void testMultiplySaturation();
@@ -35,9 +34,6 @@ private Q_SLOTS:
 void TestWindowPaintData::testCtor()
 {
     WindowPaintData data;
-    QCOMPARE(data.xScale(), 1.0);
-    QCOMPARE(data.yScale(), 1.0);
-    QCOMPARE(data.zScale(), 1.0);
     QCOMPARE(data.xTranslation(), 0.0);
     QCOMPARE(data.yTranslation(), 0.0);
     QCOMPARE(data.zTranslation(), 0.0);
@@ -55,9 +51,6 @@ void TestWindowPaintData::testCopyCtor()
     WindowPaintData data;
     WindowPaintData data2(data);
     // no value had been changed
-    QCOMPARE(data2.xScale(), 1.0);
-    QCOMPARE(data2.yScale(), 1.0);
-    QCOMPARE(data2.zScale(), 1.0);
     QCOMPARE(data2.xTranslation(), 0.0);
     QCOMPARE(data2.yTranslation(), 0.0);
     QCOMPARE(data2.zTranslation(), 0.0);
@@ -69,7 +62,6 @@ void TestWindowPaintData::testCopyCtor()
     QCOMPARE(data2.brightness(), 1.0);
     QCOMPARE(data2.saturation(), 1.0);
 
-    data2.setScale(QVector3D(0.5, 2.0, 3.0));
     data2.translate(0.5, 2.0, 3.0);
     data2.setRotationAngle(45.0);
     data2.setRotationOrigin(QVector3D(1.0, 2.0, 3.0));
@@ -79,9 +71,6 @@ void TestWindowPaintData::testCopyCtor()
     data2.setSaturation(0.4);
 
     WindowPaintData data3(data2);
-    QCOMPARE(data3.xScale(), 0.5);
-    QCOMPARE(data3.yScale(), 2.0);
-    QCOMPARE(data3.zScale(), 3.0);
     QCOMPARE(data3.xTranslation(), 0.5);
     QCOMPARE(data3.yTranslation(), 2.0);
     QCOMPARE(data3.zTranslation(), 3.0);
@@ -92,30 +81,6 @@ void TestWindowPaintData::testCopyCtor()
     QCOMPARE(data3.opacity(), 0.1);
     QCOMPARE(data3.brightness(), 0.3);
     QCOMPARE(data3.saturation(), 0.4);
-}
-
-void TestWindowPaintData::testOperatorMultiplyAssign()
-{
-    WindowPaintData data;
-    // without anything set, it's 1.0 on all axis
-    QCOMPARE(data.xScale(), 1.0);
-    QCOMPARE(data.yScale(), 1.0);
-    QCOMPARE(data.zScale(), 1.0);
-    // multiplying by a factor should set all components
-    data *= 2.0;
-    QCOMPARE(data.xScale(), 2.0);
-    QCOMPARE(data.yScale(), 2.0);
-    QCOMPARE(data.zScale(), 2.0);
-    // multiplying by a vector2D should set x and y components
-    data *= QVector2D(2.0, 3.0);
-    QCOMPARE(data.xScale(), 4.0);
-    QCOMPARE(data.yScale(), 6.0);
-    QCOMPARE(data.zScale(), 2.0);
-    // multiplying by a vector3d should set all components
-    data *= QVector3D(0.5, 1.5, 2.0);
-    QCOMPARE(data.xScale(), 2.0);
-    QCOMPARE(data.yScale(), 9.0);
-    QCOMPARE(data.zScale(), 4.0);
 }
 
 void TestWindowPaintData::testOperatorPlus()
