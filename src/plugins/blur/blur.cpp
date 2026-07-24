@@ -493,10 +493,9 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
         return false;
     }
 
-    bool scaled = !qFuzzyCompare(data.xScale(), 1.0) && !qFuzzyCompare(data.yScale(), 1.0);
     bool translated = data.xTranslation() || data.yTranslation();
 
-    if ((scaled || (translated || (mask & PAINT_WINDOW_TRANSFORMED))) && !w->data(WindowForceBlurRole).toBool()) {
+    if ((translated || (mask & PAINT_WINDOW_TRANSFORMED)) && !w->data(WindowForceBlurRole).toBool()) {
         return false;
     }
 
@@ -562,9 +561,6 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
 
     // Compute the effective blur shape. Note that if the window is transformed, so will be the blur shape.
     RegionF blurShape = blurRegion(w);
-    if (data.xScale() != 1 || data.yScale() != 1) {
-        blurShape.scale(data.xScale(), data.yScale());
-    }
     if (data.xTranslation() || data.yTranslation()) {
         blurShape.translate(data.xTranslation(), data.yTranslation());
     }
@@ -838,8 +834,8 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         const RectF transformedRect = RectF{
             rect.x() + data.xTranslation(),
             rect.y() + data.yTranslation(),
-            rect.width() * data.xScale(),
-            rect.height() * data.yScale(),
+            rect.width(),
+            rect.height(),
         };
         const RectF nativeBox = transformedRect
                                     .scaled(viewport.scale())
