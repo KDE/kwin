@@ -622,13 +622,15 @@ static void addOpaqueRegionRecursive(SceneView *view, Item *item, const std::opt
         return;
     }
     const std::optional<ClipCorner> corner = calculateClipCorner(item, parentCorner);
-    RegionF opaque = item->opaque();
-    if (corner.has_value()) {
-        opaque = corner->radius.clip(item->opaque(), corner->box);
-    }
-    const Rect deviceRect = view->mapToDeviceCoordinates(item->mapToView(item->rect(), view)).rounded();
-    for (const RectF &rect : opaque.rects()) {
-        ret |= view->mapToDeviceCoordinates(item->mapToView(rect, view)).rounded() & deviceRect;
+    if (view->shouldRenderItem(item) || view->shouldRenderHole(item)) {
+        RegionF opaque = item->opaque();
+        if (corner.has_value()) {
+            opaque = corner->radius.clip(item->opaque(), corner->box);
+        }
+        const Rect deviceRect = view->mapToDeviceCoordinates(item->mapToView(item->rect(), view)).rounded();
+        for (const RectF &rect : opaque.rects()) {
+            ret |= view->mapToDeviceCoordinates(item->mapToView(rect, view)).rounded() & deviceRect;
+        }
     }
     const auto children = item->childItems();
     for (Item *child : children) {
