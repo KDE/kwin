@@ -94,7 +94,7 @@ protected:
     // saved data for 2nd pass of optimized screen painting
     struct Phase2Data
     {
-        WindowItem *item = nullptr;
+        Item *item;
         Region deviceRegion;
         Region deviceOpaque;
         int mask = 0;
@@ -111,8 +111,8 @@ protected:
     LogicalOutput *painted_screen = nullptr;
     SceneView *painted_delegate = nullptr;
 
-    // windows in their stacking order
-    QList<WindowItem *> stacking_order;
+    // Items in their stacking order
+    QList<QPointer<Item>> stacking_order;
 
 private:
     void createDndIconItem();

@@ -135,10 +135,17 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, Re
         }
         hole = true;
     }
+    const auto scale = context->renderTargetScale;
+    if (auto clip = item->globalClipRect()) {
+        deviceClip &= clip->scaled(scale).translated(-context->viewportOrigin).rounded();
+        if (deviceClip.isEmpty()) {
+            return true;
+        }
+    }
+
     const QList<Item *> sortedChildItems = item->sortedChildItems();
 
     const auto logicalPosition = QVector2D(item->position().x(), item->position().y());
-    const auto scale = context->renderTargetScale;
 
     MirrorItem *mirror = qobject_cast<MirrorItem *>(item);
     Item *toRender = mirror ? mirror->source() : item;
@@ -165,10 +172,6 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, Re
         opacity *= mirror->opacity();
     }
     context->opacityStack.push(context->opacityStack.top() * opacity);
-
-    if (auto clip = item->globalClipRect()) {
-        deviceClip &= clip->scaled(scale).translated(-context->viewportOrigin).rounded();
-    }
 
     for (Item *childItem : sortedChildItems) {
         if (childItem->z() >= 0) {

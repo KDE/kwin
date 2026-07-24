@@ -14,6 +14,10 @@
 #include "core/output.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
+#include "scene/mirroritem.h"
+#include "scene/transformitem.h"
+#include "scene/windowitem.h"
+#include "scene/workspacescene.h"
 
 // KConfigSkeleton
 #include "slideconfig.h"
@@ -52,7 +56,7 @@ SlideEffect::SlideEffect()
     connect(effects, &EffectsHandler::screenAdded,
             this, &SlideEffect::finishedSwitching);
     connect(effects, &EffectsHandler::screenRemoved, this, [this](LogicalOutput *screen) {
-        m_slideEffectScreens.remove(screen);
+        m_slideEffectScreens.erase(screen);
         finishedSwitching();
     });
     connect(effects, &EffectsHandler::currentActivityAboutToChange, this, [this]() {
@@ -82,7 +86,7 @@ void SlideEffect::reconfigure(ReconfigureFlags)
 {
     SlideConfig::self()->read();
 
-    for (SlideEffectScreen &slideScreen : m_slideEffectScreens) {
+    for (auto &[output, slideScreen] : m_slideEffectScreens) {
         slideScreen.reconfigure();
     }
 
@@ -135,6 +139,7 @@ void SlideEffectScreen::prePaintScreen(ScreenPrePaintData &data)
     if (m_state == State::Inactive) {
         return;
     }
+    m_paintCtx.wrap = effects->optionRollOverDesktops();
     const QList<VirtualDesktop *> desktops = effects->desktops();
     const int w = effects->desktopGridWidth();
     const int h = effects->desktopGridHeight();
@@ -161,39 +166,88 @@ void SlideEffectScreen::prePaintScreen(ScreenPrePaintData &data)
     // Clipping
     m_paintCtx.visibleDesktops.clear();
     m_paintCtx.visibleDesktops.reserve(4); // 4 - maximum number of visible desktops
-    bool includedX = false, includedY = false;
     for (VirtualDesktop *desktop : desktops) {
         const QPoint coords = effects->desktopGridCoords(desktop);
-        if (coords.x() % w == (int)(m_paintCtx.position.x()) % w) {
-            includedX = true;
-        } else if (coords.x() % w == ((int)(m_paintCtx.position.x()) + 1) % w) {
-            includedX = true;
-        }
-        if (coords.y() % h == (int)(m_paintCtx.position.y()) % h) {
-            includedY = true;
-        } else if (coords.y() % h == ((int)(m_paintCtx.position.y()) + 1) % h) {
-            includedY = true;
-        }
+        const bool includedX = (coords.x() % w) == ((int)(m_paintCtx.position.x()) % w)
+            || (coords.x() % w) == (((int)(m_paintCtx.position.x()) + 1) % w);
+        const bool includedY = (coords.y() % h) == ((int)(m_paintCtx.position.y()) % h)
+            || (coords.y() % h) == (((int)(m_paintCtx.position.y()) + 1) % h);
 
         if (includedX && includedY) {
             m_paintCtx.visibleDesktops << desktop;
         }
     }
-
-    data.mask |= Effect::PAINT_SCREEN_TRANSFORMED;
+    prePaintItems();
 }
 
-bool SlideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
+void SlideEffectScreen::prePaintItems()
 {
-    if (SlideEffectScreen *slideScreen = getSlideEffectScreen(screen)) {
-        slideScreen->paintScreen();
+    for (auto &[window, windowData] : m_windowData) {
+        if (!willBePainted(window) || !isTranslated(window)) {
+            windowData.transformItem.reset();
+            windowData.mirrorItems.clear();
+            continue;
+        }
+
+        const int gridWidth = effects->desktopGridWidth();
+        const int gridHeight = effects->desktopGridHeight();
+
+        QPointF drawPosition = forcePositivePosition(m_paintCtx.position);
+        drawPosition = m_paintCtx.wrap ? constrainToDrawableRange(drawPosition) : drawPosition;
+
+        // If we're wrapping, draw the desktop in the second position.
+        const bool wrappingX = drawPosition.x() > gridWidth - 1;
+        const bool wrappingY = drawPosition.y() > gridHeight - 1;
+
+        const auto screens = effects->screens();
+
+        size_t count = 0;
+        for (VirtualDesktop *desktop : std::as_const(m_paintCtx.visibleDesktops)) {
+            if (!window->isOnDesktop(desktop)) {
+                continue;
+            }
+            QPointF desktopTranslation = QPointF(effects->desktopGridCoords(desktop)) - drawPosition;
+            // Decide if that first desktop should be drawn at 0 or the higher position used for wrapping.
+            if (effects->desktopGridCoords(desktop).x() == 0 && wrappingX) {
+                desktopTranslation = QPointF(desktopTranslation.x() + gridWidth, desktopTranslation.y());
+            }
+            if (effects->desktopGridCoords(desktop).y() == 0 && wrappingY) {
+                desktopTranslation = QPointF(desktopTranslation.x(), desktopTranslation.y() + gridHeight);
+            }
+
+            for (LogicalOutput *screen : screens) {
+                const QPoint drawTranslation = getDrawCoords(desktopTranslation, screen);
+                const Rect screenArea = screen->geometry();
+                const Rect clip = screenArea.translated(drawTranslation).intersected(screenArea);
+
+                // FIXME two problems remain,
+                // - at the start of the animation, there's a black flicker (???)
+                // - when sliding completely to the other desktop, windows from the first desktop show up again.
+                //   Apparently, count=0 when that happens...
+
+                if (windowData.mirrorItems.size() <= count) {
+                    windowData.mirrorItems.push_back(std::make_unique<MirrorItem>(window->windowItem()->effectContainer(), effects->scene()->containerItem()));
+                }
+                auto &item = windowData.mirrorItems[count];
+                item->setPosition(window->pos() + drawTranslation);
+                item->setZ(window->windowItem()->z());
+                item->setGlobalClipRect(clip);
+                count++;
+            }
+        }
+
+        if (count > 0) {
+            windowData.mirrorItems.resize(count);
+            // hide the original window
+            if (!windowData.transformItem) {
+                windowData.transformItem = std::make_unique<TransformItem>(window);
+            }
+            windowData.transformItem->setGlobalClipRect(RectF());
+        } else {
+            windowData.transformItem.reset();
+            windowData.mirrorItems.clear();
+        }
     }
-    return effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
-}
-
-void SlideEffectScreen::paintScreen()
-{
-    m_paintCtx.wrap = effects->optionRollOverDesktops();
 }
 
 QPoint SlideEffectScreen::getDrawCoords(QPointF pos, LogicalOutput *screen)
@@ -246,82 +300,10 @@ bool SlideEffectScreen::willBePainted(const EffectWindow *w) const
     return false;
 }
 
-void SlideEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data)
-{
-    data.setTransformed();
-    effects->prePaintWindow(view, w, data);
-}
-
-bool SlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data)
-{
-    if (SlideEffectScreen *slideScreen = getSlideEffectScreen(w->screen())) {
-        return slideScreen->paintWindow(renderTarget, viewport, w, mask, deviceGeometry, data);
-    } else {
-        return effects->paintWindow(renderTarget, viewport, w, mask, deviceGeometry, data);
-    }
-}
-
-bool SlideEffectScreen::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data)
-{
-    if (!willBePainted(w)) {
-        return true;
-    }
-
-    if (!isTranslated(w)) {
-        return effects->paintWindow(renderTarget, viewport, w, mask, deviceGeometry, data);
-    }
-
-    const int gridWidth = effects->desktopGridWidth();
-    const int gridHeight = effects->desktopGridHeight();
-
-    QPointF drawPosition = forcePositivePosition(m_paintCtx.position);
-    drawPosition = m_paintCtx.wrap ? constrainToDrawableRange(drawPosition) : drawPosition;
-
-    // If we're wrapping, draw the desktop in the second position.
-    const bool wrappingX = drawPosition.x() > gridWidth - 1;
-    const bool wrappingY = drawPosition.y() > gridHeight - 1;
-
-    const auto screens = effects->screens();
-
-    for (VirtualDesktop *desktop : std::as_const(m_paintCtx.visibleDesktops)) {
-        if (!w->isOnDesktop(desktop)) {
-            continue;
-        }
-        QPointF desktopTranslation = QPointF(effects->desktopGridCoords(desktop)) - drawPosition;
-        // Decide if that first desktop should be drawn at 0 or the higher position used for wrapping.
-        if (effects->desktopGridCoords(desktop).x() == 0 && wrappingX) {
-            desktopTranslation = QPointF(desktopTranslation.x() + gridWidth, desktopTranslation.y());
-        }
-        if (effects->desktopGridCoords(desktop).y() == 0 && wrappingY) {
-            desktopTranslation = QPointF(desktopTranslation.x(), desktopTranslation.y() + gridHeight);
-        }
-
-        for (LogicalOutput *screen : screens) {
-            QPoint drawTranslation = getDrawCoords(desktopTranslation, screen);
-            data += drawTranslation;
-
-            const Rect screenArea = screen->geometry();
-            const Rect logicalDamage = screenArea.translated(drawTranslation).intersected(screenArea);
-
-            if (!effects->paintWindow(
-                    renderTarget, viewport, w, mask,
-                    // Only paint the region that intersects the current screen and desktop.
-                    deviceGeometry.intersected(viewport.mapToDeviceCoordinatesAligned(logicalDamage)),
-                    data)) {
-                return false;
-            }
-
-            // Undo the translation for the next screen. I know, it hurts me too.
-            data += QPoint(-drawTranslation.x(), -drawTranslation.y());
-        }
-    }
-    return true;
-}
-
 void SlideEffect::postPaintScreen()
 {
     bool allInactive = true;
-    for (SlideEffectScreen &slideScreen : m_slideEffectScreens) {
+    for (auto &[output, slideScreen] : m_slideEffectScreens) {
         slideScreen.postPaintScreen();
         if (slideScreen.isActive()) {
             allInactive = false;
@@ -403,9 +385,7 @@ void SlideEffectScreen::prepareSwitching()
         if (w->screen() != m_screen) {
             continue;
         }
-        m_windowData[w] = WindowData{
-            .visibilityRef = EffectWindowVisibleRef(w, EffectWindow::PAINT_DISABLED_BY_DESKTOP),
-        };
+        m_windowData[w] = WindowData{};
 
         if (shouldElevate(w)) {
             effects->setElevatedWindow(w, true);
@@ -416,7 +396,7 @@ void SlideEffectScreen::prepareSwitching()
 
 void SlideEffect::finishedSwitching()
 {
-    for (SlideEffectScreen &slideScreen : m_slideEffectScreens) {
+    for (auto &[output, slideScreen] : m_slideEffectScreens) {
         slideScreen.finishedSwitching();
     }
     m_slideEffectScreens.clear();
@@ -456,8 +436,8 @@ void SlideEffect::desktopChanged(VirtualDesktop *old, VirtualDesktop *current, E
         }
     }
 
-    auto slideScreenResult = m_slideEffectScreens.tryEmplace(screen, this, screen);
-    slideScreenResult.iterator->desktopChanged(old, current, with);
+    auto slideScreenResult = m_slideEffectScreens.try_emplace(screen, this, screen);
+    slideScreenResult.first->second.desktopChanged(old, current, with);
     effects->setActiveFullScreenEffect(this);
 }
 
@@ -496,8 +476,8 @@ void SlideEffect::desktopChanging(VirtualDesktop *old, QPointF desktopOffset, Ef
         }
     }
 
-    auto slideScreenResult = m_slideEffectScreens.tryEmplace(output, this, output);
-    slideScreenResult.iterator->desktopChanging(old, desktopOffset, with);
+    auto slideScreenResult = m_slideEffectScreens.try_emplace(output, this, output);
+    slideScreenResult.first->second.desktopChanging(old, desktopOffset, with);
     effects->setActiveFullScreenEffect(this);
 }
 
@@ -529,7 +509,7 @@ void SlideEffect::desktopChangingCancelled()
     // If the fingers have been lifted and the current desktop didn't change, start animation
     // to move back to the original virtual desktop.
     if (effects->activeFullScreenEffect() == this) {
-        for (SlideEffectScreen &slideScreen : m_slideEffectScreens) {
+        for (auto &[output, slideScreen] : m_slideEffectScreens) {
             slideScreen.desktopChangingCancelled();
         }
     }
@@ -579,16 +559,14 @@ void SlideEffectScreen::windowAdded(EffectWindow *w)
         m_elevatedWindows << w;
     }
 
-    m_windowData[w] = WindowData{
-        .visibilityRef = EffectWindowVisibleRef(w, EffectWindow::PAINT_DISABLED_BY_DESKTOP),
-    };
+    m_windowData[w] = WindowData{};
 }
 
 void SlideEffect::windowDeleted(EffectWindow *w)
 {
     // It's necessary to delete it in all screens, because the window may have changed screens since it was added. This happens e.g. with the desktop change OSD
     // window if the slide effect is triggered on both screens consecutively: the window is added on the first screen and deleted on the second screen.
-    for (SlideEffectScreen &slideScreen : m_slideEffectScreens) {
+    for (auto &[output, slideScreen] : m_slideEffectScreens) {
         slideScreen.windowDeleted(w);
     }
 }
@@ -602,7 +580,7 @@ void SlideEffectScreen::windowDeleted(EffectWindow *w)
         m_movingWindow = nullptr;
     }
     m_elevatedWindows.removeAll(w);
-    m_windowData.remove(w);
+    m_windowData.erase(w);
 }
 
 /*
@@ -683,7 +661,7 @@ SlideEffectScreen *SlideEffect::getSlideEffectScreen(LogicalOutput *screen)
     if (it == m_slideEffectScreens.end()) {
         return nullptr;
     }
-    return &(*it);
+    return &it->second;
 }
 
 } // namespace KWin
