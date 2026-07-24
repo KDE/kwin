@@ -122,60 +122,6 @@ class KWIN_EXPORT PaintData
 public:
     virtual ~PaintData();
     /*!
-     * Returns scale factor in X direction.
-     * \since 4.10
-     */
-    qreal xScale() const;
-    /*!
-     * Returns scale factor in Y direction.
-     * \since 4.10
-     */
-    qreal yScale() const;
-    /*!
-     * Returns scale factor in Z direction.
-     * \since 4.10
-     */
-    qreal zScale() const;
-    /*!
-     * Sets the scale factor in X direction to \a scale
-     *
-     * \a scale The scale factor in X direction
-     * \since 4.10
-     */
-    void setXScale(qreal scale);
-    /*!
-     * Sets the scale factor in Y direction to \a scale
-     *
-     * \a scale The scale factor in Y direction
-     * \since 4.10
-     */
-    void setYScale(qreal scale);
-    /*!
-     * Sets the scale factor in Z direction to \a scale
-     *
-     * \a scale The scale factor in Z direction
-     * \since 4.10
-     */
-    void setZScale(qreal scale);
-    /*!
-     * Sets the scale factor in X and Y direction.
-     *
-     * \a scale The scale factor for X and Y direction
-     * \since 4.10
-     */
-    void setScale(const QVector2D &scale);
-    /*!
-     * Sets the scale factor in X, Y and Z direction
-     *
-     * \a scale The scale factor for X, Y and Z direction
-     * \since 4.10
-     */
-    void setScale(const QVector3D &scale);
-    /*!
-     *
-     */
-    const QVector3D &scale() const;
-    /*!
      *
      */
     const QVector3D &translation() const;
@@ -353,27 +299,6 @@ public:
     WindowPaintData();
     WindowPaintData(const WindowPaintData &other);
     ~WindowPaintData() override;
-    /*!
-     * Scales the window by \a scale factor.
-     *
-     * Multiplies all three components by the given factor.
-     * \since 4.10
-     */
-    WindowPaintData &operator*=(qreal scale);
-    /*!
-     * Scales the window by \a scale factor.
-     *
-     * Performs a component wise multiplication on x and y components.
-     * \since 4.10
-     */
-    WindowPaintData &operator*=(const QVector2D &scale);
-    /*!
-     * Scales the window by \a scale factor.
-     *
-     * Performs a component wise multiplication.
-     * \since 4.10
-     */
-    WindowPaintData &operator*=(const QVector3D &scale);
     /*!
      * Translates the window by the given \a translation and returns a reference to the ScreenPaintData.
      * \since 4.10
@@ -1059,12 +984,6 @@ public:
     {
         return x * (1 - a) + y * a;
     }
-    /*!
-     * Helper to set WindowPaintData and Region to necessary transformations so that
-     * a following drawWindow() would put the window at the requested geometry (useful for thumbnails)
-     */
-    static void setPositionTransformations(WindowPaintData &data, Rect &logicalRegion, EffectWindow *w,
-                                           const Rect &r, Qt::AspectRatioMode aspect);
 
     /*!
      * overwrite this method to return \c false if your effect does not need to be drawn over opaque fullscreen windows

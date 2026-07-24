@@ -32,12 +32,10 @@ class PaintDataPrivate
 {
 public:
     PaintDataPrivate()
-        : scale(1., 1., 1.)
-        , rotationAxis(0, 0, 1.)
+        : rotationAxis(0, 0, 1.)
         , rotationAngle(0.)
     {
     }
-    QVector3D scale;
     QVector3D translation;
 
     QVector3D rotationAxis;
@@ -51,51 +49,6 @@ PaintData::PaintData()
 }
 
 PaintData::~PaintData() = default;
-
-qreal PaintData::xScale() const
-{
-    return d->scale.x();
-}
-
-qreal PaintData::yScale() const
-{
-    return d->scale.y();
-}
-
-qreal PaintData::zScale() const
-{
-    return d->scale.z();
-}
-
-void PaintData::setScale(const QVector2D &scale)
-{
-    d->scale.setX(scale.x());
-    d->scale.setY(scale.y());
-}
-
-void PaintData::setScale(const QVector3D &scale)
-{
-    d->scale = scale;
-}
-void PaintData::setXScale(qreal scale)
-{
-    d->scale.setX(scale);
-}
-
-void PaintData::setYScale(qreal scale)
-{
-    d->scale.setY(scale);
-}
-
-void PaintData::setZScale(qreal scale)
-{
-    d->scale.setZ(scale);
-}
-
-const QVector3D &PaintData::scale() const
-{
-    return d->scale;
-}
 
 void PaintData::setXTranslation(qreal translate)
 {
@@ -193,9 +146,6 @@ QMatrix4x4 PaintData::toMatrix(qreal deviceScale) const
     if (d->translation != QVector3D(0, 0, 0)) {
         ret.translate(d->translation * deviceScale);
     }
-    if (d->scale != QVector3D(1, 1, 1)) {
-        ret.scale(d->scale);
-    }
 
     if (d->rotationAngle != 0) {
         ret.translate(d->rotationOrigin * deviceScale);
@@ -229,9 +179,6 @@ WindowPaintData::WindowPaintData(const WindowPaintData &other)
     : PaintData()
     , d(std::make_unique<WindowPaintDataPrivate>())
 {
-    setXScale(other.xScale());
-    setYScale(other.yScale());
-    setZScale(other.zScale());
     translate(other.translation());
     setRotationOrigin(other.rotationOrigin());
     setRotationAxis(other.rotationAxis());
@@ -300,29 +247,6 @@ qreal WindowPaintData::multiplyBrightness(qreal factor)
 {
     d->brightness *= factor;
     return d->brightness;
-}
-
-WindowPaintData &WindowPaintData::operator*=(qreal scale)
-{
-    this->setXScale(this->xScale() * scale);
-    this->setYScale(this->yScale() * scale);
-    this->setZScale(this->zScale() * scale);
-    return *this;
-}
-
-WindowPaintData &WindowPaintData::operator*=(const QVector2D &scale)
-{
-    this->setXScale(this->xScale() * scale.x());
-    this->setYScale(this->yScale() * scale.y());
-    return *this;
-}
-
-WindowPaintData &WindowPaintData::operator*=(const QVector3D &scale)
-{
-    this->setXScale(this->xScale() * scale.x());
-    this->setYScale(this->yScale() * scale.y());
-    this->setZScale(this->zScale() * scale.z());
-    return *this;
 }
 
 WindowPaintData &WindowPaintData::operator+=(const QPointF &translation)
@@ -411,22 +335,6 @@ QString Effect::debug(const QString &) const
 bool Effect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
     return effects->drawWindow(renderTarget, viewport, w, mask, deviceRegion, data);
-}
-
-void Effect::setPositionTransformations(WindowPaintData &data, Rect &logicalRegion, EffectWindow *w,
-                                        const Rect &r, Qt::AspectRatioMode aspect)
-{
-    QSizeF size = w->size();
-    size.scale(r.size(), aspect);
-    data.setXScale(size.width() / double(w->width()));
-    data.setYScale(size.height() / double(w->height()));
-    int width = int(w->width() * data.xScale());
-    int height = int(w->height() * data.yScale());
-    int x = r.x() + (r.width() - width) / 2;
-    int y = r.y() + (r.height() - height) / 2;
-    logicalRegion = Rect(x, y, width, height);
-    data.setXTranslation(x - w->x());
-    data.setYTranslation(y - w->y());
 }
 
 QPointF Effect::cursorPos()

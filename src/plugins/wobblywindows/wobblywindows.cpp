@@ -283,10 +283,10 @@ void WobblyWindowsEffect::apply(EffectWindow *w, int mask, WindowPaintData &data
             bottom = std::max(bottom, quads[i].bottom());
         }
         RectF dirtyRect(
-            left * data.xScale() + w->x() + data.xTranslation(),
-            top * data.yScale() + w->y() + data.yTranslation(),
-            (right - left + 1.0) * data.xScale(),
-            (bottom - top + 1.0) * data.yScale());
+            left + w->x() + data.xTranslation(),
+            top + w->y() + data.yTranslation(),
+            right - left + 1.0,
+            bottom - top + 1.0);
         // Expand the dirty region by 1px to fix potential round/floor issues.
         dirtyRect.adjust(-1.0, -1.0, 1.0, 1.0);
         m_updateRegion = m_updateRegion.united(dirtyRect.toAlignedRect());
