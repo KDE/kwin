@@ -121,62 +121,6 @@ class KWIN_EXPORT PaintData
 {
 public:
     virtual ~PaintData();
-    /*!
-     *
-     */
-    const QVector3D &translation() const;
-    /*!
-     * Returns the translation in X direction.
-     * \since 4.10
-     */
-    qreal xTranslation() const;
-    /*!
-     * Returns the translation in Y direction.
-     * \since 4.10
-     */
-    qreal yTranslation() const;
-    /*!
-     * Returns the translation in Z direction.
-     * \since 4.10
-     */
-    qreal zTranslation() const;
-    /*!
-     * Sets the translation in X direction to \a translate.
-     * \since 4.10
-     */
-    void setXTranslation(qreal translate);
-    /*!
-     * Sets the translation in Y direction to \a translate.
-     * \since 4.10
-     */
-    void setYTranslation(qreal translate);
-    /*!
-     * Sets the translation in Z direction to \a translate.
-     * \since 4.10
-     */
-    void setZTranslation(qreal translate);
-    /*!
-     * Performs a translation by adding the values component wise.
-     *
-     * \a x Translation in X direction
-     *
-     * \a y Translation in Y direction
-     *
-     * \a z Translation in Z direction
-     *
-     * \since 4.10
-     */
-    void translate(qreal x, qreal y = 0.0, qreal z = 0.0);
-    /*!
-     * Performs a translation by adding the values component wise.
-     *
-     * Overloaded method for convenience.
-     *
-     * \a translate The translation
-     *
-     * \since 4.10
-     */
-    void translate(const QVector3D &translate);
 
     /*!
      * Sets the rotation angle.
@@ -299,32 +243,6 @@ public:
     WindowPaintData();
     WindowPaintData(const WindowPaintData &other);
     ~WindowPaintData() override;
-    /*!
-     * Translates the window by the given \a translation and returns a reference to the ScreenPaintData.
-     * \since 4.10
-     */
-    WindowPaintData &operator+=(const QPointF &translation);
-    /*!
-     * Translates the window by the given \a translation and returns a reference to the ScreenPaintData.
-     *
-     * Overloaded method for convenience.
-     * \since 4.10
-     */
-    WindowPaintData &operator+=(const QPoint &translation);
-    /*!
-     * Translates the window by the given \a translation and returns a reference to the ScreenPaintData.
-     *
-     * Overloaded method for convenience.
-     * \since 4.10
-     */
-    WindowPaintData &operator+=(const QVector2D &translation);
-    /*!
-     * Translates the window by the given \a translation and returns a reference to the ScreenPaintData.
-     *
-     * Overloaded method for convenience.
-     * \since 4.10
-     */
-    WindowPaintData &operator+=(const QVector3D &translation);
     /*!
      * Window opacity, in range 0 = transparent to 1 = fully opaque
      * \sa setOpacity
