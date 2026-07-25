@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-24 00:46+0000\n"
-"PO-Revision-Date: 2026-07-23 20:26+0200\n"
+"PO-Revision-Date: 2026-07-24 08:33+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -3615,7 +3615,7 @@ msgstr "Правило за скриване от снимки и записи �
 #: scene/workspacescene.cpp:115
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
-msgstr ""
+msgstr "Превключване на ефекта „Показване на композиране“"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -4207,13 +4207,13 @@ msgstr "Принудително затваряне на прозорец"
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Focused Window"
-msgstr ""
+msgstr "Поставяне на курсора в центъра на фокусирания прозорец"
 
 #: useractions.cpp:1018
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Screen"
-msgstr ""
+msgstr "Поставяне на курсора в центъра на екрана"
 
 #: useractions.cpp:1083
 #, kde-format
@@ -4271,6 +4271,8 @@ msgid ""
 "Setting custom modes with too old kde-output-management-v2 protocol versions "
 "is unsupported"
 msgstr ""
+"Настройка на персонализирани режими със прекалено стари версии на протокола "
+"kde-output-management-v2 не се поддържа"
 
 #: wayland/outputmanagement_v2.cpp:575
 #, kde-format
