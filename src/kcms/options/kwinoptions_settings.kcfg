@@ -192,7 +192,7 @@
         <default>Nothing</default>
         <choices name="commandTitlebarWheelChoices" prefix="CommandTitlebarWheel_">
             <choice name="RaiseLower" value="Raise/Lower"></choice>
-            <choice name="MaxmizeRestore" value="Maximize/Restore"></choice>
+            <choice name="MaximizeRestore" value="Maximize/Restore"></choice>
             <choice name="AboveBelow" value="Above/Below"></choice>
             <choice name="PreviousNextDesktop" value="Previous/Next Desktop"></choice>
             <choice name="ChangeOpacity" value="Change Opacity"></choice>
@@ -308,7 +308,7 @@
           <choice name="Lower"></choice>
           <choice name="Minimize"></choice>
           <choice name="DecreaseOpacity" value="Decrease Opacity"></choice>
-          <choice name="IncreaseOpactiy" value="Increase Opacity"></choice>
+          <choice name="IncreaseOpacity" value="Increase Opacity"></choice>
           <choice name="OperationsMenu" value="Operations menu"></choice>
           <choice name="Nothing"></choice>
       </choices>
@@ -326,7 +326,7 @@
           <choice name="Lower"></choice>
           <choice name="Minimize"></choice>
           <choice name="DecreaseOpacity" value="Decrease Opacity"></choice>
-          <choice name="IncreaseOpactiy" value="Increase Opacity"></choice>
+          <choice name="IncreaseOpacity" value="Increase Opacity"></choice>
           <choice name="OperationsMenu" value="Operations menu"></choice>
           <choice name="Nothing"></choice>
       </choices>
@@ -344,7 +344,7 @@
           <choice name="Lower"></choice>
           <choice name="Minimize"></choice>
           <choice name="DecreaseOpacity" value="Decrease Opacity"></choice>
-          <choice name="IncreaseOpactiy" value="Increase Opacity"></choice>
+          <choice name="IncreaseOpacity" value="Increase Opacity"></choice>
           <choice name="OperationsMenu" value="Operations menu"></choice>
           <choice name="Nothing"></choice>
       </choices>
@@ -354,7 +354,7 @@
       <default>Nothing</default>
       <choices name="CommandAllWheelChoices" prefix="CommandAllWheel_">
           <choice name="RaiseLower" value="Raise/Lower"></choice>
-          <choice name="MaxmizeRestore" value="Maximize/Restore"></choice>
+          <choice name="MaximizeRestore" value="Maximize/Restore"></choice>
           <choice name="AboveBelow" value="Above/Below"></choice>
           <choice name="PreviousNextDesktop" value="Previous/Next Desktop"></choice>
           <choice name="ChangeOpacity" value="Change Opacity"></choice>

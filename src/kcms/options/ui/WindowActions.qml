@@ -33,7 +33,7 @@ Kirigami.Form {
         { text: i18nd("kcmkwm", "Raise/lower"), value: KWinOptionsSettings.CommandAll_ToggleRaiseAndLower },
         { text: i18nd("kcmkwm", "Minimize"), value: KWinOptionsSettings.CommandAll_Minimize },
         { text: i18nd("kcmkwm", "Decrease opacity"), value: KWinOptionsSettings.CommandAll_DecreaseOpacity },
-        { text: i18nd("kcmkwm", "Increase opacity"), value: KWinOptionsSettings.CommandAll_IncreaseOpactiy },
+        { text: i18nd("kcmkwm", "Increase opacity"), value: KWinOptionsSettings.CommandAll_IncreaseOpacity },
         { text: i18nd("kcmkwm", "Window menu"), value: KWinOptionsSettings.CommandAll_OperationsMenu },
         { text: i18nd("kcmkwm", "Do nothing"), value: KWinOptionsSettings.CommandAll_Nothing },
     ]
@@ -204,7 +204,7 @@ Kirigami.Form {
                         valueRole: "value"
                         model: [
                             { text: i18nd("kcmkwm", "Raise/lower"), value: KWinOptionsSettings.CommandAllWheel_RaiseLower },
-                            { text: i18nd("kcmkwm", "Maximize/restore"), value: KWinOptionsSettings.CommandAllWheel_MaxmizeRestore },
+                            { text: i18nd("kcmkwm", "Maximize/restore"), value: KWinOptionsSettings.CommandAllWheel_MaximizeRestore },
                             { text: i18nd("kcmkwm", "Keep above/below"), value: KWinOptionsSettings.CommandAllWheel_AboveBelow },
                             { text: i18nd("kcmkwm", "Move to previous/next desktop"), value: KWinOptionsSettings.CommandAllWheel_PreviousNextDesktop },
                             { text: i18nd("kcmkwm", "Change opacity"), value: KWinOptionsSettings.CommandAllWheel_ChangeOpacity },

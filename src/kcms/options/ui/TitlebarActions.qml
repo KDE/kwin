@@ -80,7 +80,7 @@ Kirigami.Form {
                 valueRole: "value"
                 model: [
                     { text: i18nd("kcmkwm", "Raise/lower"), value: KWinOptionsSettings.CommandTitlebarWheel_RaiseLower },
-                    { text: i18nd("kcmkwm", "Maximize/restore"), value: KWinOptionsSettings.CommandTitlebarWheel_MaxmizeRestore },
+                    { text: i18nd("kcmkwm", "Maximize/restore"), value: KWinOptionsSettings.CommandTitlebarWheel_MaximizeRestore },
                     { text: i18nd("kcmkwm", "Keep above/below"), value: KWinOptionsSettings.CommandTitlebarWheel_AboveBelow },
                     { text: i18nd("kcmkwm", "Move to previous/next desktop"), value: KWinOptionsSettings.CommandTitlebarWheel_PreviousNextDesktop },
                     { text: i18nd("kcmkwm", "Change opacity"), value: KWinOptionsSettings.CommandTitlebarWheel_ChangeOpacity },
