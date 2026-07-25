@@ -7,7 +7,7 @@
 
 #include "bouncekeys.h"
 
-class KWIN_EXPORT StickyKeysFactory : public KWin::PluginFactory
+class KWIN_EXPORT BounceKeysFactory : public KWin::PluginFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID PluginFactory_iid FILE "metadata.json")
