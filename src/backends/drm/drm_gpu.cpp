@@ -113,8 +113,6 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
         m_asyncPageflipSupported = drmGetCap(fd, DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP, &capability) == 0 && capability == 1;
     }
 
-    m_colorPipelineSupported = s_colorPipelineEnv.value_or(true) && drmSetClientCap(fd, DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE, 1) == 0;
-
     m_delayedModesetTimer.setInterval(0);
     m_delayedModesetTimer.setSingleShot(true);
     connect(&m_delayedModesetTimer, &QTimer::timeout, this, &DrmGpu::doModeset);
@@ -201,6 +199,13 @@ void DrmGpu::initDrmResources()
                 noAMS = true;
             }
         }
+        // Set the plane color pipeline cap now, after ATOMIC and before enumerating planes and
+        // CRTCs: the kernel only exposes the per-plane COLOR_PIPELINE property once this cap is
+        // set, and DrmCrtc::updateProperties() reads colorPipelineSupported() while building its
+        // (cached) post-blend pipeline. Setting it after initDrmResources() would leave it false
+        // during that setup, so the legacy CRTC CTM would wrongly stay active on capable hardware.
+        m_colorPipelineSupported = s_colorPipelineEnv.value_or(true) && drmSetClientCap(m_fd, DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE, 1) == 0;
+
         DrmUniquePtr<drmModePlaneRes> planeResources(drmModeGetPlaneResources(m_fd));
         if (planeResources && !noAMS) {
             qCDebug(KWIN_DRM) << "Using Atomic Mode Setting on gpu" << this;

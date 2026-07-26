@@ -432,8 +432,8 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
 
     commit->addProperty(m_pending.crtc->active, 1);
     commit->addBlob(m_pending.crtc->modeId, m_pending.mode->blob());
-    if (m_pending.crtc->degammaLut.isValid()) {
-        commit->addProperty(m_pending.crtc->degammaLut, 0);
+    for (DrmAbstractColorOp *op = m_pending.crtc->legacyPreBlendPipeline; op; op = op->next()) {
+        op->bypass(commit);
     }
 
     if (m_pending.crtc->sharpnessStrength.isValid()) {

@@ -53,6 +53,11 @@ public:
     DrmProperty sharpnessStrength;
 
     DrmAbstractColorOp *postBlendingPipeline = nullptr;
+    /**
+     * the legacy color properties that map to pre-blending hardware. We never program these;
+     * the pipeline only exists so that DrmPipeline::prepareAtomicModeset can disable them
+     */
+    DrmAbstractColorOp *legacyPreBlendPipeline = nullptr;
 
 private:
     DrmUniquePtr<drmModeCrtc> m_crtc;
@@ -61,6 +66,7 @@ private:
     DrmPlane *m_primaryPlane;
 
     std::vector<std::unique_ptr<DrmAbstractColorOp>> m_postBlendingColorOps;
+    std::vector<std::unique_ptr<DrmAbstractColorOp>> m_legacyPreBlendColorOps;
 };
 
 }

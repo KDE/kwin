@@ -61,7 +61,10 @@ bool DrmCrtc::updateProperties()
             m_postBlendingColorOps.push_back(std::make_unique<DrmLutColorOp16>(next, &gammaLut, nullptr, gammaRampSize(), nullptr));
             next = m_postBlendingColorOps.back().get();
         }
-        if (!gpu()->drmDevice()->isNvidia() && ctm.isValid()) {
+        // the CTM is only a genuine post blending matrix on a few drivers; on most it maps to
+        // per-plane hardware. Where the plane COLOR_PIPELINE API is available, matrices are
+        // handled with per-plane colorops instead, and the CTM belongs to legacyPreBlendPipeline
+        if (!gpu()->drmDevice()->isNvidia() && !gpu()->colorPipelineSupported() && ctm.isValid()) {
             m_postBlendingColorOps.push_back(std::make_unique<LegacyMatrixColorOp>(next, &ctm));
             next = m_postBlendingColorOps.back().get();
         }
@@ -69,6 +72,22 @@ bool DrmCrtc::updateProperties()
         // as on most hardware it actually maps to pre-blending operations,
         // and more importantly it's buggy on Intel, AMD and NVidia...
         postBlendingPipeline = next;
+    }
+
+    if (!legacyPreBlendPipeline) {
+        // these properties are sticky, so a matrix or LUT programmed before we took over would
+        // linger and corrupt the output. Once the post blending COLOR_PIPELINE API is available,
+        // the degamma LUT can be added to postBlendingPipeline instead
+        DrmAbstractColorOp *next = nullptr;
+        if (gpu()->colorPipelineSupported() && ctm.isValid()) {
+            m_legacyPreBlendColorOps.push_back(std::make_unique<LegacyMatrixColorOp>(next, &ctm));
+            next = m_legacyPreBlendColorOps.back().get();
+        }
+        if (degammaLut.isValid()) {
+            m_legacyPreBlendColorOps.push_back(std::make_unique<DrmLutColorOp16>(next, &degammaLut, nullptr, degammaLutSize.value(), nullptr));
+            next = m_legacyPreBlendColorOps.back().get();
+        }
+        legacyPreBlendPipeline = next;
     }
 
     const bool ret = !gpu()->atomicModeSetting() || (modeId.isValid() && active.isValid());
