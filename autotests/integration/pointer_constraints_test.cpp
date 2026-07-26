@@ -47,6 +47,7 @@ private Q_SLOTS:
     void testConfinedPointer_data();
     void testConfinedPointer();
     void testLockedPointer();
+    void testLockedPointerKeepsFocusWhenWindowMoves();
     void testCloseWindowWithLockedPointer();
 };
 
@@ -331,6 +332,43 @@ void TestPointerConstraints::testLockedPointer()
     QCOMPARE(input()->pointer()->isConstrained(), false);
     KWin::input()->pointer()->warp(window->frameGeometry().center());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), window->frameGeometry().center());
+}
+
+void TestPointerConstraints::testLockedPointerKeepsFocusWhenWindowMoves()
+{
+    // A locked pointer stays where it is, so the surface that holds the lock keeps the
+    // pointer focus and the lock itself, even while the window is moved away from the
+    // position the pointer is locked to and motion keeps coming in.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
+    std::unique_ptr<KWayland::Client::LockedPointer> lockedPointer(Test::waylandPointerConstraints()->lockPointer(surface.get(), pointer.get(), nullptr, KWayland::Client::PointerConstraints::LifeTime::Persistent));
+    QSignalSpy lockedSpy(lockedPointer.get(), &KWayland::Client::LockedPointer::locked);
+    QSignalSpy unlockedSpy(lockedPointer.get(), &KWayland::Client::LockedPointer::unlocked);
+
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
+    QVERIFY(window);
+
+    const QPointF lockPosition = window->frameGeometry().center();
+    KWin::input()->pointer()->warp(lockPosition);
+    QCOMPARE(input()->pointer()->isConstrained(), true);
+    QVERIFY(lockedSpy.wait());
+    QCOMPARE(input()->pointer()->focus(), window);
+
+    // the window ends up somewhere else, leaving the locked position outside of it
+    window->move(QPointF(500, 500));
+    QVERIFY(!window->frameGeometry().contains(lockPosition));
+
+    // the mouse keeps reporting motion, the way it does while a game reads relative motion
+    quint32 timestamp = 1;
+    for (int i = 0; i < 5; ++i) {
+        Test::pointerMotionRelative(QPointF(1, 1), timestamp++);
+    }
+
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), lockPosition);
+    QCOMPARE(input()->pointer()->focus(), window);
+    QCOMPARE(input()->pointer()->isConstrained(), true);
+    QVERIFY(unlockedSpy.isEmpty());
 }
 
 void TestPointerConstraints::testCloseWindowWithLockedPointer()

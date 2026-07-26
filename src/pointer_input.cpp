@@ -268,6 +268,7 @@ void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QP
     }
 
     PositionUpdateBlocker blocker(this);
+    const QPointF positionBefore = m_pos;
     updatePosition(pos, delta, time);
 
     PointerMotionEvent event{
@@ -282,7 +283,14 @@ void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QP
         .timestamp = time,
     };
 
-    update();
+    // A locked pointer stays where it is, so the window below it is still the one that
+    // was found for the previous event. The lock also holds the pointer focus on the
+    // surface that owns it, and the hover is refreshed by the things that can change it
+    // while the pointer stands still, such as a change of the stacking order or of the
+    // current desktop.
+    if (m_pos != positionBefore || !m_locked) {
+        update();
+    }
     input()->processSpies(&InputEventSpy::pointerMotion, &event);
     input()->processFilters(&InputEventFilter::pointerMotion, &event);
 }
