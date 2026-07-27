@@ -1100,24 +1100,18 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
     if (!window) {
         return;
     }
-    if (op == Options::MoveOp || op == Options::UnrestrictedMoveOp) {
+    if (op == Options::MoveOp) {
         input()->pointer()->warp(window->frameGeometry().center());
     }
-    if (op == Options::ResizeOp || op == Options::UnrestrictedResizeOp) {
+    if (op == Options::ResizeOp) {
         input()->pointer()->warp(window->frameGeometry().bottomRight());
     }
     switch (op) {
     case Options::MoveOp:
         window->performMousePressCommand(Options::MouseMove, Cursors::self()->mouse()->pos());
         break;
-    case Options::UnrestrictedMoveOp:
-        window->performMousePressCommand(Options::MouseUnrestrictedMove, Cursors::self()->mouse()->pos());
-        break;
     case Options::ResizeOp:
         window->performMousePressCommand(Options::MouseResize, Cursors::self()->mouse()->pos());
-        break;
-    case Options::UnrestrictedResizeOp:
-        window->performMousePressCommand(Options::MouseUnrestrictedResize, Cursors::self()->mouse()->pos());
         break;
     case Options::CloseOp:
         QMetaObject::invokeMethod(window, &Window::closeWindow, Qt::QueuedConnection);

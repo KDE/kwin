@@ -1656,20 +1656,6 @@ protected:
         m_interactiveMoveResize.modifiers = modifiers;
     }
     /**
-     * @returns whether the move resize mode is unrestricted.
-     */
-    bool isUnrestrictedInteractiveMoveResize() const
-    {
-        return m_interactiveMoveResize.unrestricted;
-    }
-    /**
-     * Sets whether move resize mode is unrestricted to @p set.
-     */
-    void setUnrestrictedInteractiveMoveResize(bool set)
-    {
-        m_interactiveMoveResize.unrestricted = set;
-    }
-    /**
      * Normalized position of the move resize anchor point relative to the top-left window
      * corner when the move resize operation started.
      *
@@ -1875,7 +1861,6 @@ protected:
     struct
     {
         bool enabled = false;
-        bool unrestricted = false;
         QPointF anchor;
         Qt::KeyboardModifiers modifiers;
         QPointF offset;

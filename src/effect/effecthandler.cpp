@@ -801,7 +801,7 @@ void EffectsHandler::moveWindow(EffectWindow *w, const QPoint &pos, bool snap, d
     }
 
     if (snap) {
-        window->move(Workspace::self()->adjustWindowPosition(window, pos, true, snapAdjust));
+        window->move(Workspace::self()->adjustWindowPosition(window, pos, snapAdjust));
     } else {
         window->move(pos);
     }

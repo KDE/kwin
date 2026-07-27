@@ -2668,7 +2668,7 @@ static bool canSnap(const Window *window, const Window *other)
  * effective snap zones. When 1.0, it means that the snap zones will be
  * used without change.
  */
-QPointF Workspace::adjustWindowPosition(const Window *window, QPointF pos, bool unrestricted, double snapAdjust) const
+QPointF Workspace::adjustWindowPosition(const Window *window, QPointF pos, double snapAdjust) const
 {
     QSizeF borderSnapZone(options->borderSnapZone(), options->borderSnapZone());
     RectF maxRect;
@@ -2807,7 +2807,7 @@ QPointF Workspace::adjustWindowPosition(const Window *window, QPointF pos, bool 
                 if ((nx == xmin || nx == xmax - cw) && diffY < centerSnapZone && diffY < deltaY) {
                     // Snap to vertical center on screen edge
                     ny = (ymin + ymax) / 2 - ch / 2;
-                } else if (((unrestricted ? ny == ymin : ny <= ymin) || ny == ymax - ch) && diffX < centerSnapZone && diffX < deltaX) {
+                } else if ((ny <= ymin || ny == ymax - ch) && diffX < centerSnapZone && diffX < deltaX) {
                     // Snap to horizontal center on screen edge
                     nx = (xmin + xmax) / 2 - cw / 2;
                 }

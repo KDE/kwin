@@ -1068,7 +1068,6 @@ void XdgToplevelWindow::handleResizeRequested(SeatInterface *seat, Gravity gravi
     setInteractiveMoveResizeAnchor(*anchor);
     setInteractiveMoveResizeModifiers(Qt::KeyboardModifiers());
     setInteractiveMoveOffset(QPointF((anchor->x() - x()) / width(), (anchor->y() - y()) / height())); // map from global
-    setUnrestrictedInteractiveMoveResize(false);
     setInteractiveMoveResizeGravity(gravity);
     if (!startInteractiveMoveResize()) {
         setInteractiveMoveResizePointerButtonDown(false);

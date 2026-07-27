@@ -184,7 +184,7 @@ public:
     void setMoveResizeWindow(Window *window);
 
     RectF adjustClientArea(Window *window, const RectF &area) const;
-    QPointF adjustWindowPosition(const Window *window, QPointF pos, bool unrestricted, double snapAdjust = 1.0) const;
+    QPointF adjustWindowPosition(const Window *window, QPointF pos, double snapAdjust = 1.0) const;
     RectF adjustWindowSize(const Window *window, RectF moveResizeGeom, Gravity gravity) const;
     void raiseWindow(Window *window, bool nogroup = false);
     void lowerWindow(Window *window, bool nogroup = false);

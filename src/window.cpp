@@ -1652,32 +1652,30 @@ RectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
         Q_UNREACHABLE();
     }
 
-    if (!isUnrestrictedInteractiveMoveResize()) {
-        if (const auto anchor = confineInteractiveResize(nextMoveResizeGeom, gravity, 100, titlebarThickness())) {
-            switch (gravity) {
-            case Gravity::TopLeft:
-                nextMoveResizeGeom.setTopLeft(*anchor);
-                break;
-            case Gravity::Top:
-                nextMoveResizeGeom.setTop(anchor->y());
-                break;
-            case Gravity::TopRight:
-                nextMoveResizeGeom.setTopRight(*anchor);
-                break;
-            case Gravity::Right:
-            case Gravity::BottomRight:
-                nextMoveResizeGeom.setRight(anchor->x());
-                break;
-            case Gravity::Left:
-            case Gravity::BottomLeft:
-                nextMoveResizeGeom.setLeft(anchor->x());
-                break;
-            case Gravity::Bottom:
-                nextMoveResizeGeom.setBottom(anchor->y());
-                break;
-            default:
-                Q_UNREACHABLE();
-            }
+    if (const auto anchor = confineInteractiveResize(nextMoveResizeGeom, gravity, 100, titlebarThickness())) {
+        switch (gravity) {
+        case Gravity::TopLeft:
+            nextMoveResizeGeom.setTopLeft(*anchor);
+            break;
+        case Gravity::Top:
+            nextMoveResizeGeom.setTop(anchor->y());
+            break;
+        case Gravity::TopRight:
+            nextMoveResizeGeom.setTopRight(*anchor);
+            break;
+        case Gravity::Right:
+        case Gravity::BottomRight:
+            nextMoveResizeGeom.setRight(anchor->x());
+            break;
+        case Gravity::Left:
+        case Gravity::BottomLeft:
+            nextMoveResizeGeom.setLeft(anchor->x());
+            break;
+        case Gravity::Bottom:
+            nextMoveResizeGeom.setBottom(anchor->y());
+            break;
+        default:
+            Q_UNREACHABLE();
         }
     }
 
@@ -1693,12 +1691,10 @@ RectF Window::nextInteractiveMoveGeometry(const RectF &rect) const
     RectF nextMoveResizeGeom = rect;
     nextMoveResizeGeom.moveTopLeft(QPointF(interactiveMoveResizeAnchor().x() - interactiveMoveOffset().x() * rect.width(),
                                            interactiveMoveResizeAnchor().y() - interactiveMoveOffset().y() * rect.height()));
-    nextMoveResizeGeom.moveTopLeft(workspace()->adjustWindowPosition(this, nextMoveResizeGeom.topLeft(), isUnrestrictedInteractiveMoveResize()));
+    nextMoveResizeGeom.moveTopLeft(workspace()->adjustWindowPosition(this, nextMoveResizeGeom.topLeft()));
 
-    if (!isUnrestrictedInteractiveMoveResize()) {
-        if (const auto anchor = confineInteractiveMove(nextMoveResizeGeom, 100, titlebarThickness())) {
-            nextMoveResizeGeom.moveTopLeft(anchor.value());
-        }
+    if (const auto anchor = confineInteractiveMove(nextMoveResizeGeom, 100, titlebarThickness())) {
+        nextMoveResizeGeom.moveTopLeft(anchor.value());
     }
 
     return nextMoveResizeGeom;
@@ -1998,9 +1994,7 @@ bool Window::mousePressCommandConsumesEvent(Options::MouseCommand command) const
     case Options::MouseOpacityLess:
     case Options::MouseClose:
     case Options::MouseResize:
-    case Options::MouseUnrestrictedResize:
     case Options::MouseActivateRaiseAndResize:
-    case Options::MouseActivateRaiseAndUnrestrictedResize:
         return true;
     case Options::MouseActivateRaiseAndPassClick:
     case Options::MouseActivateRaiseOnReleaseAndPassClick:
@@ -2012,9 +2006,7 @@ bool Window::mousePressCommandConsumesEvent(Options::MouseCommand command) const
     case Options::MouseActivate:
         return !isActive() && rules()->checkAcceptFocus(acceptsFocus());
     case Options::MouseActivateRaiseAndMove:
-    case Options::MouseActivateRaiseAndUnrestrictedMove:
     case Options::MouseMove:
-    case Options::MouseUnrestrictedMove:
         return isMovableAcrossScreens();
     }
     return false;
@@ -2126,13 +2118,11 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
         closeWindow();
         break;
     case Options::MouseActivateRaiseAndMove:
-    case Options::MouseActivateRaiseAndUnrestrictedMove:
         workspace()->raiseWindow(this);
         workspace()->requestFocus(this);
         workspace()->setActiveOutput(globalPos);
         // fallthrough
-    case Options::MouseMove:
-    case Options::MouseUnrestrictedMove: {
+    case Options::MouseMove: {
         if (!isMovableAcrossScreens()) {
             break;
         }
@@ -2144,8 +2134,6 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
         setInteractiveMoveResizeAnchor(globalPos);
         setInteractiveMoveResizeModifiers(Qt::KeyboardModifiers());
         setInteractiveMoveOffset(QPointF(qreal(globalPos.x() - x()) / width(), qreal(globalPos.y() - y()) / height())); // map from global
-        setUnrestrictedInteractiveMoveResize((cmd == Options::MouseActivateRaiseAndUnrestrictedMove
-                                              || cmd == Options::MouseUnrestrictedMove));
         if (!startInteractiveMoveResize()) {
             setInteractiveMoveResizePointerButtonDown(false);
         }
@@ -2153,13 +2141,11 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
         break;
     }
     case Options::MouseActivateRaiseAndResize:
-    case Options::MouseActivateRaiseAndUnrestrictedResize:
         workspace()->raiseWindow(this);
         workspace()->requestFocus(this);
         workspace()->setActiveOutput(globalPos);
         // fallthrough
-    case Options::MouseResize:
-    case Options::MouseUnrestrictedResize: {
+    case Options::MouseResize: {
         if (!isResizable()) {
             break;
         }
@@ -2185,7 +2171,6 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
             gravity = (x < width() / 2) ? Gravity::Left : Gravity::Right;
         }
         setInteractiveMoveResizeGravity(gravity);
-        setUnrestrictedInteractiveMoveResize((cmd == Options::MouseUnrestrictedResize));
         if (!startInteractiveMoveResize()) {
             setInteractiveMoveResizePointerButtonDown(false);
         }
@@ -2838,7 +2823,6 @@ bool Window::processDecorationButtonPress(const QPointF &localPos, const QPointF
         setInteractiveMoveResizeAnchor(globalPos);
         setInteractiveMoveResizeModifiers(Qt::KeyboardModifiers());
         setInteractiveMoveOffset(QPointF(qreal(localPos.x()) / width(), qreal(localPos.y()) / height()));
-        setUnrestrictedInteractiveMoveResize(false);
         startDelayedInteractiveMoveResize();
         updateInteractiveMoveResizeCursor();
     }

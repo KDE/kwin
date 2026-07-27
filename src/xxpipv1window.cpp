@@ -133,7 +133,6 @@ void XXPipV1Window::handleResizeRequested(SeatInterface *seat, Gravity gravity, 
     setInteractiveMoveResizeAnchor(*anchor);
     setInteractiveMoveResizeModifiers(Qt::KeyboardModifiers());
     setInteractiveMoveOffset(QPointF((anchor->x() - x()) / width(), (anchor->y() - y()) / height()));
-    setUnrestrictedInteractiveMoveResize(false);
     setInteractiveMoveResizeGravity(gravity);
     if (!startInteractiveMoveResize()) {
         setInteractiveMoveResizePointerButtonDown(false);
