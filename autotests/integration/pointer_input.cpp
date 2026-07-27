@@ -481,9 +481,9 @@ void PointerInputTest::testModifierClickUnrestrictedMove()
     group.sync();
     workspace()->slotReconfigure();
     QCOMPARE(options->commandAllModifier(), modKey == QStringLiteral("Alt") ? Qt::AltModifier : Qt::MetaModifier);
-    QCOMPARE(options->commandAll1(), Options::MouseUnrestrictedMove);
-    QCOMPARE(options->commandAll2(), Options::MouseUnrestrictedMove);
-    QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
+    QCOMPARE(options->commandAll1(), Options::MouseMove);
+    QCOMPARE(options->commandAll2(), Options::MouseMove);
+    QCOMPARE(options->commandAll3(), Options::MouseMove);
 
     // create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
@@ -547,9 +547,9 @@ void PointerInputTest::testModifierClickUnrestrictedFullscreenMove()
     group.sync();
     workspace()->slotReconfigure();
     QCOMPARE(options->commandAllModifier(), Qt::MetaModifier);
-    QCOMPARE(options->commandAll1(), Options::MouseUnrestrictedMove);
-    QCOMPARE(options->commandAll2(), Options::MouseUnrestrictedMove);
-    QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
+    QCOMPARE(options->commandAll1(), Options::MouseMove);
+    QCOMPARE(options->commandAll2(), Options::MouseMove);
+    QCOMPARE(options->commandAll3(), Options::MouseMove);
 
     // create a window
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
@@ -601,9 +601,9 @@ void PointerInputTest::testModifierClickUnrestrictedMoveGlobalShortcutsDisabled(
     group.sync();
     workspace()->slotReconfigure();
     QCOMPARE(options->commandAllModifier(), Qt::MetaModifier);
-    QCOMPARE(options->commandAll1(), Options::MouseUnrestrictedMove);
-    QCOMPARE(options->commandAll2(), Options::MouseUnrestrictedMove);
-    QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
+    QCOMPARE(options->commandAll1(), Options::MouseMove);
+    QCOMPARE(options->commandAll2(), Options::MouseMove);
+    QCOMPARE(options->commandAll3(), Options::MouseMove);
 
     // create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
@@ -1662,7 +1662,7 @@ void PointerInputTest::testResizeCursor()
     group.sync();
     workspace()->slotReconfigure();
     QCOMPARE(options->commandAllModifier(), Qt::MetaModifier);
-    QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedResize);
+    QCOMPARE(options->commandAll3(), Options::MouseResize);
 
     // load the fallback cursor (arrow cursor)
     const PlatformCursorImage arrowCursor = loadReferenceThemeCursor(Qt::ArrowCursor);
@@ -1749,7 +1749,7 @@ void PointerInputTest::testMoveCursor()
     group.sync();
     workspace()->slotReconfigure();
     QCOMPARE(options->commandAllModifier(), Qt::MetaModifier);
-    QCOMPARE(options->commandAll1(), Options::MouseUnrestrictedMove);
+    QCOMPARE(options->commandAll1(), Options::MouseMove);
 
     // load the fallback cursor (arrow cursor)
     const PlatformCursorImage arrowCursor = loadReferenceThemeCursor(Qt::ArrowCursor);

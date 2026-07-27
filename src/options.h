@@ -577,7 +577,7 @@ public:
     }
 
     static WindowOperation windowOperation(const QString &name);
-    static MouseCommand mouseCommand(const QString &name, bool restricted);
+    static MouseCommand mouseCommand(const QString &name);
     static MouseWheelCommand mouseWheelCommand(const QString &name);
 
     /**
@@ -769,7 +769,7 @@ public:
     }
     static MouseCommand defaultCommandAll1()
     {
-        return MouseUnrestrictedMove;
+        return MouseMove;
     }
     static MouseCommand defaultCommandAll2()
     {
@@ -777,7 +777,7 @@ public:
     }
     static MouseCommand defaultCommandAll3()
     {
-        return MouseUnrestrictedResize;
+        return MouseResize;
     }
     static MouseWheelCommand defaultCommandTitlebarWheel()
     {

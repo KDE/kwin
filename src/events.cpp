@@ -668,11 +668,11 @@ void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction directi
     } else if (direction == NET::KeyboardMove) {
         // ignore mouse coordinates given in the message, mouse position is used by the moving algorithm
         input()->pointer()->warp(frameGeometry().center());
-        performMousePressCommand(Options::MouseUnrestrictedMove, frameGeometry().center());
+        performMousePressCommand(Options::MouseMove, frameGeometry().center());
     } else if (direction == NET::KeyboardSize) {
         // ignore mouse coordinates given in the message, mouse position is used by the resizing algorithm
         input()->pointer()->warp(frameGeometry().bottomRight());
-        performMousePressCommand(Options::MouseUnrestrictedResize, frameGeometry().bottomRight());
+        performMousePressCommand(Options::MouseResize, frameGeometry().bottomRight());
     }
 }
 

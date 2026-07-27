@@ -220,7 +220,7 @@ void UserActionsMenu::init()
     m_moveOperation = advancedMenu->addAction(i18n("&Move"));
     m_moveOperation->setIcon(QIcon::fromTheme(QStringLiteral("transform-move")));
     setShortcut(m_moveOperation, QStringLiteral("Window Move"));
-    m_moveOperation->setData(Options::UnrestrictedMoveOp);
+    m_moveOperation->setData(Options::MoveOp);
 
     m_resizeOperation = advancedMenu->addAction(i18n("&Resize"));
     m_resizeOperation->setIcon(QIcon::fromTheme(QStringLiteral("transform-scale")));
@@ -1698,7 +1698,7 @@ void Workspace::slotWindowClose()
 void Workspace::slotWindowMove()
 {
     if (USABLE_ACTIVE_WINDOW) {
-        performWindowOperation(m_activeWindow, Options::UnrestrictedMoveOp);
+        performWindowOperation(m_activeWindow, Options::MoveOp);
     }
 }
 
@@ -1708,7 +1708,7 @@ void Workspace::slotWindowMove()
 void Workspace::slotWindowResize()
 {
     if (USABLE_ACTIVE_WINDOW) {
-        performWindowOperation(m_activeWindow, Options::UnrestrictedResizeOp);
+        performWindowOperation(m_activeWindow, Options::ResizeOp);
     }
 }
 

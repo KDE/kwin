@@ -677,19 +677,19 @@ void Options::loadConfig()
     CmdTitlebarWheel = mouseWheelCommand(m_settings->commandTitlebarWheel());
     CmdAllModKey = (m_settings->commandAllKey() == QLatin1StringView("Meta")) ? Qt::Key_Meta : Qt::Key_Alt;
     CmdAllWheel = mouseWheelCommand(m_settings->commandAllWheel());
-    setCommandActiveTitlebar1(mouseCommand(m_settings->commandActiveTitlebar1(), true));
-    setCommandActiveTitlebar2(mouseCommand(m_settings->commandActiveTitlebar2(), true));
-    setCommandActiveTitlebar3(mouseCommand(m_settings->commandActiveTitlebar3(), true));
-    setCommandInactiveTitlebar1(mouseCommand(m_settings->commandInactiveTitlebar1(), true));
-    setCommandInactiveTitlebar2(mouseCommand(m_settings->commandInactiveTitlebar2(), true));
-    setCommandInactiveTitlebar3(mouseCommand(m_settings->commandInactiveTitlebar3(), true));
-    setCommandWindow1(mouseCommand(m_settings->commandWindow1(), false));
-    setCommandWindow2(mouseCommand(m_settings->commandWindow2(), false));
-    setCommandWindow3(mouseCommand(m_settings->commandWindow3(), false));
-    setCommandWindowWheel(mouseCommand(m_settings->commandWindowWheel(), false));
-    setCommandAll1(mouseCommand(m_settings->commandAll1(), false));
-    setCommandAll2(mouseCommand(m_settings->commandAll2(), false));
-    setCommandAll3(mouseCommand(m_settings->commandAll3(), false));
+    setCommandActiveTitlebar1(mouseCommand(m_settings->commandActiveTitlebar1()));
+    setCommandActiveTitlebar2(mouseCommand(m_settings->commandActiveTitlebar2()));
+    setCommandActiveTitlebar3(mouseCommand(m_settings->commandActiveTitlebar3()));
+    setCommandInactiveTitlebar1(mouseCommand(m_settings->commandInactiveTitlebar1()));
+    setCommandInactiveTitlebar2(mouseCommand(m_settings->commandInactiveTitlebar2()));
+    setCommandInactiveTitlebar3(mouseCommand(m_settings->commandInactiveTitlebar3()));
+    setCommandWindow1(mouseCommand(m_settings->commandWindow1()));
+    setCommandWindow2(mouseCommand(m_settings->commandWindow2()));
+    setCommandWindow3(mouseCommand(m_settings->commandWindow3()));
+    setCommandWindowWheel(mouseCommand(m_settings->commandWindowWheel()));
+    setCommandAll1(mouseCommand(m_settings->commandAll1()));
+    setCommandAll2(mouseCommand(m_settings->commandAll2()));
+    setCommandAll3(mouseCommand(m_settings->commandAll3()));
 
     // Compositing
     const KConfigGroup config(m_settings->config(), QStringLiteral("Compositing"));
@@ -784,7 +784,7 @@ Options::WindowOperation Options::windowOperation(const QString &name)
     return NoOp;
 }
 
-Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted)
+Options::MouseCommand Options::mouseCommand(const QString &name)
 {
     QString lowerName = name.toLower();
     if (lowerName == QLatin1StringView("raise")) {
@@ -827,16 +827,16 @@ Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted
         return MouseActivateRaiseAndPassClick;
     }
     if (lowerName == QLatin1StringView("activate, raise and move")) {
-        return restricted ? MouseActivateRaiseAndMove : MouseActivateRaiseAndUnrestrictedMove;
+        return MouseActivateRaiseAndMove;
     }
     if (lowerName == QLatin1StringView("activate, raise and resize")) {
-        return restricted ? MouseActivateRaiseAndResize : MouseActivateRaiseAndUnrestrictedResize;
+        return MouseActivateRaiseAndResize;
     }
     if (lowerName == QLatin1StringView("move")) {
-        return restricted ? MouseMove : MouseUnrestrictedMove;
+        return MouseMove;
     }
     if (lowerName == QLatin1StringView("resize")) {
-        return restricted ? MouseResize : MouseUnrestrictedResize;
+        return MouseResize;
     }
     if (lowerName == QLatin1StringView("minimize")) {
         return MouseMinimize;

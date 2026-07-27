@@ -172,9 +172,9 @@ void TestPointerConstraints::testConfinedPointer()
     group.sync();
     workspace()->slotReconfigure();
     QCOMPARE(options->commandAllModifier(), Qt::MetaModifier);
-    QCOMPARE(options->commandAll1(), Options::MouseUnrestrictedMove);
-    QCOMPARE(options->commandAll2(), Options::MouseUnrestrictedMove);
-    QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
+    QCOMPARE(options->commandAll1(), Options::MouseMove);
+    QCOMPARE(options->commandAll2(), Options::MouseMove);
+    QCOMPARE(options->commandAll3(), Options::MouseMove);
 
     quint32 timestamp = 1;
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);

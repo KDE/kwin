@@ -483,9 +483,9 @@ void InternalWindowTest::testModifierClickUnrestrictedMove()
     group.sync();
     workspace()->slotReconfigure();
     QCOMPARE(options->commandAllModifier(), Qt::MetaModifier);
-    QCOMPARE(options->commandAll1(), Options::MouseUnrestrictedMove);
-    QCOMPARE(options->commandAll2(), Options::MouseUnrestrictedMove);
-    QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
+    QCOMPARE(options->commandAll1(), Options::MouseMove);
+    QCOMPARE(options->commandAll2(), Options::MouseMove);
+    QCOMPARE(options->commandAll3(), Options::MouseMove);
 
     // move cursor on window
     input()->pointer()->warp(internalWindow->frameGeometry().center());

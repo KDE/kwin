@@ -1306,7 +1306,7 @@ void X11WindowTest::testNetWmKeyboardMove()
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *window = createWindow(c.get(), Rect(100, 100, 100, 200));
+    X11Window *window = createWindow(c.get(), Rect(100, 100, 200, 400));
 
     // Request interactive move.
     {
@@ -1343,7 +1343,7 @@ void X11WindowTest::testNetWmKeyboardMoveCancel()
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *window = createWindow(c.get(), Rect(100, 100, 100, 200));
+    X11Window *window = createWindow(c.get(), Rect(100, 100, 200, 400));
 
     // Request interactive move.
     {
@@ -1383,7 +1383,7 @@ void X11WindowTest::testNetWmKeyboardResize()
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *window = createWindow(c.get(), Rect(100, 100, 100, 200));
+    X11Window *window = createWindow(c.get(), Rect(100, 100, 200, 400));
 
     // Request interactive resize.
     {
@@ -1420,7 +1420,7 @@ void X11WindowTest::testNetWmKeyboardResizeCancel()
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *window = createWindow(c.get(), Rect(100, 100, 100, 200));
+    X11Window *window = createWindow(c.get(), Rect(100, 100, 200, 400));
 
     // Request interactive resize.
     {
@@ -1460,7 +1460,7 @@ void X11WindowTest::testNetWmButtonMove()
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *window = createWindow(c.get(), Rect(100, 100, 100, 200));
+    X11Window *window = createWindow(c.get(), Rect(100, 100, 200, 400));
 
     // Request interactive move.
     const RectF originalGeometry = window->frameGeometry();
@@ -1496,7 +1496,7 @@ void X11WindowTest::testNetWmButtonMoveNotPressed()
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *window = createWindow(c.get(), Rect(100, 100, 100, 200));
+    X11Window *window = createWindow(c.get(), Rect(100, 100, 200, 400));
 
     // Request interactive move.
     {
@@ -1515,7 +1515,7 @@ void X11WindowTest::testNetWmButtonMoveCancel()
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *window = createWindow(c.get(), Rect(100, 100, 100, 200));
+    X11Window *window = createWindow(c.get(), Rect(100, 100, 200, 400));
 
     // Request interactive move.
     const RectF originalGeometry = window->frameGeometry();
@@ -1726,7 +1726,7 @@ void X11WindowTest::testMinimumSize()
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    const Rect windowGeometry(0, 0, 100, 200);
+    const Rect windowGeometry(0, 0, 300, 400);
     xcb_window_t windowId = xcb_generate_id(c.get());
     xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
@@ -1769,14 +1769,14 @@ void X11WindowTest::testMinimumSize()
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, 0));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(!frameGeometryChangedSpy.wait(10));
-    QCOMPARE(window->clientSize().width(), 100 / scale);
+    QCOMPARE(window->clientSize().width(), windowGeometry.width() / scale);
 
     window->keyPressEvent(Qt::Key_Right);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos);
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(!frameGeometryChangedSpy.wait(10));
-    QCOMPARE(window->clientSize().width(), 100 / scale);
+    QCOMPARE(window->clientSize().width(), windowGeometry.width() / scale);
 
     window->keyPressEvent(Qt::Key_Right);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
@@ -1784,28 +1784,28 @@ void X11WindowTest::testMinimumSize()
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QVERIFY(!frameGeometryChangedSpy.wait(10));
     // whilst X11 window size goes through scale, the increment is a logical value kwin side
-    QCOMPARE(window->clientSize().width(), 100 / scale + 8);
+    QCOMPARE(window->clientSize().width(), windowGeometry.width() / scale + 8);
 
     window->keyPressEvent(Qt::Key_Up);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, -8));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QVERIFY(!frameGeometryChangedSpy.wait(10));
-    QCOMPARE(window->clientSize().height(), 200 / scale);
+    QCOMPARE(window->clientSize().height(), windowGeometry.height() / scale);
 
     window->keyPressEvent(Qt::Key_Down);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QVERIFY(!frameGeometryChangedSpy.wait(10));
-    QCOMPARE(window->clientSize().height(), 200 / scale);
+    QCOMPARE(window->clientSize().height(), windowGeometry.height() / scale);
 
     window->keyPressEvent(Qt::Key_Down);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 8));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 2);
     QVERIFY(!frameGeometryChangedSpy.wait(10));
-    QCOMPARE(window->clientSize().height(), 200 / scale + 8);
+    QCOMPARE(window->clientSize().height(), windowGeometry.height() / scale + 8);
 
     // Finish the resize operation.
     QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 0);
@@ -1830,7 +1830,7 @@ void X11WindowTest::testMaximumSize()
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    const Rect windowGeometry(0, 0, 100, 200);
+    const Rect windowGeometry(0, 0, 300, 400);
     xcb_window_t windowId = xcb_generate_id(c.get());
     xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
@@ -1873,42 +1873,42 @@ void X11WindowTest::testMaximumSize()
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(!frameGeometryChangedSpy.wait(10));
-    QCOMPARE(window->clientSize().width(), 100 / scale);
+    QCOMPARE(window->clientSize().width(), windowGeometry.width() / scale);
 
     window->keyPressEvent(Qt::Key_Left);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos);
     QVERIFY(!interactiveMoveResizeSteppedSpy.wait(10));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
-    QCOMPARE(window->clientSize().width(), 100 / scale);
+    QCOMPARE(window->clientSize().width(), windowGeometry.width() / scale);
 
     window->keyPressEvent(Qt::Key_Left);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, 0));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QVERIFY(!frameGeometryChangedSpy.wait(10));
-    QCOMPARE(window->clientSize().width(), 100 / scale - 8);
+    QCOMPARE(window->clientSize().width(), windowGeometry.width() / scale - 8);
 
     window->keyPressEvent(Qt::Key_Down);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, 8));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QVERIFY(!frameGeometryChangedSpy.wait(10));
-    QCOMPARE(window->clientSize().height(), 200 / scale);
+    QCOMPARE(window->clientSize().height(), windowGeometry.height() / scale);
 
     window->keyPressEvent(Qt::Key_Up);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, 0));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QVERIFY(!frameGeometryChangedSpy.wait(10));
-    QCOMPARE(window->clientSize().height(), 200 / scale);
+    QCOMPARE(window->clientSize().height(), windowGeometry.height() / scale);
 
     window->keyPressEvent(Qt::Key_Up);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, -8));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 2);
     QVERIFY(!frameGeometryChangedSpy.wait(10));
-    QCOMPARE(window->clientSize().height(), 200 / scale - 8);
+    QCOMPARE(window->clientSize().height(), windowGeometry.height() / scale - 8);
 
     // Finish the resize operation.
     QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 0);

@@ -313,7 +313,7 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
 
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
 
-    workspace()->performWindowOperation(window, Options::UnrestrictedMoveOp);
+    workspace()->performWindowOperation(window, Options::MoveOp);
     QCOMPARE(window, workspace()->moveResizeWindow());
     QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(50, 25));
 
@@ -388,7 +388,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
     // verify that basic quick tile mode works as expected, i.e. the window is going to be
     // tiled if the user drags it to a screen edge or a corner
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
-    workspace()->performWindowOperation(window, Options::UnrestrictedMoveOp);
+    workspace()->performWindowOperation(window, Options::MoveOp);
     QCOMPARE(window, workspace()->moveResizeWindow());
     QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(50, 25));
 
@@ -415,7 +415,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
 
     // verify that geometry restore is correct after user untiles the window, but changes
     // their mind and tiles the window again while still holding left button
-    workspace()->performWindowOperation(window, Options::UnrestrictedMoveOp);
+    workspace()->performWindowOperation(window, Options::MoveOp);
     QCOMPARE(window, workspace()->moveResizeWindow());
 
     Test::pointerButtonPressed(BTN_LEFT, timestamp++); // untile the window
