@@ -101,11 +101,6 @@ void Application::start()
     setQuitOnLastWindowClosed(false);
     setQuitLockEnabled(false);
 
-    if (!m_config->isImmutable()) {
-        // TODO: This shouldn't be necessary
-        // config->setReadOnly( true );
-        m_config->reparseConfiguration();
-    }
     if (!m_kxkbConfig) {
         m_kxkbConfig = KSharedConfig::openConfig(QStringLiteral("kxkbrc"), KConfig::NoGlobals);
     }
