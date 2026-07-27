@@ -79,7 +79,6 @@ Atoms *atoms;
 
 Application::Application(int &argc, char **argv)
     : QApplication(argc, argv)
-    , m_configLock(false)
     , m_config(KSharedConfig::openConfig(QStringLiteral("kwinrc")))
     , m_kxkbConfig()
     , m_kdeglobals(KSharedConfig::openConfig(QStringLiteral("kdeglobals")))
@@ -89,11 +88,6 @@ Application::Application(int &argc, char **argv)
     qRegisterMetaType<KWin::SurfaceInterface *>("KWin::SurfaceInterface *");
     qRegisterMetaType<KSharedConfigPtr>();
     qRegisterMetaType<std::chrono::nanoseconds>();
-}
-
-void Application::setConfigLock(bool lock)
-{
-    m_configLock = lock;
 }
 
 void Application::start()
@@ -107,7 +101,7 @@ void Application::start()
     setQuitOnLastWindowClosed(false);
     setQuitLockEnabled(false);
 
-    if (!m_config->isImmutable() && m_configLock) {
+    if (!m_config->isImmutable()) {
         // TODO: This shouldn't be necessary
         // config->setReadOnly( true );
         m_config->reparseConfiguration();
@@ -165,14 +159,9 @@ void Application::createAboutData()
     KAboutData::setApplicationData(aboutData);
 }
 
-static const QString s_lockOption = QStringLiteral("lock");
-
 void Application::setupCommandLine(QCommandLineParser *parser)
 {
-    QCommandLineOption lockOption(s_lockOption, i18n("Disable configuration options"));
-
     parser->setApplicationDescription(i18n("KDE window manager"));
-    parser->addOption(lockOption);
     KAboutData::applicationData().setupCommandLine(parser);
 }
 
@@ -180,7 +169,6 @@ void Application::processCommandLine(QCommandLineParser *parser)
 {
     KAboutData aboutData = KAboutData::applicationData();
     aboutData.processCommandLine(parser);
-    setConfigLock(parser->isSet(s_lockOption));
 }
 
 void Application::setupMalloc()

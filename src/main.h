@@ -72,8 +72,6 @@ class KWIN_EXPORT Application : public QApplication
 public:
     ~Application() override;
 
-    void setConfigLock(bool lock);
-
     KSharedConfigPtr config() const
     {
         return m_config;
@@ -319,7 +317,6 @@ private:
 #endif
     std::unique_ptr<WorkspaceScene> m_scene;
     bool m_followLocale1 = false;
-    bool m_configLock;
     bool m_initiallyLocked = false;
     bool m_supportsLockScreen = true;
     bool m_supportsGlobalShortcuts = true;
