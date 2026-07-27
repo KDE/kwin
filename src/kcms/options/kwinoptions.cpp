@@ -12,7 +12,7 @@
 #include <QDBusMessage>
 #include <qqml.h>
 
-K_PLUGIN_CLASS_WITH_JSON(KWinOptions, "kcm_kwinoptions.json")
+K_PLUGIN_FACTORY_WITH_JSON(KWinOptionsFactory, "kcm_kwinoptions.json", registerPlugin<KWinOptions>(); registerPlugin<KWinOptionsData>();)
 
 KWinOptions::KWinOptions(QObject *parent, const KPluginMetaData &metaData)
     : KQuickManagedConfigModule(parent, metaData)
