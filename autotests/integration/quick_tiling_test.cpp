@@ -443,9 +443,9 @@ void QuickTilingTest::testQuickTilingPointerMove()
 
     // attach a new image
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    Test::render(surface.get(), QSize(100, 50), Qt::red);
+    Test::render(surface.get(), tileSize, Qt::red);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->frameGeometry().size(), QSize(100, 50));
+    QCOMPARE(window->frameGeometry().size(), tileSize);
     QCOMPARE(quickTileChangedSpy.count(), 3);
     QTEST(window->quickTileMode(), "expectedMode");
 }
