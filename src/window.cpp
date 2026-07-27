@@ -1279,6 +1279,10 @@ QSizeF Window::minVisibleArea() const
         break;
     }
 
+    if (!minVisibleHeight) {
+        minVisibleHeight = 50;
+    }
+
     return QSizeF(minVisibleWidth, minVisibleHeight);
 }
 
