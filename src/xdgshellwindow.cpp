@@ -126,7 +126,7 @@ void XdgSurfaceWindow::sendConfigure()
     configureEvent->scale = m_nextTargetScale;
     m_configureFlags = {};
     if (!isInteractiveMoveResize()) {
-        m_nextGravity = Gravity::None;
+        m_nextGravity = Gravity::BottomRight;
     }
 
     m_configureEvents.append(configureEvent);
