@@ -300,7 +300,7 @@ void QuickSceneEffect::loadFromModule(const QString &uri, const QString &typeNam
         qWarning() << "Cannot call QuickSceneEffect::loadFromModule while running";
         return;
     }
-    if (d->loadInfo.uri != uri && d->loadInfo.typeName != typeName) {
+    if (d->loadInfo.uri != uri || d->loadInfo.typeName != typeName) {
         d->delegate.clear();
         d->source = QUrl();
         d->loadInfo.uri = uri;
