@@ -22,6 +22,9 @@ namespace KWin
 
 static QString outputName(const LogicalOutput *screen)
 {
+    if (screen->isInternal()) {
+        return i18nc("@label", "Built-in Screen");
+    }
     const auto screens = effects->screens();
     const bool shouldShowSerialNumber = std::any_of(screens.cbegin(), screens.cend(), [screen](const LogicalOutput *other) {
         return other != screen && other->manufacturer() == screen->manufacturer() && other->model() == screen->model();
