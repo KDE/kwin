@@ -668,10 +668,10 @@ void Options::loadConfig()
     syncFromKcfgc();
 
     // Electric borders
-    OpTitlebarDblClick = windowOperation(m_settings->titlebarDoubleClickCommand(), true);
-    setOperationMaxButtonLeftClick(windowOperation(m_settings->maximizeButtonLeftClickCommand(), true));
-    setOperationMaxButtonMiddleClick(windowOperation(m_settings->maximizeButtonMiddleClickCommand(), true));
-    setOperationMaxButtonRightClick(windowOperation(m_settings->maximizeButtonRightClickCommand(), true));
+    OpTitlebarDblClick = windowOperation(m_settings->titlebarDoubleClickCommand());
+    setOperationMaxButtonLeftClick(windowOperation(m_settings->maximizeButtonLeftClickCommand()));
+    setOperationMaxButtonMiddleClick(windowOperation(m_settings->maximizeButtonMiddleClickCommand()));
+    setOperationMaxButtonRightClick(windowOperation(m_settings->maximizeButtonRightClickCommand()));
 
     // TODO: add properties for missing options
     CmdTitlebarWheel = mouseWheelCommand(m_settings->commandTitlebarWheel());
@@ -760,16 +760,12 @@ void Options::syncFromKcfgc()
     setPictureInPictureMargin(m_settings->pictureInPictureMargin());
 }
 
-// restricted should be true for operations that the user may not be able to repeat
-// if the window is moved out of the workspace (e.g. if the user moves a window
-// by the titlebar, and moves it too high beneath Kicker at the top edge, they
-// may not be able to move it back, unless they know about Meta+LMB)
-Options::WindowOperation Options::windowOperation(const QString &name, bool restricted)
+Options::WindowOperation Options::windowOperation(const QString &name)
 {
     if (name == QLatin1StringView("Move")) {
-        return restricted ? MoveOp : UnrestrictedMoveOp;
+        return MoveOp;
     } else if (name == QLatin1StringView("Resize")) {
-        return restricted ? ResizeOp : UnrestrictedResizeOp;
+        return ResizeOp;
     } else if (name == QLatin1StringView("Maximize")) {
         return MaximizeOp;
     } else if (name == QLatin1StringView("Minimize")) {

@@ -576,7 +576,7 @@ public:
         }
     }
 
-    static WindowOperation windowOperation(const QString &name, bool restricted);
+    static WindowOperation windowOperation(const QString &name);
     static MouseCommand mouseCommand(const QString &name, bool restricted);
     static MouseWheelCommand mouseWheelCommand(const QString &name);
 
