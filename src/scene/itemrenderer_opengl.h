@@ -95,7 +95,6 @@ private:
     void visualizeFractional(const RenderViewport &viewport, const Region &logicalRegion, const RenderContext &renderContext);
 
     bool m_blendingEnabled = false;
-    RenderDevice *const m_device;
     std::unordered_set<std::shared_ptr<SyncReleasePoint>> m_releasePoints;
 
     struct

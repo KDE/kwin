@@ -414,7 +414,7 @@ void ItemView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffse
 {
     const Region globalRegion = region == Region::infinite() ? Region::infinite() : region.translated(viewport().topLeft().toPoint());
     RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), renderTarget, deviceOffset);
-    auto renderer = m_item->scene()->renderer();
+    auto renderer = m_item->scene()->renderer(renderDevice());
     renderer->beginFrame(renderTarget, renderViewport);
     renderer->renderBackground(renderTarget, renderViewport, globalRegion);
     WindowPaintData data;
@@ -544,7 +544,7 @@ Region ItemTreeView::collectDamage()
 void ItemTreeView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion)
 {
     RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), renderTarget, deviceOffset);
-    auto renderer = m_item->scene()->renderer();
+    auto renderer = m_item->scene()->renderer(renderDevice());
     renderer->beginFrame(renderTarget, renderViewport);
     renderer->renderBackground(renderTarget, renderViewport, deviceRegion);
     WindowPaintData data;
@@ -641,9 +641,10 @@ Scene::~Scene()
 {
 }
 
-ItemRenderer *Scene::renderer() const
+ItemRenderer *Scene::renderer(RenderDevice *device) const
 {
-    return m_renderer.get();
+    const auto it = m_renderers.find(device);
+    return it == m_renderers.end() ? nullptr : it->second.get();
 }
 
 void Scene::addRepaintFull()
@@ -712,13 +713,13 @@ void Scene::removeView(RenderView *view)
     Q_EMIT viewRemoved(view);
 }
 
-void Scene::releaseResources(Item *item)
+void Scene::releaseResources(RenderDevice *device, Item *item)
 {
     item->releaseResources();
 
     const auto childItems = item->m_childItems;
     for (Item *childItem : childItems) {
-        releaseResources(childItem);
+        releaseResources(device, childItem);
     }
 }
 

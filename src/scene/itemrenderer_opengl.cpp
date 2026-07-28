@@ -28,7 +28,7 @@ namespace KWin
 {
 
 ItemRendererOpenGL::ItemRendererOpenGL(RenderDevice *device)
-    : m_device(device)
+    : ItemRenderer(device)
 {
     const QString visualizeOptionsString = qEnvironmentVariable("KWIN_SCENE_VISUALIZE");
     if (!visualizeOptionsString.isEmpty()) {
@@ -39,17 +39,17 @@ ItemRendererOpenGL::ItemRendererOpenGL(RenderDevice *device)
 
 std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
-    return BufferTextureOpenGL::create(m_device, buffer, releasePoint);
+    return BufferTextureOpenGL::create(m_renderDevice, buffer, releasePoint);
 }
 
 std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(const QImage &image)
 {
-    return ImageTextureOpenGL::create(m_device->eglContext(), image);
+    return ImageTextureOpenGL::create(m_renderDevice->eglContext(), image);
 }
 
 std::unique_ptr<NinePatch> ItemRendererOpenGL::createNinePatch(const QImage &image)
 {
-    return NinePatchOpenGL::create(m_device->eglContext(), image);
+    return NinePatchOpenGL::create(m_renderDevice->eglContext(), image);
 }
 
 std::unique_ptr<NinePatch> ItemRendererOpenGL::createNinePatch(const QImage &topLeftPatch,
@@ -61,12 +61,12 @@ std::unique_ptr<NinePatch> ItemRendererOpenGL::createNinePatch(const QImage &top
                                                                const QImage &bottomLeftPatch,
                                                                const QImage &leftPatch)
 {
-    return NinePatchOpenGL::create(m_device->eglContext(), topLeftPatch, topPatch, topRightPatch, rightPatch, bottomRightPatch, bottomPatch, bottomLeftPatch, leftPatch);
+    return NinePatchOpenGL::create(m_renderDevice->eglContext(), topLeftPatch, topPatch, topRightPatch, rightPatch, bottomRightPatch, bottomPatch, bottomLeftPatch, leftPatch);
 }
 
 std::unique_ptr<Atlas> ItemRendererOpenGL::createAtlas(const QList<QImage> &sprites)
 {
-    return AtlasOpenGL::create(m_device->eglContext(), sprites);
+    return AtlasOpenGL::create(m_renderDevice->eglContext(), sprites);
 }
 
 void ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)
@@ -82,7 +82,7 @@ void ItemRendererOpenGL::endFrame()
     GLVertexBuffer::streamingBuffer()->endOfFrame();
     GLFramebuffer::popFramebuffer();
 
-    EGLNativeFence fence(m_device->eglDisplay());
+    EGLNativeFence fence(m_renderDevice->eglDisplay());
     if (fence.isValid()) {
         for (const auto &releasePoint : m_releasePoints) {
             releasePoint->addReleaseFence(fence.fileDescriptor());

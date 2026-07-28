@@ -374,8 +374,9 @@ void Compositor::start()
         }
     }
 
-    if (const auto eglBackend = qobject_cast<EglBackend *>(m_backend.get())) {
-        kwinApp()->scene()->attachRenderer(std::make_unique<ItemRendererOpenGL>(m_primaryDevice));
+    const auto &devices = GpuManager::self()->renderDevices();
+    for (const auto &device : devices) {
+        kwinApp()->scene()->attachRenderer(device.get(), std::make_unique<ItemRendererOpenGL>(device.get()));
     }
 
     handleOutputsChanged();
@@ -420,7 +421,10 @@ void Compositor::stop()
         removeOutput(findOutput(loop));
     }
 
-    kwinApp()->scene()->detachRenderer();
+    const auto &devices = GpuManager::self()->renderDevices();
+    for (const auto &device : devices) {
+        kwinApp()->scene()->detachRenderer(device.get());
+    }
 
     m_backend.reset();
 
