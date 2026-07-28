@@ -10,13 +10,14 @@
 #include "compositor.h"
 #include "core/drm_formats.h"
 #include "core/drmdevice.h"
+#include "core/gpumanager.h"
 #include "core/graphicsbufferallocator.h"
 #include "core/renderbackend.h"
 #include "core/renderdevice.h"
 #include "cursor.h"
 #include "kwinscreencast_logging.h"
 #include "main.h"
-#include "opengl/eglbackend.h"
+#include "opengl/eglcontext.h"
 #include "opengl/eglnativefence.h"
 #include "opengl/glframebuffer.h"
 #include "opengl/glplatform.h"
@@ -262,7 +263,7 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
             if (receivedModifiers.size() > 1) {
                 receivedModifiers.erase(DRM_FORMAT_MOD_INVALID);
             }
-            m_dmabufParams = testCreateDmaBuf(m_resolution, m_drmFormat, receivedModifiers);
+            m_dmabufParams = testCreateDmaBuf(m_source->renderDevice(), m_resolution, m_drmFormat, receivedModifiers);
 
             // In case we fail to use any modifier from the list of offered ones, remove these
             // from our all future offerings, otherwise there will be no indication that it cannot
@@ -295,12 +296,13 @@ void ScreenCastStream::onStreamAddBuffer(pw_buffer *pwBuffer)
 
     struct spa_data *spa_data = pwBuffer->buffer->datas;
     if (spa_data[0].type & (1 << SPA_DATA_DmaBuf)) {
-        if (auto dmabuf = DmaBufScreenCastBuffer::create(pwBuffer, GraphicsBufferOptions{
-                                                                       .size = QSize(m_videoFormat.size.width, m_videoFormat.size.height),
-                                                                       .format = spaVideoFormatToDrmFormat(m_videoFormat.format),
-                                                                       .modifiers = {m_videoFormat.modifier},
-                                                                       .scanout = false,
-                                                                   })) {
+        GraphicsBufferOptions options{
+            .size = QSize(m_videoFormat.size.width, m_videoFormat.size.height),
+            .format = spaVideoFormatToDrmFormat(m_videoFormat.format),
+            .modifiers = {m_videoFormat.modifier},
+            .scanout = false,
+        };
+        if (auto dmabuf = DmaBufScreenCastBuffer::create(m_source->renderDevice(), pwBuffer, options)) {
             pwBuffer->user_data = dmabuf;
             m_allBuffers.push_back(dmabuf);
             return;
@@ -342,6 +344,11 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
         scheduleRecord(Content::Video);
     });
     connect(source, &ScreenCastSource::closed, this, &ScreenCastStream::close);
+    connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, [this](RenderDevice *removed) {
+        if (removed == m_source->renderDevice()) {
+            close();
+        }
+    });
 
     m_pwStreamEvents.version = PW_VERSION_STREAM_EVENTS;
     m_pwStreamEvents.add_buffer = [](void *data, struct pw_buffer *buffer) {
@@ -384,9 +391,7 @@ bool ScreenCastStream::init()
         return false;
     }
 
-    EglBackend *backend = qobject_cast<EglBackend *>(Compositor::self()->backend());
-    if (!backend) {
-        m_error = i18n("OpenGL compositing is required for screencasting");
+    if (!Compositor::self()->primaryDevice()->eglContext()) {
         return false;
     }
 
@@ -451,7 +456,7 @@ bool ScreenCastStream::createStream()
         m_drmFormat = itModifiers.key();
         m_modifiers = *itModifiers;
     }
-    m_hasDmaBuf = testCreateDmaBuf(m_resolution, m_drmFormat, m_modifiers).has_value();
+    m_hasDmaBuf = testCreateDmaBuf(m_source->renderDevice(), m_resolution, m_drmFormat, m_modifiers).has_value();
 
     char buffer[2048];
     QList<const spa_pod *> params = buildFormats(false, buffer);
@@ -593,11 +598,6 @@ pw_buffer *ScreenCastStream::dequeueBuffer()
 
 void ScreenCastStream::record(Contents contents)
 {
-    EglBackend *backend = qobject_cast<EglBackend *>(Compositor::self()->backend());
-    if (!backend) {
-        return;
-    }
-
     struct pw_buffer *pwBuffer = dequeueBuffer();
     if (!pwBuffer) {
         return;
@@ -626,9 +626,11 @@ void ScreenCastStream::record(Contents contents)
         break;
     }
 
-    EglContext *context = backend->openglContext();
-    if (!context->makeCurrent()) {
+    const auto &context = m_source->eglContext();
+    if (!context || !context->makeCurrent()) {
         pw_stream_return_buffer(m_pwStream, pwBuffer);
+        // TODO maybe re-allocate buffers and deal with this better?
+        close();
         return;
     }
 
@@ -649,7 +651,7 @@ void ScreenCastStream::record(Contents contents)
                                                                                             SPA_META_SyncTimeline,
                                                                                             sizeof(spa_meta_sync_timeline)));
                 FileDescriptor syncFileFd = dmabuf->synctimeline->exportSyncFile(synctmeta->release_point);
-                EGLNativeFence fence = EGLNativeFence::importFence(backend->eglDisplayObject(), std::move(syncFileFd));
+                EGLNativeFence fence = EGLNativeFence::importFence(m_source->renderDevice()->eglDisplay(), std::move(syncFileFd));
                 if (fence.waitSync() != EGL_TRUE) {
                     qCWarning(KWIN_SCREENCAST) << objectName() << "Failed to wait on a fence, recording may be corrupted";
                 }
@@ -663,7 +665,7 @@ void ScreenCastStream::record(Contents contents)
 
     if (spa_data[0].type == SPA_DATA_DmaBuf) {
         if (synctmeta) {
-            EGLNativeFence fence(backend->eglDisplayObject());
+            EGLNativeFence fence(m_source->renderDevice()->eglDisplay());
 
             synctmeta->acquire_point = synctmeta->release_point + 1;
             synctmeta->release_point = synctmeta->acquire_point + 1;
@@ -919,14 +921,9 @@ void ScreenCastStream::setCursorMode(ScreencastV1Interface::CursorMode mode)
     m_cursor.mode = mode;
 }
 
-std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(const QSize &size, quint32 format, const ModifierList &modifiers)
+std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(RenderDevice *device, const QSize &size, quint32 format, const ModifierList &modifiers)
 {
-    EglBackend *backend = qobject_cast<EglBackend *>(Compositor::self()->backend());
-    if (!backend) {
-        return std::nullopt;
-    }
-
-    GraphicsBuffer *buffer = backend->renderDevice()->allocator()->allocate(GraphicsBufferOptions{
+    GraphicsBuffer *buffer = device->allocator()->allocate(GraphicsBufferOptions{
         .size = size,
         .format = format,
         .modifiers = modifiers,
@@ -947,11 +944,12 @@ std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(
     // Also test if we can actually create the framebuffer,
     // since this may fail on some drivers with some modifiers
     // (namely Nvidia with the implicit modifier)
-    if (!backend->openglContext()->makeCurrent()) {
+    const auto context = device->eglContext();
+    if (!context || !context->makeCurrent()) {
         return std::nullopt;
     }
 
-    auto texture = backend->importDmaBufAsTexture(*attrs);
+    auto texture = context->importDmaBufAsTexture(*attrs);
     if (!texture) {
         return std::nullopt;
     }
@@ -966,7 +964,7 @@ std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(
         .height = attrs->height,
         .format = attrs->format,
         .modifier = attrs->modifier,
-        .supportsSyncObj = backend->renderDevice()->drmDevice() && backend->renderDevice()->drmDevice()->supportsSyncObjTimelines(),
+        .supportsSyncObj = device->drmDevice() && device->drmDevice()->supportsSyncObjTimelines(),
     };
 }
 
