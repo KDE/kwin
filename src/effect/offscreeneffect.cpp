@@ -5,12 +5,18 @@
 */
 
 #include "effect/offscreeneffect.h"
+#include "compositor.h"
 #include "core/output.h"
 #include "core/pixelgrid.h"
+#include "core/renderdevice.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
+#include "core/syncobjtimeline.h"
 #include "effect/effecthandler.h"
 #include "opengl/eglcontext.h"
+#include "opengl/egldisplay.h"
+#include "opengl/eglnativefence.h"
+#include "opengl/eglswapchain.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
 #include "scene/windowitem.h"
@@ -31,8 +37,9 @@ public:
 
     [[nodiscard]] bool maybeRender(EffectWindow *window);
 
-    std::unique_ptr<GLTexture> m_texture;
-    std::unique_ptr<GLFramebuffer> m_fbo;
+    std::shared_ptr<EglSwapchain> m_swapchain;
+    std::shared_ptr<EglSwapchainSlot> m_slot;
+    std::shared_ptr<SyncReleasePoint> m_releasePoint;
     bool m_isDirty = true;
     GLShader *m_shader = nullptr;
     RenderGeometry::VertexSnappingMode m_vertexSnappingMode = RenderGeometry::VertexSnappingMode::Round;
@@ -113,39 +120,57 @@ bool OffscreenData::maybeRender(EffectWindow *window)
     const QSize textureSize = (logicalGeometry.size() * scale).toSize();
 
     if (textureSize.isEmpty()) {
-        m_fbo.reset();
-        m_texture.reset();
+        m_swapchain.reset();
+        m_slot.reset();
         return true;
     }
-    if (!m_texture || m_texture->size() != textureSize) {
-        m_texture = GLTexture::allocate(GL_RGBA8, textureSize);
-        if (!m_texture) {
-            return true;
+    if (!m_swapchain || m_swapchain->size() != textureSize) {
+        m_slot.reset();
+
+        const auto device = Compositor::self()->primaryDevice();
+        GraphicsBufferOptions options{
+            .size = textureSize,
+            .format = DRM_FORMAT_ARGB8888,
+            .modifiers = device->eglDisplay()->nonExternalOnlySupportedDrmFormats()[DRM_FORMAT_ARGB8888],
+            .software = false,
+            .scanout = false,
+        };
+        m_swapchain = EglSwapchain::create(device, options);
+        if (!m_swapchain) {
+            return false;
         }
-        m_texture->setFilter(GL_LINEAR);
-        m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
-        m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
         m_isDirty = true;
     }
 
-    if (m_isDirty) {
-        RenderTarget renderTarget(m_fbo.get());
-        RenderViewport viewport(logicalGeometry, scale, renderTarget, QPoint());
-        GLFramebuffer::pushFramebuffer(m_fbo.get());
-        glClearColor(0.0, 0.0, 0.0, 0.0);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        WindowPaintData data;
-        data.setOpacity(1.0);
-
-        const int mask = Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_WINDOW_TRANSLUCENT;
-        if (!effects->drawWindow(renderTarget, viewport, window, mask, Region::infinite(), data)) {
-            return false;
-        }
-
-        GLFramebuffer::popFramebuffer();
-        m_isDirty = false;
+    if (!m_isDirty) {
+        return true;
     }
+    m_slot = m_swapchain->acquire();
+    if (!m_slot) {
+        return false;
+    }
+    RenderTarget renderTarget(m_slot->framebuffer());
+    RenderViewport viewport(logicalGeometry, scale, renderTarget, QPoint());
+    GLFramebuffer::pushFramebuffer(m_slot->framebuffer());
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    WindowPaintData data;
+    data.setOpacity(1.0);
+
+    const int mask = Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_WINDOW_TRANSLUCENT;
+    if (!effects->drawWindow(renderTarget, viewport, window, mask, Region::infinite(), data)) {
+        m_slot.reset();
+        m_swapchain.reset();
+        return false;
+    }
+
+    GLFramebuffer::popFramebuffer();
+    EGLNativeFence fence(m_swapchain->context()->displayObject());
+    m_swapchain->release(m_slot, fence.takeFileDescriptor());
+    m_releasePoint = m_slot->releasePoint();
+
+    m_isDirty = false;
     return true;
 }
 
@@ -172,7 +197,7 @@ void OffscreenData::setVertexSnappingMode(RenderGeometry::VertexSnappingMode mod
 void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, const Region &deviceRegion,
                           const WindowPaintData &data, const WindowQuadList &quads)
 {
-    if (!m_texture) {
+    if (!m_slot) {
         return;
     }
     GLShader *shader = m_shader ? m_shader : ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation | ShaderTrait::TransformColorspace);
@@ -189,7 +214,7 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     for (auto &quad : quads) {
         geometry.appendWindowQuad(quad, scale);
     }
-    geometry.postProcessTextureCoordinates(m_texture->matrix(NormalizedCoordinates));
+    geometry.postProcessTextureCoordinates(m_slot->texture()->matrix(NormalizedCoordinates));
 
     const auto map = vbo->map<GLVertex2D>(geometry.size());
     if (!map) {
@@ -211,8 +236,8 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
     shader->setUniform(GLShader::FloatUniform::Saturation, data.saturation());
     shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
-    shader->setUniform(GLShader::IntUniform::TextureWidth, m_texture->width());
-    shader->setUniform(GLShader::IntUniform::TextureHeight, m_texture->height());
+    shader->setUniform(GLShader::IntUniform::TextureWidth, m_slot->texture()->width());
+    shader->setUniform(GLShader::IntUniform::TextureHeight, m_slot->texture()->height());
     shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
 
     const bool clipping = deviceRegion != Region::infinite();
@@ -225,15 +250,18 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-    m_texture->bind();
+    m_slot->texture()->bind();
     vbo->draw(clipRegion, GL_TRIANGLES, 0, geometry.count(), clipping);
-    m_texture->unbind();
+    m_slot->texture()->unbind();
 
     glDisable(GL_BLEND);
     if (clipping) {
         glDisable(GL_SCISSOR_TEST);
     }
     vbo->unbindArrays();
+
+    EGLNativeFence fence(m_swapchain->context()->displayObject());
+    m_releasePoint->addReleaseFence(fence.takeFileDescriptor());
 }
 
 bool OffscreenEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data)
