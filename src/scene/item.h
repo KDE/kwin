@@ -32,6 +32,7 @@ class LogicalOutput;
 class OutputFrame;
 class SceneView;
 class ItemRenderer;
+class RenderDevice;
 
 class KWIN_EXPORT ItemEffect
 {
@@ -166,7 +167,7 @@ public:
     Region takeDeviceRepaints(RenderView *delegate);
     void resetRepaints(RenderView *delegate);
 
-    WindowQuadList quads() const;
+    WindowQuadList quads(ItemRenderer *renderer) const;
     virtual void preprocess(ItemRenderer *renderer);
     const std::shared_ptr<ColorDescription> &colorDescription() const;
     RenderingIntent renderingIntent() const;
@@ -206,10 +207,10 @@ Q_SIGNALS:
     void boundingRectChanged();
 
 protected:
-    virtual WindowQuadList buildQuads() const;
+    virtual WindowQuadList buildQuads(ItemRenderer *renderer) const;
     virtual void handlePrepareFrame(std::chrono::nanoseconds timestamp);
     virtual void handleFramePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
-    virtual void releaseResources();
+    virtual void releaseResources(RenderDevice *device);
     void discardQuads();
     void setColorDescription(const std::shared_ptr<ColorDescription> &description);
     void setRenderingIntent(RenderingIntent intent);

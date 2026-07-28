@@ -21,7 +21,7 @@ public:
     DecorationShadowTextureCache(const DecorationShadowTextureCache &) = delete;
     static DecorationShadowTextureCache &instance();
 
-    void unregister(ShadowItem *shadowItem);
+    void unregister(RenderDevice *device, ShadowItem *shadowItem);
     std::shared_ptr<NinePatch> ninePatch(ShadowItem *shadowItem, ItemRenderer *renderer);
 
 private:
@@ -31,7 +31,7 @@ private:
         std::shared_ptr<NinePatch> ninePatch;
         QList<ShadowItem *> shadowItems;
     };
-    QHash<KDecoration3::DecorationShadow *, Data> m_cache;
+    QHash<RenderDevice *, QHash<KDecoration3::DecorationShadow *, Data>> m_cache;
 };
 
 ShadowItem::ShadowItem(Shadow *shadow, Window *window, Item *parent)
@@ -53,9 +53,8 @@ ShadowItem::ShadowItem(Shadow *shadow, Window *window, Item *parent)
 
 ShadowItem::~ShadowItem()
 {
-    if (m_ninePatch) {
-        DecorationShadowTextureCache::instance().unregister(this);
-        m_ninePatch.reset();
+    for (const auto &[device, ninePatch] : m_ninePatch) {
+        DecorationShadowTextureCache::instance().unregister(device, this);
     }
 }
 
@@ -64,9 +63,10 @@ Shadow *ShadowItem::shadow() const
     return m_shadow;
 }
 
-NinePatch *ShadowItem::ninePatch() const
+NinePatch *ShadowItem::ninePatch(RenderDevice *device) const
 {
-    return m_ninePatch.get();
+    const auto it = m_ninePatch.find(device);
+    return it == m_ninePatch.end() ? nullptr : it->second.get();
 }
 
 void ShadowItem::updateGeometry()
@@ -82,7 +82,7 @@ void ShadowItem::handleTextureChanged()
 {
     scheduleRepaint(rect());
     discardQuads();
-    m_textureDirty = true;
+    m_textureNotDirty.clear();
 }
 
 void ShadowItem::updateVisibility()
@@ -112,7 +112,7 @@ static inline void distributeVertically(RectF &topRect, RectF &bottomRect)
     }
 }
 
-WindowQuadList ShadowItem::buildQuads() const
+WindowQuadList ShadowItem::buildQuads(ItemRenderer *renderer) const
 {
     // Do not draw shadows if window width or window height is less than 5 px. 5 is an arbitrary choice.
     if (m_window->width() < 5 || m_window->height() < 5) {
@@ -324,31 +324,31 @@ WindowQuadList ShadowItem::buildQuads() const
 
 void ShadowItem::preprocess(ItemRenderer *renderer)
 {
-    if (!m_textureDirty) {
+    if (m_textureNotDirty.contains(renderer->renderDevice())) {
         return;
     }
+    m_textureNotDirty.insert(renderer->renderDevice());
 
-    m_textureDirty = false;
-
+    auto &patch = m_ninePatch[renderer->renderDevice()];
     if (m_shadow->hasDecorationShadow()) {
-        m_ninePatch = DecorationShadowTextureCache::instance().ninePatch(this, renderer);
+        patch = DecorationShadowTextureCache::instance().ninePatch(this, renderer);
     } else {
-        m_ninePatch = renderer->createNinePatch(m_shadow->shadowElement(Shadow::ShadowElementTopLeft),
-                                                m_shadow->shadowElement(Shadow::ShadowElementTop),
-                                                m_shadow->shadowElement(Shadow::ShadowElementTopRight),
-                                                m_shadow->shadowElement(Shadow::ShadowElementRight),
-                                                m_shadow->shadowElement(Shadow::ShadowElementBottomRight),
-                                                m_shadow->shadowElement(Shadow::ShadowElementBottom),
-                                                m_shadow->shadowElement(Shadow::ShadowElementBottomLeft),
-                                                m_shadow->shadowElement(Shadow::ShadowElementLeft));
+        patch = renderer->createNinePatch(m_shadow->shadowElement(Shadow::ShadowElementTopLeft),
+                                          m_shadow->shadowElement(Shadow::ShadowElementTop),
+                                          m_shadow->shadowElement(Shadow::ShadowElementTopRight),
+                                          m_shadow->shadowElement(Shadow::ShadowElementRight),
+                                          m_shadow->shadowElement(Shadow::ShadowElementBottomRight),
+                                          m_shadow->shadowElement(Shadow::ShadowElementBottom),
+                                          m_shadow->shadowElement(Shadow::ShadowElementBottomLeft),
+                                          m_shadow->shadowElement(Shadow::ShadowElementLeft));
     }
 }
 
-void ShadowItem::releaseResources()
+void ShadowItem::releaseResources(RenderDevice *device)
 {
-    DecorationShadowTextureCache::instance().unregister(this);
-    m_ninePatch.reset();
-    m_textureDirty = true;
+    DecorationShadowTextureCache::instance().unregister(device, this);
+    m_ninePatch.erase(device);
+    m_textureNotDirty.erase(device);
 }
 
 DecorationShadowTextureCache &DecorationShadowTextureCache::instance()
@@ -362,10 +362,16 @@ DecorationShadowTextureCache::~DecorationShadowTextureCache()
     Q_ASSERT(m_cache.isEmpty());
 }
 
-void DecorationShadowTextureCache::unregister(ShadowItem *shadowItem)
+void DecorationShadowTextureCache::unregister(RenderDevice *device, ShadowItem *shadowItem)
 {
-    auto it = m_cache.begin();
-    while (it != m_cache.end()) {
+    const auto cacheIt = m_cache.find(device);
+    if (cacheIt == m_cache.end()) {
+        return;
+    }
+    auto &cache = *cacheIt;
+
+    auto it = cache.begin();
+    while (it != cache.end()) {
         auto &d = it.value();
         // check whether the Vector of Shadows contains our shadow and remove all of them
         auto glIt = d.shadowItems.begin();
@@ -378,10 +384,13 @@ void DecorationShadowTextureCache::unregister(ShadowItem *shadowItem)
         }
         // if there are no shadows any more we can erase the cache entry
         if (d.shadowItems.isEmpty()) {
-            it = m_cache.erase(it);
+            it = cache.erase(it);
         } else {
             it++;
         }
+    }
+    if (cache.isEmpty()) {
+        m_cache.erase(cacheIt);
     }
 }
 
@@ -389,22 +398,28 @@ std::shared_ptr<NinePatch> DecorationShadowTextureCache::ninePatch(ShadowItem *s
 {
     Shadow *shadow = shadowItem->shadow();
     Q_ASSERT(shadow->hasDecorationShadow());
-    unregister(shadowItem);
+    unregister(renderer->renderDevice(), shadowItem);
     const auto decoShadow = shadow->decorationShadow().lock();
     Q_ASSERT(decoShadow);
-    auto it = m_cache.find(decoShadow.get());
-    if (it != m_cache.end()) {
-        Q_ASSERT(!it.value().shadowItems.contains(shadowItem));
-        it.value().shadowItems << shadowItem;
-        return it.value().ninePatch;
+
+    auto cacheIt = m_cache.find(renderer->renderDevice());
+    if (cacheIt != m_cache.end()) {
+        auto &cache = *cacheIt;
+        auto it = cache.find(decoShadow.get());
+        if (it != cache.end()) {
+            Q_ASSERT(!it.value().shadowItems.contains(shadowItem));
+            it.value().shadowItems << shadowItem;
+            return it.value().ninePatch;
+        }
     }
+
     Data d;
     d.shadowItems << shadowItem;
     d.ninePatch = renderer->createNinePatch(shadow->decorationShadowImage());
     if (!d.ninePatch) {
         return nullptr;
     }
-    m_cache.insert(decoShadow.get(), d);
+    m_cache[renderer->renderDevice()].insert(decoShadow.get(), d);
     return d.ninePatch;
 }
 

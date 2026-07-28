@@ -27,12 +27,12 @@ public:
     ~ShadowItem() override;
 
     Shadow *shadow() const;
-    NinePatch *ninePatch() const;
+    NinePatch *ninePatch(RenderDevice *device) const;
 
 protected:
-    WindowQuadList buildQuads() const override;
+    WindowQuadList buildQuads(ItemRenderer *renderer) const override;
     void preprocess(ItemRenderer *renderer) override;
-    void releaseResources() override;
+    void releaseResources(RenderDevice *device) override;
 
 private Q_SLOTS:
     void handleTextureChanged();
@@ -42,8 +42,8 @@ private Q_SLOTS:
 private:
     Window *m_window;
     Shadow *m_shadow = nullptr;
-    std::shared_ptr<NinePatch> m_ninePatch;
-    bool m_textureDirty = true;
+    std::unordered_map<RenderDevice *, std::shared_ptr<NinePatch>> m_ninePatch;
+    std::unordered_set<RenderDevice *> m_textureNotDirty;
 };
 
 } // namespace KWin

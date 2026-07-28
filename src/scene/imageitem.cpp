@@ -21,9 +21,10 @@ ImageItem::~ImageItem()
 {
 }
 
-Texture *ImageItem::texture() const
+Texture *ImageItem::texture(RenderDevice *device) const
 {
-    return m_texture.get();
+    const auto it = m_textures.find(device);
+    return it == m_textures.end() ? nullptr : it->second.first.get();
 }
 
 QImage ImageItem::image() const
@@ -40,21 +41,22 @@ void ImageItem::setImage(const QImage &image)
 
 void ImageItem::preprocess(ItemRenderer *renderer)
 {
+    auto &[texture, key] = m_textures[renderer->renderDevice()];
     if (m_image.isNull()) {
-        m_texture.reset();
-        m_textureKey = 0;
-    } else if (!m_texture || m_textureKey != m_image.cacheKey()) {
-        m_textureKey = m_image.cacheKey();
+        texture.reset();
+        key = 0;
+    } else if (!texture || key != m_image.cacheKey()) {
+        key = m_image.cacheKey();
 
-        if (!m_texture || m_texture->size() != m_image.size()) {
-            m_texture = renderer->createTexture(m_image);
+        if (!texture || texture->size() != m_image.size()) {
+            texture = renderer->createTexture(m_image);
         } else {
-            m_texture->upload(m_image, m_image.rect());
+            texture->upload(m_image, m_image.rect());
         }
     }
 }
 
-WindowQuadList ImageItem::buildQuads() const
+WindowQuadList ImageItem::buildQuads(ItemRenderer *renderer) const
 {
     const RectF geometry = boundingRect();
     if (geometry.isEmpty()) {
@@ -74,9 +76,9 @@ WindowQuadList ImageItem::buildQuads() const
     return ret;
 }
 
-void ImageItem::releaseResources()
+void ImageItem::releaseResources(RenderDevice *device)
 {
-    m_texture.reset();
+    m_textures.erase(device);
 }
 
 } // namespace KWin

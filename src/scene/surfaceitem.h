@@ -53,10 +53,8 @@ public:
     RegionF mapFromBuffer(const Region &region) const;
 
     void addDamage(const Region &region);
-    void resetDamage();
-    Region damage() const;
 
-    Texture *texture() const;
+    Texture *texture(RenderDevice *device) const;
 
     virtual ContentType contentType() const;
     virtual void setScanoutHint(DrmDevice *device, const FormatModifierMap &drmFormats);
@@ -75,11 +73,13 @@ Q_SIGNALS:
 protected:
     explicit SurfaceItem(Item *parent = nullptr);
 
-    void preprocess(ItemRenderer *renderer) override;
-    WindowQuadList buildQuads() const override;
-    void releaseResources() override;
+    void resetDamage(RenderDevice *Device);
+    Region damage(RenderDevice *device) const;
 
-    Region m_damage;
+    void preprocess(ItemRenderer *renderer) override;
+    WindowQuadList buildQuads(ItemRenderer *renderer) const override;
+    void releaseResources(RenderDevice *device) override;
+
     OutputTransform m_bufferToSurfaceTransform;
     OutputTransform m_surfaceToBufferTransform;
     GraphicsBufferRef m_bufferRef;
@@ -87,7 +87,8 @@ protected:
     QSize m_bufferSize;
     QSizeF m_destinationSize;
     bool m_hasAlphaChannel = false;
-    std::unique_ptr<Texture> m_texture;
+    std::unordered_map<RenderDevice *, std::unique_ptr<Texture>> m_textures;
+    std::unordered_map<RenderDevice *, Region> m_damage;
     std::deque<std::chrono::nanoseconds> m_lastDamageTimeDiffs;
     std::optional<std::chrono::nanoseconds> m_accumulatedTimeDiffs;
     std::optional<std::chrono::steady_clock::time_point> m_lastDamage;

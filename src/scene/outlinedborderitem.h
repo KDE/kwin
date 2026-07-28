@@ -26,7 +26,7 @@ public:
     void setOutline(const BorderOutline &outline);
 
 protected:
-    WindowQuadList buildQuads() const override;
+    WindowQuadList buildQuads(ItemRenderer *renderer) const override;
 
 private:
     RectF m_innerRect;
