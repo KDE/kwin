@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-24 00:46+0000\n"
+"POT-Creation-Date: 2026-07-28 00:47+0000\n"
 "PO-Revision-Date: 2008-08-05 22:26+0200\n"
 "Last-Translator: Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>\n"
 "Language-Team: Occitan (lengadocian) <ubuntu-l10n-oci@lists.ubuntu.com>\n"
@@ -1478,7 +1478,7 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: main.cpp:150 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:139 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
@@ -1489,66 +1489,61 @@ msgstr ""
 msgid "KWin"
 msgstr ""
 
-#: main.cpp:152 main.cpp:174
+#: main.cpp:141 main.cpp:159
 #, kde-format
 msgid "KDE window manager"
 msgstr ""
 
-#: main.cpp:154
+#: main.cpp:143
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr ""
 
-#: main.cpp:156
+#: main.cpp:145
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:157
+#: main.cpp:146
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:158
+#: main.cpp:147
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr ""
 
-#: main.cpp:159
+#: main.cpp:148
 #, kde-format
 msgid "Luboš Luňák"
 msgstr ""
 
-#: main.cpp:160
+#: main.cpp:149
 #, kde-format
 msgid "Martin Flöser"
 msgstr ""
 
-#: main.cpp:161
+#: main.cpp:150
 #, kde-format
 msgid "David Edmundson"
 msgstr ""
 
-#: main.cpp:162
+#: main.cpp:151
 #, kde-format
 msgid "Roman Gilg"
 msgstr ""
 
-#: main.cpp:163
+#: main.cpp:152
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:164
+#: main.cpp:153
 #, fuzzy, kde-format
 #| msgid "Large"
 msgid "Xaver Hugl"
 msgstr "Grand"
-
-#: main.cpp:172
-#, kde-format
-msgid "Disable configuration options"
-msgstr ""
 
 #: main_wayland.cpp:328
 #, kde-format

@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-24 00:46+0000\n"
+"POT-Creation-Date: 2026-07-28 00:47+0000\n"
 "PO-Revision-Date: 2026-07-22 00:44-0300\n"
 "Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -1517,7 +1517,7 @@ msgstr ""
 "Selecione a janela para forçar o fechamento com clique esquerdo ou Enter. \n"
 "ESC ou clique direito para cancelar."
 
-#: main.cpp:150 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:139 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
@@ -1528,65 +1528,60 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:152 main.cpp:174
+#: main.cpp:141 main.cpp:159
 #, kde-format
 msgid "KDE window manager"
 msgstr "Gerenciador de janelas do KDE"
 
-#: main.cpp:154
+#: main.cpp:143
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2019, Os desenvolvedores do KDE"
 
-#: main.cpp:156
+#: main.cpp:145
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:157
+#: main.cpp:146
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:158
+#: main.cpp:147
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:159
+#: main.cpp:148
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:160
+#: main.cpp:149
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:161
+#: main.cpp:150
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:162
+#: main.cpp:151
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:163
+#: main.cpp:152
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:164
+#: main.cpp:153
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "Xaver Hugl"
-
-#: main.cpp:172
-#, kde-format
-msgid "Disable configuration options"
-msgstr "Desabilita as opções de configuração"
 
 #: main_wayland.cpp:328
 #, kde-format
@@ -4421,6 +4416,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "O Xwayland falhou"
+
+#~ msgid "Disable configuration options"
+#~ msgstr "Desabilita as opções de configuração"
 
 #~ msgid "Block Compositing"
 #~ msgstr "Bloquear composição"

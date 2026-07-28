@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-24 00:46+0000\n"
+"POT-Creation-Date: 2026-07-28 00:47+0000\n"
 "PO-Revision-Date: 2026-07-07 18:07+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -1486,7 +1486,7 @@ msgstr ""
 "حدد نافذة لفرض الإغلاق بالنقرة اليسرى أو الضغط على زر الدخول. \n"
 "للإلغاء اضغط زر الهروب أو انقر بزر الفأرة الأيمن."
 
-#: main.cpp:150 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:139 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
@@ -1497,65 +1497,60 @@ msgstr ""
 msgid "KWin"
 msgstr "كوين"
 
-#: main.cpp:152 main.cpp:174
+#: main.cpp:141 main.cpp:159
 #, kde-format
 msgid "KDE window manager"
 msgstr "مدير كِيدِي للنّوافذ"
 
-#: main.cpp:154
+#: main.cpp:143
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "© 1999-2019 لمطوري «كِيدِي»"
 
-#: main.cpp:156
+#: main.cpp:145
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "ماتياس إتريش"
 
-#: main.cpp:157
+#: main.cpp:146
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "كريستيان تيبيرنا"
 
-#: main.cpp:158
+#: main.cpp:147
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "دانيال م. دولي"
 
-#: main.cpp:159
+#: main.cpp:148
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "لوبوس لوناك"
 
-#: main.cpp:160
+#: main.cpp:149
 #, kde-format
 msgid "Martin Flöser"
 msgstr "مارتن فلوسر"
 
-#: main.cpp:161
+#: main.cpp:150
 #, kde-format
 msgid "David Edmundson"
 msgstr "ديفيد إدموندسون"
 
-#: main.cpp:162
+#: main.cpp:151
 #, kde-format
 msgid "Roman Gilg"
 msgstr "رومان غيلغ"
 
-#: main.cpp:163
+#: main.cpp:152
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "فلاد زاهورودني"
 
-#: main.cpp:164
+#: main.cpp:153
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "كسافير هوغل"
-
-#: main.cpp:172
-#, kde-format
-msgid "Disable configuration options"
-msgstr "عطّل خيارات الضّبط"
 
 #: main_wayland.cpp:328
 #, kde-format
@@ -4365,6 +4360,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "إنهار ويلاند_اكس"
+
+#~ msgid "Disable configuration options"
+#~ msgstr "عطّل خيارات الضّبط"
 
 #~ msgid "Block Compositing"
 #~ msgstr "التركيب الكتلي"

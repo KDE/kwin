@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-24 00:46+0000\n"
+"POT-Creation-Date: 2026-07-28 00:47+0000\n"
 "PO-Revision-Date: 2009-01-16 16:49+0530\n"
 "Last-Translator: Amitakhya Phukan <অমিতাক্ষ ফুকন>\n"
 "Language-Team: Assamese <fedora-trans-as@redhat.com>\n"
@@ -1481,7 +1481,7 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: main.cpp:150 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:139 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
@@ -1492,66 +1492,61 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:152 main.cpp:174
+#: main.cpp:141 main.cpp:159
 #, kde-format
 msgid "KDE window manager"
 msgstr "KDE সংযোগক্ষেত্ৰ পৰিচালন ব্যৱস্থা"
 
-#: main.cpp:154
+#: main.cpp:143
 #, fuzzy, kde-format
 #| msgid "(c) 1999-2008, The KDE Developers"
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2008, The KDE Developers"
 
-#: main.cpp:156
+#: main.cpp:145
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:157
+#: main.cpp:146
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:158
+#: main.cpp:147
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:159
+#: main.cpp:148
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:160
+#: main.cpp:149
 #, kde-format
 msgid "Martin Flöser"
 msgstr ""
 
-#: main.cpp:161
+#: main.cpp:150
 #, kde-format
 msgid "David Edmundson"
 msgstr ""
 
-#: main.cpp:162
+#: main.cpp:151
 #, kde-format
 msgid "Roman Gilg"
 msgstr ""
 
-#: main.cpp:163
+#: main.cpp:152
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:164
+#: main.cpp:153
 #, kde-format
 msgid "Xaver Hugl"
 msgstr ""
-
-#: main.cpp:172
-#, kde-format
-msgid "Disable configuration options"
-msgstr "বিন্যাসৰ বিকল্প নিষ্ক্ৰিয় কৰা হ'ব"
 
 #: main_wayland.cpp:328
 #, kde-format
@@ -4482,6 +4477,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid "Disable configuration options"
+#~ msgstr "বিন্যাসৰ বিকল্প নিষ্ক্ৰিয় কৰা হ'ব"
 
 #, fuzzy
 #~| msgid "Mouse Emulation"
