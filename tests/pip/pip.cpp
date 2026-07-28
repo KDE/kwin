@@ -209,6 +209,12 @@ void Pip::mousePressEvent(QMouseEvent *event)
         event->accept();
         windowHandle()->startSystemMove();
         break;
+    case Qt::MiddleButton:
+        resize(width() * 1.5, height() * 1.5);
+        break;
+    case Qt::RightButton:
+        resize(width() * 0.5, height() * 0.5);
+        break;
     default:
         break;
     }

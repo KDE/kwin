@@ -71,25 +71,20 @@ protected:
 
     virtual XdgSurfaceConfigure *sendRoleConfigure() = 0;
     virtual void handleRoleCommit();
-    virtual void handleRolePrecommit();
     virtual void handleRoleDestroyed();
 
     XdgSurfaceConfigure *lastAcknowledgedConfigure() const;
     void scheduleConfigure();
     void sendConfigure();
 
+    void handleConfigureAcknowledged(quint32 serial);
+    void handleCommit();
+
     QPointer<PlasmaShellSurfaceInterface> m_plasmaShellSurface;
 
     WindowType m_windowType = WindowType::Normal;
+    Gravity m_gravity = Gravity::BottomRight;
     Gravity m_nextGravity = Gravity::BottomRight;
-
-private:
-    void handleConfigureAcknowledged(quint32 serial);
-    void handleCommit();
-    void handleNextWindowGeometry();
-    bool haveNextWindowGeometry() const;
-    void setHaveNextWindowGeometry();
-    void resetHaveNextWindowGeometry();
 
     XdgSurfaceInterface *m_shellSurface;
     QTimer *m_configureTimer;
@@ -97,7 +92,6 @@ private:
     std::unique_ptr<XdgSurfaceConfigure> m_lastAcknowledgedConfigure;
     std::optional<quint32> m_lastAcknowledgedConfigureSerial;
     RectF m_windowGeometry;
-    bool m_haveNextWindowGeometry = false;
 };
 
 class XdgToplevelConfigure final : public XdgSurfaceConfigure
@@ -185,7 +179,6 @@ public:
 protected:
     XdgSurfaceConfigure *sendRoleConfigure() override;
     void handleRoleCommit() override;
-    void handleRolePrecommit() override;
     void handleRoleDestroyed() override;
     void doMinimize() override;
     void doSetActive() override;
@@ -296,6 +289,7 @@ public:
 protected:
     bool acceptsFocus() const override;
     XdgSurfaceConfigure *sendRoleConfigure() override;
+    void handleRoleCommit() override;
     void handleRoleDestroyed() override;
     void doSetNextTargetScale() override;
     void doSetPreferredBufferTransform() override;

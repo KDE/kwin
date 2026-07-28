@@ -1745,6 +1745,7 @@ protected:
     QSizeF minVisibleArea() const;
     RectF nextInteractiveMoveGeometry(const RectF &rect) const;
     RectF nextInteractiveResizeGeometry(const QPointF &global) const;
+    std::optional<QPointF> confineInteractiveMove(const RectF &geometry, const QSizeF &minVisibleArea) const;
     std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gravity gravity, const QSizeF &minVisibleArea) const;
     void dontInteractiveMoveResize();
 

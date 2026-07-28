@@ -5,6 +5,7 @@
 */
 
 #include "xxpipv1window.h"
+#include "core/pixelgrid.h"
 #include "input.h"
 #include "wayland/seat.h"
 #include "wayland/surface.h"
@@ -23,6 +24,9 @@ XXPipV1Window::XXPipV1Window(XXPipV1Interface *shellSurface)
     setMoveResizeOutput(workspace()->activeOutput());
     setOnAllDesktops(true);
     setOnAllActivities(true);
+
+    m_gravity = Gravity::Center;
+    m_nextGravity = Gravity::Center;
 
     connect(shellSurface, &XXPipV1Interface::initializeRequested,
             this, &XXPipV1Window::initialize);
@@ -96,8 +100,86 @@ XdgSurfaceConfigure *XXPipV1Window::sendRoleConfigure()
     XdgSurfaceConfigure *configureEvent = new XdgSurfaceConfigure();
     configureEvent->bounds = moveResizeGeometry();
     configureEvent->serial = m_shellSurface->sendConfigureSize(geometry.size());
+    configureEvent->gravity = m_nextGravity;
+    configureEvent->scale = m_nextTargetScale;
+
+    if (!isInteractiveMoveResize()) {
+        m_nextGravity = Gravity::Center;
+    }
 
     return configureEvent;
+}
+
+void XXPipV1Window::handleRoleCommit()
+{
+    const RectF oldWindowGeometry = m_windowGeometry;
+    m_windowGeometry = snapToPixels(m_shellSurface->xdgSurface()->windowGeometry(), targetScale());
+
+    RectF frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
+    if (isInteractiveMove()) {
+        frameGeometry = nextInteractiveMoveGeometry(frameGeometry);
+    } else {
+        if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
+            frameGeometry = configureEvent->gravity.apply(frameGeometry, configureEvent->bounds);
+            if (const auto anchor = confineInteractiveMove(frameGeometry, minVisibleArea())) {
+                frameGeometry.moveTopLeft(*anchor);
+            }
+        } else if (oldWindowGeometry != m_windowGeometry) {
+            frameGeometry = m_gravity.apply(frameGeometry, m_frameGeometry);
+            if (const auto anchor = confineInteractiveMove(frameGeometry, minVisibleArea())) {
+                frameGeometry.moveTopLeft(*anchor);
+            }
+        }
+
+        const RectF safeArea = workspace()->clientArea(PlacementArea, this)
+            .shrunkBy(QMarginsF(options->pictureInPictureMargin(),
+                                options->pictureInPictureMargin(),
+                                options->pictureInPictureMargin(),
+                                options->pictureInPictureMargin()));
+        const qreal snapDistance = options->pictureInPictureMargin() / 2.0;
+
+        if (m_frameGeometry.right() - safeArea.right() < snapDistance) {
+            if (frameGeometry.right() - safeArea.right() > -snapDistance
+                || m_frameGeometry.right() - safeArea.right() > -snapDistance) {
+                frameGeometry.moveRight(safeArea.right());
+            }
+        }
+
+        if (m_frameGeometry.left() - safeArea.left() > -snapDistance) {
+            if (frameGeometry.left() - safeArea.left() < snapDistance
+                || m_frameGeometry.left() - safeArea.left() < snapDistance) {
+                frameGeometry.moveLeft(safeArea.left());
+            }
+        }
+
+        if (m_frameGeometry.bottom() - safeArea.bottom() < snapDistance) {
+            if (frameGeometry.bottom() - safeArea.bottom() > -snapDistance
+                || m_frameGeometry.bottom() - safeArea.bottom() > -snapDistance) {
+                frameGeometry.moveBottom(safeArea.bottom());
+            }
+        }
+
+        if (m_frameGeometry.top() - safeArea.top() > -snapDistance) {
+            if (frameGeometry.top() - safeArea.top() < snapDistance
+                || m_frameGeometry.top() - safeArea.top() < snapDistance) {
+                frameGeometry.moveTop(safeArea.top());
+            }
+        }
+    }
+
+    if (!m_configureTimer->isActive() && m_configureEvents.isEmpty()) {
+        setMoveResizeGeometry(frameGeometry);
+    }
+
+    updateGeometry(frameGeometry);
+
+    if (const auto configureEvent = lastAcknowledgedConfigure()) {
+        if (!m_configureEvents.isEmpty()) {
+            m_gravity = configureEvent->gravity;
+        } else if (!isInteractiveResize()) {
+            m_gravity = Gravity::Center;
+        }
+    }
 }
 
 void XXPipV1Window::handleRoleDestroyed()
@@ -169,6 +251,21 @@ void XXPipV1Window::doSetPreferredColorDescription()
     if (m_shellSurface->isConfigured()) {
         scheduleConfigure();
     }
+}
+
+bool XXPipV1Window::doStartInteractiveMoveResize()
+{
+    if (interactiveMoveResizeGravity() != Gravity::Center) {
+        m_nextGravity = interactiveMoveResizeGravity();
+        scheduleConfigure();
+    }
+
+    return true;
+}
+
+void XXPipV1Window::doFinishInteractiveMoveResize()
+{
+    scheduleConfigure();
 }
 
 } // namespace KWin

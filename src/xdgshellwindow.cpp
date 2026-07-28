@@ -57,8 +57,6 @@ XdgSurfaceWindow::XdgSurfaceWindow(XdgSurfaceInterface *shellSurface)
             this, &XdgSurfaceWindow::destroyWindow);
     connect(shellSurface->surface(), &SurfaceInterface::aboutToBeDestroyed,
             this, &XdgSurfaceWindow::destroyWindow);
-    connect(shellSurface, &XdgSurfaceInterface::windowGeometryChanged,
-            this, &XdgSurfaceWindow::setHaveNextWindowGeometry);
 
     // Configure events are not sent immediately, but rather scheduled to be sent when the event
     // loop is about to be idle. By doing this, we can avoid sending configure events that do
@@ -91,16 +89,7 @@ void XdgSurfaceWindow::scheduleConfigure()
 
 void XdgSurfaceWindow::sendConfigure()
 {
-    XdgSurfaceConfigure *configureEvent = sendRoleConfigure();
-
-    configureEvent->gravity = m_nextGravity;
-    configureEvent->scale = m_nextTargetScale;
-
-    if (!isInteractiveMoveResize()) {
-        m_nextGravity = Gravity::BottomRight;
-    }
-
-    m_configureEvents.append(configureEvent);
+    m_configureEvents.append(sendRoleConfigure());
 }
 
 void XdgSurfaceWindow::handleConfigureAcknowledged(quint32 serial)
@@ -128,10 +117,8 @@ void XdgSurfaceWindow::handleCommit()
         }
     }
 
-    handleRolePrecommit();
-    if (haveNextWindowGeometry()) {
-        handleNextWindowGeometry();
-        resetHaveNextWindowGeometry();
+    if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
+        setTargetScale(configureEvent->scale);
     }
 
     handleRoleCommit();
@@ -141,57 +128,8 @@ void XdgSurfaceWindow::handleCommit()
     markAsMapped();
 }
 
-void XdgSurfaceWindow::handleRolePrecommit()
-{
-}
-
 void XdgSurfaceWindow::handleRoleCommit()
 {
-}
-
-void XdgSurfaceWindow::handleNextWindowGeometry()
-{
-    if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
-        setTargetScale(configureEvent->scale);
-    }
-
-    m_windowGeometry = snapToPixels(m_shellSurface->windowGeometry(), targetScale());
-
-    RectF frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
-    if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
-        frameGeometry = configureEvent->gravity.apply(frameGeometry, configureEvent->bounds);
-    }
-
-    if (isInteractiveMove()) {
-        bool fullscreen = isFullScreen();
-        if (const auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure())) {
-            fullscreen = configureEvent->states & XdgToplevelInterface::State::FullScreen;
-        }
-        if (!fullscreen) {
-            frameGeometry = nextInteractiveMoveGeometry(frameGeometry);
-        }
-    }
-
-    if (!m_configureTimer->isActive() && m_configureEvents.isEmpty()) {
-        setMoveResizeGeometry(frameGeometry);
-    }
-
-    updateGeometry(frameGeometry);
-}
-
-bool XdgSurfaceWindow::haveNextWindowGeometry() const
-{
-    return m_haveNextWindowGeometry || m_lastAcknowledgedConfigure;
-}
-
-void XdgSurfaceWindow::setHaveNextWindowGeometry()
-{
-    m_haveNextWindowGeometry = true;
-}
-
-void XdgSurfaceWindow::resetHaveNextWindowGeometry()
-{
-    m_haveNextWindowGeometry = false;
 }
 
 void XdgSurfaceWindow::moveResizeInternal(const RectF &rect, MoveResizeMode mode)
@@ -761,11 +699,17 @@ XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure()
     configureEvent->decorationState = m_nextDecorationState;
     configureEvent->serial = serial;
     configureEvent->tile = m_requestedTile;
+    configureEvent->gravity = m_nextGravity;
+    configureEvent->scale = m_nextTargetScale;
+
+    if (!isInteractiveMoveResize()) {
+        m_nextGravity = Gravity::BottomRight;
+    }
 
     return configureEvent;
 }
 
-void XdgToplevelWindow::handleRolePrecommit()
+void XdgToplevelWindow::handleRoleCommit()
 {
     if (auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure())) {
         if (configureEvent->decoration) {
@@ -777,14 +721,43 @@ void XdgToplevelWindow::handleRolePrecommit()
             updateShadow();
         }
     }
-}
 
-void XdgToplevelWindow::handleRoleCommit()
-{
+    const auto oldWindowGeometry = m_windowGeometry;
+    m_windowGeometry = snapToPixels(m_shellSurface->xdgSurface()->windowGeometry(), targetScale());
+
+    RectF frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
+    if (isInteractiveMove()) {
+        bool fullscreen = isFullScreen();
+        if (const auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure())) {
+            fullscreen = configureEvent->states & XdgToplevelInterface::State::FullScreen;
+        }
+        if (!fullscreen) {
+            frameGeometry = nextInteractiveMoveGeometry(frameGeometry);
+        }
+    } else {
+        if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
+            frameGeometry = configureEvent->gravity.apply(frameGeometry, configureEvent->bounds);
+        } else if (oldWindowGeometry != m_windowGeometry) {
+            frameGeometry = m_gravity.apply(frameGeometry, m_frameGeometry);
+        }
+    }
+
+    if (!m_configureTimer->isActive() && m_configureEvents.isEmpty()) {
+        setMoveResizeGeometry(frameGeometry);
+    }
+
+    updateGeometry(frameGeometry);
+
     auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure());
     if (configureEvent) {
         handleStatesAcknowledged(configureEvent->states);
         commitTile(configureEvent->tile);
+
+        if (!m_configureEvents.isEmpty()) {
+            m_gravity = configureEvent->gravity;
+        } else if (!isInteractiveResize()) {
+            m_gravity = Gravity::BottomRight;
+        }
     }
 }
 
@@ -1844,6 +1817,18 @@ XdgPopupWindow::XdgPopupWindow(XdgPopupInterface *shellSurface)
             this, &XdgPopupWindow::destroyWindow);
 }
 
+void XdgPopupWindow::handleRoleCommit()
+{
+    m_windowGeometry = snapToPixels(m_shellSurface->xdgSurface()->windowGeometry(), targetScale());
+
+    RectF frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
+    if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
+        frameGeometry.moveTopLeft(configureEvent->bounds.topLeft());
+    }
+
+    updateGeometry(frameGeometry);
+}
+
 void XdgPopupWindow::handleRoleDestroyed()
 {
     if (transientFor()) {
@@ -1976,6 +1961,8 @@ XdgSurfaceConfigure *XdgPopupWindow::sendRoleConfigure()
     XdgSurfaceConfigure *configureEvent = new XdgSurfaceConfigure();
     configureEvent->bounds = moveResizeGeometry();
     configureEvent->serial = serial;
+    configureEvent->gravity = m_nextGravity;
+    configureEvent->scale = m_nextTargetScale;
 
     return configureEvent;
 }

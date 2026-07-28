@@ -30,10 +30,13 @@ public:
 protected:
     bool acceptsFocus() const override;
     XdgSurfaceConfigure *sendRoleConfigure() override;
+    void handleRoleCommit() override;
     void handleRoleDestroyed() override;
     void doSetNextTargetScale() override;
     void doSetPreferredBufferTransform() override;
     void doSetPreferredColorDescription() override;
+    bool doStartInteractiveMoveResize() override;
+    void doFinishInteractiveMoveResize() override;
 
 private:
     void initialize();

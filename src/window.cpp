@@ -1370,7 +1370,7 @@ static RegionF interactiveMoveResizeVisibleSubrectRegion(const RectF &geometry, 
  *
  * See doc/moveresizerestriction for more details on algorithm.
  */
-static std::optional<QPointF> confineInteractiveMove(const RectF &geometry, const QSizeF &minVisibleArea)
+std::optional<QPointF> Window::confineInteractiveMove(const RectF &geometry, const QSizeF &minVisibleArea) const
 {
     std::optional<QPointF> candidate;
     qreal bestScore;
