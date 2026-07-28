@@ -9,8 +9,8 @@
 namespace KWin
 {
 
-ColorPickerSceneView::ColorPickerSceneView(Scene *scene, LogicalOutput *logicalOutput, OutputLayer *layer)
-    : SceneView(scene, logicalOutput, nullptr, layer)
+ColorPickerSceneView::ColorPickerSceneView(Scene *scene, LogicalOutput *logicalOutput, OutputLayer *layer, RenderDevice *renderDevice)
+    : SceneView(scene, logicalOutput, nullptr, layer, renderDevice)
     , m_presentationTimestamp(std::chrono::steady_clock::now().time_since_epoch())
 {
 }

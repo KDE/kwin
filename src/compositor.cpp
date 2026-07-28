@@ -1043,7 +1043,7 @@ void Compositor::assignOutputLayers(LogicalOutput *logicalOutput, BackendOutput 
     if (sceneView) {
         sceneView->setLayer(primaryLayer);
     } else {
-        sceneView = std::make_unique<SceneView>(kwinApp()->scene(), logicalOutput, backendOutput, primaryLayer);
+        sceneView = std::make_unique<SceneView>(kwinApp()->scene(), logicalOutput, backendOutput, primaryLayer, m_primaryDevice);
         sceneView->setScale(backendOutput->scale());
         sceneView->setRenderOffset(backendOutput->deviceOffset());
         const auto updateViewport = [view = sceneView.get(), logicalOutput, backendOutput]() {

@@ -16,7 +16,7 @@ class FilteredSceneView : public SceneView
     Q_OBJECT
 
 public:
-    FilteredSceneView(Scene *scene, LogicalOutput *output, OutputLayer *layer, std::optional<pid_t> pidToHide);
+    FilteredSceneView(Scene *scene, LogicalOutput *output, OutputLayer *layer, RenderDevice *renderDevice, std::optional<pid_t> pidToHide);
 
     void prePaint(OutputFrame *frame = nullptr) override;
 

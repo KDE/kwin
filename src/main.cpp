@@ -490,7 +490,7 @@ static PlatformCursorImage grabCursorOpenGL(WorkspaceScene *scene)
     GLFramebuffer framebuffer(texture.get());
     RenderTarget renderTarget(&framebuffer);
 
-    SceneView sceneView(scene, output, nullptr, nullptr);
+    SceneView sceneView(scene, output, nullptr, nullptr, Compositor::self()->primaryDevice());
     ItemTreeView cursorView(&sceneView, scene->cursorItem(), output, nullptr, nullptr);
     cursorView.paint(renderTarget, QPoint(), Region::infinite());
 

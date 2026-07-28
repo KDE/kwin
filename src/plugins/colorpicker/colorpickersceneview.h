@@ -16,7 +16,7 @@ class ColorPickerSceneView : public SceneView
     Q_OBJECT
 
 public:
-    ColorPickerSceneView(Scene *scene, LogicalOutput *logicalOutput, OutputLayer *layer);
+    ColorPickerSceneView(Scene *scene, LogicalOutput *logicalOutput, OutputLayer *layer, RenderDevice *renderDevice);
 
     std::chrono::nanoseconds nextPresentationTimestamp() const override;
     uint refreshRate() const override;

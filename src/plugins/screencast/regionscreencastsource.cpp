@@ -11,6 +11,7 @@
 
 #include "compositor.h"
 #include "core/output.h"
+#include "core/renderdevice.h"
 #include "cursor.h"
 #include "opengl/eglbackend.h"
 #include "opengl/glframebuffer.h"
@@ -146,9 +147,10 @@ void RegionScreenCastSource::resume()
         return;
     }
 
-    m_layer = std::make_unique<ScreencastLayer>(workspace()->outputs().front(), static_cast<EglBackend *>(Compositor::self()->backend())->openglContext()->displayObject()->nonExternalOnlySupportedDrmFormats());
+    auto device = Compositor::self()->primaryDevice();
+    m_layer = std::make_unique<ScreencastLayer>(workspace()->outputs().front(), device->eglDisplay()->nonExternalOnlySupportedDrmFormats());
 
-    m_sceneView = std::make_unique<FilteredSceneView>(kwinApp()->scene(), workspace()->outputs().front(), m_layer.get(), m_pidToHide);
+    m_sceneView = std::make_unique<FilteredSceneView>(kwinApp()->scene(), workspace()->outputs().front(), m_layer.get(), device, m_pidToHide);
     m_sceneView->setViewport(m_region);
     m_sceneView->setScale(m_scale);
     m_sceneView->setRefreshRate(refreshRate());
