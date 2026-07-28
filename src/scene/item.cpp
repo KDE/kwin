@@ -537,7 +537,7 @@ void Item::preprocess(ItemRenderer *renderer)
 {
 }
 
-WindowQuadList Item::buildQuads() const
+WindowQuadList Item::buildQuads(ItemRenderer *renderer) const
 {
     return WindowQuadList();
 }
@@ -547,10 +547,10 @@ void Item::discardQuads()
     m_quads.reset();
 }
 
-WindowQuadList Item::quads() const
+WindowQuadList Item::quads(ItemRenderer *renderer) const
 {
     if (!m_quads.has_value()) {
-        m_quads = buildQuads();
+        m_quads = buildQuads(renderer);
     }
     return m_quads.value();
 }
@@ -757,7 +757,7 @@ void Item::handleFramePainted(LogicalOutput *output, OutputFrame *frame, std::ch
 {
 }
 
-void Item::releaseResources()
+void Item::releaseResources(RenderDevice *device)
 {
 }
 

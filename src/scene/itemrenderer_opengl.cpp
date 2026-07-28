@@ -110,9 +110,9 @@ void ItemRendererOpenGL::setBlendEnabled(bool enabled)
     m_blendingEnabled = enabled;
 }
 
-static RenderGeometry clipQuads(const Item *item, const ItemRendererOpenGL::RenderContext *context)
+static RenderGeometry clipQuads(ItemRenderer *renderer, const Item *item, const ItemRendererOpenGL::RenderContext *context)
 {
-    const WindowQuadList quads = item->quads();
+    const WindowQuadList quads = item->quads(renderer);
 
     const qreal scale = context->renderTargetScale;
     const QPointF itemToDeviceTranslation = context->transformStack.top().map(QPointF(0., 0.))
@@ -210,11 +210,11 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
         return false;
     }
 
-    RenderGeometry geometry = clipQuads(item, context);
+    RenderGeometry geometry = clipQuads(this, item, context);
 
     if (auto shadowItem = qobject_cast<ShadowItem *>(item)) {
         if (!geometry.isEmpty()) {
-            const auto ninePatch = static_cast<NinePatchOpenGL *>(shadowItem->ninePatch());
+            const auto ninePatch = static_cast<NinePatchOpenGL *>(shadowItem->ninePatch(m_renderDevice));
             if (ninePatch->texture()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                     .traits = ShaderTrait::MapTexture,
@@ -233,7 +233,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
         }
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
         if (!geometry.isEmpty()) {
-            auto atlas = static_cast<const AtlasOpenGL *>(decorationItem->atlas());
+            auto atlas = static_cast<const AtlasOpenGL *>(decorationItem->atlas(m_renderDevice));
             if (atlas && atlas->texture()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                     .traits = ShaderTrait::MapTexture,
@@ -251,7 +251,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
             }
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
-        auto texture = static_cast<TextureOpenGL *>(surfaceItem->texture());
+        auto texture = static_cast<TextureOpenGL *>(surfaceItem->texture(m_renderDevice));
         if (texture && !texture->planes().isEmpty()) {
             if (!geometry.isEmpty()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
@@ -296,7 +296,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
         }
     } else if (auto imageItem = qobject_cast<ImageItem *>(item)) {
         if (!geometry.isEmpty()) {
-            auto texture = static_cast<TextureOpenGL *>(imageItem->texture());
+            auto texture = static_cast<TextureOpenGL *>(imageItem->texture(m_renderDevice));
             if (texture && !texture->planes().isEmpty()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                     .traits = ShaderTrait::MapTexture,

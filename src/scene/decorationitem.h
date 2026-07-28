@@ -47,32 +47,32 @@ public:
     explicit DecorationRenderer(Decoration::DecoratedWindowImpl *client);
     ~DecorationRenderer();
 
-    Atlas *atlas() const;
-    bool needsRepaint() const;
+    Atlas *atlas(RenderDevice *device) const;
+    bool needsRepaint(RenderDevice *device) const;
     void render(ItemRenderer *renderer, const RegionF &region);
     void invalidate();
 
     // TODO: Move damage tracking inside DecorationItem.
-    RegionF damage() const;
+    RegionF damage(RenderDevice *device) const;
     void addDamage(const RegionF &region);
-    void resetDamage();
+    void resetDamage(RenderDevice *device);
 
     qreal effectiveDevicePixelRatio() const;
     qreal devicePixelRatio() const;
     void setDevicePixelRatio(qreal dpr);
 
-    void releaseResources();
+    void releaseResources(RenderDevice *device);
 
 Q_SIGNALS:
     void damaged(const RegionF &region);
 
 private:
     QPointer<Decoration::DecoratedWindowImpl> m_client;
-    RegionF m_damage;
+    QHash<RenderDevice *, RegionF> m_damage;
     qreal m_devicePixelRatio = 1;
-    bool m_imageSizesDirty;
+    std::unordered_set<RenderDevice *> m_imageSizesNotDirty;
     QImage m_images[4];
-    std::unique_ptr<Atlas> m_atlas;
+    std::unordered_map<RenderDevice *, std::unique_ptr<Atlas>> m_atlas;
 };
 
 /**
@@ -86,7 +86,7 @@ public:
     explicit DecorationItem(KDecoration3::Decoration *decoration, Window *window, Item *parent = nullptr);
     ~DecorationItem() override;
 
-    Atlas *atlas() const;
+    Atlas *atlas(RenderDevice *device) const;
     Window *window() const;
 
     RegionF shape() const override final;
@@ -99,8 +99,8 @@ private Q_SLOTS:
 
 protected:
     void preprocess(ItemRenderer *renderer) override;
-    WindowQuadList buildQuads() const override;
-    void releaseResources() override;
+    WindowQuadList buildQuads(ItemRenderer *renderer) const override;
+    void releaseResources(RenderDevice *device) override;
 
 private:
     Window *m_window;

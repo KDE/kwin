@@ -46,7 +46,7 @@ void OutlinedBorderItem::setOutline(const BorderOutline &outline)
     }
 }
 
-WindowQuadList OutlinedBorderItem::buildQuads() const
+WindowQuadList OutlinedBorderItem::buildQuads(ItemRenderer *renderer) const
 {
     if (m_innerRect.isEmpty()) {
         return WindowQuadList();

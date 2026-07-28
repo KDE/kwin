@@ -715,7 +715,7 @@ void Scene::removeView(RenderView *view)
 
 void Scene::releaseResources(RenderDevice *device, Item *item)
 {
-    item->releaseResources();
+    item->releaseResources(device);
 
     const auto childItems = item->m_childItems;
     for (Item *childItem : childItems) {
