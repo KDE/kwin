@@ -224,8 +224,10 @@ void SurfaceItemWayland::handlePresentationModeHintChanged()
 void SurfaceItemWayland::handleReleasePointChanged()
 {
     m_bufferReleasePoint = m_surface->bufferReleasePoint();
-    if (m_texture) {
-        m_texture->setReleasePoint(m_bufferReleasePoint);
+    for (const auto &[device, texture] : m_textures) {
+        if (texture) {
+            texture->setReleasePoint(m_bufferReleasePoint);
+        }
     }
 }
 

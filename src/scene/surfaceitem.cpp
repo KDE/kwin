@@ -133,7 +133,9 @@ void SurfaceItem::addDamage(const Region &region)
         }
     }
     m_lastDamage = now;
-    m_damage += region;
+    for (auto &[device, damage] : m_damage) {
+        damage += region;
+    }
 
     const RectF sourceBox = m_bufferToSurfaceTransform.map(m_bufferSourceBox, m_bufferSize);
     const qreal xScale = sourceBox.width() / m_destinationSize.width();
@@ -156,44 +158,47 @@ void SurfaceItem::addDamage(const Region &region)
     Q_EMIT damaged();
 }
 
-void SurfaceItem::resetDamage()
+void SurfaceItem::resetDamage(RenderDevice *device)
 {
-    m_damage = Region();
+    m_damage[device] = Region{};
 }
 
-Region SurfaceItem::damage() const
+Region SurfaceItem::damage(RenderDevice *device) const
 {
-    return m_damage;
+    const auto it = m_damage.find(device);
+    return it == m_damage.end() ? Rect{QPoint(), m_bufferSize} : it->second;
 }
 
-Texture *SurfaceItem::texture() const
+Texture *SurfaceItem::texture(RenderDevice *device) const
 {
-    return m_texture.get();
+    const auto it = m_textures.find(device);
+    return it == m_textures.end() ? nullptr : it->second.get();
 }
 
 void SurfaceItem::preprocess(ItemRenderer *renderer)
 {
+    auto &texture = m_textures[renderer->renderDevice()];
     if (!buffer()) {
-        m_texture.reset();
+        texture.reset();
         return;
     }
 
-    if (!m_texture || m_texture->size() != m_bufferSize) {
-        m_texture = renderer->createTexture(buffer(), m_bufferReleasePoint);
-        if (m_texture) {
-            resetDamage();
+    if (!texture || texture->size() != m_bufferSize) {
+        texture = renderer->createTexture(buffer(), m_bufferReleasePoint);
+        if (texture) {
+            resetDamage(renderer->renderDevice());
         }
         return;
     }
 
-    const Region region = damage();
+    const Region region = damage(renderer->renderDevice());
     if (!region.isEmpty()) {
-        m_texture->attach(buffer(), region, m_bufferReleasePoint);
-        resetDamage();
+        texture->attach(buffer(), region, m_bufferReleasePoint);
+        resetDamage(renderer->renderDevice());
     }
 }
 
-WindowQuadList SurfaceItem::buildQuads() const
+WindowQuadList SurfaceItem::buildQuads(ItemRenderer *renderer) const
 {
     const RegionF region = shape();
     WindowQuadList quads;
@@ -222,9 +227,9 @@ WindowQuadList SurfaceItem::buildQuads() const
     return quads;
 }
 
-void SurfaceItem::releaseResources()
+void SurfaceItem::releaseResources(RenderDevice *device)
 {
-    m_texture.reset();
+    m_textures.erase(device);
 }
 
 ContentType SurfaceItem::contentType() const

@@ -6,6 +6,7 @@
 */
 
 #include "scene/decorationitem.h"
+#include "core/gpumanager.h"
 #include "decorations/decoratedwindow.h"
 #include "scene/atlas.h"
 #include "scene/itemrenderer.h"
@@ -23,7 +24,6 @@ namespace KWin
 
 DecorationRenderer::DecorationRenderer(Decoration::DecoratedWindowImpl *client)
     : m_client(client)
-    , m_imageSizesDirty(true)
 {
     connect(client->decoration(), &KDecoration3::Decoration::damaged, this, [this](const QRegion &region) {
         addDamage(RegionF(region));
@@ -46,23 +46,26 @@ void DecorationRenderer::invalidate()
     if (m_client) {
         addDamage(m_client->window()->rect());
     }
-    m_imageSizesDirty = true;
+    m_imageSizesNotDirty.clear();
 }
 
-RegionF DecorationRenderer::damage() const
+RegionF DecorationRenderer::damage(RenderDevice *device) const
 {
-    return m_damage;
+    return m_damage[device];
 }
 
 void DecorationRenderer::addDamage(const RegionF &region)
 {
-    m_damage += region;
+    const auto &devices = GpuManager::self()->renderDevices();
+    for (const auto &device : devices) {
+        m_damage[device.get()] += region;
+    }
     Q_EMIT damaged(region);
 }
 
-void DecorationRenderer::resetDamage()
+void DecorationRenderer::resetDamage(RenderDevice *device)
 {
-    m_damage = RegionF();
+    m_damage.remove(device);
 }
 
 qreal DecorationRenderer::effectiveDevicePixelRatio() const
@@ -84,14 +87,15 @@ void DecorationRenderer::setDevicePixelRatio(qreal dpr)
     }
 }
 
-Atlas *DecorationRenderer::atlas() const
+Atlas *DecorationRenderer::atlas(RenderDevice *device) const
 {
-    return m_atlas.get();
+    const auto it = m_atlas.find(device);
+    return it == m_atlas.end() ? nullptr : it->second.get();
 }
 
-bool DecorationRenderer::needsRepaint() const
+bool DecorationRenderer::needsRepaint(RenderDevice *device) const
 {
-    return m_imageSizesDirty || !m_damage.isEmpty();
+    return !m_imageSizesNotDirty.contains(device) || !damage(device).isEmpty();
 }
 
 void DecorationRenderer::render(ItemRenderer *itemRenderer, const RegionF &region)
@@ -104,7 +108,7 @@ void DecorationRenderer::render(ItemRenderer *itemRenderer, const RegionF &regio
                                               decorationRects[int(DecorationPart::Right)],
                                               decorationRects[int(DecorationPart::Bottom)]);
 
-    const bool resized = std::exchange(m_imageSizesDirty, false);
+    const bool resized = !m_imageSizesNotDirty.contains(itemRenderer->renderDevice());
     if (resized) {
         const qreal dpr = effectiveDevicePixelRatio();
 
@@ -119,6 +123,7 @@ void DecorationRenderer::render(ItemRenderer *itemRenderer, const RegionF &regio
                 m_images[i].fill(Qt::transparent);
             }
         }
+        m_imageSizesNotDirty.insert(itemRenderer->renderDevice());
     }
 
     const auto renderPart = [this](QImage &image, const RectF &partRect, const RectF &damageRect) {
@@ -160,26 +165,27 @@ void DecorationRenderer::render(ItemRenderer *itemRenderer, const RegionF &regio
         repainted[i] = renderPart(m_images[i], decorationRects[i], geometry);
     }
 
-    if (!m_atlas) {
-        m_atlas = itemRenderer->createAtlas({m_images[0], m_images[1], m_images[2], m_images[3]});
+    auto &atlas = m_atlas[itemRenderer->renderDevice()];
+    if (!atlas) {
+        atlas = itemRenderer->createAtlas({m_images[0], m_images[1], m_images[2], m_images[3]});
         return;
     }
 
     if (resized) {
-        m_atlas->reset({m_images[0], m_images[1], m_images[2], m_images[3]});
+        atlas->reset({m_images[0], m_images[1], m_images[2], m_images[3]});
     } else {
         for (int i = 0; i < 4; ++i) {
             if (!repainted[i].isEmpty()) {
-                m_atlas->update(i, m_images[i], repainted[i]);
+                atlas->update(i, m_images[i], repainted[i]);
             }
         }
     }
 }
 
-void DecorationRenderer::releaseResources()
+void DecorationRenderer::releaseResources(RenderDevice *device)
 {
-    m_atlas.reset();
-    m_imageSizesDirty = true;
+    m_atlas.erase(device);
+    m_imageSizesNotDirty.erase(device);
 }
 
 DecorationItem::DecorationItem(KDecoration3::Decoration *decoration, Window *window, Item *parent)
@@ -227,9 +233,9 @@ RegionF DecorationItem::opaque() const
 
 void DecorationItem::preprocess(ItemRenderer *renderer)
 {
-    if (m_renderer->needsRepaint()) {
-        m_renderer->render(renderer, m_renderer->damage());
-        m_renderer->resetDamage();
+    if (m_renderer->needsRepaint(renderer->renderDevice())) {
+        m_renderer->render(renderer, m_renderer->damage(renderer->renderDevice()));
+        m_renderer->resetDamage(renderer->renderDevice());
     }
 }
 
@@ -266,9 +272,9 @@ void DecorationItem::handleDecorationGeometryChanged()
     }
 }
 
-Atlas *DecorationItem::atlas() const
+Atlas *DecorationItem::atlas(RenderDevice *device) const
 {
-    return m_renderer ? m_renderer->atlas() : nullptr;
+    return m_renderer ? m_renderer->atlas(device) : nullptr;
 }
 
 Window *DecorationItem::window() const
@@ -276,13 +282,13 @@ Window *DecorationItem::window() const
     return m_window;
 }
 
-WindowQuadList DecorationItem::buildQuads() const
+WindowQuadList DecorationItem::buildQuads(ItemRenderer *renderer) const
 {
     if (m_window->frameMargins().isNull()) {
         return WindowQuadList();
     }
 
-    const Atlas *atlas = m_renderer->atlas();
+    const Atlas *atlas = m_renderer->atlas(renderer->renderDevice());
     if (!atlas) {
         return WindowQuadList();
     }
@@ -323,9 +329,9 @@ WindowQuadList DecorationItem::buildQuads() const
     return list;
 }
 
-void DecorationItem::releaseResources()
+void DecorationItem::releaseResources(RenderDevice *device)
 {
-    m_renderer->releaseResources();
+    m_renderer->releaseResources(device);
 }
 
 } // namespace KWin

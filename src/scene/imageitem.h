@@ -14,6 +14,7 @@ namespace KWin
 {
 
 class Texture;
+class RenderDevice;
 
 class KWIN_EXPORT ImageItem : public Item
 {
@@ -23,19 +24,18 @@ public:
     explicit ImageItem(Item *parent = nullptr);
     ~ImageItem() override;
 
-    Texture *texture() const;
+    Texture *texture(RenderDevice *device) const;
 
     QImage image() const;
     void setImage(const QImage &image);
 
 protected:
     void preprocess(ItemRenderer *renderer) override;
-    WindowQuadList buildQuads() const override;
-    void releaseResources() override;
+    WindowQuadList buildQuads(ItemRenderer *renderer) const override;
+    void releaseResources(RenderDevice *device) override;
 
     QImage m_image;
-    std::unique_ptr<Texture> m_texture;
-    qint64 m_textureKey = 0;
+    std::unordered_map<RenderDevice *, std::pair<std::unique_ptr<Texture>, int64_t>> m_textures;
 };
 
 } // namespace KWin
