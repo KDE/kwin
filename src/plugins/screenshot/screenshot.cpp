@@ -13,6 +13,7 @@
 #include "compositor.h"
 #include "core/output.h"
 #include "core/pixelgrid.h"
+#include "core/renderdevice.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effect.h"
@@ -53,11 +54,8 @@ ScreenShotManager::~ScreenShotManager()
 
 std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, ScreenShotFlags flags, std::optional<pid_t> pidToHide)
 {
-    const auto eglBackend = dynamic_cast<EglBackend *>(Compositor::self()->backend());
-    if (!eglBackend) {
-        return std::nullopt;
-    }
-    const auto context = eglBackend->openglContext();
+    RenderDevice *device = Compositor::self()->primaryDevice();
+    const auto context = device->eglContext();
     if (!context || !context->makeCurrent()) {
         return std::nullopt;
     }
@@ -87,7 +85,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
     if (!beginInfo) {
         return std::nullopt;
     }
-    SceneView sceneView(kwinApp()->scene(), screen, nullptr, &layer);
+    SceneView sceneView(kwinApp()->scene(), screen, nullptr, &layer, device);
     std::unique_ptr<ItemTreeView> cursorView;
     if (!(flags & ScreenShotIncludeCursor)) {
         cursorView = std::make_unique<ItemTreeView>(&sceneView, kwinApp()->scene()->cursorItem(), workspace()->outputs().front(), nullptr, nullptr);
@@ -118,11 +116,8 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
 
 std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, ScreenShotFlags flags, std::optional<pid_t> pidToHide)
 {
-    const auto eglBackend = dynamic_cast<EglBackend *>(Compositor::self()->backend());
-    if (!eglBackend) {
-        return std::nullopt;
-    }
-    const auto context = eglBackend->openglContext();
+    RenderDevice *device = Compositor::self()->primaryDevice();
+    const auto context = device->eglContext();
     if (!context || !context->makeCurrent()) {
         return std::nullopt;
     }
@@ -155,7 +150,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
     if (!beginInfo) {
         return std::nullopt;
     }
-    SceneView sceneView(kwinApp()->scene(), workspace()->outputs().front(), nullptr, &layer);
+    SceneView sceneView(kwinApp()->scene(), workspace()->outputs().front(), nullptr, &layer, device);
     std::unique_ptr<ItemTreeView> cursorView;
     if (!(flags & ScreenShotIncludeCursor)) {
         cursorView = std::make_unique<ItemTreeView>(&sceneView, kwinApp()->scene()->cursorItem(), workspace()->outputs().front(), nullptr, nullptr);
