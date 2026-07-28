@@ -16,14 +16,16 @@
 #include <QAction>
 #include <QTimer>
 
+#include <KGlobalAccel>
 #include <KStandardActions>
 
+#include "core/renderdevice.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
 #include "opengl/eglcontext.h"
 #include "opengl/glutils.h"
+#include "scene/scene.h"
 #include "utils/keys.h"
-#include <KGlobalAccel>
 
 using namespace std::chrono_literals;
 
@@ -79,6 +81,11 @@ MagnifierEffect::MagnifierEffect()
 
     connect(effects, &EffectsHandler::mouseChanged, this, &MagnifierEffect::slotMouseChanged);
     connect(effects, &EffectsHandler::windowAdded, this, &MagnifierEffect::slotWindowAdded);
+    connect(effects, &EffectsHandler::viewRemoved, this, [this](RenderView *view) {
+        const auto context = view->renderDevice()->eglContext();
+        (void)context->makeCurrent();
+        m_fbos.erase(view);
+    });
 
     const auto windows = effects->stackingOrder();
     for (EffectWindow *window : windows) {
@@ -101,7 +108,7 @@ MagnifierEffect::~MagnifierEffect()
 
 bool MagnifierEffect::supported()
 {
-    return effects->openglContext() && effects->openglContext()->supportsBlits();
+    return true;
 }
 
 void MagnifierEffect::reconfigure(ReconfigureFlags)
@@ -140,6 +147,7 @@ void MagnifierEffect::reconfigure(ReconfigureFlags)
 
 void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data)
 {
+    m_currentView = data.view;
     const int time = m_clock.tick(data.view).count();
 
     if (m_zoom != m_targetZoom) {
@@ -150,18 +158,20 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data)
             m_zoom = std::max(m_zoom * std::min(1 - diff, 0.8), m_targetZoom);
         }
     }
+
+    auto &fbo = m_fbos[m_currentView];
     if (m_zoom == 1.0) {
         // zoom ended - delete FBO and texture
-        m_fbo.reset();
-        m_texture.reset();
-    } else if (!m_texture || m_texture->size() != m_magnifierSize) {
+        fbo.m_fbo.reset();
+        fbo.m_texture.reset();
+    } else if (!fbo.m_texture || fbo.m_texture->size() != m_magnifierSize) {
         if (auto texture = GLTexture::allocate(GL_RGBA16F, m_magnifierSize)) {
             texture->setWrapMode(GL_CLAMP_TO_EDGE);
             texture->setFilter(GL_LINEAR);
 
-            if (auto fbo = std::make_unique<GLFramebuffer>(texture.get()); fbo->valid()) {
-                m_texture = std::move(texture);
-                m_fbo = std::move(fbo);
+            if (auto f = std::make_unique<GLFramebuffer>(texture.get()); f->valid()) {
+                fbo.m_texture = std::move(texture);
+                fbo.m_fbo = std::move(f);
             }
         }
     }
@@ -181,7 +191,8 @@ bool MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
     if (!effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen)) { // paint normal screen)
         return false;
     }
-    if (m_zoom != 1.0 && m_fbo) {
+    auto &fbo = m_fbos[m_currentView];
+    if (m_zoom != 1.0 && fbo.m_fbo) {
         // get the right area from the current rendered screen
         const Rect area = magnifierArea();
         const QPointF cursor = cursorPos();
@@ -191,13 +202,13 @@ bool MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
                       cursor.y() - (double)area.height() / (m_zoom * 2),
                       (double)area.width() / m_zoom, (double)area.height() / m_zoom);
         if (effects->isOpenGLCompositing()) {
-            m_fbo->blitFromRenderTarget(renderTarget, viewport, srcArea.toRect(), Rect(QPoint(), m_fbo->size()));
+            fbo.m_fbo->blitFromRenderTarget(renderTarget, viewport, srcArea.toRect(), Rect(QPoint(), fbo.m_fbo->size()));
             // paint magnifier
             auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
             QMatrix4x4 mvp = viewport.projectionMatrix();
             mvp.translate(area.x() * scale, area.y() * scale);
             s->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
-            m_texture->render(area.size() * scale);
+            fbo.m_texture->render(area.size() * scale);
             ShaderManager::instance()->popShader();
 
             GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
