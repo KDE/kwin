@@ -71,10 +71,8 @@ public:
      */
     bool isActive();
 
-    RenderBackend *backend() const
-    {
-        return m_backend.get();
-    }
+    RenderBackend *backend() const;
+    RenderDevice *primaryDevice() const;
 
     void createRenderer();
 
@@ -130,7 +128,7 @@ protected:
     std::unordered_set<RenderLoop *> m_brokenCursors;
     std::optional<bool> m_allowOverlaysEnv;
     RenderLoopDrivenQAnimationDriver *m_renderLoopDrivenAnimationDriver;
-    RenderDevice *m_renderDevice = nullptr;
+    RenderDevice *m_primaryDevice = nullptr;
 };
 
 } // namespace KWin

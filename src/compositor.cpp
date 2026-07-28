@@ -89,19 +89,19 @@ Compositor::Compositor(QObject *workspace)
     FTraceLogger::create();
 
     connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, [this](RenderDevice *device) {
-        if (m_renderDevice != device) {
+        if (m_primaryDevice != device) {
             return;
         }
         if (GpuManager::self()->renderDevices().empty()) {
             qCFatal(KWIN_CORE, "All GPUs were removed!");
             return;
         }
-        qCWarning(KWIN_CORE, "Primary GPU %s was removed", qPrintable(m_renderDevice->drmDevice()->path()));
+        qCWarning(KWIN_CORE, "Primary GPU %s was removed", qPrintable(m_primaryDevice->path()));
         stop();
-        m_renderDevice = nullptr;
+        m_primaryDevice = nullptr;
         // this will choose a new render device
         start();
-        qCWarning(KWIN_CORE, "Switched primary GPU to %s", qPrintable(m_renderDevice->drmDevice()->path()));
+        qCWarning(KWIN_CORE, "Switched primary GPU to %s", qPrintable(m_primaryDevice->path()));
         Q_EMIT primaryGpuChanged();
     });
 }
@@ -139,6 +139,16 @@ void Compositor::handleFrameRequested(RenderLoop *renderLoop)
 bool Compositor::isActive()
 {
     return m_state == State::On;
+}
+
+RenderBackend *Compositor::backend() const
+{
+    return m_backend.get();
+}
+
+RenderDevice *Compositor::primaryDevice() const
+{
+    return m_primaryDevice;
 }
 
 static QVariantHash collectCrashInformation(const EglBackend *backend)
@@ -244,15 +254,15 @@ static RenderDevice *selectRenderDevice()
 
 bool Compositor::attemptOpenGLCompositing()
 {
-    if (!m_renderDevice) {
-        m_renderDevice = selectRenderDevice();
-        if (!m_renderDevice) {
+    if (!m_primaryDevice) {
+        m_primaryDevice = selectRenderDevice();
+        if (!m_primaryDevice) {
             qCWarning(KWIN_CORE, "Found no render device!");
             return false;
         }
-        qCDebug(KWIN_CORE, "Chose %s as the primary GPU", qPrintable(m_renderDevice->path()));
+        qCDebug(KWIN_CORE, "Chose %s as the primary GPU", qPrintable(m_primaryDevice->path()));
     }
-    std::unique_ptr<EglBackend> backend = kwinApp()->outputBackend()->createOpenGLBackend(m_renderDevice);
+    std::unique_ptr<EglBackend> backend = kwinApp()->outputBackend()->createOpenGLBackend(m_primaryDevice);
     if (!backend->init()) {
         return false;
     }
