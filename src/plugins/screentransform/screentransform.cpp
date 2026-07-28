@@ -8,6 +8,7 @@
 */
 // own
 #include "screentransform.h"
+#include "compositor.h"
 #include "core/outputconfiguration.h"
 #include "core/outputlayer.h"
 #include "core/rendertarget.h"
@@ -107,7 +108,7 @@ void ScreenTransformEffect::addScreen(LogicalOutput *screen)
         RenderTarget renderTarget(state.m_prev.framebuffer.get(), screen->blendingColor());
 
         Scene *scene = effects->scene();
-        SceneView delegate(scene, screen, nullptr, nullptr);
+        SceneView delegate(scene, screen, nullptr, nullptr, Compositor::self()->primaryDevice());
         delegate.setViewport(screen->geometryF());
         delegate.setScale(screen->scale());
         scene->prePaint(&delegate);

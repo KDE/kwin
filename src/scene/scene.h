@@ -25,21 +25,23 @@ class OutputFrame;
 class Item;
 class SurfaceItem;
 class Window;
+class RenderDevice;
 
 class KWIN_EXPORT RenderView : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit RenderView(LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer);
+    explicit RenderView(LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer, RenderDevice *renderDevice);
 
     LogicalOutput *logicalOutput() const;
     /**
      * may be nullptr.
      */
     BackendOutput *backendOutput() const;
-    OutputLayer *layer() const;
+    RenderDevice *renderDevice() const;
 
+    OutputLayer *layer() const;
     void setLayer(OutputLayer *layer);
 
     virtual bool isVisible() const;
@@ -92,6 +94,7 @@ protected:
     LogicalOutput *m_logicalOutput = nullptr;
     BackendOutput *m_backendOutput = nullptr;
     OutputLayer *m_layer = nullptr;
+    RenderDevice *const m_renderDevice;
     QPoint m_renderOffset;
 };
 
@@ -100,7 +103,7 @@ class KWIN_EXPORT SceneView : public RenderView
     Q_OBJECT
 
 public:
-    explicit SceneView(Scene *scene, LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer);
+    explicit SceneView(Scene *scene, LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer, RenderDevice *renderDevice);
     ~SceneView() override;
 
     Scene *scene() const;

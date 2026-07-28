@@ -8,6 +8,7 @@
 #include "core/backendoutput.h"
 #include "core/outputlayer.h"
 #include "core/pixelgrid.h"
+#include "core/renderdevice.h"
 #include "core/renderviewport.h"
 #include "effect/effect.h"
 #include "scene/cursoritem.h"
@@ -18,10 +19,11 @@
 namespace KWin
 {
 
-RenderView::RenderView(LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer)
+RenderView::RenderView(LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer, RenderDevice *renderDevice)
     : m_logicalOutput(logicalOutput)
     , m_backendOutput(backendOutput)
     , m_layer(layer)
+    , m_renderDevice(renderDevice)
 {
 }
 
@@ -43,6 +45,11 @@ OutputLayer *RenderView::layer() const
 void RenderView::setLayer(OutputLayer *layer)
 {
     m_layer = layer;
+}
+
+RenderDevice *RenderView::renderDevice() const
+{
+    return m_renderDevice;
 }
 
 void RenderView::addDeviceRepaint(const Region &deviceRegion)
@@ -175,8 +182,8 @@ void RenderView::setRenderOffset(const QPoint &offset)
     addDeviceRepaint(deviceRect());
 }
 
-SceneView::SceneView(Scene *scene, LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer)
-    : RenderView(logicalOutput, backendOutput, layer)
+SceneView::SceneView(Scene *scene, LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer, RenderDevice *renderDevice)
+    : RenderView(logicalOutput, backendOutput, layer, renderDevice)
     , m_scene(scene)
     , m_nextPresentationTimestamp(std::chrono::steady_clock::now().time_since_epoch())
 {
@@ -317,7 +324,7 @@ bool SceneView::shouldHideWindow(Window *window) const
 }
 
 ItemView::ItemView(SceneView *parentView, Item *item, LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer)
-    : RenderView(logicalOutput, backendOutput, layer)
+    : RenderView(logicalOutput, backendOutput, layer, parentView->renderDevice())
     , m_parentView(parentView)
     , m_item(item)
 {

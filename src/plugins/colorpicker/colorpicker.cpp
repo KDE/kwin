@@ -13,6 +13,7 @@
 #include "compositor.h"
 #include "core/output.h"
 #include "core/pixelgrid.h"
+#include "core/renderdevice.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effect.h"
@@ -94,11 +95,8 @@ QColor ColorPickerEffect::pick()
                 setPicking(false);
             });
 
-            const auto eglBackend = dynamic_cast<EglBackend *>(Compositor::self()->backend());
-            if (!eglBackend) {
-                return;
-            }
-            const auto context = eglBackend->openglContext();
+            const auto device = Compositor::self()->primaryDevice();
+            const auto context = device->eglContext();
             if (!context || !context->makeCurrent()) {
                 return;
             }
@@ -125,7 +123,7 @@ QColor ColorPickerEffect::pick()
             if (!beginInfo) {
                 return;
             }
-            ColorPickerSceneView sceneView(kwinApp()->scene(), screen, &layer);
+            ColorPickerSceneView sceneView(kwinApp()->scene(), screen, &layer, device);
             auto cursorView = std::make_unique<ItemTreeView>(&sceneView, kwinApp()->scene()->cursorItem(), workspace()->outputs().front(), nullptr, nullptr);
             cursorView->setExclusive(true);
             const Rect pixelDamage = Rect(QPoint(), QSize(1, 1));
