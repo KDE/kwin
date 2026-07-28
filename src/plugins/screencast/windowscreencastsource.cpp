@@ -124,17 +124,18 @@ Region WindowScreenCastSource::render(GLFramebuffer *target, const Region &buffe
     RenderViewport viewport(boundingRect(), devicePixelRatio(), renderTarget, QPoint());
 
     WorkspaceScene *scene = kwinApp()->scene();
+    auto renderer = scene->renderer(m_renderDevice);
 
-    scene->renderer()->beginFrame(renderTarget, viewport);
+    renderer->beginFrame(renderTarget, viewport);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
     for (const auto &window : m_windows) {
-        scene->renderer()->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, Region::infinite(), WindowPaintData{}, {}, {});
+        renderer->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, Region::infinite(), WindowPaintData{}, {}, {});
     }
     if (m_renderCursor && scene->cursorItem()->isVisible()) {
-        scene->renderer()->renderItem(renderTarget, viewport, scene->cursorItem(), 0, Region::infinite(), WindowPaintData{}, {}, {});
+        renderer->renderItem(renderTarget, viewport, scene->cursorItem(), 0, Region::infinite(), WindowPaintData{}, {}, {});
     }
-    scene->renderer()->endFrame();
+    renderer->endFrame();
     return Rect(QPoint(), target->size());
 }
 

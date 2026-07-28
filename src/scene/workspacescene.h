@@ -37,8 +37,8 @@ public:
     Item *overlayItem() const;
     Item *cursorItem() const;
 
-    void attachRenderer(std::unique_ptr<ItemRenderer> &&renderer) override;
-    void detachRenderer() override;
+    void attachRenderer(RenderDevice *device, std::unique_ptr<ItemRenderer> &&renderer) override;
+    void detachRenderer(RenderDevice *device) override;
 
     /**
      * @returns a minimal list of items that will yield the correct visual

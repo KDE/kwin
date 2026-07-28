@@ -22,7 +22,7 @@ public:
     static DecorationShadowTextureCache &instance();
 
     void unregister(ShadowItem *shadowItem);
-    std::shared_ptr<NinePatch> ninePatch(ShadowItem *shadowItem);
+    std::shared_ptr<NinePatch> ninePatch(ShadowItem *shadowItem, ItemRenderer *renderer);
 
 private:
     DecorationShadowTextureCache() = default;
@@ -331,7 +331,7 @@ void ShadowItem::preprocess(ItemRenderer *renderer)
     m_textureDirty = false;
 
     if (m_shadow->hasDecorationShadow()) {
-        m_ninePatch = DecorationShadowTextureCache::instance().ninePatch(this);
+        m_ninePatch = DecorationShadowTextureCache::instance().ninePatch(this, renderer);
     } else {
         m_ninePatch = renderer->createNinePatch(m_shadow->shadowElement(Shadow::ShadowElementTopLeft),
                                                 m_shadow->shadowElement(Shadow::ShadowElementTop),
@@ -385,7 +385,7 @@ void DecorationShadowTextureCache::unregister(ShadowItem *shadowItem)
     }
 }
 
-std::shared_ptr<NinePatch> DecorationShadowTextureCache::ninePatch(ShadowItem *shadowItem)
+std::shared_ptr<NinePatch> DecorationShadowTextureCache::ninePatch(ShadowItem *shadowItem, ItemRenderer *renderer)
 {
     Shadow *shadow = shadowItem->shadow();
     Q_ASSERT(shadow->hasDecorationShadow());
@@ -400,7 +400,7 @@ std::shared_ptr<NinePatch> DecorationShadowTextureCache::ninePatch(ShadowItem *s
     }
     Data d;
     d.shadowItems << shadowItem;
-    d.ninePatch = shadowItem->scene()->renderer()->createNinePatch(shadow->decorationShadowImage());
+    d.ninePatch = renderer->createNinePatch(shadow->decorationShadowImage());
     if (!d.ninePatch) {
         return nullptr;
     }

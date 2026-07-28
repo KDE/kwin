@@ -9,7 +9,8 @@
 namespace KWin
 {
 
-ItemRenderer::ItemRenderer()
+ItemRenderer::ItemRenderer(RenderDevice *device)
+    : m_renderDevice(device)
 {
 }
 
@@ -27,6 +28,11 @@ void ItemRenderer::endFrame()
 
 void ItemRenderer::setLayerDebugging(bool enable)
 {
+}
+
+RenderDevice *ItemRenderer::renderDevice() const
+{
+    return m_renderDevice;
 }
 
 } // namespace KWin
