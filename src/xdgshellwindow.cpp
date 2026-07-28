@@ -870,7 +870,7 @@ void XdgToplevelWindow::doSetQuickTileMode()
 
 bool XdgToplevelWindow::doStartInteractiveMoveResize()
 {
-    if (interactiveMoveResizeGravity() != Gravity::None) {
+    if (interactiveMoveResizeGravity() != Gravity::Center) {
         m_nextGravity = interactiveMoveResizeGravity();
         m_nextStates |= XdgToplevelInterface::State::Resizing;
         scheduleConfigure();

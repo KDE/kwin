@@ -1152,14 +1152,14 @@ public:
      */
     bool isInteractiveMove() const
     {
-        return isInteractiveMoveResize() && interactiveMoveResizeGravity() == Gravity::None;
+        return isInteractiveMoveResize() && interactiveMoveResizeGravity() == Gravity::Center;
     }
     /**
      * Returns @c true if the Client is being interactively resized; otherwise @c false.
      */
     bool isInteractiveResize() const
     {
-        return isInteractiveMoveResize() && interactiveMoveResizeGravity() != Gravity::None;
+        return isInteractiveMoveResize() && interactiveMoveResizeGravity() != Gravity::Center;
     }
     Gravity interactiveMoveResizeGravity() const
     {
@@ -1881,7 +1881,7 @@ protected:
         QPointF offset;
         RectF initialGeometry;
         RectF initialGeometryRestore;
-        Gravity gravity = Gravity::None;
+        Gravity gravity = Gravity::Center;
         bool buttonDown = false;
         CursorShape cursor = Qt::ArrowCursor;
         QString initialOutputId;

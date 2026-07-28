@@ -1033,8 +1033,8 @@ bool Window::startInteractiveMoveResize()
     if (isRequestedFullScreen() && (workspace()->outputs().count() < 2 || !isMovableAcrossScreens())) {
         return false;
     }
-    if ((interactiveMoveResizeGravity() == Gravity::None && !isMovableAcrossScreens())
-        || (interactiveMoveResizeGravity() != Gravity::None && !isResizable())) {
+    if ((interactiveMoveResizeGravity() == Gravity::Center && !isMovableAcrossScreens())
+        || (interactiveMoveResizeGravity() != Gravity::Center && !isResizable())) {
         return false;
     }
     if (!doStartInteractiveMoveResize()) {
@@ -1310,7 +1310,7 @@ static RegionF interactiveMoveResizeVisibleSubrectRegion(const RectF &geometry, 
 
     RectF initialRect = availableArea;
     switch (gravity) {
-    case Gravity::None:
+    case Gravity::Center:
     case Gravity::Top:
         // resizing from the top is handled like moving the window to avoid zero width rectangles when window width is equal to minWidth
         initialRect.adjust(0, 0, -minVisibleArea.width(), -minVisibleArea.height());
@@ -1336,7 +1336,7 @@ static RegionF interactiveMoveResizeVisibleSubrectRegion(const RectF &geometry, 
     RegionF availableRegion(initialRect);
 
     switch (gravity) {
-    case Gravity::None:
+    case Gravity::Center:
     case Gravity::Top:
     case Gravity::Left:
     case Gravity::TopLeft:
@@ -1378,7 +1378,7 @@ static std::optional<QPointF> confineInteractiveMove(const RectF &geometry, cons
     const QSizeF effectiveMinVisibleArea(std::min(geometry.width(), minVisibleArea.width()),
                                          std::min(geometry.height(), minVisibleArea.height()));
 
-    const RegionF visibleSubrectRegion = interactiveMoveResizeVisibleSubrectRegion(geometry, Gravity::None, effectiveMinVisibleArea);
+    const RegionF visibleSubrectRegion = interactiveMoveResizeVisibleSubrectRegion(geometry, Gravity::Center, effectiveMinVisibleArea);
     const QPointF anchor = geometry.topLeft();
     for (RectF rect : visibleSubrectRegion.rects()) {
         // Extend the left edge of the rect so the right edge of the window can be
@@ -1498,7 +1498,7 @@ std::optional<QPointF> Window::confineInteractiveResize(const RectF &geometry, G
         case Gravity::Right:
             break;
 
-        case Gravity::None:
+        case Gravity::Center:
             Q_UNREACHABLE();
         }
 
@@ -1533,7 +1533,7 @@ std::optional<QPointF> Window::confineInteractiveResize(const RectF &geometry, G
             constrainedRect.setRight(std::min(constrainedRect.right(), geometry.left() + maxFrameSize.width()));
             break;
 
-        case Gravity::None:
+        case Gravity::Center:
             Q_UNREACHABLE();
         }
 
@@ -1592,7 +1592,7 @@ RectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
     RectF nextMoveResizeGeom = moveResizeGeometry();
 
     const Gravity gravity = interactiveMoveResizeGravity();
-    if (gravity == Gravity::None || !isResizable()) {
+    if (gravity == Gravity::Center || !isResizable()) {
         return nextMoveResizeGeom;
     }
 
@@ -1627,7 +1627,7 @@ RectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
     case Gravity::Right:
         nextMoveResizeGeom = RectF(orig.topLeft(), QPointF(bottomright.x(), orig.bottom()));
         break;
-    case Gravity::None:
+    case Gravity::Center:
         Q_UNREACHABLE();
         break;
     }
@@ -1664,7 +1664,7 @@ RectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
     case Gravity::Left:
         nextMoveResizeGeom.setLeft(nextMoveResizeGeom.right() - constrainedSize.width());
         break;
-    case Gravity::None:
+    case Gravity::Center:
         Q_UNREACHABLE();
     }
 
@@ -2155,7 +2155,7 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
         if (isInteractiveMoveResize()) {
             finishInteractiveMoveResize(false);
         }
-        setInteractiveMoveResizeGravity(Gravity::None);
+        setInteractiveMoveResizeGravity(Gravity::Center);
         setInteractiveMoveResizePointerButtonDown(true);
         setInteractiveMoveResizeAnchor(globalPos);
         setInteractiveMoveResizeModifiers(Qt::KeyboardModifiers());
@@ -2411,7 +2411,7 @@ void Window::updateInteractiveMoveResizeCursor()
     }
     Gravity gravity = interactiveMoveResizeGravity();
     if (!isResizable()) {
-        gravity = Gravity::None;
+        gravity = Gravity::Center;
     }
     CursorShape c = Qt::ArrowCursor;
     switch (gravity) {
@@ -2641,10 +2641,10 @@ Gravity Window::mouseGravity() const
         case Qt::TopRightSection:
             return Gravity::TopRight;
         default:
-            return Gravity::None;
+            return Gravity::Center;
         }
     }
-    return Gravity::None;
+    return Gravity::Center;
 }
 
 void Window::endInteractiveMoveResize()

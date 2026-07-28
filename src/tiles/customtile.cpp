@@ -184,7 +184,7 @@ void CustomTile::setRelativeGeometry(const RectF &geom)
 bool CustomTile::supportsResizeGravity(KWin::Gravity gravity)
 {
     if (layoutDirection() == LayoutDirection::Floating) {
-        return gravity != Gravity::None;
+        return gravity != Gravity::Center;
     }
 
     return Tile::supportsResizeGravity(gravity);

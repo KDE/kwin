@@ -10,7 +10,7 @@ namespace KWin
 {
 
 Gravity::Gravity()
-    : m_kind(None)
+    : m_kind(Center)
 {
 }
 
@@ -29,6 +29,9 @@ RectF Gravity::apply(const RectF &rect, const RectF &bounds) const
     RectF geometry = rect;
 
     switch (m_kind) {
+    case Gravity::Center:
+        geometry.moveCenter(bounds.center());
+        break;
     case Gravity::TopLeft:
         geometry.moveRight(bounds.right());
         geometry.moveBottom(bounds.bottom());
@@ -45,7 +48,6 @@ RectF Gravity::apply(const RectF &rect, const RectF &bounds) const
         geometry.moveLeft(bounds.left());
         geometry.moveVerticalCenter(bounds.verticalCenter());
         break;
-    case Gravity::None:
     case Gravity::BottomRight:
         geometry.moveLeft(bounds.left());
         geometry.moveTop(bounds.top());
