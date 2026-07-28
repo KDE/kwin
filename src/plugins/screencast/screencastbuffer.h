@@ -18,6 +18,7 @@ class GLFramebuffer;
 class GLTexture;
 class GraphicsBuffer;
 struct GraphicsBufferOptions;
+class RenderDevice;
 
 class ScreenCastBuffer
 {
@@ -34,7 +35,7 @@ private:
 class DmaBufScreenCastBuffer : public ScreenCastBuffer
 {
 public:
-    static DmaBufScreenCastBuffer *create(pw_buffer *pwBuffer, const GraphicsBufferOptions &options);
+    static DmaBufScreenCastBuffer *create(RenderDevice *renderDevice, pw_buffer *pwBuffer, const GraphicsBufferOptions &options);
 
     std::shared_ptr<GLTexture> texture;
     std::unique_ptr<GLFramebuffer> framebuffer;

@@ -18,6 +18,8 @@ class GLFramebuffer;
 class GLTexture;
 class RectF;
 class Region;
+class RenderDevice;
+class EglContext;
 
 class ScreenCastSource : public QObject
 {
@@ -25,6 +27,7 @@ class ScreenCastSource : public QObject
 
 public:
     explicit ScreenCastSource();
+    ~ScreenCastSource() override;
 
     virtual uint refreshRate() const = 0;
     virtual quint32 drmFormat() const = 0;
@@ -45,9 +48,16 @@ public:
     virtual bool followsStreamSize();
     virtual void resize(const QSize &size);
 
+    RenderDevice *renderDevice() const;
+    const std::shared_ptr<EglContext> &eglContext() const;
+
 Q_SIGNALS:
     void frame();
     void closed();
+
+protected:
+    RenderDevice *const m_renderDevice;
+    std::shared_ptr<EglContext> m_eglContext;
 };
 
 } // namespace KWin

@@ -147,10 +147,9 @@ void RegionScreenCastSource::resume()
         return;
     }
 
-    auto device = Compositor::self()->primaryDevice();
-    m_layer = std::make_unique<ScreencastLayer>(workspace()->outputs().front(), device->eglDisplay()->nonExternalOnlySupportedDrmFormats());
+    m_layer = std::make_unique<ScreencastLayer>(workspace()->outputs().front(), m_renderDevice->eglDisplay()->nonExternalOnlySupportedDrmFormats());
 
-    m_sceneView = std::make_unique<FilteredSceneView>(kwinApp()->scene(), workspace()->outputs().front(), m_layer.get(), device, m_pidToHide);
+    m_sceneView = std::make_unique<FilteredSceneView>(kwinApp()->scene(), workspace()->outputs().front(), m_layer.get(), m_renderDevice, m_pidToHide);
     m_sceneView->setViewport(m_region);
     m_sceneView->setScale(m_scale);
     m_sceneView->setRefreshRate(refreshRate());

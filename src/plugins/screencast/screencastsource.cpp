@@ -5,11 +5,20 @@
 */
 
 #include "screencastsource.h"
+#include "compositor.h"
+#include "core/renderdevice.h"
+#include "opengl/eglcontext.h"
 
 namespace KWin
 {
 
 ScreenCastSource::ScreenCastSource()
+    : m_renderDevice(Compositor::self()->primaryDevice())
+    , m_eglContext(m_renderDevice->eglContext())
+{
+}
+
+ScreenCastSource::~ScreenCastSource()
 {
 }
 
@@ -21,6 +30,16 @@ bool ScreenCastSource::followsStreamSize()
 void ScreenCastSource::resize(const QSize &)
 {
     Q_ASSERT(false);
+}
+
+RenderDevice *ScreenCastSource::renderDevice() const
+{
+    return m_renderDevice;
+}
+
+const std::shared_ptr<EglContext> &ScreenCastSource::eglContext() const
+{
+    return m_eglContext;
 }
 
 } // namespace KWin
