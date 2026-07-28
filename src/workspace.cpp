@@ -40,6 +40,7 @@
 #include "tabbox/tabbox.h"
 #endif
 #include "compositor.h"
+#include "core/renderdevice.h"
 #include "core/session.h"
 #include "decorations/decorationbridge.h"
 #include "dpmsinputeventfilter.h"
@@ -1947,7 +1948,7 @@ QString Workspace::supportInformation() const
         support.append(QStringLiteral("Compositing is active\n"));
         switch (effects->compositingType()) {
         case OpenGLCompositing: {
-            const auto context = kwinApp()->scene()->openglContext();
+            const auto context = Compositor::self()->primaryDevice()->eglContext();
             GLPlatform *platform = context->glPlatform();
             support.append(QStringLiteral("Compositing Type: OpenGL ES\n"));
             support.append(QStringLiteral("OpenGL vendor string: ") + QString::fromUtf8(platform->glVendorString()) + QStringLiteral("\n"));

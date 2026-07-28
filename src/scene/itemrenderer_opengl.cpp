@@ -7,6 +7,7 @@
 #include "scene/itemrenderer_opengl.h"
 #include "core/colorpipeline.h"
 #include "core/pixelgrid.h"
+#include "core/renderdevice.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "core/syncobjtimeline.h"
@@ -26,8 +27,8 @@
 namespace KWin
 {
 
-ItemRendererOpenGL::ItemRendererOpenGL(EglDisplay *eglDisplay)
-    : m_eglDisplay(eglDisplay)
+ItemRendererOpenGL::ItemRendererOpenGL(RenderDevice *device)
+    : m_device(device)
 {
     const QString visualizeOptionsString = qEnvironmentVariable("KWIN_SCENE_VISUALIZE");
     if (!visualizeOptionsString.isEmpty()) {
@@ -38,17 +39,17 @@ ItemRendererOpenGL::ItemRendererOpenGL(EglDisplay *eglDisplay)
 
 std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
-    return BufferTextureOpenGL::create(buffer, releasePoint);
+    return BufferTextureOpenGL::create(m_device, buffer, releasePoint);
 }
 
 std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(const QImage &image)
 {
-    return ImageTextureOpenGL::create(image);
+    return ImageTextureOpenGL::create(m_device->eglContext(), image);
 }
 
 std::unique_ptr<NinePatch> ItemRendererOpenGL::createNinePatch(const QImage &image)
 {
-    return NinePatchOpenGL::create(image);
+    return NinePatchOpenGL::create(m_device->eglContext(), image);
 }
 
 std::unique_ptr<NinePatch> ItemRendererOpenGL::createNinePatch(const QImage &topLeftPatch,
@@ -60,12 +61,12 @@ std::unique_ptr<NinePatch> ItemRendererOpenGL::createNinePatch(const QImage &top
                                                                const QImage &bottomLeftPatch,
                                                                const QImage &leftPatch)
 {
-    return NinePatchOpenGL::create(topLeftPatch, topPatch, topRightPatch, rightPatch, bottomRightPatch, bottomPatch, bottomLeftPatch, leftPatch);
+    return NinePatchOpenGL::create(m_device->eglContext(), topLeftPatch, topPatch, topRightPatch, rightPatch, bottomRightPatch, bottomPatch, bottomLeftPatch, leftPatch);
 }
 
 std::unique_ptr<Atlas> ItemRendererOpenGL::createAtlas(const QList<QImage> &sprites)
 {
-    return AtlasOpenGL::create(sprites);
+    return AtlasOpenGL::create(m_device->eglContext(), sprites);
 }
 
 void ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)
@@ -81,12 +82,10 @@ void ItemRendererOpenGL::endFrame()
     GLVertexBuffer::streamingBuffer()->endOfFrame();
     GLFramebuffer::popFramebuffer();
 
-    if (m_eglDisplay) {
-        EGLNativeFence fence(m_eglDisplay);
-        if (fence.isValid()) {
-            for (const auto &releasePoint : m_releasePoints) {
-                releasePoint->addReleaseFence(fence.fileDescriptor());
-            }
+    EGLNativeFence fence(m_device->eglDisplay());
+    if (fence.isValid()) {
+        for (const auto &releasePoint : m_releasePoints) {
+            releasePoint->addReleaseFence(fence.fileDescriptor());
         }
     }
     m_releasePoints.clear();

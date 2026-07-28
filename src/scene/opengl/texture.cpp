@@ -23,8 +23,14 @@
 namespace KWin
 {
 
+TextureOpenGL::TextureOpenGL(const std::shared_ptr<EglContext> &context)
+    : m_context(context)
+{
+}
+
 TextureOpenGL::~TextureOpenGL()
 {
+    (void)m_context->makeCurrent();
     qDeleteAll(m_planes);
 }
 
@@ -33,14 +39,19 @@ QVarLengthArray<GLTexture *, 4> TextureOpenGL::planes() const
     return m_planes;
 }
 
-std::unique_ptr<ImageTextureOpenGL> ImageTextureOpenGL::create(const QImage &image)
+std::unique_ptr<ImageTextureOpenGL> ImageTextureOpenGL::create(const std::shared_ptr<EglContext> &context, const QImage &image)
 {
-    auto texture = std::make_unique<ImageTextureOpenGL>();
+    auto texture = std::make_unique<ImageTextureOpenGL>(context);
     if (texture->upload(image)) {
         return texture;
     }
 
     return nullptr;
+}
+
+ImageTextureOpenGL::ImageTextureOpenGL(const std::shared_ptr<EglContext> &context)
+    : TextureOpenGL(context)
+{
 }
 
 void ImageTextureOpenGL::attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint)
@@ -69,8 +80,9 @@ void ImageTextureOpenGL::upload(const QImage &image, const Rect &rect)
     m_planes[0]->update(image, rect);
 }
 
-BufferTextureOpenGL::BufferTextureOpenGL(EglBackend *backend)
-    : m_backend(backend)
+BufferTextureOpenGL::BufferTextureOpenGL(RenderDevice *renderDevice)
+    : TextureOpenGL(renderDevice->eglContext())
+    , m_renderDevice(renderDevice)
 {
 }
 
@@ -78,9 +90,9 @@ BufferTextureOpenGL::~BufferTextureOpenGL()
 {
 }
 
-std::unique_ptr<BufferTextureOpenGL> BufferTextureOpenGL::create(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+std::unique_ptr<BufferTextureOpenGL> BufferTextureOpenGL::create(RenderDevice *device, GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
-    auto texture = std::make_unique<BufferTextureOpenGL>(static_cast<EglBackend *>(Compositor::self()->backend()));
+    auto texture = std::make_unique<BufferTextureOpenGL>(device);
     if (texture->attach(buffer, releasePoint)) {
         return texture;
     }
@@ -93,7 +105,7 @@ bool BufferTextureOpenGL::attach(GraphicsBuffer *buffer, const std::shared_ptr<S
     if (buffer->dmabufAttributes()) {
         return loadDmabufTexture(buffer, releasePoint);
     } else if (buffer->shmAttributes()) {
-        if (EGLImageKHR image = m_backend->importBufferAsImage(buffer)) {
+        if (EGLImageKHR image = m_renderDevice->eglDisplay()->importBufferAsImage(buffer)) {
             return loadUDmabufTexture(buffer, image);
         } else {
             return loadShmTexture(buffer);
@@ -111,7 +123,7 @@ void BufferTextureOpenGL::attach(GraphicsBuffer *buffer, const Region &region, c
     if (buffer->dmabufAttributes()) {
         updateDmabufTexture(buffer, region, releasePoint);
     } else if (buffer->shmAttributes()) {
-        if (EGLImageKHR image = m_backend->importBufferAsImage(buffer)) {
+        if (EGLImageKHR image = m_renderDevice->eglDisplay()->importBufferAsImage(buffer)) {
             updateUDmabufTexture(buffer, image, releasePoint);
         } else {
             updateShmTexture(buffer, region, releasePoint);
@@ -219,25 +231,25 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const std::s
     if (!compat) {
         qCCritical(KWIN_OPENGL, "Couldn't find a compatible GPU for a buffer");
         return false;
-    } else if (compat == m_backend->renderDevice()) {
+    } else if (compat == m_renderDevice) {
         m_mgpuSwapchain.reset();
         m_releasePoint = releasePoint;
     } else {
         // need to do a multi gpu copy
-        m_mgpuSwapchain = MultiGpuSwapchain::createForSampling(compat, m_backend->renderDevice(),
+        m_mgpuSwapchain = MultiGpuSwapchain::createForSampling(compat, m_renderDevice,
                                                                attribs->format, attribs->modifier, buffer->size(),
-                                                               m_backend->renderDevice()->eglDisplay()->allSupportedDrmFormats());
+                                                               m_renderDevice->eglDisplay()->allSupportedDrmFormats());
         if (!m_mgpuSwapchain) {
             qCCritical(KWIN_OPENGL, "Couldn't create multi gpu swapchain for a buffer %s 0x%lx", qPrintable(FormatInfo::drmFormatName(attribs->format)), attribs->modifier);
             return false;
         }
-        EGLNativeFence releaseFence(m_backend->eglDisplayObject());
+        EGLNativeFence releaseFence(m_renderDevice->eglDisplay());
         auto imported = m_mgpuSwapchain->copyRgbBuffer(buffer, Region::infinite(), releaseFence.takeFileDescriptor(),
                                                        nullptr, releasePoint);
         if (!imported.has_value()) {
             return false;
         }
-        const auto fence = EGLNativeFence::importFence(m_backend->eglDisplayObject(), std::move(imported->sync));
+        const auto fence = EGLNativeFence::importFence(m_renderDevice->eglDisplay(), std::move(imported->sync));
         if (!fence.waitSync()) {
             return false;
         }
@@ -256,8 +268,8 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const std::s
             size.rwidth() /= currentPlane.widthDivisor;
             size.rheight() /= currentPlane.heightDivisor;
 
-            const bool isExternal = m_backend->eglDisplayObject()->isExternalOnly(currentPlane.format, attribs->modifier);
-            auto t = createTexture(m_backend->importBufferAsImage(buffer, plane, currentPlane.format, size), size, isExternal);
+            const bool isExternal = m_renderDevice->eglDisplay()->isExternalOnly(currentPlane.format, attribs->modifier);
+            auto t = createTexture(m_renderDevice->eglDisplay()->importBufferAsImage(buffer, plane, currentPlane.format, size), size, isExternal);
             if (!t) {
                 return false;
             }
@@ -267,8 +279,8 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const std::s
             m_planes.append(texture.release());
         }
     } else {
-        const bool isExternal = m_backend->eglDisplayObject()->isExternalOnly(attribs->format, attribs->modifier);
-        auto texture = createTexture(m_backend->importBufferAsImage(buffer), buffer->size(), isExternal);
+        const bool isExternal = m_renderDevice->eglDisplay()->isExternalOnly(attribs->format, attribs->modifier);
+        auto texture = createTexture(m_renderDevice->eglDisplay()->importBufferAsImage(buffer), buffer->size(), isExternal);
         if (!texture) {
             return false;
         }
@@ -293,13 +305,13 @@ void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const Regi
         return;
     }
     if (m_mgpuSwapchain) {
-        EGLNativeFence releaseFence(m_backend->eglDisplayObject());
+        EGLNativeFence releaseFence(m_renderDevice->eglDisplay());
         auto imported = m_mgpuSwapchain->copyRgbBuffer(buffer, region, releaseFence.takeFileDescriptor(),
                                                        nullptr, releasePoint);
         if (!imported.has_value()) {
             return;
         }
-        const auto fence = EGLNativeFence::importFence(m_backend->eglDisplayObject(), std::move(imported->sync));
+        const auto fence = EGLNativeFence::importFence(m_renderDevice->eglDisplay(), std::move(imported->sync));
         if (!fence.waitSync()) {
             return;
         }
@@ -318,13 +330,13 @@ void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const Regi
             size.rheight() /= currentPlane.heightDivisor;
 
             m_planes[plane]->bind();
-            glEGLImageTargetTexture2DOES(m_planes[plane]->target(), static_cast<GLeglImageOES>(m_backend->importBufferAsImage(buffer, plane, currentPlane.format, size)));
+            glEGLImageTargetTexture2DOES(m_planes[plane]->target(), static_cast<GLeglImageOES>(m_renderDevice->eglDisplay()->importBufferAsImage(buffer, plane, currentPlane.format, size)));
             m_planes[plane]->unbind();
         }
     } else {
         Q_ASSERT(m_planes.count() == 1);
         m_planes[0]->bind();
-        glEGLImageTargetTexture2DOES(m_planes[0]->target(), static_cast<GLeglImageOES>(m_backend->importBufferAsImage(buffer)));
+        glEGLImageTargetTexture2DOES(m_planes[0]->target(), static_cast<GLeglImageOES>(m_renderDevice->eglDisplay()->importBufferAsImage(buffer)));
         m_planes[0]->unbind();
     }
     const auto info = FormatInfo::get(buffer->dmabufAttributes()->format);
@@ -388,7 +400,7 @@ public:
 
 bool BufferTextureOpenGL::loadUDmabufTexture(GraphicsBuffer *buffer, EGLImageKHR image)
 {
-    const bool isExternal = m_backend->eglDisplayObject()->isExternalOnly(buffer->shmAttributes()->format, DRM_FORMAT_MOD_LINEAR);
+    const bool isExternal = m_renderDevice->eglDisplay()->isExternalOnly(buffer->shmAttributes()->format, DRM_FORMAT_MOD_LINEAR);
     auto texture = createTexture(image, buffer->size(), isExternal);
     if (!texture) {
         return false;
@@ -409,7 +421,7 @@ void BufferTextureOpenGL::updateUDmabufTexture(GraphicsBuffer *buffer, EGLImageK
         loadUDmabufTexture(buffer, image);
         return;
     }
-    const bool isExternal = m_backend->eglDisplayObject()->isExternalOnly(buffer->shmAttributes()->format, DRM_FORMAT_MOD_LINEAR);
+    const bool isExternal = m_renderDevice->eglDisplay()->isExternalOnly(buffer->shmAttributes()->format, DRM_FORMAT_MOD_LINEAR);
     const GLint target = isExternal ? GL_TEXTURE_EXTERNAL_OES : GL_TEXTURE_2D;
 
     m_planes[0]->bind();
