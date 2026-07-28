@@ -868,6 +868,13 @@ void InputMethod::startInputMethod()
     }
 
     const QString program = arguments.takeFirst();
+    if (program.contains(QStringLiteral("flatpak")) && arguments.first().contains(QStringLiteral("run"))) {
+        // Without the --die-with-parent argument, the flatpak process itself will be
+        // killed when the input method is stopped but the child process would continue to run.
+        qCDebug(KWIN_VIRTUALKEYBOARD) << "Input method is a flatpak, adding --die-with-parent argument";
+        arguments.insert(1, QStringLiteral("--die-with-parent"));
+    }
+
     int socket = waylandServer()->createInputMethodConnection();
     if (socket < 0) {
         qWarning("Failed to create the input method connection");
