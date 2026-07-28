@@ -22,6 +22,9 @@ namespace KWin
 
 class GLFramebuffer;
 class GLTexture;
+class RenderDevice;
+class RenderView;
+class EglContext;
 
 class MagnifierEffect : public Effect
 {
@@ -71,8 +74,16 @@ private:
     double m_lastPinchProgress = 0;
     AnimationClock m_clock;
     QSize m_magnifierSize;
-    std::unique_ptr<GLTexture> m_texture;
-    std::unique_ptr<GLFramebuffer> m_fbo;
+
+    struct Fbo
+    {
+        ~Fbo();
+        std::shared_ptr<EglContext> m_context;
+        std::unique_ptr<GLTexture> m_texture;
+        std::unique_ptr<GLFramebuffer> m_fbo;
+    };
+    std::unordered_map<RenderView *, Fbo> m_fbos;
+    RenderView *m_currentView = nullptr;
 };
 
 } // namespace

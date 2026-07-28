@@ -16,14 +16,16 @@
 #include <QAction>
 #include <QTimer>
 
+#include <KGlobalAccel>
 #include <KStandardActions>
 
+#include "core/renderdevice.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
 #include "opengl/eglcontext.h"
 #include "opengl/glutils.h"
+#include "scene/scene.h"
 #include "utils/keys.h"
-#include <KGlobalAccel>
 
 using namespace std::chrono_literals;
 
@@ -31,6 +33,13 @@ namespace KWin
 {
 
 const int FRAME_WIDTH = 5;
+
+MagnifierEffect::Fbo::~Fbo()
+{
+    if (m_context) {
+        std::ignore = m_context->makeCurrent();
+    }
+}
 
 MagnifierEffect::MagnifierEffect()
     : m_zoom(1)
@@ -79,6 +88,9 @@ MagnifierEffect::MagnifierEffect()
 
     connect(effects, &EffectsHandler::mouseChanged, this, &MagnifierEffect::slotMouseChanged);
     connect(effects, &EffectsHandler::windowAdded, this, &MagnifierEffect::slotWindowAdded);
+    connect(effects, &EffectsHandler::viewRemoved, this, [this](RenderView *view) {
+        m_fbos.erase(view);
+    });
 
     const auto windows = effects->stackingOrder();
     for (EffectWindow *window : windows) {
@@ -101,7 +113,7 @@ MagnifierEffect::~MagnifierEffect()
 
 bool MagnifierEffect::supported()
 {
-    return effects->openglContext() && effects->openglContext()->supportsBlits();
+    return true;
 }
 
 void MagnifierEffect::reconfigure(ReconfigureFlags)
@@ -140,6 +152,8 @@ void MagnifierEffect::reconfigure(ReconfigureFlags)
 
 void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data)
 {
+    m_currentView = data.view;
+
     if (m_zoom != m_targetZoom) {
         const auto deltaTime = m_clock.tick(data.view);
         const auto duration = animationTime(500ms);
@@ -151,18 +165,22 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data)
             m_zoom = std::max(m_zoom * std::min(1 - diff, 0.8), m_targetZoom);
         }
     }
+
     if (m_zoom == 1.0) {
         // zoom ended - delete FBO and texture
-        m_fbo.reset();
-        m_texture.reset();
-    } else if (!m_texture || m_texture->size() != m_magnifierSize) {
-        if (auto texture = GLTexture::allocate(GL_RGBA16F, m_magnifierSize)) {
-            texture->setWrapMode(GL_CLAMP_TO_EDGE);
-            texture->setFilter(GL_LINEAR);
+        m_fbos.erase(m_currentView);
+    } else {
+        auto &fbo = m_fbos[m_currentView];
+        if (!fbo.m_texture || fbo.m_texture->size() != m_magnifierSize) {
+            if (auto texture = GLTexture::allocate(GL_RGBA16F, m_magnifierSize)) {
+                texture->setWrapMode(GL_CLAMP_TO_EDGE);
+                texture->setFilter(GL_LINEAR);
 
-            if (auto fbo = std::make_unique<GLFramebuffer>(texture.get()); fbo->valid()) {
-                m_texture = std::move(texture);
-                m_fbo = std::move(fbo);
+                if (auto f = std::make_unique<GLFramebuffer>(texture.get()); f->valid()) {
+                    fbo.m_context = EglContext::currentContext()->shared_from_this();
+                    fbo.m_texture = std::move(texture);
+                    fbo.m_fbo = std::move(f);
+                }
             }
         }
     }
@@ -182,68 +200,71 @@ bool MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
     if (!effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen)) { // paint normal screen)
         return false;
     }
-    if (m_zoom != 1.0 && m_fbo) {
-        // get the right area from the current rendered screen
-        const Rect area = magnifierArea();
-        const QPointF cursor = cursorPos();
-        const auto scale = viewport.scale();
-
-        RectF srcArea(cursor.x() - (double)area.width() / (m_zoom * 2),
-                      cursor.y() - (double)area.height() / (m_zoom * 2),
-                      (double)area.width() / m_zoom, (double)area.height() / m_zoom);
-        if (effects->isOpenGLCompositing()) {
-            m_fbo->blitFromRenderTarget(renderTarget, viewport, srcArea.toRect(), Rect(QPoint(), m_fbo->size()));
-            // paint magnifier
-            auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-            QMatrix4x4 mvp = viewport.projectionMatrix();
-            mvp.translate(area.x() * scale, area.y() * scale);
-            s->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
-            m_texture->render(area.size() * scale);
-            ShaderManager::instance()->popShader();
-
-            GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-            vbo->reset();
-
-            RectF areaF = area.scaled(scale);
-            const RectF frame = area.adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH).scaled(scale);
-            QList<QVector2D> verts;
-            verts.reserve(4 * 6 * 2);
-            // top frame
-            verts.push_back(QVector2D(frame.right(), frame.top()));
-            verts.push_back(QVector2D(frame.left(), frame.top()));
-            verts.push_back(QVector2D(frame.left(), areaF.top()));
-            verts.push_back(QVector2D(frame.left(), areaF.top()));
-            verts.push_back(QVector2D(frame.right(), areaF.top()));
-            verts.push_back(QVector2D(frame.right(), frame.top()));
-            // left frame
-            verts.push_back(QVector2D(areaF.left(), frame.top()));
-            verts.push_back(QVector2D(frame.left(), frame.top()));
-            verts.push_back(QVector2D(frame.left(), frame.bottom()));
-            verts.push_back(QVector2D(frame.left(), frame.bottom()));
-            verts.push_back(QVector2D(areaF.left(), frame.bottom()));
-            verts.push_back(QVector2D(areaF.left(), frame.top()));
-            // right frame
-            verts.push_back(QVector2D(frame.right(), frame.top()));
-            verts.push_back(QVector2D(areaF.right(), frame.top()));
-            verts.push_back(QVector2D(areaF.right(), frame.bottom()));
-            verts.push_back(QVector2D(areaF.right(), frame.bottom()));
-            verts.push_back(QVector2D(frame.right(), frame.bottom()));
-            verts.push_back(QVector2D(frame.right(), frame.top()));
-            // bottom frame
-            verts.push_back(QVector2D(frame.right(), areaF.bottom()));
-            verts.push_back(QVector2D(frame.left(), areaF.bottom()));
-            verts.push_back(QVector2D(frame.left(), frame.bottom()));
-            verts.push_back(QVector2D(frame.left(), frame.bottom()));
-            verts.push_back(QVector2D(frame.right(), frame.bottom()));
-            verts.push_back(QVector2D(frame.right(), areaF.bottom()));
-            vbo->setVertices(verts);
-
-            ShaderBinder binder(ShaderTrait::UniformColor);
-            binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix());
-            binder.shader()->setUniform(GLShader::ColorUniform::Color, QColor(0, 0, 0));
-            vbo->render(GL_TRIANGLES);
-        }
+    if (m_zoom == 1.0) {
+        return true;
     }
+    auto &fbo = m_fbos[m_currentView];
+    if (!fbo.m_fbo) {
+        return true;
+    }
+    // get the right area from the current rendered screen
+    const Rect area = magnifierArea();
+    const QPointF cursor = cursorPos();
+    const auto scale = viewport.scale();
+
+    RectF srcArea(cursor.x() - (double)area.width() / (m_zoom * 2),
+                  cursor.y() - (double)area.height() / (m_zoom * 2),
+                  (double)area.width() / m_zoom, (double)area.height() / m_zoom);
+    fbo.m_fbo->blitFromRenderTarget(renderTarget, viewport, srcArea.toRect(), Rect(QPoint(), fbo.m_fbo->size()));
+    // paint magnifier
+    auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
+    QMatrix4x4 mvp = viewport.projectionMatrix();
+    mvp.translate(area.x() * scale, area.y() * scale);
+    s->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
+    fbo.m_texture->render(area.size() * scale);
+    ShaderManager::instance()->popShader();
+
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    vbo->reset();
+
+    RectF areaF = area.scaled(scale);
+    const RectF frame = area.adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH).scaled(scale);
+    QList<QVector2D> verts;
+    verts.reserve(4 * 6 * 2);
+    // top frame
+    verts.push_back(QVector2D(frame.right(), frame.top()));
+    verts.push_back(QVector2D(frame.left(), frame.top()));
+    verts.push_back(QVector2D(frame.left(), areaF.top()));
+    verts.push_back(QVector2D(frame.left(), areaF.top()));
+    verts.push_back(QVector2D(frame.right(), areaF.top()));
+    verts.push_back(QVector2D(frame.right(), frame.top()));
+    // left frame
+    verts.push_back(QVector2D(areaF.left(), frame.top()));
+    verts.push_back(QVector2D(frame.left(), frame.top()));
+    verts.push_back(QVector2D(frame.left(), frame.bottom()));
+    verts.push_back(QVector2D(frame.left(), frame.bottom()));
+    verts.push_back(QVector2D(areaF.left(), frame.bottom()));
+    verts.push_back(QVector2D(areaF.left(), frame.top()));
+    // right frame
+    verts.push_back(QVector2D(frame.right(), frame.top()));
+    verts.push_back(QVector2D(areaF.right(), frame.top()));
+    verts.push_back(QVector2D(areaF.right(), frame.bottom()));
+    verts.push_back(QVector2D(areaF.right(), frame.bottom()));
+    verts.push_back(QVector2D(frame.right(), frame.bottom()));
+    verts.push_back(QVector2D(frame.right(), frame.top()));
+    // bottom frame
+    verts.push_back(QVector2D(frame.right(), areaF.bottom()));
+    verts.push_back(QVector2D(frame.left(), areaF.bottom()));
+    verts.push_back(QVector2D(frame.left(), frame.bottom()));
+    verts.push_back(QVector2D(frame.left(), frame.bottom()));
+    verts.push_back(QVector2D(frame.right(), frame.bottom()));
+    verts.push_back(QVector2D(frame.right(), areaF.bottom()));
+    vbo->setVertices(verts);
+
+    ShaderBinder binder(ShaderTrait::UniformColor);
+    binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix());
+    binder.shader()->setUniform(GLShader::ColorUniform::Color, QColor(0, 0, 0));
+    vbo->render(GL_TRIANGLES);
     return true;
 }
 
