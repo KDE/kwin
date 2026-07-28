@@ -73,6 +73,7 @@ public:
 
     RenderBackend *backend() const;
     RenderDevice *primaryDevice() const;
+    SceneView *sceneView(BackendOutput *output) const;
 
     void createRenderer();
 
