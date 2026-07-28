@@ -22,13 +22,14 @@ class GLFramebuffer;
 class GLTexture;
 class ThumbnailTextureProvider;
 class WindowThumbnailSource;
+class EglContext;
 
 class WindowThumbnailSource : public QObject
 {
     Q_OBJECT
 
 public:
-    WindowThumbnailSource(QQuickWindow *view, Window *handle);
+    WindowThumbnailSource(const std::shared_ptr<EglContext> &context, QQuickWindow *view, Window *handle);
     ~WindowThumbnailSource() override;
 
     static std::shared_ptr<WindowThumbnailSource> getOrCreate(QQuickWindow *window, Window *handle);
@@ -50,6 +51,7 @@ private:
     QPointer<QQuickWindow> m_view;
     QPointer<Window> m_handle;
 
+    std::shared_ptr<EglContext> m_context;
     std::shared_ptr<GLTexture> m_offscreenTexture;
     std::unique_ptr<GLFramebuffer> m_offscreenTarget;
     GLsync m_acquireFence = 0;

@@ -58,7 +58,7 @@
 #include "core/graphicsbufferview.h"
 #include "core/output.h"
 #include "core/pixelgrid.h"
-#include "core/renderbackend.h"
+#include "core/renderdevice.h"
 #include "core/renderloop.h"
 #include "core/renderviewport.h"
 #include "cursoritem.h"
@@ -835,18 +835,9 @@ bool WorkspaceScene::finalDrawWindow(const RenderTarget &renderTarget, const Ren
     });
 }
 
-EglContext *WorkspaceScene::openglContext() const
-{
-    if (auto eglBackend = qobject_cast<EglBackend *>(Compositor::self()->backend())) {
-        return eglBackend->openglContext();
-    }
-    return nullptr;
-}
-
 bool WorkspaceScene::animationsSupported() const
 {
-    const auto context = openglContext();
-    return context && !context->isSoftwareRenderer();
+    return !Compositor::self()->primaryDevice()->eglDisplay()->isSoftwareRenderer();
 }
 
 void WorkspaceScene::setLayerDebugging(bool enable)

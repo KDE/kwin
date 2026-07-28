@@ -55,8 +55,6 @@ public:
     void frame(SceneView *delegate, OutputFrame *frame) override;
     double desiredHdrHeadroom() const override;
 
-    EglContext *openglContext() const;
-
     /**
      * Whether the Scene is able to drive animations.
      * This is used as a hint to the effects system which effects can be supported.

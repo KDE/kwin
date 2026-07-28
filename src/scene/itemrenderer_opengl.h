@@ -15,7 +15,7 @@
 namespace KWin
 {
 
-class EglDisplay;
+class RenderDevice;
 
 class KWIN_EXPORT ItemRendererOpenGL : public ItemRenderer
 {
@@ -63,7 +63,7 @@ public:
         const QPoint renderOffset;
     };
 
-    ItemRendererOpenGL(EglDisplay *eglDisplay);
+    explicit ItemRendererOpenGL(RenderDevice *device);
 
     std::unique_ptr<Texture> createTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
     std::unique_ptr<Texture> createTexture(const QImage &image) override;
@@ -95,7 +95,7 @@ private:
     void visualizeFractional(const RenderViewport &viewport, const Region &logicalRegion, const RenderContext &renderContext);
 
     bool m_blendingEnabled = false;
-    EglDisplay *const m_eglDisplay;
+    RenderDevice *const m_device;
     std::unordered_set<std::shared_ptr<SyncReleasePoint>> m_releasePoints;
 
     struct

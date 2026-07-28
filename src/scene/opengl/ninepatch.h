@@ -16,12 +16,15 @@ namespace KWin
 {
 
 class GLTexture;
+class EglContext;
 
 class NinePatchOpenGL : public NinePatch
 {
 public:
-    static std::unique_ptr<NinePatchOpenGL> create(const QImage &image);
-    static std::unique_ptr<NinePatchOpenGL> create(const QImage &topLeftPatch,
+    static std::unique_ptr<NinePatchOpenGL> create(const std::shared_ptr<EglContext> &context,
+                                                   const QImage &image);
+    static std::unique_ptr<NinePatchOpenGL> create(const std::shared_ptr<EglContext> &context,
+                                                   const QImage &topLeftPatch,
                                                    const QImage &topPatch,
                                                    const QImage &topRightPatch,
                                                    const QImage &rightPatch,
@@ -30,12 +33,13 @@ public:
                                                    const QImage &bottomLeftPatch,
                                                    const QImage &leftPatch);
 
-    explicit NinePatchOpenGL(std::unique_ptr<GLTexture> &&texture);
+    explicit NinePatchOpenGL(const std::shared_ptr<EglContext> &eglContext, std::unique_ptr<GLTexture> &&texture);
     ~NinePatchOpenGL() override;
 
     GLTexture *texture() const;
 
 private:
+    std::shared_ptr<EglContext> m_eglContext;
     std::unique_ptr<GLTexture> m_texture;
 };
 

@@ -15,29 +15,35 @@
 namespace KWin
 {
 
-class EglBackend;
+class RenderDevice;
 class GLTexture;
 class GraphicsBuffer;
 class Region;
 class Rect;
 typedef void *EGLImageKHR;
 class MultiGpuSwapchain;
+class EglContext;
 
 class TextureOpenGL : public Texture
 {
 public:
+    explicit TextureOpenGL(const std::shared_ptr<EglContext> &context);
     ~TextureOpenGL() override;
 
     QVarLengthArray<GLTexture *, 4> planes() const;
 
 protected:
     QVarLengthArray<GLTexture *, 4> m_planes;
+
+    std::shared_ptr<EglContext> m_context;
 };
 
 class ImageTextureOpenGL : public TextureOpenGL
 {
 public:
-    static std::unique_ptr<ImageTextureOpenGL> create(const QImage &image);
+    static std::unique_ptr<ImageTextureOpenGL> create(const std::shared_ptr<EglContext> &context, const QImage &image);
+
+    explicit ImageTextureOpenGL(const std::shared_ptr<EglContext> &context);
 
     void attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
 
@@ -48,9 +54,9 @@ public:
 class BufferTextureOpenGL : public TextureOpenGL
 {
 public:
-    static std::unique_ptr<BufferTextureOpenGL> create(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
+    static std::unique_ptr<BufferTextureOpenGL> create(RenderDevice *device, GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
 
-    explicit BufferTextureOpenGL(EglBackend *backend);
+    explicit BufferTextureOpenGL(RenderDevice *device);
     ~BufferTextureOpenGL() override;
 
     bool attach(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
@@ -79,7 +85,7 @@ private:
     };
 
     BufferType m_bufferType = BufferType::None;
-    EglBackend *m_backend;
+    RenderDevice *m_renderDevice;
     std::unique_ptr<MultiGpuSwapchain> m_mgpuSwapchain;
     std::optional<dev_t> m_dmabufDevice;
 };
