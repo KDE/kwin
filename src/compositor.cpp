@@ -146,6 +146,12 @@ RenderDevice *Compositor::primaryDevice() const
     return m_primaryDevice;
 }
 
+SceneView *Compositor::sceneView(BackendOutput *output) const
+{
+    const auto it = m_primaryViews.find(output->renderLoop());
+    return it == m_primaryViews.end() ? nullptr : it->second.get();
+}
+
 static QVariantHash collectCrashInformation(const EglBackend *backend)
 {
     const GLPlatform *glPlatform = backend->openglContext()->glPlatform();
