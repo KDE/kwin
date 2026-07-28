@@ -9,19 +9,19 @@
 #include "windowthumbnailitem.h"
 #include "compositor.h"
 #include "core/renderbackend.h"
+#include "core/renderdevice.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effect.h"
 #include "opengl/eglcontext.h"
 #include "opengl/glframebuffer.h"
+#include "opengl/gltexture.h"
 #include "scene/itemrenderer.h"
 #include "scene/windowitem.h"
 #include "scene/workspacescene.h"
 #include "scripting_logging.h"
 #include "window.h"
 #include "workspace.h"
-
-#include "opengl/gltexture.h"
 
 #include <QOpenGLContext>
 #include <QQuickWindow>
@@ -38,9 +38,10 @@ static bool useGlThumbnails()
     return Compositor::self()->backend() && Compositor::self()->backend()->compositingType() == OpenGLCompositing && !qtQuickIsSoftware;
 }
 
-WindowThumbnailSource::WindowThumbnailSource(QQuickWindow *view, Window *handle)
+WindowThumbnailSource::WindowThumbnailSource(const std::shared_ptr<EglContext> &context, QQuickWindow *view, Window *handle)
     : m_view(view)
     , m_handle(handle)
+    , m_context(context)
 {
     connect(handle, &Window::frameGeometryChanged, this, [this]() {
         m_dirty = true;
@@ -66,7 +67,7 @@ WindowThumbnailSource::~WindowThumbnailSource()
         return;
     }
     const bool hasContext = QOpenGLContext::currentContext()
-        || kwinApp()->scene()->openglContext()->makeCurrent();
+        || m_context->makeCurrent();
     m_offscreenTarget.reset();
     m_offscreenTexture.reset();
 
@@ -87,7 +88,7 @@ std::shared_ptr<WindowThumbnailSource> WindowThumbnailSource::getOrCreate(QQuick
         return source.lock();
     }
 
-    auto s = std::make_shared<WindowThumbnailSource>(window, handle);
+    auto s = std::make_shared<WindowThumbnailSource>(Compositor::self()->primaryDevice()->eglContext(), window, handle);
     source = s;
 
     QObject::connect(handle, &Window::destroyed, handle, [key]() {

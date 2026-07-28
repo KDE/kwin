@@ -8,16 +8,15 @@
 #include "main.h"
 #include "opengl/eglcontext.h"
 #include "opengl/gltexture.h"
-#include "scene/workspacescene.h"
 
 #include <QPainter>
 
 namespace KWin
 {
 
-std::unique_ptr<AtlasOpenGL> AtlasOpenGL::create(const QList<QImage> &images)
+std::unique_ptr<AtlasOpenGL> AtlasOpenGL::create(const std::shared_ptr<EglContext> &context, const QList<QImage> &images)
 {
-    auto atlas = std::make_unique<AtlasOpenGL>();
+    auto atlas = std::make_unique<AtlasOpenGL>(context);
     if (atlas->reset(images)) {
         return atlas;
     }
@@ -25,12 +24,14 @@ std::unique_ptr<AtlasOpenGL> AtlasOpenGL::create(const QList<QImage> &images)
     return nullptr;
 }
 
+AtlasOpenGL::AtlasOpenGL(const std::shared_ptr<EglContext> &context)
+    : m_context(context)
+{
+}
+
 AtlasOpenGL::~AtlasOpenGL()
 {
-    // FIXME: It should not be attached to the workspace scene.
-    if (WorkspaceScene *scene = kwinApp()->scene()) {
-        (void)scene->openglContext()->makeCurrent();
-    }
+    (void)m_context->makeCurrent();
 }
 
 Atlas::Sprite AtlasOpenGL::sprite(uint spriteId) const

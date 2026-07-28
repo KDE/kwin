@@ -9,6 +9,7 @@
 #include "debug_console.h"
 #include "compositor.h"
 #include "core/inputdevice.h"
+#include "core/renderdevice.h"
 #include "effect/effecthandler.h"
 #include "input_event.h"
 #include "internalwindow.h"
@@ -757,7 +758,9 @@ void DebugConsole::initGLTab()
         m_ui->glInfoScrollArea->setVisible(false);
         return;
     }
-    const auto gl = kwinApp()->scene()->openglContext()->glPlatform();
+    // TODO show GL info of all GPUs?
+    const auto context = Compositor::self()->primaryDevice()->eglContext();
+    const auto gl = context->glPlatform();
     m_ui->noOpenGLLabel->setVisible(false);
     m_ui->glInfoScrollArea->setVisible(true);
     m_ui->glVendorStringLabel->setText(QString::fromLocal8Bit(gl->glVendorString()));

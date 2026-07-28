@@ -375,7 +375,7 @@ void Compositor::start()
     }
 
     if (const auto eglBackend = qobject_cast<EglBackend *>(m_backend.get())) {
-        kwinApp()->scene()->attachRenderer(std::make_unique<ItemRendererOpenGL>(eglBackend->eglDisplayObject()));
+        kwinApp()->scene()->attachRenderer(std::make_unique<ItemRendererOpenGL>(m_primaryDevice));
     }
 
     handleOutputsChanged();

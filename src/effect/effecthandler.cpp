@@ -17,6 +17,7 @@
 #include "core/inputdevice.h"
 #include "core/output.h"
 #include "core/renderbackend.h"
+#include "core/renderdevice.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "decorations/decorationbridge.h"
@@ -307,7 +308,7 @@ bool EffectsHandler::isOpenGLCompositing() const
 
 EglContext *EffectsHandler::openglContext() const
 {
-    return m_scene->openglContext();
+    return Compositor::self()->primaryDevice()->eglContext().get();
 }
 
 void EffectsHandler::unloadAllEffects()
@@ -1391,17 +1392,12 @@ QString EffectsHandler::debug(const QString &name, const QString &parameter) con
 
 bool EffectsHandler::makeOpenGLContextCurrent()
 {
-    if (!isOpenGLCompositing()) {
-        return false;
-    }
-    return m_scene->openglContext()->makeCurrent();
+    return openglContext()->makeCurrent();
 }
 
 void EffectsHandler::doneOpenGLContextCurrent()
 {
-    if (isOpenGLCompositing()) {
-        m_scene->openglContext()->doneCurrent();
-    }
+    openglContext()->doneCurrent();
 }
 
 bool EffectsHandler::animationsSupported() const

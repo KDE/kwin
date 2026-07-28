@@ -8,14 +8,13 @@
 #include "main.h"
 #include "opengl/eglcontext.h"
 #include "opengl/gltexture.h"
-#include "scene/workspacescene.h"
 
 #include <QPainter>
 
 namespace KWin
 {
 
-std::unique_ptr<NinePatchOpenGL> NinePatchOpenGL::create(const QImage &image)
+std::unique_ptr<NinePatchOpenGL> NinePatchOpenGL::create(const std::shared_ptr<EglContext> &context, const QImage &image)
 {
     auto texture = GLTexture::upload(image);
     if (!texture) {
@@ -25,10 +24,11 @@ std::unique_ptr<NinePatchOpenGL> NinePatchOpenGL::create(const QImage &image)
     texture->setFilter(GL_LINEAR);
     texture->setWrapMode(GL_CLAMP_TO_EDGE);
 
-    return std::make_unique<NinePatchOpenGL>(std::move(texture));
+    return std::make_unique<NinePatchOpenGL>(context, std::move(texture));
 }
 
-std::unique_ptr<NinePatchOpenGL> NinePatchOpenGL::create(const QImage &topLeftPatch,
+std::unique_ptr<NinePatchOpenGL> NinePatchOpenGL::create(const std::shared_ptr<EglContext> &context,
+                                                         const QImage &topLeftPatch,
                                                          const QImage &topPatch,
                                                          const QImage &topRightPatch,
                                                          const QImage &rightPatch,
@@ -76,7 +76,6 @@ std::unique_ptr<NinePatchOpenGL> NinePatchOpenGL::create(const QImage &topLeftPa
     p.end();
 
     // Check if the image is alpha-only in practice, and if so convert it to an 8-bpp format
-    const auto context = EglContext::currentContext();
     if (context->supportsTextureSwizzle() && context->supportsRGTextures()) {
         QImage alphaImage(image.size(), QImage::Format_Alpha8);
         bool alphaOnly = true;
@@ -113,18 +112,18 @@ std::unique_ptr<NinePatchOpenGL> NinePatchOpenGL::create(const QImage &topLeftPa
         texture->setSwizzle(GL_ZERO, GL_ZERO, GL_ZERO, GL_RED);
     }
 
-    return std::make_unique<NinePatchOpenGL>(std::move(texture));
+    return std::make_unique<NinePatchOpenGL>(context, std::move(texture));
 }
 
-NinePatchOpenGL::NinePatchOpenGL(std::unique_ptr<GLTexture> &&texture)
-    : m_texture(std::move(texture))
+NinePatchOpenGL::NinePatchOpenGL(const std::shared_ptr<EglContext> &context, std::unique_ptr<GLTexture> &&texture)
+    : m_eglContext(context)
+    , m_texture(std::move(texture))
 {
 }
 
 NinePatchOpenGL::~NinePatchOpenGL()
 {
-    // FIXME: It should not be attached to the workspace scene.
-    (void)kwinApp()->scene()->openglContext()->makeCurrent();
+    (void)m_eglContext->makeCurrent();
 }
 
 GLTexture *NinePatchOpenGL::texture() const
