@@ -51,7 +51,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::doBeginFrame()
             .software = false,
             .scanout = false,
         };
-        m_swapchain = EglSwapchain::create(m_backend->renderDevice()->allocator(), m_backend->openglContext(), options);
+        m_swapchain = EglSwapchain::create(m_backend->renderDevice(), options);
         if (!m_swapchain) {
             return std::nullopt;
         }

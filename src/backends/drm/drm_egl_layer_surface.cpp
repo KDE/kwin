@@ -143,7 +143,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
                     .software = false,
                     .scanout = false,
                 };
-                m_surface->shadowSwapchain = EglSwapchain::create(m_eglBackend->renderDevice()->allocator(), m_eglBackend->openglContext(), options);
+                m_surface->shadowSwapchain = EglSwapchain::create(m_eglBackend->renderDevice(), options);
                 if (m_surface->shadowSwapchain) {
                     break;
                 }
@@ -481,9 +481,9 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
         .scanout = importMode == MultiGpuImportMode::None && bufferTarget == BufferTarget::Normal,
     };
     if (importMode == MultiGpuImportMode::None && bufferTarget == BufferTarget::Normal) {
-        ret->gbmSwapchain = EglSwapchain::create(m_gpu->drmDevice()->allocator(), m_eglBackend->openglContext(), options);
+        ret->gbmSwapchain = EglSwapchain::create(m_gpu->drmDevice()->allocator(), m_eglBackend->openglContextRef(), options);
     } else {
-        ret->gbmSwapchain = EglSwapchain::create(m_eglBackend->renderDevice()->allocator(), m_eglBackend->openglContext(), options);
+        ret->gbmSwapchain = EglSwapchain::create(m_eglBackend->renderDevice(), options);
     }
     ret->tradeoff = tradeoff;
     ret->requiredAlphaBits = requiredAlphaBits;

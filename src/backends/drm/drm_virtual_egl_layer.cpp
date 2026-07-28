@@ -114,7 +114,7 @@ std::shared_ptr<EglSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
                 .software = false,
                 .scanout = false,
             };
-            if (auto swapchain = EglSwapchain::create(m_eglBackend->renderDevice()->allocator(), m_eglBackend->openglContext(), options)) {
+            if (auto swapchain = EglSwapchain::create(m_eglBackend->renderDevice(), options)) {
                 return swapchain;
             }
         }

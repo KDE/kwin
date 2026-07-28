@@ -10,6 +10,7 @@
 #include "opengl/eglswapchain.h"
 #include "core/graphicsbuffer.h"
 #include "core/graphicsbufferallocator.h"
+#include "core/renderdevice.h"
 #include "core/syncobjtimeline.h"
 #include "opengl/eglcontext.h"
 #include "opengl/glutils.h"
@@ -21,8 +22,9 @@
 namespace KWin
 {
 
-EglSwapchainSlot::EglSwapchainSlot(GraphicsBuffer *buffer, std::unique_ptr<GLFramebuffer> &&framebuffer, const std::shared_ptr<GLTexture> &texture)
-    : m_buffer(buffer)
+EglSwapchainSlot::EglSwapchainSlot(GraphicsBuffer *buffer, const std::shared_ptr<EglContext> &context, std::unique_ptr<GLFramebuffer> &&framebuffer, const std::shared_ptr<GLTexture> &texture)
+    : m_context(context)
+    , m_buffer(buffer)
     , m_framebuffer(std::move(framebuffer))
     , m_texture(texture)
     , m_releasePoint(std::make_shared<GraphicsBufferReleasePoint>())
@@ -31,6 +33,7 @@ EglSwapchainSlot::EglSwapchainSlot(GraphicsBuffer *buffer, std::unique_ptr<GLFra
 
 EglSwapchainSlot::~EglSwapchainSlot()
 {
+    (void)m_context->makeCurrent();
     m_framebuffer.reset();
     m_texture.reset();
     m_releasePoint->setBuffer(m_buffer);
@@ -74,7 +77,7 @@ std::shared_ptr<SyncReleasePoint> EglSwapchainSlot::releasePoint()
     return m_releasePoint;
 }
 
-std::shared_ptr<EglSwapchainSlot> EglSwapchainSlot::create(EglContext *context, GraphicsBuffer *buffer)
+std::shared_ptr<EglSwapchainSlot> EglSwapchainSlot::create(const std::shared_ptr<EglContext> &context, GraphicsBuffer *buffer)
 {
     auto texture = context->importDmaBufAsTexture(*buffer->dmabufAttributes());
     if (!texture) {
@@ -90,10 +93,10 @@ std::shared_ptr<EglSwapchainSlot> EglSwapchainSlot::create(EglContext *context, 
     texture->setFilter(GL_LINEAR);
     texture->setWrapMode(GL_CLAMP_TO_EDGE);
 
-    return std::make_shared<EglSwapchainSlot>(buffer, std::move(framebuffer), texture);
+    return std::make_shared<EglSwapchainSlot>(buffer, context, std::move(framebuffer), texture);
 }
 
-EglSwapchain::EglSwapchain(GraphicsBufferAllocator *allocator, EglContext *context, const GraphicsBufferOptions &options, const std::shared_ptr<EglSwapchainSlot> &seed)
+EglSwapchain::EglSwapchain(GraphicsBufferAllocator *allocator, const std::shared_ptr<EglContext> &context, const GraphicsBufferOptions &options, const std::shared_ptr<EglSwapchainSlot> &seed)
     : m_allocator(allocator)
     , m_context(context)
     , m_options(options)
@@ -123,6 +126,11 @@ uint64_t EglSwapchain::modifier() const
 bool EglSwapchain::scanout() const
 {
     return m_options.scanout;
+}
+
+const std::shared_ptr<EglContext> &EglSwapchain::context() const
+{
+    return m_context;
 }
 
 std::shared_ptr<EglSwapchainSlot> EglSwapchain::acquire()
@@ -167,7 +175,16 @@ void EglSwapchain::resetBufferAge()
     }
 }
 
-std::shared_ptr<EglSwapchain> EglSwapchain::create(GraphicsBufferAllocator *allocator, EglContext *context, GraphicsBufferOptions options)
+std::shared_ptr<EglSwapchain> EglSwapchain::create(RenderDevice *device, GraphicsBufferOptions options)
+{
+    auto context = device->eglContext();
+    if (!context) {
+        return nullptr;
+    }
+    return create(device->allocator(), context, options);
+}
+
+std::shared_ptr<EglSwapchain> EglSwapchain::create(GraphicsBufferAllocator *allocator, const std::shared_ptr<EglContext> &context, GraphicsBufferOptions options)
 {
     if (!context->makeCurrent()) {
         return nullptr;

@@ -329,7 +329,7 @@ void OffscreenQuickView::update(OutputFrame *frame)
                     .software = false,
                     .scanout = true,
                 };
-                d->m_swapchain = EglSwapchain::create(d->m_scanoutDevice->allocator(), EglContext::currentContext(), options);
+                d->m_swapchain = EglSwapchain::create(d->m_scanoutDevice->allocator(), EglContext::currentContext()->shared_from_this(), options);
             }
             if (!d->m_swapchain) {
                 // TODO add non-scanout feedback on the item for this?
@@ -340,7 +340,7 @@ void OffscreenQuickView::update(OutputFrame *frame)
                     .software = false,
                     .scanout = false,
                 };
-                d->m_swapchain = EglSwapchain::create(Compositor::self()->backend()->renderDevice()->allocator(), EglContext::currentContext(), options);
+                d->m_swapchain = EglSwapchain::create(Compositor::self()->backend()->renderDevice(), options);
             }
             if (!d->m_swapchain) {
                 d->m_glcontext->doneCurrent();
