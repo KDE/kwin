@@ -32,6 +32,7 @@ class PipeWireCore;
 class Region;
 class ScreenCastBuffer;
 class ScreenCastSource;
+class RenderDevice;
 
 struct ScreenCastDmaBufTextureParams
 {
@@ -106,7 +107,7 @@ private:
     void bumpBufferAge(ScreenCastBuffer *renderedBuffer);
     std::chrono::nanoseconds frameInterval() const;
 
-    std::optional<ScreenCastDmaBufTextureParams> testCreateDmaBuf(const QSize &size, quint32 format, const ModifierList &modifiers);
+    std::optional<ScreenCastDmaBufTextureParams> testCreateDmaBuf(RenderDevice *device, const QSize &size, quint32 format, const ModifierList &modifiers);
 
     std::shared_ptr<PipeWireCore> m_pwCore;
     std::unique_ptr<ScreenCastSource> m_source;
