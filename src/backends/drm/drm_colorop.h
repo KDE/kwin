@@ -194,7 +194,7 @@ private:
 };
 
 enum class Lut3DInterpolation {
-    Tetrahedal = 0,
+    Tetrahedral = 0,
 };
 
 class DrmLut3DColorOp : public DrmAbstractColorOp

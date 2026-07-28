@@ -768,7 +768,7 @@ void DrmLut3DColorOp::program(DrmAtomicCommit *commit, const std::deque<ColorOp:
     }
     commit->addBlob(*m_value, DrmBlob::create(m_value->drmObject()->gpu(), m_components.data(), m_components.size() * sizeof(LutComponent32)));
     if (m_interpolation) {
-        commit->addEnum(*m_interpolation, Lut3DInterpolation::Tetrahedal);
+        commit->addEnum(*m_interpolation, Lut3DInterpolation::Tetrahedral);
     }
     if (m_bypass) {
         commit->addProperty(*m_bypass, 0);
@@ -1078,7 +1078,7 @@ DrmColorOp::DrmColorOp(DrmGpu *gpu, uint32_t objectId)
                                                                      QByteArrayLiteral("Gamma 2.2 Inverse"),
                                                                  })
     , m_lut1dInterpolation(this, QByteArrayLiteral("LUT1D_INTERPOLATION"), {QByteArrayLiteral("Linear")})
-    , m_lut3dInterpolation(this, QByteArrayLiteral("LUT3D_INTERPOLATION"), {QByteArrayLiteral("Tetrahedal")})
+    , m_lut3dInterpolation(this, QByteArrayLiteral("LUT3D_INTERPOLATION"), {QByteArrayLiteral("Tetrahedral")})
 {
 }
 
