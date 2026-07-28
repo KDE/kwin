@@ -38,10 +38,11 @@ static bool useGlThumbnails()
     return Compositor::self()->backend() && Compositor::self()->backend()->compositingType() == OpenGLCompositing && !qtQuickIsSoftware;
 }
 
-WindowThumbnailSource::WindowThumbnailSource(const std::shared_ptr<EglContext> &context, QQuickWindow *view, Window *handle)
+WindowThumbnailSource::WindowThumbnailSource(RenderDevice *device, QQuickWindow *view, Window *handle)
     : m_view(view)
     , m_handle(handle)
-    , m_context(context)
+    , m_renderDevice(device)
+    , m_context(device->eglContext())
 {
     connect(handle, &Window::frameGeometryChanged, this, [this]() {
         m_dirty = true;
@@ -88,7 +89,7 @@ std::shared_ptr<WindowThumbnailSource> WindowThumbnailSource::getOrCreate(QQuick
         return source.lock();
     }
 
-    auto s = std::make_shared<WindowThumbnailSource>(Compositor::self()->primaryDevice()->eglContext(), window, handle);
+    auto s = std::make_shared<WindowThumbnailSource>(Compositor::self()->primaryDevice(), window, handle);
     source = s;
 
     QObject::connect(handle, &Window::destroyed, handle, [key]() {
@@ -119,6 +120,11 @@ void WindowThumbnailSource::update()
     const qreal devicePixelRatio = m_view->devicePixelRatio();
     const QSize textureSize = geometry.toAlignedRect().size() * devicePixelRatio;
 
+    const auto context = m_renderDevice->eglContext();
+    if (!context || !context->makeCurrent()) {
+        return;
+    }
+
     if (!m_offscreenTexture || m_offscreenTexture->size() != textureSize) {
         m_offscreenTexture = GLTexture::allocate(GL_RGBA8, textureSize);
         if (!m_offscreenTexture) {
@@ -137,7 +143,7 @@ void WindowThumbnailSource::update()
     // shared across contexts. Unfortunately, this also introduces a latency of 1
     // frame, which is not ideal, but it is acceptable for things such as thumbnails.
     const int mask = Scene::PAINT_WINDOW_TRANSFORMED;
-    ItemRenderer *renderer = kwinApp()->scene()->renderer();
+    ItemRenderer *renderer = kwinApp()->scene()->renderer(m_renderDevice);
     renderer->beginFrame(offscreenRenderTarget, offscreenViewport);
     renderer->renderBackground(offscreenRenderTarget, offscreenViewport, offscreenRenderTarget.transformedRect());
     renderer->renderItem(offscreenRenderTarget, offscreenViewport, m_handle->windowItem(), mask, Region::infinite(), WindowPaintData{}, {}, {});

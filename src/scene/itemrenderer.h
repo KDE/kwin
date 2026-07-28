@@ -27,11 +27,12 @@ class Scene;
 class Texture;
 class WindowPaintData;
 class SyncReleasePoint;
+class RenderDevice;
 
 class KWIN_EXPORT ItemRenderer
 {
 public:
-    ItemRenderer();
+    explicit ItemRenderer(RenderDevice *device);
     virtual ~ItemRenderer();
 
     virtual std::unique_ptr<Texture> createTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint) = 0;
@@ -56,6 +57,11 @@ public:
     [[nodiscard]] virtual bool renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) = 0;
 
     virtual void setLayerDebugging(bool enable);
+
+    RenderDevice *renderDevice() const;
+
+protected:
+    RenderDevice *const m_renderDevice;
 };
 
 } // namespace KWin

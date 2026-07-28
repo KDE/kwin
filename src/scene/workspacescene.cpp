@@ -124,21 +124,20 @@ WorkspaceScene::~WorkspaceScene()
 {
 }
 
-void WorkspaceScene::attachRenderer(std::unique_ptr<ItemRenderer> &&renderer)
+void WorkspaceScene::attachRenderer(RenderDevice *device, std::unique_ptr<ItemRenderer> &&renderer)
 {
-    m_renderer = std::move(renderer);
-    if (m_renderer) {
-        m_renderer->setLayerDebugging(m_layerDebugging);
-    }
+    auto &ref = m_renderers[device];
+    ref = std::move(renderer);
+    ref->setLayerDebugging(m_layerDebugging);
 }
 
-void WorkspaceScene::detachRenderer()
+void WorkspaceScene::detachRenderer(RenderDevice *device)
 {
-    releaseResources(m_containerItem.get());
-    releaseResources(m_overlayItem.get());
-    releaseResources(m_cursorItem.get());
+    releaseResources(device, m_containerItem.get());
+    releaseResources(device, m_overlayItem.get());
+    releaseResources(device, m_cursorItem.get());
 
-    m_renderer.reset();
+    m_renderers.erase(device);
 }
 
 void WorkspaceScene::createDndIconItem()
@@ -699,15 +698,16 @@ void WorkspaceScene::postPaint()
 void WorkspaceScene::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion)
 {
     RenderViewport viewport(painted_delegate->viewport(), painted_delegate->scale(), renderTarget, deviceOffset);
+    auto &renderer = m_renderers[painted_delegate->renderDevice()];
 
-    m_renderer->beginFrame(renderTarget, viewport);
+    renderer->beginFrame(renderTarget, viewport);
 
     if (!effects->paintScreen(renderTarget, viewport, m_paintContext.mask, deviceRegion, painted_screen)) {
         return;
     }
 
     Q_EMIT frameRendered();
-    m_renderer->endFrame();
+    renderer->endFrame();
 }
 
 // the function that'll be eventually called by paintScreen() above
@@ -724,7 +724,8 @@ bool WorkspaceScene::finalPaintScreen(const RenderTarget &renderTarget, const Re
 // It simply paints bottom-to-top.
 bool WorkspaceScene::paintGenericScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int, LogicalOutput *screen)
 {
-    m_renderer->renderBackground(renderTarget, viewport, Region::infinite());
+    auto &renderer = m_renderers[painted_delegate->renderDevice()];
+    renderer->renderBackground(renderTarget, viewport, Region::infinite());
 
     for (const Phase2Data &paintData : std::as_const(m_paintContext.phase2Data)) {
         if (!paintWindow(renderTarget, viewport, paintData.item, paintData.mask, paintData.deviceRegion)) {
@@ -733,7 +734,7 @@ bool WorkspaceScene::paintGenericScreen(const RenderTarget &renderTarget, const 
     }
 
     const Rect bounds = viewport.mapToDeviceCoordinates(m_overlayItem->mapToScene(m_overlayItem->boundingRect())).toRect();
-    return m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, bounds, WindowPaintData{}, [this](Item *item) {
+    return renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, bounds, WindowPaintData{}, [this](Item *item) {
         return !painted_delegate->shouldRenderItem(item);
     }, [this](Item *item) {
         return painted_delegate->shouldRenderHole(item);
@@ -745,6 +746,8 @@ bool WorkspaceScene::paintGenericScreen(const RenderTarget &renderTarget, const 
 // to reduce painting and improve performance.
 bool WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int, const Region &deviceRegion)
 {
+    auto &renderer = m_renderers[painted_delegate->renderDevice()];
+
     // This is the occlusion culling pass
     Region visible = deviceRegion;
     for (int i = m_paintContext.phase2Data.size() - 1; i >= 0; --i) {
@@ -763,7 +766,7 @@ bool WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
         }
     }
 
-    m_renderer->renderBackground(renderTarget, viewport, visible);
+    renderer->renderBackground(renderTarget, viewport, visible);
 
     for (const Phase2Data &paintData : std::as_const(m_paintContext.phase2Data)) {
         if (!paintWindow(renderTarget, viewport, paintData.item, paintData.mask, paintData.deviceRegion)) {
@@ -774,7 +777,7 @@ bool WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
     const Rect bounds = viewport.mapToDeviceCoordinates(m_overlayItem->mapToScene(m_overlayItem->boundingRect())).toRect();
     const Region deviceRepaint = deviceRegion & bounds;
     if (!deviceRepaint.isEmpty()) {
-        return m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, deviceRepaint, WindowPaintData{}, [this](Item *item) {
+        return renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, deviceRepaint, WindowPaintData{}, [this](Item *item) {
             return !painted_delegate->shouldRenderItem(item);
         }, [this](Item *item) {
             return painted_delegate->shouldRenderHole(item);
@@ -827,8 +830,10 @@ bool WorkspaceScene::finalPaintWindow(const RenderTarget &renderTarget, const Re
 bool WorkspaceScene::finalDrawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
     // TODO: Reconsider how the CrossFadeEffect captures the initial window contents to remove
-    // null pointer delegate checks in "should render item" and "should render hole" checks.
-    return m_renderer->renderItem(renderTarget, viewport, w->windowItem(), mask, deviceRegion, data, [this](Item *item) {
+    // null pointer delegate checks
+
+    auto &renderer = m_renderers[painted_delegate ? painted_delegate->renderDevice() : Compositor::self()->primaryDevice()];
+    return renderer->renderItem(renderTarget, viewport, w->windowItem(), mask, deviceRegion, data, [this](Item *item) {
         return painted_delegate && !painted_delegate->shouldRenderItem(item);
     }, [this](Item *item) {
         return painted_delegate && painted_delegate->shouldRenderHole(item);
@@ -846,8 +851,8 @@ void WorkspaceScene::setLayerDebugging(bool enable)
         return;
     }
     m_layerDebugging = enable;
-    if (m_renderer) {
-        m_renderer->setLayerDebugging(enable);
+    for (const auto &[device, renderer] : m_renderers) {
+        renderer->setLayerDebugging(enable);
     }
     addRepaintFull();
 }

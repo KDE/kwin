@@ -226,9 +226,9 @@ public:
     Scene();
     ~Scene() override;
 
-    ItemRenderer *renderer() const;
-    virtual void attachRenderer(std::unique_ptr<ItemRenderer> &&renderer) = 0;
-    virtual void detachRenderer() = 0;
+    ItemRenderer *renderer(RenderDevice *device) const;
+    virtual void attachRenderer(RenderDevice *device, std::unique_ptr<ItemRenderer> &&renderer) = 0;
+    virtual void detachRenderer(RenderDevice *device) = 0;
 
     void addLogicalRepaint(const Region &logicalRegion);
     void addLogicalRepaint(RenderView *view, const Region &logicalRegion);
@@ -257,9 +257,9 @@ Q_SIGNALS:
     void viewRemoved(RenderView *delegate);
 
 protected:
-    void releaseResources(Item *item);
+    void releaseResources(RenderDevice *device, Item *item);
 
-    std::unique_ptr<ItemRenderer> m_renderer;
+    std::unordered_map<RenderDevice *, std::unique_ptr<ItemRenderer>> m_renderers;
     QList<RenderView *> m_views;
     Rect m_geometry;
 };
