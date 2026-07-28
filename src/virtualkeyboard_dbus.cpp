@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2017 Martin Flöser <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2026 Kristen McWilliam <kristen@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -56,6 +57,15 @@ int VirtualKeyboardDBus::mode() const
 bool VirtualKeyboardDBus::isVisible() const
 {
     return m_inputMethod->isVisible();
+}
+
+void VirtualKeyboardDBus::setVisible(bool visible)
+{
+    if (visible) {
+        m_inputMethod->show();
+    } else {
+        m_inputMethod->hide();
+    }
 }
 
 bool VirtualKeyboardDBus::isAvailable() const
