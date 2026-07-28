@@ -205,7 +205,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
 
     // For multi-gpu copies, preprocess may change the active EGL context,
     // and switching back can fail in the case of a GPU reset.
-    item->preprocess();
+    item->preprocess(this);
     if (!EglContext::currentContext()) {
         return false;
     }

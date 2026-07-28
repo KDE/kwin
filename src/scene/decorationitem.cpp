@@ -225,10 +225,10 @@ RegionF DecorationItem::opaque() const
     }
 }
 
-void DecorationItem::preprocess()
+void DecorationItem::preprocess(ItemRenderer *renderer)
 {
     if (m_renderer->needsRepaint()) {
-        m_renderer->render(scene()->renderer(), m_renderer->damage());
+        m_renderer->render(renderer, m_renderer->damage());
         m_renderer->resetDamage();
     }
 }
