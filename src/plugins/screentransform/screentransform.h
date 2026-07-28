@@ -18,6 +18,8 @@ namespace KWin
 class GLFramebuffer;
 class GLShader;
 class GLTexture;
+class RenderDevice;
+class EglContext;
 
 class ScreenTransformEffect : public Effect
 {
@@ -41,30 +43,37 @@ public:
 private:
     struct Snapshot
     {
-        std::shared_ptr<GLTexture> texture;
-        std::shared_ptr<GLFramebuffer> framebuffer;
+        std::unique_ptr<GLTexture> texture;
+        std::unique_ptr<GLFramebuffer> framebuffer;
     };
 
     struct ScreenState
     {
+        ~ScreenState();
+
+        RenderDevice *m_device = nullptr;
+        std::shared_ptr<EglContext> m_context;
+
         TimeLine m_timeLine;
         Snapshot m_prev;
         Snapshot m_current;
         Rect m_oldGeometry;
         OutputTransform m_oldTransform;
         qreal m_angle = 0;
+
+        std::unique_ptr<GLShader> m_shader;
+        int m_previousTextureLocation = -1;
+        int m_currentTextureLocation = -1;
+        int m_modelViewProjectioMatrixLocation = -1;
+        int m_blendFactorLocation = -1;
     };
 
-    void addScreen(LogicalOutput *screen);
-    void removeScreen(LogicalOutput *screen);
+    void addOutput(BackendOutput *output);
+    void removeOutput(BackendOutput *output);
+    void removeRenderDevice(RenderDevice *device);
 
-    QHash<LogicalOutput *, ScreenState> m_states;
+    std::unordered_map<BackendOutput *, ScreenState> m_states;
 
-    std::unique_ptr<GLShader> m_shader;
-    int m_previousTextureLocation = -1;
-    int m_currentTextureLocation = -1;
-    int m_modelViewProjectioMatrixLocation = -1;
-    int m_blendFactorLocation = -1;
     bool m_capturing = false;
     RenderView *m_currentView = nullptr;
 };

@@ -9,13 +9,18 @@
 // own
 #include "screentransform.h"
 #include "compositor.h"
+#include "core/gpumanager.h"
+#include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
 #include "core/outputlayer.h"
+#include "core/renderdevice.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
+#include "main.h"
 #include "opengl/glutils.h"
 #include "scene/workspacescene.h"
+#include "workspace.h"
 
 #include <QDebug>
 
@@ -38,26 +43,13 @@ ScreenTransformEffect::ScreenTransformEffect()
     // Make sure that shaders in /effects/screentransform/shaders/* are loaded.
     ensureResources();
 
-    m_shader = ShaderManager::instance()->generateShaderFromFile(
-        ShaderTrait::MapTexture,
-        QStringLiteral(":/effects/screentransform/shaders/crossfade.vert"),
-        QStringLiteral(":/effects/screentransform/shaders/crossfade.frag"));
-    if (!m_shader) {
-        qCCritical(KWIN_SCREENTRANSFORM) << "Failed to load the crossfade shader.";
-        return;
+    const auto outputs = kwinApp()->outputBackend()->outputs();
+    for (BackendOutput *output : outputs) {
+        addOutput(output);
     }
-
-    m_modelViewProjectioMatrixLocation = m_shader->uniformLocation("modelViewProjectionMatrix");
-    m_blendFactorLocation = m_shader->uniformLocation("blendFactor");
-    m_previousTextureLocation = m_shader->uniformLocation("previousTexture");
-    m_currentTextureLocation = m_shader->uniformLocation("currentTexture");
-
-    const QList<LogicalOutput *> screens = effects->screens();
-    for (auto screen : screens) {
-        addScreen(screen);
-    }
-    connect(effects, &EffectsHandler::screenAdded, this, &ScreenTransformEffect::addScreen);
-    connect(effects, &EffectsHandler::screenRemoved, this, &ScreenTransformEffect::removeScreen);
+    connect(kwinApp()->outputBackend(), &OutputBackend::outputAdded, this, &ScreenTransformEffect::addOutput);
+    connect(kwinApp()->outputBackend(), &OutputBackend::outputRemoved, this, &ScreenTransformEffect::removeOutput);
+    connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, &ScreenTransformEffect::removeRenderDevice);
 }
 
 ScreenTransformEffect::~ScreenTransformEffect() = default;
@@ -77,13 +69,25 @@ qreal transformAngle(OutputTransform current, OutputTransform old)
     return ensureShort((int(current.kind()) % 4 - int(old.kind()) % 4) * 90);
 }
 
-void ScreenTransformEffect::addScreen(LogicalOutput *screen)
+void ScreenTransformEffect::addOutput(BackendOutput *output)
 {
-    connect(screen, &LogicalOutput::aboutToChange, this, [this, screen](OutputChangeSet *changeSet) {
-        const OutputTransform transform = changeSet->transform.value_or(screen->transform());
-        if (screen->transform() == transform) {
+    connect(output, &BackendOutput::aboutToChange, this, [this, output](OutputChangeSet *changeSet) {
+        const OutputTransform transform = changeSet->transform.value_or(output->transform());
+        if (output->transform() == transform) {
             return;
         }
+
+        SceneView *view = Compositor::self()->sceneView(output);
+        if (!view) {
+            return;
+        }
+        const auto context = view->renderDevice()->eglContext();
+        if (!context || !context->makeCurrent()) {
+            m_states.erase(output);
+            return;
+        }
+
+        const auto logicalOutput = workspace()->findOutput(output);
 
         // Avoid including this effect while capturing previous screen state.
         m_capturing = true;
@@ -91,49 +95,71 @@ void ScreenTransformEffect::addScreen(LogicalOutput *screen)
             m_capturing = false;
         });
 
-        effects->makeOpenGLContextCurrent();
-        auto texture = GLTexture::allocate(GL_RGBA16F, screen->pixelSize());
+        auto texture = GLTexture::allocate(GL_RGBA16F, output->pixelSize());
         if (!texture) {
-            m_states.remove(screen);
+            m_states.erase(output);
             return;
         }
-        auto &state = m_states[screen];
-        state.m_oldTransform = screen->transform();
-        state.m_oldGeometry = screen->geometry();
+
+        auto shader = ShaderManager::instance()->generateShaderFromFile(
+            ShaderTrait::MapTexture,
+            QStringLiteral(":/effects/screentransform/shaders/crossfade.vert"),
+            QStringLiteral(":/effects/screentransform/shaders/crossfade.frag"));
+        if (!shader) {
+            qCCritical(KWIN_SCREENTRANSFORM) << "Failed to load the crossfade shader.";
+            m_states.erase(output);
+            return;
+        }
+
+        auto &state = m_states[output];
+        state.m_device = view->renderDevice();
+        state.m_context = context;
+        state.m_shader = std::move(shader);
+        state.m_modelViewProjectioMatrixLocation = state.m_shader->uniformLocation("modelViewProjectionMatrix");
+        state.m_blendFactorLocation = state.m_shader->uniformLocation("blendFactor");
+        state.m_previousTextureLocation = state.m_shader->uniformLocation("previousTexture");
+        state.m_currentTextureLocation = state.m_shader->uniformLocation("currentTexture");
+        state.m_oldTransform = output->transform();
+        state.m_oldGeometry = logicalOutput->geometry();
         state.m_timeLine.setDuration(animationTime(250ms));
         state.m_timeLine.setEasingCurve(QEasingCurve::InOutCubic);
         state.m_angle = transformAngle(changeSet->transform.value(), state.m_oldTransform);
         state.m_prev.texture = std::move(texture);
         state.m_prev.framebuffer = std::make_unique<GLFramebuffer>(state.m_prev.texture.get());
-        RenderTarget renderTarget(state.m_prev.framebuffer.get(), screen->blendingColor());
+        RenderTarget renderTarget(state.m_prev.framebuffer.get(), output->blendingColor());
 
         Scene *scene = effects->scene();
-        SceneView delegate(scene, screen, nullptr, nullptr, Compositor::self()->primaryDevice());
-        delegate.setViewport(screen->geometryF());
-        delegate.setScale(screen->scale());
+        SceneView delegate(scene, logicalOutput, output, nullptr, view->renderDevice());
+        delegate.setViewport(logicalOutput->geometryF());
+        delegate.setScale(output->scale());
         scene->prePaint(&delegate);
-        scene->paint(renderTarget, QPoint(), screen->geometry());
+        scene->paint(renderTarget, QPoint(), logicalOutput->geometry());
         scene->postPaint();
     });
 }
 
-void ScreenTransformEffect::removeScreen(LogicalOutput *screen)
+void ScreenTransformEffect::removeOutput(BackendOutput *output)
 {
-    screen->disconnect(this);
-    if (auto it = m_states.find(screen); it != m_states.end()) {
-        effects->makeOpenGLContextCurrent();
-        m_states.erase(it);
-    }
+    m_states.erase(output);
+}
+
+void ScreenTransformEffect::removeRenderDevice(RenderDevice *device)
+{
+    std::erase_if(m_states, [device](const auto &pair) {
+        const auto &[output, state] = pair;
+        return state.m_device == device;
+    });
 }
 
 void ScreenTransformEffect::prePaintScreen(ScreenPrePaintData &data)
 {
     m_currentView = data.view;
-    auto it = m_states.find(data.screen);
+    auto it = m_states.find(m_currentView->backendOutput());
     if (it != m_states.end()) {
-        it->m_timeLine.advance(data.view);
-        if (it->m_timeLine.done()) {
-            m_states.remove(data.screen);
+        auto &state = it->second;
+        state.m_timeLine.advance(data.view);
+        if (state.m_timeLine.done()) {
+            m_states.erase(it);
         }
     }
 
@@ -202,36 +228,37 @@ static RectF lerp(const RectF &a, const RectF &b, qreal t)
 
 bool ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
-    auto it = m_states.find(screen);
+    auto it = m_states.find(m_currentView->backendOutput());
     if (it == m_states.end() || m_currentView->backendOutput() != screen->backendOutput()) {
         return effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
     }
+    ScreenState &state = it->second;
 
     // Render the screen in an offscreen texture.
     const QSize nativeSize = screen->geometry().size() * screen->scale();
-    if (!it->m_current.texture || it->m_current.texture->size() != nativeSize
-        || it->m_current.texture->internalFormat() != renderTarget.texture()->internalFormat()) {
-        it->m_current.texture = GLTexture::allocate(renderTarget.texture()->internalFormat(), nativeSize);
-        if (!it->m_current.texture) {
-            m_states.remove(screen);
+    if (!state.m_current.texture || state.m_current.texture->size() != nativeSize
+        || state.m_current.texture->internalFormat() != renderTarget.texture()->internalFormat()) {
+        state.m_current.texture = GLTexture::allocate(renderTarget.texture()->internalFormat(), nativeSize);
+        if (!state.m_current.texture) {
+            m_states.erase(m_currentView->backendOutput());
             EglContext::currentContext()->setFailed();
             return false;
         }
-        it->m_current.framebuffer = std::make_unique<GLFramebuffer>(it->m_current.texture.get());
+        state.m_current.framebuffer = std::make_unique<GLFramebuffer>(state.m_current.texture.get());
     }
 
-    RenderTarget fboRenderTarget(it->m_current.framebuffer.get(), renderTarget.colorDescription());
+    RenderTarget fboRenderTarget(state.m_current.framebuffer.get(), renderTarget.colorDescription());
     RenderViewport fboViewport(viewport.renderRect(), viewport.scale(), fboRenderTarget, QPoint());
 
-    GLFramebuffer::pushFramebuffer(it->m_current.framebuffer.get());
+    GLFramebuffer::pushFramebuffer(state.m_current.framebuffer.get());
     if (!effects->paintScreen(fboRenderTarget, fboViewport, mask, deviceRegion, screen)) {
         return false;
     }
     GLFramebuffer::popFramebuffer();
 
-    const qreal blendFactor = it->m_timeLine.value();
+    const qreal blendFactor = state.m_timeLine.value();
     const RectF screenRect = screen->geometry();
-    const qreal angle = it->m_angle * (1 - blendFactor);
+    const qreal angle = state.m_angle * (1 - blendFactor);
 
     const auto scale = viewport.scale();
 
@@ -243,26 +270,26 @@ bool ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     modelViewProjectionMatrix.translate(-transformOrigin * scale);
 
     glActiveTexture(GL_TEXTURE1);
-    it->m_prev.texture->bind();
+    state.m_prev.texture->bind();
     glActiveTexture(GL_TEXTURE0);
-    it->m_current.texture->bind();
+    state.m_current.texture->bind();
 
     // Clear the background.
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    GLVertexBuffer *vbo = texturedRectVbo(lerp(it->m_oldGeometry, screenRect, blendFactor), scale);
+    GLVertexBuffer *vbo = texturedRectVbo(lerp(state.m_oldGeometry, screenRect, blendFactor), scale);
     if (!vbo) {
         EglContext::currentContext()->setFailed();
         return false;
     }
 
     ShaderManager *sm = ShaderManager::instance();
-    sm->pushShader(m_shader.get());
-    m_shader->setUniform(m_modelViewProjectioMatrixLocation, modelViewProjectionMatrix);
-    m_shader->setUniform(m_blendFactorLocation, float(blendFactor));
-    m_shader->setUniform(m_currentTextureLocation, 0);
-    m_shader->setUniform(m_previousTextureLocation, 1);
+    sm->pushShader(state.m_shader.get());
+    state.m_shader->setUniform(state.m_modelViewProjectioMatrixLocation, modelViewProjectionMatrix);
+    state.m_shader->setUniform(state.m_blendFactorLocation, float(blendFactor));
+    state.m_shader->setUniform(state.m_currentTextureLocation, 0);
+    state.m_shader->setUniform(state.m_previousTextureLocation, 1);
 
     vbo->bindArrays();
     vbo->draw(GL_TRIANGLES, 0, 6);
@@ -270,9 +297,9 @@ bool ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     sm->popShader();
 
     glActiveTexture(GL_TEXTURE1);
-    it->m_prev.texture->unbind();
+    state.m_prev.texture->unbind();
     glActiveTexture(GL_TEXTURE0);
-    it->m_current.texture->unbind();
+    state.m_current.texture->unbind();
 
     effects->addRepaintFull();
     return true;
@@ -280,7 +307,14 @@ bool ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
 
 bool ScreenTransformEffect::isActive() const
 {
-    return !m_states.isEmpty() && !m_capturing;
+    return !m_states.empty() && !m_capturing;
+}
+
+ScreenTransformEffect::ScreenState::~ScreenState()
+{
+    if (m_context) {
+        (void)m_context->makeCurrent();
+    }
 }
 
 } // namespace KWin
