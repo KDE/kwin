@@ -55,7 +55,7 @@ public:
 
     bool isExposed() const override;
     void applyConfigure() override;
-    void setWindowGeometry(const QRect &rect) override;
+    void setContentGeometry(const QRect &rect) override;
     bool move(QtWaylandClient::QWaylandInputDevice *inputDevice) override;
     bool resize(QtWaylandClient::QWaylandInputDevice *inputDevice, Qt::Edges edges) override;
 

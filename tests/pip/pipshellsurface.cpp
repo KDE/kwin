@@ -93,7 +93,7 @@ void PipShellSurface::applyConfigure()
     window()->resizeFromApplyConfigure(size);
 }
 
-void PipShellSurface::setWindowGeometry(const QRect &rect)
+void PipShellSurface::setContentGeometry(const QRect &rect)
 {
     if (window()->isExposed()) {
         xdg_surface::set_window_geometry(rect.x(), rect.y(), rect.width(), rect.height());
