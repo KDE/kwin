@@ -98,7 +98,7 @@ private Q_SLOTS:
     void updateOutline();
 
 protected:
-    void preprocess() override;
+    void preprocess(ItemRenderer *renderer) override;
     WindowQuadList buildQuads() const override;
     void releaseResources() override;
 

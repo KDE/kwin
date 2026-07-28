@@ -38,7 +38,7 @@ void ImageItem::setImage(const QImage &image)
     scheduleRepaint(boundingRect());
 }
 
-void ImageItem::preprocess()
+void ImageItem::preprocess(ItemRenderer *renderer)
 {
     if (m_image.isNull()) {
         m_texture.reset();
@@ -46,9 +46,8 @@ void ImageItem::preprocess()
     } else if (!m_texture || m_textureKey != m_image.cacheKey()) {
         m_textureKey = m_image.cacheKey();
 
-        ItemRenderer *itemRenderer = scene()->renderer();
         if (!m_texture || m_texture->size() != m_image.size()) {
-            m_texture = itemRenderer->createTexture(m_image);
+            m_texture = renderer->createTexture(m_image);
         } else {
             m_texture->upload(m_image, m_image.rect());
         }

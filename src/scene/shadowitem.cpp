@@ -322,7 +322,7 @@ WindowQuadList ShadowItem::buildQuads() const
     return quads;
 }
 
-void ShadowItem::preprocess()
+void ShadowItem::preprocess(ItemRenderer *renderer)
 {
     if (!m_textureDirty) {
         return;
@@ -333,14 +333,14 @@ void ShadowItem::preprocess()
     if (m_shadow->hasDecorationShadow()) {
         m_ninePatch = DecorationShadowTextureCache::instance().ninePatch(this);
     } else {
-        m_ninePatch = scene()->renderer()->createNinePatch(m_shadow->shadowElement(Shadow::ShadowElementTopLeft),
-                                                           m_shadow->shadowElement(Shadow::ShadowElementTop),
-                                                           m_shadow->shadowElement(Shadow::ShadowElementTopRight),
-                                                           m_shadow->shadowElement(Shadow::ShadowElementRight),
-                                                           m_shadow->shadowElement(Shadow::ShadowElementBottomRight),
-                                                           m_shadow->shadowElement(Shadow::ShadowElementBottom),
-                                                           m_shadow->shadowElement(Shadow::ShadowElementBottomLeft),
-                                                           m_shadow->shadowElement(Shadow::ShadowElementLeft));
+        m_ninePatch = renderer->createNinePatch(m_shadow->shadowElement(Shadow::ShadowElementTopLeft),
+                                                m_shadow->shadowElement(Shadow::ShadowElementTop),
+                                                m_shadow->shadowElement(Shadow::ShadowElementTopRight),
+                                                m_shadow->shadowElement(Shadow::ShadowElementRight),
+                                                m_shadow->shadowElement(Shadow::ShadowElementBottomRight),
+                                                m_shadow->shadowElement(Shadow::ShadowElementBottom),
+                                                m_shadow->shadowElement(Shadow::ShadowElementBottomLeft),
+                                                m_shadow->shadowElement(Shadow::ShadowElementLeft));
     }
 }
 

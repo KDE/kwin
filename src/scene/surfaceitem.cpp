@@ -171,16 +171,15 @@ Texture *SurfaceItem::texture() const
     return m_texture.get();
 }
 
-void SurfaceItem::preprocess()
+void SurfaceItem::preprocess(ItemRenderer *renderer)
 {
     if (!buffer()) {
         m_texture.reset();
         return;
     }
-    ItemRenderer *itemRenderer = scene()->renderer();
 
     if (!m_texture || m_texture->size() != m_bufferSize) {
-        m_texture = itemRenderer->createTexture(buffer(), m_bufferReleasePoint);
+        m_texture = renderer->createTexture(buffer(), m_bufferReleasePoint);
         if (m_texture) {
             resetDamage();
         }

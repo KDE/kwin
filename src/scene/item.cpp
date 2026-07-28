@@ -533,7 +533,7 @@ void Item::scheduleSceneRepaintInternal(const RegionF &region)
     }
 }
 
-void Item::preprocess()
+void Item::preprocess(ItemRenderer *renderer)
 {
 }
 
