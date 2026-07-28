@@ -75,7 +75,7 @@ Q_SIGNALS:
 protected:
     explicit SurfaceItem(Item *parent = nullptr);
 
-    void preprocess() override;
+    void preprocess(ItemRenderer *renderer) override;
     WindowQuadList buildQuads() const override;
     void releaseResources() override;
 

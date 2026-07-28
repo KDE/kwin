@@ -31,6 +31,7 @@ class Item;
 class LogicalOutput;
 class OutputFrame;
 class SceneView;
+class ItemRenderer;
 
 class KWIN_EXPORT ItemEffect
 {
@@ -166,7 +167,7 @@ public:
     void resetRepaints(RenderView *delegate);
 
     WindowQuadList quads() const;
-    virtual void preprocess();
+    virtual void preprocess(ItemRenderer *renderer);
     const std::shared_ptr<ColorDescription> &colorDescription() const;
     RenderingIntent renderingIntent() const;
     PresentationModeHint presentationHint() const;
