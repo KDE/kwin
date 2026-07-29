@@ -25,8 +25,8 @@ class DrmPlane;
 class EglGbmLayer : public DrmPipelineLayer
 {
 public:
-    explicit EglGbmLayer(EglGbmBackend *eglBackend, DrmPlane *plane);
-    explicit EglGbmLayer(EglGbmBackend *eglBackend, DrmGpu *gpu, DrmPlane::TypeIndex type);
+    explicit EglGbmLayer(EglGbmBackend *eglBackend, RenderDevice *device, DrmPlane *plane);
+    explicit EglGbmLayer(EglGbmBackend *eglBackend, RenderDevice *device, DrmGpu *gpu, DrmPlane::TypeIndex type);
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
     bool endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame) override;

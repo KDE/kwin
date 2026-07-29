@@ -8,6 +8,7 @@
 */
 #include "drm_egl_backend.h"
 // kwin
+#include "compositor.h"
 #include "core/renderdevice.h"
 #include "core/syncobjtimeline.h"
 #include "drm_backend.h"
@@ -26,9 +27,8 @@
 namespace KWin
 {
 
-EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend, RenderDevice *device)
-    : EglBackend(device)
-    , m_backend(drmBackend)
+EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend)
+    : m_backend(drmBackend)
 {
     drmBackend->setRenderBackend(this);
 }
@@ -47,10 +47,6 @@ bool EglGbmBackend::init()
         return false;
     }
 
-    if (!createContext()) {
-        qCWarning(KWIN_DRM, "Could not initialize rendering context");
-        return false;
-    }
     initWayland();
     m_backend->createLayers();
     return true;
@@ -67,12 +63,12 @@ QList<OutputLayer *> EglGbmBackend::compatibleOutputLayers(BackendOutput *output
 
 std::unique_ptr<DrmPipelineLayer> EglGbmBackend::createDrmPlaneLayer(DrmPlane *plane)
 {
-    return std::make_unique<EglGbmLayer>(this, plane);
+    return std::make_unique<EglGbmLayer>(this, Compositor::self()->primaryDevice(), plane);
 }
 
 std::unique_ptr<DrmPipelineLayer> EglGbmBackend::createDrmPlaneLayer(DrmGpu *gpu, DrmPlane::TypeIndex type)
 {
-    return std::make_unique<EglGbmLayer>(this, gpu, type);
+    return std::make_unique<EglGbmLayer>(this, Compositor::self()->primaryDevice(), gpu, type);
 }
 
 std::unique_ptr<DrmOutputLayer> EglGbmBackend::createLayer(DrmVirtualOutput *output)

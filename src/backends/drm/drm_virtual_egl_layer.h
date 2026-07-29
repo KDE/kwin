@@ -26,6 +26,8 @@ class EglGbmBackend;
 class DrmVirtualOutput;
 class GLRenderTimeQuery;
 class SurfaceInterface;
+class RenderDevice;
+class EglContext;
 
 class VirtualEglGbmLayer : public DrmOutputLayer
 {
@@ -53,6 +55,8 @@ private:
     std::unique_ptr<GLRenderTimeQuery> m_query;
 
     EglGbmBackend *const m_eglBackend;
+    RenderDevice *const m_device;
+    const std::shared_ptr<EglContext> m_context;
 };
 
 }
