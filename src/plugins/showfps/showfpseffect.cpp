@@ -223,7 +223,7 @@ bool ShowFpsEffect::blocksDirectScanout() const
 
 bool ShowFpsEffect::supported()
 {
-    return effects->isOpenGLCompositing();
+    return true;
 }
 
 } // namespace KWin

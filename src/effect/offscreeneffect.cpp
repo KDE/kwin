@@ -91,7 +91,7 @@ OffscreenEffect::~OffscreenEffect() = default;
 
 bool OffscreenEffect::supported()
 {
-    return effects->isOpenGLCompositing();
+    return true;
 }
 
 void OffscreenEffect::redirect(EffectWindow *window)

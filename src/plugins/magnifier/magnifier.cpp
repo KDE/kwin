@@ -201,58 +201,56 @@ bool MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
         RectF srcArea(cursor.x() - (double)area.width() / (m_zoom * 2),
                       cursor.y() - (double)area.height() / (m_zoom * 2),
                       (double)area.width() / m_zoom, (double)area.height() / m_zoom);
-        if (effects->isOpenGLCompositing()) {
-            fbo.m_fbo->blitFromRenderTarget(renderTarget, viewport, srcArea.toRect(), Rect(QPoint(), fbo.m_fbo->size()));
-            // paint magnifier
-            auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-            QMatrix4x4 mvp = viewport.projectionMatrix();
-            mvp.translate(area.x() * scale, area.y() * scale);
-            s->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
-            fbo.m_texture->render(area.size() * scale);
-            ShaderManager::instance()->popShader();
+        fbo.m_fbo->blitFromRenderTarget(renderTarget, viewport, srcArea.toRect(), Rect(QPoint(), fbo.m_fbo->size()));
+        // paint magnifier
+        auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
+        QMatrix4x4 mvp = viewport.projectionMatrix();
+        mvp.translate(area.x() * scale, area.y() * scale);
+        s->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
+        fbo.m_texture->render(area.size() * scale);
+        ShaderManager::instance()->popShader();
 
-            GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-            vbo->reset();
+        GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+        vbo->reset();
 
-            RectF areaF = area.scaled(scale);
-            const RectF frame = area.adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH).scaled(scale);
-            QList<QVector2D> verts;
-            verts.reserve(4 * 6 * 2);
-            // top frame
-            verts.push_back(QVector2D(frame.right(), frame.top()));
-            verts.push_back(QVector2D(frame.left(), frame.top()));
-            verts.push_back(QVector2D(frame.left(), areaF.top()));
-            verts.push_back(QVector2D(frame.left(), areaF.top()));
-            verts.push_back(QVector2D(frame.right(), areaF.top()));
-            verts.push_back(QVector2D(frame.right(), frame.top()));
-            // left frame
-            verts.push_back(QVector2D(areaF.left(), frame.top()));
-            verts.push_back(QVector2D(frame.left(), frame.top()));
-            verts.push_back(QVector2D(frame.left(), frame.bottom()));
-            verts.push_back(QVector2D(frame.left(), frame.bottom()));
-            verts.push_back(QVector2D(areaF.left(), frame.bottom()));
-            verts.push_back(QVector2D(areaF.left(), frame.top()));
-            // right frame
-            verts.push_back(QVector2D(frame.right(), frame.top()));
-            verts.push_back(QVector2D(areaF.right(), frame.top()));
-            verts.push_back(QVector2D(areaF.right(), frame.bottom()));
-            verts.push_back(QVector2D(areaF.right(), frame.bottom()));
-            verts.push_back(QVector2D(frame.right(), frame.bottom()));
-            verts.push_back(QVector2D(frame.right(), frame.top()));
-            // bottom frame
-            verts.push_back(QVector2D(frame.right(), areaF.bottom()));
-            verts.push_back(QVector2D(frame.left(), areaF.bottom()));
-            verts.push_back(QVector2D(frame.left(), frame.bottom()));
-            verts.push_back(QVector2D(frame.left(), frame.bottom()));
-            verts.push_back(QVector2D(frame.right(), frame.bottom()));
-            verts.push_back(QVector2D(frame.right(), areaF.bottom()));
-            vbo->setVertices(verts);
+        RectF areaF = area.scaled(scale);
+        const RectF frame = area.adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH).scaled(scale);
+        QList<QVector2D> verts;
+        verts.reserve(4 * 6 * 2);
+        // top frame
+        verts.push_back(QVector2D(frame.right(), frame.top()));
+        verts.push_back(QVector2D(frame.left(), frame.top()));
+        verts.push_back(QVector2D(frame.left(), areaF.top()));
+        verts.push_back(QVector2D(frame.left(), areaF.top()));
+        verts.push_back(QVector2D(frame.right(), areaF.top()));
+        verts.push_back(QVector2D(frame.right(), frame.top()));
+        // left frame
+        verts.push_back(QVector2D(areaF.left(), frame.top()));
+        verts.push_back(QVector2D(frame.left(), frame.top()));
+        verts.push_back(QVector2D(frame.left(), frame.bottom()));
+        verts.push_back(QVector2D(frame.left(), frame.bottom()));
+        verts.push_back(QVector2D(areaF.left(), frame.bottom()));
+        verts.push_back(QVector2D(areaF.left(), frame.top()));
+        // right frame
+        verts.push_back(QVector2D(frame.right(), frame.top()));
+        verts.push_back(QVector2D(areaF.right(), frame.top()));
+        verts.push_back(QVector2D(areaF.right(), frame.bottom()));
+        verts.push_back(QVector2D(areaF.right(), frame.bottom()));
+        verts.push_back(QVector2D(frame.right(), frame.bottom()));
+        verts.push_back(QVector2D(frame.right(), frame.top()));
+        // bottom frame
+        verts.push_back(QVector2D(frame.right(), areaF.bottom()));
+        verts.push_back(QVector2D(frame.left(), areaF.bottom()));
+        verts.push_back(QVector2D(frame.left(), frame.bottom()));
+        verts.push_back(QVector2D(frame.left(), frame.bottom()));
+        verts.push_back(QVector2D(frame.right(), frame.bottom()));
+        verts.push_back(QVector2D(frame.right(), areaF.bottom()));
+        vbo->setVertices(verts);
 
-            ShaderBinder binder(ShaderTrait::UniformColor);
-            binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix());
-            binder.shader()->setUniform(GLShader::ColorUniform::Color, QColor(0, 0, 0));
-            vbo->render(GL_TRIANGLES);
-        }
+        ShaderBinder binder(ShaderTrait::UniformColor);
+        binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix());
+        binder.shader()->setUniform(GLShader::ColorUniform::Color, QColor(0, 0, 0));
+        vbo->render(GL_TRIANGLES);
     }
     return true;
 }

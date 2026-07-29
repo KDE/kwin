@@ -10,6 +10,7 @@
 // KConfigSkeleton
 #include "blurconfig.h"
 
+#include "compositor.h"
 #include "core/gpumanager.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
@@ -428,7 +429,8 @@ bool BlurEffect::eventFilter(QObject *watched, QEvent *event)
 
 bool BlurEffect::enabledByDefault()
 {
-    const auto context = effects->openglContext();
+    const auto main = Compositor::self()->primaryDevice();
+    const auto context = main->eglContext();
     if (!context || context->isSoftwareRenderer()) {
         return false;
     }
@@ -449,7 +451,7 @@ bool BlurEffect::enabledByDefault()
 
 bool BlurEffect::supported()
 {
-    return effects->isOpenGLCompositing();
+    return true;
 }
 
 bool BlurEffect::decorationSupportsBlurBehind(const EffectWindow *w) const

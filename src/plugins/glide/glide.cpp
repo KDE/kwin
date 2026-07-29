@@ -179,8 +179,7 @@ bool GlideEffect::isActive() const
 
 bool GlideEffect::supported()
 {
-    return effects->isOpenGLCompositing()
-        && effects->animationsSupported();
+    return effects->animationsSupported();
 }
 
 void GlideEffect::windowAdded(EffectWindow *w)

@@ -38,7 +38,7 @@ ColorBlindnessCorrectionEffect::~ColorBlindnessCorrectionEffect()
 
 bool ColorBlindnessCorrectionEffect::supported()
 {
-    return effects->isOpenGLCompositing();
+    return true;
 }
 
 void ColorBlindnessCorrectionEffect::loadData()

@@ -66,7 +66,7 @@ InvertEffect::~InvertEffect() = default;
 
 bool InvertEffect::supported()
 {
-    return effects->isOpenGLCompositing();
+    return true;
 }
 
 bool InvertEffect::isInvertable(EffectWindow *window) const
