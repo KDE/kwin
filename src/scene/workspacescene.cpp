@@ -546,7 +546,6 @@ void WorkspaceScene::prePaint(SceneView *delegate, OutputFrame *frame)
     prePaintData.view = delegate;
     prePaintData.frame = frame;
 
-    effects->makeOpenGLContextCurrent();
     Q_EMIT preFrameRender();
 
     effects->prePaintScreen(prePaintData);
