@@ -39,7 +39,7 @@ class EglGbmBackend : public EglBackend, public DrmRenderBackend
     Q_OBJECT
 
 public:
-    EglGbmBackend(DrmBackend *drmBackend, RenderDevice *device);
+    EglGbmBackend(DrmBackend *drmBackend);
     ~EglGbmBackend() override;
 
     QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) override;

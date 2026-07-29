@@ -41,9 +41,9 @@ QList<CompositingType> VirtualBackend::supportedCompositors() const
     return {OpenGLCompositing};
 }
 
-std::unique_ptr<EglBackend> VirtualBackend::createOpenGLBackend(RenderDevice *renderDevice)
+std::unique_ptr<EglBackend> VirtualBackend::createOpenGLBackend()
 {
-    return std::make_unique<VirtualEglBackend>(this, renderDevice);
+    return std::make_unique<VirtualEglBackend>(this);
 }
 
 BackendOutput *VirtualBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, qreal scale)

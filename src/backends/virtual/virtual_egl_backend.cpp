@@ -28,17 +28,21 @@ static const bool s_bufferAgeEnabled = qEnvironmentVariable("KWIN_USE_BUFFER_AGE
 VirtualEglLayer::VirtualEglLayer(BackendOutput *output, VirtualEglBackend *backend)
     : OutputLayer(output, OutputLayerType::Primary)
     , m_backend(backend)
+    , m_device(backend->renderDevice(output))
+    , m_context(m_device->eglContext())
 {
 }
 
 VirtualEglLayer::~VirtualEglLayer()
 {
-    (void)m_backend->openglContext()->makeCurrent();
+    if (m_context) {
+        (void)m_context->makeCurrent();
+    }
 }
 
 std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame(OutputFrame *frame)
 {
-    if (!m_backend->openglContext()->makeCurrent()) {
+    if (!m_context || !m_context->makeCurrent()) {
         return std::nullopt;
     }
 
@@ -47,11 +51,11 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame(OutputFrame
         GraphicsBufferOptions options{
             .size = nativeSize,
             .format = DRM_FORMAT_XRGB8888,
-            .modifiers = m_backend->supportedFormats()[DRM_FORMAT_XRGB8888],
+            .modifiers = supportedDrmFormats()[DRM_FORMAT_XRGB8888],
             .software = false,
             .scanout = false,
         };
-        m_swapchain = Swapchain::create(m_backend->renderDevice()->allocator(), options);
+        m_swapchain = Swapchain::create(m_device->allocator(), options);
         if (!m_swapchain) {
             return std::nullopt;
         }
@@ -62,14 +66,14 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame(OutputFrame
         return std::nullopt;
     }
 
-    auto fbo = m_backend->openglContext()->importDmaBufAsFbo(m_current->buffer());
+    auto fbo = m_context->importDmaBufAsFbo(m_current->buffer());
     if (!fbo) {
         return std::nullopt;
     }
 
     fbo->colorAttachment()->setContentTransform(bufferTransform().combine(OutputTransform::FlipY));
 
-    m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
+    m_query = GLRenderTimeQuery::begin(m_context);
 
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(fbo),
@@ -91,7 +95,7 @@ bool VirtualEglLayer::endFrame(const Region &damagedDeviceRegion, OutputFrame *f
 
 FormatModifierMap VirtualEglLayer::supportedDrmFormats() const
 {
-    return m_backend->supportedFormats();
+    return m_backend->supportedFormats(m_device);
 }
 
 void VirtualEglLayer::releaseBuffers()
@@ -105,12 +109,11 @@ GLTexture *VirtualEglLayer::texture() const
     if (!m_current) {
         return nullptr;
     }
-    return m_backend->openglContext()->importDmaBufAsTexture(m_current->buffer());
+    return m_context->importDmaBufAsTexture(m_current->buffer());
 }
 
-VirtualEglBackend::VirtualEglBackend(VirtualBackend *b, RenderDevice *renderDevice)
-    : EglBackend(renderDevice)
-    , m_backend(b)
+VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)
+    : m_backend(b)
 {
 }
 
@@ -132,10 +135,6 @@ bool VirtualEglBackend::init()
 {
     if (!initClientExtensions()) {
         qCWarning(KWIN_VIRTUAL, "Could not initialize egl");
-        return false;
-    }
-    if (!createContext()) {
-        qCWarning(KWIN_VIRTUAL, "Could not initialize rendering context");
         return false;
     }
     initWayland();

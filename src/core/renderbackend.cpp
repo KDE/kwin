@@ -200,19 +200,9 @@ void OutputFrame::setArtificialHdrHeadroom(double edr)
     m_artificialHdrHeadroom = edr;
 }
 
-RenderDevice *RenderBackend::renderDevice() const
-{
-    return nullptr;
-}
-
 bool RenderBackend::testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice)
 {
     return false;
-}
-
-FormatModifierMap RenderBackend::supportedFormats() const
-{
-    return FormatModifierMap{{DRM_FORMAT_XRGB8888, ModifierList{DRM_FORMAT_MOD_LINEAR}}};
 }
 
 } // namespace KWin

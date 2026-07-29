@@ -146,10 +146,10 @@ public:
 
     virtual QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) = 0;
 
-    virtual RenderDevice *renderDevice() const;
+    virtual RenderDevice *renderDevice(BackendOutput *output) const = 0;
+    virtual FormatModifierMap supportedFormats(RenderDevice *device) const = 0;
 
     virtual bool testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice);
-    virtual FormatModifierMap supportedFormats() const;
 };
 
 } // namespace KWin

@@ -29,6 +29,8 @@ namespace KWin
 VirtualDrmEglLayer::VirtualDrmEglLayer(EglGbmBackend *eglBackend, DrmVirtualOutput *output)
     : DrmOutputLayer(output, OutputLayerType::Primary)
     , m_eglBackend(eglBackend)
+    , m_device(eglBackend->renderDevice(output))
+    , m_context(m_device->eglContext())
 {
 }
 
@@ -39,6 +41,9 @@ VirtualDrmEglLayer::~VirtualDrmEglLayer()
 
 std::optional<OutputLayerBeginFrameInfo> VirtualDrmEglLayer::beginFrame(OutputFrame *frame)
 {
+    if (!m_context || !m_context->makeCurrent()) {
+        return std::nullopt;
+    }
     m_scanoutBuffer.reset();
 
     if (doesSwapchainFit(m_swapchain.get())) {
@@ -60,23 +65,19 @@ std::optional<OutputLayerBeginFrameInfo> VirtualDrmEglLayer::beginFrame(OutputFr
         }
     }
 
-    if (!m_eglBackend->openglContext()->makeCurrent()) {
-        return std::nullopt;
-    }
-
     auto slot = m_swapchain->acquire();
     if (!slot) {
         return std::nullopt;
     }
 
-    auto fbo = m_eglBackend->openglContext()->importDmaBufAsFbo(slot->buffer());
+    auto fbo = m_context->importDmaBufAsFbo(slot->buffer());
     if (!fbo) {
         return std::nullopt;
     }
 
     m_currentSlot = slot;
 
-    m_query = GLRenderTimeQuery::begin(m_eglBackend->openglContextRef());
+    m_query = GLRenderTimeQuery::begin(m_context);
 
     const Region repair = m_damageJournal.accumulate(slot->age(), Region::infinite());
     return OutputLayerBeginFrameInfo{
@@ -94,7 +95,7 @@ bool VirtualDrmEglLayer::endFrame(const Region &damagedDeviceRegion, OutputFrame
     glFlush();
     m_damageJournal.add(damagedDeviceRegion);
 
-    EGLNativeFence releaseFence{m_eglBackend->eglDisplayObject()};
+    EGLNativeFence releaseFence{m_context->displayObject()};
     m_swapchain->release(m_currentSlot.get(), releaseFence.takeFileDescriptor());
     return true;
 }
@@ -119,7 +120,7 @@ std::shared_ptr<Swapchain> VirtualDrmEglLayer::createSwapchain() const
                 .software = false,
                 .scanout = false,
             };
-            if (auto swapchain = Swapchain::create(m_eglBackend->renderDevice()->allocator(), options)) {
+            if (auto swapchain = Swapchain::create(m_device->allocator(), options)) {
                 return swapchain;
             }
         }
@@ -154,7 +155,7 @@ void VirtualDrmEglLayer::releaseBuffers()
 
 FormatModifierMap VirtualDrmEglLayer::supportedDrmFormats() const
 {
-    return m_eglBackend->supportedFormats();
+    return m_eglBackend->supportedFormats(m_device);
 }
 
 }
