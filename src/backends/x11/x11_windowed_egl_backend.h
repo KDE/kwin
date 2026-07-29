@@ -34,11 +34,14 @@ public:
     void releaseBuffers() override;
 
 private:
+    X11WindowedOutput *const m_output;
+    X11WindowedEglBackend *const m_backend;
+    RenderDevice *const m_device;
+    const std::shared_ptr<EglContext> m_context;
+
     std::shared_ptr<EglSwapchain> m_swapchain;
     std::shared_ptr<EglSwapchainSlot> m_buffer;
     std::unique_ptr<GLRenderTimeQuery> m_query;
-    X11WindowedOutput *const m_output;
-    X11WindowedEglBackend *const m_backend;
 };
 
 class X11WindowedEglCursorLayer : public OutputLayer
@@ -56,6 +59,9 @@ public:
 
 private:
     X11WindowedEglBackend *const m_backend;
+    RenderDevice *const m_device;
+    const std::shared_ptr<EglContext> m_context;
+
     std::unique_ptr<GLFramebuffer> m_framebuffer;
     std::unique_ptr<GLTexture> m_texture;
     std::unique_ptr<GLRenderTimeQuery> m_query;
@@ -69,7 +75,7 @@ class X11WindowedEglBackend : public EglBackend
     Q_OBJECT
 
 public:
-    explicit X11WindowedEglBackend(X11WindowedBackend *backend, RenderDevice *device);
+    explicit X11WindowedEglBackend(X11WindowedBackend *backend);
     ~X11WindowedEglBackend() override;
 
     X11WindowedBackend *backend() const;

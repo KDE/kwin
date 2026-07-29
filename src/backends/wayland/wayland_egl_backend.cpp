@@ -38,9 +38,12 @@ namespace Wayland
 
 static const bool bufferAgeEnabled = qEnvironmentVariable("KWIN_USE_BUFFER_AGE") != QStringLiteral("0");
 
-WaylandEglLayer::WaylandEglLayer(WaylandOutput *output, WaylandEglBackend *backend, OutputLayerType type, int zpos)
+WaylandEglLayer::WaylandEglLayer(WaylandOutput *output, WaylandEglBackend *backend, RenderDevice *device, OutputLayerType type, int zpos)
     : WaylandLayer(output, type, zpos)
     , m_backend(backend)
+    , m_device(device)
+    , m_context(device->eglContext())
+    , m_formats(m_backend->backend()->display()->linuxDmabuf()->formats().intersected(device->eglDisplay()->nonExternalOnlySupportedDrmFormats()))
 {
 }
 
@@ -55,8 +58,7 @@ GLFramebuffer *WaylandEglLayer::fbo() const
 
 std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame(OutputFrame *frame)
 {
-    if (!m_backend->openglContext()->makeCurrent()) {
-        qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
+    if (!m_context || !m_context->makeCurrent()) {
         return std::nullopt;
     }
 
@@ -67,11 +69,10 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame(OutputFrame
 
     const QSize nativeSize = targetRect().size();
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
-        const FormatModifierMap formatTable = m_backend->backend()->display()->linuxDmabuf()->formats();
-        const auto suitableFormats = filterAndSortFormats(formatTable, m_requiredAlphaBits, m_output->colorPowerTradeoff());
+        const auto suitableFormats = filterAndSortFormats(m_formats, m_requiredAlphaBits, m_output->colorPowerTradeoff());
         for (const auto &candidate : suitableFormats) {
-            auto it = formatTable.constFind(candidate.drmFormat);
-            if (it == formatTable.constEnd()) {
+            auto it = m_formats.constFind(candidate.drmFormat);
+            if (it == m_formats.constEnd()) {
                 continue;
             }
             GraphicsBufferOptions options{
@@ -81,7 +82,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame(OutputFrame
                 .software = false,
                 .scanout = false,
             };
-            m_swapchain = EglSwapchain::create(m_backend->renderDevice(), options);
+            m_swapchain = EglSwapchain::create(m_device, options);
             if (m_swapchain) {
                 break;
             }
@@ -108,7 +109,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame(OutputFrame
     m_buffer->framebuffer()->colorAttachment()->setContentTransform(contentTransform);
 
     const Region repair = bufferAgeEnabled ? m_damageJournal.accumulate(m_buffer->age(), Region::infinite()) : Region::infinite();
-    m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
+    m_query = GLRenderTimeQuery::begin(m_context);
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer->framebuffer(), m_color),
         .repaint = repair,
@@ -123,7 +124,7 @@ bool WaylandEglLayer::endFrame(const Region &renderedDeviceRegion, const Region 
     }
     // Flush rendering commands to the dmabuf.
     glFlush();
-    EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
+    EGLNativeFence releaseFence{m_context->displayObject()};
 
     // The damage is where the picture changed, and the picture is composed the way the user
     // sees it. What the host reads is the buffer, which a rotated display fills turned, so
@@ -151,7 +152,7 @@ bool WaylandEglLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::sha
 
 FormatModifierMap WaylandEglLayer::supportedDrmFormats() const
 {
-    return m_backend->backend()->display()->linuxDmabuf()->formats();
+    return m_formats;
 }
 
 void WaylandEglLayer::releaseBuffers()
@@ -160,21 +161,24 @@ void WaylandEglLayer::releaseBuffers()
     m_swapchain.reset();
 }
 
-WaylandEglCursorLayer::WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBackend *backend)
+WaylandEglCursorLayer::WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBackend *backend, RenderDevice *device)
     : OutputLayer(output, OutputLayerType::CursorOnly, 255, 255, 255)
     , m_backend(backend)
+    , m_device(device)
+    , m_context(device->eglContext())
 {
 }
 
 WaylandEglCursorLayer::~WaylandEglCursorLayer()
 {
-    (void)m_backend->openglContext()->makeCurrent();
+    if (m_context) {
+        (void)m_context->makeCurrent();
+    }
 }
 
 std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame(OutputFrame *frame)
 {
-    if (!m_backend->openglContext()->makeCurrent()) {
-        qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
+    if (!m_context || !m_context->makeCurrent()) {
         return std::nullopt;
     }
 
@@ -194,7 +198,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame(Outpu
                 .software = false,
                 .scanout = false,
             };
-            m_swapchain = EglSwapchain::create(m_backend->renderDevice(), options);
+            m_swapchain = EglSwapchain::create(m_device, options);
             if (m_swapchain) {
                 break;
             }
@@ -213,7 +217,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame(Outpu
     // to be turned as well - and on a rotated screen the cursor has to stand upright anyway.
     m_buffer->framebuffer()->colorAttachment()->setContentTransform(bufferTransform().combine(OutputTransform::FlipY));
 
-    m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
+    m_query = GLRenderTimeQuery::begin(m_context);
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer->framebuffer()),
         .repaint = Region::infinite(),
@@ -234,14 +238,14 @@ bool WaylandEglCursorLayer::endFrame(const Region &renderedDeviceRegion, const R
 
     static_cast<WaylandOutput *>(m_output.get())->cursor()->update(buffer, m_buffer->buffer()->size() / m_output->scale(), (hotspot() / m_output->scale()).toPoint());
 
-    EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
+    EGLNativeFence releaseFence{m_context->displayObject()};
     m_swapchain->release(m_buffer, releaseFence.takeFileDescriptor());
     return true;
 }
 
 FormatModifierMap WaylandEglCursorLayer::supportedDrmFormats() const
 {
-    return m_backend->supportedFormats();
+    return m_backend->supportedFormats(m_device);
 }
 
 void WaylandEglCursorLayer::releaseBuffers()
@@ -250,8 +254,8 @@ void WaylandEglCursorLayer::releaseBuffers()
     m_swapchain.reset();
 }
 
-WaylandEglBackend::WaylandEglBackend(WaylandBackend *b, RenderDevice *device)
-    : EglBackend(device)
+WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
+    : EglBackend()
     , m_backend(b)
 {
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandEglBackend::createOutputLayers);
@@ -276,16 +280,17 @@ WaylandBackend *WaylandEglBackend::backend() const
 void WaylandEglBackend::createOutputLayers(BackendOutput *output)
 {
     const auto waylandOutput = static_cast<WaylandOutput *>(output);
+    RenderDevice *device = renderDevice(output);
     std::vector<std::unique_ptr<OutputLayer>> layers;
-    auto primary = std::make_unique<WaylandEglLayer>(waylandOutput, this, OutputLayerType::Primary, 0);
+    auto primary = std::make_unique<WaylandEglLayer>(waylandOutput, this, device, OutputLayerType::Primary, 0);
     primary->subSurface()->placeAbove(waylandOutput->surface());
     layers.push_back(std::move(primary));
     for (int z = 1; z < 5; z++) {
-        auto layer = std::make_unique<WaylandEglLayer>(waylandOutput, this, OutputLayerType::GenericLayer, z);
+        auto layer = std::make_unique<WaylandEglLayer>(waylandOutput, this, device, OutputLayerType::GenericLayer, z);
         layer->subSurface()->placeAbove(static_cast<WaylandEglLayer *>(layers.back().get())->surface());
         layers.push_back(std::move(layer));
     }
-    layers.push_back(std::make_unique<WaylandEglCursorLayer>(waylandOutput, this));
+    layers.push_back(std::make_unique<WaylandEglCursorLayer>(waylandOutput, this, device));
     waylandOutput->setOutputLayers(std::move(layers));
 }
 
@@ -305,10 +310,6 @@ bool WaylandEglBackend::init()
 
 bool WaylandEglBackend::initRenderingContext()
 {
-    if (!createContext()) {
-        return false;
-    }
-
     auto waylandOutputs = m_backend->waylandOutputs();
 
     // we only allow to start with at least one output
@@ -320,7 +321,7 @@ bool WaylandEglBackend::initRenderingContext()
         createOutputLayers(out);
     }
 
-    return openglContext()->makeCurrent();
+    return true;
 }
 
 QList<OutputLayer *> WaylandEglBackend::compatibleOutputLayers(BackendOutput *output)
