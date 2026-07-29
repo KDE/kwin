@@ -34,28 +34,21 @@ class KWIN_EXPORT EglBackend : public RenderBackend
     Q_OBJECT
 
 public:
-    explicit EglBackend(RenderDevice *device);
+    explicit EglBackend();
 
     bool init();
 
-    EglContext *openglContext() const;
-    std::shared_ptr<EglContext> openglContextRef() const;
-    EglDisplay *eglDisplayObject() const;
-    RenderDevice *renderDevice() const override;
+    FormatModifierMap supportedFormats(RenderDevice *device) const override;
 
     bool testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice) override;
-    FormatModifierMap supportedFormats() const override;
 
     QList<LinuxDmaBufV1Feedback::Tranche> tranches() const;
 
 protected:
-    void cleanup();
     bool initClientExtensions();
     bool hasClientExtension(const QByteArray &ext) const;
     void updateDmabufTranches();
 
-    RenderDevice *m_renderDevice = nullptr;
-    std::shared_ptr<EglContext> m_context;
     QList<QByteArray> m_clientExtensions;
     QList<LinuxDmaBufV1Feedback::Tranche> m_tranches;
     QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> m_importedBuffers;

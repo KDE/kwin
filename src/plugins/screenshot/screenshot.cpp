@@ -104,7 +104,7 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(LogicalOutput 
     GraphicsBuffer *buffer = device->allocator()->allocate(GraphicsBufferOptions{
         .size = nativeSize,
         .format = DRM_FORMAT_XRGB8888,
-        .modifiers = backend->supportedFormats()[DRM_FORMAT_XRGB8888],
+        .modifiers = backend->supportedFormats(device)[DRM_FORMAT_XRGB8888],
         .software = false,
         .scanout = false,
         .render = true,
@@ -168,7 +168,7 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(const Rect &ar
     GraphicsBuffer *buffer = device->allocator()->allocate(GraphicsBufferOptions{
         .size = nativeSize,
         .format = DRM_FORMAT_XRGB8888,
-        .modifiers = backend->supportedFormats()[DRM_FORMAT_XRGB8888],
+        .modifiers = backend->supportedFormats(device)[DRM_FORMAT_XRGB8888],
         .software = false,
         .scanout = false,
         .render = true,
@@ -236,7 +236,7 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(Window *window
     GraphicsBuffer *buffer = device->allocator()->allocate(GraphicsBufferOptions{
         .size = nativeSize,
         .format = DRM_FORMAT_ARGB8888,
-        .modifiers = backend->supportedFormats()[DRM_FORMAT_ARGB8888],
+        .modifiers = backend->supportedFormats(device)[DRM_FORMAT_ARGB8888],
         .software = false,
         .scanout = false,
         .render = true,

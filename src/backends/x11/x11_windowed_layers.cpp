@@ -22,6 +22,7 @@ X11WindowedPrimaryLayer::X11WindowedPrimaryLayer(X11WindowedBackend *outputBacke
     , m_output(output)
     , m_outputBackend(outputBackend)
     , m_renderBackend(renderBackend)
+    , m_device(m_renderBackend->renderDevice(m_output))
 {
 }
 
@@ -34,7 +35,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedPrimaryLayer::beginFrame(Out
     const QSize bufferSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
         const uint32_t format = DRM_FORMAT_XRGB8888;
-        const FormatModifierMap formatTable = m_outputBackend->driFormats();
+        const FormatModifierMap formatTable = m_outputBackend->driFormats().intersected(m_renderBackend->supportedFormats(m_device));
         if (!formatTable.contains(format)) {
             return std::nullopt;
         }
@@ -45,7 +46,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedPrimaryLayer::beginFrame(Out
             .software = false,
             .scanout = false,
         };
-        m_swapchain = Swapchain::create(m_renderBackend->renderDevice()->allocator(), options);
+        m_swapchain = Swapchain::create(m_device->allocator(), options);
         if (!m_swapchain) {
             return std::nullopt;
         }
@@ -87,6 +88,7 @@ X11WindowedCursorLayer::X11WindowedCursorLayer(X11WindowedBackend *outputBackend
     : OutputLayer(output, OutputLayerType::CursorOnly)
     , m_outputBackend(outputBackend)
     , m_renderBackend(renderBackend)
+    , m_device(m_renderBackend->renderDevice(m_output))
 {
 }
 
@@ -101,12 +103,12 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedCursorLayer::beginFrame(Outp
         GraphicsBufferOptions options{
             .size = bufferSize,
             .format = DRM_FORMAT_ARGB8888,
-            .modifiers = m_renderBackend->supportedFormats()[DRM_FORMAT_ARGB8888],
+            .modifiers = m_renderBackend->supportedFormats(m_device)[DRM_FORMAT_ARGB8888],
             .software = false,
             .scanout = false,
             .render = true,
         };
-        m_swapchain = Swapchain::create(m_renderBackend->renderDevice()->allocator(), options);
+        m_swapchain = Swapchain::create(m_device->allocator(), options);
         if (!m_swapchain) {
             return std::nullopt;
         }
@@ -125,7 +127,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedCursorLayer::beginFrame(Outp
 
 bool X11WindowedCursorLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
-    const QImage buffer = m_renderBackend->renderDevice()->download(m_slot->buffer());
+    const QImage buffer = m_device->download(m_slot->buffer());
     m_slot.reset();
     if (buffer.isNull()) {
         return false;
@@ -137,7 +139,7 @@ bool X11WindowedCursorLayer::endFrame(const Region &damagedDeviceRegion, FileDes
 
 FormatModifierMap X11WindowedCursorLayer::supportedDrmFormats() const
 {
-    return m_renderBackend->supportedFormats();
+    return m_renderBackend->supportedFormats(m_device);
 }
 
 void X11WindowedCursorLayer::releaseBuffers()

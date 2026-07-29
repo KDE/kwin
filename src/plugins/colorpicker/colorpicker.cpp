@@ -98,7 +98,7 @@ QColor ColorPickerEffect::pick()
             const GraphicsBufferOptions options{
                 .size = QSize(1, 1),
                 .format = DRM_FORMAT_ARGB8888,
-                .modifiers = Compositor::self()->backend()->supportedFormats()[DRM_FORMAT_ARGB8888],
+                .modifiers = Compositor::self()->backend()->supportedFormats(device)[DRM_FORMAT_ARGB8888],
                 .software = false,
                 .scanout = false,
                 .render = true,

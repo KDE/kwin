@@ -19,6 +19,7 @@ class X11WindowedBackend;
 class X11WindowedOutput;
 class X11WindowedEglBackend;
 class RenderBackend;
+class RenderDevice;
 
 class X11WindowedPrimaryLayer : public OutputLayer
 {
@@ -37,6 +38,7 @@ private:
     X11WindowedOutput *const m_output;
     X11WindowedBackend *const m_outputBackend;
     RenderBackend *const m_renderBackend;
+    RenderDevice *const m_device;
 };
 
 class X11WindowedCursorLayer : public OutputLayer
@@ -55,6 +57,8 @@ public:
 private:
     X11WindowedBackend *const m_outputBackend;
     RenderBackend *const m_renderBackend;
+    RenderDevice *const m_device;
+
     std::unique_ptr<Swapchain> m_swapchain;
     std::shared_ptr<SwapchainSlot> m_slot;
 };

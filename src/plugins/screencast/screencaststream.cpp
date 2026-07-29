@@ -457,7 +457,7 @@ bool ScreenCastStream::createStream()
     const QByteArray objname = "kwin-screencast-" + objectName().toUtf8();
     m_pwStream = pw_stream_new(m_pwCore->pwCore, objname, nullptr);
 
-    const auto supported = Compositor::self()->backend()->supportedFormats();
+    const auto supported = Compositor::self()->backend()->supportedFormats(m_source->renderDevice());
     auto itModifiers = supported.constFind(m_source->drmFormat());
 
     // If the offered format is not available for dmabuf, prefer converting to another one than resorting to memfd
@@ -644,7 +644,7 @@ void ScreenCastStream::record(std::chrono::nanoseconds timestamp, Contents conte
                 GraphicsBufferOptions options{
                     .size = memfd->m_buffer->size(),
                     .format = DRM_FORMAT_ARGB8888,
-                    .modifiers = Compositor::self()->backend()->supportedFormats()[DRM_FORMAT_ARGB8888],
+                    .modifiers = Compositor::self()->backend()->supportedFormats(m_source->renderDevice())[DRM_FORMAT_ARGB8888],
                     .software = false,
                     .scanout = false,
                     .render = true,

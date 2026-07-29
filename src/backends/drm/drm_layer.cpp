@@ -309,7 +309,9 @@ bool DrmPipelineLayer::checkSurface(const QSize &size, const FormatModifierMap &
         m_surface = std::move(m_oldSurface);
         return true;
     }
-    if (m_gpu->renderDevice() && m_gpu->renderDevice() != m_backend->renderDevice() && m_gpu->renderDevice()->isInReset()) {
+    RenderDevice *const render = m_backend->renderDevice(m_output);
+    RenderDevice *const display = m_gpu->renderDevice();
+    if (display && display != render && display->isInReset()) {
         // avoid creating a suboptimal swapchain until the reset is complete
         return false;
     }
@@ -352,7 +354,9 @@ std::unique_ptr<DrmPipelineLayer::Surface> DrmPipelineLayer::createSurface(const
 
     // special case: the cursor plane needs linear, but not all GPUs (NVidia) can render to linear
     auto bufferTarget = m_requestedBufferTarget;
-    if (m_gpu->renderDevice() == m_backend->renderDevice()) {
+    RenderDevice *const render = m_backend->renderDevice(m_output);
+    RenderDevice *const display = m_gpu->renderDevice();
+    if (render == display) {
         const bool needsLinear = std::ranges::all_of(sortedFormats, [&formats](const FormatInfo &fmt) {
             const auto &mods = formats[fmt.drmFormat];
             return std::ranges::all_of(mods, [](uint64_t mod) {
@@ -360,7 +364,7 @@ std::unique_ptr<DrmPipelineLayer::Surface> DrmPipelineLayer::createSurface(const
             });
         });
         if (needsLinear) {
-            const auto renderFormats = m_backend->supportedFormats();
+            const auto renderFormats = m_backend->supportedFormats(render);
             const bool noLinearSupport = std::ranges::none_of(sortedFormats, [&renderFormats](const auto &formatInfo) {
                 return renderFormats.containsFormat(formatInfo.drmFormat, DRM_FORMAT_MOD_LINEAR);
             });
@@ -379,7 +383,7 @@ std::unique_ptr<DrmPipelineLayer::Surface> DrmPipelineLayer::createSurface(const
         }
         return nullptr;
     };
-    if (m_gpu->renderDevice() == m_backend->renderDevice()) {
+    if (render == display) {
         return doTestFormats(sortedFormats, MultiGpuImportMode::None);
     } else {
         return doTestFormats(sortedFormats, MultiGpuImportMode::GpuCopy);
@@ -389,12 +393,11 @@ std::unique_ptr<DrmPipelineLayer::Surface> DrmPipelineLayer::createSurface(const
 std::unique_ptr<DrmPipelineLayer::Surface> DrmPipelineLayer::createSurface(const QSize &size, uint32_t format, const ModifierList &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
 {
     auto ret = std::make_unique<Surface>();
-    ModifierList renderModifiers = m_backend->supportedFormats()[format];
+
+    RenderDevice *const render = m_backend->renderDevice(m_output);
+    ModifierList renderModifiers = m_backend->supportedFormats(render)[format];
 
     if (bufferTarget == BufferTarget::Dumb || importMode == MultiGpuImportMode::GpuCopy) {
-        if (!m_backend->renderDevice() || !m_gpu->renderDevice()) {
-            return nullptr;
-        }
         GraphicsBufferOptions options{
             .size = size,
             .format = format,
@@ -402,7 +405,7 @@ std::unique_ptr<DrmPipelineLayer::Surface> DrmPipelineLayer::createSurface(const
             .software = bufferTarget == BufferTarget::Dumb,
             .scanout = true,
         };
-        auto copy = MultiGpuSwapchain::createForScanout(m_backend->renderDevice(), m_gpu->drmDevice(), options, FormatModifierMap{{format, modifiers}});
+        auto copy = MultiGpuSwapchain::createForScanout(render, m_gpu->drmDevice(), options, FormatModifierMap{{format, modifiers}});
         if (!copy) {
             return nullptr;
         }
@@ -426,7 +429,7 @@ std::unique_ptr<DrmPipelineLayer::Surface> DrmPipelineLayer::createSurface(const
     if (importMode == MultiGpuImportMode::None && bufferTarget == BufferTarget::Normal) {
         ret->swapchain = Swapchain::create(m_gpu->drmDevice()->allocator(), options);
     } else {
-        ret->swapchain = Swapchain::create(m_backend->renderDevice()->allocator(), options);
+        ret->swapchain = Swapchain::create(render->allocator(), options);
     }
     ret->tradeoff = tradeoff;
     ret->requiredAlphaBits = requiredAlphaBits;

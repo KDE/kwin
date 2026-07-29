@@ -17,6 +17,7 @@ namespace KWin
 class RenderBackend;
 class Swapchain;
 class SwapchainSlot;
+class RenderDevice;
 
 class KWIN_EXPORT VirtualLayer : public OutputLayer
 {
@@ -34,6 +35,8 @@ public:
 
 private:
     RenderBackend *const m_backend;
+    RenderDevice *const m_device;
+
     std::shared_ptr<Swapchain> m_swapchain;
     std::shared_ptr<SwapchainSlot> m_current;
     DamageJournal m_damageJournal;

@@ -142,10 +142,10 @@ class KWIN_EXPORT RenderBackend : public QObject
     Q_OBJECT
 
 public:
-    virtual RenderDevice *renderDevice() const;
+    RenderDevice *renderDevice(BackendOutput *output) const;
+    virtual FormatModifierMap supportedFormats(RenderDevice *device) const = 0;
 
     virtual bool testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice);
-    virtual FormatModifierMap supportedFormats() const;
 };
 
 } // namespace KWin

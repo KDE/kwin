@@ -88,7 +88,7 @@ static FormatModifierMap getRenderableFormats(EglDisplay *eglDisplay, VulkanDevi
 {
     FormatModifierMap ret = eglDisplay->nonExternalOnlySupportedDrmFormats();
     if (vulkanDevice) {
-        ret = ret.intersected(vulkanDevice->transferFormats());
+        ret = ret.intersected(vulkanDevice->storageFormats());
     }
     return ret;
 }

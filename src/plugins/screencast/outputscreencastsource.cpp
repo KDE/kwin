@@ -103,7 +103,7 @@ void OutputScreenCastSource::resume()
         return;
     }
 
-    m_layer = std::make_unique<ScreencastLayer>(m_output, Compositor::self()->backend()->supportedFormats());
+    m_layer = std::make_unique<ScreencastLayer>(m_output, Compositor::self()->backend()->supportedFormats(m_renderDevice));
 
     m_sceneView = std::make_unique<FilteredSceneView>(kwinApp()->scene(), m_output, m_layer.get(), m_renderDevice, m_pidToHide);
     m_sceneView->setViewport(m_output->geometryF());
