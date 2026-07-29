@@ -36,7 +36,8 @@ public:
     bool provides(Feature) override;
     void reconfigure(ReconfigureFlags flags) override;
     int requestedEffectChainPosition() const override;
-    bool drawWindow(const RenderTarget &renderTarget,
+    bool drawWindow(RenderDevice *device,
+                    const RenderTarget &renderTarget,
                     const RenderViewport &viewport,
                     EffectWindow *w,
                     int mask,
