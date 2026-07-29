@@ -212,7 +212,7 @@ void AnimationEffect::validate(Attribute a, uint &meta, FPx2 *from, FPx2 *to, co
     }
 }
 
-quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, std::chrono::milliseconds duration, FPx2 to, const QEasingCurve &curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect, bool keepAlive, GLShader *shader)
+quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, const QByteArray &metaUniform, std::chrono::milliseconds duration, FPx2 to, const QEasingCurve &curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect, bool keepAlive, FragmentShaderInfo *shader)
 {
     const bool waitAtSource = from.isValid();
     validate(a, meta, &from, &to, w);
@@ -241,16 +241,18 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, std:
         CrossFadeEffect::redirect(w);
     }
 
-    animations.push_back(AniData(
+    animations.push_back(AniData{
         a, // Attribute
-        meta, // Metadata
+        int(meta), // Metadata
+        metaUniform,
         to, // Target
         delay, // Delay
         from, // Source
         waitAtSource, // Whether the animation should be kept at source
         fullscreen, // Full screen effect lock
         keepAlive, // Keep alive flag
-        shader));
+        shader,
+    });
 
     const quint64 ret_id = ++d->m_animCounter;
     AniData &animation = animations.back();
@@ -611,16 +613,14 @@ bool AnimationEffect::paintWindow(const RenderTarget &renderTarget, const Render
             break;
         case Shader:
             if (anim.shader) {
-                ShaderBinder binder{anim.shader};
-                anim.shader->setUniform("animationProgress", progress(anim));
+                anim.shader->m_floatUniforms[QByteArrayLiteral("animationProgress")] = progress(anim);
                 setShader(w, anim.shader);
             }
             break;
         case ShaderUniform:
             if (anim.shader) {
-                ShaderBinder binder{anim.shader};
-                anim.shader->setUniform("animationProgress", progress(anim));
-                anim.shader->setUniform(anim.meta, interpolated(anim));
+                anim.shader->m_floatUniforms[QByteArrayLiteral("animationProgress")] = progress(anim);
+                anim.shader->m_floatUniforms[anim.metaUniform] = interpolated(anim);
                 setShader(w, anim.shader);
             }
             break;

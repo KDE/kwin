@@ -35,6 +35,8 @@ class ThumbnailAsideEffect
 public:
     ThumbnailAsideEffect();
     void reconfigure(ReconfigureFlags) override;
+
+    void prePaintScreen(ScreenPrePaintData &data) override;
     bool paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
     bool paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data) override;
 
@@ -69,6 +71,7 @@ private:
     void addThumbnail(EffectWindow *w);
     void removeThumbnail(EffectWindow *w);
     void arrange();
+
     struct Data
     {
         EffectWindow *window; // the same like the key in the hash (makes code simpler)
@@ -81,6 +84,7 @@ private:
     double opacity;
     int screen;
     Region painted;
+    RenderView *m_currentView = nullptr;
 };
 
 } // namespace

@@ -84,7 +84,7 @@ void InvertEffect::invert(EffectWindow *window)
     }
 
     redirect(window);
-    setShader(window, m_shader.get());
+    setShader(window, &m_shader);
 }
 
 void InvertEffect::uninvert(EffectWindow *window)
@@ -97,11 +97,9 @@ bool InvertEffect::loadData()
     ensureResources();
     m_inited = true;
 
-    m_shader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/invert/shaders/invert.frag"));
-    if (!m_shader) {
-        qCCritical(KWIN_INVERT) << "The shader failed to load!";
-        return false;
-    }
+    m_shader = {};
+    m_shader.m_traits = ShaderTrait::MapTexture;
+    m_shader.m_path = QStringLiteral(":/effects/invert/shaders/invert.frag");
 
     return true;
 }

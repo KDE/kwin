@@ -206,7 +206,7 @@ private:
 
     QJSValue animate_helper(const QJSValue &object, AnimationType animationType);
 
-    GLShader *findShader(uint shaderId) const;
+    FragmentShaderInfo *findShader(uint shaderId);
 
     QJSEngine *m_engine;
     QString m_effectName;
@@ -218,7 +218,7 @@ private:
     int m_chainPosition;
     QHash<int, QAction *> m_touchScreenEdgeCallbacks;
     Effect *m_activeFullScreenEffect = nullptr;
-    std::map<uint, std::unique_ptr<GLShader>> m_shaders;
+    std::map<uint, FragmentShaderInfo> m_shaders;
     uint m_nextShaderId{1u};
 };
 

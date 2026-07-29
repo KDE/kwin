@@ -37,10 +37,10 @@ class KWIN_EXPORT AniData
 {
 public:
     AniData();
-    AniData(AnimationEffect::Attribute a, int meta, const FPx2 &to,
+    AniData(AnimationEffect::Attribute a, int meta, const QByteArray &metaUniform, const FPx2 &to,
             int delay, const FPx2 &from, bool waitAtSource,
             const std::shared_ptr<FullScreenEffectLock> &lock = nullptr,
-            bool keepAlive = true, GLShader *shader = nullptr);
+            bool keepAlive = true, FragmentShaderInfo *shader = nullptr);
 
     bool isActive() const;
 
@@ -64,8 +64,9 @@ public:
     EffectWindowDeletedRef deletedRef;
     EffectWindowVisibleRef visibleRef;
     AnimationEffect::TerminationFlags terminationFlags;
-    GLShader *shader{nullptr};
+    FragmentShaderInfo *shader{nullptr};
     ItemEffect itemEffect;
+    QByteArray metaUniform;
 };
 
 } // namespace

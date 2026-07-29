@@ -51,7 +51,7 @@ private:
 
     bool m_inited;
     bool m_valid;
-    std::unique_ptr<GLShader> m_shader;
+    FragmentShaderInfo m_shader;
     bool m_allWindows;
     QList<EffectWindow *> m_windows;
 };

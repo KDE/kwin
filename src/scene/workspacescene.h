@@ -88,7 +88,7 @@ protected:
     // shared implementation, starts painting the window
     [[nodiscard]] bool paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, WindowItem *w, int mask, const Region &deviceRegion);
     // called after all effects had their drawWindow() called
-    [[nodiscard]] bool finalDrawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
+    [[nodiscard]] bool finalDrawWindow(RenderDevice *device, const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
 
     // saved data for 2nd pass of optimized screen painting
     struct Phase2Data
