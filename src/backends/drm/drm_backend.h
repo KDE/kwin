@@ -39,7 +39,7 @@ public:
     ~DrmBackend() override;
 
     std::unique_ptr<InputBackend> createInputBackend() override;
-    std::unique_ptr<EglBackend> createOpenGLBackend(RenderDevice *device) override;
+    std::unique_ptr<EglBackend> createOpenGLBackend() override;
 
     bool initialize() override;
 

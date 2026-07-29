@@ -37,7 +37,7 @@ class WaylandEglBackend;
 class WaylandEglLayer : public WaylandLayer
 {
 public:
-    WaylandEglLayer(WaylandOutput *output, WaylandEglBackend *backend, OutputLayerType type, int zpos);
+    WaylandEglLayer(WaylandOutput *output, WaylandEglBackend *backend, RenderDevice *device, OutputLayerType type, int zpos);
     ~WaylandEglLayer() override;
 
     GLFramebuffer *fbo() const;
@@ -49,11 +49,15 @@ public:
     void releaseBuffers() override;
 
 private:
+    WaylandEglBackend *const m_backend;
+    RenderDevice *const m_device;
+    const std::shared_ptr<EglContext> m_context;
+    const FormatModifierMap m_formats;
+
     DamageJournal m_damageJournal;
     std::shared_ptr<EglSwapchain> m_swapchain;
     std::shared_ptr<EglSwapchainSlot> m_buffer;
     std::unique_ptr<GLRenderTimeQuery> m_query;
-    WaylandEglBackend *const m_backend;
 
     friend class WaylandEglBackend;
 };
@@ -63,7 +67,7 @@ class WaylandEglCursorLayer : public OutputLayer
     Q_OBJECT
 
 public:
-    WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBackend *backend);
+    WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBackend *backend, RenderDevice *device);
     ~WaylandEglCursorLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
@@ -73,6 +77,9 @@ public:
 
 private:
     WaylandEglBackend *m_backend;
+    RenderDevice *const m_device;
+    const std::shared_ptr<EglContext> m_context;
+
     std::shared_ptr<EglSwapchain> m_swapchain;
     std::shared_ptr<EglSwapchainSlot> m_buffer;
     std::unique_ptr<GLRenderTimeQuery> m_query;
@@ -95,7 +102,7 @@ class WaylandEglBackend : public EglBackend
     Q_OBJECT
 
 public:
-    WaylandEglBackend(WaylandBackend *b, RenderDevice *device);
+    WaylandEglBackend(WaylandBackend *b);
     ~WaylandEglBackend() override;
 
     WaylandBackend *backend() const;
