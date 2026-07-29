@@ -38,15 +38,15 @@ static EglGbmLayerSurface::BufferTarget targetFor(DrmGpu *gpu, DrmPlane::TypeInd
     }
 }
 
-EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmPlane *plane)
+EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, RenderDevice *device, DrmPlane *plane)
     : DrmPipelineLayer(plane)
-    , m_surface(plane->gpu(), eglBackend, targetFor(plane->gpu(), plane->type.enumValue()))
+    , m_surface(plane->gpu(), eglBackend, device, targetFor(plane->gpu(), plane->type.enumValue()))
 {
 }
 
-EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmGpu *gpu, DrmPlane::TypeIndex type)
+EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, RenderDevice *device, DrmGpu *gpu, DrmPlane::TypeIndex type)
     : DrmPipelineLayer(type)
-    , m_surface(gpu, eglBackend, targetFor(gpu, type))
+    , m_surface(gpu, eglBackend, device, targetFor(gpu, type))
 {
 }
 

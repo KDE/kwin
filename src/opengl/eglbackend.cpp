@@ -9,6 +9,7 @@
 */
 #include "opengl/eglbackend.h"
 #include "compositor.h"
+#include "core/backendoutput.h"
 #include "core/drm_formats.h"
 #include "core/drmdevice.h"
 #include "core/gpumanager.h"
@@ -33,8 +34,7 @@
 namespace KWin
 {
 
-EglBackend::EglBackend(RenderDevice *device)
-    : m_renderDevice(device)
+EglBackend::EglBackend()
 {
     connect(GpuManager::s_self.get(), &GpuManager::renderDeviceAdded, this, &EglBackend::updateDmabufTranches);
     connect(GpuManager::s_self.get(), &GpuManager::renderDeviceRemoved, this, &EglBackend::updateDmabufTranches);
@@ -45,16 +45,14 @@ CompositingType EglBackend::compositingType() const
     return OpenGLCompositing;
 }
 
-bool EglBackend::checkGraphicsReset()
+bool EglBackend::checkGraphicsReset(RenderDevice *device)
 {
-    const auto context = openglContext();
-    if (context != EglContext::currentContext()) {
-        const bool success = context->makeCurrent();
-        if (!success) {
-            // not necessarily a graphics reset, but we can't really know
-            // and need to re-create everything either way
-            return true;
-        }
+    const auto context = device->eglContext();
+    const bool success = context && context->makeCurrent();
+    if (!success) {
+        // not necessarily a graphics reset, but we can't really know
+        // and need to re-create everything either way
+        return true;
     }
     const GLenum status = context->checkGraphicsResetStatus();
     if (Q_LIKELY(status == GL_NO_ERROR)) {
@@ -148,27 +146,28 @@ void EglBackend::updateDmabufTranches()
     m_tranches.clear();
 
     // put the "main" device first, with EGL format+modifiers
+    const auto main = Compositor::self()->primaryDevice();
     m_tranches.append({
-        .device = m_renderDevice->deviceId(),
+        .device = main->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-        .formatTable = filterFormats(m_renderDevice, 10),
+        .formatTable = filterFormats(main, 10),
     });
     m_tranches.append({
-        .device = m_renderDevice->deviceId(),
+        .device = main->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-        .formatTable = filterFormats(m_renderDevice, 8),
+        .formatTable = filterFormats(main, 8),
     });
     m_tranches.append({
-        .device = m_renderDevice->deviceId(),
+        .device = main->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-        .formatTable = filterFormats(m_renderDevice, std::nullopt),
+        .formatTable = filterFormats(main, std::nullopt),
     });
 
     // Other GPUs come afterwards, in no particular order.
     // Until the copy code can handle them, YUV formats are excluded from this
     const auto &devices = GpuManager::s_self->renderDevices();
     for (const auto &device : devices) {
-        if (device.get() == m_renderDevice) {
+        if (device.get() == main) {
             continue;
         }
         if (!s_dmabufV6Env.value_or(true)) {
@@ -226,12 +225,6 @@ bool EglBackend::hasClientExtension(const QByteArray &ext) const
     return m_clientExtensions.contains(ext);
 }
 
-bool EglBackend::createContext()
-{
-    m_context = m_renderDevice->eglContext();
-    return m_context != nullptr;
-}
-
 QList<LinuxDmaBufV1Feedback::Tranche> EglBackend::tranches() const
 {
     return m_tranches;
@@ -244,42 +237,20 @@ bool EglBackend::testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice)
         return false;
     }
 
-    if (device != m_renderDevice && device->vulkanDevice() && device->vulkanDevice()->transferFormats().containsFormat(buffer->dmabufAttributes()->format, buffer->dmabufAttributes()->modifier)) {
-        if (device->vulkanDevice()->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_SRC_BIT)) {
-            return true;
-        }
-        // allow falling back to EGL
-    }
-
     // NOTE for YUV buffers this uses whatever default values
     // the OpenGL driver chooses, since we don't know yet which
     // parameters the client will use with the buffer later on
     return device->eglDisplay()->importBufferAsImage(buffer) != EGL_NO_IMAGE_KHR;
 }
 
-FormatModifierMap EglBackend::supportedFormats() const
+RenderDevice *EglBackend::renderDevice(BackendOutput *output) const
 {
-    return m_renderDevice->eglDisplay()->nonExternalOnlySupportedDrmFormats();
+    return Compositor::self()->primaryDevice();
 }
 
-EglDisplay *EglBackend::eglDisplayObject() const
+FormatModifierMap EglBackend::supportedFormats(RenderDevice *device) const
 {
-    return m_renderDevice->eglDisplay();
-}
-
-EglContext *EglBackend::openglContext() const
-{
-    return m_context.get();
-}
-
-std::shared_ptr<EglContext> EglBackend::openglContextRef() const
-{
-    return m_context;
-}
-
-RenderDevice *EglBackend::renderDevice() const
-{
-    return m_renderDevice;
+    return device->eglDisplay()->nonExternalOnlySupportedDrmFormats();
 }
 
 } // namespace KWin

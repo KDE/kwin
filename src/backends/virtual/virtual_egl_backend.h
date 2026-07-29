@@ -43,6 +43,9 @@ public:
 
 private:
     VirtualEglBackend *const m_backend;
+    RenderDevice *const m_device;
+    const std::shared_ptr<EglContext> m_context;
+
     std::shared_ptr<EglSwapchain> m_swapchain;
     std::shared_ptr<EglSwapchainSlot> m_current;
     std::unique_ptr<GLRenderTimeQuery> m_query;
@@ -57,7 +60,7 @@ class VirtualEglBackend : public EglBackend
     Q_OBJECT
 
 public:
-    VirtualEglBackend(VirtualBackend *b, RenderDevice *renderDevice);
+    VirtualEglBackend(VirtualBackend *b);
     ~VirtualEglBackend() override;
 
     QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) override;
