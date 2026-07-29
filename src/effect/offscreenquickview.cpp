@@ -19,6 +19,7 @@
 #include "input_event.h"
 #include "logging_p.h"
 #include "opengl/eglcontext.h"
+#include "opengl/egldisplay.h"
 #include "opengl/eglnativefence.h"
 #include "opengl/glrendertimequery.h"
 #include "opengl/glutils.h"
@@ -334,7 +335,8 @@ void OffscreenQuickView::update(OutputFrame *frame)
             fboFormat.setInternalTextureFormat(GL_RGBA8);
 
             const uint32_t format = d->m_hasAlphaChannel ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888;
-            if (d->m_scanoutDevice && GpuManager::self()->compatibleRenderDevice(d->m_scanoutDevice) == Compositor::self()->backend()->renderDevice()) {
+            const auto device = Compositor::self()->primaryDevice();
+            if (d->m_scanoutDevice && GpuManager::self()->compatibleRenderDevice(d->m_scanoutDevice) == device) {
                 GraphicsBufferOptions options{
                     .size = nativeSize,
                     .format = format,
@@ -349,11 +351,11 @@ void OffscreenQuickView::update(OutputFrame *frame)
                 GraphicsBufferOptions options{
                     .size = nativeSize,
                     .format = format,
-                    .modifiers = Compositor::self()->backend()->supportedFormats()[format],
+                    .modifiers = device->eglDisplay()->nonExternalOnlySupportedDrmFormats()[format],
                     .software = false,
                     .scanout = false,
                 };
-                d->m_swapchain = Swapchain::create(Compositor::self()->backend()->renderDevice()->allocator(), options);
+                d->m_swapchain = Swapchain::create(device->allocator(), options);
             }
             if (!d->m_swapchain) {
                 d->m_glcontext->doneCurrent();
