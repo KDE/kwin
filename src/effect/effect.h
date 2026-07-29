@@ -653,16 +653,10 @@ public:
 
     /*!
      * Constructs new Effect object.
-     *
-     * In OpenGL based compositing, the frameworks ensures that the context is current
-     * when the Effect is constructed.
      */
     Effect(QObject *parent = nullptr);
     /*!
      * Destructs the Effect object.
-     *
-     * In OpenGL based compositing, the frameworks ensures that the context is current
-     * when the Effect is destroyed.
      */
     ~Effect() override;
 
@@ -678,10 +672,6 @@ public:
 
     /*!
      * Called when configuration changes (either the effect's or KWin's global).
-     *
-     * In OpenGL based compositing, the frameworks ensures that the context is current
-     * when the Effect is reconfigured. If this method is called from within the Effect it is
-     * required to ensure that the context is current if the implementation does OpenGL calls.
      */
     virtual void reconfigure(ReconfigureFlags flags);
 
@@ -713,8 +703,8 @@ public:
      *      by calling effects->paintScreen() multiple times
      * \endlist
      *
-     * In OpenGL based compositing, the frameworks ensures that the context is current
-     * when this method is invoked.
+     * In OpenGL based compositing, the frameworks ensures that the appropriate
+     * context is current when this method is invoked.
      *
      * @returns if painting was successful or failed (for example because of a GPU reset).
      *          If painting failed, effects should stop rendering immediately.
@@ -746,8 +736,8 @@ public:
      * \li request the window to be divided into multiple parts
      * \endlist
      *
-     * In OpenGL based compositing, the frameworks ensures that the context is current
-     * when this method is invoked.
+     * In OpenGL based compositing, the frameworks ensures that the appropriate
+     * context is current when this method is invoked.
      */
     virtual void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data);
     /*!
@@ -760,8 +750,8 @@ public:
      * \li change brightness and/or saturation, if it's supported
      * \endlist
      *
-     * In OpenGL based compositing, the frameworks ensures that the context is current
-     * when this method is invoked.
+     * In OpenGL based compositing, the frameworks ensures that the appropriate
+     * context is current when this method is invoked.
      */
     [[nodiscard]] virtual bool paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
 
@@ -791,8 +781,8 @@ public:
      * You can change window's opacity/brightness/etc here, but you can't
      *  do any transformations.
      *
-     * In OpenGL based compositing, the frameworks ensures that the context is current
-     * when this method is invoked.
+     * In OpenGL based compositing, the frameworks ensures that the appropriate
+     * context is current when this method is invoked.
      */
     [[nodiscard]] virtual bool drawWindow(RenderDevice *device, const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
 
