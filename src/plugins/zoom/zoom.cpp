@@ -11,6 +11,7 @@
 
 #include "zoom.h"
 #include "core/pixelgrid.h"
+#include "core/renderdevice.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "cursor.h"
@@ -125,7 +126,6 @@ ZoomEffect::ZoomEffect()
     connect(effects->scene(), &WorkspaceScene::viewRemoved, this, [this](RenderView *view) {
         auto it = m_offscreenData.find(view);
         if (it != m_offscreenData.end()) {
-            effects->makeOpenGLContextCurrent();
             m_offscreenData.erase(it);
         }
     });
@@ -345,7 +345,6 @@ void ZoomEffect::prePaintView(SceneView *view, OutputFrame *frame)
     if (m_zoom == 1.0) {
         auto it = m_offscreenData.find(view);
         if (it != m_offscreenData.end()) {
-            effects->makeOpenGLContextCurrent();
             m_offscreenData.erase(it);
             view->addDeviceRepaint(view->deviceRect());
         }
@@ -358,6 +357,11 @@ void ZoomEffect::prePaintView(SceneView *view, OutputFrame *frame)
     });
 
     OffscreenData &data = m_offscreenData[view];
+    data.m_context = view->renderDevice()->eglContext();
+    if (!data.m_context || !data.m_context->makeCurrent()) {
+        return;
+    }
+
     data.color = view->logicalOutput()->blendingColor();
     if (!data.view) {
         data.view = std::make_unique<SceneView>(effects->scene(), view->logicalOutput(), nullptr, nullptr, view->renderDevice());
@@ -372,10 +376,6 @@ void ZoomEffect::prePaintView(SceneView *view, OutputFrame *frame)
     data.view->setViewport(newViewport);
     data.view->setScale(view->scale());
     data.view->setNextPresentationTimestamp(view->nextPresentationTimestamp(), view->refreshRate(), nullptr);
-
-    if (!effects->makeOpenGLContextCurrent()) {
-        return;
-    }
 
     const QSize nativeSize = (newViewport.size() * data.view->scale()).toSize();
     const GLenum textureFormat = data.color == ColorDescription::sRGB ? GL_RGBA8 : GL_RGBA16F;
@@ -399,7 +399,7 @@ void ZoomEffect::prePaintView(SceneView *view, OutputFrame *frame)
 
     data.view->prePaint(frame);
     // NOTE that prePaint can change the current context
-    if (!effects->makeOpenGLContextCurrent()) {
+    if (!data.m_context->makeCurrent()) {
         return;
     }
     data.view->paint(offscreenRenderTarget, QPoint(), Rect(QPoint(), nativeSize));
@@ -408,23 +408,23 @@ void ZoomEffect::prePaintView(SceneView *view, OutputFrame *frame)
     view->addDeviceRepaint(view->deviceRect());
 }
 
-GLShader *ZoomEffect::shaderForZoom(double zoom)
+GLShader *ZoomEffect::shaderForZoom(OffscreenData &data, double zoom)
 {
     if (zoom >= m_pixelGridZoom) {
-        if (!m_pixelGridShader) {
-            m_pixelGridShader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/zoom/shaders/pixelgrid.frag"));
+        if (!data.m_pixelGridShader) {
+            data.m_pixelGridShader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/zoom/shaders/pixelgrid.frag"));
         }
-        if (m_pixelGridShader) {
-            return m_pixelGridShader.get();
+        if (data.m_pixelGridShader) {
+            return data.m_pixelGridShader.get();
         }
     }
 
     if (m_usePatternUpscaler) {
-        if (!m_upscalerShader) {
-            m_upscalerShader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/zoom/shaders/upscaler.frag"));
+        if (!data.m_upscalerShader) {
+            data.m_upscalerShader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/zoom/shaders/upscaler.frag"));
         }
-        if (m_upscalerShader) {
-            return m_upscalerShader.get();
+        if (data.m_upscalerShader) {
+            return data.m_upscalerShader.get();
         }
 
         // if the shader doesn't load, disable the setting so we don't keep trying each repaint.
@@ -445,7 +445,7 @@ bool ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
     }
     OffscreenData &offscreenData = it->second;
 
-    GLShader *shader = shaderForZoom(m_zoom);
+    GLShader *shader = shaderForZoom(offscreenData, m_zoom);
     if (!shader) {
         return false;
     }
@@ -704,6 +704,13 @@ void ZoomEffect::trackFocus()
     m_focusTracker = std::make_unique<FocusTracker>();
     connect(m_focusTracker.get(), &FocusTracker::moved, this, &ZoomEffect::moveFocus);
 #endif
+}
+
+ZoomEffect::OffscreenData::~OffscreenData()
+{
+    if (m_context) {
+        (void)m_context->makeCurrent();
+    }
 }
 
 } // namespace
