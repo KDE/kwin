@@ -35,6 +35,7 @@ class WindowPaintDataPrivate;
 class RenderView;
 class OutputFrame;
 class SceneView;
+class RenderDevice;
 
 /*!
  * \page kwin-effects.html
@@ -793,7 +794,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    [[nodiscard]] virtual bool drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
+    [[nodiscard]] virtual bool drawWindow(RenderDevice *device, const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
 
     /*!
      * This function can be overriden to handle grabbed keyboard input.

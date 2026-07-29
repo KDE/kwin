@@ -41,10 +41,10 @@ AniData::AniData()
 {
 }
 
-AniData::AniData(AnimationEffect::Attribute a, int meta_, const FPx2 &to_,
+AniData::AniData(AnimationEffect::Attribute a, int meta_, const QByteArray &metaUniform, const FPx2 &to_,
                  int delay, const FPx2 &from_, bool waitAtSource_,
                  const std::shared_ptr<FullScreenEffectLock> &fullScreenEffectLock, bool keepAlive,
-                 GLShader *shader)
+                 FragmentShaderInfo *shader)
     : attribute(a)
     , from(from_)
     , to(to_)
@@ -55,6 +55,7 @@ AniData::AniData(AnimationEffect::Attribute a, int meta_, const FPx2 &to_,
     , waitAtSource(waitAtSource_)
     , keepAlive(keepAlive)
     , shader(shader)
+    , metaUniform(metaUniform)
 {
 }
 

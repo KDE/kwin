@@ -6,6 +6,7 @@
 
 #include "effect/offscreeneffect.h"
 #include "compositor.h"
+#include "core/gpumanager.h"
 #include "core/output.h"
 #include "core/pixelgrid.h"
 #include "core/renderdevice.h"
@@ -30,21 +31,38 @@ struct OffscreenData
 public:
     virtual ~OffscreenData();
     void setDirty();
-    void setShader(GLShader *newShader);
+    void setShader(FragmentShaderInfo *shader);
     void setVertexSnappingMode(RenderGeometry::VertexSnappingMode mode);
 
-    void paint(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, const Region &deviceRegion,
-               const WindowPaintData &data, const WindowQuadList &quads);
+    [[nodiscard]] bool paint(RenderDevice *device, const RenderTarget &renderTarget, const RenderViewport &viewport,
+                             EffectWindow *window, const Region &deviceRegion,
+                             const WindowPaintData &data, const WindowQuadList &quads);
 
-    [[nodiscard]] bool maybeRender(EffectWindow *window);
+    [[nodiscard]] bool maybeRender(RenderDevice *device, EffectWindow *window);
 
-    std::shared_ptr<EglSwapchain> m_swapchain;
-    std::shared_ptr<EglSwapchainSlot> m_slot;
-    std::shared_ptr<SyncReleasePoint> m_releasePoint;
-    std::shared_ptr<ColorDescription> m_colorDescription = ColorDescription::sRGB;
-    bool m_isDirty = true;
     bool m_recursionGuard = false;
-    GLShader *m_shader = nullptr;
+
+    struct GLResources
+    {
+        ~GLResources();
+
+        std::shared_ptr<EglContext> m_context;
+        std::shared_ptr<EglSwapchain> m_swapchain;
+        std::shared_ptr<EglSwapchainSlot> m_slot;
+        std::shared_ptr<SyncReleasePoint> m_releasePoint;
+        std::shared_ptr<ColorDescription> m_colorDescription = ColorDescription::sRGB;
+
+        std::unique_ptr<MultiGpuSwapchain> m_mgpuSwapchain;
+        std::shared_ptr<GLTexture> m_importedTexture;
+
+        bool m_isDirty = true;
+        std::unique_ptr<GLShader> m_shader;
+        QString m_shaderPath;
+        ShaderTraits m_shaderTraits;
+    };
+    std::unordered_map<RenderDevice *, GLResources> m_resources;
+
+    FragmentShaderInfo *m_shaderInfo = nullptr;
     RenderGeometry::VertexSnappingMode m_vertexSnappingMode = RenderGeometry::VertexSnappingMode::Round;
     QMetaObject::Connection m_windowDamagedConnection;
     ItemEffect m_windowEffect;
@@ -62,6 +80,11 @@ OffscreenEffect::OffscreenEffect(QObject *parent)
     : Effect(parent)
     , d(std::make_unique<OffscreenEffectPrivate>())
 {
+    connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, [this](RenderDevice *removed) {
+        for (auto &[window, data] : d->windows) {
+            data->m_resources.erase(removed);
+        }
+    });
 }
 
 OffscreenEffect::~OffscreenEffect() = default;
@@ -95,17 +118,13 @@ void OffscreenEffect::unredirect(EffectWindow *window)
         return;
     }
 
-    if (!EglContext::currentContext()) {
-        (void)effects->openglContext()->makeCurrent();
-    }
-
     d->windows.erase(it);
     if (d->windows.empty()) {
         destroyConnections();
     }
 }
 
-void OffscreenEffect::setShader(EffectWindow *window, GLShader *shader)
+void OffscreenEffect::setShader(EffectWindow *window, FragmentShaderInfo *shader)
 {
     if (const auto it = d->windows.find(window); it != d->windows.end()) {
         it->second->setShader(shader);
@@ -116,22 +135,44 @@ void OffscreenEffect::apply(EffectWindow *window, int mask, WindowPaintData &dat
 {
 }
 
-bool OffscreenData::maybeRender(EffectWindow *window)
+OffscreenData::GLResources::~GLResources()
+{
+    if (m_context) {
+        (void)m_context->makeCurrent();
+    }
+}
+
+bool OffscreenData::maybeRender(RenderDevice *device, EffectWindow *window)
 {
     const qreal scale = window->screen()->scale();
     const RectF logicalGeometry = snapToPixels(window->expandedGeometry(), scale);
     const QSize textureSize = (logicalGeometry.size() * scale).toSize();
 
     if (textureSize.isEmpty()) {
-        m_swapchain.reset();
-        m_slot.reset();
-        return true;
+        m_resources.erase(device);
+        return EglContext::currentContext() != nullptr;
     }
+
+    auto &resources = m_resources[device];
+    if (!resources.m_context) {
+        resources.m_context = device->eglContext();
+        if (!resources.m_context) {
+            return false;
+        }
+    }
+
+    if (resources.m_mgpuSwapchain) {
+        resources.m_importedTexture.reset();
+        resources.m_mgpuSwapchain.reset();
+        if (!EglContext::currentContext()) {
+            return false;
+        }
+    }
+
     // Capture the window in the color space the scene is blended in, so that a window with a wider
     // color description than sRGB keeps its colors while it is redirected.
     const std::shared_ptr<ColorDescription> &colorDescription = window->screen()->blendingColor();
 
-    const auto device = Compositor::self()->primaryDevice();
     const FormatModifierMap &supportedFormats = device->eglDisplay()->nonExternalOnlySupportedDrmFormats();
     // An 8 bit intermediate bands, most visibly across an HDR blending space's luminance range, so
     // ask for 16 and let chooseFormat settle on what this device actually supports.
@@ -141,8 +182,8 @@ bool OffscreenData::maybeRender(EffectWindow *window)
                                 .modifiers = supportedFormats[DRM_FORMAT_ARGB8888],
                             });
 
-    if (!m_swapchain || m_swapchain->size() != textureSize || m_swapchain->format() != chosen.format) {
-        m_slot.reset();
+    if (!resources.m_swapchain || resources.m_swapchain->size() != textureSize || resources.m_swapchain->format() != chosen.format) {
+        resources.m_slot.reset();
 
         GraphicsBufferOptions options{
             .size = textureSize,
@@ -151,27 +192,27 @@ bool OffscreenData::maybeRender(EffectWindow *window)
             .software = device->isSoftwareDevice(),
             .scanout = false,
         };
-        m_swapchain = EglSwapchain::create(device, options);
-        if (!m_swapchain) {
+        resources.m_swapchain = EglSwapchain::create(device, options);
+        if (!resources.m_swapchain) {
             return false;
         }
-        m_isDirty = true;
+        resources.m_isDirty = true;
     }
-    if (m_colorDescription != colorDescription) {
-        m_colorDescription = colorDescription;
-        m_isDirty = true;
+    if (resources.m_colorDescription != colorDescription) {
+        resources.m_colorDescription = colorDescription;
+        resources.m_isDirty = true;
     }
 
-    if (!m_isDirty) {
+    if (!resources.m_isDirty) {
         return true;
     }
-    m_slot = m_swapchain->acquire();
-    if (!m_slot) {
+    resources.m_slot = resources.m_swapchain->acquire();
+    if (!resources.m_slot) {
         return false;
     }
-    RenderTarget renderTarget(m_slot->framebuffer(), m_colorDescription);
+    RenderTarget renderTarget(resources.m_slot->framebuffer(), resources.m_colorDescription);
     RenderViewport viewport(logicalGeometry, scale, renderTarget, QPoint());
-    GLFramebuffer::pushFramebuffer(m_slot->framebuffer());
+    GLFramebuffer::pushFramebuffer(resources.m_slot->framebuffer());
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -182,20 +223,20 @@ bool OffscreenData::maybeRender(EffectWindow *window)
     // This method can be called from redirect, in which case drawWindow
     // will call on the effect again to render itself
     m_recursionGuard = true;
-    if (!effects->drawWindow(renderTarget, viewport, window, mask, Region::infinite(), data)) {
-        m_slot.reset();
-        m_swapchain.reset();
+    if (!effects->drawWindow(device, renderTarget, viewport, window, mask, Region::infinite(), data)) {
+        resources.m_slot.reset();
+        resources.m_swapchain.reset();
         m_recursionGuard = false;
         return false;
     }
     m_recursionGuard = false;
 
     GLFramebuffer::popFramebuffer();
-    EGLNativeFence fence(m_swapchain->context()->displayObject());
-    m_swapchain->release(m_slot, fence.takeFileDescriptor());
-    m_releasePoint = m_slot->releasePoint();
+    EGLNativeFence fence(resources.m_swapchain->context()->displayObject());
+    resources.m_swapchain->release(resources.m_slot, fence.takeFileDescriptor());
+    resources.m_releasePoint = resources.m_slot->releasePoint();
 
-    m_isDirty = false;
+    resources.m_isDirty = false;
     return true;
 }
 
@@ -206,12 +247,14 @@ OffscreenData::~OffscreenData()
 
 void OffscreenData::setDirty()
 {
-    m_isDirty = true;
+    for (auto &[device, resource] : m_resources) {
+        resource.m_isDirty = true;
+    }
 }
 
-void OffscreenData::setShader(GLShader *newShader)
+void OffscreenData::setShader(FragmentShaderInfo *shader)
 {
-    m_shader = newShader;
+    m_shaderInfo = shader;
 }
 
 void OffscreenData::setVertexSnappingMode(RenderGeometry::VertexSnappingMode mode)
@@ -219,13 +262,76 @@ void OffscreenData::setVertexSnappingMode(RenderGeometry::VertexSnappingMode mod
     m_vertexSnappingMode = mode;
 }
 
-void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, const Region &deviceRegion,
+bool OffscreenData::paint(RenderDevice *device, const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, const Region &deviceRegion,
                           const WindowPaintData &data, const WindowQuadList &quads)
 {
-    if (!m_slot) {
-        return;
+    auto &resources = m_resources[device];
+    GLTexture *texture = nullptr;
+
+    if (resources.m_slot) {
+        texture = resources.m_slot->texture().get();
+    } else {
+        // find a different device to copy from.
+        // This can happen with the crossfade effect, which takes a
+        // snapshot of the window on any GPU
+        const auto it = std::ranges::find_if(m_resources, [](const auto &pair) {
+            const auto &[device, resources] = pair;
+            return resources.m_slot != nullptr;
+        });
+        if (it == m_resources.end()) {
+            // Technically this means we failed, but rendering doesn't need to abort because of this
+            return true;
+        }
+
+        const auto &[srcDevice, srcResources] = *it;
+        GraphicsBuffer *srcBuffer = srcResources.m_slot->buffer();
+        if (!resources.m_mgpuSwapchain || !resources.m_mgpuSwapchain->isSuitableFor(srcBuffer)) {
+            resources.m_mgpuSwapchain = MultiGpuSwapchain::createForSampling(srcDevice, device,
+                                                                             srcBuffer->dmabufAttributes()->format,
+                                                                             srcBuffer->dmabufAttributes()->modifier,
+                                                                             srcBuffer->size(),
+                                                                             device->eglDisplay()->allSupportedDrmFormats());
+        }
+        if (!resources.m_mgpuSwapchain || !EglContext::currentContext()) {
+            return false;
+        }
+        auto ret = resources.m_mgpuSwapchain->copyRgbBuffer(srcBuffer, Rect(QPoint(), srcBuffer->size()),
+                                                            srcResources.m_slot->releaseFd().duplicate(), nullptr,
+                                                            srcResources.m_slot->releasePoint());
+        if (!ret || !EglContext::currentContext()) {
+            return EglContext::currentContext() != nullptr;
+        }
+
+        EGLNativeFence fence = EGLNativeFence::importFence(device->eglDisplay(), std::move(ret->sync));
+        fence.waitSync();
+
+        if (!resources.m_context) {
+            resources.m_context = device->eglContext();
+        }
+        if (!resources.m_context || !resources.m_context->makeCurrent()) {
+            return false;
+        }
+
+        resources.m_importedTexture = resources.m_context->importDmaBufAsTexture(*ret->buffer->dmabufAttributes());
+        texture = resources.m_importedTexture.get();
+        resources.m_releasePoint = ret->releasePoint;
+        if (!texture) {
+            return true;
+        }
     }
-    GLShader *shader = m_shader ? m_shader : ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation | ShaderTrait::TransformColorspace);
+
+    const QString shaderPath = m_shaderInfo ? m_shaderInfo->m_path : QString();
+    if (resources.m_shaderPath != shaderPath) {
+        resources.m_shaderPath = shaderPath;
+        if (shaderPath.isEmpty()) {
+            resources.m_shader.reset();
+        } else {
+            resources.m_shaderTraits = m_shaderInfo->m_traits;
+            resources.m_shader = ShaderManager::instance()->generateShaderFromFile(resources.m_shaderTraits, {}, shaderPath);
+        }
+    }
+
+    GLShader *shader = resources.m_shader ? resources.m_shader.get() : ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation | ShaderTrait::TransformColorspace);
     ShaderBinder binder(shader);
 
     const double scale = viewport.scale();
@@ -240,11 +346,11 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     for (auto &quad : quads) {
         geometry.appendWindowQuad(quad, scale);
     }
-    geometry.postProcessTextureCoordinates(m_slot->texture()->matrix(NormalizedCoordinates));
+    geometry.postProcessTextureCoordinates(texture->matrix(NormalizedCoordinates));
 
     const auto map = vbo->map<GLVertex2D>(geometry.size());
     if (!map) {
-        return;
+        return false;
     }
     geometry.copy(*map);
     vbo->unmap();
@@ -262,9 +368,9 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
     shader->setUniform(GLShader::FloatUniform::Saturation, data.saturation());
     shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
-    shader->setUniform(GLShader::IntUniform::TextureWidth, m_slot->texture()->width());
-    shader->setUniform(GLShader::IntUniform::TextureHeight, m_slot->texture()->height());
-    shader->setColorspaceUniforms(m_colorDescription, renderTarget.colorDescription(), RenderingIntent::Perceptual);
+    shader->setUniform(GLShader::IntUniform::TextureWidth, texture->width());
+    shader->setUniform(GLShader::IntUniform::TextureHeight, texture->height());
+    shader->setColorspaceUniforms(resources.m_colorDescription, renderTarget.colorDescription(), RenderingIntent::Perceptual);
 
     const bool clipping = deviceRegion != Region::infinite();
     const Region clipRegion = clipping ? viewport.transform().map(deviceRegion, renderTarget.transformedSize()) : Region::infinite();
@@ -276,9 +382,9 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-    m_slot->texture()->bind();
+    texture->bind();
     vbo->draw(clipRegion, GL_TRIANGLES, 0, geometry.count(), clipping);
-    m_slot->texture()->unbind();
+    texture->unbind();
 
     glDisable(GL_BLEND);
     if (clipping) {
@@ -286,15 +392,19 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     }
     vbo->unbindArrays();
 
-    EGLNativeFence fence(m_swapchain->context()->displayObject());
-    m_releasePoint->addReleaseFence(fence.takeFileDescriptor());
+    if (resources.m_releasePoint) {
+        EGLNativeFence fence(resources.m_context->displayObject());
+        resources.m_releasePoint->addReleaseFence(fence.takeFileDescriptor());
+    }
+
+    return true;
 }
 
-bool OffscreenEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data)
+bool OffscreenEffect::drawWindow(RenderDevice *device, const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
     const auto it = d->windows.find(window);
     if (it == d->windows.end() || it->second->m_recursionGuard) {
-        return effects->drawWindow(renderTarget, viewport, window, mask, deviceRegion, data);
+        return effects->drawWindow(device, renderTarget, viewport, window, mask, deviceRegion, data);
     }
     OffscreenData *offscreenData = it->second.get();
 
@@ -313,11 +423,8 @@ bool OffscreenEffect::drawWindow(const RenderTarget &renderTarget, const RenderV
     quads.append(quad);
     apply(window, mask, data, quads);
 
-    if (!offscreenData->maybeRender(window)) {
-        return false;
-    }
-    offscreenData->paint(renderTarget, viewport, window, deviceRegion, data, quads);
-    return true;
+    return offscreenData->maybeRender(device, window)
+        && offscreenData->paint(device, renderTarget, viewport, window, deviceRegion, data, quads);
 }
 
 void OffscreenEffect::handleWindowDamaged(EffectWindow *window)
@@ -380,13 +487,13 @@ CrossFadeEffect::CrossFadeEffect(QObject *parent)
 
 CrossFadeEffect::~CrossFadeEffect() = default;
 
-bool CrossFadeEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data)
+bool CrossFadeEffect::drawWindow(RenderDevice *device, const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
     const auto it = d->windows.find(window);
 
     // paint the new window (if applicable) underneath
     if (data.crossFadeProgress() > 0 || it == d->windows.end()) {
-        if (!Effect::drawWindow(renderTarget, viewport, window, mask, deviceRegion, data)) {
+        if (!Effect::drawWindow(device, renderTarget, viewport, window, mask, deviceRegion, data)) {
             return false;
         }
     }
@@ -430,8 +537,7 @@ bool CrossFadeEffect::drawWindow(const RenderTarget &renderTarget, const RenderV
 
     WindowQuadList quads;
     quads.append(quad);
-    offscreenData->paint(renderTarget, viewport, window, deviceRegion, previousWindowData, quads);
-    return true;
+    return offscreenData->paint(device, renderTarget, viewport, window, deviceRegion, previousWindowData, quads);
 }
 
 void CrossFadeEffect::redirect(EffectWindow *window)
@@ -455,8 +561,12 @@ void CrossFadeEffect::redirect(EffectWindow *window)
     const QVariant contrastRole = window->data(WindowForceBackgroundContrastRole);
     window->setData(WindowForceBackgroundContrastRole, QVariant());
 
-    effects->makeOpenGLContextCurrent();
-    (void)offscreenData->maybeRender(window);
+    const auto device = Compositor::self()->primaryDevice();
+    const auto context = device->eglContext();
+    if (!context || !context->makeCurrent()) {
+        return;
+    }
+    (void)offscreenData->maybeRender(device, window);
     offscreenData->frameGeometryAtCapture = window->frameGeometry();
     offscreenData->expandedGeometryAtCapture = window->expandedGeometry();
 
@@ -471,10 +581,6 @@ void CrossFadeEffect::unredirect(EffectWindow *window)
         return;
     }
 
-    if (!EglContext::currentContext()) {
-        (void)effects->openglContext()->makeCurrent();
-    }
-
     d->windows.erase(it);
     if (d->windows.empty()) {
         disconnect(effects, &EffectsHandler::windowDeleted, this, &CrossFadeEffect::handleWindowDeleted);
@@ -486,7 +592,7 @@ void CrossFadeEffect::handleWindowDeleted(EffectWindow *window)
     unredirect(window);
 }
 
-void CrossFadeEffect::setShader(EffectWindow *window, GLShader *shader)
+void CrossFadeEffect::setShader(EffectWindow *window, FragmentShaderInfo *shader)
 {
     if (const auto it = d->windows.find(window); it != d->windows.end()) {
         it->second->setShader(shader);

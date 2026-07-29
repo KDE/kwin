@@ -11,6 +11,7 @@
 #include "thumbnailaside.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
+#include "scene/scene.h"
 // KConfigSkeleton
 #include "thumbnailasideconfig.h"
 
@@ -54,6 +55,11 @@ void ThumbnailAsideEffect::reconfigure(ReconfigureFlags)
     arrange();
 }
 
+void ThumbnailAsideEffect::prePaintScreen(ScreenPrePaintData &data)
+{
+    m_currentView = data.view;
+}
+
 bool ThumbnailAsideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
     painted = Region();
@@ -67,7 +73,8 @@ bool ThumbnailAsideEffect::paintScreen(const RenderTarget &renderTarget, const R
             data.multiplyOpacity(opacity);
             Rect region;
             setPositionTransformations(data, region, d.window, d.rect, Qt::KeepAspectRatio);
-            if (!effects->drawWindow(renderTarget, viewport, d.window, PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED,
+            if (!effects->drawWindow(m_currentView->renderDevice(), renderTarget, viewport, d.window,
+                                     PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED,
                                      viewport.mapToDeviceCoordinatesAligned(region), data)) {
                 return false;
             }
