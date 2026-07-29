@@ -63,17 +63,35 @@ QList<OutputLayer *> EglGbmBackend::compatibleOutputLayers(BackendOutput *output
 
 std::unique_ptr<DrmPipelineLayer> EglGbmBackend::createDrmPlaneLayer(DrmPlane *plane)
 {
-    return std::make_unique<EglGbmLayer>(this, Compositor::self()->primaryDevice(), plane);
+    return std::make_unique<EglGbmLayer>(this, renderDevice(plane->gpu()), plane);
 }
 
 std::unique_ptr<DrmPipelineLayer> EglGbmBackend::createDrmPlaneLayer(DrmGpu *gpu, DrmPlane::TypeIndex type)
 {
-    return std::make_unique<EglGbmLayer>(this, Compositor::self()->primaryDevice(), gpu, type);
+    return std::make_unique<EglGbmLayer>(this, renderDevice(gpu), gpu, type);
 }
 
 std::unique_ptr<DrmOutputLayer> EglGbmBackend::createLayer(DrmVirtualOutput *output)
 {
     return std::make_unique<VirtualEglGbmLayer>(this, output);
+}
+
+RenderDevice *EglGbmBackend::renderDevice(BackendOutput *output) const
+{
+    if (auto drm = qobject_cast<DrmOutput *>(output)) {
+        return renderDevice(drm->connector()->gpu());
+    } else {
+        return Compositor::self()->primaryDevice();
+    }
+}
+
+RenderDevice *EglGbmBackend::renderDevice(DrmGpu *gpu) const
+{
+    if (!s_perGpuRendering || !gpu->renderDevice() || gpu->renderDevice()->eglDisplay()->isSoftwareRenderer()) {
+        return Compositor::self()->primaryDevice();
+    } else {
+        return gpu->renderDevice();
+    }
 }
 
 } // namespace KWin
