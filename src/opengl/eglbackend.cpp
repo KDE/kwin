@@ -34,6 +34,8 @@
 namespace KWin
 {
 
+const bool EglBackend::s_perGpuRendering = environmentVariableBoolValue("KWIN_ENABLE_PER_GPU_RENDERING").value_or(true);
+
 EglBackend::EglBackend()
 {
     connect(GpuManager::s_self.get(), &GpuManager::renderDeviceAdded, this, &EglBackend::updateDmabufTranches);
@@ -245,7 +247,14 @@ bool EglBackend::testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice)
 
 RenderDevice *EglBackend::renderDevice(BackendOutput *output) const
 {
-    return Compositor::self()->primaryDevice();
+    RenderDevice *compat = nullptr;
+    if (output->scanoutDevice() && s_perGpuRendering) {
+        compat = GpuManager::self()->compatibleRenderDevice(output->scanoutDevice());
+    }
+    if (!compat) {
+        compat = Compositor::self()->primaryDevice();
+    }
+    return compat;
 }
 
 FormatModifierMap EglBackend::supportedFormats(RenderDevice *device) const

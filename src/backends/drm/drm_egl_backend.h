@@ -43,6 +43,7 @@ public:
     ~EglGbmBackend() override;
 
     QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) override;
+    RenderDevice *renderDevice(BackendOutput *output) const override;
 
     bool init() override;
     std::unique_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmPlane *plane) override;
@@ -50,6 +51,8 @@ public:
     std::unique_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
 
 private:
+    RenderDevice *renderDevice(DrmGpu *gpu) const;
+
     DrmBackend *m_backend;
 };
 

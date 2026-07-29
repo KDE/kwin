@@ -58,6 +58,8 @@ protected:
     QList<QByteArray> m_clientExtensions;
     QList<LinuxDmaBufV1Feedback::Tranche> m_tranches;
     QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> m_importedBuffers;
+
+    static const bool s_perGpuRendering;
 };
 
 }
