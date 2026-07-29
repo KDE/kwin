@@ -413,14 +413,14 @@ Effect *EffectsHandler::provides(Effect::Feature ef)
     return nullptr;
 }
 
-bool EffectsHandler::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
+bool EffectsHandler::drawWindow(RenderDevice *device, const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
     if (m_currentDrawWindowIterator != m_activeEffects.constEnd()) {
-        const bool ret = (*m_currentDrawWindowIterator++)->drawWindow(renderTarget, viewport, w, mask, deviceRegion, data);
+        const bool ret = (*m_currentDrawWindowIterator++)->drawWindow(device, renderTarget, viewport, w, mask, deviceRegion, data);
         --m_currentDrawWindowIterator;
         return ret;
     } else {
-        return m_scene->finalDrawWindow(renderTarget, viewport, w, mask, deviceRegion, data);
+        return m_scene->finalDrawWindow(device, renderTarget, viewport, w, mask, deviceRegion, data);
     }
 }
 

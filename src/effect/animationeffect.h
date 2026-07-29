@@ -375,9 +375,9 @@ protected:
      * @returns An ID that you can use to cancel a running animation.
      * @since 4.8
      */
-    quint64 animate(EffectWindow *w, Attribute a, uint meta, std::chrono::milliseconds duration, const FPx2 &to, const QEasingCurve &curve = QEasingCurve(), int delay = 0, const FPx2 &from = FPx2(), bool fullScreen = false, bool keepAlive = true, GLShader *shader = nullptr)
+    quint64 animate(EffectWindow *w, Attribute a, uint meta, const QByteArray &metaUniform, std::chrono::milliseconds duration, const FPx2 &to, const QEasingCurve &curve = QEasingCurve(), int delay = 0, const FPx2 &from = FPx2(), bool fullScreen = false, bool keepAlive = true, FragmentShaderInfo *shader = nullptr)
     {
-        return p_animate(w, a, meta, duration, to, curve, delay, from, false, fullScreen, keepAlive, shader);
+        return p_animate(w, a, meta, metaUniform, duration, to, curve, delay, from, false, fullScreen, keepAlive, shader);
     }
 
     /**
@@ -408,9 +408,9 @@ protected:
      * @returns An ID that you need to use to cancel this manipulation.
      * @since 4.11
      */
-    quint64 set(EffectWindow *w, Attribute a, uint meta, std::chrono::milliseconds duration, const FPx2 &to, const QEasingCurve &curve = QEasingCurve(), int delay = 0, const FPx2 &from = FPx2(), bool fullScreen = false, bool keepAlive = true, GLShader *shader = nullptr)
+    quint64 set(EffectWindow *w, Attribute a, uint meta, const QByteArray &metaUniform, std::chrono::milliseconds duration, const FPx2 &to, const QEasingCurve &curve = QEasingCurve(), int delay = 0, const FPx2 &from = FPx2(), bool fullScreen = false, bool keepAlive = true, FragmentShaderInfo *shader = nullptr)
     {
-        return p_animate(w, a, meta, duration, to, curve, delay, from, true, fullScreen, keepAlive, shader);
+        return p_animate(w, a, meta, metaUniform, duration, to, curve, delay, from, true, fullScreen, keepAlive, shader);
     }
 
     /**
@@ -508,7 +508,7 @@ protected:
     const AniMap &state() const;
 
 private:
-    quint64 p_animate(EffectWindow *w, Attribute a, uint meta, std::chrono::milliseconds duration, FPx2 to, const QEasingCurve &curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect, bool keepAlive, GLShader *shader);
+    quint64 p_animate(EffectWindow *w, Attribute a, uint meta, const QByteArray &metaUniform, std::chrono::milliseconds duration, FPx2 to, const QEasingCurve &curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect, bool keepAlive, FragmentShaderInfo *shader);
     Rect clipRect(const Rect &windowRect, const AniData &) const;
     float interpolated(const AniData &, int i = 0) const;
     float progress(const AniData &) const;

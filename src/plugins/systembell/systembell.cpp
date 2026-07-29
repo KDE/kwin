@@ -151,7 +151,7 @@ void SystemBellEffect::flash(EffectWindow *window)
     }
 
     redirect(window);
-    setShader(window, m_shader.get());
+    setShader(window, &m_shader);
 }
 
 void SystemBellEffect::unflash(EffectWindow *window)
@@ -164,21 +164,14 @@ bool SystemBellEffect::loadData()
     ensureResources();
     m_inited = true;
 
+    m_shader = {};
     if (m_visibleBell) {
+        m_shader.m_traits = ShaderTrait::MapTexture;
         if (m_mode == Invert) {
-            m_shader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/systembell/shaders/invert.frag"));
-            if (!m_shader) {
-                qCCritical(KWIN_SYSTEMBELL) << "The invert.frag shader failed to load!";
-                return false;
-            }
+            m_shader.m_path = QStringLiteral(":/effects/systembell/shaders/invert.frag");
         } else {
-            m_shader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/systembell/shaders/color.frag"));
-            if (!m_shader) {
-                qCCritical(KWIN_SYSTEMBELL) << "The color.frag shader failed to load!";
-                return false;
-            }
-            ShaderBinder binder(m_shader.get());
-            m_shader->setUniform(GLShader::ColorUniform::Color, m_color);
+            m_shader.m_path = QStringLiteral(":/effects/systembell/shaders/color.frag");
+            m_shader.m_colorUniforms[QByteArrayLiteral("geometryColor")] = m_color;
         }
     }
 
