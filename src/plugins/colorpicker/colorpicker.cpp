@@ -56,7 +56,7 @@ namespace KWin
 
 bool ColorPickerEffect::supported()
 {
-    return effects->isOpenGLCompositing();
+    return true;
 }
 
 ColorPickerEffect::ColorPickerEffect()

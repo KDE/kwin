@@ -29,7 +29,7 @@ ShowCompositingEffect::~ShowCompositingEffect()
 
 bool ShowCompositingEffect::supported()
 {
-    return effects->isOpenGLCompositing();
+    return true;
 }
 
 bool ShowCompositingEffect::blocksDirectScanout() const

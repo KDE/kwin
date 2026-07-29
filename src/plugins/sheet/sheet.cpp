@@ -131,8 +131,7 @@ bool SheetEffect::isActive() const
 
 bool SheetEffect::supported()
 {
-    return effects->isOpenGLCompositing()
-        && effects->animationsSupported();
+    return effects->animationsSupported();
 }
 
 void SheetEffect::slotWindowAdded(EffectWindow *w)

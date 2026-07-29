@@ -188,9 +188,7 @@ bool TouchPointsEffect::isActive() const
 
 void TouchPointsEffect::drawCircle(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r)
 {
-    if (effects->isOpenGLCompositing()) {
-        drawCircleGl(viewport, color, cx, cy, r);
-    }
+    drawCircleGl(viewport, color, cx, cy, r);
 }
 
 void TouchPointsEffect::drawCircleGl(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r)

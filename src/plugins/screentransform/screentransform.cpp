@@ -57,7 +57,7 @@ ScreenTransformEffect::~ScreenTransformEffect() = default;
 
 bool ScreenTransformEffect::supported()
 {
-    return effects->isOpenGLCompositing() && effects->animationsSupported();
+    return effects->animationsSupported();
 }
 
 qreal transformAngle(OutputTransform current, OutputTransform old)

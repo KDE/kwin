@@ -471,13 +471,6 @@ public:
      */
     void scheduleFrame();
 
-    /**
-     * @brief Whether the Compositor is OpenGL based (either GL 1 or 2).
-     *
-     * @return bool @c true in case of OpenGL based Compositor, @c false otherwise
-     */
-    bool isOpenGLCompositing() const;
-    EglContext *openglContext() const;
     void reconfigure();
 
 #if KWIN_BUILD_X11
@@ -553,24 +546,6 @@ public:
      * @since 4.11
      */
     bool isScreenLocked() const;
-
-    /**
-     * @brief Makes the OpenGL compositing context current.
-     *
-     * If the compositing backend is not using OpenGL, this method returns @c false.
-     *
-     * @return bool @c true if the context became current, @c false otherwise.
-     */
-    bool makeOpenGLContextCurrent();
-    /**
-     * @brief Makes a null OpenGL context current resulting in no context
-     * being current.
-     *
-     * If the compositing backend is not OpenGL based, this method is a noop.
-     *
-     * There is normally no reason for an Effect to call this method.
-     */
-    void doneOpenGLContextCurrent();
 
 #if KWIN_BUILD_X11
     xcb_connection_t *xcbConnection() const;

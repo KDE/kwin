@@ -34,7 +34,7 @@ BlendChanges::~BlendChanges() = default;
 
 bool BlendChanges::supported()
 {
-    return effects->isOpenGLCompositing() && effects->animationsSupported();
+    return effects->animationsSupported();
 }
 
 void KWin::BlendChanges::start(int delay)

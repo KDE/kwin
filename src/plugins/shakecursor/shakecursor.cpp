@@ -61,7 +61,7 @@ ShakeCursorEffect::~ShakeCursorEffect()
 
 bool ShakeCursorEffect::supported()
 {
-    return effects->isOpenGLCompositing();
+    return true;
 }
 
 bool ShakeCursorEffect::isActive() const

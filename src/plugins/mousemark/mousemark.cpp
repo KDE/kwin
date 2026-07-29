@@ -186,38 +186,36 @@ bool MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const Render
     if (marks.isEmpty() && drawings.isEmpty()) {
         return true;
     }
-    if (effects->openglContext()) {
-        glLineWidth(width);
-        GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-        vbo->reset();
-        const auto scale = viewport.scale();
-        ShaderBinder binder(ShaderTrait::UniformColor | ShaderTrait::TransformColorspace);
-        binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix());
-        binder.shader()->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
-        binder.shader()->setUniform(GLShader::ColorUniform::Color, color);
-        QList<QVector2D> verts;
-        for (const Mark &mark : std::as_const(marks)) {
+    glLineWidth(width);
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    vbo->reset();
+    const auto scale = viewport.scale();
+    ShaderBinder binder(ShaderTrait::UniformColor | ShaderTrait::TransformColorspace);
+    binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix());
+    binder.shader()->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
+    binder.shader()->setUniform(GLShader::ColorUniform::Color, color);
+    QList<QVector2D> verts;
+    for (const Mark &mark : std::as_const(marks)) {
+        verts.clear();
+        verts.reserve(mark.size());
+        for (const QPointF &p : std::as_const(mark)) {
+            verts.push_back(QVector2D(p.x() * scale, p.y() * scale));
+        }
+        vbo->setVertices(verts);
+        vbo->render(GL_LINE_STRIP);
+    }
+    for (const Mark &drawing : std::as_const(drawings)) {
+        if (!drawing.isEmpty()) {
             verts.clear();
-            verts.reserve(mark.size());
-            for (const QPointF &p : std::as_const(mark)) {
+            verts.reserve(drawing.size());
+            for (const QPointF &p : std::as_const(drawing)) {
                 verts.push_back(QVector2D(p.x() * scale, p.y() * scale));
             }
             vbo->setVertices(verts);
             vbo->render(GL_LINE_STRIP);
         }
-        for (const Mark &drawing : std::as_const(drawings)) {
-            if (!drawing.isEmpty()) {
-                verts.clear();
-                verts.reserve(drawing.size());
-                for (const QPointF &p : std::as_const(drawing)) {
-                    verts.push_back(QVector2D(p.x() * scale, p.y() * scale));
-                }
-                vbo->setVertices(verts);
-                vbo->render(GL_LINE_STRIP);
-            }
-        }
-        glLineWidth(1.0);
     }
+    glLineWidth(1.0);
     return true;
 }
 

@@ -753,11 +753,6 @@ DebugConsole::~DebugConsole() = default;
 
 void DebugConsole::initGLTab()
 {
-    if (!effects || !effects->isOpenGLCompositing()) {
-        m_ui->noOpenGLLabel->setVisible(true);
-        m_ui->glInfoScrollArea->setVisible(false);
-        return;
-    }
     // TODO show GL info of all GPUs?
     const auto context = Compositor::self()->primaryDevice()->eglContext();
     const auto gl = context->glPlatform();
