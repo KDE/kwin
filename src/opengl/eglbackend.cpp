@@ -20,6 +20,7 @@
 #include "opengl/eglimagetexture.h"
 #include "opengl/eglutils_p.h"
 #include "utils/common.h"
+#include "utils/envvar.h"
 #include "vulkan/vulkan_device.h"
 #include "wayland/linux_drm_syncobj_v1.h"
 #include "wayland_server.h"
@@ -32,6 +33,8 @@
 
 namespace KWin
 {
+
+const bool EglBackend::s_perGpuRendering = environmentVariableBoolValue("KWIN_ENABLE_PER_GPU_RENDERING").value_or(true);
 
 EglBackend::EglBackend()
 {
@@ -267,7 +270,14 @@ bool EglBackend::testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice)
 
 RenderDevice *EglBackend::renderDevice(BackendOutput *output) const
 {
-    return Compositor::self()->primaryDevice();
+    RenderDevice *compat = nullptr;
+    if (output->scanoutDevice() && s_perGpuRendering) {
+        compat = GpuManager::self()->compatibleRenderDevice(output->scanoutDevice());
+    }
+    if (!compat) {
+        compat = Compositor::self()->primaryDevice();
+    }
+    return compat;
 }
 
 FormatModifierMap EglBackend::supportedFormats(RenderDevice *device) const
