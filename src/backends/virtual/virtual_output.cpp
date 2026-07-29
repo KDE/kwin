@@ -137,6 +137,21 @@ void VirtualOutput::applyChanges(const OutputConfiguration &config)
     Q_EMIT changed();
 }
 
+bool VirtualOutput::canResize() const
+{
+    return true;
+}
+
+void VirtualOutput::resize(const QSize &size)
+{
+    auto mode = std::make_shared<OutputMode>(OutputModeline(size, 60000, OutputModeline::Flag::Preferred));
+    auto next = m_state;
+    next.modes = {mode};
+    next.currentMode = mode;
+    setState(next);
+    Q_EMIT m_backend->outputsQueried();
+}
+
 void VirtualOutput::vblank(std::chrono::nanoseconds timestamp)
 {
     if (m_frame) {

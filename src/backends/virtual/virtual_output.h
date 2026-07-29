@@ -33,6 +33,8 @@ public:
     void init(const QSize &pixelSize, qreal scale, const QList<OutputModeline> &modes);
 
     void applyChanges(const OutputConfiguration &config) override;
+    bool canResize() const override;
+    void resize(const QSize &size) override;
 
     void setOutputLayer(std::unique_ptr<OutputLayer> &&layer);
     OutputLayer *outputLayer() const;

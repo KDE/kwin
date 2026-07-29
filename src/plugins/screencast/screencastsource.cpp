@@ -13,6 +13,16 @@ ScreenCastSource::ScreenCastSource()
 {
 }
 
+bool ScreenCastSource::followsStreamSize()
+{
+    return false;
+}
+
+void ScreenCastSource::resize(const QSize &)
+{
+    Q_ASSERT(false);
+}
+
 } // namespace KWin
 
 #include "moc_screencastsource.cpp"

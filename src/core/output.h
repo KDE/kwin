@@ -435,6 +435,16 @@ public:
     QSize orientateSize(const QSize &size) const;
 
     /*!
+     * Returns whether the modeline size can be changed from within kwin
+     */
+    bool canResize() const;
+
+    /*!
+     * Sets the pixel size of the output
+     */
+    void resize(const QSize &size);
+
+    /*!
      * Returns \c true if this is a placeholder output; otherwise returns \c false.
      *
      * A placeholder output is created when there are no any physical outputs.

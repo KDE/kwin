@@ -90,14 +90,15 @@ private:
     bool createStream();
     QList<const spa_pod *> buildFormats(bool fixate, char buffer[2048]);
     void updateParams();
-    void resize(const QSize &resolution);
+    void updateStreamSize(const QSize &resolution);
     void coreFailed(const QString &errorMessage);
     void addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor);
     void addHeader(spa_buffer *spaBuffer);
     void corruptHeader(spa_buffer *spaBuffer);
     void addDamage(spa_buffer *spaBuffer, const Region &damagedRegion);
     void newStreamParams();
-    spa_pod *buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
+    spa_pod *buildFormat(struct spa_pod_builder *b, enum spa_video_format format,
+                         struct spa_rectangle defaultSize, struct spa_rectangle minSize, struct spa_rectangle maxSize,
                          struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
                          const ModifierList &modifiers, quint32 modifiersFlags);
     pw_buffer *dequeueBuffer();
