@@ -30,6 +30,7 @@ class FocusTracker;
 class TextCaretTracker;
 class RenderView;
 class SceneView;
+class EglContext;
 
 class ZoomEffect : public Effect
 {
@@ -85,8 +86,14 @@ private:
 
     struct OffscreenData
     {
+        ~OffscreenData();
+
+        std::shared_ptr<EglContext> m_context;
         std::unique_ptr<GLTexture> texture;
         std::unique_ptr<GLFramebuffer> framebuffer;
+        std::unique_ptr<GLShader> m_upscalerShader;
+        std::unique_ptr<GLShader> m_pixelGridShader;
+
         RectF viewport;
         std::shared_ptr<ColorDescription> color = ColorDescription::sRGB;
         std::unique_ptr<SceneView> view;
@@ -96,7 +103,7 @@ private:
     bool screenExistsAt(const QPoint &point) const;
     void realtimeZoom(double delta);
 
-    GLShader *shaderForZoom(double zoom);
+    GLShader *shaderForZoom(OffscreenData &data, double zoom);
     void trackTextCaret();
     void trackFocus();
 
@@ -119,8 +126,6 @@ private:
     std::map<RenderView *, OffscreenData> m_offscreenData;
     RenderView *m_currentView = nullptr;
     bool m_paintingZoom = false;
-    std::unique_ptr<GLShader> m_upscalerShader;
-    std::unique_ptr<GLShader> m_pixelGridShader;
     double m_pixelGridZoom;
     std::unique_ptr<QAction> m_zoomInAxisAction;
     std::unique_ptr<QAction> m_zoomOutAxisAction;
