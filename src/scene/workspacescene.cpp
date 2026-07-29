@@ -828,16 +828,16 @@ bool WorkspaceScene::paintWindow(const RenderTarget &renderTarget, const RenderV
 // the function that'll be eventually called by paintWindow() above
 bool WorkspaceScene::finalPaintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
-    return effects->drawWindow(renderTarget, viewport, w, mask, deviceRegion, data);
+    return effects->drawWindow(painted_delegate->renderDevice(), renderTarget, viewport, w, mask, deviceRegion, data);
 }
 
 // will be eventually called from drawWindow()
-bool WorkspaceScene::finalDrawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
+bool WorkspaceScene::finalDrawWindow(RenderDevice *device, const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
     // TODO: Reconsider how the CrossFadeEffect captures the initial window contents to remove
     // null pointer delegate checks
 
-    auto &renderer = m_renderers[painted_delegate ? painted_delegate->renderDevice() : Compositor::self()->primaryDevice()];
+    auto &renderer = m_renderers[device];
     return renderer->renderItem(renderTarget, viewport, w->windowItem(), mask, deviceRegion, data, [this](Item *item) {
         return painted_delegate && !painted_delegate->shouldRenderItem(item);
     }, [this](Item *item) {
