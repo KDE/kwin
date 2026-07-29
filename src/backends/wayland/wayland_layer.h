@@ -35,6 +35,7 @@ namespace KWin
 class SwapchainSlot;
 class Swapchain;
 class RenderBackend;
+class RenderDevice;
 
 namespace WaylandClient
 {
@@ -73,6 +74,8 @@ public:
 protected:
     RenderBackend *const m_backend;
     WaylandDisplay *const m_display;
+    RenderDevice *const m_device;
+
     DamageJournal m_damageJournal;
     std::shared_ptr<Swapchain> m_swapchain;
     std::shared_ptr<SwapchainSlot> m_currentSlot;
@@ -106,6 +109,8 @@ private:
     WaylandBackend *const m_outputBackend;
     RenderBackend *const m_renderBackend;
     WaylandDisplay *const m_display;
+    RenderDevice *const m_device;
+
     std::shared_ptr<Swapchain> m_swapchain;
     std::shared_ptr<SwapchainSlot> m_buffer;
 };

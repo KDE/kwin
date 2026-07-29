@@ -5,8 +5,12 @@
 */
 
 #include "renderbackend.h"
+#include "compositor.h"
+#include "core/backendoutput.h"
+#include "core/gpumanager.h"
 #include "renderloop_p.h"
 #include "syncobjtimeline.h"
+#include "utils/envvar.h"
 
 #include <QCoreApplication>
 #include <QThread>
@@ -15,6 +19,8 @@
 
 namespace KWin
 {
+
+const bool s_perGpuRendering = environmentVariableBoolValue("KWIN_ENABLE_PER_GPU_RENDERING").value_or(true);
 
 RenderTimeSpan RenderTimeSpan::operator|(const RenderTimeSpan &other) const
 {
@@ -200,19 +206,21 @@ void OutputFrame::setArtificialHdrHeadroom(double edr)
     m_artificialHdrHeadroom = edr;
 }
 
-RenderDevice *RenderBackend::renderDevice() const
-{
-    return nullptr;
-}
-
 bool RenderBackend::testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice)
 {
     return false;
 }
 
-FormatModifierMap RenderBackend::supportedFormats() const
+RenderDevice *RenderBackend::renderDevice(BackendOutput *output) const
 {
-    return FormatModifierMap{{DRM_FORMAT_XRGB8888, ModifierList{DRM_FORMAT_MOD_LINEAR}}};
+    RenderDevice *compat = nullptr;
+    if (s_perGpuRendering && output->scanoutDevice()) {
+        compat = GpuManager::self()->compatibleRenderDevice(output->scanoutDevice());
+    }
+    if (!compat || compat->isSoftwareDevice()) {
+        compat = Compositor::self()->primaryDevice();
+    }
+    return compat;
 }
 
 } // namespace KWin

@@ -24,6 +24,7 @@ class SwapchainSlot;
 class RenderBackend;
 class DrmVirtualOutput;
 class SurfaceInterface;
+class RenderDevice;
 
 class VirtualDrmLayer : public OutputLayer
 {
@@ -42,14 +43,15 @@ private:
     std::shared_ptr<Swapchain> createSwapchain() const;
     bool doesSwapchainFit(Swapchain *swapchain) const;
 
+    RenderBackend *const m_backend;
+    RenderDevice *const m_device;
+
     GraphicsBufferRef m_scanoutBuffer;
     DamageJournal m_damageJournal;
     DamageJournal m_oldDamageJournal;
     std::shared_ptr<Swapchain> m_swapchain;
     std::shared_ptr<Swapchain> m_oldSwapchain;
     std::shared_ptr<SwapchainSlot> m_currentSlot;
-
-    RenderBackend *const m_backend;
 };
 
 }

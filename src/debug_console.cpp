@@ -755,6 +755,9 @@ void DebugConsole::initGLTab()
 {
     // TODO show GL info of all GPUs?
     const auto context = Compositor::self()->primaryDevice()->eglContext();
+    if (!context) {
+        return;
+    }
     const auto gl = context->glPlatform();
     m_ui->noOpenGLLabel->setVisible(false);
     m_ui->glInfoScrollArea->setVisible(true);
@@ -776,9 +779,8 @@ void DebugConsole::initGLTab()
         return text;
     };
 
-    const EglBackend *backend = static_cast<EglBackend *>(Compositor::self()->backend());
-    m_ui->platformExtensionsLabel->setText(extensionsString(backend->eglDisplayObject()->extensions()));
-    m_ui->openGLExtensionsLabel->setText(extensionsString(backend->openglContext()->openglExtensions()));
+    m_ui->platformExtensionsLabel->setText(extensionsString(context->displayObject()->extensions()));
+    m_ui->openGLExtensionsLabel->setText(extensionsString(context->openglExtensions()));
 }
 
 template<typename T>

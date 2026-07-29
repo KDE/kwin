@@ -172,7 +172,7 @@ void DrmTest::testOutputDetection()
     const auto backend = std::make_unique<DrmBackend>(session.get());
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
     QVERIFY(gpu->updateOutputs());
-    const auto renderBackend = std::make_unique<EglBackend>(gpu->renderDevice());
+    const auto renderBackend = std::make_unique<EglBackend>();
     backend->createOutputLayers(renderBackend.get());
 
     // 3 outputs should be detected, one of them non-desktop
@@ -219,7 +219,7 @@ void DrmTest::testZeroModesHandling()
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
-    const auto renderBackend = std::make_unique<EglBackend>(gpu->renderDevice());
+    const auto renderBackend = std::make_unique<EglBackend>();
     backend->createOutputLayers(renderBackend.get());
 
     // connector with zero modes should be ignored
@@ -276,7 +276,7 @@ void DrmTest::testModeFiltering()
     const auto backend = std::make_unique<DrmBackend>(session.get());
     auto gpu = std::make_unique<DrmGpu>(
         backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
-    const auto renderBackend = std::make_unique<EglBackend>(gpu->renderDevice());
+    const auto renderBackend = std::make_unique<EglBackend>();
     backend->createOutputLayers(renderBackend.get());
 
     QVERIFY(gpu->updateOutputs());
@@ -434,7 +434,7 @@ void DrmTest::testModeGeneration()
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
-    const auto renderBackend = std::make_unique<EglBackend>(gpu->renderDevice());
+    const auto renderBackend = std::make_unique<EglBackend>();
     backend->createOutputLayers(renderBackend.get());
 
     QFETCH(Mode, nativeMode);
@@ -484,7 +484,7 @@ void DrmTest::testConnectorLifetime()
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
-    const auto renderBackend = std::make_unique<EglBackend>(gpu->renderDevice());
+    const auto renderBackend = std::make_unique<EglBackend>();
     backend->createOutputLayers(renderBackend.get());
 
     QVERIFY(gpu->updateOutputs());
@@ -524,7 +524,7 @@ void DrmTest::testModeset()
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
-    const auto renderBackend = std::make_unique<EglBackend>(gpu->renderDevice());
+    const auto renderBackend = std::make_unique<EglBackend>();
     backend->createOutputLayers(renderBackend.get());
 
     QVERIFY(gpu->updateOutputs());
@@ -553,7 +553,7 @@ void DrmTest::testVrrChange()
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
-    const auto renderBackend = std::make_unique<EglBackend>(gpu->renderDevice());
+    const auto renderBackend = std::make_unique<EglBackend>();
     backend->createOutputLayers(renderBackend.get());
 
     QVERIFY(gpu->updateOutputs());
@@ -578,7 +578,7 @@ void DrmTest::testLeaseDisconnectReconnect()
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
-    const auto renderBackend = std::make_unique<EglBackend>(gpu->renderDevice());
+    const auto renderBackend = std::make_unique<EglBackend>();
     backend->createOutputLayers(renderBackend.get());
 
     QVERIFY(gpu->updateOutputs());
@@ -651,7 +651,7 @@ void DrmTest::testLeaseAvailableWhenClientExitsBeforeQueuedReoffer()
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
-    const auto renderBackend = std::make_unique<EglBackend>(gpu->renderDevice());
+    const auto renderBackend = std::make_unique<EglBackend>();
     backend->createOutputLayers(renderBackend.get());
 
     QVERIFY(gpu->updateOutputs());

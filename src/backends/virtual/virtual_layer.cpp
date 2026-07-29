@@ -18,6 +18,7 @@ namespace KWin
 VirtualLayer::VirtualLayer(BackendOutput *output, RenderBackend *backend)
     : OutputLayer(output, OutputLayerType::Primary)
     , m_backend(backend)
+    , m_device(backend->renderDevice(output))
 {
 }
 
@@ -32,11 +33,11 @@ std::optional<OutputLayerBeginFrameInfo> VirtualLayer::beginFrame(OutputFrame *f
         GraphicsBufferOptions options{
             .size = nativeSize,
             .format = DRM_FORMAT_XRGB8888,
-            .modifiers = m_backend->supportedFormats()[DRM_FORMAT_XRGB8888],
+            .modifiers = m_backend->supportedFormats(m_device)[DRM_FORMAT_XRGB8888],
             .software = false,
             .scanout = false,
         };
-        m_swapchain = Swapchain::create(m_backend->renderDevice()->allocator(), options);
+        m_swapchain = Swapchain::create(m_device->allocator(), options);
         if (!m_swapchain) {
             return std::nullopt;
         }
@@ -62,7 +63,7 @@ bool VirtualLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&
 
 FormatModifierMap VirtualLayer::supportedDrmFormats() const
 {
-    return m_backend->supportedFormats();
+    return m_backend->supportedFormats(m_device);
 }
 
 void VirtualLayer::releaseBuffers()
@@ -76,7 +77,7 @@ QImage VirtualLayer::download() const
     if (!m_current) {
         return QImage{};
     }
-    return m_backend->renderDevice()->download(m_current->buffer());
+    return m_device->download(m_current->buffer());
 }
 
 }

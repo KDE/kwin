@@ -25,6 +25,7 @@ namespace KWin
 VirtualDrmLayer::VirtualDrmLayer(RenderBackend *backend, DrmVirtualOutput *output)
     : OutputLayer(output, OutputLayerType::Primary)
     , m_backend(backend)
+    , m_device(backend->renderDevice(m_output))
 {
 }
 
@@ -82,7 +83,7 @@ std::shared_ptr<Swapchain> VirtualDrmLayer::createSwapchain() const
     static const bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
     const bool allowModifiers = !modifiersEnvSet || modifiersEnv;
 
-    const auto allFormats = m_backend->supportedFormats();
+    const auto allFormats = m_backend->supportedFormats(m_device);
     const auto formats = OutputLayer::filterAndSortFormats(allFormats, 0, m_output->colorPowerTradeoff());
     for (const auto &format : formats) {
         const auto size = m_output->modeSize();
@@ -94,7 +95,7 @@ std::shared_ptr<Swapchain> VirtualDrmLayer::createSwapchain() const
             .software = false,
             .scanout = false,
         };
-        if (auto swapchain = Swapchain::create(m_backend->renderDevice()->allocator(), options)) {
+        if (auto swapchain = Swapchain::create(m_device->allocator(), options)) {
             return swapchain;
         }
     }
@@ -128,7 +129,7 @@ void VirtualDrmLayer::releaseBuffers()
 
 FormatModifierMap VirtualDrmLayer::supportedDrmFormats() const
 {
-    return m_backend->supportedFormats();
+    return m_backend->supportedFormats(m_device);
 }
 
 }

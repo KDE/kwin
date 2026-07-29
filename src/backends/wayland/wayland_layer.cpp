@@ -35,6 +35,7 @@ WaylandLayer::WaylandLayer(WaylandOutput *output, RenderBackend *backend, Waylan
     : OutputLayer(output, type, zpos, zpos, zpos)
     , m_backend(backend)
     , m_display(display)
+    , m_device(backend->renderDevice(output))
     , m_surface(m_display->compositor()->createSurface())
     , m_subSurface(m_display->subCompositor()->createSubSurface(m_surface.get(), output->surface()))
 {
@@ -148,7 +149,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandLayer::beginFrame(OutputFrame *f
 
     const QSize nativeSize = targetRect().size();
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
-        const FormatModifierMap formatTable = m_display->linuxDmabuf()->formats().intersected(m_backend->supportedFormats());
+        const FormatModifierMap formatTable = m_display->linuxDmabuf()->formats().intersected(m_backend->supportedFormats(m_device));
         const auto suitableFormats = filterAndSortFormats(formatTable, m_requiredAlphaBits, m_output->colorPowerTradeoff());
         for (const auto &candidate : suitableFormats) {
             auto it = formatTable.constFind(candidate.drmFormat);
@@ -162,7 +163,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandLayer::beginFrame(OutputFrame *f
                 .software = false,
                 .scanout = false,
             };
-            m_swapchain = Swapchain::create(m_backend->renderDevice()->allocator(), options);
+            m_swapchain = Swapchain::create(m_device->allocator(), options);
             if (m_swapchain) {
                 break;
             }
@@ -221,6 +222,7 @@ WaylandCursorLayer::WaylandCursorLayer(WaylandOutput *output, RenderBackend *bac
     , m_outputBackend(output->backend())
     , m_renderBackend(backend)
     , m_display(display)
+    , m_device(backend->renderDevice(output))
 {
 }
 
@@ -232,7 +234,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandCursorLayer::beginFrame(OutputFr
 {
     const auto bufferSize = targetRect().size();
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
-        const FormatModifierMap formatTable = m_display->linuxDmabuf()->formats().intersected(m_renderBackend->supportedFormats());
+        const FormatModifierMap formatTable = m_display->linuxDmabuf()->formats().intersected(m_renderBackend->supportedFormats(m_device));
         const auto suitableFormats = filterAndSortFormats(formatTable, m_requiredAlphaBits, m_output->colorPowerTradeoff());
         for (const auto &candidate : suitableFormats) {
             auto it = formatTable.constFind(candidate.drmFormat);
@@ -246,7 +248,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandCursorLayer::beginFrame(OutputFr
                 .software = false,
                 .scanout = false,
             };
-            m_swapchain = Swapchain::create(m_renderBackend->renderDevice()->allocator(), options);
+            m_swapchain = Swapchain::create(m_device->allocator(), options);
             if (m_swapchain) {
                 break;
             }
@@ -280,7 +282,7 @@ bool WaylandCursorLayer::endFrame(const Region &damagedDeviceRegion, FileDescrip
 
 FormatModifierMap WaylandCursorLayer::supportedDrmFormats() const
 {
-    return m_renderBackend->supportedFormats();
+    return m_renderBackend->supportedFormats(m_device);
 }
 
 void WaylandCursorLayer::releaseBuffers()
