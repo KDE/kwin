@@ -246,21 +246,6 @@ QList<LinuxDmaBufV1Feedback::Tranche> EglBackend::tranches() const
     return m_tranches;
 }
 
-EGLImageKHR EglBackend::importBufferAsImage(GraphicsBuffer *buffer)
-{
-    return m_renderDevice->eglDisplay()->importBufferAsImage(buffer);
-}
-
-EGLImageKHR EglBackend::importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size)
-{
-    return m_renderDevice->eglDisplay()->importBufferAsImage(buffer, plane, format, size);
-}
-
-std::shared_ptr<GLTexture> EglBackend::importDmaBufAsTexture(const DmaBufAttributes &attributes) const
-{
-    return m_context->importDmaBufAsTexture(attributes);
-}
-
 bool EglBackend::testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice)
 {
     RenderDevice *device = GpuManager::self()->compatibleRenderDevice(targetDevice);
