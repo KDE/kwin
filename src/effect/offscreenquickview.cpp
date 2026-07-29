@@ -18,6 +18,7 @@
 #include "input_event.h"
 #include "logging_p.h"
 #include "opengl/eglcontext.h"
+#include "opengl/egldisplay.h"
 #include "opengl/eglnativefence.h"
 #include "opengl/eglswapchain.h"
 #include "opengl/glrendertimequery.h"
@@ -337,16 +338,17 @@ void OffscreenQuickView::update(OutputFrame *frame)
                 };
                 d->m_swapchain = EglSwapchain::create(d->m_scanoutDevice->allocator(), EglContext::currentContext()->shared_from_this(), options);
             }
+            const auto device = Compositor::self()->primaryDevice();
             if (!d->m_swapchain) {
                 // TODO add non-scanout feedback on the item for this?
                 GraphicsBufferOptions options{
                     .size = nativeSize,
                     .format = format,
-                    .modifiers = Compositor::self()->backend()->supportedFormats()[format],
+                    .modifiers = device->eglDisplay()->nonExternalOnlySupportedDrmFormats()[format],
                     .software = false,
                     .scanout = false,
                 };
-                d->m_swapchain = EglSwapchain::create(Compositor::self()->backend()->renderDevice(), options);
+                d->m_swapchain = EglSwapchain::create(device, options);
             }
             if (!d->m_swapchain) {
                 d->m_glcontext->doneCurrent();
