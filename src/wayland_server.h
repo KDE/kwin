@@ -226,8 +226,6 @@ public:
     PointerWarpV1 *pointerWarp() const;
     ExtBackgroundEffectManagerV1 *backgroundEffectManager() const;
 
-    void setRenderBackend(RenderBackend *backend);
-
 Q_SIGNALS:
     void windowCreated(KWin::Window *);
     void windowAdded(KWin::Window *);
@@ -247,6 +245,7 @@ private:
     void handleOutputRemoved(BackendOutput *output);
     void handleOutputEnabled(LogicalOutput *output);
     void handleOutputDisabled(LogicalOutput *output);
+    void updateSyncobjSupport();
 
     class LockScreenPresentationWatcher : public QObject
     {

@@ -104,7 +104,6 @@ void EglBackend::cleanup()
 void EglBackend::initWayland()
 {
     updateDmabufTranches();
-    waylandServer()->setRenderBackend(this);
 }
 
 void EglBackend::updateDmabufTranches()

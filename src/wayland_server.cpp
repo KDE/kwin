@@ -13,6 +13,7 @@
 #include "backends/drm/drm_backend.h"
 #include "core/backendoutput.h"
 #include "core/drmdevice.h"
+#include "core/gpumanager.h"
 #include "core/outputbackend.h"
 #include "core/renderdevice.h"
 #include "core/session.h"
@@ -597,6 +598,10 @@ void WaylandServer::initWorkspace()
         m_outputOrder->setOutputOrder(workspace()->outputOrder());
     });
 
+    updateSyncobjSupport();
+    connect(GpuManager::self(), &GpuManager::renderDeviceAdded, this, &WaylandServer::updateSyncobjSupport);
+    connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, &WaylandServer::updateSyncobjSupport);
+
     Q_EMIT initialized();
 }
 
@@ -821,10 +826,14 @@ ExtBackgroundEffectManagerV1 *WaylandServer::backgroundEffectManager() const
     return m_backgroundEffect;
 }
 
-void WaylandServer::setRenderBackend(RenderBackend *backend)
+void WaylandServer::updateSyncobjSupport()
 {
-    if (backend->renderDevice()->drmDevice()
-        && backend->renderDevice()->drmDevice()->supportsSyncObjTimelines()) {
+    const auto &devices = GpuManager::self()->renderDevices();
+    const auto it = std::ranges::find_if(devices, [](const auto &device) {
+        return device->drmDevice()
+            && device->drmDevice()->supportsSyncObjTimelines();
+    });
+    if (it != devices.end()) {
         // ensure the DRM_IOCTL_SYNCOBJ_EVENTFD ioctl is supported
         const auto linuxVersion = linuxKernelVersion();
         if (linuxVersion < Version(6, 6)) {
@@ -835,7 +844,7 @@ void WaylandServer::setRenderBackend(RenderBackend *backend)
             return;
         }
         if (!m_linuxDrmSyncObj) {
-            m_linuxDrmSyncObj = new LinuxDrmSyncObjV1Interface(m_display, m_display, backend->renderDevice()->drmDevice());
+            m_linuxDrmSyncObj = new LinuxDrmSyncObjV1Interface(m_display, m_display, (*it)->drmDevice());
         }
     } else if (m_linuxDrmSyncObj) {
         m_linuxDrmSyncObj->remove();
