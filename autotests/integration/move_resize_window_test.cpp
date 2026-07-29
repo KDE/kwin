@@ -435,6 +435,7 @@ void MoveResizeWindowTest::testGrowShrink()
     QFETCH(QString, methodCall);
     QMetaObject::invokeMethod(workspace(), methodCall.toLocal8Bit().constData());
     QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last()[0].toInt());
     Test::render(surface.get(), toplevelConfigureRequestedSpy.last().first().toSize(), Qt::red);
 
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
