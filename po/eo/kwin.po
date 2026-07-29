@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-28 00:47+0000\n"
+"POT-Creation-Date: 2026-07-29 00:47+0000\n"
 "PO-Revision-Date: 2025-03-15 10:38+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -2511,6 +2511,12 @@ msgstr "Suspendi/Reŝalti Noktan Lumon"
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Antaŭrigardo de Kolora Temperaturo"
+
+#: plugins/outputlocator/outputlocator.cpp:26
+#, kde-format
+msgctxt "@label"
+msgid "Built-in Screen"
+msgstr ""
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format

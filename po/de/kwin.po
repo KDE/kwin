@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-28 00:47+0000\n"
+"POT-Creation-Date: 2026-07-29 00:47+0000\n"
 "PO-Revision-Date: 2026-05-21 13:41+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -2483,6 +2483,13 @@ msgstr "Nachtlicht aussetzen/fortsetzen"
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Farbtemperaturvorschau"
+
+#: plugins/outputlocator/outputlocator.cpp:26
+#, fuzzy, kde-format
+#| msgid "Built-in Screen"
+msgctxt "@label"
+msgid "Built-in Screen"
+msgstr "Integrierter Bildschirm"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format

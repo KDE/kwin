@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-28 00:47+0000\n"
+"POT-Creation-Date: 2026-07-29 00:47+0000\n"
 "PO-Revision-Date: 2008-12-27 14:55+0200\n"
 "Last-Translator: Ihar Hrachyshka <ihar.hrachyshka@gmail.com>\n"
 "Language-Team: Belarusian Latin <i18n@mova.org>\n"
@@ -2500,6 +2500,12 @@ msgstr ""
 #: plugins/nightlight/nightlightmanager.cpp:393
 #, kde-format
 msgid "Color Temperature Preview"
+msgstr ""
+
+#: plugins/outputlocator/outputlocator.cpp:26
+#, kde-format
+msgctxt "@label"
+msgid "Built-in Screen"
 msgstr ""
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-28 00:47+0000\n"
+"POT-Creation-Date: 2026-07-29 00:47+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -2414,6 +2414,13 @@ msgstr "暂停/继续夜间色温"
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "色温预览"
+
+#: plugins/outputlocator/outputlocator.cpp:26
+#, fuzzy, kde-format
+#| msgid "Built-in Screen"
+msgctxt "@label"
+msgid "Built-in Screen"
+msgstr "内置屏幕"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format

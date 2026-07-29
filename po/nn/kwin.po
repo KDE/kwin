@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-28 00:47+0000\n"
+"POT-Creation-Date: 2026-07-29 00:47+0000\n"
 "PO-Revision-Date: 2026-07-07 18:03+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
@@ -2445,6 +2445,13 @@ msgstr "Kveldsfargar på/av"
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Førehandsvising av fargetemperatur"
+
+#: plugins/outputlocator/outputlocator.cpp:26
+#, fuzzy, kde-format
+#| msgid "Built-in Screen"
+msgctxt "@label"
+msgid "Built-in Screen"
+msgstr "Innebygd skjerm"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format

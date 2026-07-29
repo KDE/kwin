@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-28 00:47+0000\n"
+"POT-Creation-Date: 2026-07-29 00:47+0000\n"
 "PO-Revision-Date: 2026-07-22 00:44-0300\n"
 "Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -2468,6 +2468,13 @@ msgstr "Suspender/Retomar cor noturna"
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Visualização da temperatura da cor"
+
+#: plugins/outputlocator/outputlocator.cpp:26
+#, fuzzy, kde-format
+#| msgid "Built-in Screen"
+msgctxt "@label"
+msgid "Built-in Screen"
+msgstr "Tela embutida"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format

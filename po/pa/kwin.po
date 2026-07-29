@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-28 00:47+0000\n"
+"POT-Creation-Date: 2026-07-29 00:47+0000\n"
 "PO-Revision-Date: 2024-01-03 14:00-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -2536,6 +2536,12 @@ msgstr ""
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "ਰੰਗ ਤਾਪਮਾਨ ਝਲਕ"
+
+#: plugins/outputlocator/outputlocator.cpp:26
+#, kde-format
+msgctxt "@label"
+msgid "Built-in Screen"
+msgstr ""
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format

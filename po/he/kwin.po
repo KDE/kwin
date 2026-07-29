@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-28 00:47+0000\n"
+"POT-Creation-Date: 2026-07-29 00:47+0000\n"
 "PO-Revision-Date: 2026-07-23 08:52+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -2441,6 +2441,13 @@ msgstr "השהיית/המשך תאורת לילה"
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "תצוגת חום צבע מקדימה"
+
+#: plugins/outputlocator/outputlocator.cpp:26
+#, fuzzy, kde-format
+#| msgid "Built-in Screen"
+msgctxt "@label"
+msgid "Built-in Screen"
+msgstr "מסך מובנה"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format
