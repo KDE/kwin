@@ -30,6 +30,8 @@ namespace KWin
 VirtualEglGbmLayer::VirtualEglGbmLayer(EglGbmBackend *eglBackend, DrmVirtualOutput *output)
     : DrmOutputLayer(output, OutputLayerType::Primary)
     , m_eglBackend(eglBackend)
+    , m_device(eglBackend->renderDevice(output))
+    , m_context(m_device->eglContext())
 {
 }
 
@@ -40,6 +42,9 @@ VirtualEglGbmLayer::~VirtualEglGbmLayer()
 
 std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame(OutputFrame *frame)
 {
+    if (!m_context || !m_context->makeCurrent()) {
+        return std::nullopt;
+    }
     m_scanoutBuffer.reset();
 
     if (doesGbmSwapchainFit(m_gbmSwapchain.get())) {
@@ -61,10 +66,6 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame(OutputFr
         }
     }
 
-    if (!m_eglBackend->openglContext()->makeCurrent()) {
-        return std::nullopt;
-    }
-
     auto slot = m_gbmSwapchain->acquire();
     if (!slot) {
         return std::nullopt;
@@ -72,7 +73,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame(OutputFr
 
     m_currentSlot = slot;
 
-    m_query = std::make_unique<GLRenderTimeQuery>(m_eglBackend->openglContextRef());
+    m_query = std::make_unique<GLRenderTimeQuery>(m_context);
     m_query->begin();
 
     const Region repair = m_damageJournal.accumulate(slot->age(), Region::infinite());
@@ -89,7 +90,7 @@ bool VirtualEglGbmLayer::endFrame(const Region &renderedDeviceRegion, const Regi
     glFlush();
     m_damageJournal.add(damagedDeviceRegion);
 
-    EGLNativeFence releaseFence{m_eglBackend->eglDisplayObject()};
+    EGLNativeFence releaseFence{m_context->displayObject()};
     m_gbmSwapchain->release(m_currentSlot, releaseFence.takeFileDescriptor());
     return true;
 }
@@ -114,7 +115,7 @@ std::shared_ptr<EglSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
                 .software = false,
                 .scanout = false,
             };
-            if (auto swapchain = EglSwapchain::create(m_eglBackend->renderDevice(), options)) {
+            if (auto swapchain = EglSwapchain::create(m_device, options)) {
                 return swapchain;
             }
         }
@@ -141,7 +142,9 @@ bool VirtualEglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::
 
 void VirtualEglGbmLayer::releaseBuffers()
 {
-    (void)m_eglBackend->openglContext()->makeCurrent();
+    if (m_context) {
+        (void)m_context->makeCurrent();
+    }
     m_gbmSwapchain.reset();
     m_oldGbmSwapchain.reset();
     m_currentSlot.reset();
@@ -150,7 +153,7 @@ void VirtualEglGbmLayer::releaseBuffers()
 
 FormatModifierMap VirtualEglGbmLayer::supportedDrmFormats() const
 {
-    return m_eglBackend->supportedFormats();
+    return m_eglBackend->supportedFormats(m_device);
 }
 
 }

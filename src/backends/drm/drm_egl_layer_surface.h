@@ -49,7 +49,7 @@ public:
         Normal,
         Dumb,
     };
-    explicit EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal);
+    explicit EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, RenderDevice *device, BufferTarget target = BufferTarget::Normal);
     ~EglGbmLayerSurface();
 
     std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const FormatModifierMap &formats,
@@ -125,6 +125,7 @@ private:
 
     DrmGpu *const m_gpu;
     EglGbmBackend *const m_eglBackend;
+    RenderDevice *const m_device;
     const BufferTarget m_requestedBufferTarget;
 };
 

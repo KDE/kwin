@@ -18,6 +18,7 @@
 #include "kwinscreencast_logging.h"
 #include "main.h"
 #include "opengl/eglcontext.h"
+#include "opengl/egldisplay.h"
 #include "opengl/eglnativefence.h"
 #include "opengl/glframebuffer.h"
 #include "opengl/glplatform.h"
@@ -438,7 +439,7 @@ bool ScreenCastStream::createStream()
     const QByteArray objname = "kwin-screencast-" + objectName().toUtf8();
     m_pwStream = pw_stream_new(m_pwCore->pwCore, objname, nullptr);
 
-    const auto supported = Compositor::self()->backend()->supportedFormats();
+    const auto supported = m_source->renderDevice()->eglDisplay()->nonExternalOnlySupportedDrmFormats();
     auto itModifiers = supported.constFind(m_source->drmFormat());
 
     // If the offered format is not available for dmabuf, prefer converting to another one than resorting to memfd

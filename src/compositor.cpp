@@ -83,12 +83,14 @@ Compositor::Compositor(QObject *workspace)
 
     FTraceLogger::create();
 
+    connect(GpuManager::self(), &GpuManager::renderDeviceAdded, this, &Compositor::reinitialize);
     connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, [this](RenderDevice *device) {
-        if (m_primaryDevice != device) {
-            return;
-        }
         if (GpuManager::self()->renderDevices().empty()) {
             qCFatal(KWIN_CORE, "All GPUs were removed!");
+            return;
+        }
+        if (m_primaryDevice != device) {
+            reinitialize();
             return;
         }
         qCWarning(KWIN_CORE, "Primary GPU %s was removed", qPrintable(m_primaryDevice->path()));
@@ -152,15 +154,20 @@ SceneView *Compositor::sceneView(BackendOutput *output) const
     return it == m_primaryViews.end() ? nullptr : it->second.get();
 }
 
-static QVariantHash collectCrashInformation(const EglBackend *backend)
+static QVariantHash collectCrashInformation(RenderDevice *device)
 {
-    const GLPlatform *glPlatform = backend->openglContext()->glPlatform();
+    // TODO add information about all GPUs
+    const auto context = device->eglContext();
+    if (!context) {
+        return {};
+    }
+    const GLPlatform *glPlatform = context->glPlatform();
 
     QVariantHash gpuInformation;
     gpuInformation[QStringLiteral("api_type")] = QStringLiteral("OpenGL");
     gpuInformation[QStringLiteral("name")] = QString::fromUtf8(glPlatform->glRendererString());
-    if (backend->renderDevice()->drmDevice() && backend->renderDevice()->drmDevice()->pciDeviceInfo()) {
-        const auto pciInfo = backend->renderDevice()->drmDevice()->pciDeviceInfo();
+    if (device->drmDevice() && device->drmDevice()->pciDeviceInfo()) {
+        const auto pciInfo = device->drmDevice()->pciDeviceInfo();
         gpuInformation[QStringLiteral("id")] = QString::number(pciInfo->device_id, 16);
         gpuInformation[QStringLiteral("vendor_id")] = QString::number(pciInfo->vendor_id, 16);
     }
@@ -263,33 +270,12 @@ bool Compositor::attemptOpenGLCompositing()
         }
         qCDebug(KWIN_CORE, "Chose %s as the primary GPU", qPrintable(m_primaryDevice->path()));
     }
-    std::unique_ptr<EglBackend> backend = kwinApp()->outputBackend()->createOpenGLBackend(m_primaryDevice);
+    std::unique_ptr<EglBackend> backend = kwinApp()->outputBackend()->createOpenGLBackend();
     if (!backend->init()) {
         return false;
     }
 
-    KCrash::setGPUData(collectCrashInformation(backend.get()));
-
-    const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
-    if (!forceEnv.isEmpty()) {
-        if (qstrcmp(forceEnv, "O2") == 0 || qstrcmp(forceEnv, "O2ES") == 0) {
-            qCDebug(KWIN_CORE) << "OpenGL 2 compositing enforced by environment variable";
-        } else {
-            // OpenGL 2 disabled by environment variable
-            return false;
-        }
-    } else {
-        if (backend->openglContext()->glPlatform()->recommendedCompositor() < OpenGLCompositing) {
-            qCDebug(KWIN_CORE) << "Driver does not recommend OpenGL compositing";
-            return false;
-        }
-    }
-
-    // We only support the OpenGL 2+ shader API, not GL_ARB_shader_objects
-    if (!backend->openglContext()->hasVersion(Version(2, 0))) {
-        qCDebug(KWIN_CORE) << "OpenGL 2.0 is not supported";
-        return false;
-    }
+    KCrash::setGPUData(collectCrashInformation(m_primaryDevice));
     m_backend = std::move(backend);
     qCDebug(KWIN_CORE) << "OpenGL compositing has been successfully initialized";
     return true;
@@ -414,11 +400,6 @@ void Compositor::stop()
 
     disconnect(workspace(), &Workspace::outputsChanged, this, &Compositor::handleOutputsChanged);
     disconnect(kwinApp()->outputBackend(), &OutputBackend::outputRemoved, this, &Compositor::removeOutput);
-
-    if (m_backend->compositingType() == OpenGLCompositing) {
-        // some layers need a context current for destruction
-        (void)static_cast<EglBackend *>(m_backend.get())->openglContext()->makeCurrent();
-    }
 
     const auto loops = m_primaryViews | std::views::transform([](const auto &pair) {
         return pair.first;
@@ -759,16 +740,17 @@ std::pair<QList<Compositor::LayerData>, bool> Compositor::setupLayers(SceneView 
 
 void Compositor::composite(RenderLoop *renderLoop)
 {
-    if (m_backend->checkGraphicsReset()) {
+    WorkspaceScene *scene = kwinApp()->scene();
+    BackendOutput *output = findOutput(renderLoop);
+    LogicalOutput *logicalOutput = workspace()->findOutput(output);
+    const auto primaryView = m_primaryViews[renderLoop].get();
+
+    if (m_backend->checkGraphicsReset(primaryView->renderDevice())) {
         qCDebug(KWIN_CORE) << "Graphics reset occurred";
         reinitialize();
         return;
     }
 
-    WorkspaceScene *scene = kwinApp()->scene();
-    BackendOutput *output = findOutput(renderLoop);
-    LogicalOutput *logicalOutput = workspace()->findOutput(output);
-    const auto primaryView = m_primaryViews[renderLoop].get();
     fTraceDuration("Paint (", output->name(), ")");
 
     // This must come first.
@@ -1053,7 +1035,7 @@ void Compositor::assignOutputLayers(LogicalOutput *logicalOutput, BackendOutput 
     if (sceneView) {
         sceneView->setLayer(primaryLayer);
     } else {
-        sceneView = std::make_unique<SceneView>(kwinApp()->scene(), logicalOutput, backendOutput, primaryLayer, m_primaryDevice);
+        sceneView = std::make_unique<SceneView>(kwinApp()->scene(), logicalOutput, backendOutput, primaryLayer, m_backend->renderDevice(backendOutput));
         sceneView->setScale(backendOutput->scale());
         sceneView->setRenderOffset(backendOutput->deviceOffset());
         const auto updateViewport = [view = sceneView.get(), logicalOutput, backendOutput]() {

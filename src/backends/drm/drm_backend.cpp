@@ -308,9 +308,9 @@ std::unique_ptr<InputBackend> DrmBackend::createInputBackend()
     return std::make_unique<LibinputBackend>(m_session);
 }
 
-std::unique_ptr<EglBackend> DrmBackend::createOpenGLBackend(RenderDevice *device)
+std::unique_ptr<EglBackend> DrmBackend::createOpenGLBackend()
 {
-    return std::make_unique<EglGbmBackend>(this, device);
+    return std::make_unique<EglGbmBackend>(this);
 }
 
 QList<CompositingType> DrmBackend::supportedCompositors() const
