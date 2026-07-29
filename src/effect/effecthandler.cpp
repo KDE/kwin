@@ -306,11 +306,6 @@ bool EffectsHandler::isOpenGLCompositing() const
     return compositing_type & OpenGLCompositing;
 }
 
-EglContext *EffectsHandler::openglContext() const
-{
-    return Compositor::self()->primaryDevice()->eglContext().get();
-}
-
 void EffectsHandler::unloadAllEffects()
 {
     m_activeEffects.clear();
@@ -1184,7 +1179,6 @@ QStringList EffectsHandler::listOfEffects() const
 
 bool EffectsHandler::loadEffect(const QString &name)
 {
-    makeOpenGLContextCurrent();
     m_scene->addRepaintFull();
 
     return m_effectLoader->loadEffect(name);
@@ -1210,8 +1204,6 @@ void EffectsHandler::unloadEffect(const QString &name)
 
 void EffectsHandler::destroyEffect(Effect *effect)
 {
-    makeOpenGLContextCurrent();
-
     if (fullscreen_effect == effect) {
         setActiveFullScreenEffect(nullptr);
     }
@@ -1234,7 +1226,6 @@ void EffectsHandler::destroyEffect(Effect *effect)
 
 void EffectsHandler::reconfigureEffects()
 {
-    makeOpenGLContextCurrent();
     for (const EffectPair &pair : loaded_effects) {
         pair.second->reconfigure(Effect::ReconfigureAll);
     }
@@ -1245,7 +1236,6 @@ void EffectsHandler::reconfigureEffect(const QString &name)
     for (QList<EffectPair>::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if ((*it).first == name) {
             kwinApp()->config()->reparseConfiguration();
-            makeOpenGLContextCurrent();
             (*it).second->reconfigure(Effect::ReconfigureAll);
             return;
         }
@@ -1266,9 +1256,6 @@ bool EffectsHandler::isEffectSupported(const QString &name)
     if (isEffectLoaded(name)) {
         return true;
     }
-
-    // next checks might require a context
-    makeOpenGLContextCurrent();
 
     return m_effectLoader->isEffectSupported(name);
 }
@@ -1407,16 +1394,6 @@ QString EffectsHandler::debug(const QString &name, const QString &parameter) con
         }
     }
     return QString();
-}
-
-bool EffectsHandler::makeOpenGLContextCurrent()
-{
-    return openglContext()->makeCurrent();
-}
-
-void EffectsHandler::doneOpenGLContextCurrent()
-{
-    openglContext()->doneCurrent();
 }
 
 bool EffectsHandler::animationsSupported() const

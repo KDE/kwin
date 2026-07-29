@@ -350,7 +350,6 @@ bool PluginEffectLoader::loadEffect(const KPluginMetaData &info, LoadEffectFlags
         return false;
     }
 
-    effects->makeOpenGLContextCurrent(); // TODO: remove it
     if (!effectFactory->isSupported()) {
         qCDebug(KWIN_CORE) << "Effect is not supported: " << name;
         return false;
