@@ -50,10 +50,6 @@ public:
 
     QList<LinuxDmaBufV1Feedback::Tranche> tranches() const;
 
-    std::shared_ptr<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes) const;
-    EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer);
-    EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size);
-
 protected:
     void cleanup();
     bool initClientExtensions();
