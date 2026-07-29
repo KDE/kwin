@@ -329,7 +329,9 @@ bool DrmConnector::updateProperties()
         }
         m_modes.clear();
         m_modes.append(m_driverModes);
-        if (scalingMode.isValid() && scalingMode.hasEnum(ScalingMode::Full_Aspect)) {
+        // only generate common modes on internal panels, where we can be certain they will work.
+        // For external displays, users can manually add custom modes to get the same result.
+        if (scalingMode.isValid() && scalingMode.hasEnum(ScalingMode::Full_Aspect) && isInternal()) {
             m_modes.append(generateCommonModes());
         }
     }

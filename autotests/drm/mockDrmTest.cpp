@@ -364,6 +364,7 @@ void DrmTest::testModeGeneration()
     const auto mockGpu = findPrimaryDevice(5);
 
     const auto conn = std::make_shared<MockConnector>(mockGpu.get());
+    conn->type = DRM_MODE_CONNECTOR_eDP;
     mockGpu->connectors.push_back(conn);
 
     const auto session = Session::create(Session::Type::Noop);
