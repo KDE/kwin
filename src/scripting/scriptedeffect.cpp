@@ -61,6 +61,7 @@ struct AnimationSettings
     bool fullScreenEffect;
     bool keepAlive;
     std::optional<uint> shader;
+    QByteArray uniform;
 };
 
 AnimationSettings animationSettingsFromObject(const QJSValue &object)
@@ -404,12 +405,7 @@ QJSValue ScriptedEffect::animate_helper(const QJSValue &object, AnimationType an
                         m_engine->throwError(QStringLiteral("Shader for given shaderId not found"));
                         return {};
                     }
-                    if (!effects->makeOpenGLContextCurrent()) {
-                        m_engine->throwError(QStringLiteral("Failed to make OpenGL context current"));
-                        return {};
-                    }
-                    ShaderBinder binder{shader};
-                    s.metaData = shader->uniformLocation(uniformProperty.toUtf8().constData());
+                    s.uniform = uniformProperty.toUtf8();
                 }
 
                 settings << s;
@@ -440,33 +436,40 @@ QJSValue ScriptedEffect::animate_helper(const QJSValue &object, AnimationType an
     for (int i = 0; i < settings.count(); i++) {
         const AnimationSettings &setting = settings[i];
         int animationId;
+
+        // NOTE this cannot use set(...) and animate(...) from this class
+        // since those can't pass on the uniform name
         if (animationType == AnimationType::Set) {
-            animationId = set(window,
-                              setting.type,
-                              setting.duration,
-                              setting.to,
-                              setting.from,
-                              setting.metaData,
-                              setting.curve,
-                              setting.delay,
-                              setting.fullScreenEffect,
-                              setting.keepAlive,
-                              setting.shader ? setting.shader.value() : 0u);
+            animationId = AnimationEffect::set(
+                window,
+                setting.type,
+                setting.metaData,
+                setting.uniform,
+                std::chrono::milliseconds(setting.duration),
+                fpx2FromScriptValue(setting.to),
+                setting.curve,
+                setting.delay,
+                fpx2FromScriptValue(setting.from),
+                setting.fullScreenEffect,
+                setting.keepAlive,
+                findShader(setting.shader.value_or(0)));
             if (setting.frozenTime >= 0) {
                 freezeInTime(animationId, setting.frozenTime);
             }
         } else {
-            animationId = animate(window,
-                                  setting.type,
-                                  setting.duration,
-                                  setting.to,
-                                  setting.from,
-                                  setting.metaData,
-                                  setting.curve,
-                                  setting.delay,
-                                  setting.fullScreenEffect,
-                                  setting.keepAlive,
-                                  setting.shader ? setting.shader.value() : 0u);
+            animationId = AnimationEffect::animate(
+                window,
+                setting.type,
+                setting.metaData,
+                setting.uniform,
+                std::chrono::milliseconds(setting.duration),
+                fpx2FromScriptValue(setting.to),
+                setting.curve,
+                setting.delay,
+                fpx2FromScriptValue(setting.from),
+                setting.fullScreenEffect,
+                setting.keepAlive,
+                findShader(setting.shader.value_or(0)));
             if (setting.frozenTime >= 0) {
                 freezeInTime(animationId, setting.frozenTime);
             }
@@ -487,7 +490,7 @@ quint64 ScriptedEffect::animate(KWin::EffectWindow *window, KWin::AnimationEffec
     } else if (curve == GaussianCurve) {
         qec.setCustomType(qecGaussian);
     }
-    return AnimationEffect::animate(window, attribute, metaData, std::chrono::milliseconds(ms), fpx2FromScriptValue(to), qec,
+    return AnimationEffect::animate(window, attribute, metaData, QByteArray{}, std::chrono::milliseconds(ms), fpx2FromScriptValue(to), qec,
                                     delay, fpx2FromScriptValue(from), fullScreen, keepAlive, findShader(shaderId));
 }
 
@@ -506,7 +509,7 @@ quint64 ScriptedEffect::set(KWin::EffectWindow *window, KWin::AnimationEffect::A
     } else if (curve == GaussianCurve) {
         qec.setCustomType(qecGaussian);
     }
-    return AnimationEffect::set(window, attribute, metaData, std::chrono::milliseconds(ms), fpx2FromScriptValue(to), qec,
+    return AnimationEffect::set(window, attribute, metaData, QByteArray{}, std::chrono::milliseconds(ms), fpx2FromScriptValue(to), qec,
                                 delay, fpx2FromScriptValue(from), fullScreen, keepAlive, findShader(shaderId));
 }
 
@@ -785,11 +788,6 @@ QJSEngine *ScriptedEffect::engine() const
 
 uint ScriptedEffect::addFragmentShader(ShaderTrait traits, const QString &fragmentShaderFile)
 {
-    if (!effects->makeOpenGLContextCurrent()) {
-        m_engine->throwError(QStringLiteral("Failed to make OpenGL context current"));
-        return 0;
-    }
-
     QString fragment;
     if (!fragmentShaderFile.isEmpty()) {
         fragment = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1StringView("kwin/effects/") + m_effectName + QLatin1StringView("/contents/shaders/") + fragmentShaderFile);
@@ -803,67 +801,61 @@ uint ScriptedEffect::addFragmentShader(ShaderTrait traits, const QString &fragme
         }
     }
 
-    auto shader = ShaderManager::instance()->generateShaderFromFile(static_cast<KWin::ShaderTraits>(int(traits)), {}, fragment);
-    if (!shader) {
-        m_engine->throwError(QStringLiteral("Shader failed to load"));
-        // 0 is never a valid shader identifier, it's ensured the first shader gets id 1
-        return 0;
-    }
-
     const uint shaderId{m_nextShaderId};
     m_nextShaderId++;
-    m_shaders[shaderId] = std::move(shader);
+    m_shaders[shaderId] = FragmentShaderInfo{
+        .m_path = fragment,
+        .m_traits = static_cast<KWin::ShaderTraits>(int(traits)),
+    };
     return shaderId;
 }
 
-GLShader *ScriptedEffect::findShader(uint shaderId) const
+FragmentShaderInfo *ScriptedEffect::findShader(uint shaderId)
 {
-    if (auto it = m_shaders.find(shaderId); it != m_shaders.end()) {
-        return it->second.get();
+    auto it = m_shaders.find(shaderId);
+    if (it != m_shaders.end()) {
+        return &it->second;
     }
     return nullptr;
 }
 
 void ScriptedEffect::setUniform(uint shaderId, const QString &name, const QJSValue &value)
 {
-    auto shader = findShader(shaderId);
+    FragmentShaderInfo *shader = findShader(shaderId);
     if (!shader) {
         m_engine->throwError(QStringLiteral("Shader for given shaderId not found"));
         return;
     }
-    if (!effects->makeOpenGLContextCurrent()) {
-        m_engine->throwError(QStringLiteral("Failed to make OpenGL context current"));
-        return;
-    }
-    auto setColorUniform = [this, shader, name](const QColor &color) {
+    auto setColorUniform = [shader, name](const QColor &color) {
         if (!color.isValid()) {
             return;
         }
-        if (!shader->setUniform(name.toUtf8().constData(), color)) {
-            m_engine->throwError(QStringLiteral("Failed to set uniform ") + name);
-        }
+        shader->m_colorUniforms[name.toUtf8()] = color;
     };
-    ShaderBinder binder{shader};
     if (value.isString()) {
         setColorUniform(value.toString());
     } else if (value.isNumber()) {
-        if (!shader->setUniform(name.toUtf8().constData(), float(value.toNumber()))) {
-            m_engine->throwError(QStringLiteral("Failed to set uniform ") + name);
-        }
+        shader->m_floatUniforms[name.toUtf8()] = value.toNumber();
     } else if (value.isArray()) {
         const auto length = value.property(QStringLiteral("length")).toInt();
         if (length == 2) {
-            if (!shader->setUniform(name.toUtf8().constData(), QVector2D{float(value.property(0).toNumber()), float(value.property(1).toNumber())})) {
-                m_engine->throwError(QStringLiteral("Failed to set uniform ") + name);
-            }
+            shader->m_vector2DUniforms[name.toUtf8()] = QVector2D{
+                float(value.property(0).toNumber()),
+                float(value.property(1).toNumber()),
+            };
         } else if (length == 3) {
-            if (!shader->setUniform(name.toUtf8().constData(), QVector3D{float(value.property(0).toNumber()), float(value.property(1).toNumber()), float(value.property(2).toNumber())})) {
-                m_engine->throwError(QStringLiteral("Failed to set uniform ") + name);
-            }
+            shader->m_vector3DUniforms[name.toUtf8()] = QVector3D{
+                float(value.property(0).toNumber()),
+                float(value.property(1).toNumber()),
+                float(value.property(2).toNumber()),
+            };
         } else if (length == 4) {
-            if (!shader->setUniform(name.toUtf8().constData(), QVector4D{float(value.property(0).toNumber()), float(value.property(1).toNumber()), float(value.property(2).toNumber()), float(value.property(3).toNumber())})) {
-                m_engine->throwError(QStringLiteral("Failed to set uniform ") + name);
-            }
+            shader->m_vector4DUniforms[name.toUtf8()] = QVector4D{
+                float(value.property(0).toNumber()),
+                float(value.property(1).toNumber()),
+                float(value.property(2).toNumber()),
+                float(value.property(3).toNumber()),
+            };
         } else {
             m_engine->throwError(QStringLiteral("Invalid number of elements in array"));
         }

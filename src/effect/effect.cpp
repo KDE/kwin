@@ -413,9 +413,9 @@ QString Effect::debug(const QString &) const
     return QString();
 }
 
-bool Effect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
+bool Effect::drawWindow(RenderDevice *device, const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
-    return effects->drawWindow(renderTarget, viewport, w, mask, deviceRegion, data);
+    return effects->drawWindow(device, renderTarget, viewport, w, mask, deviceRegion, data);
 }
 
 void Effect::setPositionTransformations(WindowPaintData &data, Rect &logicalRegion, EffectWindow *w,

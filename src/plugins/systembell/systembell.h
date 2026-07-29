@@ -64,7 +64,7 @@ private:
 
     bool m_inited = false;
     bool m_valid = true;
-    std::unique_ptr<GLShader> m_shader;
+    FragmentShaderInfo m_shader;
     bool m_allWindows = false;
     QList<EffectWindow *> m_windows;
     QColor m_color;
