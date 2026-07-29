@@ -22,6 +22,10 @@ class BackgroundEffectItem;
 
 struct BlurRenderData
 {
+    ~BlurRenderData();
+
+    std::shared_ptr<EglContext> m_context;
+
     /// Temporary render targets needed for the Dual Kawase algorithm, the first texture
     /// contains not blurred background behind the window, it's cached.
     std::vector<std::unique_ptr<GLTexture>> textures;
@@ -89,56 +93,66 @@ private:
     bool shouldBlur(const EffectWindow *w, int mask, const WindowPaintData &data) const;
     void updateBlurRegion(EffectWindow *w);
     void blur(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
-    GLTexture *ensureNoiseTexture();
 
-private:
-    struct
+    struct Passes
     {
-        std::unique_ptr<GLShader> shader;
-        int mvpMatrixLocation;
-        int colorMatrixLocation;
-        int offsetLocation;
-        int halfpixelLocation;
-    } m_onscreenPass;
+        ~Passes();
 
-    struct
-    {
-        std::unique_ptr<GLShader> shader;
-        int mvpMatrixLocation;
-        int colorMatrixLocation;
-        int offsetLocation;
-        int halfpixelLocation;
-        int boxLocation;
-        int cornerRadiusLocation;
-        int opacityLocation;
-    } m_roundedOnscreenPass;
+        std::shared_ptr<EglContext> m_context;
 
-    struct
-    {
-        std::unique_ptr<GLShader> shader;
-        int mvpMatrixLocation;
-        int offsetLocation;
-        int halfpixelLocation;
-    } m_downsamplePass;
+        struct
+        {
+            std::unique_ptr<GLShader> shader;
+            int mvpMatrixLocation;
+            int colorMatrixLocation;
+            int offsetLocation;
+            int halfpixelLocation;
+        } m_onscreenPass;
 
-    struct
-    {
-        std::unique_ptr<GLShader> shader;
-        int mvpMatrixLocation;
-        int offsetLocation;
-        int halfpixelLocation;
-    } m_upsamplePass;
+        struct
+        {
+            std::unique_ptr<GLShader> shader;
+            int mvpMatrixLocation;
+            int colorMatrixLocation;
+            int offsetLocation;
+            int halfpixelLocation;
+            int boxLocation;
+            int cornerRadiusLocation;
+            int opacityLocation;
+        } m_roundedOnscreenPass;
 
-    struct
-    {
-        std::unique_ptr<GLShader> shader;
-        int mvpMatrixLocation;
-        int noiseTextureSizeLocation;
+        struct
+        {
+            std::unique_ptr<GLShader> shader;
+            int mvpMatrixLocation;
+            int offsetLocation;
+            int halfpixelLocation;
+        } m_downsamplePass;
 
-        std::unique_ptr<GLTexture> noiseTexture;
-        qreal noiseTextureScale = 1.0;
-        int noiseTextureStength = 0;
-    } m_noisePass;
+        struct
+        {
+            std::unique_ptr<GLShader> shader;
+            int mvpMatrixLocation;
+            int offsetLocation;
+            int halfpixelLocation;
+        } m_upsamplePass;
+
+        struct
+        {
+            std::unique_ptr<GLShader> shader;
+            int mvpMatrixLocation;
+            int noiseTextureSizeLocation;
+
+            std::unique_ptr<GLTexture> noiseTexture;
+            qreal noiseTextureScale = 1.0;
+            int noiseTextureStength = 0;
+        } m_noisePass;
+    };
+
+    GLTexture *ensureNoiseTexture(Passes &passes);
+    std::optional<Passes> &loadShaders(RenderDevice *device);
+
+    std::unordered_map<RenderDevice *, std::optional<Passes>> m_passes;
 
     bool m_valid = false;
 #if KWIN_BUILD_X11
