@@ -36,7 +36,8 @@ public:
     bool provides(Feature) override;
     void reconfigure(ReconfigureFlags flags) override;
     int requestedEffectChainPosition() const override;
-    bool drawWindow(const RenderTarget &renderTarget,
+    bool drawWindow(RenderDevice *device,
+                    const RenderTarget &renderTarget,
                     const RenderViewport &viewport,
                     EffectWindow *w,
                     int mask,
@@ -58,7 +59,7 @@ private:
     float m_intensity = 1.0f;
 
     std::unordered_set<KWin::EffectWindow *> m_windows;
-    std::unique_ptr<GLShader> m_shader;
+    FragmentShaderInfo m_shader;
 };
 
 } // namespace

@@ -88,19 +88,12 @@ void ColorBlindnessCorrectionEffect::loadData()
         break;
     }
 
-    m_shader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), fragPath);
-
-    if (!m_shader) {
-        qCCritical(KWIN_COLORBLINDNESS_CORRECTION) << "Failed to load the shader!";
-        return;
-    }
-
-    ShaderBinder binder{m_shader.get()};
-
+    m_shader = {};
+    m_shader.m_traits = ShaderTrait::MapTexture;
+    m_shader.m_path = fragPath;
     if (m_mode != Monochrome) {
-        // These uniforms aren't present in the monochrome shader, so we shouldn't set them there.
-        m_shader->setUniform("intensity", m_intensity);
-        m_shader->setUniform("defectMatrix", defectMatrix);
+        m_shader.m_floatUniforms[QByteArrayLiteral("intensity")] = m_intensity;
+        m_shader.m_matrix3x3Uniforms[QByteArrayLiteral("defectMatrix")] = defectMatrix;
     }
 
     for (const auto windows = effects->stackingOrder(); EffectWindow *w : windows) {
@@ -112,7 +105,8 @@ void ColorBlindnessCorrectionEffect::loadData()
     connect(effects, &EffectsHandler::windowAdded, this, &ColorBlindnessCorrectionEffect::correctColor);
 }
 
-bool ColorBlindnessCorrectionEffect::drawWindow(const RenderTarget &renderTarget,
+bool ColorBlindnessCorrectionEffect::drawWindow(RenderDevice *device,
+                                                const RenderTarget &renderTarget,
                                                 const RenderViewport &viewport,
                                                 EffectWindow *w,
                                                 int mask,
@@ -124,7 +118,7 @@ bool ColorBlindnessCorrectionEffect::drawWindow(const RenderTarget &renderTarget
         data.setSaturation(1.0f - m_intensity);
     }
 
-    return OffscreenEffect::drawWindow(renderTarget, viewport, w, mask, logicalRegion, data);
+    return OffscreenEffect::drawWindow(device, renderTarget, viewport, w, mask, logicalRegion, data);
 }
 
 void ColorBlindnessCorrectionEffect::correctColor(KWin::EffectWindow *w)
@@ -134,7 +128,7 @@ void ColorBlindnessCorrectionEffect::correctColor(KWin::EffectWindow *w)
     }
 
     redirect(w);
-    setShader(w, m_shader.get());
+    setShader(w, &m_shader);
     m_windows.insert(w);
 }
 
