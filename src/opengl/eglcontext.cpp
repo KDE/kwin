@@ -30,9 +30,9 @@ namespace KWin
 
 EglContext *EglContext::s_currentContext = nullptr;
 
-std::shared_ptr<EglContext> EglContext::create(EglDisplay *display, EGLConfig config, EglContext *sharedContext)
+std::shared_ptr<EglContext> EglContext::create(EglDisplay *display, EGLConfig config, const std::shared_ptr<EglContext> &shareContext)
 {
-    auto handle = createContext(display, config, sharedContext ? sharedContext->handle() : EGL_NO_CONTEXT);
+    auto handle = createContext(display, config, shareContext ? shareContext->handle() : EGL_NO_CONTEXT);
     if (!handle) {
         return nullptr;
     }
@@ -40,7 +40,7 @@ std::shared_ptr<EglContext> EglContext::create(EglDisplay *display, EGLConfig co
         eglDestroyContext(display->handle(), handle);
         return nullptr;
     }
-    auto ret = std::make_shared<EglContext>(display, config, handle, sharedContext);
+    auto ret = std::make_shared<EglContext>(display, config, handle, shareContext);
     s_currentContext = ret.get();
     if (!ret->checkSupported()) {
         return nullptr;
@@ -70,7 +70,7 @@ static eglFuncPtr getProcAddress(const char *name)
     return eglGetProcAddress(name);
 }
 
-EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext context, EglContext *shareContext)
+EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext context, const std::shared_ptr<EglContext> &shareContext)
     : m_shareContext(shareContext)
     , m_versionString((const char *)glGetString(GL_VERSION))
     , m_version(Version::parseString(m_versionString))
@@ -580,8 +580,8 @@ bool EglContext::isCompatibleWith(EglContext *other) const
     // technically speaking, context sharing could be done
     // more indirectly, but we don't do that in KWin
     return other == this
-        || other->m_shareContext == this
-        || other == m_shareContext
+        || other->m_shareContext.get() == this
+        || other == m_shareContext.get()
         || (m_shareContext && other->m_shareContext == this->m_shareContext);
 }
 

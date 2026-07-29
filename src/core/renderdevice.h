@@ -50,9 +50,16 @@ public:
      * @returns an EGL context suitable for rendering with this render device,
      * Note that the EGL context is lazily created, and destroyed once no
      * references to it exist anymore.
-     * If the context already exists, @p shareContext is ignored
+     * This context is shared with eglShareContext.
      */
-    std::shared_ptr<EglContext> eglContext(EglContext *shareContext = nullptr);
+    std::shared_ptr<EglContext> eglContext();
+    /**
+     * @returns an EGL context that can be used as a share context for
+     *          OpenGL contexts targeting this device.
+     *          Note that the EGL context is lazily created, and destroyed
+     *          once no references to it exist anymore.
+     */
+    std::shared_ptr<EglContext> eglShareContext();
 
     VulkanDevice *vulkanDevice() const;
 
@@ -99,6 +106,7 @@ private:
     const vk::raii::Instance m_vulkanInstance;
     std::unique_ptr<VulkanDevice> m_vulkanDevice;
     FormatModifierMap m_allImportableFormats;
+    std::weak_ptr<EglContext> m_shareContext;
     std::weak_ptr<EglContext> m_eglContext;
     bool m_inReset = false;
     const QString m_path;

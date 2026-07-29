@@ -43,7 +43,6 @@ public:
     EglContext *openglContext() const;
     std::shared_ptr<EglContext> openglContextRef() const;
     EglDisplay *eglDisplayObject() const;
-    EglContext *openglShareContext() const;
     RenderDevice *renderDevice() const override;
 
     bool testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice) override;
@@ -63,12 +62,8 @@ protected:
     bool createContext();
     void updateDmabufTranches();
 
-    bool ensureGlobalShareContext();
-    ::EGLContext createContextInternal(::EGLContext sharedContext);
-
     RenderDevice *m_renderDevice = nullptr;
     std::shared_ptr<EglContext> m_context;
-    std::shared_ptr<EglContext> m_globalShareContext;
     QList<QByteArray> m_clientExtensions;
     QList<LinuxDmaBufV1Feedback::Tranche> m_tranches;
     QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> m_importedBuffers;

@@ -131,12 +131,26 @@ EglDisplay *RenderDevice::eglDisplay() const
     return m_display.get();
 }
 
-std::shared_ptr<EglContext> RenderDevice::eglContext(EglContext *shareContext)
+std::shared_ptr<EglContext> RenderDevice::eglContext()
 {
     auto ret = m_eglContext.lock();
     if (!ret || ret->isFailed()) {
-        ret = EglContext::create(m_display.get(), EGL_NO_CONFIG_KHR, shareContext);
+        const auto share = eglShareContext();
+        if (!share) {
+            return nullptr;
+        }
+        ret = EglContext::create(m_display.get(), EGL_NO_CONFIG_KHR, share);
         m_eglContext = ret;
+    }
+    return ret;
+}
+
+std::shared_ptr<EglContext> RenderDevice::eglShareContext()
+{
+    auto ret = m_shareContext.lock();
+    if (!ret || ret->isFailed()) {
+        ret = EglContext::create(m_display.get(), EGL_NO_CONFIG_KHR, nullptr);
+        m_shareContext = ret;
     }
     return ret;
 }

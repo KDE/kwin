@@ -41,7 +41,7 @@ EGLRenderTarget::~EGLRenderTarget()
     texture.reset();
 }
 
-EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, EglContext *shareContext)
+EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, const std::shared_ptr<EglContext> &shareContext)
     : m_eglDisplay(shareContext->displayObject())
 {
     create(context->format(), shareContext);
@@ -182,7 +182,7 @@ GLuint EGLPlatformContext::defaultFramebufferObject(QPlatformSurface *surface) c
     return 0;
 }
 
-void EGLPlatformContext::create(const QSurfaceFormat &format, EglContext *shareContext)
+void EGLPlatformContext::create(const QSurfaceFormat &format, const std::shared_ptr<EglContext> &shareContext)
 {
     m_config = configFromFormat(m_eglDisplay, format);
     if (m_config == EGL_NO_CONFIG_KHR) {

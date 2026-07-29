@@ -88,14 +88,6 @@ bool EglBackend::checkGraphicsReset()
     return true;
 }
 
-bool EglBackend::ensureGlobalShareContext()
-{
-    if (!m_globalShareContext) {
-        m_globalShareContext = EglContext::create(m_renderDevice->eglDisplay(), EGL_NO_CONFIG_KHR, nullptr);
-    }
-    return m_globalShareContext != nullptr;
-}
-
 void EglBackend::cleanup()
 {
     m_context.reset();
@@ -245,10 +237,7 @@ bool EglBackend::hasClientExtension(const QByteArray &ext) const
 
 bool EglBackend::createContext()
 {
-    if (!ensureGlobalShareContext()) {
-        return false;
-    }
-    m_context = m_renderDevice->eglContext(m_globalShareContext.get());
+    m_context = m_renderDevice->eglContext();
     return m_context != nullptr;
 }
 
@@ -313,11 +302,6 @@ FormatModifierMap EglBackend::supportedFormats() const
 EglDisplay *EglBackend::eglDisplayObject() const
 {
     return m_renderDevice->eglDisplay();
-}
-
-EglContext *EglBackend::openglShareContext() const
-{
-    return m_globalShareContext.get();
 }
 
 EglContext *EglBackend::openglContext() const

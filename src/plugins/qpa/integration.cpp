@@ -14,6 +14,7 @@
 #include "compositor.h"
 #include "core/output.h"
 #include "core/renderbackend.h"
+#include "core/renderdevice.h"
 #include "eglplatformcontext.h"
 #include "inputmethod.h"
 #include "internalinputmethodcontext.h"
@@ -156,12 +157,12 @@ QStringList Integration::themeNames() const
 
 QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext *context) const
 {
-    EglBackend *egl = qobject_cast<EglBackend *>(Compositor::self()->backend());
-    if (!egl || !egl->openglShareContext()) {
-        qCWarning(KWIN_QPA) << "Attempting to create a QOpenGLContext before the scene is initialized";
+    const auto device = Compositor::self()->primaryDevice();
+    const auto shareContext = device->eglShareContext();
+    if (!shareContext) {
         return nullptr;
     }
-    return new EGLPlatformContext(context, egl->openglShareContext());
+    return new EGLPlatformContext(context, shareContext);
 }
 
 QPlatformAccessibility *Integration::accessibility() const
