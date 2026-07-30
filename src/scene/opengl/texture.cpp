@@ -226,7 +226,7 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const std::s
         // need to do a multi gpu copy
         m_mgpuSwapchain = MultiGpuSwapchain::createForSampling(compat, m_backend->renderDevice(),
                                                                attribs->format, attribs->modifier, buffer->size(),
-                                                               m_backend->renderDevice()->eglDisplay()->nonExternalOnlySupportedDrmFormats());
+                                                               m_backend->renderDevice()->eglDisplay()->allSupportedDrmFormats());
         if (!m_mgpuSwapchain) {
             qCCritical(KWIN_OPENGL, "Couldn't create multi gpu swapchain for a buffer %s 0x%lx", qPrintable(FormatInfo::drmFormatName(attribs->format)), attribs->modifier);
             return false;
