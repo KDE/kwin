@@ -23,9 +23,7 @@ VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::De
     : m_type(type)
     , m_physical(physicalDevice)
     , m_logical(std::move(logicalDevice))
-    // TODO it might be useful to have separate lists for sample + transfer_src
-    // and sample + color attachment + transfer_dst
-    , m_formats(queryFormats(VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT))
+    , m_transferFormats(queryFormats(VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT))
     , m_queueProperties(std::move(queueProperties))
     , m_deviceLimits(m_physical.getProperties().limits)
 {
@@ -116,11 +114,11 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
         qCWarning(KWIN_VULKAN, "Dmabuf has unknown format");
         return nullptr;
     }
-    auto formatIt = m_formats.find(attributes->format);
-    if (formatIt == m_formats.end() || !formatIt->contains(attributes->modifier)) {
-        if (formatIt == m_formats.end()) {
+    auto formatIt = m_transferFormats.find(attributes->format);
+    if (formatIt == m_transferFormats.end() || !formatIt->contains(attributes->modifier)) {
+        if (formatIt == m_transferFormats.end()) {
             qCWarning(KWIN_VULKAN, "Dmabuf has unsupported format %s", qPrintable(FormatInfo::drmFormatName(attributes->format)));
-            for (auto it = m_formats.begin(); it != m_formats.end(); it++) {
+            for (auto it = m_transferFormats.begin(); it != m_transferFormats.end(); it++) {
                 qCWarning(KWIN_VULKAN, "Supported fmt: %s", qPrintable(FormatInfo::drmFormatName(it.key())));
             }
         } else {
@@ -332,9 +330,9 @@ vk::PhysicalDeviceType VulkanDevice::type() const
     return m_type;
 }
 
-const FormatModifierMap &VulkanDevice::supportedFormats() const
+const FormatModifierMap &VulkanDevice::transferFormats() const
 {
-    return m_formats;
+    return m_transferFormats;
 }
 
 const vk::raii::Device &VulkanDevice::logicalDevice() const

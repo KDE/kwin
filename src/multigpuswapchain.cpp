@@ -157,9 +157,9 @@ static std::optional<CopyRet> createCopy(RenderDevice *device,
 {
     // use Vulkan if possible
     if (device->vulkanDevice()) {
-        auto retModifiers = device->vulkanDevice()->supportedFormats()[sourceFormat].intersected(sourceModifiers);
+        auto retModifiers = device->vulkanDevice()->transferFormats()[sourceFormat].intersected(sourceModifiers);
         if (!retModifiers.empty()) {
-            const auto fmt = chooseFormat(sourceFormat, device->vulkanDevice()->supportedFormats(), formats);
+            const auto fmt = chooseFormat(sourceFormat, device->vulkanDevice()->transferFormats(), formats);
             if (fmt) {
                 options.format = fmt->format;
                 options.modifiers = fmt->modifiers;
@@ -767,7 +767,7 @@ bool MultiGpuSwapchain::isSuitableFor(GraphicsBuffer *buffer) const
         return false;
     }
     if (qobject_cast<VulkanMultiGpuCopy *>(m_firstCopy.get())) {
-        return m_firstCopy->m_device->vulkanDevice()->supportedFormats().containsFormat(attrs->format, attrs->modifier);
+        return m_firstCopy->m_device->vulkanDevice()->transferFormats().containsFormat(attrs->format, attrs->modifier);
     } else {
         return m_firstCopy->m_device->eglDisplay()->allSupportedDrmFormats().containsFormat(attrs->format, attrs->modifier);
     }

@@ -75,7 +75,7 @@ static FormatModifierMap getImportFormats(EglDisplay *eglDisplay, VulkanDevice *
         ret = eglDisplay->allSupportedDrmFormats();
     }
     if (vulkanDevice) {
-        ret = ret.merged(vulkanDevice->supportedFormats());
+        ret = ret.merged(vulkanDevice->transferFormats());
     }
     return ret;
 }
@@ -281,7 +281,7 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             std::move(logicalDevice),
             queueProperties | std::ranges::to<std::vector<VkQueueFamilyProperties>>(),
             basicProperties.properties.deviceType);
-        if (ret->supportedFormats().isEmpty()) {
+        if (ret->transferFormats().isEmpty()) {
             continue;
         }
         qCDebug(KWIN_VULKAN, "Found Vulkan device %s for %s", deviceName, qPrintable(path));

@@ -81,7 +81,7 @@ public:
     vk::raii::DeviceMemory allocateMemory(const vk::ImageCreateInfo &imageInfo, vk::MemoryPropertyFlags memoryProperties);
     vk::raii::DeviceMemory allocateMemory(const vk::BufferCreateInfo &bufferInfo, vk::MemoryPropertyFlags memoryProperties);
 
-    const FormatModifierMap &supportedFormats() const;
+    const FormatModifierMap &transferFormats() const;
     const vk::raii::Device &logicalDevice() const;
 
     VulkanQueue *graphicsQueue() const;
@@ -136,7 +136,7 @@ private:
     vk::PhysicalDeviceType m_type;
     vk::raii::PhysicalDevice m_physical;
     vk::raii::Device m_logical;
-    FormatModifierMap m_formats;
+    FormatModifierMap m_transferFormats;
     std::vector<VkQueueFamilyProperties> m_queueProperties;
     vk::PhysicalDeviceMemoryProperties m_memoryProperties;
     vk::PhysicalDeviceLimits m_deviceLimits;

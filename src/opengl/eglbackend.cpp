@@ -115,10 +115,10 @@ void EglBackend::updateDmabufTranches()
     auto filterFormats = [this](RenderDevice *device, std::optional<uint32_t> bpc, bool withExternalOnlyYUV, DeviceType type) {
         FormatModifierMap set;
         const auto &allFormats = type == DeviceType::Vulkan
-            ? device->vulkanDevice()->supportedFormats()
+            ? device->vulkanDevice()->transferFormats()
             : device->eglDisplay()->allSupportedDrmFormats();
         const auto &nonExternalOnly = type == DeviceType::Vulkan
-            ? device->vulkanDevice()->supportedFormats()
+            ? device->vulkanDevice()->transferFormats()
             : device->eglDisplay()->nonExternalOnlySupportedDrmFormats();
         for (auto it = allFormats.constBegin(); it != allFormats.constEnd(); it++) {
             const auto info = FormatInfo::get(it.key());
@@ -286,7 +286,7 @@ bool EglBackend::testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice)
         return false;
     }
 
-    if (device != m_renderDevice && device->vulkanDevice() && device->vulkanDevice()->supportedFormats().containsFormat(buffer->dmabufAttributes()->format, buffer->dmabufAttributes()->modifier)) {
+    if (device != m_renderDevice && device->vulkanDevice() && device->vulkanDevice()->transferFormats().containsFormat(buffer->dmabufAttributes()->format, buffer->dmabufAttributes()->modifier)) {
         if (device->vulkanDevice()->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_SRC_BIT)) {
             return true;
         }
