@@ -108,18 +108,14 @@ void EglBackend::initWayland()
 
 void EglBackend::updateDmabufTranches()
 {
-    enum class DeviceType {
-        EGL,
-        Vulkan,
-    };
-    auto filterFormats = [this](RenderDevice *device, std::optional<uint32_t> bpc, bool withExternalOnlyYUV, DeviceType type) {
+    auto filterFormats = [this](RenderDevice *device, std::optional<uint32_t> bpc, bool withExternalOnlyYUV) {
         FormatModifierMap set;
-        const auto &allFormats = type == DeviceType::Vulkan
-            ? device->vulkanDevice()->transferFormats()
-            : device->eglDisplay()->allSupportedDrmFormats();
-        const auto &nonExternalOnly = type == DeviceType::Vulkan
-            ? device->vulkanDevice()->transferFormats()
-            : device->eglDisplay()->nonExternalOnlySupportedDrmFormats();
+        auto allFormats = device->eglDisplay()->allSupportedDrmFormats();
+        auto nonExternalOnly = device->eglDisplay()->nonExternalOnlySupportedDrmFormats();
+        if (device->vulkanDevice() && !device->vulkanDevice()->isSoftwareRenderer()) {
+            allFormats = allFormats.intersected(device->vulkanDevice()->transferFormats());
+            nonExternalOnly = nonExternalOnly.intersected(device->vulkanDevice()->transferFormats());
+        }
         for (auto it = allFormats.constBegin(); it != allFormats.constEnd(); it++) {
             const auto info = FormatInfo::get(it.key());
             if (bpc && (!info || bpc != info->bitsPerColor)) {
@@ -175,17 +171,17 @@ void EglBackend::updateDmabufTranches()
     m_tranches.append({
         .device = m_renderDevice->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-        .formatTable = filterFormats(m_renderDevice, 10, false, DeviceType::EGL),
+        .formatTable = filterFormats(m_renderDevice, 10, false),
     });
     m_tranches.append({
         .device = m_renderDevice->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-        .formatTable = filterFormats(m_renderDevice, 8, false, DeviceType::EGL),
+        .formatTable = filterFormats(m_renderDevice, 8, false),
     });
     m_tranches.append({
         .device = m_renderDevice->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-        .formatTable = includeShaderConversions(filterFormats(m_renderDevice, std::nullopt, true, DeviceType::EGL)),
+        .formatTable = includeShaderConversions(filterFormats(m_renderDevice, std::nullopt, true)),
     });
 
     // Other GPUs come afterwards, in no particular order.
@@ -195,23 +191,20 @@ void EglBackend::updateDmabufTranches()
         if (device.get() == m_renderDevice) {
             continue;
         }
-        // If available, prefer Vulkan for better performance.
-        // EGL formats can still be imported, but should be avoided by clients this way
-        const DeviceType type = device->vulkanDevice() ? DeviceType::Vulkan : DeviceType::EGL;
         m_tranches.append({
             .device = device->deviceId(),
             .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-            .formatTable = filterFormats(device.get(), 10, false, type),
+            .formatTable = filterFormats(device.get(), 10, false),
         });
         m_tranches.append({
             .device = device->deviceId(),
             .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-            .formatTable = filterFormats(device.get(), 8, false, type),
+            .formatTable = filterFormats(device.get(), 8, false),
         });
         m_tranches.push_back({
             .device = device->deviceId(),
             .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-            .formatTable = filterFormats(device.get(), std::nullopt, false, type),
+            .formatTable = filterFormats(device.get(), std::nullopt, false),
         });
     }
 

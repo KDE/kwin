@@ -51,6 +51,8 @@ public:
 
     void merge(const FormatModifierMap &other);
     FormatModifierMap merged(const FormatModifierMap &other) const;
+    FormatModifierMap intersected(const FormatModifierMap &other) const;
+
     bool containsFormat(uint32_t format, uint64_t modifier) const;
 };
 

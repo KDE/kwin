@@ -104,6 +104,19 @@ FormatModifierMap FormatModifierMap::merged(const FormatModifierMap &other) cons
     return ret;
 }
 
+FormatModifierMap FormatModifierMap::intersected(const FormatModifierMap &other) const
+{
+    FormatModifierMap ret;
+    for (auto it = begin(); it != end(); it++) {
+        const uint32_t format = it.key();
+        const auto modifiers = it.value().intersected(other[format]);
+        if (!modifiers.isEmpty()) {
+            ret[format] = modifiers;
+        }
+    }
+    return ret;
+}
+
 const QHash<uint32_t, YuvConversion> FormatInfo::s_drmConversions = {
     {DRM_FORMAT_NV12, YuvConversion{
                           {YuvFormat{DRM_FORMAT_R8, 1, 1}, YuvFormat{DRM_FORMAT_GR88, 2, 2}},
