@@ -152,12 +152,16 @@ bool ShaderManager::isShaderBound() const
 GLShader *ShaderManager::pushShader(ShaderTraits traits)
 {
     GLShader *shader = this->shader(traits);
+    if (!shader) {
+        return nullptr;
+    }
     pushShader(shader);
     return shader;
 }
 
 void ShaderManager::pushShader(GLShader *shader)
 {
+    Q_ASSERT(shader);
     // only bind shader if it is not already bound
     if (shader != getBoundShader()) {
         shader->bind();
