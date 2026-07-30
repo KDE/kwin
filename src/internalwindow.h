@@ -18,6 +18,7 @@ namespace KWin
 struct InternalWindowFrame
 {
     GraphicsBuffer *buffer = nullptr;
+    FileDescriptor syncFd;
     Region bufferDamage;
     OutputTransform bufferTransform = OutputTransform::Normal;
 };
@@ -63,6 +64,7 @@ public:
     void pointerLeaveEvent() override;
 
     GraphicsBuffer *graphicsBuffer() const;
+    const FileDescriptor &syncFd() const;
     OutputTransform bufferTransform() const;
 
     void present(const InternalWindowFrame &frame);
@@ -95,6 +97,7 @@ private:
     Qt::WindowFlags m_internalWindowFlags = Qt::WindowFlags();
     DecorationPolicy m_decorationPolicy = DecorationPolicy::ClientPreference;
     GraphicsBufferRef m_graphicsBufferRef;
+    FileDescriptor m_syncFd;
     OutputTransform m_bufferTransform = OutputTransform::Normal;
 
     Q_DISABLE_COPY(InternalWindow)

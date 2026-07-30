@@ -54,7 +54,7 @@ ImageTextureOpenGL::ImageTextureOpenGL(const std::shared_ptr<EglContext> &contex
 {
 }
 
-void ImageTextureOpenGL::attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+void ImageTextureOpenGL::attach(GraphicsBuffer *buffer, const FileDescriptor &sync, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     Q_UNREACHABLE();
 }
@@ -90,20 +90,20 @@ BufferTextureOpenGL::~BufferTextureOpenGL()
 {
 }
 
-std::unique_ptr<BufferTextureOpenGL> BufferTextureOpenGL::create(RenderDevice *device, GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+std::unique_ptr<BufferTextureOpenGL> BufferTextureOpenGL::create(RenderDevice *device, GraphicsBuffer *buffer, const FileDescriptor &sync, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     auto texture = std::make_unique<BufferTextureOpenGL>(device);
-    if (texture->attach(buffer, releasePoint)) {
+    if (texture->attach(buffer, sync, releasePoint)) {
         return texture;
     }
 
     return nullptr;
 }
 
-bool BufferTextureOpenGL::attach(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+bool BufferTextureOpenGL::attach(GraphicsBuffer *buffer, const FileDescriptor &sync, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     if (buffer->dmabufAttributes()) {
-        return loadDmabufTexture(buffer, releasePoint);
+        return loadDmabufTexture(buffer, sync, releasePoint);
     } else if (buffer->shmAttributes()) {
         if (EGLImageKHR image = m_renderDevice->eglDisplay()->importBufferAsImage(buffer)) {
             return loadUDmabufTexture(buffer, image);
@@ -118,18 +118,18 @@ bool BufferTextureOpenGL::attach(GraphicsBuffer *buffer, const std::shared_ptr<S
     }
 }
 
-void BufferTextureOpenGL::attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+void BufferTextureOpenGL::attach(GraphicsBuffer *buffer, const FileDescriptor &sync, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     if (buffer->dmabufAttributes()) {
-        updateDmabufTexture(buffer, region, releasePoint);
+        updateDmabufTexture(buffer, sync, region, releasePoint);
     } else if (buffer->shmAttributes()) {
         if (EGLImageKHR image = m_renderDevice->eglDisplay()->importBufferAsImage(buffer)) {
-            updateUDmabufTexture(buffer, image, releasePoint);
+            updateUDmabufTexture(buffer, image);
         } else {
-            updateShmTexture(buffer, region, releasePoint);
+            updateShmTexture(buffer, region);
         }
     } else if (buffer->singlePixelAttributes()) {
-        updateSinglePixelTexture(buffer, releasePoint);
+        updateSinglePixelTexture(buffer);
     } else {
         qCDebug(KWIN_OPENGL) << "Failed to update OpenGLSurfaceTexture for a buffer of unknown type" << buffer;
     }
@@ -205,11 +205,11 @@ static Region simplifyDamage(const Region &damage)
     }
 }
 
-void BufferTextureOpenGL::updateShmTexture(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+void BufferTextureOpenGL::updateShmTexture(GraphicsBuffer *buffer, const Region &region)
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::Shm)) {
         reset();
-        attach(buffer, releasePoint);
+        loadShmTexture(buffer);
         return;
     }
 
@@ -223,7 +223,7 @@ void BufferTextureOpenGL::updateShmTexture(GraphicsBuffer *buffer, const Region 
     m_isFloatingPoint = info && info->floatingPoint;
 }
 
-bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const FileDescriptor &sync, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     auto attribs = buffer->dmabufAttributes();
     m_dmabufDevice = attribs->device;
@@ -234,6 +234,12 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const std::s
     } else if (compat == m_renderDevice) {
         m_mgpuSwapchain.reset();
         m_releasePoint = releasePoint;
+        if (sync.isValid()) {
+            const auto fence = EGLNativeFence::importFence(m_renderDevice->eglDisplay(), sync.duplicate());
+            if (!fence.waitSync()) {
+                return false;
+            }
+        }
     } else {
         // need to do a multi gpu copy
         m_mgpuSwapchain = MultiGpuSwapchain::createForSampling(compat, m_renderDevice,
@@ -243,9 +249,7 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const std::s
             qCCritical(KWIN_OPENGL, "Couldn't create multi gpu swapchain for a buffer %s 0x%lx", qPrintable(FormatInfo::drmFormatName(attribs->format)), attribs->modifier);
             return false;
         }
-        EGLNativeFence releaseFence(m_renderDevice->eglDisplay());
-        auto imported = m_mgpuSwapchain->copyRgbBuffer(buffer, Region::infinite(), releaseFence.takeFileDescriptor(),
-                                                       nullptr, releasePoint);
+        auto imported = m_mgpuSwapchain->copyRgbBuffer(buffer, Region::infinite(), sync.duplicate(), nullptr, releasePoint);
         if (!imported.has_value()) {
             return false;
         }
@@ -295,19 +299,17 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const std::s
     return true;
 }
 
-void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const FileDescriptor &sync, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::DmaBuf)
         || Q_UNLIKELY(m_dmabufDevice != buffer->dmabufAttributes()->device)
         || (m_mgpuSwapchain && !m_mgpuSwapchain->isSuitableFor(buffer))) {
         reset();
-        attach(buffer, releasePoint);
+        loadDmabufTexture(buffer, sync, releasePoint);
         return;
     }
     if (m_mgpuSwapchain) {
-        EGLNativeFence releaseFence(m_renderDevice->eglDisplay());
-        auto imported = m_mgpuSwapchain->copyRgbBuffer(buffer, region, releaseFence.takeFileDescriptor(),
-                                                       nullptr, releasePoint);
+        auto imported = m_mgpuSwapchain->copyRgbBuffer(buffer, region, sync.duplicate(), nullptr, releasePoint);
         if (!imported.has_value()) {
             return;
         }
@@ -319,6 +321,12 @@ void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const Regi
         m_releasePoint = imported->releasePoint;
     } else {
         m_releasePoint = releasePoint;
+        if (sync.isValid()) {
+            const auto fence = EGLNativeFence::importFence(m_renderDevice->eglDisplay(), sync.duplicate());
+            if (!fence.waitSync()) {
+                return;
+            }
+        }
     }
 
     if (auto itConv = FormatInfo::s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != FormatInfo::s_drmConversions.end()) {
@@ -359,11 +367,11 @@ bool BufferTextureOpenGL::loadSinglePixelTexture(GraphicsBuffer *buffer)
     return true;
 }
 
-void BufferTextureOpenGL::updateSinglePixelTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+void BufferTextureOpenGL::updateSinglePixelTexture(GraphicsBuffer *buffer)
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::SinglePixel)) {
         reset();
-        attach(buffer, releasePoint);
+        loadSinglePixelTexture(buffer);
         return;
     }
     const GraphicsBufferView view(buffer);
@@ -414,7 +422,7 @@ bool BufferTextureOpenGL::loadUDmabufTexture(GraphicsBuffer *buffer, EGLImageKHR
     return true;
 }
 
-void BufferTextureOpenGL::updateUDmabufTexture(GraphicsBuffer *buffer, EGLImageKHR image, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+void BufferTextureOpenGL::updateUDmabufTexture(GraphicsBuffer *buffer, EGLImageKHR image)
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::UDmaBuf)) {
         reset();

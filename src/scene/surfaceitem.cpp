@@ -43,10 +43,16 @@ GraphicsBuffer *SurfaceItem::buffer() const
     return m_bufferRef.buffer();
 }
 
-void SurfaceItem::setBuffer(GraphicsBuffer *buffer)
+const FileDescriptor &SurfaceItem::syncFd() const
+{
+    return m_bufferSync;
+}
+
+void SurfaceItem::setBuffer(GraphicsBuffer *buffer, FileDescriptor &&syncFd)
 {
     if (buffer) {
         m_bufferRef = buffer;
+        m_bufferSync = std::move(syncFd);
         m_hasAlphaChannel = buffer->hasAlphaChannel();
         setBufferSize(buffer->size());
     } else {
@@ -184,7 +190,7 @@ void SurfaceItem::preprocess(ItemRenderer *renderer)
     }
 
     if (!texture || texture->size() != m_bufferSize) {
-        texture = renderer->createTexture(buffer(), m_bufferReleasePoint);
+        texture = renderer->createTexture(buffer(), m_bufferSync, m_bufferReleasePoint);
         if (texture) {
             resetDamage(renderer->renderDevice());
         }
@@ -193,7 +199,7 @@ void SurfaceItem::preprocess(ItemRenderer *renderer)
 
     const Region region = damage(renderer->renderDevice());
     if (!region.isEmpty()) {
-        texture->attach(buffer(), region, m_bufferReleasePoint);
+        texture->attach(buffer(), m_bufferSync, region, m_bufferReleasePoint);
         resetDamage(renderer->renderDevice());
     }
 }

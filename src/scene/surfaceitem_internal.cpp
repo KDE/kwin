@@ -18,7 +18,7 @@ SurfaceItemInternal::SurfaceItemInternal(InternalWindow *window, Item *parent)
             this, &SurfaceItemInternal::handlePresented);
 
     setDestinationSize(window->bufferGeometry().size());
-    setBuffer(m_window->graphicsBuffer());
+    setBuffer(m_window->graphicsBuffer(), m_window->syncFd().duplicate());
     setBufferSourceBox(RectF(QPointF(0, 0), window->bufferGeometry().size() * window->bufferScale()));
     setBufferTransform(m_window->bufferTransform());
 }
@@ -36,7 +36,7 @@ RegionF SurfaceItemInternal::shape() const
 void SurfaceItemInternal::handlePresented(const InternalWindowFrame &frame)
 {
     setDestinationSize(m_window->bufferGeometry().size());
-    setBuffer(frame.buffer);
+    setBuffer(frame.buffer, frame.syncFd.duplicate());
     setBufferSourceBox(RectF(QPointF(0, 0), frame.buffer->size()));
     setBufferTransform(frame.bufferTransform);
 

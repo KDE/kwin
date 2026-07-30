@@ -45,7 +45,7 @@ public:
 
     explicit ImageTextureOpenGL(const std::shared_ptr<EglContext> &context);
 
-    void attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
+    void attach(GraphicsBuffer *buffer, const FileDescriptor &sync, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
 
     bool upload(const QImage &image);
     void upload(const QImage &image, const Rect &region) override;
@@ -54,13 +54,13 @@ public:
 class BufferTextureOpenGL : public TextureOpenGL
 {
 public:
-    static std::unique_ptr<BufferTextureOpenGL> create(RenderDevice *device, GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
+    static std::unique_ptr<BufferTextureOpenGL> create(RenderDevice *device, GraphicsBuffer *buffer, const FileDescriptor &sync, const std::shared_ptr<SyncReleasePoint> &releasePoint);
 
     explicit BufferTextureOpenGL(RenderDevice *device);
     ~BufferTextureOpenGL() override;
 
-    bool attach(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
-    void attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
+    bool attach(GraphicsBuffer *buffer, const FileDescriptor &sync, const std::shared_ptr<SyncReleasePoint> &releasePoint);
+    void attach(GraphicsBuffer *buffer, const FileDescriptor &sync, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
 
     void upload(const QImage &image, const Rect &region) override;
 
@@ -68,13 +68,13 @@ private:
     void reset();
 
     bool loadShmTexture(GraphicsBuffer *buffer);
-    void updateShmTexture(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint);
-    bool loadDmabufTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
-    void updateDmabufTexture(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint);
+    void updateShmTexture(GraphicsBuffer *buffer, const Region &region);
+    bool loadDmabufTexture(GraphicsBuffer *buffer, const FileDescriptor &sync, const std::shared_ptr<SyncReleasePoint> &releasePoint);
+    void updateDmabufTexture(GraphicsBuffer *buffer, const FileDescriptor &sync, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint);
     bool loadSinglePixelTexture(GraphicsBuffer *buffer);
-    void updateSinglePixelTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
+    void updateSinglePixelTexture(GraphicsBuffer *buffer);
     bool loadUDmabufTexture(GraphicsBuffer *buffer, EGLImageKHR image);
-    void updateUDmabufTexture(GraphicsBuffer *buffer, EGLImageKHR image, const std::shared_ptr<SyncReleasePoint> &releasePoint);
+    void updateUDmabufTexture(GraphicsBuffer *buffer, EGLImageKHR image);
 
     enum class BufferType {
         None,

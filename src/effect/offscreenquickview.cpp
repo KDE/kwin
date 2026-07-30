@@ -387,7 +387,8 @@ void OffscreenQuickView::update(OutputFrame *frame)
         d->m_imageItem->setImage(d->m_image);
         d->m_imageItem->setSize(geometry().size());
     } else {
-        d->m_surfaceItem->setBuffer(d->m_currentSlot->buffer());
+        EGLNativeFence fence(EglContext::currentContext()->displayObject());
+        d->m_surfaceItem->setBuffer(d->m_currentSlot->buffer(), fence.takeFileDescriptor());
         d->m_surfaceItem->setBufferReleasePoint(d->m_currentSlot->releasePoint());
         d->m_surfaceItem->setBufferSourceBox(Rect(QPoint(), d->m_swapchain->size()));
         d->m_surfaceItem->setDestinationSize(geometry().size());

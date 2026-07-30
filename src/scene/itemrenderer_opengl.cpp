@@ -37,9 +37,9 @@ ItemRendererOpenGL::ItemRendererOpenGL(RenderDevice *device)
     }
 }
 
-std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(GraphicsBuffer *buffer, const FileDescriptor &sync, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
-    return BufferTextureOpenGL::create(m_renderDevice, buffer, releasePoint);
+    return BufferTextureOpenGL::create(m_renderDevice, buffer, sync, releasePoint);
 }
 
 std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(const QImage &image)

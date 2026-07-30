@@ -13,15 +13,15 @@
 #include "core/outputbackend.h"
 #include "eglhelpers.h"
 #include "internalwindow.h"
+#include "logging.h"
 #include "offscreensurface.h"
 #include "opengl/eglcontext.h"
 #include "opengl/egldisplay.h"
+#include "opengl/eglnativefence.h"
 #include "opengl/eglutils_p.h"
 #include "opengl/glutils.h"
 #include "swapchain.h"
 #include "window.h"
-
-#include "logging.h"
 
 namespace KWin
 {
@@ -158,10 +158,10 @@ void EGLPlatformContext::swapBuffers(QPlatformSurface *surface)
             return;
         }
 
-        glFlush(); // We need to flush pending rendering commands manually
-
+        EGLNativeFence fence(EglContext::currentContext()->displayObject());
         internalWindow->present(InternalWindowFrame{
             .buffer = m_current->buffer,
+            .syncFd = fence.takeFileDescriptor(),
             .bufferDamage = Rect(QPoint(0, 0), m_current->buffer->size()),
             .bufferTransform = OutputTransform::FlipY,
         });
