@@ -68,7 +68,7 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
     setDestinationSize(surface->size());
     setBufferTransform(surface->bufferTransform());
     setBufferSourceBox(surface->bufferSourceBox());
-    setBuffer(surface->buffer());
+    setBuffer(surface->buffer(), FileDescriptor{});
     m_bufferReleasePoint = m_surface->bufferReleasePoint();
     setColorDescription(surface->colorDescription());
     setRenderingIntent(surface->renderingIntent());
@@ -101,7 +101,7 @@ void SurfaceItemWayland::handleSurfaceSizeChanged()
 
 void SurfaceItemWayland::handleBufferChanged()
 {
-    setBuffer(m_surface->buffer());
+    setBuffer(m_surface->buffer(), FileDescriptor{});
 }
 
 void SurfaceItemWayland::handleBufferSourceBoxChanged()

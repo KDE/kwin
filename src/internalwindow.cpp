@@ -390,6 +390,11 @@ GraphicsBuffer *InternalWindow::graphicsBuffer() const
     return m_graphicsBufferRef.get();
 }
 
+const FileDescriptor &InternalWindow::syncFd() const
+{
+    return m_syncFd;
+}
+
 OutputTransform InternalWindow::bufferTransform() const
 {
     return m_bufferTransform;
@@ -405,6 +410,7 @@ void InternalWindow::present(const InternalWindowFrame &frame)
     commitGeometry(geometry);
 
     m_graphicsBufferRef = frame.buffer;
+    m_syncFd = frame.syncFd.duplicate();
     m_bufferTransform = frame.bufferTransform;
 
     Q_EMIT presented(frame);

@@ -29,6 +29,7 @@ class WindowPaintData;
 class SyncReleasePoint;
 class ColorDescription;
 class RenderDevice;
+class FileDescriptor;
 
 class KWIN_EXPORT ItemRenderer
 {
@@ -36,7 +37,8 @@ public:
     explicit ItemRenderer(RenderDevice *device);
     virtual ~ItemRenderer();
 
-    virtual std::unique_ptr<Texture> createTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint,
+    virtual std::unique_ptr<Texture> createTexture(GraphicsBuffer *buffer, const FileDescriptor &sync,
+                                                   const std::shared_ptr<SyncReleasePoint> &releasePoint,
                                                    const std::shared_ptr<ColorDescription> &color) = 0;
     virtual std::unique_ptr<Texture> createTexture(const QImage &image) = 0;
 

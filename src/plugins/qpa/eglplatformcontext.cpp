@@ -163,6 +163,7 @@ void EGLPlatformContext::swapBuffers(QPlatformSurface *surface)
         EGLNativeFence fence(EglContext::currentContext()->displayObject());
         internalWindow->present(InternalWindowFrame{
             .buffer = m_current->buffer,
+            .syncFd = fence.takeFileDescriptor(),
             .bufferDamage = Rect(QPoint(0, 0), m_current->buffer->size()),
             .bufferTransform = OutputTransform::FlipY,
         });

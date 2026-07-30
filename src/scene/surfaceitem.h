@@ -35,7 +35,8 @@ public:
     void setDestinationSize(const QSizeF &size);
 
     GraphicsBuffer *buffer() const;
-    void setBuffer(GraphicsBuffer *buffer);
+    const FileDescriptor &syncFd() const;
+    void setBuffer(GraphicsBuffer *buffer, FileDescriptor &&syncFd);
 
     void setBufferReleasePoint(const std::shared_ptr<SyncReleasePoint> &releasePoint);
 
@@ -83,6 +84,7 @@ protected:
     OutputTransform m_bufferToSurfaceTransform;
     OutputTransform m_surfaceToBufferTransform;
     GraphicsBufferRef m_bufferRef;
+    FileDescriptor m_bufferSync;
     RectF m_bufferSourceBox;
     QSize m_bufferSize;
     QSizeF m_destinationSize;

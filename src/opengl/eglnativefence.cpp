@@ -22,6 +22,7 @@ EGLNativeFence::EGLNativeFence(EglDisplay *display)
 {
     if (!display->supportsNativeFence()) {
         m_sync = EGL_NO_SYNC_KHR;
+        glFlush();
         return;
     }
 
