@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-29 00:47+0000\n"
-"PO-Revision-Date: 2026-07-22 13:02+0200\n"
+"POT-Creation-Date: 2026-07-30 00:46+0000\n"
+"PO-Revision-Date: 2026-07-29 09:45+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -2468,8 +2468,7 @@ msgid "Color Temperature Preview"
 msgstr "Vista prèvia de la temperatura de color"
 
 #: plugins/outputlocator/outputlocator.cpp:26
-#, fuzzy, kde-format
-#| msgid "Built-in Screen"
+#, kde-format
 msgctxt "@label"
 msgid "Built-in Screen"
 msgstr "Pantalla integrada"
@@ -2636,12 +2635,12 @@ msgstr "No s'ha pogut trobar l'eixida"
 msgid "Invalid region"
 msgstr "Regió no vàlida"
 
-#: plugins/screencast/screencaststream.cpp:380
+#: plugins/screencast/screencaststream.cpp:389
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "Es requerix la composició OpenGL per als vídeos de captura de pantalla"
 
-#: plugins/screencast/screencaststream.cpp:388
+#: plugins/screencast/screencaststream.cpp:397
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Ha fallat mentre es creava el flux de PipeWire"
@@ -4423,6 +4422,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
-
-#~ msgid "Disable configuration options"
-#~ msgstr "Desactiva les opcions de configuració"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-29 00:47+0000\n"
+"POT-Creation-Date: 2026-07-30 00:46+0000\n"
 "PO-Revision-Date: 2026-05-10 16:23+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -2632,12 +2632,12 @@ msgstr "திரையை கண்டுபிடிக்க முடிய�
 msgid "Invalid region"
 msgstr "செல்லுபடியாகாத பரப்பளவு"
 
-#: plugins/screencast/screencaststream.cpp:380
+#: plugins/screencast/screencaststream.cpp:389
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "திரைப்பகிர்வுக்கு OpenGL சாளரவரைவு தேவை"
 
-#: plugins/screencast/screencaststream.cpp:388
+#: plugins/screencast/screencaststream.cpp:397
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""

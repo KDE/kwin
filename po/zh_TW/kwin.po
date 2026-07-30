@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-29 00:47+0000\n"
+"POT-Creation-Date: 2026-07-30 00:46+0000\n"
 "PO-Revision-Date: 2026-06-25 23:58+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -2598,12 +2598,12 @@ msgstr "找不到輸出"
 msgid "Invalid region"
 msgstr "無效的區域"
 
-#: plugins/screencast/screencaststream.cpp:380
+#: plugins/screencast/screencaststream.cpp:389
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "需要使用 OpenGL 合成才能利用螢幕錄製"
 
-#: plugins/screencast/screencaststream.cpp:388
+#: plugins/screencast/screencaststream.cpp:397
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "無法建立 PipeWire 串流"
