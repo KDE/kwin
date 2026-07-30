@@ -547,8 +547,19 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCopy(Surface *surf
         glFinish();
     }
 
-    const QSize orientedSize = source->texture()->contentTransform().map(source->texture()->size());
-    const Region bufferDamage = source->texture()->contentTransform().map(damagedDeviceRegion, orientedSize);
+    // The source texture transform looks as follows: output transform + flip-y transform. The
+    // flip-y transform is added by the render backend to handle the OpenGL render target origin
+    // being in the bottom-left corner.
+    //
+    // As is, without the flip-y transform, the top-left corner of the graphics buffer will
+    // map to the bottom-left corner of the render target and the final image will look upside down.
+    //
+    // .combine(FlipY) undoes the flip-y transform in "output transform + flip-y" so we only end
+    // with the output transform and the bufferDamage has its origin in the top-left corner rather
+    // than in the bottom-left corner.
+    const OutputTransform mapping = source->texture()->contentTransform().combine(OutputTransform::FlipY);
+    const QSize orientedSize = mapping.map(source->texture()->size());
+    const Region bufferDamage = mapping.map(damagedDeviceRegion, orientedSize);
     auto imported = surface->importSwapchain->copyRgbBuffer(source->buffer(), bufferDamage, std::move(readFence), frame, source->releasePoint());
     if (!imported) {
         // this is probably caused by a GPU reset, let's not take any chances

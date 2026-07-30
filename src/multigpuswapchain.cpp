@@ -254,8 +254,8 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
                 1,
             },
             std::array{
-                vk::Offset3D{rect.left(), completeRect.height() - rect.bottom(), 0},
-                vk::Offset3D{rect.right(), completeRect.height() - rect.top(), 1},
+                vk::Offset3D{rect.left(), rect.top(), 0},
+                vk::Offset3D{rect.right(), rect.bottom(), 1},
             },
             // dst
             vk::ImageSubresourceLayers{
@@ -265,8 +265,8 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
                 1,
             },
             std::array{
-                vk::Offset3D{rect.left(), completeRect.height() - rect.bottom(), 0},
-                vk::Offset3D{rect.right(), completeRect.height() - rect.top(), 1},
+                vk::Offset3D{rect.left(), rect.top(), 0},
+                vk::Offset3D{rect.right(), rect.bottom(), 1},
             },
         };
     }) | std::ranges::to<std::vector>();
@@ -349,17 +349,28 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithEGL(GraphicsBuf
     }
 
     const Rect completeRect{QPoint(), m_size};
-    const Region toRender = (m_journal.accumulate(m_currentEglSlot->age(), completeRect) | damage) & completeRect;
+    // GLVertexBuffer flips the clip region vertically. In other words, it maps (0, 0) to the
+    // top-left corner of the render target. It does so because it's more convenient in the
+    // rendering code.
+    //
+    // However, the input damage region is specified in the final graphics buffer coordinates,
+    // with the origin in the top-left corner. In other words, damage = flipVertically(toRender),
+    // so we apply a flip-y transform to get a toRender region so when GLVertexBuffer flips it,
+    // we get the original input damage region.
+    const Region toRender = OutputTransform(OutputTransform::FlipY).map((m_journal.accumulate(m_currentEglSlot->age(), completeRect) | damage) & completeRect, m_size);
     m_journal.add(damage);
 
     m_copyContext->pushFramebuffer(m_currentEglSlot->framebuffer());
-    // TODO when possible, use a blit instead of a shader for better performance?
     ShaderBinder binder(sourceTex->target() == GL_TEXTURE_EXTERNAL_OES ? ShaderTrait::MapExternalTexture : ShaderTrait::MapTexture);
     QMatrix4x4 proj;
     proj.scale(1, -1);
     proj.ortho(QRectF(QPointF(), buffer->size()));
     binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, proj);
-    sourceTex->render(toRender, buffer->size());
+
+    glEnable(GL_SCISSOR_TEST);
+    sourceTex->render(toRender, buffer->size(), true);
+    glDisable(GL_SCISSOR_TEST);
+
     m_copyContext->popFramebuffer();
     EGLNativeFence fence(m_copyContext->displayObject());
     m_eglSwapchain->release(m_currentEglSlot, fence.fileDescriptor().duplicate());
