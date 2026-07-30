@@ -65,7 +65,7 @@ public:
 
     explicit ItemRendererOpenGL(RenderDevice *device);
 
-    std::unique_ptr<Texture> createTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
+    std::unique_ptr<Texture> createTexture(GraphicsBuffer *buffer, const FileDescriptor &sync, const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
     std::unique_ptr<Texture> createTexture(const QImage &image) override;
 
     std::unique_ptr<NinePatch> createNinePatch(const QImage &image) override;
