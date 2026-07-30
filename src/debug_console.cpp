@@ -689,7 +689,7 @@ static QString sourceString(const AbstractDataSource *const source)
             return QStringLiteral("data control by %1").arg(executable);
         }
 
-        return QStringLiteral("unknown source of").arg(executable);
+        return QStringLiteral("unknown source of %1").arg(executable);
     }
 
     return QStringLiteral("%1(0x%2)").arg(source->metaObject()->className()).arg(qulonglong(source), 0, 16);
