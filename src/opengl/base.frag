@@ -10,7 +10,6 @@ uniform sampler2D sampler1;
 #endif
 
 #if TRAIT_MAP_EXTERNAL_TEXTURE
-#extension GL_OES_EGL_image_external : require
 uniform samplerExternalOES sampler;
 in vec2 texcoord0;
 #endif

@@ -85,10 +85,12 @@ std::optional<QByteArray> GLShader::preprocess(const QByteArray &src, GLenum sha
     if (recursionDepth == 1) {
         if (coreShader) {
             ret.append("#version 300 es\n");
+            ret.append("#extension GL_OES_EGL_image_external : require\n");
             ret.append("precision highp float;\n");
             ret.append("precision highp sampler2D;\n");
             ret.append("precision highp sampler3D;\n");
         } else {
+            ret.append("#extension GL_OES_EGL_image_external : require\n");
             // derivative functions are optional in 2.0
             ret.append("#extension GL_OES_standard_derivatives : enable\n");
             ret.append("precision highp float;\n");
