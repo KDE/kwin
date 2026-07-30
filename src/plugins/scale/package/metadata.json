@@ -90,7 +90,7 @@
         "Description[uk]": "Масштабування вікон при появі або приховуванні",
         "Description[zh_CN]": "窗口显示/隐藏时呈现等比例缩放过渡动效",
         "Description[zh_TW]": "讓視窗在顯示或隱藏的時候以比例縮放方式出現或消失",
-        "EnabledByDefault": true,
+        "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-scale",
         "Id": "scale",
         "License": "GPL",
