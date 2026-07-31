@@ -4368,6 +4368,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#~ msgid "Disable configuration options"
-#~ msgstr "Ale geavat heivehusmolssaeavttuid"
