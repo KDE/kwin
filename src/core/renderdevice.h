@@ -72,6 +72,12 @@ public:
     const FormatModifierMap &allImportableFormats() const;
 
     /**
+     * @returns all format+modifiers that can be rendered to be EGL
+     *          and sampled by both EGL and Vulkan
+     */
+    const FormatModifierMap &renderableFormats() const;
+
+    /**
      * @returns whether or not this device is handling a GPU reset at the moment.
      *          This can be used to avoid attempting to allocate new GPU resources
      *          until the reset is complete
@@ -109,6 +115,7 @@ private:
     const vk::raii::Instance m_vulkanInstance;
     std::unique_ptr<VulkanDevice> m_vulkanDevice;
     FormatModifierMap m_allImportableFormats;
+    FormatModifierMap m_renderableFormats;
     std::weak_ptr<EglContext> m_shareContext;
     std::weak_ptr<EglContext> m_eglContext;
     bool m_inReset = false;

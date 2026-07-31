@@ -162,7 +162,7 @@ QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext 
     if (!shareContext) {
         return nullptr;
     }
-    return new EGLPlatformContext(context, shareContext);
+    return new EGLPlatformContext(context, device, shareContext);
 }
 
 QPlatformAccessibility *Integration::accessibility() const
