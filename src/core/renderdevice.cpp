@@ -84,6 +84,15 @@ static FormatModifierMap getImportFormats(EglDisplay *eglDisplay, VulkanDevice *
     return ret;
 }
 
+static FormatModifierMap getRenderableFormats(EglDisplay *eglDisplay, VulkanDevice *vulkanDevice)
+{
+    FormatModifierMap ret = eglDisplay->nonExternalOnlySupportedDrmFormats();
+    if (vulkanDevice) {
+        ret = ret.intersected(vulkanDevice->transferFormats());
+    }
+    return ret;
+}
+
 RenderDevice::RenderDevice(std::unique_ptr<DrmDevice> &&device, std::unique_ptr<EglDisplay> &&display)
     : m_device(std::move(device))
     , m_display(std::move(display))
@@ -94,6 +103,7 @@ RenderDevice::RenderDevice(std::unique_ptr<DrmDevice> &&device, std::unique_ptr<
     createVulkanDevice();
     fetchName();
     m_allImportableFormats = getImportFormats(m_display.get(), m_vulkanDevice.get());
+    m_renderableFormats = getRenderableFormats(m_display.get(), m_vulkanDevice.get());
 }
 
 RenderDevice::RenderDevice(std::unique_ptr<UDmabufAllocator> &&allocator, std::unique_ptr<EglDisplay> &&display, dev_t deviceId)
@@ -106,6 +116,7 @@ RenderDevice::RenderDevice(std::unique_ptr<UDmabufAllocator> &&allocator, std::u
     createVulkanDevice();
     fetchName();
     m_allImportableFormats = getImportFormats(m_display.get(), m_vulkanDevice.get());
+    m_renderableFormats = getRenderableFormats(m_display.get(), m_vulkanDevice.get());
 }
 
 RenderDevice::~RenderDevice()
@@ -179,6 +190,11 @@ VulkanDevice *RenderDevice::vulkanDevice() const
 const FormatModifierMap &RenderDevice::allImportableFormats() const
 {
     return m_allImportableFormats;
+}
+
+const FormatModifierMap &RenderDevice::renderableFormats() const
+{
+    return m_renderableFormats;
 }
 
 static constexpr std::array s_requiredVulkanExtensions = {
