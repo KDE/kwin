@@ -262,20 +262,24 @@ void OffscreenQuickView::setDevicePixelRatio(qreal dpr)
 
 void OffscreenQuickView::handleSceneChanged()
 {
-    if (d->m_automaticRepaint) {
-        d->m_repaintTimer->start();
-    } else {
-        d->m_item->scheduleFrame();
+    if (d->m_visible) {
+        if (d->m_automaticRepaint) {
+            d->m_repaintTimer->start();
+        } else {
+            d->m_item->scheduleFrame();
+        }
     }
     Q_EMIT sceneChanged();
 }
 
 void OffscreenQuickView::handleRenderRequested()
 {
-    if (d->m_automaticRepaint) {
-        d->m_repaintTimer->start();
-    } else {
-        d->m_item->scheduleFrame();
+    if (d->m_visible) {
+        if (d->m_automaticRepaint) {
+            d->m_repaintTimer->start();
+        } else {
+            d->m_item->scheduleFrame();
+        }
     }
     Q_EMIT renderRequested();
 }
@@ -563,6 +567,7 @@ void OffscreenQuickView::setVisible(bool visible)
     }
     d->m_visible = visible;
     d->m_item->setVisible(visible);
+    Q_EMIT visibleChanged(visible);
 
     if (visible) {
         Q_EMIT d->m_renderControl->renderRequested();
