@@ -82,7 +82,7 @@ public:
     ~X11WindowedOutput() override;
 
     void init(const QSize &pixelSize, qreal scale, bool fullscreen);
-    void resize(const QSize &pixelSize);
+    void setSize(const QSize &pixelSize);
 
     X11WindowedBackend *backend() const;
     X11WindowedCursor *cursor() const;

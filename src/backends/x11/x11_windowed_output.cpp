@@ -293,7 +293,7 @@ void X11WindowedOutput::initXInputForWindow()
 #endif
 }
 
-void X11WindowedOutput::resize(const QSize &pixelSize)
+void X11WindowedOutput::setSize(const QSize &pixelSize)
 {
     auto mode = std::make_shared<OutputMode>(OutputModeline(pixelSize, m_renderLoop->refreshRate()));
 

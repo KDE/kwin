@@ -609,7 +609,7 @@ void X11WindowedBackend::updateSize(xcb_configure_notify_event_t *event)
 
     const QSize s = QSize(event->width, event->height);
     if (s != output->pixelSize()) {
-        output->resize(s);
+        output->setSize(s);
         Q_EMIT outputsQueried();
     }
 }
