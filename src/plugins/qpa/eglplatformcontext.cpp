@@ -11,6 +11,7 @@
 #include "eglplatformcontext.h"
 #include "compositor.h"
 #include "core/outputbackend.h"
+#include "core/renderdevice.h"
 #include "core/syncobjtimeline.h"
 #include "eglhelpers.h"
 #include "internalwindow.h"
@@ -42,8 +43,9 @@ EGLRenderTarget::~EGLRenderTarget()
     texture.reset();
 }
 
-EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, const std::shared_ptr<EglContext> &shareContext)
-    : m_eglDisplay(shareContext->displayObject())
+EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, RenderDevice *device, const std::shared_ptr<EglContext> &shareContext)
+    : m_device(device)
+    , m_eglDisplay(shareContext->displayObject())
 {
     create(context->format(), shareContext);
 }
@@ -81,7 +83,7 @@ bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
 
     if (surface->surface()->surfaceClass() == QSurface::Window) {
         Window *window = static_cast<Window *>(surface);
-        Swapchain *swapchain = window->swapchain(m_eglContext, m_eglDisplay->nonExternalOnlySupportedDrmFormats());
+        Swapchain *swapchain = window->swapchain(m_eglContext, m_device->renderableFormats());
         if (!swapchain) {
             return false;
         }
