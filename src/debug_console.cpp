@@ -1707,7 +1707,7 @@ QVariant DataSourceModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
     const QString mimeType = m_source->mimeTypes().at(index.row());
-    ;
+
     if (index.column() == 0 && role == Qt::DisplayRole) {
         return mimeType;
     } else if (index.column() == 1 && index.row() < m_data.count()) {
