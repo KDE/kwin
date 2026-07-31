@@ -173,7 +173,7 @@ bool OffscreenData::maybeRender(RenderDevice *device, EffectWindow *window)
     // color description than sRGB keeps its colors while it is redirected.
     const std::shared_ptr<ColorDescription> &colorDescription = window->screen()->blendingColor();
 
-    const FormatModifierMap &supportedFormats = device->eglDisplay()->nonExternalOnlySupportedDrmFormats();
+    const FormatModifierMap &supportedFormats = device->renderableFormats();
     // An 8 bit intermediate bands, most visibly across an HDR blending space's luminance range, so
     // ask for 16 and let chooseFormat settle on what this device actually supports.
     const auto chosen = MultiGpuSwapchain::chooseFormat(DRM_FORMAT_ARGB16161616, supportedFormats, supportedFormats)
