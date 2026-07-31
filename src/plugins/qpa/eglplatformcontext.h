@@ -25,6 +25,7 @@ class GraphicsBuffer;
 class EglDisplay;
 class EglContext;
 class SwapchainSlot;
+class RenderDevice;
 
 namespace QPA
 {
@@ -47,7 +48,7 @@ class EGLPlatformContext : public QObject, public QPlatformOpenGLContext, public
     Q_OBJECT
 
 public:
-    EGLPlatformContext(QOpenGLContext *context, const std::shared_ptr<EglContext> &shareContext);
+    EGLPlatformContext(QOpenGLContext *context, RenderDevice *device, const std::shared_ptr<EglContext> &shareContext);
     ~EGLPlatformContext() override;
 
     bool makeCurrent(QPlatformSurface *surface) override;
@@ -67,6 +68,7 @@ private:
     void create(const QSurfaceFormat &format, const std::shared_ptr<EglContext> &shareContext);
     void updateFormatFromContext();
 
+    RenderDevice *const m_device;
     EglDisplay *const m_eglDisplay;
     QSurfaceFormat m_format;
     EGLConfig m_config = EGL_NO_CONFIG_KHR;

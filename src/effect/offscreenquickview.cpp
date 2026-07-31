@@ -28,6 +28,7 @@
 #include "scene/surfaceitem.h"
 #include "scene/texture.h"
 #include "scene/workspacescene.h"
+#include "vulkan/vulkan_device.h"
 
 #include <QGuiApplication>
 #include <QQmlComponent>
@@ -328,23 +329,26 @@ void OffscreenQuickView::update(OutputFrame *frame)
             fboFormat.setInternalTextureFormat(GL_RGBA8);
 
             const uint32_t format = d->m_hasAlphaChannel ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888;
-            if (d->m_scanoutDevice) {
-                GraphicsBufferOptions options{
-                    .size = nativeSize,
-                    .format = format,
-                    .modifiers = d->m_scanoutFormats.value(format),
-                    .software = false,
-                    .scanout = true,
-                };
-                d->m_swapchain = EglSwapchain::create(d->m_scanoutDevice->allocator(), EglContext::currentContext()->shared_from_this(), options);
-            }
             const auto device = Compositor::self()->primaryDevice();
+            if (d->m_scanoutDevice) {
+                const auto mods = d->m_scanoutFormats.value(format).intersected(device->renderableFormats().value(format));
+                if (!mods.isEmpty()) {
+                    GraphicsBufferOptions options{
+                        .size = nativeSize,
+                        .format = format,
+                        .modifiers = mods,
+                        .software = false,
+                        .scanout = true,
+                    };
+                    d->m_swapchain = EglSwapchain::create(d->m_scanoutDevice->allocator(), EglContext::currentContext()->shared_from_this(), options);
+                }
+            }
             if (!d->m_swapchain) {
                 // TODO add non-scanout feedback on the item for this?
                 GraphicsBufferOptions options{
                     .size = nativeSize,
                     .format = format,
-                    .modifiers = device->eglDisplay()->nonExternalOnlySupportedDrmFormats()[format],
+                    .modifiers = device->renderableFormats().value(format),
                     .software = false,
                     .scanout = false,
                 };

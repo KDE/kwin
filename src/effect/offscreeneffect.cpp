@@ -172,7 +172,7 @@ bool OffscreenData::maybeRender(RenderDevice *device, EffectWindow *window)
         GraphicsBufferOptions options{
             .size = textureSize,
             .format = DRM_FORMAT_ARGB8888,
-            .modifiers = device->eglDisplay()->nonExternalOnlySupportedDrmFormats()[DRM_FORMAT_ARGB8888],
+            .modifiers = device->renderableFormats()[DRM_FORMAT_ARGB8888],
             .software = false,
             .scanout = false,
         };
