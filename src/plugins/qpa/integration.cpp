@@ -163,7 +163,7 @@ QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext 
     if (!m_eglContext) {
         return nullptr;
     }
-    const auto ret = new EGLPlatformContext(context, m_eglContext);
+    const auto ret = new EGLPlatformContext(context, Compositor::self()->primaryDevice(), m_eglContext);
     connect(Compositor::self(), &Compositor::primaryGpuChanged, ret, &EGLPlatformContext::invalidateContext);
     connect(Compositor::self(), &Compositor::aboutToDestroy, ret, &EGLPlatformContext::invalidateContext);
     return ret;

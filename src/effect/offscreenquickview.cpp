@@ -337,21 +337,24 @@ void OffscreenQuickView::update(OutputFrame *frame)
             const uint32_t format = d->m_hasAlphaChannel ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888;
             const auto device = Compositor::self()->primaryDevice();
             if (d->m_scanoutDevice && GpuManager::self()->compatibleRenderDevice(d->m_scanoutDevice) == device) {
-                GraphicsBufferOptions options{
-                    .size = nativeSize,
-                    .format = format,
-                    .modifiers = d->m_scanoutFormats.value(format),
-                    .software = false,
-                    .scanout = true,
-                };
-                d->m_swapchain = Swapchain::create(d->m_scanoutDevice->allocator(), options);
+                const auto mods = d->m_scanoutFormats.value(format).intersected(device->renderableFormats().value(format));
+                if (!mods.isEmpty()) {
+                    GraphicsBufferOptions options{
+                        .size = nativeSize,
+                        .format = format,
+                        .modifiers = mods,
+                        .software = false,
+                        .scanout = true,
+                    };
+                    d->m_swapchain = Swapchain::create(d->m_scanoutDevice->allocator(), options);
+                }
             }
             if (!d->m_swapchain) {
                 // TODO add non-scanout feedback on the item for this?
                 GraphicsBufferOptions options{
                     .size = nativeSize,
                     .format = format,
-                    .modifiers = device->eglDisplay()->nonExternalOnlySupportedDrmFormats()[format],
+                    .modifiers = device->renderableFormats().value(format),
                     .software = false,
                     .scanout = false,
                 };
