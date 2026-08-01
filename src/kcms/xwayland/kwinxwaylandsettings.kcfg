@@ -17,7 +17,7 @@
         <entry name="xwaylandEavesdropsMouse" key="XwaylandEavesdropsMouse" type="Bool">
             <default>false</default>
         </entry>
-        <entry name="XwaylandEisNoPrompt" type="Bool">
+        <entry name="xwaylandEisNoPrompt" key="XwaylandEisNoPrompt" type="Bool">
             <default>false</default>
         </entry>
         <entry name="XwaylandEisNoPromptApps" type="StringList" />

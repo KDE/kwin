@@ -147,6 +147,10 @@ KCM.SimpleKCM {
                             QQC2.ButtonGroup.group: xwaylandGroup
                             checked: !kcm.settings.xwaylandEisNoPrompt
                             onToggled: kcm.settings.xwaylandEisNoPrompt = !checked
+                            KCM.SettingStateBinding {
+                                configObject: kcm.settings
+                                settingName: "xwaylandEisNoPrompt"
+                            }
                         }
                         QQC2.Button {
                             text: i18nc("@action:button", "See Allowed Applications…")
@@ -170,6 +174,10 @@ KCM.SimpleKCM {
                         QQC2.ButtonGroup.group: xwaylandGroup
                         checked: kcm.settings.xwaylandEisNoPrompt
                         onToggled: kcm.settings.xwaylandEisNoPrompt = checked
+                        KCM.SettingStateBinding {
+                            configObject: kcm.settings
+                            settingName: "xwaylandEisNoPrompt"
+                        }
                     }
                     subtitle: i18nc("@info:usagetip", "Least secure; all X11 apps will be able to take control of the computer")
                 }
