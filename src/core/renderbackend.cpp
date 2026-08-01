@@ -59,9 +59,12 @@ OutputFrame::~OutputFrame()
     }
 }
 
-void OutputFrame::addFeedback(std::shared_ptr<PresentationFeedback> &&feedback)
+void OutputFrame::addFeedback(std::shared_ptr<PresentationFeedback> &&feedback, PresentationFeedbackFlags flags)
 {
-    m_feedbacks.push_back(std::move(feedback));
+    m_feedbacks.push_back(Feedback{
+        .feedback = std::move(feedback),
+        .flags = flags,
+    });
 }
 
 std::optional<RenderTimeSpan> OutputFrame::queryRenderTime() const
@@ -93,8 +96,8 @@ void OutputFrame::presented(std::chrono::nanoseconds timestamp, PresentationMode
     if (m_loop) {
         RenderLoopPrivate::get(m_loop)->notifyFrameCompleted(timestamp, renderTime, mode, this);
     }
-    for (const auto &feedback : m_feedbacks) {
-        feedback->presented(m_refreshDuration, timestamp, mode);
+    for (const auto &[feedback, flags] : m_feedbacks) {
+        feedback->presented(m_refreshDuration, timestamp, mode, flags);
     }
 }
 

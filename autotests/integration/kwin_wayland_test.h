@@ -931,6 +931,7 @@ class WpPresentationFeedback : public QObject, public QtWayland::wp_presentation
 public:
     explicit WpPresentationFeedback(struct ::wp_presentation_feedback *obj);
     ~WpPresentationFeedback() override;
+    bool zeroCopy() const;
 
 Q_SIGNALS:
     void presented(std::chrono::nanoseconds timestamp, std::chrono::nanoseconds refreshDuration);
@@ -939,6 +940,8 @@ Q_SIGNALS:
 private:
     void wp_presentation_feedback_presented(uint32_t tv_sec_hi, uint32_t tv_sec_lo, uint32_t tv_nsec, uint32_t refresh, uint32_t seq_hi, uint32_t seq_lo, uint32_t flags) override;
     void wp_presentation_feedback_discarded() override;
+
+    uint32_t m_flags = 0;
 };
 
 class XdgActivationToken : public QObject, public QtWayland::xdg_activation_token_v1

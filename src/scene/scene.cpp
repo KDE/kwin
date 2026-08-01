@@ -90,6 +90,11 @@ bool RenderView::shouldRenderHole(Item *item) const
     return false;
 }
 
+bool RenderView::presentationIsZeroCopy(Item *item) const
+{
+    return false;
+}
+
 Rect RenderView::deviceRect() const
 {
     return Rect(renderOffset(), deviceSize());
@@ -296,6 +301,13 @@ bool SceneView::shouldRenderHole(Item *item) const
 {
     return std::ranges::any_of(m_underlayViews, [item](RenderView *view) {
         return view->shouldRenderItem(item);
+    });
+}
+
+bool SceneView::presentationIsZeroCopy(Item *item) const
+{
+    return std::ranges::any_of(m_exclusiveViews, [item](RenderView *view) {
+        return view->layer()->presentedDirectScanoutItem() == item;
     });
 }
 

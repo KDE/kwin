@@ -107,6 +107,10 @@ public:
      * Attempts to import the buffer for direct scanout
      */
     virtual bool importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame);
+    /**
+     * Returns the item whose buffer is presented directly by display hardware.
+     */
+    virtual SurfaceItem *presentedDirectScanoutItem() const;
 
     void setScanoutCandidate(SurfaceItem *item);
 

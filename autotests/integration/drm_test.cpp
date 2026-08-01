@@ -27,6 +27,7 @@
 
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/seat.h>
+#include <optional>
 #include <ranges>
 #include <xf86drmMode.h>
 
@@ -257,7 +258,7 @@ public:
         return m_window;
     }
 
-    bool presentWait()
+    std::optional<PresentationFeedbackFlags> presentWait()
     {
         wl_buffer *wlbuffer = nullptr;
         if (m_needsRealloc) {
@@ -295,7 +296,10 @@ public:
             wl_buffer_destroy(wlbuffer);
         }
         QSignalSpy spy(feedback.get(), &Test::WpPresentationFeedback::presented);
-        return spy.wait();
+        if (!spy.wait()) {
+            return std::nullopt;
+        }
+        return feedback->zeroCopy() ? PresentationFeedbackFlag::ZeroCopy : PresentationFeedbackFlags{};
     }
 
     void reactToDmabufFeedback()
@@ -576,9 +580,11 @@ void DrmTest::testDirectScanout()
     timer.start();
     while (timer.durationElapsed() < 5s) {
         window.m_surface->damageBuffer(QRect(QPoint(), QSize(100, 100)));
-        QVERIFY(window.presentWait());
+        const auto flags = window.presentWait();
+        QVERIFY(flags);
 
         if (findBufferOnPlane(output, window.m_window->surfaceItem()->buffer())) {
+            QVERIFY(flags->testFlag(PresentationFeedbackFlag::ZeroCopy));
             break;
         }
     }
@@ -669,9 +675,11 @@ void DrmTest::testOverlay()
     timer.start();
     while (timer.durationElapsed() < 5s) {
         window.m_surface->damageBuffer(QRect(QPoint(), planeGeometry.size()));
-        QVERIFY(window.presentWait());
+        const auto flags = window.presentWait();
+        QVERIFY(flags);
 
         if (findBufferOnPlane(output, window.m_window->surfaceItem()->buffer())) {
+            QVERIFY(flags->testFlag(PresentationFeedbackFlag::ZeroCopy));
             break;
         }
     }

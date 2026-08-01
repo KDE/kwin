@@ -741,7 +741,7 @@ void Item::framePainted(RenderView *view, LogicalOutput *output, OutputFrame *fr
     collectItems(list, output);
     for (QPointer<Item> item : list) {
         if (item) {
-            item->handleFramePainted(output, frame, timestamp);
+            item->handleFramePainted(view, output, frame, timestamp);
         }
     }
 }
@@ -753,7 +753,7 @@ bool Item::isAncestorOf(const Item *item) const
     });
 }
 
-void Item::handleFramePainted(LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+void Item::handleFramePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
 {
 }
 

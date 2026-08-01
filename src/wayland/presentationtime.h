@@ -39,7 +39,8 @@ public:
 
     wl_list resources;
 
-    void presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp, PresentationMode mode) override;
+    void presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp,
+                   PresentationMode mode, PresentationFeedbackFlags flags) override;
 
 private:
     bool m_presented = false;

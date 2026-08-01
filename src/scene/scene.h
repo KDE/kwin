@@ -51,6 +51,7 @@ public:
     virtual void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion) = 0;
     virtual bool shouldRenderItem(Item *item) const;
     virtual bool shouldRenderHole(Item *item) const;
+    virtual bool presentationIsZeroCopy(Item *item) const;
     virtual double desiredHdrHeadroom() const = 0;
     virtual std::chrono::nanoseconds nextPresentationTimestamp() const = 0;
     virtual uint refreshRate() const = 0;
@@ -129,6 +130,7 @@ public:
      */
     bool shouldRenderItem(Item *item) const override;
     bool shouldRenderHole(Item *item) const override;
+    bool presentationIsZeroCopy(Item *item) const override;
 
     void addWindowFilter(std::function<bool(Window *)> filter);
     bool shouldHideWindow(Window *window) const;

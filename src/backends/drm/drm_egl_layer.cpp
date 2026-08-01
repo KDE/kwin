@@ -153,6 +153,11 @@ bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_
     return m_scanoutBuffer != nullptr;
 }
 
+SurfaceItem *EglGbmLayer::presentedDirectScanoutItem() const
+{
+    return m_scanoutBuffer ? m_scanoutCandidate.data() : nullptr;
+}
+
 std::shared_ptr<DrmFramebuffer> EglGbmLayer::currentBuffer() const
 {
     return m_scanoutBuffer ? m_scanoutBuffer : m_surface.currentBuffer();

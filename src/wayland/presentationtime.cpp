@@ -64,7 +64,8 @@ PresentationTimeFeedback::~PresentationTimeFeedback()
     }
 }
 
-void PresentationTimeFeedback::presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp, PresentationMode mode)
+void PresentationTimeFeedback::presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp,
+                                         PresentationMode mode, PresentationFeedbackFlags presentationFlags)
 {
     if (m_presented) {
         return;
@@ -79,6 +80,9 @@ void PresentationTimeFeedback::presented(std::chrono::nanoseconds refreshCycleDu
     uint32_t flags = WP_PRESENTATION_FEEDBACK_KIND_HW_CLOCK | WP_PRESENTATION_FEEDBACK_KIND_HW_COMPLETION;
     if (mode == PresentationMode::VSync || mode == PresentationMode::AdaptiveSync) {
         flags |= WP_PRESENTATION_FEEDBACK_KIND_VSYNC;
+    }
+    if (presentationFlags.testFlag(PresentationFeedbackFlag::ZeroCopy)) {
+        flags |= WP_PRESENTATION_FEEDBACK_KIND_ZERO_COPY;
     }
 
     wl_resource *resource;

@@ -8,6 +8,7 @@
 #include "core/backendoutput.h"
 #include "core/drmdevice.h"
 #include "core/renderbackend.h"
+#include "scene/scene.h"
 #include "texture.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/subcompositor.h"
@@ -234,7 +235,7 @@ void SurfaceItemWayland::handleAlphaMultiplierChanged()
     setOpacity(m_surface->alphaMultiplier());
 }
 
-void SurfaceItemWayland::handleFramePainted(LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+void SurfaceItemWayland::handleFramePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
 {
     if (!m_surface) {
         return;
@@ -243,7 +244,7 @@ void SurfaceItemWayland::handleFramePainted(LogicalOutput *output, OutputFrame *
     if (frame) {
         // FIXME make frame always valid
         if (auto feedback = m_surface->presentationFeedback(output)) {
-            frame->addFeedback(std::move(feedback));
+            frame->addFeedback(std::move(feedback), view && view->presentationIsZeroCopy(this) ? PresentationFeedbackFlag::ZeroCopy : PresentationFeedbackFlags{});
         }
     }
     // TODO only call this once per refresh cycle

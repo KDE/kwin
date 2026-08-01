@@ -11,6 +11,7 @@
 #include "effect/globals.h"
 #include "utils/filedescriptor.h"
 
+#include <QFlags>
 #include <QObject>
 #include <QPointer>
 #include <memory>
@@ -27,6 +28,11 @@ class RenderLoop;
 class SyncTimeline;
 class RenderDevice;
 
+enum class PresentationFeedbackFlag {
+    ZeroCopy = 0x1,
+};
+Q_DECLARE_FLAGS(PresentationFeedbackFlags, PresentationFeedbackFlag)
+
 class PresentationFeedback
 {
 public:
@@ -35,7 +41,8 @@ public:
     PresentationFeedback(PresentationFeedback &&move) = default;
     virtual ~PresentationFeedback() = default;
 
-    virtual void presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp, PresentationMode mode) = 0;
+    virtual void presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp,
+                           PresentationMode mode, PresentationFeedbackFlags flags) = 0;
 };
 
 struct RenderTimeSpan
@@ -78,7 +85,7 @@ public:
 
     void presented(std::chrono::nanoseconds timestamp, PresentationMode mode);
 
-    void addFeedback(std::shared_ptr<PresentationFeedback> &&feedback);
+    void addFeedback(std::shared_ptr<PresentationFeedback> &&feedback, PresentationFeedbackFlags flags);
 
     void setContentType(ContentType type);
     std::optional<ContentType> contentType() const;
@@ -108,7 +115,12 @@ private:
     const std::chrono::nanoseconds m_refreshDuration;
     const std::chrono::steady_clock::time_point m_targetPageflipTime;
     const std::chrono::nanoseconds m_predictedRenderTime;
-    std::vector<std::shared_ptr<PresentationFeedback>> m_feedbacks;
+    struct Feedback
+    {
+        std::shared_ptr<PresentationFeedback> feedback;
+        PresentationFeedbackFlags flags;
+    };
+    std::vector<Feedback> m_feedbacks;
     std::optional<ContentType> m_contentType;
     PresentationMode m_presentationMode = PresentationMode::VSync;
     std::vector<std::unique_ptr<RenderTimeQuery>> m_renderTimeQueries;
@@ -139,3 +151,5 @@ public:
 };
 
 } // namespace KWin
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::PresentationFeedbackFlags)

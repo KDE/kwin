@@ -118,6 +118,11 @@ bool OutputLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_
     return false;
 }
 
+SurfaceItem *OutputLayer::presentedDirectScanoutItem() const
+{
+    return nullptr;
+}
+
 void OutputLayer::setScanoutCandidate(SurfaceItem *item)
 {
     if (m_scanoutCandidate && item != m_scanoutCandidate) {
