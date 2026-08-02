@@ -149,7 +149,13 @@ public:
      */
     void processFilters(auto method, const auto &...args)
     {
-        for (const auto filter : std::as_const(m_filters)) {
+        // A filter may uninstall and delete *itself* while handling the event -
+        // DpmsInputEventFilter does whenever it wakes the outputs up. Iterate over
+        // a copy so the loop stays valid when the list shrinks underneath it. The
+        // filter's own pointer is never touched again after the call, so this is
+        // safe as long as no handler deletes a filter other than itself.
+        const auto filters = m_filters;
+        for (const auto filter : filters) {
             if ((filter->*method)(args...)) {
                 return;
             }
@@ -162,7 +168,9 @@ public:
      */
     void processSpies(auto method, const auto &...args)
     {
-        for (const auto spy : std::as_const(m_spies)) {
+        // Spies can delete themselves during dispatch too, see processFilters().
+        const auto spies = m_spies;
+        for (const auto spy : spies) {
             (spy->*method)(args...);
         }
     }
