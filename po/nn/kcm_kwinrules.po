@@ -1,5 +1,6 @@
 # Translation of kcm_kwinrules to Norwegian Nynorsk
 #
+# Karl Ove Hufthammer <karl@huftis.org>, 2004, 2007, 2008, 2010, 2015, 2016, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2026.
 # Gaute Hvoslef Kvalnes <gaute@verdsveven.com>, 2004, 2005.
 # Håvard Korsvoll <korsvoll@skulelinux.no>, 2005, 2009.
 # Eirik U. Birkeland <eirbir@gmail.com>, 2010.

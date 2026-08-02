@@ -1,5 +1,6 @@
 # Translation of kcm_virtualkeyboard to Norwegian Nynorsk
 #
+# Karl Ove Hufthammer <karl@huftis.org>, 2022, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"

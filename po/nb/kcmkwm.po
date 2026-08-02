@@ -7,6 +7,7 @@
 # Axel Bojer <fri_programvare@bojer.no>, 2003, 2005, 2006.
 # Bjørn Kvisli <bjorn.kvisli@gmail.com>, 2007.
 # Nils Kristian Tomren <slx@nilsk.net>, 2007.
+# Martin Hansen <mh306602@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"

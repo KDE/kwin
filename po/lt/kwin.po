@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-30 00:46+0000\n"
-"PO-Revision-Date: 2026-07-24 01:20+0300\n"
+"PO-Revision-Date: 2026-08-01 14:36+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -2457,8 +2457,7 @@ msgid "Color Temperature Preview"
 msgstr "Spalvos temperatūros peržiūra"
 
 #: plugins/outputlocator/outputlocator.cpp:26
-#, fuzzy, kde-format
-#| msgid "Built-in Screen"
+#, kde-format
 msgctxt "@label"
 msgid "Built-in Screen"
 msgstr "Įtaisytas ekranas"
