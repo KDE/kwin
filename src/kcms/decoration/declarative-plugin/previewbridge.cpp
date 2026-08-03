@@ -105,7 +105,7 @@ void PreviewBridge::setKcmoduleName(const QString &kcmoduleName)
         return;
     }
     m_kcmoduleName = kcmoduleName;
-    Q_EMIT themeChanged();
+    Q_EMIT kcmoduleNameChanged();
 }
 
 QString PreviewBridge::plugin() const
