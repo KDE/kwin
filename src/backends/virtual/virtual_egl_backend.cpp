@@ -62,6 +62,8 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame(OutputFrame
         return std::nullopt;
     }
 
+    m_current->framebuffer()->colorAttachment()->setContentTransform(bufferTransform().combine(OutputTransform::FlipY));
+
     m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
 
     return OutputLayerBeginFrameInfo{
