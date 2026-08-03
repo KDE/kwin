@@ -1,6 +1,7 @@
 # Translation of kcmkwinscreenedges to Norwegian Nynorsk
 #
 # Eirik U. Birkeland <eirbir@gmail.com>, 2009, 2010.
+# Karl Ove Hufthammer <karl@huftis.org>, 2010, 2015, 2016, 2017, 2018, 2019, 2020, 2022, 2024, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"

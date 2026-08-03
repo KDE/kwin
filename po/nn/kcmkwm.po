@@ -1,6 +1,7 @@
 # Translation of kcmkwm to Norwegian Nynorsk
 #
 # Gaute Hvoslef Kvalnes <gaute@verdsveven.com>, 1999, 2000, 2002, 2004, 2005.
+# Karl Ove Hufthammer <karl@huftis.org>, 2004, 2007, 2008, 2010, 2011, 2015, 2016, 2018, 2019, 2020, 2022, 2023, 2024, 2026.
 # Eirik U. Birkeland <eirbir@gmail.com>, 2008, 2009, 2010.
 # Øystein Steffensen-Alværvik <oysteins.omsetting@protonmail.com>, 2018.
 msgid ""
@@ -8,14 +9,14 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-12 00:46+0000\n"
-"PO-Revision-Date: 2026-07-05 16:32+0200\n"
+"PO-Revision-Date: 2026-08-02 11:13+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
 "Language: nn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 26.04.3\n"
+"X-Generator: Lokalize 26.11.70\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
@@ -531,7 +532,7 @@ msgstr "Oppe til venstre"
 #: advanced.ui:59
 #, kde-format
 msgid "Under mouse"
-msgstr "Under musa"
+msgstr "Under peikaren"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:67
@@ -626,25 +627,25 @@ msgstr "Trykk for fokus (musprioritet)"
 #: focus.ui:46
 #, kde-format
 msgid "Focus follows mouse"
-msgstr "Fokuset følgjer musa"
+msgstr "Fokuset følgjer peikaren"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:51
 #, kde-format
 msgid "Focus follows mouse (mouse precedence)"
-msgstr "Fokuset følgjer musa (musprioritet)"
+msgstr "Fokuset følgjer peikaren (musprioritet)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:56
 #, kde-format
 msgid "Focus under mouse"
-msgstr "Fokus under musa"
+msgstr "Fokus under peikaren"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:61
 #, kde-format
 msgid "Focus strictly under mouse"
-msgstr "Hald fokuset alltid under musa"
+msgstr "Hald fokuset alltid under peikaren"
 
 #. i18n: ectx: property (text), widget (QLabel, delayFocusOnLabel)
 #: focus.ui:69
@@ -659,7 +660,7 @@ msgid ""
 "This is the delay after which the window the mouse pointer is over will "
 "automatically receive focus."
 msgstr ""
-"Vel kor lenge musa må liggja over vindauget før det automatisk får fokus."
+"Vel kor lenge peikaren må liggja over vindauget før det automatisk får fokus."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
@@ -712,33 +713,34 @@ msgstr ""
 "<html><head/><body><p>Med denne funksjonen kan du velja kor mykje KWin skal "
 "prøva å hindra uønskt fokus­steling frå vindauge som dukkar uventa opp. (Merk "
 "at denne funksjonen ikkje fungerer med <span style=\" font-style:italic;"
-"\">Fokus under musa</span> og <span style=\" font-style:italic;\">Fokus "
-"strengt under musa</span>.) </p><ul style=\"margin-top: 0px; margin-bottom: "
-"0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" "
-"margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Inga:"
-"</span> Fokussteling vert ikkje hindra, og nye vindauge vert alltid verksame."
-"</li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"\">Fokus under peikaren</span> og <span style=\" font-style:italic;\">Fokus "
+"strengt under peikaren</span>.) </p><ul style=\"margin-top: 0px; margin-"
+"bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li "
+"style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">Låg:</span> Fokussteling vert hindra. Eit vindauge vert verksamt "
-"dersom det ikkje støttar den underliggjande mekanismen, slik at KWin ikkje "
-"klarar å avgjera om vindauget skal gjerast verksamt. Avhengig av programmet "
-"kan denne innstillinga gje dårlegare eller betre resultat enn middelsnivået."
-"</li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">Middels:</span> Fokussteling vert hindra.</li><li style=\" margin-"
-"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Høg:</span> "
-"Nye vindauge vert berre verksame dersom ingen andre vindauge er verksame, "
-"eller dersom dei høyrer til det aktive programmet. Denne innstillinga er "
-"truleg ikkje særleg nyttig dersom du ikkje brukar musa til fokusering.</"
-"li><li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">Ekstrem:</span> Alle vindauge må gjerast verksame av brukaren.</"
-"li></ul><p>Vindauge som vert hindra i å stela fokus, vil visa at dei "
-"påkallar merksemd. Det skjer vanlegvis ved at dei vert markerte i "
-"oppgåvelinja. Du kan endra på dette i kontrollmodulen <span style=\" font-"
-"style:italic;\">Varslingar</span>.</p></body></html>"
+"italic;\">Inga:</span> Fokussteling vert ikkje hindra, og nye vindauge vert "
+"alltid verksame.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Låg:</span> Fokussteling vert hindra. Eit "
+"vindauge vert verksamt dersom det ikkje støttar den underliggjande "
+"mekanismen, slik at KWin ikkje klarar å avgjera om vindauget skal gjerast "
+"verksamt. Avhengig av programmet kan denne innstillinga gje dårlegare eller "
+"betre resultat enn middelsnivået.</li><li style=\" margin-top:0px; margin-"
+"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">Middels:</span> "
+"Fokussteling vert hindra.</li><li style=\" margin-top:0px; margin-"
+"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">Høg:</span> Nye vindauge "
+"vert berre verksame dersom ingen andre vindauge er verksame, eller dersom "
+"dei høyrer til det aktive programmet. Denne innstillinga er truleg ikkje "
+"særleg nyttig dersom du ikkje brukar musa til fokusering.</li><li style=\" "
+"margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-"
+"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+"\">Ekstrem:</span> Alle vindauge må gjerast verksame av brukaren.</li></"
+"ul><p>Vindauge som vert hindra i å stela fokus, vil visa at dei påkallar "
+"merksemd. Det skjer vanlegvis ved at dei vert markerte i oppgåvelinja. Du "
+"kan endra på dette i kontrollmodulen <span style=\" font-style:italic;"
+"\">Varslingar</span>.</p></body></html>"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
@@ -825,7 +827,8 @@ msgid ""
 "This is the delay after which the window that the mouse pointer is over will "
 "automatically come to the front."
 msgstr ""
-"Musa ligg så lenge over eit vindauge før det automatisk kjem til framgrunnen."
+"Peikaren ligg så lenge over eit vindauge før det automatisk kjem til "
+"framgrunnen."
 
 #. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
 #: focus.ui:199
@@ -1211,7 +1214,7 @@ msgid ""
 "<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
 "to focus</em> just without having to actually click."
 msgstr ""
-"<em>Fokuset følgjer musa:</em> Eit vindauge vert aktivt når muse­peikaren "
+"<em>Fokuset følgjer peikaren:</em> Eit vindauge vert aktivt når muse­peikaren "
 "vert flytta inn i det. Vindauge som tilfeldigvis dukkar opp under muse­"
 "peikaren, får ikkje fokus. Fokus­steling vert førebygd på vanleg måte. Tenk "
 "på dette som <em>Trykk for fokus</em>, men utan at det er nødvendig å "
@@ -1225,11 +1228,11 @@ msgid ""
 "closed) the window under the mouse is the preferred candidate. Choose this, "
 "if you want a hover controlled focus."
 msgstr ""
-"<em>Fokuset følgjer musa (musprioritet):</em> Dette er stort sett det same "
-"som <em>Fokuset følgjer musa</em>. Viss systemet må velja eit nytt aktivt "
-"vindauge (for eksempel fordi det gjeldande vart lukka), så er vindauget "
-"under muse­peikaren den føretrekte kandidaten. Vel dette viss du ønskjer "
-"fokus styrt av plasseringa til musepeikaren."
+"<em>Fokuset følgjer peikaren (musprioritet):</em> Dette er stort sett det "
+"same som <em>Fokuset følgjer peikaren</em>. Viss systemet må velja eit nytt "
+"aktivt vindauge (for eksempel fordi det gjeldande vart lukka), så er "
+"vindauget under muse­peikaren den føretrekte kandidaten. Vel dette viss du "
+"ønskjer fokus styrt av plasseringa til musepeikaren."
 
 #: windows.cpp:104
 #, kde-format
@@ -1240,10 +1243,10 @@ msgid ""
 "not work. You very likely want to use <em>Focus follows mouse (mouse "
 "precedence)</em> instead!"
 msgstr ""
-"<em>Fokus under musa:</em> Fokus er alltid på vindauget under muse­peikaren."
-"<br/><strong>Merk:</strong> <em>Hindring av fokus­steling</em> og "
+"<em>Fokus under peikaren:</em> Fokus er alltid på vindauget under muse­"
+"peikaren.<br/><strong>Merk:</strong> <em>Hindring av fokus­steling</em> og "
 "<em>programbyte­vindauget («Alt+Tab»)</em> er mot denne praksisen og vil "
-"ikkje verka. Du vil truleg heller vilja bruka <em>Fokus følgjer musa – "
+"ikkje verka. Du vil truleg heller vilja bruka <em>Fokus følgjer peikaren – "
 "musprioritet</em> i staden."
 
 #: windows.cpp:107
@@ -1256,9 +1259,9 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
-"<em>Hald fokuset alltid under musa:</em> Fokus er alltid på vindauget under "
-"muse­peikaren (viss tvil, ingen stadar), svært likt fokus­åtferda i eit "
+"<em>Hald fokuset alltid under peikaren:</em> Fokus er alltid på vindauget "
+"under muse­peikaren (viss tvil, ingen stadar), svært likt fokus­åtferda i eit "
 "gammaldags X11-miljø utan vindaugs­handsamar.<br/><strong>Merk:</strong> "
 "<em>Hindring av fokus­steling</em> og <em>programbyte­vindauget («Alt+Tab»)</"
 "em> er mot denne praksisen og vil ikkje verka. Du vil truleg heller vilja "
-"bruka <em>Fokuset følgjer musa – musprioritet</em> i staden."
+"bruka <em>Fokuset følgjer peikaren – musprioritet</em> i staden."

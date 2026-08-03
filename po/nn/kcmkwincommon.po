@@ -1,5 +1,6 @@
 # Translation of kcmkwincommon to Norwegian Nynorsk
 #
+# Karl Ove Hufthammer <karl@huftis.org>, 2007, 2008, 2010, 2015, 2016, 2018, 2019, 2023, 2026.
 # Håvard Korsvoll <korsvoll@skulelinux.no>, 2009.
 # Eirik U. Birkeland <eirbir@gmail.com>, 2009, 2010.
 # Øystein Steffensen-Alværvik <oysteins.omsetting@protonmail.com>, 2018.
