@@ -392,7 +392,7 @@ bool WindowViewEffect::borderActivated(ElectricBorder border)
         toggleMode(ModeAllDesktops);
     } else if (m_borderActivateClass.contains(border)) {
         toggleMode(ModeWindowClass);
-    } else if (m_touchBorderActivateClassCurrentDesktop.contains(border)) {
+    } else if (m_borderActivateClassCurrentDesktop.contains(border)) {
         toggleMode(ModeWindowClassCurrentDesktop);
     } else {
         return false;
