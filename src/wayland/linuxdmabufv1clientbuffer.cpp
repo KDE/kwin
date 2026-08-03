@@ -185,12 +185,12 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create(Resource *resource, 
         clientBuffer->setDevice(target);
     } else {
         for (const auto &device : devices) {
-            if (device->drmDevice()->deviceId() == target) {
+            if (device->deviceId() == target) {
                 continue;
             }
-            success = renderBackend->testImportBuffer(clientBuffer, device->drmDevice()->deviceId());
+            success = renderBackend->testImportBuffer(clientBuffer, device->deviceId());
             if (success) {
-                clientBuffer->setDevice(device->drmDevice()->deviceId());
+                clientBuffer->setDevice(device->deviceId());
                 break;
             }
         }
@@ -253,12 +253,12 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *reso
         clientBuffer->setDevice(target);
     } else {
         for (const auto &device : devices) {
-            if (device->drmDevice()->deviceId() == target) {
+            if (device->deviceId() == target) {
                 continue;
             }
-            success = renderBackend->testImportBuffer(clientBuffer, device->drmDevice()->deviceId());
+            success = renderBackend->testImportBuffer(clientBuffer, device->deviceId());
             if (success) {
-                clientBuffer->setDevice(device->drmDevice()->deviceId());
+                clientBuffer->setDevice(device->deviceId());
                 break;
             }
         }
