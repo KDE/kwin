@@ -2146,7 +2146,7 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
         workspace()->raiseWindow(this);
         workspace()->requestFocus(this);
         workspace()->setActiveOutput(globalPos);
-        // fallthrough
+        [[fallthrough]];
     case Options::MouseMove:
     case Options::MouseUnrestrictedMove: {
         if (!isMovableAcrossScreens()) {
@@ -2173,7 +2173,7 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
         workspace()->raiseWindow(this);
         workspace()->requestFocus(this);
         workspace()->setActiveOutput(globalPos);
-        // fallthrough
+        [[fallthrough]];
     case Options::MouseResize:
     case Options::MouseUnrestrictedResize: {
         if (!isResizable()) {
