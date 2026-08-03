@@ -2416,8 +2416,7 @@ msgid "Color Temperature Preview"
 msgstr "色温预览"
 
 #: plugins/outputlocator/outputlocator.cpp:26
-#, fuzzy, kde-format
-#| msgid "Built-in Screen"
+#, kde-format
 msgctxt "@label"
 msgid "Built-in Screen"
 msgstr "内置屏幕"
@@ -4347,6 +4346,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgid "Disable configuration options"
-#~ msgstr "禁用配置选项"
