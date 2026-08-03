@@ -410,9 +410,6 @@ void BackendOutput::setState(const State &state)
     if (oldState.scale != state.scale) {
         Q_EMIT scaleChanged();
     }
-    if (oldState.scaleSetting != state.scaleSetting) {
-        Q_EMIT scaleSettingChanged();
-    }
     if (oldState.modes != state.modes) {
         Q_EMIT modesChanged();
     }
