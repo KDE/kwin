@@ -409,11 +409,6 @@ bool EffectsHandler::drawWindow(const RenderTarget &renderTarget, const RenderVi
     }
 }
 
-void EffectsHandler::renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
-{
-    m_scene->finalDrawWindow(renderTarget, viewport, w, mask, deviceRegion, data);
-}
-
 bool EffectsHandler::hasDecorationShadows() const
 {
     return false;

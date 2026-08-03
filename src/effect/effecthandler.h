@@ -181,7 +181,6 @@ public:
     void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data);
     [[nodiscard]] bool paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
     [[nodiscard]] bool drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
-    void renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
     QVariant kwinOption(KWinOption kwopt);
     /**
      * Sets the cursor while the mouse is intercepted.
