@@ -231,12 +231,27 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::createForSampling(RenderDe
         .scanout = false,
     };
 
-    RenderDevice *sysMemDevice = GpuManager::self()->softwareDevice() ? GpuManager::self()->softwareDevice() : sourceDevice;
+    RenderDevice *sysMemDevice = GpuManager::self()->softwareDevice();
+
+    // NOTE that udmabuf has an arbitrary size limit fo 64MB as of Linux 7.2,
+    // so we need to have a fallback when creating the udmabuf fails.
+    // Additionally, importing a dmabuf from Nvidia into a non-Nvidia GPU
+    // will cause a hang because of a bug in the Nvidia driver:
+    // https://github.com/NVIDIA/open-gpu-kernel-modules/issues/1037
+    RenderDevice *fallbackDevice = !sourceDevice->drmDevice() || sourceDevice->drmDevice()->isNvidia() ? destination : sourceDevice;
+
+    std::optional<KWin::CopyRet> firstCopy;
+
     // For implicit modifiers, we need to do a second copy, since accessing
     // them from multiple GPUs may not work as we expect.
     // For dedicated GPUs, the second copy improves performance.
     if (modifier == DRM_FORMAT_MOD_INVALID || !destination->isInternal()) {
-        auto firstCopy = createCopy(sourceDevice, format, {modifier}, sysMemDevice->allocator(), destination->allImportableFormats(), options);
+        if (sysMemDevice) {
+            firstCopy = createCopy(sourceDevice, format, {modifier}, sysMemDevice->allocator(), destination->allImportableFormats(), options);
+        }
+        if (!firstCopy) {
+            firstCopy = createCopy(sourceDevice, format, {modifier}, fallbackDevice->allocator(), destination->allImportableFormats(), options);
+        }
         if (!firstCopy) {
             return nullptr;
         }
@@ -246,7 +261,12 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::createForSampling(RenderDe
         }
         return std::make_unique<MultiGpuSwapchain>(std::move(firstCopy->copy), std::move(secondCopy->copy), format);
     } else {
-        auto firstCopy = createCopy(sourceDevice, format, {modifier}, sysMemDevice->allocator(), importFormats, options);
+        if (sysMemDevice) {
+            firstCopy = createCopy(sourceDevice, format, {modifier}, sysMemDevice->allocator(), importFormats, options);
+        }
+        if (!firstCopy) {
+            firstCopy = createCopy(sourceDevice, format, {modifier}, fallbackDevice->allocator(), importFormats, options);
+        }
         if (!firstCopy) {
             return nullptr;
         }
@@ -297,11 +317,17 @@ std::optional<MultiGpuSwapchain::AllocationInfo> MultiGpuSwapchain::createForSca
         // If there's no matching formats, fall back to double copy
     }
 
-    // The two copies are required on dedicated GPUs to
-    // avoid migrating the source buffer to system memory
-    RenderDevice *sysMemDevice = GpuManager::self()->softwareDevice() ? GpuManager::self()->softwareDevice() : sourceDevice;
+    RenderDevice *sysMemDevice = GpuManager::self()->softwareDevice();
+    RenderDevice *fallbackDevice = !sourceDevice->drmDevice() || sourceDevice->drmDevice()->isNvidia() ? destination : sourceDevice;
+
     options.scanout = false;
-    auto firstCopy = createCopy(sourceDevice, format, modifiers, sysMemDevice->allocator(), destination->allImportableFormats(), options);
+    std::optional<KWin::CopyRet> firstCopy;
+    if (sysMemDevice) {
+        firstCopy = createCopy(sourceDevice, format, modifiers, sysMemDevice->allocator(), destination->allImportableFormats(), options);
+    }
+    if (!firstCopy) {
+        firstCopy = createCopy(sourceDevice, format, modifiers, fallbackDevice->allocator(), destination->allImportableFormats(), options);
+    }
     if (!firstCopy) {
         return std::nullopt;
     }
