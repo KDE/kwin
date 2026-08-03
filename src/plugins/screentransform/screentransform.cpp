@@ -223,7 +223,9 @@ bool ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     RenderViewport fboViewport(viewport.renderRect(), viewport.scale(), fboRenderTarget, QPoint());
 
     GLFramebuffer::pushFramebuffer(it->m_current.framebuffer.get());
-    effects->paintScreen(fboRenderTarget, fboViewport, mask, deviceRegion, screen);
+    if (!effects->paintScreen(fboRenderTarget, fboViewport, mask, deviceRegion, screen)) {
+        return false;
+    }
     GLFramebuffer::popFramebuffer();
 
     const qreal blendFactor = it->m_timeLine.value();
