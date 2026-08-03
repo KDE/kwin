@@ -286,25 +286,23 @@ bool EglBackend::testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice)
         // allow falling back to EGL
     }
 
-    const auto nonExternalOnly = device->eglDisplay()->nonExternalOnlySupportedDrmFormats();
-    if (auto it = nonExternalOnly.find(buffer->dmabufAttributes()->format); it != nonExternalOnly.end() && it->contains(buffer->dmabufAttributes()->modifier)) {
-        return device->eglDisplay()->importBufferAsImage(buffer) != EGL_NO_IMAGE_KHR;
-    }
-    // external_only buffers aren't used as a single EGLImage, import them separately
     const auto info = FormatInfo::get(buffer->dmabufAttributes()->format);
-    if (!info || !info->yuvConversion()) {
-        return false;
-    }
-    const auto planes = info->yuvConversion()->plane;
-    if (buffer->dmabufAttributes()->planeCount != planes.size()) {
-        return false;
-    }
-    for (int i = 0; i < planes.size(); i++) {
-        if (!device->eglDisplay()->importBufferAsImage(buffer, i, planes[i].format, QSize(buffer->size().width() / planes[i].widthDivisor, buffer->size().height() / planes[i].heightDivisor))) {
+    if (info && info->yuvConversion()) {
+        // YUV buffers need to be imported plane for plane
+        const auto planes = info->yuvConversion()->plane;
+        if (buffer->dmabufAttributes()->planeCount != planes.size()) {
             return false;
         }
+        for (int i = 0; i < planes.size(); i++) {
+            if (!device->eglDisplay()->importBufferAsImage(buffer, i, planes[i].format, QSize(buffer->size().width() / planes[i].widthDivisor, buffer->size().height() / planes[i].heightDivisor))) {
+                return false;
+            }
+        }
+        return true;
     }
-    return true;
+
+    // other formats can be imported normally
+    return device->eglDisplay()->importBufferAsImage(buffer) != EGL_NO_IMAGE_KHR;
 }
 
 FormatModifierMap EglBackend::supportedFormats() const
