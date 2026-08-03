@@ -163,6 +163,7 @@ static std::optional<CopyRet> createCopy(RenderDevice *device,
             if (fmt) {
                 options.format = fmt->format;
                 options.modifiers = fmt->modifiers;
+                options.render = false;
                 auto swapchain = VulkanSwapchain::create(device->vulkanDevice(), allocator, options);
                 if (swapchain) {
                     return CopyRet{
@@ -194,6 +195,7 @@ static std::optional<CopyRet> createCopy(RenderDevice *device,
     }
     options.format = fmt->format;
     options.modifiers = fmt->modifiers;
+    options.render = true;
     auto swapchain = EglSwapchain::create(allocator, context.get(), options);
     if (!swapchain) {
         return std::nullopt;

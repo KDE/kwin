@@ -162,7 +162,10 @@ static GraphicsBuffer *allocateDumb(gbm_device *device, dev_t deviceId, const Gr
 
 static GraphicsBuffer *allocateDmaBuf(gbm_device *device, dev_t deviceId, const GraphicsBufferOptions &options)
 {
-    uint32_t flags = GBM_BO_USE_RENDERING;
+    uint32_t flags = 0;
+    if (options.render) {
+        flags |= GBM_BO_USE_RENDERING;
+    }
     if (options.scanout) {
         flags |= GBM_BO_USE_SCANOUT;
     }
