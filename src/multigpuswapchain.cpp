@@ -249,7 +249,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
     });
 
     if (useTransferQueue) {
-        const std::vector<vk::ImageCopy> regions = toRender.rects() | std::views::transform([&completeRect](const Rect &rect) {
+        const std::vector<vk::ImageCopy> regions = toRender.rects() | std::views::transform([](const Rect &rect) {
             return vk::ImageCopy{
                 // src
                 vk::ImageSubresourceLayers{
@@ -274,7 +274,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
                                 m_currentVulkanSlot->texture()->handle(), vk::ImageLayout::eGeneral,
                                 regions);
     } else {
-        const std::vector<vk::ImageBlit> regions = toRender.rects() | std::views::transform([&completeRect](const Rect &rect) {
+        const std::vector<vk::ImageBlit> regions = toRender.rects() | std::views::transform([](const Rect &rect) {
             return vk::ImageBlit{
                 // src
                 vk::ImageSubresourceLayers{
