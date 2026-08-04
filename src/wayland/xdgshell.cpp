@@ -161,14 +161,9 @@ void XdgSurfaceInterfacePrivate::apply(XdgSurfaceCommit *commit)
         explicitWindowGeometry = commit->windowGeometry;
     }
 
-    RectF geometry = surface->boundingRect();
+    effectiveWindowGeometry = surface->boundingRect();
     if (explicitWindowGeometry) {
-        geometry &= *explicitWindowGeometry;
-    }
-
-    if (effectiveWindowGeometry != geometry) {
-        effectiveWindowGeometry = geometry;
-        Q_EMIT q->windowGeometryChanged();
+        effectiveWindowGeometry &= *explicitWindowGeometry;
     }
 }
 

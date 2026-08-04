@@ -190,11 +190,6 @@ Q_SIGNALS:
     void configureAcknowledged(quint32 serial);
 
     /**
-     * This signal is emitted when the window geometry has been changed.
-     */
-    void windowGeometryChanged();
-
-    /**
      * This signal is emitted when the surface has been unmapped and its state has been reset.
      */
     void resetOccurred();
