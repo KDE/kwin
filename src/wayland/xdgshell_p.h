@@ -124,7 +124,7 @@ public:
     QPointer<XXPipV1Interface> pip;
     QPointer<SurfaceInterface> surface;
     RectF effectiveWindowGeometry;
-    std::optional<RectF> explicitWindowGeometry;
+    bool explicitWindowGeometryIsSet = false;
     bool firstBufferAttached = false;
     bool isConfigured = false;
     bool isInitialized = false;

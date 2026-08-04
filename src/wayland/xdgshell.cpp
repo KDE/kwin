@@ -158,19 +158,17 @@ void XdgSurfaceInterfacePrivate::apply(XdgSurfaceCommit *commit)
     }
 
     if (commit->windowGeometry.has_value()) {
-        explicitWindowGeometry = commit->windowGeometry;
-    }
-
-    effectiveWindowGeometry = surface->boundingRect();
-    if (explicitWindowGeometry) {
-        effectiveWindowGeometry &= *explicitWindowGeometry;
+        explicitWindowGeometryIsSet = true;
+        effectiveWindowGeometry = *commit->windowGeometry;
+    } else if (!explicitWindowGeometryIsSet) {
+        effectiveWindowGeometry = surface->boundingRect();
     }
 }
 
 void XdgSurfaceInterfacePrivate::reset()
 {
     effectiveWindowGeometry = RectF();
-    explicitWindowGeometry = std::nullopt;
+    explicitWindowGeometryIsSet = false;
     firstBufferAttached = false;
     isConfigured = false;
     isInitialized = false;
