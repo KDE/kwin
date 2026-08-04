@@ -258,7 +258,8 @@ QList<CustomTile *> CustomTile::split(KWin::Tile::LayoutDirection newDirection)
 
 void CustomTile::moveByPixels(const QPointF &delta)
 {
-    if (static_cast<CustomTile *>(parentTile())->layoutDirection() != LayoutDirection::Floating) {
+    const auto parent = static_cast<CustomTile *>(parentTile());
+    if (!parent || parent->layoutDirection() != LayoutDirection::Floating) {
         return;
     }
 
