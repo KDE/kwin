@@ -16,15 +16,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-30 00:46+0000\n"
-"PO-Revision-Date: 2026-06-25 23:58+0900\n"
+"POT-Creation-Date: 2026-08-04 00:46+0000\n"
+"PO-Revision-Date: 2026-08-04 08:07+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 26.07.70\n"
+"X-Generator: Lokalize 26.11.70\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #, kde-format
@@ -2430,8 +2430,7 @@ msgid "Color Temperature Preview"
 msgstr "色溫預覽"
 
 #: plugins/outputlocator/outputlocator.cpp:26
-#, fuzzy, kde-format
-#| msgid "Built-in Screen"
+#, kde-format
 msgctxt "@label"
 msgid "Built-in Screen"
 msgstr "內建螢幕"
@@ -3441,14 +3440,13 @@ msgstr "沒有標題列規則類型"
 #: rulesettings.kcfg:322
 #, kde-format
 msgid "Decoration policy"
-msgstr ""
+msgstr "視窗裝飾策略"
 
 #. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
-#, fuzzy, kde-format
-#| msgid "Active opacity rule type"
+#, kde-format
 msgid "Decoration policy rule type"
-msgstr "作用中的不透明度規則類型"
+msgstr "視窗裝飾策略規則類型"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:339
@@ -3597,7 +3595,7 @@ msgstr "「從螢幕截圖和螢幕錄影當中隱藏」規則類型"
 #: scene/workspacescene.cpp:115
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
-msgstr ""
+msgstr "切換「顯示合成器狀態」效果"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -4188,18 +4186,18 @@ msgstr "砍掉程式"
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Focused Window"
-msgstr ""
+msgstr "將游標移至焦點所在視窗的中央"
 
 #: useractions.cpp:1018
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Screen"
-msgstr ""
+msgstr "將游標移至螢幕的中央"
 
 #: useractions.cpp:1083
 #, kde-format
 msgid "Activate Window (%1)"
-msgstr "作用中視窗（%1）"
+msgstr "聚焦視窗（%1）"
 
 #: utils/edid.cpp:360
 #, kde-format
@@ -4251,7 +4249,7 @@ msgstr "切換到桌面 %1"
 msgid ""
 "Setting custom modes with too old kde-output-management-v2 protocol versions "
 "is unsupported"
-msgstr ""
+msgstr "在太舊的 kde-output-management-v2 協定版本設定自訂模式是不支援的"
 
 #: wayland/outputmanagement_v2.cpp:575
 #, kde-format
@@ -4308,7 +4306,7 @@ msgstr "驅動程式回絕了提供的輸出配置"
 msgid "The session is not active"
 msgstr "工作階段並非作用中"
 
-#: window.cpp:3162
+#: window.cpp:3178
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

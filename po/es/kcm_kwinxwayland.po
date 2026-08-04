@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-05 00:46+0000\n"
+"POT-Creation-Date: 2026-08-04 00:46+0000\n"
 "PO-Revision-Date: 2026-04-29 11:57+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -152,13 +152,13 @@ msgctxt ""
 msgid "Allowed apps"
 msgstr "Aplicaciones permitidas"
 
-#: ui/main.qml:152
+#: ui/main.qml:156
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr "Ver las aplicaciones permitidas…"
 
-#: ui/main.qml:163
+#: ui/main.qml:167
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -170,7 +170,7 @@ msgstr ""
 "alguna de las que figuran en esta lista podrán tomar el control del equipo, "
 "ya que no se puede verificar la identidad de dichas aplicaciones."
 
-#: ui/main.qml:169
+#: ui/main.qml:173
 #, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
@@ -178,14 +178,14 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr "Permitir sin solicitar permiso"
 
-#: ui/main.qml:174
+#: ui/main.qml:182
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr ""
 "Menos seguro; todas las aplicaciones X11 podrán tomar el control del equipo"
 
-#: ui/main.qml:181
+#: ui/main.qml:189
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -197,7 +197,7 @@ msgstr ""
 "seguridad del sistema y permitirá que el software malicioso tome el control "
 "del puntero y del teclado. Asegúrese de comprender y aceptar este riesgo."
 
-#: ui/main.qml:189
+#: ui/main.qml:197
 #, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
@@ -205,7 +205,7 @@ msgctxt ""
 msgid "Applications allowed to control the pointer and keyboard"
 msgstr "Aplicaciones que tienen permitido controlar el puntero y el teclado"
 
-#: ui/main.qml:209
+#: ui/main.qml:217
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-05 00:46+0000\n"
+"POT-Creation-Date: 2026-08-04 00:46+0000\n"
 "PO-Revision-Date: 2025-06-06 08:41+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -147,13 +147,13 @@ msgctxt ""
 msgid "Allowed apps"
 msgstr "Sallittu"
 
-#: ui/main.qml:152
+#: ui/main.qml:156
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr ""
 
-#: ui/main.qml:163
+#: ui/main.qml:167
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -162,7 +162,7 @@ msgid ""
 "identities can’t be verified"
 msgstr ""
 
-#: ui/main.qml:169
+#: ui/main.qml:173
 #, fuzzy, kde-format
 #| msgctxt ""
 #| "@option:check Allow control of pointer and keyboard without asking for "
@@ -174,13 +174,13 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr "salli kysymättä lupaa"
 
-#: ui/main.qml:174
+#: ui/main.qml:182
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr "Turvattomin: kaikki X11-sovellukset saavat tietokoneen hallintaansa"
 
-#: ui/main.qml:181
+#: ui/main.qml:189
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -192,7 +192,7 @@ msgstr ""
 "ja sallii pahantahtoisten ohjelmien ottaa osoitin ja näppäimistö täysin "
 "hallintaansa. Varmista, että ymmärrät ja hyväksyt riskin."
 
-#: ui/main.qml:189
+#: ui/main.qml:197
 #, fuzzy, kde-format
 #| msgctxt "@title:group"
 #| msgid "Control of pointer and keyboard:"
@@ -202,7 +202,7 @@ msgctxt ""
 msgid "Applications allowed to control the pointer and keyboard"
 msgstr "Osoittimen ja näppäimistön hallinta:"
 
-#: ui/main.qml:209
+#: ui/main.qml:217
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"

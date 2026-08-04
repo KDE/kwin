@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-05 00:46+0000\n"
+"POT-Creation-Date: 2026-08-04 00:46+0000\n"
 "PO-Revision-Date: 2026-04-29 08:47+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -149,13 +149,13 @@ msgctxt ""
 msgid "Allowed apps"
 msgstr "Дозволені програми"
 
-#: ui/main.qml:152
+#: ui/main.qml:156
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr "Переглянути дозволені програми…"
 
-#: ui/main.qml:163
+#: ui/main.qml:167
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -168,7 +168,7 @@ msgstr ""
 "оскільки ідентифікаційні дані програм, що використовують XWayland, неможливо "
 "перевірити."
 
-#: ui/main.qml:169
+#: ui/main.qml:173
 #, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
@@ -176,13 +176,13 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr "Дозволити без додаткового запиту"
 
-#: ui/main.qml:174
+#: ui/main.qml:182
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr "Найменший захист; усі програми X11 зможуть керувати вашим комп'ютером"
 
-#: ui/main.qml:181
+#: ui/main.qml:189
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -195,7 +195,7 @@ msgstr ""
 "можливість повного контролю за вказівником миші та клавіатурою. Вам слід "
 "розуміти цей ризик та взяти на себе відповідальність за наслідки."
 
-#: ui/main.qml:189
+#: ui/main.qml:197
 #, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
@@ -203,7 +203,7 @@ msgctxt ""
 msgid "Applications allowed to control the pointer and keyboard"
 msgstr "Програми, яким дозволено керувати вказівником і клавіатурою"
 
-#: ui/main.qml:209
+#: ui/main.qml:217
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"

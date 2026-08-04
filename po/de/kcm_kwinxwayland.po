@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-05 00:46+0000\n"
+"POT-Creation-Date: 2026-08-04 00:46+0000\n"
 "PO-Revision-Date: 2026-06-18 18:48+0200\n"
 "Last-Translator: Alexander Becker <alex-at-kde-l10n-de@freenet.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -156,13 +156,13 @@ msgctxt ""
 msgid "Allowed apps"
 msgstr "Erlaubte Anwendungen"
 
-#: ui/main.qml:152
+#: ui/main.qml:156
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr "Erlaubte Anwendungen anzeigen …"
 
-#: ui/main.qml:163
+#: ui/main.qml:167
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -174,7 +174,7 @@ msgstr ""
 "Liste ausgeben, können die Kontrolle über den Computer erlangen, da die "
 "Identität dieser Anwendungen nicht verifiziert werden kann"
 
-#: ui/main.qml:169
+#: ui/main.qml:173
 #, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
@@ -182,7 +182,7 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr "Erlauben, ohne um Erlaubnis zu fragen"
 
-#: ui/main.qml:174
+#: ui/main.qml:182
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
@@ -190,7 +190,7 @@ msgstr ""
 "Niedrigste Sicherheit – Alle X11-Anwendungen werden die Kontrolle über den "
 "Computer übernehmen können"
 
-#: ui/main.qml:181
+#: ui/main.qml:189
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -202,7 +202,7 @@ msgstr ""
 "schwächt und es bösartiger Software erlaubt, die vollständige Kontrolle über "
 "Maus und Tastatur zu erhalten. Seien Sie sich der Risiken bewusst."
 
-#: ui/main.qml:189
+#: ui/main.qml:197
 #, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
@@ -210,7 +210,7 @@ msgctxt ""
 msgid "Applications allowed to control the pointer and keyboard"
 msgstr "Anwendungen, die Zeiger und Tastatur steuern dürfen"
 
-#: ui/main.qml:209
+#: ui/main.qml:217
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"

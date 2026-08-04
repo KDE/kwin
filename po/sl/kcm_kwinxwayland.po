@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-05 00:46+0000\n"
+"POT-Creation-Date: 2026-08-04 00:46+0000\n"
 "PO-Revision-Date: 2026-04-29 09:30+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -147,13 +147,13 @@ msgctxt ""
 msgid "Allowed apps"
 msgstr "Dovoljene aplikacije"
 
-#: ui/main.qml:152
+#: ui/main.qml:156
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr "Glejte dovoljene aplikacije…"
 
-#: ui/main.qml:163
+#: ui/main.qml:167
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -165,7 +165,7 @@ msgstr ""
 "seznamu, bodo lahko prevzele nadzor nad računalnikom, ker identitet "
 "aplikacij, ki uporabljajo XWayland, ni mogoče preveriti."
 
-#: ui/main.qml:169
+#: ui/main.qml:173
 #, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
@@ -173,14 +173,14 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr "Dovoli brez prošnje za dovoljenje"
 
-#: ui/main.qml:174
+#: ui/main.qml:182
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr ""
 "Najmanj varno; vse aplikacije X11 bodo lahko prevzele nadzor nad računalnikom"
 
-#: ui/main.qml:181
+#: ui/main.qml:189
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -192,7 +192,7 @@ msgstr ""
 "in zlonamerni programski opremi omogočila popoln nadzor nad vašim kazalcem "
 "in tipkovnico. Prepričajte se, da razumete in sprejemate to tveganje."
 
-#: ui/main.qml:189
+#: ui/main.qml:197
 #, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
@@ -200,7 +200,7 @@ msgctxt ""
 msgid "Applications allowed to control the pointer and keyboard"
 msgstr "Aplikacije, ki lahko upravljajo kazalec in tipkovnico"
 
-#: ui/main.qml:209
+#: ui/main.qml:217
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"

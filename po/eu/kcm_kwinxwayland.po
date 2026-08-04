@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-05 00:46+0000\n"
+"POT-Creation-Date: 2026-08-04 00:46+0000\n"
 "PO-Revision-Date: 2026-07-21 17:37+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -152,13 +152,13 @@ msgctxt ""
 msgid "Allowed apps"
 msgstr "Baimendutako aplikazioak"
 
-#: ui/main.qml:152
+#: ui/main.qml:156
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr "Ikusi baimendutako aplikazioak…"
 
-#: ui/main.qml:163
+#: ui/main.qml:167
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -170,7 +170,7 @@ msgstr ""
 "zerbait direla adierazten badute, ordenagailuaren kontrola hartu ahal izango "
 "dute, XWayland erabiltzen duten aplikazioen nortasuna ezin baita egiaztatu."
 
-#: ui/main.qml:169
+#: ui/main.qml:173
 #, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
@@ -178,7 +178,7 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr "Baimenik eskatu gabe baimendu"
 
-#: ui/main.qml:174
+#: ui/main.qml:182
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
@@ -186,7 +186,7 @@ msgstr ""
 "Segurtasun txikienekoa; X11 aplikazio guztiak ordenagailuaren agintea "
 "hartzeko gai izango dira"
 
-#: ui/main.qml:181
+#: ui/main.qml:189
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -199,7 +199,7 @@ msgstr ""
 "kontrol osoa hartzeko aukera emango diela. Ziurtatu arrisku hori ulertzen "
 "eta onartzen duzula."
 
-#: ui/main.qml:189
+#: ui/main.qml:197
 #, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
@@ -207,7 +207,7 @@ msgctxt ""
 msgid "Applications allowed to control the pointer and keyboard"
 msgstr "Erakuslearen eta teklatuaren agintea hartzera baimendutako aplikazioak"
 
-#: ui/main.qml:209
+#: ui/main.qml:217
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
