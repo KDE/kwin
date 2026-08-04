@@ -106,8 +106,16 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
         WaylandOutput *output = m_seat->backend()->findOutput(m_pointer->enteredSurface());
         Q_ASSERT(output);
         const auto subsurface = m_seat->backend()->findSubSurface(m_pointer->enteredSurface());
-        const QPointF absolutePos = output->position() + relativeToSurface
-            + (subsurface ? subsurface->position() : QPoint());
+        // A position in the host window is in the coordinates the panel is driven in, while
+        // the compositor works in the picture as the user sees it. On a rotated display those
+        // are not the same, so the position has to be turned back.
+        const QPointF inPanel = relativeToSurface + (subsurface ? subsurface->position() : QPoint());
+        // Exactly the size the surface is given in WaylandOutput::present(), rounding and all -
+        // turning a position needs the bounds it was expressed in, and being off by the
+        // rounding here shifts the pointer by a little more the further it travels.
+        const QSizeF panelSize = QSize(std::round(output->modeSize().width() / output->scale()),
+                                       std::round(output->modeSize().height() / output->scale()));
+        const QPointF absolutePos = output->position() + output->transform().inverted().map(inPanel, panelSize);
         Q_EMIT pointerMotionAbsolute(absolutePos, std::chrono::milliseconds(time), this);
     });
     connect(pointer, &Pointer::buttonStateChanged, this, [this](quint32 serial, quint32 time, quint32 button, Pointer::ButtonState nativeState) {
