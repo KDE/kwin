@@ -311,7 +311,9 @@ bool WaylandOutput::present(const QList<OutputLayer *> &layersToUpdate, const st
         m_surface->attachBuffer(buffer);
         m_mapped = true;
     }
-    m_viewport->setDestination(QSize(std::round(modeSize().width() / scale()), std::round(modeSize().height() / scale())));
+    const Rect rect(QPoint(), QSize(std::round(modeSize().width() / scale()), std::round(modeSize().height() / scale())));
+    m_xdgShellSurface->setWindowGeometry(rect);
+    m_viewport->setDestination(rect.size());
     m_surface->setScale(1);
     // commit the subsurfaces before the main surface
     for (OutputLayer *layer : layersToUpdate) {
