@@ -164,12 +164,12 @@ static QString deviceRow(InputDevice *device)
 static QString buttonsToString(Qt::MouseButtons buttons)
 {
     QString ret;
-    for (uint i = 1; i < Qt::ExtraButton24; i = i << 1) {
+    for (uint i = 1; i <= Qt::ExtraButton24; i = i << 1) {
         if (buttons & i) {
             ret.append(buttonToString(Qt::MouseButton(uint(buttons) & i)));
             ret.append(QStringLiteral(" "));
         }
-    };
+    }
     return ret.trimmed();
 }
 
