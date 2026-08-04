@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-05 00:46+0000\n"
+"POT-Creation-Date: 2026-08-04 02:42+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -135,13 +135,13 @@ msgctxt ""
 msgid "Allowed apps"
 msgstr "允许的应用"
 
-#: ui/main.qml:152
+#: ui/main.qml:156
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr "查看允许的应用程序…"
 
-#: ui/main.qml:163
+#: ui/main.qml:167
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -152,7 +152,7 @@ msgstr ""
 "安全性一般；声称属于此列表的 XWayland 使用应用程序将能够控制计算机，因为 "
 "XWayland 使用应用程序的身份无法得到验证。"
 
-#: ui/main.qml:169
+#: ui/main.qml:173
 #, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
@@ -160,13 +160,13 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr "允许控制，无需询问用户授权"
 
-#: ui/main.qml:174
+#: ui/main.qml:182
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr "安全性最差；所有 X11 应用程序均可控制此计算机"
 
-#: ui/main.qml:181
+#: ui/main.qml:189
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -177,7 +177,7 @@ msgstr ""
 "请注意：使用此设置将极大地降低系统安全性，使得恶意软件能够完全控制您的鼠标和"
 "键盘。请确保您已了解并接受此风险。"
 
-#: ui/main.qml:189
+#: ui/main.qml:197
 #, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
@@ -185,7 +185,7 @@ msgctxt ""
 msgid "Applications allowed to control the pointer and keyboard"
 msgstr "允许控制指针和键盘的应用程序"
 
-#: ui/main.qml:209
+#: ui/main.qml:217
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"

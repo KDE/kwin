@@ -14,14 +14,14 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-05-21 22:23+0900\n"
+"PO-Revision-Date: 2026-08-04 07:53+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 26.07.70\n"
+"X-Generator: Lokalize 26.11.70\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: kcmrules.cpp:228
@@ -791,7 +791,7 @@ msgstr "覆蓋"
 #: rulesmodel.cpp:968
 #, kde-format
 msgid "Unmanaged window"
-msgstr "未管理視窗"
+msgstr "未管理的視窗"
 
 #: rulesmodel.cpp:969
 #, kde-format

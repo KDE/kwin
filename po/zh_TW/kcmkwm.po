@@ -8,20 +8,20 @@
 # Franklin Weng <franklin at goodhorse dot idv dot tw>, 2007, 2008.
 # pan93412 <pan93412@gmail.com>, 2019, 2020.
 # Jeff Huang <s8321414@gmail.com>, 2022.
-# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025 Kisaragi Hiu <mail@kisaragi-hiu.com>
+# SPDX-FileCopyrightText: 2022-2026 Kisaragi Hiu <mail@kisaragi-hiu.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-12 00:46+0000\n"
-"PO-Revision-Date: 2025-08-08 01:57+0900\n"
+"PO-Revision-Date: 2026-08-04 08:05+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.07.70\n"
+"X-Generator: Lokalize 26.11.70\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
@@ -270,7 +270,7 @@ msgstr "改變視窗大小"
 #: mouse.ui:337 mouse.ui:394 mouse.ui:442 mouse.ui:499
 #, kde-format
 msgid "Raise"
-msgstr "前景"
+msgstr "抬升"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -356,7 +356,7 @@ msgstr "視窗選單"
 #: mouse.ui:472 mouse.ui:529
 #, kde-format
 msgid "Do nothing"
-msgstr "無動作"
+msgstr "什麼都不做"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: actions.ui:334
@@ -640,7 +640,7 @@ msgstr "嚴格將游標下位置設為焦點"
 #: focus.ui:69
 #, kde-format
 msgid "&Delay focus by:"
-msgstr "延遲取焦時間(&D)："
+msgstr "聚焦延遲時間(&D)："
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_DelayFocusInterval)
 #: focus.ui:82
@@ -763,7 +763,7 @@ msgstr "最高"
 #: focus.ui:146
 #, kde-format
 msgid "Raising windows:"
-msgstr "移視窗至上層："
+msgstr "將視窗移至上層："
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ClickRaise)
 #: focus.ui:153
@@ -796,7 +796,7 @@ msgstr ""
 #: focus.ui:168
 #, kde-format
 msgid "&Raise on hover, delayed by:"
-msgstr "懸停時將視窗移至上層的延遲時間(&R)："
+msgstr "懸停時將視窗移至上層，延遲時間(&R)："
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_AutoRaiseInterval)
 #: focus.ui:178
@@ -997,7 +997,7 @@ msgstr "作用及移至下層"
 #: mouse.ui:537
 #, kde-format
 msgid "Maximize window by double clicking its frame"
-msgstr "雙擊視窗框架來將其最大化"
+msgstr "雙擊視窗邊框來將其最大化"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: mouse.ui:562

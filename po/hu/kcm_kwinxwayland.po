@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-05 00:46+0000\n"
+"POT-Creation-Date: 2026-08-04 02:42+0000\n"
 "PO-Revision-Date: 2026-06-23 23:19+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -150,13 +150,13 @@ msgctxt ""
 msgid "Allowed apps"
 msgstr "Engedélyezett alkalmazások"
 
-#: ui/main.qml:152
+#: ui/main.qml:156
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr "Engedélyezett alkalmazások megtekintése…"
 
-#: ui/main.qml:163
+#: ui/main.qml:167
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -169,7 +169,7 @@ msgstr ""
 "számítógép felett, mivel az XWaylandet használó alkalmazások azonosságát nem "
 "lehet ellenőrizni"
 
-#: ui/main.qml:169
+#: ui/main.qml:173
 #, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
@@ -177,7 +177,7 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr "Engedélyezés jogosultságkérés nélkül"
 
-#: ui/main.qml:174
+#: ui/main.qml:182
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
@@ -185,7 +185,7 @@ msgstr ""
 "Legkevésbé biztonságos; minden X11-es alkalmazás átveheti az irányítást a "
 "számítógép felett"
 
-#: ui/main.qml:181
+#: ui/main.qml:189
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -198,7 +198,7 @@ msgstr ""
 "hogy teljes mértékben átvegyék az irányítást a mutató és a billentyűzet "
 "felett. Győződjön meg róla, hogy megértette és elfogadja ezt a kockázatot."
 
-#: ui/main.qml:189
+#: ui/main.qml:197
 #, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
@@ -206,7 +206,7 @@ msgctxt ""
 msgid "Applications allowed to control the pointer and keyboard"
 msgstr "A mutató és a billentyűzet vezérlésére jogosult alkalmazások"
 
-#: ui/main.qml:209
+#: ui/main.qml:217
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"

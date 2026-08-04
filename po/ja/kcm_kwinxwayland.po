@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-05 00:46+0000\n"
+"POT-Creation-Date: 2026-08-04 02:42+0000\n"
 "PO-Revision-Date: 2026-05-10 15:33+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
@@ -145,13 +145,13 @@ msgctxt ""
 msgid "Allowed apps"
 msgstr "個別に許可"
 
-#: ui/main.qml:152
+#: ui/main.qml:156
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr "許可したアプリを確認…"
 
-#: ui/main.qml:163
+#: ui/main.qml:167
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -163,7 +163,7 @@ msgstr ""
 "XWayland アプリが許可リストにあるアプリに偽装すると、コンピューターを制御する"
 "ことができます。"
 
-#: ui/main.qml:169
+#: ui/main.qml:173
 #, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
@@ -171,7 +171,7 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr "権限を確認することなく許可"
 
-#: ui/main.qml:174
+#: ui/main.qml:182
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
@@ -179,7 +179,7 @@ msgstr ""
 "弱いセキュリティです。すべての X11 アプリがコンピューターを制御することができ"
 "るようになります。"
 
-#: ui/main.qml:181
+#: ui/main.qml:189
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -191,7 +191,7 @@ msgstr ""
 "ソフトウェアがポインタやキーボードの制御を完全に掌握することができるようにな"
 "ります。リスクを理解し受け入れられる場合のみこの設定を使用してください。"
 
-#: ui/main.qml:189
+#: ui/main.qml:197
 #, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
@@ -199,7 +199,7 @@ msgctxt ""
 msgid "Applications allowed to control the pointer and keyboard"
 msgstr "ポインタとキーボードの制御が許可されたアプリ"
 
-#: ui/main.qml:209
+#: ui/main.qml:217
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
