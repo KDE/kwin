@@ -14,13 +14,17 @@
 #include "backends/virtual/virtual_backend.h"
 #include "backends/wayland/wayland_backend.h"
 #include "compositor.h"
+#include "core/gpumanager.h"
 #include "core/outputbackend.h"
+#include "core/renderdevice.h"
 #include "core/session.h"
 #include "effect/effecthandler.h"
 #include "inputmethod.h"
 #include "tabletmodemanager.h"
 #include "utils/realtime.h"
+#include "wayland/clientconnection.h"
 #include "wayland/display.h"
+#include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -171,10 +175,17 @@ void ApplicationWayland::performStartup()
         m_xwayland->xwaylandLauncher()->addEnvironmentVariables(m_xwaylandExtraEnvironment);
         m_xwayland->xwaylandLauncher()->passFileDescriptors(std::move(m_xwaylandFds));
         m_xwayland->init();
-        connect(Compositor::self(), &Compositor::primaryGpuChanged, m_xwayland.get(), [this]() {
-            // Xwayland will automatically be started again
-            // once a client tries to connect to it
-            m_xwayland->xwaylandLauncher()->stop();
+        connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, m_xwayland.get(), [this](RenderDevice *removed) {
+            if (!waylandServer()->xWaylandConnection() || !waylandServer()->linuxDmabuf()) {
+                return;
+            }
+            const auto mainDevice = waylandServer()->linuxDmabuf()->mainDevice(waylandServer()->xWaylandConnection()->client());
+            if (mainDevice == removed->deviceId()) {
+                // Xwayland breaks if the GPU it's using was hotunplugged,
+                // so we manually stop it here. It will automatically be
+                // started again once a client tries to connect to it
+                m_xwayland->xwaylandLauncher()->stop();
+            }
         });
     }
 #endif

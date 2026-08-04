@@ -78,7 +78,7 @@ public:
 
     void setSupportedFormatsWithModifiers(const QList<LinuxDmaBufV1Feedback::Tranche> &tranches);
 
-    dev_t mainDevice(wl_client *client) const;
+    std::optional<dev_t> mainDevice(wl_client *client) const;
 
 private:
     friend class LinuxDmaBufV1ClientBufferIntegrationPrivate;
