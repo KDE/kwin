@@ -123,7 +123,7 @@ public:
     QPointer<XXPipV1Interface> pip;
     QPointer<SurfaceInterface> surface;
     RectF effectiveWindowGeometry;
-    bool explicitWindowGeometry = false;
+    std::optional<RectF> explicitWindowGeometry;
     bool firstBufferAttached = false;
     bool isConfigured = false;
     bool isInitialized = false;

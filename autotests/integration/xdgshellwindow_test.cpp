@@ -1227,13 +1227,17 @@ void TestXdgShellWindow::testXdgWindowGeometryAttachBuffer()
     QCOMPARE(window->bufferGeometry().size(), QSize(200, 100));
 
     Test::render(surface.get(), QSize(100, 50), Qt::blue);
-    QVERIFY(Test::waylandSync());
-    QCOMPARE(frameGeometryChangedSpy.count(), 1);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(frameGeometryChangedSpy.count(), 2);
+    QCOMPARE(window->frameGeometry().topLeft(), oldPosition);
+    QCOMPARE(window->frameGeometry().size(), QSize(90, 40));
+    QCOMPARE(window->bufferGeometry().topLeft(), oldPosition - QPoint(10, 10));
+    QCOMPARE(window->bufferGeometry().size(), QSize(100, 50));
 
     shellSurface->xdgSurface()->set_window_geometry(0, 0, 100, 50);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(frameGeometryChangedSpy.count(), 2);
+    QCOMPARE(frameGeometryChangedSpy.count(), 3);
     QCOMPARE(window->frameGeometry().topLeft(), oldPosition);
     QCOMPARE(window->frameGeometry().size(), QSize(100, 50));
     QCOMPARE(window->bufferGeometry().topLeft(), oldPosition);
