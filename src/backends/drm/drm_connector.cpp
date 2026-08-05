@@ -200,6 +200,9 @@ QString DrmConnector::connectorName() const
 
 QString DrmConnector::modelName() const
 {
+    if (m_edid.monitorName().isEmpty() && m_edid.serialNumber().isEmpty()) {
+        return connectorName(); // just use the connector name
+    }
     if (m_edid.serialNumber().isEmpty()) {
         return connectorName() + QLatin1Char('-') + m_edid.nameString();
     } else {
