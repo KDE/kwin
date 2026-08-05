@@ -4210,7 +4210,7 @@ void Window::checkOffscreenPosition(RectF *geom, const RectF &screenArea)
     if (geom->top() > screenArea.bottom()) {
         geom->moveTop(screenArea.bottom() - screenArea.height() / 4);
     } else if (geom->bottom() < screenArea.top()) {
-        geom->moveBottom(screenArea.top() + screenArea.width() / 4);
+        geom->moveBottom(screenArea.top() + screenArea.height() / 4);
     }
 }
 
