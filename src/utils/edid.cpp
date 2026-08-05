@@ -77,6 +77,20 @@ static QByteArray parseEisaId(const uint8_t *data)
     return parsePnpId(data);
 }
 
+static QByteArray parseDescriptorString(const di_edid *edid, di_edid_display_descriptor_tag wantedTag)
+{
+    const di_edid_display_descriptor *const *descriptors = di_edid_get_display_descriptors(edid);
+    for (; *descriptors != nullptr; descriptors++) {
+        if (di_edid_display_descriptor_get_tag(*descriptors) != wantedTag) {
+            continue;
+        }
+        if (const char *str = di_edid_display_descriptor_get_string(*descriptors); str && str[0] != '\0') {
+            return QByteArray(str).trimmed();
+        }
+    }
+    return {};
+}
+
 static QByteArray parseVendor(const uint8_t *data)
 {
     const auto pnpId = parsePnpId(data);
@@ -167,10 +181,11 @@ Edid::Edid(QByteArrayView data)
     m_physicalSize = determineScreenPhysicalSizeMm(edid);
     m_eisaId = parseEisaId(bytes);
     m_pnpId = parsePnpId(bytes);
-    UniqueCPtr<char> monitorName{di_info_get_model(info)};
-    m_monitorName = QByteArray(monitorName.get());
-    UniqueCPtr<char> serial{di_info_get_serial(info)};
-    m_serialNumber = QByteArray(serial.get());
+    m_monitorName = parseDescriptorString(edid, DI_EDID_DISPLAY_DESCRIPTOR_PRODUCT_NAME);
+    m_serialNumber = parseDescriptorString(edid, DI_EDID_DISPLAY_DESCRIPTOR_PRODUCT_SERIAL);
+    if (m_serialNumber.isEmpty() && productInfo->serial != 0) {
+        m_serialNumber = QByteArray::number(productInfo->serial); // fallback to decimal value
+    }
     m_vendor = parseVendor(bytes);
 
     m_identifier = QByteArray(productInfo->manufacturer, 3) + " " + QByteArray::number(productInfo->product) + " " + QByteArray::number(productInfo->serial) + " "
