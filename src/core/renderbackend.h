@@ -14,6 +14,7 @@
 #include <QObject>
 #include <QPointer>
 #include <memory>
+#include <sys/types.h>
 
 namespace KWin
 {
