@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-04 00:46+0000\n"
+"POT-Creation-Date: 2026-08-05 00:48+0000\n"
 "PO-Revision-Date: 2026-07-23 17:22+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -41,29 +41,29 @@ msgstr ""
 "kom@kde.gr.jp,shinobo@leo.bekkoame.ne.jp,ryuk@user.script.nu,okushi@kde.gr."
 "jp,tsuno@ngy.1st.ne.jp,5602mint@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:474
+#: backends/wayland/wayland_output.cpp:476
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "右 Ctrl でポインタのキャプチャを解除します"
 
-#: backends/wayland/wayland_output.cpp:476
+#: backends/wayland/wayland_output.cpp:478
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "右 Ctrl でポインタをキャプチャします"
 
-#: backends/wayland/wayland_output.cpp:480
+#: backends/wayland/wayland_output.cpp:482
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland コンポジター %1"
 
-#: backends/wayland/wayland_output.cpp:483
+#: backends/wayland/wayland_output.cpp:485
 #, kde-format
 msgid "- Output disabled"
 msgstr "- 出力を無効化済み"
 
-#: backends/wayland/wayland_output.cpp:485
+#: backends/wayland/wayland_output.cpp:487
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- 出力をスリープ中"
@@ -1575,61 +1575,61 @@ msgstr "Vlad Zahorodnii"
 msgid "Xaver Hugl"
 msgstr "Xaver Hugl"
 
-#: main_wayland.cpp:328
+#: main_wayland.cpp:339
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "ルートレス XWayland を開始"
 
-#: main_wayland.cpp:331
+#: main_wayland.cpp:342
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 "リッスンする Wayland ソケット名 (未指定の場合 \"wayland-0\" が使用されます)"
 
-#: main_wayland.cpp:335
+#: main_wayland.cpp:346
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "X11 プラットフォームのウィンドウモードで使用する X11 ディスプレイ"
 
-#: main_wayland.cpp:339
+#: main_wayland.cpp:350
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "Wayland プラットフォームのウィンドウモードで使用する Wayland ディスプレイ"
 
-#: main_wayland.cpp:341
+#: main_wayland.cpp:352
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "仮想フレームバッファにレンダリングする"
 
-#: main_wayland.cpp:343
+#: main_wayland.cpp:354
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "ウィンドウモードの幅 (デフォルトは 1024 です)"
 
-#: main_wayland.cpp:347
+#: main_wayland.cpp:358
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "ウィンドウモードの高さ (デフォルトは 768 です)"
 
-#: main_wayland.cpp:352
+#: main_wayland.cpp:363
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
 msgstr "ウィンドウモードをフルスクリーンにするかどうか"
 
-#: main_wayland.cpp:356
+#: main_wayland.cpp:367
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "ウィンドウモードのスケール (デフォルトは 1 です)"
 
-#: main_wayland.cpp:361
+#: main_wayland.cpp:372
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr "ウィンドウモードで出力先として開くウィンドウ数 (デフォルトは 1 です)"
 
-#: main_wayland.cpp:366
+#: main_wayland.cpp:377
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1638,7 +1638,7 @@ msgstr ""
 "Wayland の着信接続に使用するソケット (--socket と組み合わせてソケットに名前を"
 "つけることができます)"
 
-#: main_wayland.cpp:370
+#: main_wayland.cpp:381
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1646,73 +1646,73 @@ msgid ""
 msgstr ""
 "XWayland の着信接続に使用するソケット名 (このオプションは複数回使用できます)"
 
-#: main_wayland.cpp:374
+#: main_wayland.cpp:385
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "セットアップ済みの XWayland ディスプレイの名前"
 
-#: main_wayland.cpp:378
+#: main_wayland.cpp:389
 #, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
 msgstr "XWayland の初期接続に使用する XWayland ソケットの名前"
 
-#: main_wayland.cpp:382
+#: main_wayland.cpp:393
 #, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
 msgstr "セットアップ済みの XWayland 初期ディスプレイの名前"
 
-#: main_wayland.cpp:386
+#: main_wayland.cpp:397
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Xauthority ファイルの名前"
 
-#: main_wayland.cpp:390
+#: main_wayland.cpp:401
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr "kwin_wayland_wrapper によって再起動できるようこのインスタンスを終了"
 
-#: main_wayland.cpp:392
+#: main_wayland.cpp:403
 #, kde-format
 msgid "Render through drm node."
 msgstr "DRM ノードを通してレンダリングする"
 
-#: main_wayland.cpp:393
+#: main_wayland.cpp:404
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr "ロケール情報を抽出する際、ユーザー設定よりも locale1 を優先する"
 
-#: main_wayland.cpp:422
+#: main_wayland.cpp:433
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "KWin が開始する入力メゾット"
 
-#: main_wayland.cpp:428
+#: main_wayland.cpp:439
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "ロック状態でセッションを開始"
 
-#: main_wayland.cpp:432
+#: main_wayland.cpp:443
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "ロック画面に未対応のセッションを開始"
 
-#: main_wayland.cpp:437
+#: main_wayland.cpp:448
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "グローバルショートカットに未対応のセッションを開始"
 
-#: main_wayland.cpp:442
+#: main_wayland.cpp:453
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivities の統合を無効化"
 
-#: main_wayland.cpp:447
+#: main_wayland.cpp:458
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "KWin が開始したセッションアプリが閉じたら終了する"
 
-#: main_wayland.cpp:452
+#: main_wayland.cpp:463
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""

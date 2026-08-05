@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-04 00:46+0000\n"
+"POT-Creation-Date: 2026-08-05 00:48+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -37,30 +37,30 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "sng@hellug.gr, manolis@koppermind.homelinux.org"
 
-#: backends/wayland/wayland_output.cpp:474
+#: backends/wayland/wayland_output.cpp:476
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Πιέστε το δεξί control για να απελευθέρωση δείκτη"
 
-#: backends/wayland/wayland_output.cpp:476
+#: backends/wayland/wayland_output.cpp:478
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Πατήστε το δεξί πλήκτρο control για να πιάσετε το δείκτη"
 
-#: backends/wayland/wayland_output.cpp:480
+#: backends/wayland/wayland_output.cpp:482
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "Συνθέτης Wayland του KDE %1"
 
-#: backends/wayland/wayland_output.cpp:483
+#: backends/wayland/wayland_output.cpp:485
 #, fuzzy, kde-format
 #| msgid "- Output disabled"
 msgid "- Output disabled"
 msgstr "- έξοδος ανενεργή"
 
-#: backends/wayland/wayland_output.cpp:485
+#: backends/wayland/wayland_output.cpp:487
 #, fuzzy, kde-format
 #| msgid "- Output dimmed"
 msgid "- Output dimmed"
@@ -1638,12 +1638,12 @@ msgstr "Vlad Zahorodnii"
 msgid "Xaver Hugl"
 msgstr "Xaver Hugl"
 
-#: main_wayland.cpp:328
+#: main_wayland.cpp:339
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Εκκίνηση ενός rootless διακομιστή Xwayland."
 
-#: main_wayland.cpp:331
+#: main_wayland.cpp:342
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1651,47 +1651,47 @@ msgstr ""
 "Όνομα της υποδοχής Wayland στην οποία θα ακούει. Αν δεν καθοριστεί, θα "
 "χρησιμοποιηθεί η \"wayland-0\". "
 
-#: main_wayland.cpp:335
+#: main_wayland.cpp:346
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr ""
 "Η οθόνη X11 που θα χρησιμοποιηθεί σε παραθυρική λειτουργία σε πλατφόρμα X11."
 
-#: main_wayland.cpp:339
+#: main_wayland.cpp:350
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "Η οθόνη Wayland που θα χρησιμοποιηθεί σε παραθυρική λειτουργία σε πλατφόρμα "
 "Wayland."
 
-#: main_wayland.cpp:341
+#: main_wayland.cpp:352
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Αποτύπωση σε εικονική ενδιάμεση μνήμη πλαισίων."
 
-#: main_wayland.cpp:343
+#: main_wayland.cpp:354
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr ""
 "Το πλάτος για τη λειτουργία παραθύρου. Το προκαθορισμένο πλάτος είναι 1024."
 
-#: main_wayland.cpp:347
+#: main_wayland.cpp:358
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Το ύψος για τη λειτουργία παραθύρου. Το προκαθορισμένο ύψος είναι 768."
 
-#: main_wayland.cpp:352
+#: main_wayland.cpp:363
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
 msgstr ""
 
-#: main_wayland.cpp:356
+#: main_wayland.cpp:367
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr ""
 "Η κλιμάκωση για τη λειτουργία παραθύρου. Η προκαθορισμένη τιμή είναι το 1."
 
-#: main_wayland.cpp:361
+#: main_wayland.cpp:372
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1699,7 +1699,7 @@ msgstr ""
 "Ο αριθμός των παραθύρων που θα ανοίξουν σαν έξοδοι σε παραθυρική λειτουργία. "
 "Η προκαθορισμένη τιμή είναι 1"
 
-#: main_wayland.cpp:366
+#: main_wayland.cpp:377
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1708,7 +1708,7 @@ msgstr ""
 "Η υποδοχή Wayland που θα χρησιμοποιείται για τις εισερχόμενες συνδέσεις. "
 "Αυτό μπορεί να συνδυαστεί με -- υποδοχή για να ονομάσετε την υποδοχή"
 
-#: main_wayland.cpp:370
+#: main_wayland.cpp:381
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1717,12 +1717,12 @@ msgstr ""
 "Η υποδοχή XWayland που θα χρησιμοποιείται για τις εισερχόμενες συνδέσεις της "
 "Xwayland. Αυτό μπορεί να οριστεί πολλές φορές"
 
-#: main_wayland.cpp:374
+#: main_wayland.cpp:385
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr ""
 
-#: main_wayland.cpp:378
+#: main_wayland.cpp:389
 #, fuzzy, kde-format
 #| msgid ""
 #| "XWayland socket to use for Xwayland's incoming connections. This can be "
@@ -1732,65 +1732,65 @@ msgstr ""
 "Η υποδοχή XWayland που θα χρησιμοποιείται για τις εισερχόμενες συνδέσεις της "
 "Xwayland. Αυτό μπορεί να οριστεί πολλές φορές"
 
-#: main_wayland.cpp:382
+#: main_wayland.cpp:393
 #, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
 msgstr ""
 
-#: main_wayland.cpp:386
+#: main_wayland.cpp:397
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr ""
 
-#: main_wayland.cpp:390
+#: main_wayland.cpp:401
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 
-#: main_wayland.cpp:392
+#: main_wayland.cpp:403
 #, kde-format
 msgid "Render through drm node."
 msgstr "Αποτύπωση μέσω λειτουργίας drm."
 
-#: main_wayland.cpp:393
+#: main_wayland.cpp:404
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 
-#: main_wayland.cpp:422
+#: main_wayland.cpp:433
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Μέθοδος εισαγωγής που εκκινεί ο KWin."
 
-#: main_wayland.cpp:428
+#: main_wayland.cpp:439
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Εκκινεί τη συνεδρία σε κλειδωμένη λειτουργία."
 
-#: main_wayland.cpp:432
+#: main_wayland.cpp:443
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Εκκινεί τη συνεδρία χωρίς υποστήριξη του κλειδώματος οθόνης."
 
-#: main_wayland.cpp:437
+#: main_wayland.cpp:448
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Εκκινεί τη συνεδρία χωρίς υποστήριξη των καθολικών συντομεύσεων."
 
-#: main_wayland.cpp:442
+#: main_wayland.cpp:453
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Απενεργοποίηση της ενσωμάτωσης KActivities."
 
-#: main_wayland.cpp:447
+#: main_wayland.cpp:458
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr ""
 "Έξοδος μετά από το κλείσιμο της εφαρμογής συνεδρίας, που εκκινείται από τον "
 "KWin."
 
-#: main_wayland.cpp:452
+#: main_wayland.cpp:463
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
