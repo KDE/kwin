@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2020 Marco Martin <mart@kde.org>
+    SPDX-FileCopyrightText: 2026 Kristen McWilliam <kristen@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -77,6 +78,8 @@ private Q_SLOTS:
     void testSendRepeatInfo();
     void testSendRepeatInfoV10();
     void testWindowNoIMActivation();
+    void testForceActivate();
+    void testMouseClickDoesNotShowPanel();
 
 private:
     void touchNow()
@@ -1104,6 +1107,133 @@ void InputMethodTest::testWindowNoIMActivation()
     win.requestActivate();
 
     QVERIFY(!kwinApp()->inputMethod()->isActive());
+}
+
+/**
+ * Verify that forceActivate() shows the on-screen keyboard.
+ *
+ * forceActivate() should show the OSK whether the current window supports input method or
+ * not, since if it doesn't the OSK emulates hardware keyboard input.
+ */
+void InputMethodTest::testForceActivate()
+{
+    QVERIFY(!kwinApp()->inputMethod()->isActive());
+
+    // First, set up a Wayland surface with text input to create the IM panel.
+    // The panel must exist before we can test forceActivate() on a non-IM window.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(1280, 1024), Qt::red);
+    QVERIFY(window);
+    QVERIFY(window->isActive());
+
+    std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
+    textInput->enable(surface.get());
+    QSignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
+    QVERIFY(paneladded.wait());
+    QVERIFY(kwinApp()->inputMethod()->isActive());
+
+    // Deactivate the input method; this makes the input method destroy its panel surface.
+    kwinApp()->inputMethod()->setActive(false);
+    QVERIFY(!kwinApp()->inputMethod()->isActive());
+    QTRY_VERIFY(!kwinApp()->inputMethod()->panel());
+
+    // Window without IM
+    QRasterWindow win;
+    win.setGeometry(0, 0, 200, 200);
+    win.show();
+    win.requestActivate();
+
+    // Simulate a mouse click, like when the user clicks outside of the input method panel.
+    // This makes the input method not allowed to show itself based on the input device.
+    int timestamp = 0;
+    Test::pointerMotion(QPointF(workspace()->activeOutput()->geometry().center()), timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+
+    // Force activate the input method. This makes the input method create a new panel
+    // surface, which must be shown despite the input method not being allowed to show
+    // itself based on the input device.
+    QSignalSpy visibleSpy(kwinApp()->inputMethod(), &InputMethod::visibleChanged);
+    kwinApp()->inputMethod()->forceActivate();
+    QVERIFY(kwinApp()->inputMethod()->isActive());
+
+    // Verify the OSK is visible
+    QVERIFY(visibleSpy.wait());
+    QVERIFY(kwinApp()->inputMethod()->isVisible());
+
+    // Switching to a window with IM should keep the IM active
+    WindowWithFocusObject winWithIM(true);
+    winWithIM.setGeometry(0, 0, 200, 200);
+    winWithIM.show();
+    winWithIM.requestActivate();
+
+    QVERIFY(kwinApp()->inputMethod()->isActive());
+
+    // Switching back to the plain window should still keep the IM active
+    win.requestActivate();
+
+    QVERIFY(kwinApp()->inputMethod()->isActive());
+
+    // Force deactivate the input method
+    kwinApp()->inputMethod()->setActive(false);
+
+    QVERIFY(!kwinApp()->inputMethod()->isActive());
+
+    // Destroy the test window.
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
+}
+
+/**
+ * Verify that clicking a text input field with the mouse does not show the
+ * on-screen keyboard when the virtual keyboard mode is NonMouseInput.
+ *
+ * The panel may only show itself when the last input device permits it (e.g.
+ * touch), unless the panel was explicitly force activated.
+ */
+void InputMethodTest::testMouseClickDoesNotShowPanel()
+{
+    QVERIFY(!kwinApp()->inputMethod()->isActive());
+
+    // Create an xdg_toplevel surface and wait for the compositor to catch up.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(1280, 1024), Qt::red);
+    QVERIFY(window);
+    QVERIFY(window->isActive());
+
+    // Simulate a mouse click on the text input field. In NonMouseInput mode (the default)
+    // this must not show the on-screen keyboard.
+    int timestamp = 0;
+    Test::pointerMotion(QPointF(workspace()->activeOutput()->geometry().center()), timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+
+    std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
+    textInput->enable(surface.get());
+    textInput->showInputPanel();
+
+    QSignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
+    QVERIFY(paneladded.wait());
+    QVERIFY(kwinApp()->inputMethod()->isActive());
+
+    // The input method is active and its panel was created, but since the last
+    // input device was a mouse, the on-screen keyboard must not be shown.
+    QTRY_VERIFY(!kwinApp()->inputMethod()->isVisible());
+
+    // With a touch event as the last input, the same panel is shown.
+    touchNow();
+    textInput->showInputPanel();
+    QTRY_VERIFY(kwinApp()->inputMethod()->isVisible());
+
+    // Hide the keyboard again.
+    textInput->hideInputPanel();
+    QTRY_VERIFY(!kwinApp()->inputMethod()->isVisible());
+
+    // Destroy the test window.
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 WAYLANDTEST_MAIN(InputMethodTest)

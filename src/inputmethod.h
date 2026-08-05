@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2026 Kristen McWilliam <kristen@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -171,6 +172,14 @@ private:
     bool m_hasPendingModifiers = false;
     bool m_activeClientSupportsTextInput = false;
     bool m_shouldShowPanel = false;
+
+    /**
+     * Whether the input method was force activated, e.g. via forceActivate().
+     *
+     * While set, a panel that gets created is allowed to show itself regardless
+     * of the input device that triggered the show request.
+     */
+    bool m_forceShow = false;
 };
 
 }
