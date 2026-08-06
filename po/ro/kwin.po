@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-05 00:48+0000\n"
+"POT-Creation-Date: 2026-08-06 00:46+0000\n"
 "PO-Revision-Date: 2026-04-13 13:13+0100\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -4241,7 +4241,7 @@ msgstr ""
 msgid "Activate Window (%1)"
 msgstr "Activează fereastra (%1)"
 
-#: utils/edid.cpp:360
+#: utils/edid.cpp:375
 #, kde-format
 msgid "unknown"
 msgstr "necunoscut"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-05 00:48+0000\n"
+"POT-Creation-Date: 2026-08-06 00:46+0000\n"
 "PO-Revision-Date: 2026-08-02 19:05+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
@@ -4223,7 +4223,7 @@ msgstr "Sentrer peikaren på skjermen"
 msgid "Activate Window (%1)"
 msgstr "Aktiver vindauge (%1)"
 
-#: utils/edid.cpp:360
+#: utils/edid.cpp:375
 #, kde-format
 msgid "unknown"
 msgstr "ukjend"

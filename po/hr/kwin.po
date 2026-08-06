@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin 0\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-05 00:48+0000\n"
+"POT-Creation-Date: 2026-08-06 00:46+0000\n"
 "PO-Revision-Date: 2011-07-12 17:48+0200\n"
 "Last-Translator: Marko Dimjašević <marko@dimjasevic.net>\n"
 "Language-Team: Croatian <kde-croatia-list@lists.sourceforge.net>\n"
@@ -20,11 +20,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 1.2\n"
-"X-Poedit-Bookmarks: 110,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
-"X-Environment: kde\n"
-"X-Accelerator-Marker: &\n"
-"X-Text-Markup: kde4\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -4424,7 +4419,7 @@ msgstr ""
 msgid "Activate Window (%1)"
 msgstr "Aktiviraj prozor (%1)"
 
-#: utils/edid.cpp:360
+#: utils/edid.cpp:375
 #, kde-format
 msgid "unknown"
 msgstr ""
