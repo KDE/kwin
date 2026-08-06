@@ -4036,8 +4036,8 @@ void Window::checkWorkspacePosition(RectF oldGeometry, LogicalOutput *oldOutput)
         screenArea = newOutput->geometry();
         newGeom.translate(screenArea.topLeft() - oldScreenArea.topLeft());
     } else {
-        oldScreenArea = workspace()->clientArea(ScreenArea, workspace()->outputAt(oldGeometry.center())).toRect();
-        screenArea = workspace()->clientArea(ScreenArea, this, newGeom.center()).toRect();
+        oldScreenArea = workspace()->clientArea(ScreenArea, workspace()->outputAt(oldGeometry.center()));
+        screenArea = workspace()->clientArea(ScreenArea, this, newGeom.center());
     }
 
     if (isRequestedFullScreen() || requestedMaximizeMode() != MaximizeRestore || requestedQuickTileMode() != QuickTileMode(QuickTileFlag::None)) {
