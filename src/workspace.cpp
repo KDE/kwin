@@ -2462,7 +2462,6 @@ void Workspace::rearrange(const QHash<Window *, LogicalOutput *> &oldOutputs)
         m_screenAreas = screenAreas;
 
         m_inRearrange = true;
-        m_oldRestrictedArea = m_restrictedArea;
         m_restrictedArea = restrictedArea;
 
 #if KWIN_BUILD_X11
@@ -2480,7 +2479,6 @@ void Workspace::rearrange(const QHash<Window *, LogicalOutput *> &oldOutputs)
             }
         }
 
-        m_oldRestrictedArea.clear(); // reset, no longer valid or needed
         m_inRearrange = false;
     }
 }
@@ -2552,22 +2550,6 @@ StrutRects Workspace::restrictedMoveArea(StrutAreas areas) const
 bool Workspace::inRearrange() const
 {
     return m_inRearrange;
-}
-
-StrutRects Workspace::previousRestrictedMoveArea(StrutAreas areas) const
-{
-    if (areas == StrutAreaAll) {
-        return m_oldRestrictedArea;
-    }
-
-    StrutRects ret;
-    ret.reserve(m_oldRestrictedArea.size());
-    for (const StrutRect &rect : m_oldRestrictedArea) {
-        if (rect.area() & areas) {
-            ret.append(rect);
-        }
-    }
-    return ret;
 }
 
 QHash<const LogicalOutput *, Rect> Workspace::previousScreenSizes() const

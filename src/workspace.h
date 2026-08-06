@@ -237,7 +237,6 @@ public:
     // Unsorted
 
 public:
-    StrutRects previousRestrictedMoveArea(StrutAreas areas = StrutAreaAll) const;
     QHash<const LogicalOutput *, Rect> previousScreenSizes() const;
 
     /**
@@ -709,7 +708,6 @@ private:
     Rect m_geometry;
 
     QHash<const LogicalOutput *, Rect> m_oldScreenGeometries;
-    StrutRects m_oldRestrictedArea;
     QTimer m_rearrangeTimer;
     bool m_inRearrange = false;
 
