@@ -4203,14 +4203,14 @@ void Window::checkWorkspacePosition(RectF oldGeometry, LogicalOutput *oldOutput)
 void Window::checkOffscreenPosition(RectF *geom, const RectF &screenArea)
 {
     if (geom->left() > screenArea.right()) {
-        geom->moveLeft(screenArea.right() - screenArea.width() / 4);
+        geom->moveLeft(screenArea.right() - std::min(geom->width(), screenArea.width() / 4));
     } else if (geom->right() < screenArea.left()) {
-        geom->moveRight(screenArea.left() + screenArea.width() / 4);
+        geom->moveRight(screenArea.left() + std::min(geom->width(), screenArea.width() / 4));
     }
     if (geom->top() > screenArea.bottom()) {
-        geom->moveTop(screenArea.bottom() - screenArea.height() / 4);
+        geom->moveTop(screenArea.bottom() - std::min(geom->height(), screenArea.height() / 4));
     } else if (geom->bottom() < screenArea.top()) {
-        geom->moveBottom(screenArea.top() + screenArea.height() / 4);
+        geom->moveBottom(screenArea.top() + std::min(geom->height(), screenArea.height() / 4));
     }
 }
 
