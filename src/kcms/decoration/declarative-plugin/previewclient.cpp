@@ -116,7 +116,7 @@ qreal PreviewClient::height() const
 
 QSizeF PreviewClient::size() const
 {
-    return QSize(m_width, m_height);
+    return QSizeF(m_width, m_height);
 }
 
 QString PreviewClient::caption() const
