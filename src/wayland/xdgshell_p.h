@@ -7,6 +7,7 @@
 #pragma once
 
 #include <QIcon>
+#include <QPointer>
 
 #include "qwayland-server-xdg-shell.h"
 #include "xdgshell.h"
@@ -194,7 +195,7 @@ public:
     void reset();
 
     XdgPopupInterface *q;
-    SurfaceInterface *parentSurface = nullptr;
+    QPointer<SurfaceInterface> parentSurface;
     XdgSurfaceInterface *xdgSurface;
     XdgPositioner positioner;
 
