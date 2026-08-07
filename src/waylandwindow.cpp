@@ -44,7 +44,6 @@ WaylandWindow::WaylandWindow(SurfaceInterface *surface)
             this, &WaylandWindow::updateClientOutputs);
     connect(workspace(), &Workspace::outputsChanged, this, &WaylandWindow::updateClientOutputs);
 
-    updateResourceName();
     updateShadow();
 }
 
@@ -157,15 +156,6 @@ void WaylandWindow::updateClientOutputs()
 
     surface()->setOutputs(waylandServer()->display()->outputsIntersecting(rect),
                           waylandServer()->display()->largestIntersectingOutput(rect));
-}
-
-void WaylandWindow::updateResourceName()
-{
-    const QFileInfo fileInfo(surface()->client()->executablePath());
-    if (fileInfo.exists()) {
-        const QByteArray executableFileName = fileInfo.fileName().toUtf8();
-        setResourceClass(executableFileName, executableFileName);
-    }
 }
 
 void WaylandWindow::updateCaption()

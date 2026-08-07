@@ -135,6 +135,7 @@ public:
     void setMovable(bool set);
     void setResizable(bool set);
     void setResourceName(const QString &resourceName);
+    void setResourceClass(const QString &resourceClass);
     /**
      * FIXME: still relevant with new desktops?
      */

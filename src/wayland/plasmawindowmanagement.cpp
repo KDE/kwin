@@ -24,7 +24,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 20;
+static const quint32 s_version = 21;
 static const quint32 s_activationVersion = 1;
 
 class PlasmaWindowManagementInterfacePrivate : public QtWaylandServer::org_kde_plasma_window_management
@@ -79,6 +79,7 @@ public:
     void setGeometry(const Rect &geometry);
     void setApplicationMenuPaths(const QString &service, const QString &object);
     void setResourceName(const QString &resourceName);
+    void setResourceClass(const QString &resourceClass);
     void sendInitialState(Resource *resource);
     wl_resource *resourceForParent(PlasmaWindowInterface *parent, Resource *child) const;
     void setClientGeometry(const Rect &geometry);
@@ -104,6 +105,7 @@ public:
     quint32 m_state = 0;
     QString uuid;
     QString m_resourceName;
+    QString m_resourceClass;
     Rect clientGeometry;
 
 protected:
@@ -434,6 +436,11 @@ void PlasmaWindowInterfacePrivate::sendInitialState(Resource *resource)
             send_resource_name_changed(resource->handle, m_resourceName);
         }
     }
+    if (!m_resourceClass.isEmpty()) {
+        if (resource->version() >= ORG_KDE_PLASMA_WINDOW_RESOURCE_CLASS_CHANGED_SINCE_VERSION) {
+            send_resource_class_changed(resource->handle, m_resourceClass);
+        }
+    }
 
     if (clientGeometry.isValid() && resource->version() >= ORG_KDE_PLASMA_WINDOW_CLIENT_GEOMETRY_SINCE_VERSION) {
         send_client_geometry(resource->handle, clientGeometry.x(), clientGeometry.y(), clientGeometry.width(), clientGeometry.height());
@@ -504,6 +511,21 @@ void PlasmaWindowInterfacePrivate::setResourceName(const QString &resourceName)
     for (auto resource : clientResources) {
         if (resource->version() >= ORG_KDE_PLASMA_WINDOW_RESOURCE_NAME_CHANGED_SINCE_VERSION) {
             send_resource_name_changed(resource->handle, resourceName);
+        }
+    }
+}
+
+void PlasmaWindowInterfacePrivate::setResourceClass(const QString &resourceClass)
+{
+    if (m_resourceClass == resourceClass) {
+        return;
+    }
+    m_resourceClass = resourceClass;
+
+    const auto clientResources = resourceMap();
+    for (auto resource : clientResources) {
+        if (resource->version() >= ORG_KDE_PLASMA_WINDOW_RESOURCE_CLASS_CHANGED_SINCE_VERSION) {
+            send_resource_class_changed(resource->handle, resourceClass);
         }
     }
 }
@@ -941,6 +963,11 @@ void PlasmaWindowInterface::setIcon(const QIcon &icon)
 void PlasmaWindowInterface::setResourceName(const QString &resourceName)
 {
     d->setResourceName(resourceName);
+}
+
+void PlasmaWindowInterface::setResourceClass(const QString &resourceClass)
+{
+    d->setResourceClass(resourceClass);
 }
 
 void PlasmaWindowInterface::addPlasmaVirtualDesktop(const QString &id)

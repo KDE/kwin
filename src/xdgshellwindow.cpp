@@ -936,7 +936,6 @@ void XdgToplevelWindow::handleWindowTitleChanged()
 void XdgToplevelWindow::handleAppIdChanged()
 {
     const QString applicationId = m_shellSurface->appId();
-    setResourceClass(resourceName(), applicationId);
     if (shellSurface()->isConfigured()) {
         evaluateWindowRules();
     }

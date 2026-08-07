@@ -191,7 +191,6 @@ void XXPipV1Window::handleRoleDestroyed()
 
 void XXPipV1Window::handleApplicationIdChanged()
 {
-    setResourceClass(resourceName(), m_shellSurface->applicationId());
     setDesktopFileName(m_shellSurface->applicationId());
 }
 

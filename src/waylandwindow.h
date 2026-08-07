@@ -44,8 +44,6 @@ protected:
     void markAsMapped();
 
 private:
-    void updateResourceName();
-
     QString m_captionNormal;
     QString m_captionSuffix;
     bool m_isScreenLocker = false;
