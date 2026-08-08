@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-14 00:45+0000\n"
-"PO-Revision-Date: 2026-08-02 11:13+0200\n"
+"PO-Revision-Date: 2026-08-07 23:49+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
 "Language: nn\n"
@@ -23,11 +23,10 @@ msgstr ""
 "X-Text-Markup: kde4\n"
 
 #: ui/Focus.qml:22
-#, fuzzy, kde-format
-#| msgid "Window &activation policy:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Window focus policy:"
-msgstr "Reglar for vindaugs&aktivering:"
+msgstr "Reglar for vindaugsfokusering:"
 
 #: ui/Focus.qml:46
 #, kde-format
@@ -54,6 +53,8 @@ msgid ""
 "As the pointer moves, windows under it become focused after a configurable "
 "delay."
 msgstr ""
+"Når peikaren vert flytta, får vindauga under han fokus etter ei forseinking "
+"av sjølvvald lengd."
 
 #: ui/Focus.qml:56
 #, kde-format
@@ -66,6 +67,7 @@ msgstr "Fokus under peikaren"
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window under pointer receives focus, even if the pointer has not moved."
 msgstr ""
+"Vindauget under peikaren får fokus, òg når peikaren ikkje har vore flytta."
 
 #: ui/Focus.qml:75
 #, kde-kuit-format
@@ -75,25 +77,27 @@ msgid ""
 "some windows appearing on screen. This can lead to assigning focus to "
 "unwanted windows. Use with caution."
 msgstr ""
+"Om du vel <interface>Fokus under peikaren</interface>, vil det hindra at det "
+"vert gjeve fokus til vindauge som dukkar opp på skjermen. Dette kan føra til "
+"at du gjev fokus til uønske vindauge. Ver forsiktig med dette valet."
 
 #: ui/Focus.qml:81
 #, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Last focused window"
-msgstr ""
+msgstr "Siste vindauget med fokus"
 
 #: ui/Focus.qml:83
 #, kde-format
 msgctxt "@title:group"
 msgid "After closing a window, move focus to:"
-msgstr ""
+msgstr "Etter lukking av vindauge, flytt fokuset til:"
 
 #: ui/Focus.qml:86
-#, fuzzy, kde-format
-#| msgid "&Window snap zone:"
+#, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Window under pointer"
-msgstr "V&indaugslåsesone:"
+msgstr "Vindauget under peikaren"
 
 #: ui/Focus.qml:115
 #, kde-format
@@ -104,14 +108,13 @@ msgstr "&Forseinka fokus med:"
 #, kde-format
 msgctxt "short for millisecond(s)"
 msgid "%1 ms"
-msgstr ""
+msgstr "%1 ms"
 
 #: ui/Focus.qml:128 ui/Focus.qml:254
-#, fuzzy, kde-format
-#| msgid " ms"
+#, kde-format
 msgctxt "short for millisecond(s)"
 msgid "ms"
-msgstr " ms"
+msgstr "ms"
 
 #: ui/Focus.qml:146
 #, kde-format
@@ -145,18 +148,16 @@ msgid "Extreme"
 msgstr "Ekstrem"
 
 #: ui/Focus.qml:171
-#, fuzzy, kde-format
-#| msgid "Switch to that Virtual Desktop"
+#, kde-format
 msgctxt "@option:radio When focusing a window on a different Virtual Desktop:"
 msgid "Switch to window’s Virtual Desktop"
-msgstr "Byt til det virtuelle skrivebordet"
+msgstr "Byt til det virtuelle skrivebordet til vindauget"
 
 #: ui/Focus.qml:173
-#, fuzzy, kde-format
-#| msgid "When activating a window on a different Virtual Desktop:"
+#, kde-format
 msgctxt "@title:group"
 msgid "When focusing a window on a different Virtual Desktop:"
-msgstr "Ved aktivering av vindauge på eit anna virtuelt skrivebord:"
+msgstr "Ved fokus på vindauge på eit anna virtuelt skrivebord:"
 
 #: ui/Focus.qml:176
 #, kde-format
@@ -176,10 +177,9 @@ msgid "Raising windows:"
 msgstr "Hev vindauge:"
 
 #: ui/Focus.qml:208
-#, fuzzy, kde-format
-#| msgid "&Click raises active window"
+#, kde-format
 msgid "&Click raises focused window"
-msgstr "&Klikk for å heva aktivt vindauge"
+msgstr "&Klikk for å heva vindauget som har fokus"
 
 #: ui/Focus.qml:228
 #, kde-format
@@ -212,17 +212,15 @@ msgid "W&indow Actions"
 msgstr "Handlingar for &vindauge"
 
 #: ui/main.qml:49
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgid "Mo&vement & Placement"
-msgstr "Fl&ytting"
+msgstr "&Forflytting og plassering"
 
 #: ui/MovementAndPlacement.qml:17
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgctxt "@title:group"
 msgid "Movement"
-msgstr "Fl&ytting"
+msgstr "Forflytting"
 
 #: ui/MovementAndPlacement.qml:22
 #, kde-format
@@ -234,15 +232,14 @@ msgstr "Låsesone for skjerm&kant:"
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "%1 px"
-msgstr ""
+msgstr "%1 pikslar"
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
 #: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
-#, fuzzy, kde-format
-#| msgid " px"
+#, kde-format
 msgctxt "short for pixel(s)"
 msgid "px"
-msgstr " pikslar"
+msgstr "pikslar"
 
 #: ui/MovementAndPlacement.qml:50
 #, kde-format
@@ -268,7 +265,7 @@ msgstr "Berre ved overlapp"
 #, kde-format
 msgctxt "@title:group"
 msgid "Placement"
-msgstr ""
+msgstr "Plassering"
 
 #: ui/MovementAndPlacement.qml:125
 #, kde-format
@@ -306,11 +303,10 @@ msgid "Under mouse"
 msgstr "Under peikaren"
 
 #: ui/MovementAndPlacement.qml:149
-#, fuzzy, kde-format
-#| msgid "&Picture-in-picture"
+#, kde-format
 msgctxt "@title:group"
 msgid "Picture-in-picture Placement"
-msgstr "&Bilete-i-bilete"
+msgstr "Bilete-i-bilete-plassering"
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
@@ -377,22 +373,19 @@ msgid "Window menu"
 msgstr "Vindaugsmeny"
 
 #: ui/TitlebarActions.qml:30 ui/WindowActions.qml:23 ui/WindowActions.qml:54
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and raise"
-msgstr "Fokus under musa"
+msgstr "Fokuser og hev"
 
 #: ui/TitlebarActions.qml:31
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and lower"
-msgstr "Fokus under musa"
+msgstr "Fokuser og senka"
 
 #: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgid "Focus"
-msgstr "&Fokus"
+msgstr "Fokuser"
 
 #: ui/TitlebarActions.qml:43 ui/TitlebarActions.qml:57
 #, kde-format
@@ -455,12 +448,11 @@ msgid "Titlebar and Frame Actions"
 msgstr "Handlingar for tittellinje og ramme"
 
 #: ui/TitlebarActions.qml:111
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for focused windows"
 msgid "Focused"
-msgstr "&Fokus"
+msgstr "Med fokus"
 
 #: ui/TitlebarActions.qml:116
 #, kde-format
@@ -468,7 +460,7 @@ msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for unfocused "
 "windows"
 msgid "Unfocused"
-msgstr ""
+msgstr "Utan fokus"
 
 #: ui/TitlebarActions.qml:122 ui/WindowActions.qml:46
 #, kde-format
@@ -479,13 +471,13 @@ msgstr "&Venstreklikk:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on a focused titlebar or frame"
-msgstr ""
+msgstr "Venstreklikk på tittellinje eller vindaugsramme med fokus"
 
 #: ui/TitlebarActions.qml:143
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "Venstreklikk på tittellinje eller vindaugsramme utan fokus"
 
 #: ui/TitlebarActions.qml:160 ui/WindowActions.qml:68
 #, kde-format
@@ -496,13 +488,13 @@ msgstr "&Midtklikk:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on a focused titlebar or frame"
-msgstr ""
+msgstr "Midtklikk på tittellinje eller vindaugsramme med fokus"
 
 #: ui/TitlebarActions.qml:179
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "Midtklikk på tittellinje eller vindaugsramme utan fokus"
 
 #: ui/TitlebarActions.qml:196 ui/WindowActions.qml:83
 #, kde-format
@@ -513,13 +505,13 @@ msgstr "&Høgreklikk:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on a focused titlebar or frame"
-msgstr ""
+msgstr "Høgreklikk på tittellinje eller vindaugsramme med fokus"
 
 #: ui/TitlebarActions.qml:215
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "Høgreklikk på tittellinje eller vindaugsramme utan fokus"
 
 #: ui/TitlebarActions.qml:233
 #, kde-format
@@ -549,12 +541,12 @@ msgstr "&Høgreklikk:"
 #: ui/WindowActions.qml:20 ui/WindowActions.qml:51
 #, kde-format
 msgid "Focus, raise, and click through"
-msgstr ""
+msgstr "Fokuser, hev og overfør klikk"
 
 #: ui/WindowActions.qml:21 ui/WindowActions.qml:52
 #, kde-format
 msgid "Focus and click through"
-msgstr ""
+msgstr "Fokuser og overfør klikk"
 
 #: ui/WindowActions.qml:27
 #, kde-format
@@ -562,16 +554,14 @@ msgid "Move"
 msgstr "Flytt"
 
 #: ui/WindowActions.qml:28
-#, fuzzy, kde-format
-#| msgid "Activate, raise and move"
+#, kde-format
 msgid "Focus, raise, and move"
-msgstr "Aktiver, hev og flytt"
+msgstr "Fokuser, hev og flytt"
 
 #: ui/WindowActions.qml:29
-#, fuzzy, kde-format
-#| msgid "Activate, raise and resize"
+#, kde-format
 msgid "Focus, raise, and resize"
-msgstr "Aktiver, hev og endra storleik"
+msgstr "Fokuser, hev og endra storleik"
 
 #: ui/WindowActions.qml:30
 #, kde-format
@@ -589,17 +579,15 @@ msgid "Increase opacity"
 msgstr "Auk tettleiken"
 
 #: ui/WindowActions.qml:42
-#, fuzzy, kde-format
-#| msgid "Inactive Inner Window Actions"
+#, kde-format
 msgctxt "@title:group"
 msgid "Unfocused Inner Window Actions"
-msgstr "Handlingar for inaktivt indre vindauge"
+msgstr "Handlingar for indre vindauge utan fokus"
 
 #: ui/WindowActions.qml:50
-#, fuzzy, kde-format
-#| msgid "Activate, pass click and raise on release"
+#, kde-format
 msgid "Focus, click through, and raise on release"
-msgstr "Aktiver, overfør klikk og hev"
+msgstr "Fokuser, overfør klikk og hev når knappen vert sleppt"
 
 #: ui/WindowActions.qml:103
 #, kde-format
@@ -607,20 +595,17 @@ msgid "Scroll"
 msgstr "Rull"
 
 #: ui/WindowActions.qml:104
-#, fuzzy, kde-format
-#| msgid "Activate and scroll"
+#, kde-format
 msgid "Focus and scroll"
-msgstr "Aktiver og rull"
+msgstr "Fokuser og rull"
 
 #: ui/WindowActions.qml:105
-#, fuzzy, kde-format
-#| msgid "Activate, raise and scroll"
+#, kde-format
 msgid "Focus, raise, and scroll"
-msgstr "Aktiver, hev og rull"
+msgstr "Fokuser, hev og rull"
 
 #: ui/WindowActions.qml:120
-#, fuzzy, kde-format
-#| msgid "Inner Window, Titlebar and Frame Actions"
+#, kde-format
 msgid "Inner Window, Titlebar, and Frame Actions"
 msgstr "Handlingar for indre vindauge, tittellinje og ramme"
 
