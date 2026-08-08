@@ -54,6 +54,7 @@ Options:
  run-tests-on: ['Linux']
  tests-run-in-parallel: True
  use-ccache: True
+ clang-format-versions: [21]
  cppcheck-arguments: '--enable=warning,style,performance --library=kwin-cppcheck.xml --suppress-xml=cppcheck-suppressions.xml'
  cppcheck-ignore-files:
   - autotests

@@ -11,6 +11,7 @@ include:
       - /gitlab-templates/yaml-lint.yml
       - /gitlab-templates/qml-lint.yml
       - /gitlab-templates/cppcheck.yml
+      - /gitlab-templates/clang-format.yml
 
 suse_tumbleweed_qt611_reduced_featureset:
   extends: suse_tumbleweed_qt611
