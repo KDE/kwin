@@ -628,6 +628,10 @@ void ScreenCastStream::record(Contents contents)
 
     spa_meta_sync_timeline *synctmeta = nullptr;
 
+    // Use one timestamp for this record operation. Sample it before video
+    // rendering, readback and buffer synchronization add latency.
+    const auto timestamp = std::chrono::duration_cast<std::chrono::nanoseconds>(
+        std::chrono::steady_clock::now().time_since_epoch());
     Region damage;
     if (effectiveContents & Content::Video) {
         if (auto memfd = dynamic_cast<MemFdScreenCastBuffer *>(buffer)) {
@@ -671,7 +675,7 @@ void ScreenCastStream::record(Contents contents)
     }
 
     addDamage(spa_buffer, damage);
-    addHeader(spa_buffer);
+    addHeader(spa_buffer, timestamp);
 
     if (effectiveContents & Content::Video) {
         spa_data->chunk->flags = SPA_CHUNK_FLAG_NONE;
@@ -711,14 +715,14 @@ void ScreenCastStream::updateStreamSize(const QSize &resolution)
     pw_stream_update_params(m_pwStream, params.data(), params.count());
 }
 
-void ScreenCastStream::addHeader(spa_buffer *spaBuffer)
+void ScreenCastStream::addHeader(spa_buffer *spaBuffer, std::chrono::nanoseconds timestamp)
 {
     spa_meta_header *spaHeader = (spa_meta_header *)spa_buffer_find_meta_data(spaBuffer, SPA_META_Header, sizeof(spa_meta_header));
     if (spaHeader) {
         spaHeader->flags = 0;
         spaHeader->dts_offset = 0;
         spaHeader->seq = m_sequential++;
-        spaHeader->pts = m_source->clock().count();
+        spaHeader->pts = timestamp.count();
     }
 }
 

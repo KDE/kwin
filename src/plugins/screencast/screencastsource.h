@@ -34,7 +34,6 @@ public:
     virtual void setRenderCursor(bool enable) = 0;
     virtual Region render(GLFramebuffer *target, const Region &bufferRepair) = 0;
     virtual Region render(QImage *target, const Region &bufferRepair) = 0;
-    virtual std::chrono::nanoseconds clock() const = 0;
 
     virtual void resume() = 0;
     virtual void pause() = 0;

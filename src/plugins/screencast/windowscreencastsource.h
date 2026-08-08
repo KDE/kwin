@@ -31,7 +31,6 @@ public:
     void setRenderCursor(bool enable) override;
     Region render(GLFramebuffer *target, const Region &bufferDamage) override;
     Region render(QImage *target, const Region &bufferDamage) override;
-    std::chrono::nanoseconds clock() const override;
 
     void resume() override;
     void pause() override;

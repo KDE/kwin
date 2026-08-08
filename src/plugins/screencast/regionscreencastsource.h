@@ -33,7 +33,6 @@ public:
     void setRenderCursor(bool enable) override;
     Region render(GLFramebuffer *target, const Region &bufferRepair) override;
     Region render(QImage *target, const Region &bufferRepair) override;
-    std::chrono::nanoseconds clock() const override;
 
     void close();
     void pause() override;
@@ -48,7 +47,6 @@ private:
     const Rect m_region;
     const qreal m_scale;
     const std::optional<pid_t> m_pidToHide;
-    std::chrono::nanoseconds m_last{0};
     bool m_closed = false;
     bool m_active = false;
     bool m_renderCursor = false;

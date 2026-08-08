@@ -63,11 +63,6 @@ quint32 RegionScreenCastSource::drmFormat() const
     return DRM_FORMAT_ARGB8888;
 }
 
-std::chrono::nanoseconds RegionScreenCastSource::clock() const
-{
-    return m_last;
-}
-
 void RegionScreenCastSource::setRenderCursor(bool enable)
 {
     m_renderCursor = enable;
@@ -78,7 +73,6 @@ void RegionScreenCastSource::setRenderCursor(bool enable)
 
 Region RegionScreenCastSource::render(GLFramebuffer *target, const Region &bufferRepair)
 {
-    m_last = std::chrono::steady_clock::now().time_since_epoch();
     m_layer->setFramebuffer(target, bufferRepair & Rect(QPoint(), target->size()));
     if (!m_layer->preparePresentationTest()) {
         return Region{};

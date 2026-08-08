@@ -11,8 +11,6 @@
 
 #include "compositor.h"
 #include "core/output.h"
-#include "core/renderbackend.h"
-#include "core/renderloop.h"
 #include "cursor.h"
 #include "opengl/eglbackend.h"
 #include "opengl/egldisplay.h"
@@ -98,11 +96,6 @@ Region OutputScreenCastSource::render(GLFramebuffer *target, const Region &buffe
         return Region{};
     }
     return bufferDamage;
-}
-
-std::chrono::nanoseconds OutputScreenCastSource::clock() const
-{
-    return m_output->backendOutput()->renderLoop()->lastPresentationTimestamp();
 }
 
 uint OutputScreenCastSource::refreshRate() const
