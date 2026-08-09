@@ -29,7 +29,7 @@ var logoutEffect = {
         }
         window.inAnimation = animate({
             window: window,
-            duration: animationTime(800),
+            duration: animationTime(400),
             type: Effect.Opacity,
             from: 0.0,
             to: 1.0
@@ -46,7 +46,7 @@ var logoutEffect = {
         }
         window.outAnimation = animate({
             window: window,
-            duration: animationTime(400),
+            duration: animationTime(200),
             type: Effect.Opacity,
             from: 1.0,
             to: 0.0
