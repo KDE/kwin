@@ -135,7 +135,7 @@ public:
         Mode mode = Mode::None;
         AbstractDataSource *source = nullptr;
         QPointer<SurfaceInterface> surface;
-        QPointer<AbstractDropHandler> target;
+        QList<AbstractDropHandler *> targets;
         QPointer<DragAndDropIcon> dragIcon;
         QPointF position;
         QMatrix4x4 transformation;

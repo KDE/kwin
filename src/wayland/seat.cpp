@@ -163,6 +163,7 @@ void SeatInterfacePrivate::registerDataDevice(DataDeviceInterface *dataDevice)
     auto dataDeviceCleanup = [this, dataDevice] {
         dataDevices.removeOne(dataDevice);
         globalDataDevice.selections.removeOne(dataDevice);
+        drag.targets.removeOne(dataDevice);
     };
     QObject::connect(dataDevice, &QObject::destroyed, q, dataDeviceCleanup);
     QObject::connect(dataDevice, &DataDeviceInterface::selectionChanged, q, [this](DataSourceInterface *source, quint32 serial) {
@@ -195,13 +196,16 @@ void SeatInterface::endDrag()
 
     QObject::disconnect(d->drag.dragSourceDestroyConnection);
 
-    AbstractDropHandler *dragTargetDevice = d->drag.target.data();
+    const auto dragTargets = d->drag.targets;
     AbstractDataSource *dragSource = d->drag.source;
+    const bool hasTarget = !dragTargets.isEmpty();
 
     if (dragSource) {
-        if (dragTargetDevice && dragSource->isAccepted() && dragSource->selectedDndAction() != DnDAction::None) {
+        if (hasTarget && dragSource->isAccepted() && dragSource->selectedDndAction() != DnDAction::None) {
             Q_EMIT dragDropped();
-            dragTargetDevice->drop();
+            for (const auto &target : dragTargets) {
+                target->drop();
+            }
             dragSource->dropPerformed();
         } else {
             dragSource->dropPerformed();
@@ -209,8 +213,8 @@ void SeatInterface::endDrag()
         }
     }
 
-    if (dragTargetDevice) {
-        dragTargetDevice->updateDragTarget(nullptr, QPointF(), 0);
+    for (const auto &target : dragTargets) {
+        target->updateDragTarget(nullptr, QPointF(), 0);
     }
 
     d->drag = {};
@@ -227,9 +231,8 @@ void SeatInterface::cancelDrag()
     if (d->drag.source) {
         d->drag.source->dndCancelled();
     }
-    if (d->drag.target) {
-        d->drag.target->updateDragTarget(nullptr, QPointF(), 0);
-        d->drag.target = nullptr;
+    for (const auto &target : std::as_const(d->drag.targets)) {
+        target->updateDragTarget(nullptr, QPointF(), 0);
     }
     d->drag = {};
     Q_EMIT dragEnded();
@@ -472,22 +475,30 @@ void SeatInterface::setDragTarget(AbstractDropHandler *dropTarget,
         return;
     }
     const quint32 serial = d->display->nextSerial();
-    if (d->drag.target) {
-        d->drag.target->updateDragTarget(nullptr, QPointF(), serial);
+    for (const auto &target : std::as_const(d->drag.targets)) {
+        target->updateDragTarget(nullptr, QPointF(), serial);
+    }
+    d->drag.targets.clear();
+
+    if (surface) {
+        const auto dataDevices = d->dataDevicesForSurface(surface);
+        for (auto device : dataDevices) {
+            d->drag.targets.append(device);
+        }
+        if (d->drag.targets.isEmpty() && dropTarget) {
+            d->drag.targets.append(dropTarget);
+        }
     }
 
-    // TODO: technically we can have multiple data devices
-    // and we should send the drag to all of them, but that seems overly complicated
-    // in practice so far the only case for multiple data devices is for clipboard overriding
-    d->drag.target = dropTarget;
-
-    if (d->drag.target) {
+    if (!d->drag.targets.isEmpty()) {
         d->drag.surface = surface;
         d->drag.transformation = inputTransformation;
         if (d->dragInhibitsPointer(d->globalPointer.focus.surface)) {
             notifyPointerLeave();
         }
-        d->drag.target->updateDragTarget(surface, globalPosition, serial);
+        for (const auto &target : std::as_const(d->drag.targets)) {
+            target->updateDragTarget(surface, globalPosition, serial);
+        }
     } else {
         d->drag.surface = nullptr;
     }
@@ -501,8 +512,8 @@ QPointF SeatInterface::dragPosition() const
 void SeatInterface::notifyDragMotion(const QPointF &position)
 {
     d->drag.position = position;
-    if (d->drag.target) {
-        d->drag.target->motion(position);
+    for (const auto &target : std::as_const(d->drag.targets)) {
+        target->motion(position);
     }
     Q_EMIT dragMoved(position);
 }
@@ -1293,14 +1304,18 @@ bool SeatInterfacePrivate::startDrag(Drag::Mode mode, AbstractDataSource *dragSo
     }
     drag.dragIcon = dragIcon;
 
-    if (!dataDevicesForSurface(originSurface).isEmpty()) {
-        drag.target = dataDevicesForSurface(originSurface)[0];
+    const auto devices = dataDevicesForSurface(originSurface);
+    for (auto device : devices) {
+        drag.targets.append(device);
     }
-    if (drag.target) {
+    if (!drag.targets.isEmpty()) {
         if (dragInhibitsPointer(originSurface)) {
             q->notifyPointerLeave();
         }
-        drag.target->updateDragTarget(originSurface, drag.position, display->nextSerial());
+        const quint32 serial = display->nextSerial();
+        for (const auto &target : std::as_const(drag.targets)) {
+            target->updateDragTarget(originSurface, drag.position, serial);
+        }
     }
     Q_EMIT q->dragStarted();
     return true;
