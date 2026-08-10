@@ -157,7 +157,6 @@ DrmGpu::~DrmGpu()
         GpuManager::self()->removeDevice(m_kmsRenderDevice);
         m_kmsRenderDevice = nullptr;
     }
-    m_platform->session()->closeRestricted(m_fd);
 }
 
 FileDescriptor DrmGpu::createNonMasterFd() const
