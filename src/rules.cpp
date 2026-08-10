@@ -534,7 +534,7 @@ bool Rules::update(Window *c, int selection)
         desktops = c->desktopIds();
     }
     if NOW_REMEMBER (Screen, screen) {
-        const int index = workspace()->outputs().indexOf(c->output());
+        const int index = workspace()->outputOrder().indexOf(c->output());
         updated = updated || screen != index;
         screen = index;
     }
@@ -887,13 +887,13 @@ LogicalOutput *WindowRules::checkOutput(LogicalOutput *output, bool init) const
     if (rules.isEmpty()) {
         return output;
     }
-    int ret = workspace()->outputs().indexOf(output);
+    int ret = workspace()->outputOrder().indexOf(output);
     for (Rules *rule : rules) {
         if (rule->applyScreen(ret, init)) {
             break;
         }
     }
-    LogicalOutput *ruleOutput = workspace()->outputs().value(ret);
+    LogicalOutput *ruleOutput = workspace()->outputOrder().value(ret);
     return ruleOutput ? ruleOutput : output;
 }
 

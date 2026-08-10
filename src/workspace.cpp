@@ -359,9 +359,11 @@ void Workspace::init()
     const auto outputs = kwinApp()->outputBackend()->outputs();
     for (BackendOutput *output : outputs) {
         connect(output, &BackendOutput::dpmsModeChanged, this, &Workspace::maybeUpdateDpmsState);
+        connect(output, &BackendOutput::priorityChanged, this, &Workspace::updateOutputOrder);
     }
     connect(kwinApp()->outputBackend(), &OutputBackend::outputAdded, this, [this](BackendOutput *output) {
         connect(output, &BackendOutput::dpmsModeChanged, this, &Workspace::maybeUpdateDpmsState);
+        connect(output, &BackendOutput::priorityChanged, this, &Workspace::updateOutputOrder);
     });
 }
 

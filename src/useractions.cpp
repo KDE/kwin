@@ -544,7 +544,7 @@ void UserActionsMenu::screenPopupAboutToShow()
     m_screenMenu->setPalette(m_window->palette());
     QActionGroup *group = new QActionGroup(m_screenMenu);
 
-    const auto outputs = workspace()->outputs();
+    const auto outputs = workspace()->outputOrder();
     for (int i = 0; i < outputs.count(); ++i) {
         LogicalOutput *output = outputs[i];
         // assumption: there are not more than 9 screens attached.
