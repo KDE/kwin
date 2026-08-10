@@ -111,6 +111,7 @@ std::shared_ptr<VulkanSwapchainSlot> VulkanSwapchain::acquire()
 
     auto texture = m_device->importBuffer(buffer, VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT);
     if (!texture) {
+        buffer->drop();
         return nullptr;
     }
     auto slot = std::make_shared<VulkanSwapchainSlot>(buffer, std::move(texture));
@@ -150,6 +151,7 @@ std::unique_ptr<VulkanSwapchain> VulkanSwapchain::create(VulkanDevice *device, G
     }
     auto texture = device->importBuffer(buffer, VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT);
     if (!texture) {
+        buffer->drop();
         return nullptr;
     }
     auto slot = std::make_shared<VulkanSwapchainSlot>(buffer, std::move(texture));
