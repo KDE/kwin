@@ -74,8 +74,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
 #: compositing.ui:82
-#, fuzzy, kde-format
-#| msgid "Animation speed:"
+#, kde-format
 msgid "Animation speed:"
 msgstr "Brzina animacije:"
 
@@ -94,28 +93,19 @@ msgstr "Trenutno"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
 #: compositing.ui:151
-#, fuzzy, kde-format
-#| msgid "Keep window thumbnails:"
+#, kde-format
 msgid "Keep window thumbnails:"
 msgstr "Zadrži prozorske sličice:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
 #: compositing.ui:159
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "Windows are unmapped as they are requested. This can lead to not having "
-#| "updated thumbnials for windows on other desktops."
-#| msgid "Never"
+#, kde-format
 msgid "Never"
 msgstr "Nikada"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
 #: compositing.ui:164
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "Windows are not unmapped if the window is somewhere visible on any of the "
-#| "virtual desktops."
-#| msgid "Only for Shown Windows"
+#, kde-format
 msgid "Only for Shown Windows"
 msgstr "Samo za prikazane prozore"
 

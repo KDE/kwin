@@ -262,53 +262,39 @@ msgid "No Side Borders"
 msgstr "Veličina ruba:"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Tiny"
+#, kde-format
 msgid "Tiny"
-msgstr "Sićušan"
+msgstr "Sićušno"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Normal"
+#, kde-format
 msgid "Normal"
-msgstr "Normalan"
+msgstr "Obično"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Large"
+#, kde-format
 msgid "Large"
-msgstr "Velik"
+msgstr "Veliko"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Large"
+#, kde-format
 msgid "Very Large"
-msgstr "Vrlo velik"
+msgstr "Vrlo Veliko"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Huge"
+#, kde-format
 msgid "Huge"
-msgstr "Ogroman"
+msgstr "Ogromno"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Very Huge"
-msgstr "Vrlo ogroman"
+msgstr "Vrlo Ogromno"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Oversized"
+#, kde-format
 msgid "Oversized"
-msgstr "Prekomjeran"
+msgstr "Preveliko"
 
 #~ msgid "Menu"
 #~ msgstr "Izbornik"

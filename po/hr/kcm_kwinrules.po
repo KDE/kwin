@@ -937,11 +937,9 @@ msgid "On Main Window"
 msgstr "Na glavnom prozoru"
 
 #: rulesmodel.cpp:818
-#, fuzzy, kde-format
-#| msgctxt "no focus stealing prevention"
-#| msgid "None"
+#, kde-format
 msgid "None"
-msgstr "Ništa"
+msgstr "Nijedan"
 
 #: rulesmodel.cpp:819
 #, kde-format
