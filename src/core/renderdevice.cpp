@@ -243,8 +243,17 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             });
         }
 
+        const auto featuresChain = physicalDevice.getFeatures2<vk::PhysicalDeviceFeatures2, vk::PhysicalDeviceHostQueryResetFeatures>();
+        if (!featuresChain.get<vk::PhysicalDeviceHostQueryResetFeatures>().hostQueryReset) {
+            qCWarning(KWIN_VULKAN, "Physical device %s doesn't support host query resets", deviceName);
+            continue;
+        }
+
+        vk::PhysicalDeviceHostQueryResetFeatures hostQueryReset;
+        hostQueryReset.hostQueryReset = true;
         vk::PhysicalDeviceSynchronization2Features syncFeatures;
         syncFeatures.synchronization2 = true;
+        syncFeatures.pNext = &hostQueryReset;
         VkPhysicalDeviceFeatures features{
             .robustBufferAccess = true,
         };

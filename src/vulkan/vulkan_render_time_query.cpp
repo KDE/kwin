@@ -72,7 +72,7 @@ std::unique_ptr<VulkanRenderTimeQuery> VulkanRenderTimeQuery::begin(VulkanDevice
     if (result != vk::Result::eSuccess) {
         return nullptr;
     }
-    buffer.resetQueryPool(query, 0, 2);
+    query.reset(0, 2);
     buffer.writeTimestamp(vk::PipelineStageFlagBits::eTopOfPipe, query, 0);
     return std::make_unique<VulkanRenderTimeQuery>(device, std::move(query));
 }
