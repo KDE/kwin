@@ -993,11 +993,9 @@ msgstr "Ponašanje kod <em>duplog</em> klika na naslovnu traku."
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
 #: mouse.ui:43 mouse.ui:591 mouse.ui:626 mouse.ui:661
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox behavior on double click"
-#| msgid "Maximize"
+#, kde-format
 msgid "Maximize"
-msgstr "Proširi"
+msgstr "Maksimiziraj"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
