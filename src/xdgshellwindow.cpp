@@ -1495,6 +1495,8 @@ DecorationMode XdgToplevelWindow::preferredDecorationMode() const
                 return DecorationMode::Client;
             case XdgToplevelDecorationV1Interface::Mode::Server:
                 return DecorationMode::Server;
+            case XdgToplevelDecorationV1Interface::Mode::ServerSideBorder:
+                return DecorationMode::Shadow;
             }
         }
 
@@ -1581,8 +1583,10 @@ void XdgToplevelWindow::configureXdgDecoration(DecorationMode decorationMode)
         m_xdgDecoration->sendConfigure(XdgToplevelDecorationV1Interface::Mode::Client);
         break;
     case DecorationMode::Server:
-    case DecorationMode::Shadow:
         m_xdgDecoration->sendConfigure(XdgToplevelDecorationV1Interface::Mode::Server);
+        break;
+    case DecorationMode::Shadow:
+        m_xdgDecoration->sendConfigure(XdgToplevelDecorationV1Interface::Mode::ServerSideBorder);
         break;
     }
 }

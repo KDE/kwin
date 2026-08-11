@@ -39,6 +39,7 @@ protected:
     void zxdg_toplevel_decoration_v1_destroy(Resource *resource) override;
     void zxdg_toplevel_decoration_v1_set_mode(Resource *resource, uint32_t mode) override;
     void zxdg_toplevel_decoration_v1_unset_mode(Resource *resource) override;
+    void zxdg_toplevel_decoration_v1_set_preferred_corner_radii(Resource *resource, wl_fixed_t top_left, wl_fixed_t top_right, wl_fixed_t bottom_right, wl_fixed_t bottom_left) override;
 };
 
 } // namespace KWin
