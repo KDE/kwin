@@ -109,7 +109,8 @@ struct DrmFormat
 
 static std::optional<DrmFormat> chooseFormat(uint32_t inputFormat, const FormatModifierMap &srcFormats, const FormatModifierMap &dstFormats)
 {
-    const auto modifiers = srcFormats[inputFormat].intersected(dstFormats[inputFormat]);
+    auto modifiers = srcFormats[inputFormat].intersected(dstFormats[inputFormat]);
+    modifiers.erase(DRM_FORMAT_MOD_INVALID);
     if (!modifiers.empty()) {
         return DrmFormat{
             .format = inputFormat,
@@ -128,7 +129,8 @@ static std::optional<DrmFormat> chooseFormat(uint32_t inputFormat, const FormatM
         }
         if (!retBPP || otherInfo->bitsPerPixel < retBPP) {
             const uint32_t fmt = it.key();
-            const auto mods = srcFormats[fmt].intersected(dstFormats[fmt]);
+            auto mods = srcFormats[fmt].intersected(dstFormats[fmt]);
+            mods.erase(DRM_FORMAT_MOD_INVALID);
             if (!mods.empty()) {
                 ret = DrmFormat{
                     .format = fmt,
