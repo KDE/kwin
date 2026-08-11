@@ -256,7 +256,6 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
         if (texture && !texture->planes().isEmpty()) {
             if (!geometry.isEmpty()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
-                    .traits = texture->planes().count() == 1 ? ShaderTrait::MapTexture : ShaderTrait::MapMultiPlaneTexture,
                     .textures = texture->planes(),
                     .geometry = geometry,
                     .transformMatrix = context->transformStack.top(),
@@ -269,6 +268,15 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .hasFloatingPointColor = texture->isFloatingPoint(),
                     .layerDebugBox = m_debug.layerEnabled ? std::optional(item->rect()) : std::nullopt,
                 });
+
+                if (texture->planes().count() > 1) {
+                    renderNode.traits = ShaderTrait::MapMultiPlaneTexture;
+                } else if (texture->planes().front()->target() == GL_TEXTURE_EXTERNAL_OES) {
+                    renderNode.traits = ShaderTrait::MapExternalTexture;
+                } else {
+                    renderNode.traits = ShaderTrait::MapTexture;
+                }
+
                 renderNode.geometry.postProcessTextureCoordinates(texture->planes().at(0)->matrix(UnnormalizedCoordinates));
                 if (surfaceItem->colorDescription()->yuvCoefficients() != YUVMatrixCoefficients::Identity) {
                     renderNode.traits |= ShaderTrait::YuvConversion;

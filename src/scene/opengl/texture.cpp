@@ -315,7 +315,6 @@ void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const Regi
         return;
     }
 
-    const GLint target = GL_TEXTURE_2D;
     if (auto itConv = FormatInfo::s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != FormatInfo::s_drmConversions.end()) {
         Q_ASSERT(itConv->plane.count() == uint(buffer->dmabufAttributes()->planeCount));
         for (uint plane = 0; plane < itConv->plane.count(); ++plane) {
@@ -325,13 +324,13 @@ void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const Regi
             size.rheight() /= currentPlane.heightDivisor;
 
             m_planes[plane]->bind();
-            glEGLImageTargetTexture2DOES(target, static_cast<GLeglImageOES>(m_backend->importBufferAsImage(buffer, plane, currentPlane.format, size)));
+            glEGLImageTargetTexture2DOES(m_planes[plane]->target(), static_cast<GLeglImageOES>(m_backend->importBufferAsImage(buffer, plane, currentPlane.format, size)));
             m_planes[plane]->unbind();
         }
     } else {
         Q_ASSERT(m_planes.count() == 1);
         m_planes[0]->bind();
-        glEGLImageTargetTexture2DOES(target, static_cast<GLeglImageOES>(m_backend->importBufferAsImage(buffer)));
+        glEGLImageTargetTexture2DOES(m_planes[0]->target(), static_cast<GLeglImageOES>(m_backend->importBufferAsImage(buffer)));
         m_planes[0]->unbind();
     }
     const auto info = FormatInfo::get(buffer->dmabufAttributes()->format);
