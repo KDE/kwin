@@ -309,12 +309,6 @@ void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const Regi
         m_releasePoint = releasePoint;
     }
 
-    RenderDevice *compat = GpuManager::self()->compatibleRenderDevice(buffer->dmabufAttributes()->device);
-    if (compat != m_backend->renderDevice()) {
-        // TODO do multi gpu copies instead
-        return;
-    }
-
     if (auto itConv = FormatInfo::s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != FormatInfo::s_drmConversions.end()) {
         Q_ASSERT(itConv->plane.count() == uint(buffer->dmabufAttributes()->planeCount));
         for (uint plane = 0; plane < itConv->plane.count(); ++plane) {
