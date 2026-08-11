@@ -68,6 +68,7 @@ public:
         None,
         Client,
         Server,
+        ServerSideBorder,
     };
     Q_ENUM(Mode)
 
