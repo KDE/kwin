@@ -51,7 +51,7 @@ XdgDecorationManagerV1Interface::XdgDecorationManagerV1Interface(Display *displa
     : QObject(parent)
     , d(new XdgDecorationManagerV1InterfacePrivate(this))
 {
-    d->init(*display, 2);
+    d->init(*display, 3);
 }
 
 XdgDecorationManagerV1Interface::~XdgDecorationManagerV1Interface()
@@ -82,6 +82,9 @@ void XdgToplevelDecorationV1InterfacePrivate::zxdg_toplevel_decoration_v1_set_mo
         break;
     case mode_server_side:
         newMode = XdgToplevelDecorationV1Interface::Mode::Server;
+        break;
+    case mode_server_side_border:
+        newMode = XdgToplevelDecorationV1Interface::Mode::ServerSideBorder;
         break;
     default:
         newMode = XdgToplevelDecorationV1Interface::Mode::Undefined;
@@ -127,6 +130,13 @@ void XdgToplevelDecorationV1Interface::sendConfigure(Mode mode)
     switch (mode) {
     case Mode::Client:
         d->send_configure(QtWaylandServer::zxdg_toplevel_decoration_v1::mode_client_side);
+        break;
+    case Mode::ServerSideBorder:
+        if (d->interfaceVersion() >= ZXDG_TOPLEVEL_DECORATION_V1_MODE_SERVER_SIDE_BORDER_SINCE_VERSION) {
+            d->send_configure(QtWaylandServer::zxdg_toplevel_decoration_v1::mode_server_side_border);
+        } else {
+            d->send_configure(QtWaylandServer::zxdg_toplevel_decoration_v1::mode_server_side);
+        }
         break;
     case Mode::None: // Faked as server_side mode.
     case Mode::Server:
