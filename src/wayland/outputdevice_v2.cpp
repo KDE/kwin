@@ -19,7 +19,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 24;
+static const quint32 s_version = 25;
 
 class OutputDeviceRegistryV2Private : public QtWaylandServer::kde_output_device_registry_v2
 {
@@ -150,6 +150,9 @@ static uint32_t kwinCapabilitiesToOutputDeviceCapabilities(BackendOutput::Capabi
     }
     if (caps & BackendOutput::Capability::AbmLevel) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_abm_level;
+    }
+    if (caps & BackendOutput::Capability::Disable) {
+        ret |= QtWaylandServer::kde_output_device_v2::capability_disable;
     }
     return ret;
 }

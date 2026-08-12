@@ -199,7 +199,7 @@ static const bool s_allowColorspaceNVidia = qEnvironmentVariableIntValue("KWIN_D
 
 BackendOutput::Capabilities DrmOutput::computeCapabilities() const
 {
-    Capabilities capabilities = Capability::Dpms | Capability::IccProfile | Capability::CustomModes | Capability::HdrIccProfile;
+    Capabilities capabilities = Capability::Dpms | Capability::IccProfile | Capability::CustomModes | Capability::HdrIccProfile | Capability::Disable;
     if (m_connector->overscan.isValid() || m_connector->underscan.isValid()) {
         capabilities |= Capability::Overscan;
     }

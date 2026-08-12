@@ -32,7 +32,7 @@ VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal, const QSize 
         .name = connectorName.value_or(QStringLiteral("Virtual-%1").arg(identifier)),
         .physicalSize = physicalSizeInMM,
         .edid = Edid{edid, edidIdentifierOverride},
-        .capabilities = Capability::CustomModes,
+        .capabilities = Capability::CustomModes | Capability::Disable,
         .panelOrientation = panelOrientation,
         .internal = internal,
         .mstPath = mstPath.value_or(QByteArray()),

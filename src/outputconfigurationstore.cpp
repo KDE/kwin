@@ -208,9 +208,25 @@ std::optional<OutputConfigurationStore::SetupWithOutputs> OutputConfigurationSto
             });
         });
     });
+
     if (setup == m_setups.end()) {
         return std::nullopt;
     } else {
+        // if the output is disabled in the config, but the output is not disable-able, abort
+        for (auto outputIt : std::as_const(outputStates)) {
+            if (outputIt.first->capabilities().testFlag(BackendOutput::Capability::Disable)) {
+                continue;
+            }
+
+            const auto isDisabled = [&outputIt](const auto &outputInfo) {
+                return outputInfo.outputIndex == outputIt.second && !outputInfo.enabled;
+            };
+
+            if (std::any_of(setup->outputs.begin(), setup->outputs.end(), isDisabled)) {
+                return std::nullopt;
+            }
+        }
+
         return SetupWithOutputs{
             .setup = &*setup,
             .globalOutputIndices = outputStates,
@@ -1403,6 +1419,7 @@ void OutputConfigurationStore::load()
                 fail = true;
                 break;
             }
+
             if (const auto it = outputData.find("outputIndex"); it != outputData.end()) {
                 const int index = it->toInt(-1);
                 if (index <= -1 || size_t(index) >= outputDatas.size() || !outputDatas[index].has_value()) {
