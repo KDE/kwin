@@ -10,6 +10,7 @@
 
 #include <QImage>
 #include <QVarLengthArray>
+#include <sys/types.h>
 
 namespace KWin
 {
