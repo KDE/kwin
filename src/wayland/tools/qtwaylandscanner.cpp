@@ -159,7 +159,7 @@ bool Scanner::parseArguments(int argc, char **argv)
             if (option.startsWith("--header-path=")) {
                 m_headerPath = option.mid(14);
             } else if (option.startsWith("--prefix=")) {
-                m_prefix = option.mid(10);
+                m_prefix = option.mid(9);
             } else if (option.startsWith("--add-include=")) {
                 auto include = option.mid(14);
                 if (!include.isEmpty())
