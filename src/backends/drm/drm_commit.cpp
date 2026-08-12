@@ -72,8 +72,7 @@ void DrmAtomicCommit::addBuffer(DrmPlane *plane, const std::shared_ptr<DrmFrameb
     addProperty(plane->fbId, buffer ? buffer->framebufferId() : 0);
     m_buffers[plane] = buffer;
     m_frames[plane] = frame;
-    // atomic commits with IN_FENCE_FD fail with NVidia and (as of kernel 6.9) with tearing
-    if (plane->inFenceFd.isValid() && !plane->gpu()->drmDevice()->isNvidia() && !isTearing()) {
+    if (plane->inFenceFd.isValid()) {
         addProperty(plane->inFenceFd, buffer ? buffer->syncFd().get() : -1);
     }
     m_planes.emplace(plane);
