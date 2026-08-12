@@ -228,6 +228,7 @@ private:
     QString initialShortcut(const std::optional<XdgToplevelSessionData> &session) const;
     QStringList initialActivities(const std::optional<XdgToplevelSessionData> &session) const;
     bool initialExcludeFromCapture(const std::optional<XdgToplevelSessionData> &session) const;
+    Gravity preferredGravity() const;
     DecorationMode preferredDecorationMode() const;
     void configureDecoration();
     void configureXdgDecoration(DecorationMode decorationMode);

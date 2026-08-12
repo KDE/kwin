@@ -279,6 +279,9 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
 #endif
     move(workspace()->activeOutput()->geometry().center());
 
+    m_gravity = preferredGravity();
+    m_nextGravity = preferredGravity();
+
     connect(shellSurface, &XdgToplevelInterface::titleChanged,
             this, &XdgToplevelWindow::handleWindowTitleChanged);
     connect(shellSurface, &XdgToplevelInterface::appIdChanged,
@@ -604,7 +607,7 @@ XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure()
     configureEvent->scale = m_nextTargetScale;
 
     if (!isInteractiveMoveResize()) {
-        m_nextGravity = Gravity::BottomRight;
+        m_nextGravity = preferredGravity();
     }
 
     return configureEvent;
@@ -670,7 +673,7 @@ void XdgToplevelWindow::handleRoleCommit()
         if (!m_configureEvents.isEmpty()) {
             m_gravity = configureEvent->gravity;
         } else if (!isInteractiveResize()) {
-            m_gravity = Gravity::BottomRight;
+            m_gravity = preferredGravity();
         }
     }
 }
@@ -1381,6 +1384,15 @@ void XdgToplevelWindow::installAppMenu(AppMenuInterface *appMenu)
     updateMenu(appMenu->address());
 }
 
+Gravity XdgToplevelWindow::preferredGravity() const
+{
+    if (m_plasmaShellSurface && m_plasmaShellSurface->isPositionSet()) {
+        return Gravity::BottomRight;
+    } else {
+        return Gravity::Center;
+    }
+}
+
 DecorationMode XdgToplevelWindow::preferredDecorationMode() const
 {
     if (!Decoration::DecorationBridge::hasPlugin()) {
@@ -1583,6 +1595,10 @@ void XdgToplevelWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *s
     auto updatePosition = [this, shellSurface] {
         if (!isInteractiveMoveResize()) {
             place(shellSurface->position());
+
+            // Reset the gravity so the top-left corner is not moved with next size changes.
+            m_gravity = preferredGravity();
+            m_nextGravity = preferredGravity();
         }
     };
     auto showUnderCursor = [this] {
