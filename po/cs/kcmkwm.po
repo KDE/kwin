@@ -4,51 +4,48 @@
 # Lukáš Tinkl <ltinkl@redhat.com>, 2010, 2011.
 # Tomáš Chvátal <tomas.chvatal@gmail.com>, 2012.
 # SPDX-FileCopyrightText: 2021, 2022, 2023, 2024 Vit Pelcak <vit@pelcak.org>
+# SPDX-FileCopyrightText: 2026 Libor Filípek <libor.filipek@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-14 00:45+0000\n"
-"PO-Revision-Date: 2024-06-20 16:26+0200\n"
-"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
+"PO-Revision-Date: 2026-08-11 21:31+0200\n"
+"Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 24.05.1\n"
+"X-Generator: Lokalize 26.04.3\n"
 "X-Language: cs_CZ\n"
 "X-Source-Language: en_US\n"
 
 #: ui/Focus.qml:22
-#, fuzzy, kde-format
-#| msgid "Window &activation policy:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Window focus policy:"
-msgstr "Pravidla &aktivace okna:"
+msgstr "Pravidla pro zaměřování okna:"
 
 #: ui/Focus.qml:46
-#, fuzzy, kde-format
-#| msgctxt "sassa asas"
-#| msgid "Click to focus"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Click to focus"
-msgstr "Klikněte pro zaměření"
+msgstr "Kliknutím zaměřit"
 
 #: ui/Focus.qml:47
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window becomes focused when clicked."
-msgstr ""
+msgstr "Po kliknutí se okno zaměří."
 
 #: ui/Focus.qml:51
-#, fuzzy, kde-format
-#| msgid "Focus follows mouse"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus follows pointer"
-msgstr "Zaměření následuje myš"
+msgstr "Ukazatel sleduje zaměření"
 
 #: ui/Focus.qml:52
 #, kde-format
@@ -57,19 +54,19 @@ msgid ""
 "As the pointer moves, windows under it become focused after a configurable "
 "delay."
 msgstr ""
+"Jak se ukazatel pohybuje, okna pod ním se zaměřují po nastavitelném zpoždění."
 
 #: ui/Focus.qml:56
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus under pointer"
-msgstr "Zaměření pod myší"
+msgstr "Zaměření pod ukazatelem"
 
 #: ui/Focus.qml:57
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window under pointer receives focus, even if the pointer has not moved."
-msgstr ""
+msgstr "Okno pod ukazatelem myši získá zaměření, i když se ukazatel nepohnul."
 
 #: ui/Focus.qml:75
 #, kde-kuit-format
@@ -79,25 +76,27 @@ msgid ""
 "some windows appearing on screen. This can lead to assigning focus to "
 "unwanted windows. Use with caution."
 msgstr ""
+"Výběrem možnosti <interface>Zaměření pod ukazatelem</interface> zabráníte "
+"tomu, aby se zaměření přesunulo na některá okna zobrazená na obrazovce. To "
+"může vést k přesunutí zaměření na nežádoucí okna. Používejte s opatrností."
 
 #: ui/Focus.qml:81
 #, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Last focused window"
-msgstr ""
+msgstr "Poslední zaměřené okno"
 
 #: ui/Focus.qml:83
 #, kde-format
 msgctxt "@title:group"
 msgid "After closing a window, move focus to:"
-msgstr ""
+msgstr "Po zavření okna přesunout zaměření na:"
 
 #: ui/Focus.qml:86
-#, fuzzy, kde-format
-#| msgid "&Window snap zone:"
+#, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Window under pointer"
-msgstr "Zóna přitahování &oken:"
+msgstr "Okno pod ukazatelem"
 
 #: ui/Focus.qml:115
 #, kde-format
@@ -108,14 +107,13 @@ msgstr "Zpoz&dit zaměření o:"
 #, kde-format
 msgctxt "short for millisecond(s)"
 msgid "%1 ms"
-msgstr ""
+msgstr "%1 ms"
 
 #: ui/Focus.qml:128 ui/Focus.qml:254
-#, fuzzy, kde-format
-#| msgid " ms"
+#, kde-format
 msgctxt "short for millisecond(s)"
 msgid "ms"
-msgstr " ms"
+msgstr "ms"
 
 #: ui/Focus.qml:146
 #, kde-format
@@ -149,23 +147,21 @@ msgid "Extreme"
 msgstr "Extrémní"
 
 #: ui/Focus.qml:171
-#, fuzzy, kde-format
-#| msgid "Switch to that Virtual Desktop"
+#, kde-format
 msgctxt "@option:radio When focusing a window on a different Virtual Desktop:"
 msgid "Switch to window’s Virtual Desktop"
-msgstr "Přepnout do této virtuální plochy"
+msgstr "Přepnout na okna virtuální plochy"
 
 #: ui/Focus.qml:173
-#, fuzzy, kde-format
-#| msgid "When activating a window on a different Virtual Desktop:"
+#, kde-format
 msgctxt "@title:group"
 msgid "When focusing a window on a different Virtual Desktop:"
-msgstr "Při aktivování okna na jiné virtuální ploše:"
+msgstr "Při zaměření okna na jiné virtuální ploše:"
 
 #: ui/Focus.qml:176
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr "Přesunout okno do této virtuální plochy"
+msgstr "Přesunout okno na aktuální virtuální plochu"
 
 #: ui/Focus.qml:180 ui/TitlebarActions.qml:26 ui/TitlebarActions.qml:39
 #: ui/TitlebarActions.qml:64 ui/TitlebarActions.qml:87 ui/WindowActions.qml:38
@@ -180,10 +176,9 @@ msgid "Raising windows:"
 msgstr "Zdvihání oken:"
 
 #: ui/Focus.qml:208
-#, fuzzy, kde-format
-#| msgid "&Click raises active window"
+#, kde-format
 msgid "&Click raises focused window"
-msgstr "K&liknutí dá do popředí aktivní okno"
+msgstr "K&liknutí dá do popředí zaměřené okno"
 
 #: ui/Focus.qml:228
 #, kde-format
@@ -216,17 +211,15 @@ msgid "W&indow Actions"
 msgstr "Či&nnosti oken"
 
 #: ui/main.qml:49
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgid "Mo&vement & Placement"
-msgstr "Poh&yb"
+msgstr "Poh&yb a umístění"
 
 #: ui/MovementAndPlacement.qml:17
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgctxt "@title:group"
 msgid "Movement"
-msgstr "Poh&yb"
+msgstr "Pohyb"
 
 #: ui/MovementAndPlacement.qml:22
 #, kde-format
@@ -238,7 +231,7 @@ msgstr "Oblast přichyc&ení k okraji obrazovky:"
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "%1 px"
-msgstr ""
+msgstr "%1 px"
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
 #: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
@@ -271,7 +264,7 @@ msgstr "Pouze při překrytí"
 #, kde-format
 msgctxt "@title:group"
 msgid "Placement"
-msgstr ""
+msgstr "Umístění"
 
 #: ui/MovementAndPlacement.qml:125
 #, kde-format
@@ -286,7 +279,7 @@ msgstr "Minimální překrytí"
 #: ui/MovementAndPlacement.qml:130
 #, kde-format
 msgid "Maximized"
-msgstr "Maximalizováno"
+msgstr "Maximalizace"
 
 #: ui/MovementAndPlacement.qml:131
 #, kde-format
@@ -312,12 +305,12 @@ msgstr "Pod myší"
 #, kde-format
 msgctxt "@title:group"
 msgid "Picture-in-picture Placement"
-msgstr ""
+msgstr "Umístění obrazu v obrazu"
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
 msgid "Open in screen corner:"
-msgstr ""
+msgstr "Otevřít v rohu obrazovky:"
 
 #: ui/MovementAndPlacement.qml:157
 #, kde-format
@@ -376,19 +369,17 @@ msgstr "Zavřít"
 #: ui/TitlebarActions.qml:25 ui/TitlebarActions.qml:38 ui/WindowActions.qml:37
 #, kde-format
 msgid "Window menu"
-msgstr ""
+msgstr "Nabídka okna"
 
 #: ui/TitlebarActions.qml:30 ui/WindowActions.qml:23 ui/WindowActions.qml:54
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and raise"
-msgstr "Zaměření pod myší"
+msgstr "Zaměřit a dát do popředí"
 
 #: ui/TitlebarActions.qml:31
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and lower"
-msgstr "Zaměření pod myší"
+msgstr "Zaostřit a snížit"
 
 #: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
 #, kde-format
@@ -448,7 +439,7 @@ msgstr "Přesunout na předchozí/následující plochu"
 #: ui/TitlebarActions.qml:86 ui/WindowActions.qml:210
 #, kde-format
 msgid "Change opacity"
-msgstr "Změnit krytí"
+msgstr "Změnit průhlednost"
 
 #: ui/TitlebarActions.qml:102
 #, kde-format
@@ -456,12 +447,11 @@ msgid "Titlebar and Frame Actions"
 msgstr "Činnosti titulku a rámu"
 
 #: ui/TitlebarActions.qml:111
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for focused windows"
 msgid "Focused"
-msgstr "&Zaměření"
+msgstr "Zaměřeno"
 
 #: ui/TitlebarActions.qml:116
 #, kde-format
@@ -469,7 +459,7 @@ msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for unfocused "
 "windows"
 msgid "Unfocused"
-msgstr ""
+msgstr "Nezaměřeno"
 
 #: ui/TitlebarActions.qml:122 ui/WindowActions.qml:46
 #, kde-format
@@ -480,13 +470,13 @@ msgstr "Kliknutí &levým tlačítkem myši:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on a focused titlebar or frame"
-msgstr ""
+msgstr "Klikněte levým tlačítkem myši na zaměřené záhlaví okna nebo rámeček"
 
 #: ui/TitlebarActions.qml:143
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "Klikněte levým tlačítkem myši na nezaměřené záhlaví okna nebo rámeček"
 
 #: ui/TitlebarActions.qml:160 ui/WindowActions.qml:68
 #, kde-format
@@ -498,12 +488,14 @@ msgstr "Kliknutí prostřední&m tlačítkem myši:"
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on a focused titlebar or frame"
 msgstr ""
+"Klikněte prostředním tlačítkem myši na zaměřené záhlaví okna nebo rámeček"
 
 #: ui/TitlebarActions.qml:179
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on an unfocused titlebar or frame"
 msgstr ""
+"Klikněte prostředním tlačítkem myši na nezaměřené záhlaví okna nebo rámeček"
 
 #: ui/TitlebarActions.qml:196 ui/WindowActions.qml:83
 #, kde-format
@@ -514,23 +506,23 @@ msgstr "Kliknutí p&ravým tlačítkem myši:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on a focused titlebar or frame"
-msgstr ""
+msgstr "Klikněte pravým tlačítkem myši na zaměřené záhlaví okna nebo rámeček"
 
 #: ui/TitlebarActions.qml:215
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "Klikněte pravým tlačítkem myši na nezaměřené záhlaví okna nebo rámeček"
 
 #: ui/TitlebarActions.qml:233
 #, kde-format
 msgid "Maximize window by double clicking its frame"
-msgstr ""
+msgstr "Maximalizovat okno dvojitým kliknutím na jeho rámeček"
 
 #: ui/TitlebarActions.qml:248
 #, kde-format
 msgid "Maximize Button Actions"
-msgstr ""
+msgstr "Akce tlačítka maximalizace"
 
 #: ui/TitlebarActions.qml:251 ui/WindowActions.qml:154
 #, kde-format
@@ -545,17 +537,17 @@ msgstr "K&liknutí prostředním tlačítkem myši:"
 #: ui/TitlebarActions.qml:285 ui/WindowActions.qml:186
 #, kde-format
 msgid "Right clic&k:"
-msgstr "&Kliknutí pravým tlačítkem myši"
+msgstr "&Kliknutí pravým tlačítkem myši:"
 
 #: ui/WindowActions.qml:20 ui/WindowActions.qml:51
 #, kde-format
 msgid "Focus, raise, and click through"
-msgstr ""
+msgstr "Zaměřit, dát do popředí a prokliknout se"
 
 #: ui/WindowActions.qml:21 ui/WindowActions.qml:52
 #, kde-format
 msgid "Focus and click through"
-msgstr ""
+msgstr "Zaměřit a prokliknout se"
 
 #: ui/WindowActions.qml:27
 #, kde-format
@@ -563,16 +555,14 @@ msgid "Move"
 msgstr "Přesunout"
 
 #: ui/WindowActions.qml:28
-#, fuzzy, kde-format
-#| msgid "Activate, raise and move"
+#, kde-format
 msgid "Focus, raise, and move"
-msgstr "Aktivovat, dát do popředí a pohnout"
+msgstr "Zaměřit, dát do popředí a přesunout"
 
 #: ui/WindowActions.qml:29
-#, fuzzy, kde-format
-#| msgid "Activate, raise and move"
+#, kde-format
 msgid "Focus, raise, and resize"
-msgstr "Aktivovat, dát do popředí a pohnout"
+msgstr "Zaměřit, dát do popředí a změnit velikost"
 
 #: ui/WindowActions.qml:30
 #, kde-format
@@ -582,24 +572,23 @@ msgstr "Změnit velikost"
 #: ui/WindowActions.qml:35
 #, kde-format
 msgid "Decrease opacity"
-msgstr "Snížit krytí"
+msgstr "Snížit průhlednost"
 
 #: ui/WindowActions.qml:36
 #, kde-format
 msgid "Increase opacity"
-msgstr "Zvýšit krytí"
+msgstr "Zvýšit průhlednost"
 
 #: ui/WindowActions.qml:42
-#, fuzzy, kde-format
-#| msgid "Inactive Inner Window Actions"
+#, kde-format
 msgctxt "@title:group"
 msgid "Unfocused Inner Window Actions"
-msgstr "Činnosti neaktivního vnitřního okna"
+msgstr "Nezaměřené akce ve vnitřním okně"
 
 #: ui/WindowActions.qml:50
 #, kde-format
 msgid "Focus, click through, and raise on release"
-msgstr ""
+msgstr "Zaměřit, prokliknout a dát do popředí"
 
 #: ui/WindowActions.qml:103
 #, kde-format
@@ -607,20 +596,17 @@ msgid "Scroll"
 msgstr "Rolovat"
 
 #: ui/WindowActions.qml:104
-#, fuzzy, kde-format
-#| msgid "Activate and scroll"
+#, kde-format
 msgid "Focus and scroll"
-msgstr "Aktivovat a rolovat"
+msgstr "Zaměřit a rolovat"
 
 #: ui/WindowActions.qml:105
-#, fuzzy, kde-format
-#| msgid "Activate, raise and scroll"
+#, kde-format
 msgid "Focus, raise, and scroll"
-msgstr "Aktivovat, dát do popředí a rolovat"
+msgstr "Zaměřit, dát do popředí a rolovat"
 
 #: ui/WindowActions.qml:120
-#, fuzzy, kde-format
-#| msgid "Inner Window, Titlebar and Frame Actions"
+#, kde-format
 msgid "Inner Window, Titlebar, and Frame Actions"
 msgstr "Vnitřní okno, pruh titulku a činnosti rámce"
 
@@ -642,7 +628,7 @@ msgstr "Alt"
 #: ui/WindowActions.qml:170
 #, kde-format
 msgid "Middle &click:"
-msgstr "Kliknutí pro&středním tlačítkem myši"
+msgstr "Kliknutí pro&středním tlačítkem myši:"
 
 #: ui/WindowActions.qml:202
 #, kde-format

@@ -1288,7 +1288,7 @@ msgstr ""
 "لقد اخترت إظهار نافذة بوضع ملء الشّاشة.\n"
 "إذا لم يكن التطبيق نفسه يحتوي على خيار لإيقاف تشغيل وضع ملء الشاشة، فلن "
 "تتمكن من تعطيله مرة أخرى باستخدام الفأرة: استخدم اختصار لوحة المفاتيح %1 "
-"بدلاً من ذلك."
+"بدلًا من ذلك."
 
 #: helpers/dialoghelper/dialoghelper.cpp:85
 #, kde-format
@@ -1655,7 +1655,7 @@ msgstr "التصيير عن طريق drm."
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
-msgstr "استخرج معلومات المحليات من locale1 عوضاً عن ضبط المستخدم"
+msgstr "استخرج معلومات المحليات من locale1 عوضًا عن ضبط المستخدم"
 
 #: main_wayland.cpp:433
 #, kde-format
@@ -2630,7 +2630,7 @@ msgstr ""
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
-msgstr "هذا التأثير ليس معياراً قياسيا"
+msgstr "هذا التأثير ليس معيارًا قياسيا"
 
 #: plugins/showfps/qml/Main.qml:110
 #, kde-format
@@ -3321,7 +3321,7 @@ msgstr "نوع القاعدة للنشاط"
 #: rulesettings.kcfg:208
 #, kde-format
 msgid "Maximized vertically"
-msgstr "مكبّرة عمودياً"
+msgstr "مكبّرة عموديًا"
 
 #. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:212
@@ -3333,7 +3333,7 @@ msgstr "نوع القاعدة لكبّر النّافذة عموديًا"
 #: rulesettings.kcfg:219
 #, kde-format
 msgid "Maximized horizontally"
-msgstr "مكبّرة أفقياً"
+msgstr "مكبّرة أفقيًا"
 
 #. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:223
@@ -4359,7 +4359,7 @@ msgstr ""
 "وما هو مُشغل OpenGL والتأثيرات قيد التشغيل. \n"
 "الرجاء نشر المعلومات المتوفرة أسفل هذا الملحق التمهيدي إلى خدمة حاوية "
 "اللصق \n"
-"مثل https://paste.kde.org بدلاً من اللصق في موضوع الدعم. \n"
+"مثل https://paste.kde.org بدلًا من اللصق في موضوع الدعم. \n"
 
 #: xwayland/xwaylandlauncher.cpp:323
 #, kde-format

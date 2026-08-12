@@ -271,12 +271,12 @@ msgstr "الحجم"
 #: rulesmodel.cpp:465
 #, kde-format
 msgid "Maximized horizontally"
-msgstr "مكبّرة أفقياً"
+msgstr "مكبّرة أفقيًا"
 
 #: rulesmodel.cpp:470
 #, kde-format
 msgid "Maximized vertically"
-msgstr "مكبّرة عمودياً"
+msgstr "مكبّرة عموديًا"
 
 #: rulesmodel.cpp:478
 #, kde-format
@@ -600,7 +600,7 @@ msgid ""
 msgstr ""
 "لا يوفر هذا التطبيق صنف للنافذة، لذلك لا يمكن لـكوين استخدامه لمطابقة أي "
 "قواعد وتطبيقها. إذا كنت لا تزال ترغب في تطبيق بعض القواعد عليها، فحاول "
-"مطابقة الخصائص الأخرى مثل عنوان النافذة بدلاً من ذلك. <nl/> <nl/> يرجى "
+"مطابقة الخصائص الأخرى مثل عنوان النافذة بدلًا من ذلك. <nl/> <nl/> يرجى "
 "التفكير في الإبلاغ عن هذا الخطأ لمطوري التطبيق."
 
 #: rulesmodel.cpp:810
@@ -828,7 +828,7 @@ msgstr "قواعد كوين (‏*.kwinrule)"
 #: ui/main.qml:28
 #, kde-format
 msgid "Add New…"
-msgstr "أضف أيضاً…"
+msgstr "أضف أيضًا…"
 
 #: ui/main.qml:35
 #, kde-format
@@ -919,7 +919,7 @@ msgstr[0] "محدّد"
 msgstr[1] "1 محدّد"
 msgstr[2] "2 محدّدين"
 msgstr[3] "%1 محدّدات"
-msgstr[4] "%1 محدّداً"
+msgstr[4] "%1 محدّدًا"
 msgstr[5] "%1 محدّد"
 
 #: ui/RulesEditor.qml:66
@@ -934,7 +934,7 @@ msgid ""
 "Click the <interface>Add Property...</interface> button below to add some "
 "window properties that will be affected by the rule"
 msgstr ""
-"انقر على زر <interface>أضف خاصية...</interface> في الأسفل لتضيف بعضاً من "
+"انقر على زر <interface>أضف خاصية...</interface> في الأسفل لتضيف بعضًا من "
 "خصائص النافذة التي ستكون مشمولة بالقاعدة"
 
 #: ui/RulesEditor.qml:88

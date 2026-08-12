@@ -225,7 +225,7 @@ msgid ""
 "To enable this option, add the \"Hide from Screenshots and Screen Recordings"
 "\" button to the titlebar first"
 msgstr ""
-"لتمكين هذا الخيار، أضف أولاً زر \"الإخفاء من لقطات الشاشة وتسجيلات الشاشة\" "
+"لتمكين هذا الخيار، أضف أولًا زر \"الإخفاء من لقطات الشاشة وتسجيلات الشاشة\" "
 "إلى شريط العنوان."
 
 #: ui/main.qml:29
@@ -289,7 +289,7 @@ msgstr "حدود ضخمة للنوافذ"
 #: utils.cpp:33
 #, kde-format
 msgid "Very huge window borders"
-msgstr "حدود ضخمة جداً للنوافذ"
+msgstr "حدود ضخمة جدًا للنوافذ"
 
 #: utils.cpp:34
 #, kde-format
