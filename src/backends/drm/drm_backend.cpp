@@ -333,7 +333,7 @@ QString DrmBackend::supportInformation() const
 
 BackendOutput *DrmBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, double scale)
 {
-    const auto ret = new DrmVirtualOutput(this, name, description, size, scale);
+    const auto ret = new DrmVirtualOutput(this, name, description, size, scale, BackendOutput::Capability::CustomModes);
     m_virtualOutputs.push_back(ret);
     addOutput(ret);
     Q_EMIT outputsQueried();

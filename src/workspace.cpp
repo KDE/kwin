@@ -522,6 +522,13 @@ OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration
         }
     }
 
+    // if the configuration contains a diabled output, but the output is not disable-able, abort
+    for (BackendOutput *output : backendOutputs) {
+        if (config.changeSet(output)->enabled == false && !(output->capabilities() & BackendOutput::Capability::Disable)) {
+            return OutputConfigurationError::Unknown;
+        }
+    }
+
     m_outputConfigStore->applyMirroring(config, backendOutputs);
     for (BackendOutput *output : backendOutputs) {
         if (m_dpms == DpmsState::Off || m_dpms == DpmsState::TurningOff) {

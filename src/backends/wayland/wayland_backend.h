@@ -12,6 +12,7 @@
 #include "config-kwin.h"
 
 // KWin
+#include "core/backendoutput.h"
 #include "core/inputbackend.h"
 #include "core/inputdevice.h"
 #include "core/outputbackend.h"
@@ -258,7 +259,7 @@ Q_SIGNALS:
 private:
     void createOutputs();
     void destroyOutputs();
-    WaylandOutput *createOutput(const QString &name, const QSize &size, qreal scale, bool fullscreen);
+    WaylandOutput *createOutput(const QString &name, const QSize &size, qreal scale, bool fullscreen, BackendOutput::Capabilities capabilities);
 
     WaylandBackendOptions m_options;
     std::unique_ptr<WaylandDisplay> m_display;

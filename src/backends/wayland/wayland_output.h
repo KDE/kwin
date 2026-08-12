@@ -85,7 +85,7 @@ class WaylandOutput : public BackendOutput
     Q_OBJECT
 
 public:
-    WaylandOutput(const QString &name, WaylandBackend *backend);
+    WaylandOutput(const QString &name, Capabilities capabilities, WaylandBackend *backend);
     ~WaylandOutput() override;
 
     bool presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;

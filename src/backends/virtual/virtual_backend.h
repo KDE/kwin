@@ -8,6 +8,7 @@
 */
 #pragma once
 
+#include "core/backendoutput.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "utils/filedescriptor.h"
@@ -40,6 +41,7 @@ public:
         double scale = 1;
         bool internal = false;
         QSize physicalSizeInMM;
+        BackendOutput::Capabilities capabilities = BackendOutput::Capability::CustomModes | BackendOutput::Capability::Disable;
         QList<OutputModeline> modes;
         OutputTransform panelOrientation = OutputTransform::Kind::Normal;
         QByteArray edid;

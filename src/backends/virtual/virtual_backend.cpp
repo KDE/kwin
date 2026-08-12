@@ -51,6 +51,7 @@ BackendOutput *VirtualBackend::createVirtualOutput(const QString &name, const QS
     return addOutput(OutputInfo{
         .size = size,
         .scale = scale,
+        .capabilities = BackendOutput::Capability::CustomModes,
         .connectorName = QStringLiteral("Virtual-") + name,
     });
 }
@@ -69,7 +70,7 @@ QList<BackendOutput *> VirtualBackend::outputs() const
 
 VirtualOutput *VirtualBackend::createOutput(const OutputInfo &info)
 {
-    VirtualOutput *output = new VirtualOutput(this, info.internal, info.physicalSizeInMM, info.panelOrientation, info.edid, info.edidIdentifierOverride, info.connectorName, info.mstPath);
+    VirtualOutput *output = new VirtualOutput(this, info.internal, info.physicalSizeInMM, info.panelOrientation, info.edid, info.edidIdentifierOverride, info.connectorName, info.mstPath, info.capabilities);
     output->init(info.size * info.scale, info.scale, info.modes);
     m_outputs.append(output);
     Q_EMIT outputAdded(output);

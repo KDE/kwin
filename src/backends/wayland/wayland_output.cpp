@@ -118,7 +118,7 @@ const wp_fractional_scale_v1_listener WaylandOutput::s_fractionalScaleListener{
     .preferred_scale = &WaylandOutput::handleFractionalScaleChanged,
 };
 
-WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
+WaylandOutput::WaylandOutput(const QString &name, Capabilities capabilities, WaylandBackend *backend)
     : BackendOutput(backend->drmDevice())
     , m_surface(backend->display()->compositor()->createSurface())
     , m_xdgShellSurface(backend->display()->xdgShell()->createSurface(m_surface.get()))
@@ -130,10 +130,7 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
         m_xdgDecoration.reset(manager->getToplevelDecoration(m_xdgShellSurface.get()));
         m_xdgDecoration->setMode(KWayland::Client::XdgDecoration::Mode::ServerSide);
     }
-    Capabilities caps = Capability::Dpms;
-    if (backend->display()->tearingControl()) {
-        caps |= Capability::Tearing;
-    }
+
     if (auto manager = backend->display()->colorManager()) {
         const bool supportsMinFeatures = manager->supportsFeature(WP_COLOR_MANAGER_V1_FEATURE_PARAMETRIC)
             && manager->supportsFeature(WP_COLOR_MANAGER_V1_FEATURE_SET_PRIMARIES)
@@ -152,7 +149,7 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
     setInformation(Information{
         .name = name,
         .model = name,
-        .capabilities = caps,
+        .capabilities = capabilities,
     });
 
     m_configureThrottleTimer.setSingleShot(true);
