@@ -446,29 +446,49 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
         query = VulkanRenderTimeQuery::begin(copyVk, commandBuffer, queue->familyIndex());
     }
 
-    vk::ImageMemoryBarrier2 memoryBarrier{
-        vk::PipelineStageFlagBits2::eAllCommands,
-        vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
-        vk::PipelineStageFlagBits2::eAllCommands,
-        vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
-        vk::ImageLayout::eGeneral,
-        vk::ImageLayout::eGeneral,
-        vk::QueueFamilyExternal,
-        queue->familyIndex(),
-        m_currentSlot->texture()->handle(),
-        vk::ImageSubresourceRange{
-            vk::ImageAspectFlagBits::eColor,
-            0,
-            1,
-            0,
-            1,
+    std::array<vk::ImageMemoryBarrier2, 2> memoryBarriers = {
+        vk::ImageMemoryBarrier2{
+            vk::PipelineStageFlagBits2::eAllCommands,
+            vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
+            vk::PipelineStageFlagBits2::eAllCommands,
+            vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
+            vk::ImageLayout::eGeneral,
+            vk::ImageLayout::eGeneral,
+            vk::QueueFamilyExternal,
+            queue->familyIndex(),
+            m_currentSlot->texture()->handle(),
+            vk::ImageSubresourceRange{
+                vk::ImageAspectFlagBits::eColor,
+                0,
+                1,
+                0,
+                1,
+            },
+        },
+        vk::ImageMemoryBarrier2{
+            vk::PipelineStageFlagBits2::eAllCommands,
+            vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
+            vk::PipelineStageFlagBits2::eAllCommands,
+            vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
+            vk::ImageLayout::eGeneral,
+            vk::ImageLayout::eGeneral,
+            vk::QueueFamilyExternal,
+            queue->familyIndex(),
+            srcTexture->handle(),
+            vk::ImageSubresourceRange{
+                vk::ImageAspectFlagBits::eColor,
+                0,
+                1,
+                0,
+                1,
+            },
         },
     };
     commandBuffer.pipelineBarrier2(vk::DependencyInfo{
         vk::DependencyFlags{},
         {},
         {},
-        memoryBarrier,
+        memoryBarriers,
     });
 
     if (useTransferQueue) {
@@ -528,13 +548,15 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
                                 regions, vk::Filter::eNearest);
     }
 
-    memoryBarrier.setSrcQueueFamilyIndex(queue->familyIndex());
-    memoryBarrier.setDstQueueFamilyIndex(vk::QueueFamilyExternal);
+    for (auto &barrier : memoryBarriers) {
+        barrier.setSrcQueueFamilyIndex(queue->familyIndex());
+        barrier.setDstQueueFamilyIndex(vk::QueueFamilyExternal);
+    }
     commandBuffer.pipelineBarrier2(vk::DependencyInfo{
         vk::DependencyFlags{},
         {},
         {},
-        memoryBarrier,
+        memoryBarriers,
     });
 
     if (query) {
