@@ -4,33 +4,34 @@
 # Lukáš Tinkl <ltinkl@redhat.com>, 2010.
 # Tomáš Chvátal <tomas.chvatal@gmail.com>, 2013.
 # Vit Pelcak <vit@pelcak.org>, 2021, 2023.
+# SPDX-FileCopyrightText: 2026 Libor Filípek <libor.filipek@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2021-08-13 10:15+0200\n"
-"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
+"PO-Revision-Date: 2026-08-11 13:20+0200\n"
+"Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 24.08.1\n"
+"X-Generator: Poedit 3.9\n"
 "X-Language: cs_CZ\n"
 "X-Source-Language: en_US\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Vít Pelčák"
+msgstr "Vít Pelčák,Libor Filípek"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "vit@pelcak.org"
+msgstr "vit@pelcak.org,libor.filipek@gmail.com"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -110,6 +111,9 @@ msgid ""
 "active session, without accidentally setting it to one that is either not "
 "available, or which is already set."
 msgstr ""
+"Tento nástroj vám umožňuje nastavit motiv oken pro aktuálně aktivní relaci, "
+"aniž byste jej omylem nastavili na motiv, který buď není k dispozici, nebo "
+"je již nastaven."
 
 #: kwin-applywindowdecoration.cpp:33
 #, kde-format
@@ -118,6 +122,9 @@ msgid ""
 "full path will attempt to find a theme in that directory, and then apply "
 "that if one can be deduced."
 msgstr ""
+"Název motivu oken, který chcete nastavit pro KWin. Pokud zadáte úplnou "
+"cestu, program se pokusí najít motiv v daném adresáři a poté jej použije, "
+"pokud jej dokáže určit."
 
 #: kwin-applywindowdecoration.cpp:34
 #, kde-format
@@ -132,6 +139,8 @@ msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
 "as your current theme."
 msgstr ""
+"Vyřešeno %1 pro motiv KWin Aurorae \"%2\" a pokusíme se jej nastavit jako "
+"váš aktuální motiv."
 
 #: kwin-applywindowdecoration.cpp:71
 #, kde-format
@@ -139,6 +148,9 @@ msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
 "theme, and we will have to abort, due to having no theme to set"
 msgstr ""
+"Pokusili jste se zadat cestu k souboru, ale nebylo možné ji přiřadit k "
+"žádnému motivu, a proto budeme muset operaci přerušit, jelikož nemáme žádný "
+"motiv, který by se dal nastavit"
 
 #: kwin-applywindowdecoration.cpp:77
 #, kde-format
@@ -149,7 +161,7 @@ msgstr "Požadovaný motiv \"%1\" je již nastaven jako motiv dekorace okna."
 #: kwin-applywindowdecoration.cpp:99
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
-msgstr ""
+msgstr "Motiv kurzoru %1 byl úspěšně použit ve vašem aktuálním sezení Plasma"
 
 #: kwin-applywindowdecoration.cpp:103
 #, kde-format
@@ -157,6 +169,8 @@ msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
 "unrecoverable error. You may find that simply trying again will work."
 msgstr ""
+"Nepodařilo se uložit nastavení motivu – důvod není znám, jedná se však o "
+"neobnovitelnou chybu. Možná zjistíte, že stačí to zkusit znovu."
 
 #: kwin-applywindowdecoration.cpp:107
 #, kde-format
@@ -169,7 +183,7 @@ msgstr ""
 #: kwin-applywindowdecoration.cpp:112
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
-msgstr ""
+msgstr "Ve vašem systému máte následující motivy oken KWin:"
 
 #: package/contents/ui/Buttons.qml:85
 #, kde-format
@@ -225,7 +239,7 @@ msgstr "Zavřít okno dvojklikem na tlačítko nabídky"
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
-msgstr ""
+msgstr "Klikněte na tlačítko nabídky a podržte ho, aby se zobrazila nabídka."
 
 #: package/contents/ui/main.qml:163
 #, kde-format

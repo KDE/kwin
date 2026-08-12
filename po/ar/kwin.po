@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2026-03-24 10:34+0400\n"
+"PO-Revision-Date: 2026-08-10 13:43+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -1340,7 +1340,7 @@ msgstr "التصيير عن طريق drm."
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
-msgstr "استخرج معلومات المحليات من locale1 عوضاً عن ضبط المستخدم"
+msgstr "استخرج معلومات المحليات من locale1 عوضًا عن ضبط المستخدم"
 
 #: main_wayland.cpp:386
 #, kde-format
@@ -1809,7 +1809,7 @@ msgstr "نوع القاعدة لعين نوع النافذة"
 #: rulesettings.kcfg:194
 #, kde-format
 msgid "Maximized vertically"
-msgstr "مكبّرة عمودياً"
+msgstr "مكبّرة عموديًا"
 
 #. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:198
@@ -1821,7 +1821,7 @@ msgstr "نوع القاعدة لكبّر النّافذة عموديًا"
 #: rulesettings.kcfg:205
 #, kde-format
 msgid "Maximized horizontally"
-msgstr "مكبّرة أفقياً"
+msgstr "مكبّرة أفقيًا"
 
 #. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:209
@@ -2790,7 +2790,7 @@ msgstr ""
 "وما هو مُشغل OpenGL والتأثيرات قيد التشغيل. \n"
 "الرجاء نشر المعلومات المتوفرة أسفل هذا الملحق التمهيدي إلى خدمة حاوية "
 "اللصق \n"
-"مثل https://paste.kde.org بدلاً من اللصق في موضوع الدعم. \n"
+"مثل https://paste.kde.org بدلًا من اللصق في موضوع الدعم. \n"
 
 #~ msgid "&No Border"
 #~ msgstr "&بلا حدّ"

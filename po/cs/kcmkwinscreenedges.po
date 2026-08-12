@@ -3,33 +3,34 @@
 # Lukáš Tinkl <lukas@kde.org>, 2010, 2012, 2013.
 # SPDX-FileCopyrightText: 2014, 2016, 2017, 2018, 2019, 2024 Vít Pelčák <vit@pelcak.org>
 # SPDX-FileCopyrightText: 2021, 2023, 2024 Vit Pelcak <vit@pelcak.org>
+# SPDX-FileCopyrightText: 2026 Libor Filípek <libor.filipek@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2023-01-04 15:26+0100\n"
-"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
+"PO-Revision-Date: 2026-08-11 13:22+0200\n"
+"Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 24.08.0\n"
+"X-Generator: Poedit 3.9\n"
 "X-Language: cs_CZ\n"
 "X-Source-Language: en_US\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Vít Pelčák"
+msgstr "Vít Pelčák,Libor Filípek"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "vit@pelcak.org"
+msgstr "vit@pelcak.org,libor.filipek@gmail.com"
 
 #: main.cpp:130 touch.cpp:124
 #, kde-format
@@ -98,8 +99,8 @@ msgid ""
 "You can trigger an action by pushing the mouse cursor against the "
 "corresponding screen edge or corner."
 msgstr ""
-"Můžete spustit činnost posunutím kurzoru myši proti odpovídajícímu okraji "
-"nebo rohu."
+"Akci můžete spustit tak, že přitlačíte kurzor myši k příslušnému okraji nebo "
+"rohu obrazovky."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67
@@ -166,7 +167,7 @@ msgstr "obrazovky"
 #, kde-format
 msgid ""
 "Change desktop when the mouse cursor is pushed against the edge of the screen"
-msgstr "Změnit plochu pokud je ukazatel myši posunut k okraji obrazovky"
+msgstr "Změnit plochu, když se kurzor myši dotkne okraje obrazovky"
 
 #. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
 #: main.ui:177
@@ -200,8 +201,8 @@ msgid ""
 "Amount of time required for the mouse cursor to be pushed against the edge "
 "of the screen before the action is triggered"
 msgstr ""
-"Doba, po jakou musí být ukazatel myši posunován proti okraji obrazovky aby "
-"se spustila přidělená činnost"
+"Doba, po kterou musí kurzor myši přiléhat k okraji obrazovky, než dojde ke "
+"spuštění akce"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
 #: main.ui:209
@@ -238,4 +239,4 @@ msgstr "Prodleva &reaktivace:"
 msgid ""
 "You can trigger an action by swiping from the screen edge towards the center "
 "of the screen."
-msgstr "Můžete spustit činnost přejetím z kraje obrazovky k jejímu středu"
+msgstr "Můžete spustit činnost přejetím z kraje obrazovky k jejímu středu."

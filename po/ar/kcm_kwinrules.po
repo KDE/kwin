@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2025-08-14 13:08+0400\n"
+"PO-Revision-Date: 2026-08-10 13:44+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -128,7 +128,7 @@ msgstr "التعبير النمطي"
 #: optionsmodel.cpp:205
 #, kde-format
 msgid "Apply Initially"
-msgstr "طبّق مبدئياً"
+msgstr "طبّق مبدئيًا"
 
 #: optionsmodel.cpp:206
 #, kde-format
@@ -253,7 +253,7 @@ msgstr "احفظ القواعد"
 #: package/contents/ui/main.qml:97
 #, kde-format
 msgid "Add New..."
-msgstr "أضف أيضاً ..."
+msgstr "أضف أيضًا ..."
 
 #: package/contents/ui/main.qml:108
 #, kde-format
@@ -313,7 +313,7 @@ msgstr[0] "محدّد"
 msgstr[1] "1 محدّد"
 msgstr[2] "2 محدّدين"
 msgstr[3] "%1 محدّدات"
-msgstr[4] "%1 محدّداً"
+msgstr[4] "%1 محدّدًا"
 msgstr[5] "%1 محدّد"
 
 #: package/contents/ui/RulesEditor.qml:63
@@ -328,7 +328,7 @@ msgid ""
 "Click the <interface>Add Property...</interface> button below to add some "
 "window properties that will be affected by the rule"
 msgstr ""
-"انقر على زر <interface>أضف خاصية...</interface> في الأسفل لتضيف بعضاً من "
+"انقر على زر <interface>أضف خاصية...</interface> في الأسفل لتضيف بعضًا من "
 "خصائص النافذة التي ستكون مشمولة بالقاعدة"
 
 #: package/contents/ui/RulesEditor.qml:85
@@ -508,12 +508,12 @@ msgstr "الحجم"
 #: rulesmodel.cpp:425
 #, kde-format
 msgid "Maximized horizontally"
-msgstr "مكبّرة أفقياً"
+msgstr "مكبّرة أفقيًا"
 
 #: rulesmodel.cpp:430
 #, kde-format
 msgid "Maximized vertically"
-msgstr "مكبّرة عمودياً"
+msgstr "مكبّرة عموديًا"
 
 #: rulesmodel.cpp:438
 #, kde-format
@@ -799,7 +799,7 @@ msgid ""
 msgstr ""
 "لا يوفر هذا التطبيق صنف للنافذة، لذلك لا يمكن لـكوين استخدامه لمطابقة أي "
 "قواعد وتطبيقها. إذا كنت لا تزال ترغب في تطبيق بعض القواعد عليها، فحاول "
-"مطابقة الخصائص الأخرى مثل عنوان النافذة بدلاً من ذلك. <nl/> <nl/> يرجى "
+"مطابقة الخصائص الأخرى مثل عنوان النافذة بدلًا من ذلك. <nl/> <nl/> يرجى "
 "التفكير في الإبلاغ عن هذا الخطأ لمطوري التطبيق."
 
 #: rulesmodel.cpp:738

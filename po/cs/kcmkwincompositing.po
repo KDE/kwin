@@ -4,21 +4,22 @@
 # Vít Pelčák <vit@pelcak.org>, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017.
 # Tomáš Chvátal <tomas.chvatal@gmail.com>, 2013.
 # Vit Pelcak <vit@pelcak.org>, 2017, 2018, 2019, 2021, 2022, 2023.
+# SPDX-FileCopyrightText: 2026 Libor Filípek <libor.filipek@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2023-01-04 09:54+0100\n"
-"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
+"PO-Revision-Date: 2026-08-11 13:22+0200\n"
+"Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Poedit 3.9\n"
 "X-Language: cs_CZ\n"
 "X-Source-Language: en_US\n"
 
@@ -36,7 +37,7 @@ msgstr ""
 "K tomu nejspíš došlo kvůli chybě v ovladači.\n"
 "Pokud si myslíte, že jste mezitím aktualizovali na stabilní verzi ovladače,\n"
 "můžete resetovat ochranu, ale mějte na paměti, že to může vést k okamžitému "
-"pádu."
+"pádu!"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
 #: compositing.ui:44
@@ -45,6 +46,8 @@ msgid ""
 "Keeping the window thumbnail always interferes with the minimized state of "
 "windows. This can result in windows not suspending their work when minimized."
 msgstr ""
+"Zobrazování miniatury okna vždy narušuje stav minimalizovaných oken. To může "
+"mít za následek, že okna při minimalizaci nepřeruší svou činnost."
 
 #. i18n: ectx: property (text), widget (QLabel, compositingLabel)
 #: compositing.ui:56
@@ -66,6 +69,9 @@ msgid ""
 " This brings performance improvements for e.g. games.\n"
 " The setting can be overruled by window-specific rules."
 msgstr ""
+"Aplikace mohou nastavit pokyn k zablokování kompozice při otevřeném okně.\n"
+" To přináší zvýšení výkonu, například u her.\n"
+" Toto nastavení lze přepsat pravidly specifickými pro dané okno."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
 #: compositing.ui:75
@@ -157,6 +163,8 @@ msgstr "Vynutit nejplynulejší animace"
 msgid ""
 "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
 msgstr ""
+"Snížit latenci tím, že povolíte artefakty způsobené trháním obrazu v oknech "
+"na celou obrazovku"
 
 #: main.cpp:79
 #, kde-format

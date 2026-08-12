@@ -670,7 +670,7 @@ msgstr "أقصى عدد الإطارات في الثانية"
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
-msgstr "هذا التأثير ليس معياراً قياسيا"
+msgstr "هذا التأثير ليس معيارًا قياسيا"
 
 #: showpaint/showpaint.cpp:38 showpaint/showpaint_config.cpp:38
 #, kde-format
@@ -763,7 +763,7 @@ msgstr "أغلق"
 #: tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Horizontally"
-msgstr "اقسم أفقياً"
+msgstr "اقسم أفقيًا"
 
 #: tileseditor/qml/TileDelegate.qml:174
 #, kde-format
