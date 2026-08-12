@@ -580,6 +580,7 @@ XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure()
         nextClientSize.setWidth(std::max(1.0, nextClientSize.width() - framePadding.width()));
         nextClientSize.setHeight(std::max(1.0, nextClientSize.height() - framePadding.height()));
     }
+    nextClientSize = surface()->snappedSize(nextClientSize);
 
     if (nextClientSize.isEmpty()) {
         QSizeF bounds = workspace()->clientArea(PlacementArea, this, moveResizeOutput()).size();
@@ -588,10 +589,12 @@ XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure()
         m_shellSurface->sendConfigureBounds(bounds);
     }
 
+    const RectF snappedBounds(moveResizeGeometry().topLeft(), snapToPixels(nextClientSize, targetScale()) + framePadding);
+
     const quint32 serial = m_shellSurface->sendConfigure(nextClientSize, m_nextStates);
 
     XdgToplevelConfigure *configureEvent = new XdgToplevelConfigure();
-    configureEvent->bounds = moveResizeGeometry();
+    configureEvent->bounds = snappedBounds;
     configureEvent->states = m_nextStates;
     configureEvent->decoration = m_nextDecoration;
     configureEvent->decorationState = m_nextDecorationState;
@@ -621,14 +624,14 @@ void XdgToplevelWindow::handleRoleCommit()
     }
 
     const auto oldWindowGeometry = m_windowGeometry;
-    m_windowGeometry = snapToPixels(m_shellSurface->xdgSurface()->windowGeometry(), targetScale());
+    m_windowGeometry = m_shellSurface->xdgSurface()->windowGeometry();
 
     bool fullscreen = isFullScreen();
     if (const auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure())) {
         fullscreen = configureEvent->states & XdgToplevelInterface::State::FullScreen;
     }
 
-    RectF frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
+    RectF frameGeometry(pos(), clientSizeToFrameSize(snapToPixels(m_windowGeometry.size(), targetScale())));
     if (fullscreen) {
         if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
             frameGeometry.moveTopLeft(configureEvent->bounds.topLeft());
