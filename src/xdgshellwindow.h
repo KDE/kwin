@@ -64,8 +64,6 @@ public:
     RectF frameRectToBufferRect(const RectF &rect) const override;
     void destroyWindow() override;
 
-    void installPlasmaShellSurface(PlasmaShellSurfaceInterface *shellSurface);
-
 protected:
     void moveResizeInternal(const RectF &rect, MoveResizeMode mode) override;
 
@@ -79,8 +77,6 @@ protected:
 
     void handleConfigureAcknowledged(quint32 serial);
     void handleCommit();
-
-    QPointer<PlasmaShellSurfaceInterface> m_plasmaShellSurface;
 
     WindowType m_windowType = WindowType::Normal;
     Gravity m_gravity = Gravity::BottomRight;
@@ -175,6 +171,7 @@ public:
     void installPalette(ServerSideDecorationPaletteInterface *palette);
     void installXdgDecoration(XdgToplevelDecorationV1Interface *decoration);
     void installXdgDialogV1(XdgDialogV1Interface *dialog);
+    void installPlasmaShellSurface(PlasmaShellSurfaceInterface *shellSurface);
 
 protected:
     XdgSurfaceConfigure *sendRoleConfigure() override;
@@ -245,6 +242,7 @@ private:
     QPointer<ServerSideDecorationInterface> m_serverDecoration;
     QPointer<XdgToplevelDecorationV1Interface> m_xdgDecoration;
     QPointer<XdgDialogV1Interface> m_xdgDialog;
+    QPointer<PlasmaShellSurfaceInterface> m_plasmaShellSurface;
     XdgToplevelInterface *m_shellSurface;
     XdgToplevelInterface::States m_nextStates;
     XdgToplevelInterface::States m_acknowledgedStates;

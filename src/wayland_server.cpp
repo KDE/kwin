@@ -255,9 +255,6 @@ void WaylandServer::registerXdgGenericWindow(Window *window)
     }
     if (auto popup = qobject_cast<XdgPopupWindow *>(window)) {
         registerWindow(popup);
-        if (auto shellSurface = PlasmaShellSurfaceInterface::get(popup->surface())) {
-            popup->installPlasmaShellSurface(shellSurface);
-        }
         return;
     }
     qCDebug(KWIN_CORE) << "Received invalid xdg shell window:" << window->surface();
@@ -379,7 +376,7 @@ bool WaylandServer::init()
     new IdleNotifyV1Interface(m_display, m_display);
     m_plasmaShell = new PlasmaShellInterface(m_display, m_display);
     connect(m_plasmaShell, &PlasmaShellInterface::surfaceCreated, this, [this](PlasmaShellSurfaceInterface *surface) {
-        if (XdgSurfaceWindow *window = findXdgSurfaceWindow(surface->surface())) {
+        if (XdgToplevelWindow *window = findXdgToplevelWindow(surface->surface())) {
             window->installPlasmaShellSurface(surface);
         }
     });

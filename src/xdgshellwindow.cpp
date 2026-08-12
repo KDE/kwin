@@ -169,9 +169,6 @@ RectF XdgSurfaceWindow::frameRectToBufferRect(const RectF &rect) const
 
 void XdgSurfaceWindow::handleRoleDestroyed()
 {
-    if (m_plasmaShellSurface) {
-        m_plasmaShellSurface->disconnect(this);
-    }
     m_shellSurface->disconnect(this);
     m_shellSurface->surface()->disconnect(this);
 }
@@ -196,108 +193,6 @@ void XdgSurfaceWindow::destroyWindow()
     cleanGrouping();
 
     unref();
-}
-
-/**
- * \todo This whole plasma shell surface thing doesn't seem right. It turns xdg-toplevel into
- * something completely different! Perhaps plasmashell surfaces need to be implemented via a
- * proprietary protocol that doesn't piggyback on existing shell surface protocols. It'll lead
- * to cleaner code and will be technically correct, but I'm not sure whether this is do-able.
- */
-void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *shellSurface)
-{
-    m_plasmaShellSurface = shellSurface;
-
-    auto updatePosition = [this, shellSurface] {
-        if (!isInteractiveMoveResize()) {
-            place(shellSurface->position());
-        }
-    };
-    auto showUnderCursor = [this] {
-        // Wait for the first commit
-        auto moveUnderCursor = [this] {
-            if (input()->hasPointer()) {
-                place(input()->globalPointer());
-                moveResize(keepInArea(moveResizeGeometry(), workspace()->clientArea(PlacementArea, this, workspace()->outputAt(pos()))));
-            }
-        };
-        connect(this, &Window::readyForPaintingChanged, this, moveUnderCursor, Qt::SingleShotConnection);
-    };
-    auto updateRole = [this, shellSurface] {
-        WindowType type = WindowType::Unknown;
-        switch (shellSurface->role()) {
-        case PlasmaShellSurfaceInterface::Role::Desktop:
-            type = WindowType::Desktop;
-            break;
-        case PlasmaShellSurfaceInterface::Role::Panel:
-            type = WindowType::Dock;
-            break;
-        case PlasmaShellSurfaceInterface::Role::OnScreenDisplay:
-            type = WindowType::OnScreenDisplay;
-            break;
-        case PlasmaShellSurfaceInterface::Role::Notification:
-            type = WindowType::Notification;
-            break;
-        case PlasmaShellSurfaceInterface::Role::ToolTip:
-            type = WindowType::Tooltip;
-            break;
-        case PlasmaShellSurfaceInterface::Role::CriticalNotification:
-            type = WindowType::CriticalNotification;
-            break;
-        case PlasmaShellSurfaceInterface::Role::AppletPopup:
-            type = WindowType::AppletPopup;
-            break;
-        case PlasmaShellSurfaceInterface::Role::Normal:
-        default:
-            type = WindowType::Normal;
-            break;
-        }
-        if (m_windowType == type) {
-            return;
-        }
-        m_windowType = type;
-        switch (m_windowType) {
-        case WindowType::Desktop:
-        case WindowType::Dock:
-        case WindowType::OnScreenDisplay:
-        case WindowType::Notification:
-        case WindowType::CriticalNotification:
-        case WindowType::Tooltip:
-        case WindowType::AppletPopup:
-            setOnAllDesktops(true);
-#if KWIN_BUILD_ACTIVITIES
-            setOnAllActivities(true);
-#endif
-            break;
-        default:
-            break;
-        }
-    };
-    connect(shellSurface, &PlasmaShellSurfaceInterface::positionChanged, this, updatePosition);
-    connect(shellSurface, &PlasmaShellSurfaceInterface::openUnderCursorRequested, this, showUnderCursor);
-    connect(shellSurface, &PlasmaShellSurfaceInterface::roleChanged, this, updateRole);
-    connect(shellSurface, &PlasmaShellSurfaceInterface::panelTakesFocusChanged, this, [this] {
-        if (m_plasmaShellSurface->panelTakesFocus()) {
-            workspace()->activateWindow(this);
-        }
-    });
-    if (shellSurface->isPositionSet()) {
-        updatePosition();
-    }
-    if (shellSurface->wantsOpenUnderCursor()) {
-        showUnderCursor();
-    }
-    updateRole();
-
-    setSkipTaskbar(shellSurface->skipTaskbar());
-    connect(shellSurface, &PlasmaShellSurfaceInterface::skipTaskbarChanged, this, [this] {
-        setSkipTaskbar(m_plasmaShellSurface->skipTaskbar());
-    });
-
-    setSkipSwitcher(shellSurface->skipSwitcher());
-    connect(shellSurface, &PlasmaShellSurfaceInterface::skipSwitcherChanged, this, [this] {
-        setSkipSwitcher(m_plasmaShellSurface->skipSwitcher());
-    });
 }
 
 std::optional<XdgToplevelSessionData> XdgToplevelSessionData::parse(const QVariant &variant)
@@ -471,6 +366,9 @@ void XdgToplevelWindow::handleRoleDestroyed()
     }
     if (m_xdgDialog) {
         m_xdgDialog->disconnect(this);
+    }
+    if (m_plasmaShellSurface) {
+        m_plasmaShellSurface->disconnect(this);
     }
 
     m_shellSurface->disconnect(this);
@@ -1669,6 +1567,108 @@ void XdgToplevelWindow::installXdgDialogV1(XdgDialogV1Interface *dialog)
     setModal(dialog->isModal());
 }
 
+/**
+ * \todo This whole plasma shell surface thing doesn't seem right. It turns xdg-toplevel into
+ * something completely different! Perhaps plasmashell surfaces need to be implemented via a
+ * proprietary protocol that doesn't piggyback on existing shell surface protocols. It'll lead
+ * to cleaner code and will be technically correct, but I'm not sure whether this is do-able.
+ */
+void XdgToplevelWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *shellSurface)
+{
+    m_plasmaShellSurface = shellSurface;
+
+    auto updatePosition = [this, shellSurface] {
+        if (!isInteractiveMoveResize()) {
+            place(shellSurface->position());
+        }
+    };
+    auto showUnderCursor = [this] {
+        // Wait for the first commit
+        auto moveUnderCursor = [this] {
+            if (input()->hasPointer()) {
+                place(input()->globalPointer());
+                moveResize(keepInArea(moveResizeGeometry(), workspace()->clientArea(PlacementArea, this, workspace()->outputAt(pos()))));
+            }
+        };
+        connect(this, &Window::readyForPaintingChanged, this, moveUnderCursor, Qt::SingleShotConnection);
+    };
+    auto updateRole = [this, shellSurface] {
+        WindowType type = WindowType::Unknown;
+        switch (shellSurface->role()) {
+        case PlasmaShellSurfaceInterface::Role::Desktop:
+            type = WindowType::Desktop;
+            break;
+        case PlasmaShellSurfaceInterface::Role::Panel:
+            type = WindowType::Dock;
+            break;
+        case PlasmaShellSurfaceInterface::Role::OnScreenDisplay:
+            type = WindowType::OnScreenDisplay;
+            break;
+        case PlasmaShellSurfaceInterface::Role::Notification:
+            type = WindowType::Notification;
+            break;
+        case PlasmaShellSurfaceInterface::Role::ToolTip:
+            type = WindowType::Tooltip;
+            break;
+        case PlasmaShellSurfaceInterface::Role::CriticalNotification:
+            type = WindowType::CriticalNotification;
+            break;
+        case PlasmaShellSurfaceInterface::Role::AppletPopup:
+            type = WindowType::AppletPopup;
+            break;
+        case PlasmaShellSurfaceInterface::Role::Normal:
+        default:
+            type = WindowType::Normal;
+            break;
+        }
+        if (m_windowType == type) {
+            return;
+        }
+        m_windowType = type;
+        switch (m_windowType) {
+        case WindowType::Desktop:
+        case WindowType::Dock:
+        case WindowType::OnScreenDisplay:
+        case WindowType::Notification:
+        case WindowType::CriticalNotification:
+        case WindowType::Tooltip:
+        case WindowType::AppletPopup:
+            setOnAllDesktops(true);
+#if KWIN_BUILD_ACTIVITIES
+            setOnAllActivities(true);
+#endif
+            break;
+        default:
+            break;
+        }
+    };
+    connect(shellSurface, &PlasmaShellSurfaceInterface::positionChanged, this, updatePosition);
+    connect(shellSurface, &PlasmaShellSurfaceInterface::openUnderCursorRequested, this, showUnderCursor);
+    connect(shellSurface, &PlasmaShellSurfaceInterface::roleChanged, this, updateRole);
+    connect(shellSurface, &PlasmaShellSurfaceInterface::panelTakesFocusChanged, this, [this] {
+        if (m_plasmaShellSurface->panelTakesFocus()) {
+            workspace()->activateWindow(this);
+        }
+    });
+    if (shellSurface->isPositionSet()) {
+        updatePosition();
+    }
+    if (shellSurface->wantsOpenUnderCursor()) {
+        showUnderCursor();
+    }
+    updateRole();
+
+    setSkipTaskbar(shellSurface->skipTaskbar());
+    connect(shellSurface, &PlasmaShellSurfaceInterface::skipTaskbarChanged, this, [this] {
+        setSkipTaskbar(m_plasmaShellSurface->skipTaskbar());
+    });
+
+    setSkipSwitcher(shellSurface->skipSwitcher());
+    connect(shellSurface, &PlasmaShellSurfaceInterface::skipSwitcherChanged, this, [this] {
+        setSkipSwitcher(m_plasmaShellSurface->skipSwitcher());
+    });
+}
+
 void XdgToplevelWindow::setFullScreen(bool set)
 {
     if (!isFullScreenable()) {
@@ -1874,11 +1874,7 @@ void XdgPopupWindow::updateRelativePlacement()
     const RectF bounds = workspace()->clientArea(transientFor()->isFullScreen() ? FullScreenArea : PlacementArea, transientFor()).translated(-parentPosition);
     const XdgPositioner positioner = m_shellSurface->positioner();
 
-    if (m_plasmaShellSurface && m_plasmaShellSurface->isPositionSet()) {
-        m_relativePlacement = RectF(m_plasmaShellSurface->position(), positioner.size()).translated(-parentPosition);
-    } else {
-        m_relativePlacement = positioner.placement(bounds);
-    }
+    m_relativePlacement = positioner.placement(bounds);
 }
 
 void XdgPopupWindow::relayout()
