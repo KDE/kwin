@@ -725,15 +725,18 @@ void XdgToplevelWindow::handleRoleCommit()
     const auto oldWindowGeometry = m_windowGeometry;
     m_windowGeometry = snapToPixels(m_shellSurface->xdgSurface()->windowGeometry(), targetScale());
 
+    bool fullscreen = isFullScreen();
+    if (const auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure())) {
+        fullscreen = configureEvent->states & XdgToplevelInterface::State::FullScreen;
+    }
+
     RectF frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
-    if (isInteractiveMove()) {
-        bool fullscreen = isFullScreen();
-        if (const auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure())) {
-            fullscreen = configureEvent->states & XdgToplevelInterface::State::FullScreen;
+    if (fullscreen) {
+        if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
+            frameGeometry.moveTopLeft(configureEvent->bounds.topLeft());
         }
-        if (!fullscreen) {
-            frameGeometry = nextInteractiveMoveGeometry(frameGeometry);
-        }
+    } else if (isInteractiveMove()) {
+        frameGeometry = nextInteractiveMoveGeometry(frameGeometry);
     } else {
         if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
             frameGeometry = configureEvent->gravity.apply(frameGeometry, configureEvent->bounds);
