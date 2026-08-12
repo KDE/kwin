@@ -45,15 +45,6 @@ private:
     uint32_t m_mapCount = 0;
 };
 
-static uint64_t align(uint64_t size, uint64_t minimum)
-{
-    if (auto remainder = size % minimum) {
-        return size + (minimum - remainder);
-    } else {
-        return size;
-    }
-}
-
 UdmabufGraphicsBuffer::UdmabufGraphicsBuffer(DmaBufAttributes &&attributes, MemoryMap &&memoryMap)
     : m_attributes(std::move(attributes))
     , m_hasAlphaChannel(alphaChannelFromDrmFormat(attributes.format))

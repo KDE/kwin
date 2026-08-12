@@ -9,6 +9,7 @@
 #include "kwin_export.h"
 #include "utils/filedescriptor.h"
 
+#include <QImage>
 #include <QObject>
 #include <QSize>
 #include <sys/types.h>
@@ -48,6 +49,14 @@ struct SinglePixelAttributes
     uint32_t green;
     uint32_t blue;
     uint32_t alpha;
+};
+
+struct HostMemoryAttributes
+{
+    std::unique_ptr<std::byte> data;
+    QSize size;
+    uint32_t stride;
+    uint32_t format;
 };
 
 /**
@@ -93,6 +102,7 @@ public:
     virtual const DmaBufAttributes *dmabufAttributes() const;
     virtual const ShmAttributes *shmAttributes() const;
     virtual const SinglePixelAttributes *singlePixelAttributes() const;
+    virtual const HostMemoryAttributes *hostDataAttributes() const;
 
     /**
      * the added release point will be referenced as long as this buffer is referenced

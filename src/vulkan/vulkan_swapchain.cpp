@@ -149,7 +149,11 @@ std::unique_ptr<VulkanSwapchain> VulkanSwapchain::create(VulkanDevice *device, G
         buffer->drop();
         return nullptr;
     }
-    options.modifiers = {buffer->dmabufAttributes()->modifier};
+    if (buffer->hostDataAttributes()) {
+        options.modifiers = {DRM_FORMAT_MOD_LINEAR};
+    } else {
+        options.modifiers = {buffer->dmabufAttributes()->modifier};
+    }
     auto slot = std::make_shared<VulkanSwapchainSlot>(buffer, std::move(texture));
     return std::make_unique<VulkanSwapchain>(device, allocator, options, std::move(slot));
 }

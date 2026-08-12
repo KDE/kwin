@@ -55,6 +55,7 @@ target_sources(kwin PRIVATE
     core/graphicsbuffer.cpp
     core/graphicsbufferallocator.cpp
     core/graphicsbufferview.cpp
+    core/hostmemoryallocator.cpp
     core/iccprofile.cpp
     core/inputbackend.cpp
     core/inputdevice.cpp
@@ -564,6 +565,7 @@ install(FILES
     core/graphicsbuffer.h
     core/graphicsbufferallocator.h
     core/graphicsbufferview.h
+    core/hostmemoryallocator.h
     core/iccprofile.h
     core/inputbackend.h
     core/inputdevice.h

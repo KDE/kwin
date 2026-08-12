@@ -19,13 +19,15 @@ namespace KWin
 {
 
 VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::Device &&logicalDevice,
-                           std::vector<VkQueueFamilyProperties> &&queueProperties, vk::PhysicalDeviceType type)
+                           std::vector<VkQueueFamilyProperties> &&queueProperties, vk::PhysicalDeviceType type,
+                           std::optional<VkDeviceSize> minImportedHostPointerAlignment)
     : m_type(type)
     , m_physical(physicalDevice)
     , m_logical(std::move(logicalDevice))
     , m_transferFormats(queryFormats(VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT))
     , m_queueProperties(std::move(queueProperties))
     , m_deviceLimits(m_physical.getProperties().limits)
+    , m_minImportedHostPointerAlignment(minImportedHostPointerAlignment)
 {
     m_memoryProperties = physicalDevice.getMemoryProperties();
     getQueues();
@@ -62,14 +64,19 @@ void VulkanDevice::getQueues()
 
 std::shared_ptr<VulkanTexture> VulkanDevice::importBuffer(GraphicsBuffer *buffer, VkImageUsageFlags usage)
 {
-    if (!buffer->dmabufAttributes()) {
+    if (!buffer->dmabufAttributes() && !buffer->hostDataAttributes()) {
         return nullptr;
     }
     auto it = m_importedTextures.find(buffer);
     if (it != m_importedTextures.end()) {
         return it.value();
     }
-    auto ret = importDmabuf(buffer->dmabufAttributes(), usage);
+    std::shared_ptr<VulkanTexture> ret;
+    if (buffer->hostDataAttributes()) {
+        ret = importHostPointer(buffer->hostDataAttributes(), usage);
+    } else {
+        ret = importDmabuf(buffer->dmabufAttributes(), usage);
+    }
     if (!ret) {
         return nullptr;
     }
@@ -237,6 +244,87 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
     }
     return std::make_shared<VulkanTexture>(this, vk::Format(format->vulkanFormat), std::move(image),
                                            std::move(deviceMemory), QSize(attributes->width, attributes->height));
+}
+
+std::shared_ptr<VulkanTexture> VulkanDevice::importHostPointer(const HostMemoryAttributes *attributes, VkImageUsageFlags usage)
+{
+    const auto format = FormatInfo::get(attributes->format);
+    if (!format) {
+        qCWarning(KWIN_VULKAN, "Dmabuf has unknown format");
+        return nullptr;
+    }
+    auto formatIt = m_transferFormats.find(attributes->format);
+    if (formatIt == m_transferFormats.end() || !formatIt->contains(DRM_FORMAT_MOD_LINEAR)) {
+        return nullptr;
+    }
+
+    vk::ExternalMemoryImageCreateInfo externalInfo{
+        vk::ExternalMemoryHandleTypeFlagBits::eHostAllocationEXT,
+    };
+    vk::ImageCreateInfo imageInfo{
+        vk::ImageCreateFlags(),
+        vk::ImageType::e2D,
+        vk::Format(format->vulkanFormat),
+        vk::Extent3D(attributes->size.width(), attributes->size.height(), 1),
+        1,
+        1,
+        vk::SampleCountFlagBits::e1,
+        vk::ImageTiling::eLinear,
+        vk::ImageUsageFlags(usage),
+        vk::SharingMode::eExclusive,
+        // the queue family index is ignored with share mode exclusive,
+        // instead Vulkan implicitly assigns ownership to the first queue
+        // the image is used in.
+        0,
+        vk::ImageLayout::eUndefined,
+        &externalInfo,
+    };
+    auto [imageResult, image] = m_logical.createImage(imageInfo);
+    if (imageResult != vk::Result::eSuccess) {
+        qCWarning(KWIN_VULKAN) << "creating vulkan image failed!" << vk::to_string(imageResult);
+        return nullptr;
+    }
+
+    const auto [result, properties] = m_logical.getMemoryHostPointerPropertiesEXT(vk::ExternalMemoryHandleTypeFlagBits::eHostAllocationEXT, attributes->data.get());
+    if (result != vk::Result::eSuccess) {
+        return nullptr;
+    }
+
+    vk::ImageMemoryRequirementsInfo2 memRequirementsInfo{image};
+    const vk::MemoryRequirements2 memRequirements = m_logical.getImageMemoryRequirements2(memRequirementsInfo);
+    const VkDeviceSize bufferSize = attributes->stride * attributes->size.height();
+    if (memRequirements.memoryRequirements.size > bufferSize) {
+        return nullptr;
+    }
+
+    const auto memoryIndex = findMemoryType(memRequirements.memoryRequirements.memoryTypeBits & properties.memoryTypeBits, {});
+    if (!memoryIndex) {
+        qCWarning(KWIN_VULKAN, "couldn't find a suitable memory type for %x & %x = %x",
+                  memRequirements.memoryRequirements.memoryTypeBits, properties.memoryTypeBits,
+                  memRequirements.memoryRequirements.memoryTypeBits & properties.memoryTypeBits);
+        return nullptr;
+    }
+
+    vk::ImportMemoryHostPointerInfoEXT importInfo(vk::ExternalMemoryHandleTypeFlagBits::eHostAllocationEXT, attributes->data.get());
+    // NOTE that this cannot use memoryRequirements.size, since it may be smaller
+    // than the buffer, and that gets the import rejected on Intel
+    vk::MemoryAllocateInfo memoryInfo(bufferSize, memoryIndex.value(), &importInfo);
+    auto [allocateResult, memory] = m_logical.allocateMemory(memoryInfo);
+    if (allocateResult != vk::Result::eSuccess) {
+        qCWarning(KWIN_VULKAN, "'Allocating' memory for host memory image failed: %s", vk::to_string(allocateResult).c_str());
+        return nullptr;
+    }
+
+    vk::BindImageMemoryInfo bindInfo{image, memory, 0};
+    const vk::Result bindResult = m_logical.bindImageMemory2(bindInfo);
+    if (bindResult != vk::Result::eSuccess) {
+        qCWarning(KWIN_VULKAN) << "failed to bind image to memory";
+        return nullptr;
+    }
+    std::vector<vk::raii::DeviceMemory> memories;
+    memories.push_back(std::move(memory));
+    return std::make_shared<VulkanTexture>(this, vk::Format(format->vulkanFormat), std::move(image),
+                                           std::move(memories), attributes->size);
 }
 
 FormatModifierMap VulkanDevice::queryFormats(VkImageUsageFlags flags) const
@@ -437,6 +525,11 @@ vk::raii::DeviceMemory VulkanDevice::allocateMemory(const vk::BufferCreateInfo &
         qCWarning(KWIN_VULKAN) << "could not find a suitable memory index for a buffer";
         return nullptr;
     }
+}
+
+std::optional<VkDeviceSize> VulkanDevice::minImportedHostPointerAlignment() const
+{
+    return m_minImportedHostPointerAlignment;
 }
 
 void VulkanDevice::waitIdle()
