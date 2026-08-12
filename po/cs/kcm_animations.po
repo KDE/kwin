@@ -1,21 +1,22 @@
 # Copyright (C) 2025 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 # SPDX-FileCopyrightText: 2025 Vit Pelcak <vit@pelcak.org>
+# SPDX-FileCopyrightText: 2026 Libor Filípek <libor.filipek@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-23 00:45+0000\n"
-"PO-Revision-Date: 2025-10-21 15:50+0200\n"
-"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
+"PO-Revision-Date: 2026-08-11 13:19+0200\n"
+"Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 25.08.2\n"
+"X-Generator: Poedit 3.9\n"
 
 #: ui/AnimationComboBox.qml:49
 #, kde-format
@@ -26,7 +27,7 @@ msgstr "Žádné"
 #: ui/main.qml:37
 #, kde-format
 msgid "Global animation speed:"
-msgstr ""
+msgstr "Globální rychlost animace:"
 
 #: ui/main.qml:83
 #, kde-kuit-format
@@ -37,48 +38,52 @@ msgid ""
 "animations when <interface>animation speed</interface> is "
 "<interface>Instant</interface>."
 msgstr ""
+"Některé aplikace toto nastavení nepodporují: Zejména aplikace GTK nemohou "
+"měnit délku trvání animací, ale i tak animace deaktivují, pokud je "
+"<interface>rychlost animace</interface> nastavena na <interface>Okamžitá</"
+"interface>."
 
 #: ui/main.qml:90
 #, kde-format
 msgctxt "Animation speed"
 msgid "Slow"
-msgstr "Pomalu"
+msgstr "Pomalá"
 
 #: ui/main.qml:99
 #, kde-format
 msgctxt "Animation speed"
 msgid "Instant"
-msgstr "Okamžitě"
+msgstr "Okamžitá"
 
 #: ui/main.qml:107
 #, kde-format
 msgctxt "@title:group"
 msgid "Desktop animations"
-msgstr ""
+msgstr "Animace plochy"
 
 #: ui/main.qml:111
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window open/close:"
-msgstr ""
+msgstr "Otevření/zavření okna:"
 
 #: ui/main.qml:112
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window maximize:"
-msgstr ""
+msgstr "Maximalizace okna:"
 
 #: ui/main.qml:113
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window minimize:"
-msgstr ""
+msgstr "Minimalizace okna:"
 
 #: ui/main.qml:114
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window full screen:"
-msgstr ""
+msgstr "Okno na celou obrazovku:"
 
 #: ui/main.qml:115
 #, kde-format
@@ -90,7 +95,7 @@ msgstr "Nakouknout na pracovní plochu:"
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Virtual desktop switching:"
-msgstr ""
+msgstr "Přepínání mezi virtuálními plochami:"
 
 #: ui/main.qml:144 ui/main.qml:211
 #, kde-format
@@ -109,4 +114,4 @@ msgstr "%1:"
 #, kde-format
 msgctxt "@title:group translate as short as possible"
 msgid "More effects settings:"
-msgstr ""
+msgstr "Další nastavení efektů:"

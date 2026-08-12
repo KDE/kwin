@@ -48,7 +48,7 @@ msgstr "محظور"
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
-msgstr "الأكثر أماناً؛ لن تعمل الاختصارات العامة في تطبيقات X11"
+msgstr "الأكثر أمانًا؛ لن تعمل الاختصارات العامة في تطبيقات X11"
 
 #: ui/main.qml:67
 #, kde-format
@@ -173,7 +173,7 @@ msgstr "اسمح دون طلب الإذن"
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
-msgstr "الأقل أماناً؛ ستتمكن جميع تطبيقات X11 من التحكم في الحاسوب"
+msgstr "الأقل أمانًا؛ ستتمكن جميع تطبيقات X11 من التحكم في الحاسوب"
 
 #: ui/main.qml:189
 #, kde-format

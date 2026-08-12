@@ -4,21 +4,22 @@
 # Lukáš Tinkl <ltinkl@redhat.com>, 2010, 2011.
 # Tomáš Chvátal <tomas.chvatal@gmail.com>, 2012.
 # SPDX-FileCopyrightText: 2021, 2022, 2023, 2024 Vit Pelcak <vit@pelcak.org>
+# SPDX-FileCopyrightText: 2026 Libor Filípek <libor.filipek@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-12 00:46+0000\n"
-"PO-Revision-Date: 2024-06-20 16:26+0200\n"
-"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
+"PO-Revision-Date: 2026-08-11 21:31+0200\n"
+"Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 24.05.1\n"
+"X-Generator: Lokalize 26.04.3\n"
 "X-Language: cs_CZ\n"
 "X-Source-Language: en_US\n"
 
@@ -49,7 +50,7 @@ msgstr ""
 #: actions.ui:46
 #, kde-format
 msgid "Activate, pass click and raise on release"
-msgstr ""
+msgstr "Aktivovat, předat kliknutí a dát do popředí"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -231,7 +232,7 @@ msgstr "Přesunout"
 #: actions.ui:281 actions.ui:356 actions.ui:431
 #, kde-format
 msgid "Activate, raise and move"
-msgstr "Aktivovat, dát do popředí a pohnout"
+msgstr "Aktivovat, dát do popředí a přesunout"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -311,7 +312,7 @@ msgstr "Minimalizovat"
 #: actions.ui:311 actions.ui:386 actions.ui:461
 #, kde-format
 msgid "Decrease opacity"
-msgstr "Snížit krytí"
+msgstr "Snížit průhlednost"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -319,7 +320,7 @@ msgstr "Snížit krytí"
 #: actions.ui:316 actions.ui:391 actions.ui:466
 #, kde-format
 msgid "Increase opacity"
-msgstr "Zvýšit krytí"
+msgstr "Zvýšit průhlednost"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -334,7 +335,7 @@ msgstr "Zvýšit krytí"
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
 #, kde-format
 msgid "Window menu"
-msgstr ""
+msgstr "Nabídka okna"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -361,7 +362,7 @@ msgstr "Nedělat nic"
 #: actions.ui:334
 #, kde-format
 msgid "Middle &click:"
-msgstr "Kliknutí pro&středním tlačítkem myši"
+msgstr "Kliknutí pro&středním tlačítkem myši:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
 #: actions.ui:347
@@ -378,7 +379,7 @@ msgstr ""
 #: actions.ui:409 mouse.ui:647
 #, kde-format
 msgid "Right clic&k:"
-msgstr "&Kliknutí pravým tlačítkem myši"
+msgstr "&Kliknutí pravým tlačítkem myši:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
 #: actions.ui:422
@@ -439,7 +440,7 @@ msgstr "Přesunout na předchozí/následující plochu"
 #: actions.ui:521 mouse.ui:120
 #, kde-format
 msgid "Change opacity"
-msgstr "Změnit krytí"
+msgstr "Změnit průhlednost"
 
 #. i18n: ectx: property (text), widget (QLabel, windowPlacementLabel)
 #: advanced.ui:20
@@ -475,6 +476,29 @@ msgid ""
 "\"><span style=\" font-style:italic;\">Under mouse</span> will place the "
 "window under the pointer</li></ul></body></html>"
 msgstr ""
+"<html><head/><body><p>Pravidla umístění určují, kde se na ploše objeví nové "
+"okno.</p><ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; "
+"margin-right: 0px; -qt-list-indent: 1;\"><li style=\" margin-top:12px; "
+"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
+"text-indent:0px;\"><span style=\" font-style:italic;\">Inteligentní funkce</"
+"span> se pokusí dosáhnout minimálního překrytí oken</li><li style=\" margin-"
+"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+"indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+"\">Maximalizace</span> se pokusí maximalizovat každé okno tak, aby vyplnilo "
+"celou obrazovku. Může být užitečné selektivně ovlivnit umístění některých "
+"oken pomocí nastavení specifických pro dané okno.</li><li style=\" margin-"
+"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Náhodné</"
+"span> použije náhodnou pozici</li><li style=\" margin-top:0px; margin-"
+"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">Na střed</span> umístí "
+"okno na střed</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Nulový roh</span> umístí okno do levého "
+"horního rohu</li><li style=\" margin-top:0px; margin-bottom:12px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Pod myší</span> umístí okno pod ukazatel</li></"
+"ul></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:34
@@ -486,7 +510,7 @@ msgstr "Minimální překrytí"
 #: advanced.ui:39
 #, kde-format
 msgid "Maximized"
-msgstr "Maximalizováno"
+msgstr "Maximalizace"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:44
@@ -520,6 +544,9 @@ msgid ""
 "windows are allowed to do so. This will override the window placement mode "
 "defined above."
 msgstr ""
+"Je-li tato funkce zapnutá, tak aplikace, které si dokážou zapamatovat polohu "
+"svých oken, tak mohou učinit. Tím se přepíše režim umístění oken definovaný "
+"výše."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:70
@@ -553,18 +580,25 @@ msgid ""
 "Virtual Desktop</span> will cause the window to jump to the active Virtual "
 "Desktop. </p></body></html>"
 msgstr ""
+"<html><head/><body><p>Toto nastavení určuje, co se stane, když je aktivováno "
+"otevřené okno umístěné na jiné virtuální ploše než je ta aktuální. </"
+"p><p><span style=\" font-style:italic;\">Přepnout na tuto virtuální plochu</"
+"span> přepne na virtuální plochu, na které se okno právě nachází. </"
+"p><p><span style=\" font-style:italic;\">Přesunout okno na aktuální "
+"virtuální plochu</span> způsobí přesun okna na aktivní virtuální plochu. </"
+"p></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:98
 #, kde-format
 msgid "Switch to that Virtual Desktop"
-msgstr "Přepnout do této virtuální plochy"
+msgstr "Přepnout na tuto virtuální plochu"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:103
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr "Přesunout okno do této virtuální plochy"
+msgstr "Přesunout okno na aktuální virtuální plochu"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
 #: focus.ui:22
@@ -576,20 +610,20 @@ msgstr "Pravidla &aktivace okna:"
 #: focus.ui:32
 #, kde-format
 msgid "With this option you can specify how and when windows will be focused."
-msgstr ""
+msgstr "Pomocí této možnosti můžete určit, jak a kdy se okna zaměřují."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:36
 #, kde-format
 msgctxt "sassa asas"
 msgid "Click to focus"
-msgstr "Klikněte pro zaměření"
+msgstr "Kliknutím zaměřit"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:41
 #, kde-format
 msgid "Click to focus (mouse precedence)"
-msgstr ""
+msgstr "Kliknutím zaměřit (priorita myši)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:46
@@ -601,7 +635,7 @@ msgstr "Zaměření následuje myš"
 #: focus.ui:51
 #, kde-format
 msgid "Focus follows mouse (mouse precedence)"
-msgstr ""
+msgstr "Myš sleduje zaměření (priorita myši)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:56
@@ -679,6 +713,36 @@ msgid ""
 "by default means their taskbar entry will be highlighted. This can be "
 "changed in the Notifications control module.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Tato možnost určuje, do jaké míry se KWin pokusí "
+"zabránit nežádoucímu přesunu zaměření způsobenému neočekávanou aktivací "
+"nových oken. (Poznámka: Tato funkce nefunguje s pravidly zaměření <span "
+"style=\" font-style:italic;\">Zaměření pod myší</span> nebo <span style=\" "
+"font-style:italic;\">Zaměření přesně pod myší</span>.) </p><ul style="
+"\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -"
+"qt-list-indent: 1;\"><li style=\" margin-top:12px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Žádné:</span> Prevence je vypnuta a nová okna "
+"se vždy aktivují.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Nízká:</span> Prevence je povolena; pokud "
+"některé okno nepodporuje základní mechanismus a KWin se nemůže spolehlivě "
+"rozhodnout, zda okno aktivovat či nikoli, aktivuje se. Toto nastavení může "
+"mít v závislosti na aplikacích horší i lepší výsledky než střední úroveň.</"
+"li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
+"italic;\">Střední:</span> Prevence je povolena.</li><li style=\" margin-"
+"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Vysoká:</"
+"span> Nová okna se aktivují pouze tehdy, pokud žádné okno není aktuálně "
+"aktivní nebo pokud patří k aktuálně aktivní aplikaci. Toto nastavení "
+"pravděpodobně není skutečně použitelné, pokud se nepoužívají pravidla pro "
+"zaměřování  pod myší.</li><li style=\" margin-top:0px; margin-bottom:12px; "
+"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+"\"><span style=\" font-style:italic;\">Extrémní:</span> Všechna okna musí "
+"být explicitně aktivována uživatelem.</li></ul><p>Okna, kterým je zabráněno "
+"v přesunu zaměření, jsou označena jako vyžadující pozornost, což ve výchozím "
+"nastavení znamená, že jejich položka na hlavním panelu bude zvýrazněna. Toto "
+"lze změnit v modulu pro ovládání oznámení.</p></body></html>"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
@@ -824,7 +888,7 @@ msgstr "Pokroči&lé"
 #: main.cpp:74
 #, kde-format
 msgid "&Picture-in-picture"
-msgstr ""
+msgstr "&Obraz v obrazu"
 
 #: main.cpp:165
 #, kde-format
@@ -965,13 +1029,13 @@ msgstr "Aktivovat a dát do pozadí"
 #: mouse.ui:537
 #, kde-format
 msgid "Maximize window by double clicking its frame"
-msgstr ""
+msgstr "Maximalizovat okno dvojitým kliknutím na jeho rámeček"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: mouse.ui:562
 #, kde-format
 msgid "Maximize Button Actions"
-msgstr ""
+msgstr "Akce tlačítka maximalizace"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_8)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
@@ -1089,7 +1153,7 @@ msgstr "Pouze při překrytí"
 #: pip.ui:20
 #, kde-format
 msgid "Open in screen corner:"
-msgstr ""
+msgstr "Otevřít v rohu obrazovky:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:31
@@ -1127,6 +1191,9 @@ msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
 "This behavior is common on other operating systems and likely what you want."
 msgstr ""
+"<em>Kliknutím zaměřit:</em> Okno se stane aktivním, když do něj kliknete. "
+"Toto chování je běžné i v jiných operačních systémech a pravděpodobně "
+"odpovídá vašim představám."
 
 #: windows.cpp:95
 #, kde-format
@@ -1137,6 +1204,10 @@ msgid ""
 "preferred candidate. Unusual, but possible variant of <em>Click to focus</"
 "em>."
 msgstr ""
+"<em>Kliknutím zaměřit (priorita myši):</em> V zásadě totéž jako "
+"<em>Kliknutím zaměřit</em>. Pokud musí systém vybrat aktivní okno (např. "
+"protože právě aktivní okno bylo zavřeno), upřednostňuje se okno pod kurzorem "
+"myši. Neobvyklá, ale možná varianta <em>Kliknutím zaměřit</em>."
 
 #: windows.cpp:98
 #, kde-format
@@ -1146,6 +1217,11 @@ msgid ""
 "<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
 "to focus</em> just without having to actually click."
 msgstr ""
+"<em>Myš sleduje zaměření:</em> Přesunutím kurzoru myši na okno se toto okno "
+"aktivuje. Např. okna, která se náhodně objeví pod kurzorem myši, nezískají "
+"zaměření. <em>Prevence ztráty zaměření</em> funguje jako obvykle. Představte "
+"si to jako funkci <em>Zaměřit kliknutím</em>, jen bez nutnosti skutečně "
+"kliknout."
 
 #: windows.cpp:101
 #, kde-format
@@ -1155,6 +1231,10 @@ msgid ""
 "closed) the window under the mouse is the preferred candidate. Choose this, "
 "if you want a hover controlled focus."
 msgstr ""
+"Toto nastavení se v podstatě shoduje s <em>Myš sleduje zaměření</em>. Pokud "
+"musí systém vybrat aktivní okno (např. proto, že aktuálně aktivní okno bylo "
+"zavřeno), je preferovaným kandidátem okno pod kurzorem myši. Tuto možnost "
+"zvolte, pokud chcete, aby se zaměření řídilo polohou kurzoru."
 
 #: windows.cpp:104
 #, kde-format
@@ -1165,6 +1245,11 @@ msgid ""
 "not work. You very likely want to use <em>Focus follows mouse (mouse "
 "precedence)</em> instead!"
 msgstr ""
+"<em>Zaměření pod myší:</em> Zaměření zůstává vždy na okně pod myší.<br/"
+"><strong>Upozornění:</strong> <em>Prevence ztráty zaměření</em> a "
+"<em>přepínač ('Alt+Tab')</em> jsou v rozporu s pravidly aktivace a nebudou "
+"fungovat. S největší pravděpodobností budete chtít místo toho použít <em>Myš "
+"sleduje zaměření (preference myši)</em>!"
 
 #: windows.cpp:107
 #, kde-format
@@ -1176,3 +1261,10 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
+"<em>Zaměření přesně pod myší:</em> Zaměření je vždy na okně pod myší (v "
+"případě pochybností nikde jinde), což velmi připomíná chování zaměření ve "
+"starším, nespravovaném prostředí X11.<br/><strong>Upozornění:</strong> "
+"<em>Prevence ztráty zaměření</em> a <em>přepínač ('Alt+Tab')</em> jsou v "
+"rozporu s pravidly aktivace a nebudou fungovat. Místo toho budete s velkou "
+"pravděpodobností chtít použít <em>Myš sleduje zaměření (preference myši)</"
+"em>!"

@@ -3,21 +3,22 @@
 # Lukáš Tinkl <lukas@kde.org>, 2010, 2012, 2013.
 # SPDX-FileCopyrightText: 2014, 2016, 2017, 2018, 2019, 2024 Vít Pelčák <vit@pelcak.org>
 # SPDX-FileCopyrightText: 2021, 2023, 2024 Vit Pelcak <vit@pelcak.org>
+# SPDX-FileCopyrightText: 2026 Libor Filípek <libor.filipek@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-20 00:45+0000\n"
-"PO-Revision-Date: 2024-08-29 13:37+0200\n"
-"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
+"PO-Revision-Date: 2026-08-11 13:22+0200\n"
+"Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 24.08.0\n"
+"X-Generator: Poedit 3.9\n"
 "X-Language: cs_CZ\n"
 "X-Source-Language: en_US\n"
 
@@ -93,16 +94,13 @@ msgstr "Zapnout alternativní přepínání oken"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23
-#, fuzzy, kde-format
-#| msgid ""
-#| "You can trigger an action by pushing the mouse cursor against the "
-#| "corresponding screen edge or corner."
+#, kde-format
 msgid ""
 "You can trigger an action by pushing the mouse pointer against the "
 "corresponding screen edge or corner."
 msgstr ""
-"Můžete spustit činnost posunutím kurzoru myši proti odpovídajícímu okraji "
-"nebo rohu."
+"Akci můžete spustit tak, že přitlačíte ukazatel myši k příslušnému okraji "
+"nebo rohu obrazovky."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67
@@ -166,14 +164,11 @@ msgstr "obrazovky"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
 #: main.ui:174
-#, fuzzy, kde-format
-#| msgid ""
-#| "Change desktop when the mouse cursor is pushed against the edge of the "
-#| "screen"
+#, kde-format
 msgid ""
 "Change desktop when the mouse pointer is pushed against the edge of the "
 "screen"
-msgstr "Změnit plochu pokud je ukazatel myši posunut k okraji obrazovky"
+msgstr "Přepnout plochu, když se ukazatel myši dotkne okraje obrazovky"
 
 #. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
 #: main.ui:177
@@ -202,16 +197,13 @@ msgstr "Vždy povolen"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
 #: main.ui:206
-#, fuzzy, kde-format
-#| msgid ""
-#| "Amount of time required for the mouse cursor to be pushed against the "
-#| "edge of the screen before the action is triggered"
+#, kde-format
 msgid ""
 "Amount of time required for the mouse pointer to be pushed against the edge "
 "of the screen before the action is triggered"
 msgstr ""
-"Doba, po jakou musí být ukazatel myši posunován proti okraji obrazovky aby "
-"se spustila přidělená činnost"
+"Doba, po kterou musí ukazatel myši přiléhat k okraji obrazovky, než dojde ke "
+"spuštění akce"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
 #: main.ui:209
@@ -258,21 +250,24 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Zde můžete zapnout nebo vypnout virtuální rohovou bariéru mezi obrazovkami. "
+"Tato bariéra zabraňuje tomu, aby se ukazatel myši přesunul na jinou "
+"obrazovku, pokud se již dotýká rohu obrazovky. Díky tomu je při používání "
+"více obrazovek snazší aktivovat prvky uživatelského rozhraní, jako jsou "
+"například tlačítka pro zavření maximalizovaných oken."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Prevents cursors from crossing at screen corners."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents the pointer from crossing at screen corners."
-msgstr "Brání ukazateli překročit roh obrazovky."
+msgstr "Zabraňuje tomu, aby ukazatel překračoval rohy obrazovky."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "&Okrajová bariéra:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -284,6 +279,11 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Zde můžete nastavit velikost okrajové bariéry mezi jednotlivými obrazovkami. "
+"Tato bariéra představuje dodatečnou vzdálenost, o kterou musíte posunout "
+"ukazatel myši, než překročí okraj a přejde na druhou obrazovku. Díky tomu je "
+"snazší přistupovat k prvkům uživatelského rozhraní, jako jsou například "
+"panely Plasma, které se nacházejí na okraji mezi obrazovkami."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
@@ -291,6 +291,8 @@ msgstr ""
 msgctxt "@info:tooltip"
 msgid "Additional distance the pointer needs to travel to cross screen edges."
 msgstr ""
+"Dodatečná vzdálenost, kterou musí ukazatel urazit, aby překročil okraje "
+"obrazovky."
 
 # žádné parametry funkce v inspektoru funkcí
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
@@ -311,4 +313,4 @@ msgstr " px"
 msgid ""
 "You can trigger an action by swiping from the screen edge towards the center "
 "of the screen."
-msgstr "Můžete spustit činnost přejetím z kraje obrazovky k jejímu středu"
+msgstr "Můžete spustit činnost přejetím z kraje obrazovky k jejímu středu."
