@@ -260,6 +260,7 @@ private:
     bool m_isRequestedFullScreen = false;
     bool m_isInitialized = false;
     bool m_isTransient = false;
+    bool m_isUnrestricted = false;
     QPointer<LogicalOutput> m_fullScreenRequestedOutput;
     std::shared_ptr<KDecoration3::Decoration> m_nextDecoration;
     std::shared_ptr<KDecoration3::DecorationState> m_nextDecorationState;

@@ -740,8 +740,18 @@ void XdgToplevelWindow::handleRoleCommit()
     } else {
         if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
             frameGeometry = configureEvent->gravity.apply(frameGeometry, configureEvent->bounds);
+            if (!m_isUnrestricted) {
+                if (const auto anchor = confineInteractiveMove(frameGeometry, minVisibleArea())) {
+                    frameGeometry.moveTopLeft(*anchor);
+                }
+            }
         } else if (oldWindowGeometry != m_windowGeometry) {
             frameGeometry = m_gravity.apply(frameGeometry, m_frameGeometry);
+            if (!m_isUnrestricted) {
+                if (const auto anchor = confineInteractiveMove(frameGeometry, minVisibleArea())) {
+                    frameGeometry.moveTopLeft(*anchor);
+                }
+            }
         }
     }
 
@@ -846,6 +856,8 @@ void XdgToplevelWindow::doSetQuickTileMode()
 
 bool XdgToplevelWindow::doStartInteractiveMoveResize()
 {
+    m_isUnrestricted = isUnrestrictedInteractiveMoveResize();
+
     if (interactiveMoveResizeGravity() != Gravity::Center) {
         m_nextGravity = interactiveMoveResizeGravity();
         m_nextStates |= XdgToplevelInterface::State::Resizing;
