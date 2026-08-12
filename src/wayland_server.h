@@ -153,7 +153,6 @@ public:
     void removeWindow(Window *c);
     Window *findWindow(const SurfaceInterface *surface) const;
     XdgToplevelWindow *findXdgToplevelWindow(SurfaceInterface *surface) const;
-    XdgSurfaceWindow *findXdgSurfaceWindow(SurfaceInterface *surface) const;
 
     /**
      * @returns a transient parent of a surface imported with the foreign protocol, if any
