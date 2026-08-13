@@ -2,7 +2,7 @@
     "KPlugin": {
         "Category": "Window Management",
         "Description": "Zoom out until all opened windows can be displayed side-by-side",
-        "Description[ar]": "بعِّد إلى أن يصير بالإمكان عرض كل النوافذ المفتوحة جبناً  إلى جنب",
+        "Description[ar]": "بعِّد إلى أن يصير بالإمكان عرض كل النوافذ المفتوحة جبنًا  إلى جنب",
         "Description[az]": "Bütün açıq pəncərələrin miniatürünü yan-yana göstərir",
         "Description[be]": "Маштаб памяншаецца, пакуль усе адкрытыя вокны не будуць адлюстроўвацца побач адно з адным",
         "Description[bg]": "Намаляване на мащаба, докато всички отворени прозорци се представят един до друг",
