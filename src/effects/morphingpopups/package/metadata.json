@@ -57,6 +57,7 @@
         "Description[bg]": "Кръстосано преливане, когато подсказките или известията променят геометрията си",
         "Description[ca@valencia]": "Animació d'esvaïment creuat quan els consells d'eina o les notificacions canvien la seua geometria",
         "Description[ca]": "Animació d'esvaïment creuat quan els consells d'eines o les notificacions canvien la seva geometria",
+        "Description[cs]": "Animace s přechodem při změně geometrie popisků nebo oznámení",
         "Description[de]": "Überblendende Animationen, wenn Kurzinfos oder Benachrichtigungen ihre Geometrie ändern",
         "Description[en_GB]": "Cross fade animation when Tooltips or Notifications change their geometry",
         "Description[eo]": "Krucfada animacio kiam Konsiletoj aŭ Sciigoj ŝanĝas sian geometrion",
