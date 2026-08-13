@@ -4,13 +4,14 @@
 # SPDX-FileCopyrightText: 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2023, 2024, 2026 Vít Pelčák <vit@pelcak.org>
 # Tomáš Chvátal <tomas.chvatal@gmail.com>, 2012.
 # SPDX-FileCopyrightText: 2021, 2022, 2023, 2024 Vit Pelcak <vit@pelcak.org>
+# SPDX-FileCopyrightText: 2026 Libor Filípek <libor.filipek@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2026-08-11 13:23+0200\n"
+"PO-Revision-Date: 2026-08-12 11:17+0200\n"
 "Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -25,12 +26,14 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Miroslav Flídr,Lukáš Tinkl,Jakub Friedl,David Kolibáč"
+msgstr "Miroslav Flídr,Lukáš Tinkl,Jakub Friedl,David Kolibáč,Libor Filípek"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "flidr@kky.zcu.cz,lukas@kde.org,jfriedl@suse.cz,david@kolibac.cz"
+msgstr ""
+"flidr@kky.zcu.cz,lukas@kde.org,jfriedl@suse.cz,david@kolibac.cz,libor."
+"filipek@gmail.com"
 
 #: composite.cpp:646
 #, kde-format
@@ -268,7 +271,7 @@ msgstr "Rozdíl"
 #, kde-format
 msgctxt "The relative mouse movement"
 msgid "Delta (not accelerated)"
-msgstr ""
+msgstr "Rozdíl (bez zrychlení)"
 
 #: debug_console.cpp:211
 #, kde-format
@@ -280,7 +283,7 @@ msgstr "Globální pozice"
 #, kde-format
 msgctxt "A mouse pointer button press event"
 msgid "Pointer Button Press"
-msgstr ""
+msgstr "Stisknutí tlačítka ukazatele"
 
 #: debug_console.cpp:218 debug_console.cpp:226
 #, kde-format
@@ -292,7 +295,7 @@ msgstr "Tlačítko"
 #, kde-format
 msgctxt "A button in a mouse press/release event"
 msgid "Native Button code"
-msgstr ""
+msgstr "Kód nativního tlačítka"
 
 #: debug_console.cpp:220 debug_console.cpp:228
 #, kde-format
@@ -304,19 +307,19 @@ msgstr "Stisknutá tlačítka"
 #, kde-format
 msgctxt "A mouse pointer button release event"
 msgid "Pointer Button Release"
-msgstr ""
+msgstr "Uvolnění tlačítka ukazatele"
 
 #: debug_console.cpp:243
 #, kde-format
 msgctxt "A mouse pointer axis (wheel) event"
 msgid "Pointer Axis"
-msgstr ""
+msgstr "Osa ukazatele"
 
 #: debug_console.cpp:247
 #, kde-format
 msgctxt "The orientation of a pointer axis event"
 msgid "Orientation"
-msgstr "7Natočení"
+msgstr "Orientace"
 
 #: debug_console.cpp:248
 #, kde-format
@@ -376,13 +379,13 @@ msgstr "Meta"
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Keypad"
-msgstr ""
+msgstr "Klávesnice"
 
 #: debug_console.cpp:297
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Group-switch"
-msgstr ""
+msgstr "Přepínač skupin"
 
 #: debug_console.cpp:303
 #, kde-format
@@ -394,13 +397,13 @@ msgstr "Opakovat"
 #, kde-format
 msgctxt "The code as read from the input device"
 msgid "Scan code"
-msgstr ""
+msgstr "Skenovat kód"
 
 #: debug_console.cpp:308
 #, kde-format
 msgctxt "Key according to Qt"
 msgid "Qt::Key code"
-msgstr ""
+msgstr "Qt::Kód klávesy"
 
 #: debug_console.cpp:310
 #, kde-format
@@ -424,13 +427,13 @@ msgstr "Modifikátory"
 #, kde-format
 msgctxt "A touch down event"
 msgid "Touch down"
-msgstr ""
+msgstr "Výběr"
 
 #: debug_console.cpp:326 debug_console.cpp:341 debug_console.cpp:356
 #, kde-format
 msgctxt "The id of the touch point in the touch event"
 msgid "Point identifier"
-msgstr ""
+msgstr "Identifikátor bodu"
 
 #: debug_console.cpp:327 debug_console.cpp:342
 #, kde-format
@@ -442,19 +445,19 @@ msgstr "Globální pozice"
 #, kde-format
 msgctxt "A touch motion event"
 msgid "Touch Motion"
-msgstr ""
+msgstr "Dotykové ovládání"
 
 #: debug_console.cpp:354
 #, kde-format
 msgctxt "A touch up event"
 msgid "Touch Up"
-msgstr ""
+msgstr "Doladění"
 
 #: debug_console.cpp:367
 #, kde-format
 msgctxt "A pinch gesture is started"
 msgid "Pinch start"
-msgstr ""
+msgstr "Začátek přiblížení prstů"
 
 #: debug_console.cpp:369
 #, kde-format
@@ -466,7 +469,7 @@ msgstr "Počet prstů"
 #, kde-format
 msgctxt "A pinch gesture is updated"
 msgid "Pinch update"
-msgstr ""
+msgstr "Aktualizace přiblížení prstů"
 
 #: debug_console.cpp:382
 #, kde-format
@@ -496,19 +499,19 @@ msgstr "Rozdíl y"
 #, kde-format
 msgctxt "A pinch gesture ended"
 msgid "Pinch end"
-msgstr ""
+msgstr "Konec přiblížení prstů"
 
 #: debug_console.cpp:408
 #, kde-format
 msgctxt "A pinch gesture got cancelled"
 msgid "Pinch cancelled"
-msgstr ""
+msgstr "Přiblížení prstů zrušeno"
 
 #: debug_console.cpp:420
 #, kde-format
 msgctxt "A swipe gesture is started"
 msgid "Swipe start"
-msgstr ""
+msgstr "Začátek přejetí prstu"
 
 #: debug_console.cpp:422
 #, kde-format
@@ -520,7 +523,7 @@ msgstr "Počet prstů"
 #, kde-format
 msgctxt "A swipe gesture is updated"
 msgid "Swipe update"
-msgstr ""
+msgstr "Aktualizace přejetí prstu"
 
 #: debug_console.cpp:435
 #, kde-format
@@ -538,19 +541,19 @@ msgstr "Rozdíl y"
 #, kde-format
 msgctxt "A swipe gesture ended"
 msgid "Swipe end"
-msgstr ""
+msgstr "Konec přejetí prstu"
 
 #: debug_console.cpp:459
 #, kde-format
 msgctxt "A swipe gesture got cancelled"
 msgid "Swipe cancelled"
-msgstr ""
+msgstr "Přejetí prstu zrušeno"
 
 #: debug_console.cpp:471
 #, kde-format
 msgctxt "A hardware switch (e.g. notebook lid) got toggled"
 msgid "Switch toggled"
-msgstr ""
+msgstr "Přepínač byl přepnut"
 
 #: debug_console.cpp:477
 #, kde-format
@@ -591,7 +594,7 @@ msgstr "Stav"
 #: debug_console.cpp:508
 #, kde-format
 msgid "Tablet Tool"
-msgstr "Nástroj pro tablet"
+msgstr "Nástroj tabletu"
 
 #: debug_console.cpp:509
 #, kde-format
@@ -658,7 +661,7 @@ msgstr "Tlačítko tabletu"
 #: debug_console.cpp:553
 #, kde-format
 msgid "Tablet Pad Strip"
-msgstr ""
+msgstr "Pás tabletu"
 
 #: debug_console.cpp:554 debug_console.cpp:568
 #, kde-format
@@ -668,12 +671,12 @@ msgstr "Číslo"
 #: debug_console.cpp:556 debug_console.cpp:570
 #, kde-format
 msgid "isFinger"
-msgstr ""
+msgstr "prst"
 
 #: debug_console.cpp:567
 #, kde-format
 msgid "Tablet Pad Ring"
-msgstr ""
+msgstr "Kroužek tabletu"
 
 #: debug_console.cpp:797
 #, kde-format
@@ -868,7 +871,7 @@ msgstr "Okna X11"
 #: debug_console.cpp:1224
 #, kde-format
 msgid "X11 Unmanaged Windows"
-msgstr ""
+msgstr "Nespravovaná okna X11"
 
 #: debug_console.cpp:1226
 #, kde-format
@@ -950,7 +953,7 @@ msgstr "Verze:"
 #: debug_console.ui:157
 #, kde-format
 msgid "Shading Language Version:"
-msgstr ""
+msgstr "Verze jazyka stínování:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: debug_console.ui:164
@@ -980,7 +983,7 @@ msgstr "Verze GLSL:"
 #: debug_console.ui:251
 #, kde-format
 msgid "Platform Extensions"
-msgstr ""
+msgstr "Rozšíření platformy"
 
 #. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
 #: debug_console.ui:267
@@ -1495,7 +1498,7 @@ msgstr "jméno"
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "appname"
-msgstr ""
+msgstr "appname"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:97
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:150
@@ -2069,7 +2072,7 @@ msgstr "Zkratka"
 #: rulesettings.kcfg:410
 #, kde-format
 msgid "Shortcut rule type"
-msgstr "Typ pravidla pro zkratky:"
+msgstr "Typ pravidla pro zkratky"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:417
