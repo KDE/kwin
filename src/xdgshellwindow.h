@@ -79,8 +79,12 @@ protected:
     void handleCommit();
 
     WindowType m_windowType = WindowType::Normal;
-    Gravity m_gravity = Gravity::BottomRight;
-    Gravity m_nextGravity = Gravity::BottomRight;
+
+    // The gravity that's applied when the client resizes the surface on its own.
+    Gravity m_spontaneousGravity = Gravity::BottomRight;
+
+    // The gravity that's applied when the geometry changes due to a configure event.
+    Gravity m_configureGravity = Gravity::BottomRight;
 
     XdgSurfaceInterface *m_shellSurface;
     QTimer *m_configureTimer;
@@ -228,6 +232,8 @@ private:
     QString initialShortcut(const std::optional<XdgToplevelSessionData> &session) const;
     QStringList initialActivities(const std::optional<XdgToplevelSessionData> &session) const;
     bool initialExcludeFromCapture(const std::optional<XdgToplevelSessionData> &session) const;
+    Gravity preferredConfigureGravity() const;
+    Gravity preferredSpontaneousGravity() const;
     DecorationMode preferredDecorationMode() const;
     void configureDecoration();
     void configureXdgDecoration(DecorationMode decorationMode);

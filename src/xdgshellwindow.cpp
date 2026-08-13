@@ -146,7 +146,7 @@ void XdgSurfaceWindow::moveResizeInternal(const RectF &rect, MoveResizeMode mode
         const QSizeF roundedClientSize = surface()->snappedSize(clientSize());
         if (roundedRequestedClientSize == roundedClientSize) {
             const RectF snappedRect = RectF(rect.topLeft(), nextClientSizeToFrameSize(snapToPixels(roundedClientSize, nextTargetScale())));
-            updateGeometry(m_nextGravity.apply(snappedRect, rect));
+            updateGeometry(m_configureGravity.apply(snappedRect, rect));
         } else {
             scheduleConfigure();
         }
@@ -278,6 +278,9 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
     }
 #endif
     move(workspace()->activeOutput()->geometry().center());
+
+    m_spontaneousGravity = preferredSpontaneousGravity();
+    m_configureGravity = preferredConfigureGravity();
 
     connect(shellSurface, &XdgToplevelInterface::titleChanged,
             this, &XdgToplevelWindow::handleWindowTitleChanged);
@@ -597,11 +600,11 @@ XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure()
     configureEvent->decorationState = m_nextDecorationState;
     configureEvent->serial = serial;
     configureEvent->tile = m_requestedTile;
-    configureEvent->gravity = m_nextGravity;
+    configureEvent->gravity = m_configureGravity;
     configureEvent->scale = m_nextTargetScale;
 
     if (!isInteractiveMoveResize()) {
-        m_nextGravity = Gravity::BottomRight;
+        m_configureGravity = preferredConfigureGravity();
     }
 
     return configureEvent;
@@ -644,7 +647,7 @@ void XdgToplevelWindow::handleRoleCommit()
                 }
             }
         } else if (oldWindowGeometry != m_windowGeometry) {
-            frameGeometry = m_gravity.apply(frameGeometry, m_frameGeometry);
+            frameGeometry = m_spontaneousGravity.apply(frameGeometry, m_frameGeometry);
             if (!m_isUnrestricted) {
                 if (const auto anchor = confineInteractiveMove(frameGeometry)) {
                     frameGeometry.moveTopLeft(*anchor);
@@ -665,9 +668,9 @@ void XdgToplevelWindow::handleRoleCommit()
         commitTile(configureEvent->tile);
 
         if (!m_configureEvents.isEmpty()) {
-            m_gravity = configureEvent->gravity;
+            m_spontaneousGravity = configureEvent->gravity;
         } else if (!isInteractiveResize()) {
-            m_gravity = Gravity::BottomRight;
+            m_spontaneousGravity = preferredSpontaneousGravity();
         }
     }
 }
@@ -757,7 +760,7 @@ bool XdgToplevelWindow::doStartInteractiveMoveResize()
     m_isUnrestricted = isUnrestrictedInteractiveMoveResize();
 
     if (interactiveMoveResizeGravity() != Gravity::Center) {
-        m_nextGravity = interactiveMoveResizeGravity();
+        m_configureGravity = interactiveMoveResizeGravity();
         m_nextStates |= XdgToplevelInterface::State::Resizing;
         scheduleConfigure();
     }
@@ -1378,6 +1381,20 @@ void XdgToplevelWindow::installAppMenu(AppMenuInterface *appMenu)
     updateMenu(appMenu->address());
 }
 
+Gravity XdgToplevelWindow::preferredConfigureGravity() const
+{
+    return Gravity::BottomRight;
+}
+
+Gravity XdgToplevelWindow::preferredSpontaneousGravity() const
+{
+    if (m_plasmaShellSurface && m_plasmaShellSurface->isPositionSet()) {
+        return Gravity::BottomRight;
+    } else {
+        return Gravity::Center;
+    }
+}
+
 DecorationMode XdgToplevelWindow::preferredDecorationMode() const
 {
     if (!Decoration::DecorationBridge::hasPlugin()) {
@@ -1580,6 +1597,10 @@ void XdgToplevelWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *s
     auto updatePosition = [this, shellSurface] {
         if (!isInteractiveMoveResize()) {
             place(shellSurface->position());
+
+            // Reset the gravities so the top-left corner stays locked when the window size changes.
+            m_configureGravity = preferredConfigureGravity();
+            m_spontaneousGravity = preferredSpontaneousGravity();
         }
     };
     auto showUnderCursor = [this] {
@@ -1972,7 +1993,7 @@ XdgSurfaceConfigure *XdgPopupWindow::sendRoleConfigure()
     XdgSurfaceConfigure *configureEvent = new XdgSurfaceConfigure();
     configureEvent->bounds = moveResizeGeometry();
     configureEvent->serial = serial;
-    configureEvent->gravity = m_nextGravity;
+    configureEvent->gravity = m_configureGravity;
     configureEvent->scale = m_nextTargetScale;
 
     return configureEvent;
