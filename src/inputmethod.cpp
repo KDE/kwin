@@ -47,6 +47,7 @@
 #include <QKeyEvent>
 #include <QMenu>
 
+#include <fcntl.h>
 #include <linux/input-event-codes.h>
 #include <private/qxkbcommon_p.h>
 #include <unistd.h>
@@ -868,12 +869,11 @@ void InputMethod::startInputMethod()
     }
 
     const QString program = arguments.takeFirst();
-    int socket = waylandServer()->createInputMethodConnection();
+    const int socket = waylandServer()->createInputMethodConnection();
     if (socket < 0) {
         qWarning("Failed to create the input method connection");
         return;
     }
-    socket = dup(socket);
 
     QProcessEnvironment environment = kwinApp()->processStartupEnvironment();
     environment.insert(QStringLiteral("WAYLAND_SOCKET"), QString::number(socket));
@@ -892,6 +892,19 @@ void InputMethod::startInputMethod()
     m_inputMethodProcess->setProcessEnvironment(environment);
     m_inputMethodProcess->setProgram(program);
     m_inputMethodProcess->setArguments(arguments);
+    // The socketpair end is created with CLOEXEC, so the input method process can't inherit
+    // it directly. Clear the flag in the child process right before exec so the input method
+    // process can use the socket; the parent closes its copy after start().
+    m_inputMethodProcess->setChildProcessModifier([this, socket]() {
+        const int originalFlags = fcntl(socket, F_GETFD);
+        if (originalFlags < 0) {
+            m_inputMethodProcess->failChildProcessModifier("failed to get file descriptor flags", errno);
+            return;
+        }
+        if (fcntl(socket, F_SETFD, originalFlags & ~FD_CLOEXEC) < 0) {
+            m_inputMethodProcess->failChildProcessModifier("failed to unset O_CLOEXEC", errno);
+        }
+    });
     m_inputMethodProcess->start();
     close(socket);
     connect(m_inputMethodProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this](int exitCode, QProcess::ExitStatus exitStatus) {
