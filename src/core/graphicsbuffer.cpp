@@ -114,7 +114,12 @@ bool GraphicsBuffer::alphaChannelFromDrmFormat(uint32_t format)
 
 uint64_t HostMemoryAttributes::offset(const QPoint &pixel) const
 {
-    return pixel.y() * stride + pixel.x() * FormatInfo::get(format)->bitsPerPixel;
+    return pixel.y() * stride + pixel.x() * FormatInfo::get(format)->bitsPerPixel / 8;
+}
+
+uint32_t HostMemoryAttributes::texelStride() const
+{
+    return stride / (FormatInfo::get(format)->bitsPerPixel / 8);
 }
 
 } // namespace KWin

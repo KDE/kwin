@@ -53,12 +53,14 @@ struct SinglePixelAttributes
 
 struct HostMemoryAttributes
 {
-    std::unique_ptr<std::byte> data;
+    std::unique_ptr<std::byte[]> data;
     QSize size;
     uint32_t stride;
     uint32_t format;
+    uint64_t sizeInBytes;
 
     uint64_t offset(const QPoint &pixel) const;
+    uint32_t texelStride() const;
 };
 
 /**

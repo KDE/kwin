@@ -58,9 +58,9 @@ GraphicsBuffer *HostMemoryGraphicsBufferAllocator::allocate(const GraphicsBuffer
     if (!info) {
         return nullptr;
     }
-    const uint32_t stride = align(options.size.width() * info->bitsPerPixel, m_alignment);
-    const size_t size = stride * options.size.height();
-    std::unique_ptr<std::byte> data(new (std::align_val_t(m_alignment)) std::byte[size]());
+    const uint32_t stride = options.size.width() * info->bitsPerPixel / 8;
+    const size_t size = align(stride * options.size.height(), m_alignment);
+    std::unique_ptr<std::byte[]> data(new (std::align_val_t(m_alignment)) std::byte[size]());
     if (!data) {
         return nullptr;
     }
@@ -69,6 +69,7 @@ GraphicsBuffer *HostMemoryGraphicsBufferAllocator::allocate(const GraphicsBuffer
         .size = options.size,
         .stride = stride,
         .format = options.format,
+        .sizeInBytes = size,
     });
 }
 

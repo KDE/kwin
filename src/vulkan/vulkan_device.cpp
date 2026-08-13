@@ -40,6 +40,7 @@ VulkanDevice::~VulkanDevice()
     m_graphicsQueue.reset();
     m_transferQueue.reset();
     m_importedTextures.clear();
+    m_importedBuffers.clear();
     m_logical.clear();
 }
 
@@ -312,8 +313,7 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importHostPointerAsTexture(const Ho
 
     vk::ImageMemoryRequirementsInfo2 memRequirementsInfo{image};
     const vk::MemoryRequirements2 memRequirements = m_logical.getImageMemoryRequirements2(memRequirementsInfo);
-    const VkDeviceSize bufferSize = attributes->stride * attributes->size.height();
-    if (memRequirements.memoryRequirements.size > bufferSize) {
+    if (memRequirements.memoryRequirements.size > attributes->sizeInBytes) {
         return nullptr;
     }
 
@@ -328,7 +328,7 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importHostPointerAsTexture(const Ho
     vk::ImportMemoryHostPointerInfoEXT importInfo(vk::ExternalMemoryHandleTypeFlagBits::eHostAllocationEXT, attributes->data.get());
     // NOTE that this cannot use memoryRequirements.size, since it may be smaller
     // than the buffer, and that gets the import rejected on Intel
-    vk::MemoryAllocateInfo memoryInfo(bufferSize, memoryIndex.value(), &importInfo);
+    vk::MemoryAllocateInfo memoryInfo(attributes->sizeInBytes, memoryIndex.value(), &importInfo);
     auto [allocateResult, memory] = m_logical.allocateMemory(memoryInfo);
     if (allocateResult != vk::Result::eSuccess) {
         qCWarning(KWIN_VULKAN, "'Allocating' memory for host memory image failed: %s", vk::to_string(allocateResult).c_str());
@@ -358,14 +358,13 @@ std::shared_ptr<VulkanBuffer> VulkanDevice::importHostPointerAsBuffer(const Host
     if (formatIt == m_transferFormats.end() || !formatIt->contains(DRM_FORMAT_MOD_LINEAR)) {
         return nullptr;
     }
-    const VkDeviceSize bufferSize = attributes->stride * attributes->size.height();
 
     vk::ExternalMemoryBufferCreateInfo externalInfo{
         vk::ExternalMemoryHandleTypeFlagBits::eHostAllocationEXT,
     };
     vk::BufferCreateInfo bufferInfo{
         vk::BufferCreateFlags(),
-        bufferSize,
+        attributes->sizeInBytes,
         usage,
         vk::SharingMode::eExclusive,
         {},
@@ -384,7 +383,7 @@ std::shared_ptr<VulkanBuffer> VulkanDevice::importHostPointerAsBuffer(const Host
 
     vk::BufferMemoryRequirementsInfo2 memRequirementsInfo{buffer};
     const vk::MemoryRequirements2 memRequirements = m_logical.getBufferMemoryRequirements2(memRequirementsInfo);
-    if (memRequirements.memoryRequirements.size > bufferSize) {
+    if (memRequirements.memoryRequirements.size > attributes->sizeInBytes) {
         return nullptr;
     }
 
@@ -399,20 +398,19 @@ std::shared_ptr<VulkanBuffer> VulkanDevice::importHostPointerAsBuffer(const Host
     vk::ImportMemoryHostPointerInfoEXT importInfo(vk::ExternalMemoryHandleTypeFlagBits::eHostAllocationEXT, attributes->data.get());
     // NOTE that this cannot use memoryRequirements.size, since it may be smaller
     // than the buffer, and that gets the import rejected on Intel
-    vk::MemoryAllocateInfo memoryInfo(bufferSize, memoryIndex.value(), &importInfo);
+    vk::MemoryAllocateInfo memoryInfo(attributes->sizeInBytes, memoryIndex.value(), &importInfo);
     auto [allocateResult, memory] = m_logical.allocateMemory(memoryInfo);
     if (allocateResult != vk::Result::eSuccess) {
         qCWarning(KWIN_VULKAN, "'Allocating' memory for host memory image failed: %s", vk::to_string(allocateResult).c_str());
         return nullptr;
     }
 
-    vk::BindBufferMemoryInfo bindInfo{buffer, memory, 0};
-    const vk::Result bindResult = m_logical.bindBufferMemory2(bindInfo);
+    const vk::Result bindResult = buffer.bindMemory(memory, 0);
     if (bindResult != vk::Result::eSuccess) {
         qCWarning(KWIN_VULKAN) << "failed to bind image to memory";
         return nullptr;
     }
-    return std::make_shared<VulkanBuffer>(std::move(buffer), std::move(memory), bufferSize);
+    return std::make_shared<VulkanBuffer>(std::move(buffer), std::move(memory), attributes->sizeInBytes);
 }
 
 FormatModifierMap VulkanDevice::queryFormats(VkImageUsageFlags flags) const

@@ -190,7 +190,7 @@ static std::optional<CopyRet> createCopy(RenderDevice *device,
                 options.format = fmt->format;
                 options.modifiers = fmt->modifiers;
                 options.render = false;
-                if (hostAllocator) {
+                if (allocator == hostAllocator.get()) {
                     auto swapchain = VulkanBufferSwapchain::create(device->vulkanDevice(), hostAllocator, options);
                     if (swapchain) {
                         return CopyRet{
@@ -211,6 +211,7 @@ static std::optional<CopyRet> createCopy(RenderDevice *device,
         }
     }
     if (hostAllocator) {
+        // The EGL path doesn't support host allocations
         return std::nullopt;
     }
 
@@ -293,9 +294,10 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::createForSampling(RenderDe
             && destination->vulkanDevice() && destination->vulkanDevice()->minImportedHostPointerAlignment()) {
             auto alignment = std::lcm(*sourceDevice->vulkanDevice()->minImportedHostPointerAlignment(), *destination->vulkanDevice()->minImportedHostPointerAlignment());
             hostAllocator = std::make_shared<HostMemoryGraphicsBufferAllocator>(alignment);
-        }
-        if (hostAllocator) {
             firstCopy = createCopy(sourceDevice, format, {modifier}, hostAllocator.get(), hostAllocator, destination->allImportableFormats(), options);
+            if (!firstCopy) {
+                hostAllocator.reset();
+            }
         }
         if (sysMemDevice && !firstCopy) {
             firstCopy = createCopy(sourceDevice, format, {modifier}, sysMemDevice->allocator(), nullptr, destination->allImportableFormats(), options);
@@ -306,7 +308,7 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::createForSampling(RenderDe
         if (!firstCopy) {
             return nullptr;
         }
-        auto secondCopy = createCopy(destination, firstCopy->copy->format(), {firstCopy->copy->modifier()}, destination->allocator(), nullptr, importFormats, options);
+        auto secondCopy = createCopy(destination, firstCopy->copy->format(), {firstCopy->copy->modifier()}, destination->allocator(), hostAllocator, importFormats, options);
         if (!secondCopy) {
             return nullptr;
         }
@@ -368,19 +370,24 @@ std::optional<MultiGpuSwapchain::AllocationInfo> MultiGpuSwapchain::createForSca
         // If there's no matching formats, fall back to double copy
     }
 
-    std::unique_ptr<HostMemoryGraphicsBufferAllocator> hostAllocator;
-    if (sourceDevice->vulkanDevice() && sourceDevice->vulkanDevice()->minImportedHostPointerAlignment()
-        && destination->vulkanDevice() && destination->vulkanDevice()->minImportedHostPointerAlignment()) {
-        auto alignment = std::lcm(*sourceDevice->vulkanDevice()->minImportedHostPointerAlignment(), *destination->vulkanDevice()->minImportedHostPointerAlignment());
-        hostAllocator = std::make_unique<HostMemoryGraphicsBufferAllocator>(alignment);
-    }
     RenderDevice *sysMemDevice = GpuManager::self()->softwareDevice();
     RenderDevice *fallbackDevice = !sourceDevice->drmDevice() || sourceDevice->drmDevice()->isNvidia() ? destination : sourceDevice;
 
     options.scanout = false;
     std::optional<KWin::CopyRet> firstCopy;
-    if (hostAllocator) {
-        firstCopy = createCopy(sourceDevice, format, modifiers, hostAllocator.get(), std::move(hostAllocator), destination->allImportableFormats(), options);
+
+    // If host pointers are supported on both GPUs, prefer that path.
+    // It's not faster than the other paths, but it seems to be the only one that
+    // works without any driver bugs on Intel.
+    std::shared_ptr<HostMemoryGraphicsBufferAllocator> hostAllocator;
+    if (sourceDevice->vulkanDevice() && sourceDevice->vulkanDevice()->minImportedHostPointerAlignment()
+        && destination->vulkanDevice() && destination->vulkanDevice()->minImportedHostPointerAlignment()) {
+        auto alignment = std::lcm(*sourceDevice->vulkanDevice()->minImportedHostPointerAlignment(), *destination->vulkanDevice()->minImportedHostPointerAlignment());
+        hostAllocator = std::make_unique<HostMemoryGraphicsBufferAllocator>(alignment);
+        firstCopy = createCopy(sourceDevice, format, modifiers, hostAllocator.get(), hostAllocator, destination->allImportableFormats(), options);
+        if (!firstCopy) {
+            hostAllocator.reset();
+        }
     }
     if (sysMemDevice && !firstCopy) {
         firstCopy = createCopy(sourceDevice, format, modifiers, sysMemDevice->allocator(), nullptr, destination->allImportableFormats(), options);
@@ -392,7 +399,7 @@ std::optional<MultiGpuSwapchain::AllocationInfo> MultiGpuSwapchain::createForSca
         return std::nullopt;
     }
     options.scanout = true;
-    auto secondCopy = createCopy(destination, format, {firstCopy->copy->modifier()}, targetDevice->allocator(), nullptr, importFormats, options);
+    auto secondCopy = createCopy(destination, format, {firstCopy->copy->modifier()}, targetDevice->allocator(), hostAllocator, importFormats, options);
     if (!secondCopy) {
         return std::nullopt;
     }
@@ -471,7 +478,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
     if (buffer->hostDataAttributes()) {
         srcBuffer = copyVk->importBufferAsBuffer(buffer, vk::BufferUsageFlagBits::eTransferSrc);
     } else {
-        const auto srcTexture = copyVk->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+        srcTexture = copyVk->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
     }
     if (!srcBuffer && !srcTexture) {
         qCWarning(KWIN_VULKAN, "Could not import buffer for multi GPU copy!");
@@ -533,7 +540,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
             return vk::BufferImageCopy2{
                 // src
                 buffer->hostDataAttributes()->offset(rect.topLeft()),
-                buffer->hostDataAttributes()->stride,
+                buffer->hostDataAttributes()->texelStride(),
                 uint32_t(rect.height()),
                 // dst
                 vk::ImageSubresourceLayers{
@@ -763,7 +770,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuBufferCopy::copy(GraphicsBuf
         query = VulkanRenderTimeQuery::begin(copyVk, commandBuffer, queue->familyIndex());
     }
 
-    vk::BufferMemoryBarrier2 memoryBarrier{
+    vk::BufferMemoryBarrier2 bufferBarrier{
         vk::PipelineStageFlagBits2::eAllCommands,
         vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
         vk::PipelineStageFlagBits2::eAllCommands,
@@ -774,17 +781,36 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuBufferCopy::copy(GraphicsBuf
         0,
         m_currentSlot->vulkanBuffer()->size(),
     };
+    vk::ImageMemoryBarrier2 imageBarrier{
+        vk::PipelineStageFlagBits2::eAllCommands,
+        vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
+        vk::PipelineStageFlagBits2::eAllCommands,
+        vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
+        vk::ImageLayout::eGeneral,
+        vk::ImageLayout::eGeneral,
+        vk::QueueFamilyExternal,
+        queue->familyIndex(),
+        srcTexture->handle(),
+        vk::ImageSubresourceRange{
+            vk::ImageAspectFlagBits::eColor,
+            0,
+            1,
+            0,
+            1,
+        },
+    };
     commandBuffer.pipelineBarrier2(vk::DependencyInfo{
         vk::DependencyFlags{},
         {},
-        memoryBarrier,
+        bufferBarrier,
+        imageBarrier,
     });
 
     const std::vector<vk::BufferImageCopy2> regions = toRender.rects() | std::views::transform([&](const Rect &rect) {
         return vk::BufferImageCopy2{
             // dst
             m_currentSlot->buffer()->hostDataAttributes()->offset(rect.topLeft()),
-            m_currentSlot->buffer()->hostDataAttributes()->stride,
+            m_currentSlot->buffer()->hostDataAttributes()->texelStride(),
             uint32_t(rect.height()),
             // src
             vk::ImageSubresourceLayers{
@@ -804,12 +830,15 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuBufferCopy::copy(GraphicsBuf
         regions,
     });
 
-    memoryBarrier.setSrcQueueFamilyIndex(queue->familyIndex());
-    memoryBarrier.setDstQueueFamilyIndex(vk::QueueFamilyExternal);
+    bufferBarrier.setSrcQueueFamilyIndex(queue->familyIndex());
+    bufferBarrier.setDstQueueFamilyIndex(vk::QueueFamilyExternal);
+    imageBarrier.setSrcQueueFamilyIndex(queue->familyIndex());
+    imageBarrier.setDstQueueFamilyIndex(vk::QueueFamilyExternal);
     commandBuffer.pipelineBarrier2(vk::DependencyInfo{
         vk::DependencyFlags{},
         {},
-        memoryBarrier,
+        bufferBarrier,
+        imageBarrier,
     });
 
     if (query) {
