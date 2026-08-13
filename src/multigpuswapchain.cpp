@@ -21,6 +21,8 @@
 #include "opengl/glshader.h"
 #include "opengl/glshadermanager.h"
 #include "utils/envvar.h"
+#include "vulkan/vulkan_buffer.h"
+#include "vulkan/vulkan_buffer_swapchain.h"
 #include "vulkan/vulkan_device.h"
 #include "vulkan/vulkan_logging.h"
 #include "vulkan/vulkan_render_time_query.h"
@@ -61,8 +63,7 @@ class VulkanMultiGpuCopy : public MultiGpuCopy
     Q_OBJECT
 
 public:
-    explicit VulkanMultiGpuCopy(RenderDevice *device, std::unique_ptr<VulkanSwapchain> &&swapchain,
-                                std::unique_ptr<HostMemoryGraphicsBufferAllocator> &&allocator);
+    explicit VulkanMultiGpuCopy(RenderDevice *device, std::unique_ptr<VulkanSwapchain> &&swapchain);
 
     std::optional<MultiGpuSwapchain::Ret> copy(GraphicsBuffer *buffer,
                                                const Region &damage,
@@ -77,6 +78,28 @@ public:
     std::unique_ptr<HostMemoryGraphicsBufferAllocator> m_allocator;
     std::unique_ptr<VulkanSwapchain> m_swapchain;
     std::shared_ptr<VulkanSwapchainSlot> m_currentSlot;
+};
+
+class VulkanMultiGpuBufferCopy : public MultiGpuCopy
+{
+    Q_OBJECT
+
+public:
+    explicit VulkanMultiGpuBufferCopy(RenderDevice *device, std::unique_ptr<VulkanBufferSwapchain> &&swapchain);
+
+    std::optional<MultiGpuSwapchain::Ret> copy(GraphicsBuffer *buffer,
+                                               const Region &damage,
+                                               FileDescriptor &&sync,
+                                               OutputFrame *frame,
+                                               const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
+    void resetDamageTracking() override;
+    QSize size() const override;
+    uint32_t format() const override;
+    uint64_t modifier() const override;
+
+    RenderDevice *m_targetDevice;
+    std::unique_ptr<VulkanBufferSwapchain> m_swapchain;
+    std::shared_ptr<VulkanBufferSwapchainSlot> m_currentSlot;
 };
 
 class EglMultiGpuCopy : public MultiGpuCopy
@@ -154,7 +177,7 @@ static std::optional<CopyRet> createCopy(RenderDevice *device,
                                          uint32_t sourceFormat,
                                          const ModifierList &sourceModifiers,
                                          GraphicsBufferAllocator *allocator,
-                                         std::unique_ptr<HostMemoryGraphicsBufferAllocator> &&hostAllocator,
+                                         const std::shared_ptr<HostMemoryGraphicsBufferAllocator> &hostAllocator,
                                          const FormatModifierMap &formats,
                                          GraphicsBufferOptions options)
 {
@@ -167,12 +190,22 @@ static std::optional<CopyRet> createCopy(RenderDevice *device,
                 options.format = fmt->format;
                 options.modifiers = fmt->modifiers;
                 options.render = false;
-                auto swapchain = VulkanSwapchain::create(device->vulkanDevice(), allocator, options);
-                if (swapchain) {
-                    return CopyRet{
-                        .copy = std::make_unique<VulkanMultiGpuCopy>(device, std::move(swapchain), std::move(hostAllocator)),
-                        .sourceModifiers = retModifiers,
-                    };
+                if (hostAllocator) {
+                    auto swapchain = VulkanBufferSwapchain::create(device->vulkanDevice(), hostAllocator, options);
+                    if (swapchain) {
+                        return CopyRet{
+                            .copy = std::make_unique<VulkanMultiGpuBufferCopy>(device, std::move(swapchain)),
+                            .sourceModifiers = retModifiers,
+                        };
+                    }
+                } else {
+                    auto swapchain = VulkanSwapchain::create(device->vulkanDevice(), allocator, options);
+                    if (swapchain) {
+                        return CopyRet{
+                            .copy = std::make_unique<VulkanMultiGpuCopy>(device, std::move(swapchain)),
+                            .sourceModifiers = retModifiers,
+                        };
+                    }
                 }
             }
         }
@@ -255,14 +288,14 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::createForSampling(RenderDe
     // them from multiple GPUs may not work as we expect.
     // For dedicated GPUs, the second copy improves performance.
     if (modifier == DRM_FORMAT_MOD_INVALID || !destination->isInternal() || destination->isIntel()) {
-        std::unique_ptr<HostMemoryGraphicsBufferAllocator> hostAllocator;
+        std::shared_ptr<HostMemoryGraphicsBufferAllocator> hostAllocator;
         if (sourceDevice->vulkanDevice() && sourceDevice->vulkanDevice()->minImportedHostPointerAlignment()
             && destination->vulkanDevice() && destination->vulkanDevice()->minImportedHostPointerAlignment()) {
             auto alignment = std::lcm(*sourceDevice->vulkanDevice()->minImportedHostPointerAlignment(), *destination->vulkanDevice()->minImportedHostPointerAlignment());
-            hostAllocator = std::make_unique<HostMemoryGraphicsBufferAllocator>(alignment);
+            hostAllocator = std::make_shared<HostMemoryGraphicsBufferAllocator>(alignment);
         }
         if (hostAllocator) {
-            firstCopy = createCopy(sourceDevice, format, {modifier}, hostAllocator.get(), std::move(hostAllocator), destination->allImportableFormats(), options);
+            firstCopy = createCopy(sourceDevice, format, {modifier}, hostAllocator.get(), hostAllocator, destination->allImportableFormats(), options);
         }
         if (sysMemDevice && !firstCopy) {
             firstCopy = createCopy(sourceDevice, format, {modifier}, sysMemDevice->allocator(), nullptr, destination->allImportableFormats(), options);
@@ -406,10 +439,8 @@ MultiGpuCopy::MultiGpuCopy(RenderDevice *device)
 {
 }
 
-VulkanMultiGpuCopy::VulkanMultiGpuCopy(RenderDevice *device, std::unique_ptr<VulkanSwapchain> &&swapchain,
-                                       std::unique_ptr<HostMemoryGraphicsBufferAllocator> &&allocator)
+VulkanMultiGpuCopy::VulkanMultiGpuCopy(RenderDevice *device, std::unique_ptr<VulkanSwapchain> &&swapchain)
     : MultiGpuCopy(device)
-    , m_allocator(std::move(allocator))
     , m_swapchain(std::move(swapchain))
 {
     connect(m_device->vulkanDevice(), &VulkanDevice::deviceLost, this, &MultiGpuCopy::gpuReset);
@@ -431,12 +462,18 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
 
     const auto copyVk = m_device->vulkanDevice();
     const uint32_t format = buffer->hostDataAttributes() ? buffer->hostDataAttributes()->format : buffer->dmabufAttributes()->format;
-    const bool useTransferQueue = copyVk->transferQueue()
-        && FormatInfo::get(format)->bitsPerPixel == FormatInfo::get(m_swapchain->format())->bitsPerPixel;
+
+    const bool useTransferQueue = buffer->hostDataAttributes() || FormatInfo::get(format)->bitsPerPixel == FormatInfo::get(m_swapchain->format())->bitsPerPixel;
     const auto queue = useTransferQueue ? copyVk->transferQueue() : copyVk->graphicsQueue();
 
-    const auto srcTexture = copyVk->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
-    if (!srcTexture) {
+    std::shared_ptr<VulkanBuffer> srcBuffer;
+    std::shared_ptr<VulkanTexture> srcTexture;
+    if (buffer->hostDataAttributes()) {
+        srcBuffer = copyVk->importBufferAsBuffer(buffer, vk::BufferUsageFlagBits::eTransferSrc);
+    } else {
+        const auto srcTexture = copyVk->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+    }
+    if (!srcBuffer && !srcTexture) {
         qCWarning(KWIN_VULKAN, "Could not import buffer for multi GPU copy!");
         m_journal.clear();
         return std::nullopt;
@@ -474,42 +511,30 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
         query = VulkanRenderTimeQuery::begin(copyVk, commandBuffer, queue->familyIndex());
     }
 
-    vk::ImageMemoryBarrier2 memoryBarrier{
-        vk::PipelineStageFlagBits2::eAllCommands,
-        vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
-        vk::PipelineStageFlagBits2::eAllCommands,
-        vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
-        vk::ImageLayout::eGeneral,
-        vk::ImageLayout::eGeneral,
-        vk::QueueFamilyExternal,
-        queue->familyIndex(),
-        m_currentSlot->texture()->handle(),
-        vk::ImageSubresourceRange{
-            vk::ImageAspectFlagBits::eColor,
+    if (srcBuffer) {
+        vk::BufferMemoryBarrier2 memoryBarrier{
+            vk::PipelineStageFlagBits2::eAllCommands,
+            vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
+            vk::PipelineStageFlagBits2::eAllCommands,
+            vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
+            vk::QueueFamilyExternal,
+            queue->familyIndex(),
+            srcBuffer->handle(),
             0,
-            1,
-            0,
-            1,
-        },
-    };
-    commandBuffer.pipelineBarrier2(vk::DependencyInfo{
-        vk::DependencyFlags{},
-        {},
-        {},
-        memoryBarrier,
-    });
+            srcBuffer->size(),
+        };
+        commandBuffer.pipelineBarrier2(vk::DependencyInfo{
+            vk::DependencyFlags{},
+            {},
+            memoryBarrier,
+        });
 
-    if (useTransferQueue) {
-        const std::vector<vk::ImageCopy> regions = toRender.rects() | std::views::transform([](const Rect &rect) {
-            return vk::ImageCopy{
+        const std::vector<vk::BufferImageCopy2> regions = toRender.rects() | std::views::transform([&](const Rect &rect) {
+            return vk::BufferImageCopy2{
                 // src
-                vk::ImageSubresourceLayers{
-                    vk::ImageAspectFlagBits::eColor,
-                    0,
-                    0,
-                    1,
-                },
-                vk::Offset3D{rect.left(), rect.top(), 0},
+                buffer->hostDataAttributes()->offset(rect.topLeft()),
+                buffer->hostDataAttributes()->stride,
+                uint32_t(rect.height()),
                 // dst
                 vk::ImageSubresourceLayers{
                     vk::ImageAspectFlagBits::eColor,
@@ -521,49 +546,112 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
                 vk::Extent3D{uint32_t(rect.width()), uint32_t(rect.height()), 1},
             };
         }) | std::ranges::to<std::vector>();
-        commandBuffer.copyImage(srcTexture->handle(), vk::ImageLayout::eGeneral,
-                                m_currentSlot->texture()->handle(), vk::ImageLayout::eGeneral,
-                                regions);
-    } else {
-        const std::vector<vk::ImageBlit> regions = toRender.rects() | std::views::transform([](const Rect &rect) {
-            return vk::ImageBlit{
-                // src
-                vk::ImageSubresourceLayers{
-                    vk::ImageAspectFlagBits::eColor,
-                    0,
-                    0,
-                    1,
-                },
-                std::array{
-                    vk::Offset3D{rect.left(), rect.top(), 0},
-                    vk::Offset3D{rect.right(), rect.bottom(), 1},
-                },
-                // dst
-                vk::ImageSubresourceLayers{
-                    vk::ImageAspectFlagBits::eColor,
-                    0,
-                    0,
-                    1,
-                },
-                std::array{
-                    vk::Offset3D{rect.left(), rect.top(), 0},
-                    vk::Offset3D{rect.right(), rect.bottom(), 1},
-                },
-            };
-        }) | std::ranges::to<std::vector>();
-        commandBuffer.blitImage(srcTexture->handle(), vk::ImageLayout::eGeneral,
-                                m_currentSlot->texture()->handle(), vk::ImageLayout::eGeneral,
-                                regions, vk::Filter::eNearest);
-    }
+        commandBuffer.copyBufferToImage2(vk::CopyBufferToImageInfo2{
+            srcBuffer->handle(),
+            m_currentSlot->texture()->handle(),
+            vk::ImageLayout::eGeneral,
+            regions,
+        });
 
-    memoryBarrier.setSrcQueueFamilyIndex(queue->familyIndex());
-    memoryBarrier.setDstQueueFamilyIndex(vk::QueueFamilyExternal);
-    commandBuffer.pipelineBarrier2(vk::DependencyInfo{
-        vk::DependencyFlags{},
-        {},
-        {},
-        memoryBarrier,
-    });
+        memoryBarrier.setSrcQueueFamilyIndex(queue->familyIndex());
+        memoryBarrier.setDstQueueFamilyIndex(vk::QueueFamilyExternal);
+        commandBuffer.pipelineBarrier2(vk::DependencyInfo{
+            vk::DependencyFlags{},
+            {},
+            memoryBarrier,
+        });
+    } else {
+        vk::ImageMemoryBarrier2 memoryBarrier{
+            vk::PipelineStageFlagBits2::eAllCommands,
+            vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
+            vk::PipelineStageFlagBits2::eAllCommands,
+            vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
+            vk::ImageLayout::eGeneral,
+            vk::ImageLayout::eGeneral,
+            vk::QueueFamilyExternal,
+            queue->familyIndex(),
+            m_currentSlot->texture()->handle(),
+            vk::ImageSubresourceRange{
+                vk::ImageAspectFlagBits::eColor,
+                0,
+                1,
+                0,
+                1,
+            },
+        };
+        commandBuffer.pipelineBarrier2(vk::DependencyInfo{
+            vk::DependencyFlags{},
+            {},
+            {},
+            memoryBarrier,
+        });
+
+        if (useTransferQueue) {
+            const std::vector<vk::ImageCopy> regions = toRender.rects() | std::views::transform([](const Rect &rect) {
+                return vk::ImageCopy{
+                    // src
+                    vk::ImageSubresourceLayers{
+                        vk::ImageAspectFlagBits::eColor,
+                        0,
+                        0,
+                        1,
+                    },
+                    vk::Offset3D{rect.left(), rect.top(), 0},
+                    // dst
+                    vk::ImageSubresourceLayers{
+                        vk::ImageAspectFlagBits::eColor,
+                        0,
+                        0,
+                        1,
+                    },
+                    vk::Offset3D{rect.left(), rect.top(), 0},
+                    vk::Extent3D{uint32_t(rect.width()), uint32_t(rect.height()), 1},
+                };
+            }) | std::ranges::to<std::vector>();
+            commandBuffer.copyImage(srcTexture->handle(), vk::ImageLayout::eGeneral,
+                                    m_currentSlot->texture()->handle(), vk::ImageLayout::eGeneral,
+                                    regions);
+        } else {
+            const std::vector<vk::ImageBlit> regions = toRender.rects() | std::views::transform([](const Rect &rect) {
+                return vk::ImageBlit{
+                    // src
+                    vk::ImageSubresourceLayers{
+                        vk::ImageAspectFlagBits::eColor,
+                        0,
+                        0,
+                        1,
+                    },
+                    std::array{
+                        vk::Offset3D{rect.left(), rect.top(), 0},
+                        vk::Offset3D{rect.right(), rect.bottom(), 1},
+                    },
+                    // dst
+                    vk::ImageSubresourceLayers{
+                        vk::ImageAspectFlagBits::eColor,
+                        0,
+                        0,
+                        1,
+                    },
+                    std::array{
+                        vk::Offset3D{rect.left(), rect.top(), 0},
+                        vk::Offset3D{rect.right(), rect.bottom(), 1},
+                    },
+                };
+            }) | std::ranges::to<std::vector>();
+            commandBuffer.blitImage(srcTexture->handle(), vk::ImageLayout::eGeneral,
+                                    m_currentSlot->texture()->handle(), vk::ImageLayout::eGeneral,
+                                    regions, vk::Filter::eNearest);
+        }
+
+        memoryBarrier.setSrcQueueFamilyIndex(queue->familyIndex());
+        memoryBarrier.setDstQueueFamilyIndex(vk::QueueFamilyExternal);
+        commandBuffer.pipelineBarrier2(vk::DependencyInfo{
+            vk::DependencyFlags{},
+            {},
+            {},
+            memoryBarrier,
+        });
+    }
 
     if (query) {
         query->end(commandBuffer);
@@ -608,6 +696,165 @@ uint32_t VulkanMultiGpuCopy::format() const
 }
 
 uint64_t VulkanMultiGpuCopy::modifier() const
+{
+    return m_swapchain->modifier();
+}
+
+VulkanMultiGpuBufferCopy::VulkanMultiGpuBufferCopy(RenderDevice *device, std::unique_ptr<VulkanBufferSwapchain> &&swapchain)
+    : MultiGpuCopy(device)
+    , m_swapchain(std::move(swapchain))
+{
+    connect(m_device->vulkanDevice(), &VulkanDevice::deviceLost, this, &MultiGpuCopy::gpuReset);
+}
+
+std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuBufferCopy::copy(GraphicsBuffer *buffer,
+                                                                     const Region &damage,
+                                                                     FileDescriptor &&sync,
+                                                                     OutputFrame *frame,
+                                                                     const std::shared_ptr<SyncReleasePoint> &releasePoint)
+{
+    if (damage.isEmpty() && m_currentSlot) {
+        return MultiGpuSwapchain::Ret{
+            .buffer = m_currentSlot->buffer(),
+            .sync = m_currentSlot->releaseFd().duplicate(),
+            .releasePoint = m_currentSlot->releasePoint(),
+        };
+    }
+
+    const auto copyVk = m_device->vulkanDevice();
+    const auto queue = copyVk->transferQueue();
+
+    const auto srcTexture = copyVk->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+    if (!srcTexture) {
+        qCWarning(KWIN_VULKAN, "Could not import buffer for multi GPU copy!");
+        m_journal.clear();
+        return std::nullopt;
+    }
+
+    m_currentSlot = m_swapchain->acquire();
+    if (!m_currentSlot) {
+        qCWarning(KWIN_VULKAN, "Swapchain acquire failed!");
+        m_journal.clear();
+        return std::nullopt;
+    }
+
+    const Rect completeRect{QPoint(), m_swapchain->size()};
+    const Region toRender = (m_journal.accumulate(m_currentSlot->age(), completeRect) | damage) & completeRect;
+    if (toRender.isEmpty()) {
+        return MultiGpuSwapchain::Ret{
+            .buffer = m_currentSlot->buffer(),
+            .sync = m_currentSlot->releaseFd().duplicate(),
+            .releasePoint = m_currentSlot->releasePoint(),
+        };
+    }
+    m_journal.add(damage);
+
+    auto commandBuffer = queue->createCommandBuffer();
+    vk::Result result = commandBuffer.begin(vk::CommandBufferBeginInfo{
+        vk::CommandBufferUsageFlagBits::eOneTimeSubmit,
+    });
+    if (result != vk::Result::eSuccess) {
+        m_journal.clear();
+        return std::nullopt;
+    }
+
+    std::unique_ptr<VulkanRenderTimeQuery> query;
+    if (frame) {
+        query = VulkanRenderTimeQuery::begin(copyVk, commandBuffer, queue->familyIndex());
+    }
+
+    vk::BufferMemoryBarrier2 memoryBarrier{
+        vk::PipelineStageFlagBits2::eAllCommands,
+        vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
+        vk::PipelineStageFlagBits2::eAllCommands,
+        vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
+        vk::QueueFamilyExternal,
+        queue->familyIndex(),
+        m_currentSlot->vulkanBuffer()->handle(),
+        0,
+        m_currentSlot->vulkanBuffer()->size(),
+    };
+    commandBuffer.pipelineBarrier2(vk::DependencyInfo{
+        vk::DependencyFlags{},
+        {},
+        memoryBarrier,
+    });
+
+    const std::vector<vk::BufferImageCopy2> regions = toRender.rects() | std::views::transform([&](const Rect &rect) {
+        return vk::BufferImageCopy2{
+            // dst
+            m_currentSlot->buffer()->hostDataAttributes()->offset(rect.topLeft()),
+            m_currentSlot->buffer()->hostDataAttributes()->stride,
+            uint32_t(rect.height()),
+            // src
+            vk::ImageSubresourceLayers{
+                vk::ImageAspectFlagBits::eColor,
+                0,
+                0,
+                1,
+            },
+            vk::Offset3D{rect.left(), rect.top(), 0},
+            vk::Extent3D{uint32_t(rect.width()), uint32_t(rect.height()), 1},
+        };
+    }) | std::ranges::to<std::vector>();
+    commandBuffer.copyImageToBuffer2(vk::CopyImageToBufferInfo2{
+        srcTexture->handle(),
+        vk::ImageLayout::eGeneral,
+        m_currentSlot->vulkanBuffer()->handle(),
+        regions,
+    });
+
+    memoryBarrier.setSrcQueueFamilyIndex(queue->familyIndex());
+    memoryBarrier.setDstQueueFamilyIndex(vk::QueueFamilyExternal);
+    commandBuffer.pipelineBarrier2(vk::DependencyInfo{
+        vk::DependencyFlags{},
+        {},
+        memoryBarrier,
+    });
+
+    if (query) {
+        query->end(commandBuffer);
+        frame->addRenderTimeQuery(std::move(query));
+    }
+
+    result = commandBuffer.end();
+    if (result != vk::Result::eSuccess) {
+        m_journal.clear();
+        return std::nullopt;
+    }
+    auto completionFd = queue->submit(std::move(commandBuffer), std::move(sync));
+    if (!completionFd.has_value()) {
+        return std::nullopt;
+    }
+    if (releasePoint) {
+        releasePoint->addReleaseFence(*completionFd);
+    }
+    m_swapchain->release(m_currentSlot.get(), completionFd->duplicate());
+    return MultiGpuSwapchain::Ret{
+        .buffer = m_currentSlot->buffer(),
+        .sync = std::move(*completionFd),
+        .releasePoint = m_currentSlot->releasePoint(),
+    };
+}
+
+void VulkanMultiGpuBufferCopy::resetDamageTracking()
+{
+    m_currentSlot.reset();
+    m_swapchain->resetBufferAge();
+    m_journal.clear();
+}
+
+QSize VulkanMultiGpuBufferCopy::size() const
+{
+    return m_swapchain->size();
+}
+
+uint32_t VulkanMultiGpuBufferCopy::format() const
+{
+    return m_swapchain->format();
+}
+
+uint64_t VulkanMultiGpuBufferCopy::modifier() const
 {
     return m_swapchain->modifier();
 }

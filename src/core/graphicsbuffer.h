@@ -57,6 +57,8 @@ struct HostMemoryAttributes
     QSize size;
     uint32_t stride;
     uint32_t format;
+
+    uint64_t offset(const QPoint &pixel) const;
 };
 
 /**

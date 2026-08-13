@@ -112,6 +112,11 @@ bool GraphicsBuffer::alphaChannelFromDrmFormat(uint32_t format)
     return info && info->alphaBits > 0;
 }
 
+uint64_t HostMemoryAttributes::offset(const QPoint &pixel) const
+{
+    return pixel.y() * stride + pixel.x() * FormatInfo::get(format)->bitsPerPixel;
+}
+
 } // namespace KWin
 
 #include "moc_graphicsbuffer.cpp"

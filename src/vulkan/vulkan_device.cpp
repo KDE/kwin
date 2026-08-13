@@ -9,6 +9,7 @@
 #include "vulkan_device.h"
 #include "core/gpumanager.h"
 #include "core/graphicsbuffer.h"
+#include "vulkan_buffer.h"
 #include "vulkan_logging.h"
 #include "vulkan_texture.h"
 
@@ -73,7 +74,7 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importBuffer(GraphicsBuffer *buffer
     }
     std::shared_ptr<VulkanTexture> ret;
     if (buffer->hostDataAttributes()) {
-        ret = importHostPointer(buffer->hostDataAttributes(), usage);
+        ret = importHostPointerAsTexture(buffer->hostDataAttributes(), usage);
     } else {
         ret = importDmabuf(buffer->dmabufAttributes(), usage);
     }
@@ -84,6 +85,25 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importBuffer(GraphicsBuffer *buffer
     connect(buffer, &QObject::destroyed, this, [this, buffer]() {
         m_importedTextures.remove(buffer);
     });
+    return ret;
+}
+
+std::shared_ptr<VulkanBuffer> VulkanDevice::importBufferAsBuffer(GraphicsBuffer *buffer, vk::BufferUsageFlags usage)
+{
+    if (!buffer->hostDataAttributes()) {
+        return nullptr;
+    }
+    auto it = m_importedBuffers.find(buffer);
+    if (it != m_importedBuffers.end()) {
+        return it.value();
+    }
+    auto ret = importHostPointerAsBuffer(buffer->hostDataAttributes(), usage);
+    m_importedBuffers[buffer] = ret;
+    if (ret) {
+        connect(buffer, &QObject::destroyed, this, [this, buffer]() {
+            m_importedTextures.remove(buffer);
+        });
+    }
     return ret;
 }
 
@@ -246,7 +266,7 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
                                            std::move(deviceMemory), QSize(attributes->width, attributes->height));
 }
 
-std::shared_ptr<VulkanTexture> VulkanDevice::importHostPointer(const HostMemoryAttributes *attributes, VkImageUsageFlags usage)
+std::shared_ptr<VulkanTexture> VulkanDevice::importHostPointerAsTexture(const HostMemoryAttributes *attributes, VkImageUsageFlags usage)
 {
     const auto format = FormatInfo::get(attributes->format);
     if (!format) {
@@ -325,6 +345,74 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importHostPointer(const HostMemoryA
     memories.push_back(std::move(memory));
     return std::make_shared<VulkanTexture>(this, vk::Format(format->vulkanFormat), std::move(image),
                                            std::move(memories), attributes->size);
+}
+
+std::shared_ptr<VulkanBuffer> VulkanDevice::importHostPointerAsBuffer(const HostMemoryAttributes *attributes, vk::BufferUsageFlags usage)
+{
+    const auto format = FormatInfo::get(attributes->format);
+    if (!format) {
+        qCWarning(KWIN_VULKAN, "Dmabuf has unknown format");
+        return nullptr;
+    }
+    auto formatIt = m_transferFormats.find(attributes->format);
+    if (formatIt == m_transferFormats.end() || !formatIt->contains(DRM_FORMAT_MOD_LINEAR)) {
+        return nullptr;
+    }
+    const VkDeviceSize bufferSize = attributes->stride * attributes->size.height();
+
+    vk::ExternalMemoryBufferCreateInfo externalInfo{
+        vk::ExternalMemoryHandleTypeFlagBits::eHostAllocationEXT,
+    };
+    vk::BufferCreateInfo bufferInfo{
+        vk::BufferCreateFlags(),
+        bufferSize,
+        usage,
+        vk::SharingMode::eExclusive,
+        {},
+        &externalInfo,
+    };
+    auto [imageResult, buffer] = m_logical.createBuffer(bufferInfo);
+    if (imageResult != vk::Result::eSuccess) {
+        qCWarning(KWIN_VULKAN) << "creating vulkan buffer failed!" << vk::to_string(imageResult);
+        return nullptr;
+    }
+
+    const auto [result, properties] = m_logical.getMemoryHostPointerPropertiesEXT(vk::ExternalMemoryHandleTypeFlagBits::eHostAllocationEXT, attributes->data.get());
+    if (result != vk::Result::eSuccess) {
+        return nullptr;
+    }
+
+    vk::BufferMemoryRequirementsInfo2 memRequirementsInfo{buffer};
+    const vk::MemoryRequirements2 memRequirements = m_logical.getBufferMemoryRequirements2(memRequirementsInfo);
+    if (memRequirements.memoryRequirements.size > bufferSize) {
+        return nullptr;
+    }
+
+    const auto memoryIndex = findMemoryType(memRequirements.memoryRequirements.memoryTypeBits & properties.memoryTypeBits, {});
+    if (!memoryIndex) {
+        qCWarning(KWIN_VULKAN, "couldn't find a suitable memory type for %x & %x = %x",
+                  memRequirements.memoryRequirements.memoryTypeBits, properties.memoryTypeBits,
+                  memRequirements.memoryRequirements.memoryTypeBits & properties.memoryTypeBits);
+        return nullptr;
+    }
+
+    vk::ImportMemoryHostPointerInfoEXT importInfo(vk::ExternalMemoryHandleTypeFlagBits::eHostAllocationEXT, attributes->data.get());
+    // NOTE that this cannot use memoryRequirements.size, since it may be smaller
+    // than the buffer, and that gets the import rejected on Intel
+    vk::MemoryAllocateInfo memoryInfo(bufferSize, memoryIndex.value(), &importInfo);
+    auto [allocateResult, memory] = m_logical.allocateMemory(memoryInfo);
+    if (allocateResult != vk::Result::eSuccess) {
+        qCWarning(KWIN_VULKAN, "'Allocating' memory for host memory image failed: %s", vk::to_string(allocateResult).c_str());
+        return nullptr;
+    }
+
+    vk::BindBufferMemoryInfo bindInfo{buffer, memory, 0};
+    const vk::Result bindResult = m_logical.bindBufferMemory2(bindInfo);
+    if (bindResult != vk::Result::eSuccess) {
+        qCWarning(KWIN_VULKAN) << "failed to bind image to memory";
+        return nullptr;
+    }
+    return std::make_shared<VulkanBuffer>(std::move(buffer), std::move(memory), bufferSize);
 }
 
 FormatModifierMap VulkanDevice::queryFormats(VkImageUsageFlags flags) const

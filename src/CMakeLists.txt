@@ -228,6 +228,8 @@ target_sources(kwin PRIVATE
     virtualdesktops.cpp
     virtualdesktopsdbustypes.cpp
     virtualkeyboard_dbus.cpp
+    vulkan/vulkan_buffer.cpp
+    vulkan/vulkan_buffer_swapchain.cpp
     vulkan/vulkan_device.cpp
     vulkan/vulkan_logging.cpp
     vulkan/vulkan_queue.cpp
@@ -682,6 +684,8 @@ install(FILES
 )
 
 install(FILES
+    vulkan/vulkan_buffer.h
+    vulkan/vulkan_buffer_swapchain.h
     vulkan/vulkan_device.h
     vulkan/vulkan_logging.h
     vulkan/vulkan_queue.h
