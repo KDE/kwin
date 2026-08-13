@@ -104,6 +104,7 @@ private:
     std::shared_ptr<VulkanTexture> importDmabuf(const DmaBufAttributes *attributes, VkImageUsageFlags usage);
     std::shared_ptr<VulkanTexture> importHostPointerAsTexture(const HostMemoryAttributes *attributes, VkImageUsageFlags usage);
     std::shared_ptr<VulkanBuffer> importHostPointerAsBuffer(const HostMemoryAttributes *attributes, vk::BufferUsageFlags usage);
+    std::shared_ptr<VulkanBuffer> importDmabufAsBuffer(const DmaBufAttributes *attributes, vk::BufferUsageFlags usage);
 
     vk::PhysicalDeviceType m_type;
     vk::raii::PhysicalDevice m_physical;

@@ -32,6 +32,9 @@ struct DmaBufAttributes
     std::array<FileDescriptor, 4> fd;
     std::array<uint32_t, 4> offset{0, 0, 0, 0};
     std::array<uint32_t, 4> pitch{0, 0, 0, 0};
+
+    uint64_t byteOffset(const QPoint &pixel) const;
+    uint32_t texelStride() const;
 };
 
 struct ShmAttributes

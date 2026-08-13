@@ -290,15 +290,15 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::createForSampling(RenderDe
     // For dedicated GPUs, the second copy improves performance.
     if (modifier == DRM_FORMAT_MOD_INVALID || !destination->isInternal() || destination->isIntel()) {
         std::shared_ptr<HostMemoryGraphicsBufferAllocator> hostAllocator;
-        if (sourceDevice->vulkanDevice() && sourceDevice->vulkanDevice()->minImportedHostPointerAlignment()
-            && destination->vulkanDevice() && destination->vulkanDevice()->minImportedHostPointerAlignment()) {
-            auto alignment = std::lcm(*sourceDevice->vulkanDevice()->minImportedHostPointerAlignment(), *destination->vulkanDevice()->minImportedHostPointerAlignment());
-            hostAllocator = std::make_shared<HostMemoryGraphicsBufferAllocator>(alignment);
-            firstCopy = createCopy(sourceDevice, format, {modifier}, hostAllocator.get(), hostAllocator, destination->allImportableFormats(), options);
-            if (!firstCopy) {
-                hostAllocator.reset();
-            }
-        }
+        // if (sourceDevice->vulkanDevice() && sourceDevice->vulkanDevice()->minImportedHostPointerAlignment()
+        //     && destination->vulkanDevice() && destination->vulkanDevice()->minImportedHostPointerAlignment()) {
+        //     auto alignment = std::lcm(*sourceDevice->vulkanDevice()->minImportedHostPointerAlignment(), *destination->vulkanDevice()->minImportedHostPointerAlignment());
+        //     hostAllocator = std::make_shared<HostMemoryGraphicsBufferAllocator>(alignment);
+        //     firstCopy = createCopy(sourceDevice, format, {modifier}, hostAllocator.get(), hostAllocator, destination->allImportableFormats(), options);
+        //     if (!firstCopy) {
+        //         hostAllocator.reset();
+        //     }
+        // }
         if (sysMemDevice && !firstCopy) {
             firstCopy = createCopy(sourceDevice, format, {modifier}, sysMemDevice->allocator(), nullptr, destination->allImportableFormats(), options);
         }
@@ -354,21 +354,21 @@ std::optional<MultiGpuSwapchain::AllocationInfo> MultiGpuSwapchain::createForSca
     };
 
     // The destination buffer must not be migrated, or scanout will fail.
-    if (sourceDevice->isInternal()) {
-        auto retModifiers = destination->allImportableFormats()[format].intersected(modifiers);
-        if (!retModifiers.isEmpty()) {
-            // We can use the source buffer directly, since it's already in system memory.
-            options.scanout = true;
-            auto copy = createCopy(destination, format, modifiers, targetDevice->allocator(), nullptr, importFormats, options);
-            if (copy) {
-                return AllocationInfo{
-                    .swapchain = std::make_unique<MultiGpuSwapchain>(std::move(copy->copy), nullptr, format),
-                    .importModifiers = copy->sourceModifiers,
-                };
-            }
-        }
-        // If there's no matching formats, fall back to double copy
-    }
+    // if (sourceDevice->isInternal()) {
+    //     auto retModifiers = destination->allImportableFormats()[format].intersected(modifiers);
+    //     if (!retModifiers.isEmpty()) {
+    //         // We can use the source buffer directly, since it's already in system memory.
+    //         options.scanout = true;
+    //         auto copy = createCopy(destination, format, modifiers, targetDevice->allocator(), nullptr, importFormats, options);
+    //         if (copy) {
+    //             return AllocationInfo{
+    //                 .swapchain = std::make_unique<MultiGpuSwapchain>(std::move(copy->copy), nullptr, format),
+    //                 .importModifiers = copy->sourceModifiers,
+    //             };
+    //         }
+    //     }
+    //     // If there's no matching formats, fall back to double copy
+    // }
 
     RenderDevice *sysMemDevice = GpuManager::self()->softwareDevice();
     RenderDevice *fallbackDevice = !sourceDevice->drmDevice() || sourceDevice->drmDevice()->isNvidia() ? destination : sourceDevice;
@@ -380,15 +380,15 @@ std::optional<MultiGpuSwapchain::AllocationInfo> MultiGpuSwapchain::createForSca
     // It's not faster than the other paths, but it seems to be the only one that
     // works without any driver bugs on Intel.
     std::shared_ptr<HostMemoryGraphicsBufferAllocator> hostAllocator;
-    if (sourceDevice->vulkanDevice() && sourceDevice->vulkanDevice()->minImportedHostPointerAlignment()
-        && destination->vulkanDevice() && destination->vulkanDevice()->minImportedHostPointerAlignment()) {
-        auto alignment = std::lcm(*sourceDevice->vulkanDevice()->minImportedHostPointerAlignment(), *destination->vulkanDevice()->minImportedHostPointerAlignment());
-        hostAllocator = std::make_unique<HostMemoryGraphicsBufferAllocator>(alignment);
-        firstCopy = createCopy(sourceDevice, format, modifiers, hostAllocator.get(), hostAllocator, destination->allImportableFormats(), options);
-        if (!firstCopy) {
-            hostAllocator.reset();
-        }
-    }
+    // if (sourceDevice->vulkanDevice() && sourceDevice->vulkanDevice()->minImportedHostPointerAlignment()
+    //     && destination->vulkanDevice() && destination->vulkanDevice()->minImportedHostPointerAlignment()) {
+    //     auto alignment = std::lcm(*sourceDevice->vulkanDevice()->minImportedHostPointerAlignment(), *destination->vulkanDevice()->minImportedHostPointerAlignment());
+    //     hostAllocator = std::make_unique<HostMemoryGraphicsBufferAllocator>(alignment);
+    //     firstCopy = createCopy(sourceDevice, format, modifiers, hostAllocator.get(), hostAllocator, destination->allImportableFormats(), options);
+    //     if (!firstCopy) {
+    //         hostAllocator.reset();
+    //     }
+    // }
     if (sysMemDevice && !firstCopy) {
         firstCopy = createCopy(sourceDevice, format, modifiers, sysMemDevice->allocator(), nullptr, destination->allImportableFormats(), options);
     }
@@ -470,13 +470,15 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
     const auto copyVk = m_device->vulkanDevice();
     const uint32_t format = buffer->hostDataAttributes() ? buffer->hostDataAttributes()->format : buffer->dmabufAttributes()->format;
 
-    const bool useTransferQueue = buffer->hostDataAttributes() || FormatInfo::get(format)->bitsPerPixel == FormatInfo::get(m_swapchain->format())->bitsPerPixel;
+    const bool useTransferQueue = buffer->dmabufAttributes()->modifier == DRM_FORMAT_MOD_LINEAR
+        || FormatInfo::get(format)->bitsPerPixel == FormatInfo::get(m_swapchain->format())->bitsPerPixel;
     const auto queue = useTransferQueue ? copyVk->transferQueue() : copyVk->graphicsQueue();
 
     std::shared_ptr<VulkanBuffer> srcBuffer;
     std::shared_ptr<VulkanTexture> srcTexture;
-    if (buffer->hostDataAttributes()) {
+    if (buffer->dmabufAttributes()->modifier == DRM_FORMAT_MOD_LINEAR) {
         srcBuffer = copyVk->importBufferAsBuffer(buffer, vk::BufferUsageFlagBits::eTransferSrc);
+        qWarning() << "buffer copy with dmabuf!";
     } else {
         srcTexture = copyVk->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
     }
@@ -539,8 +541,8 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
         const std::vector<vk::BufferImageCopy2> regions = toRender.rects() | std::views::transform([&](const Rect &rect) {
             return vk::BufferImageCopy2{
                 // src
-                buffer->hostDataAttributes()->offset(rect.topLeft()),
-                buffer->hostDataAttributes()->texelStride(),
+                buffer->dmabufAttributes()->byteOffset(rect.topLeft()),
+                buffer->dmabufAttributes()->texelStride(),
                 uint32_t(rect.height()),
                 // dst
                 vk::ImageSubresourceLayers{
@@ -672,6 +674,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
     }
     auto completionFd = queue->submit(std::move(commandBuffer), std::move(sync), {buffer, m_currentSlot->buffer()});
     if (!completionFd.has_value()) {
+        qWarning() << "oof normal";
         return std::nullopt;
     }
     if (releasePoint) {
@@ -853,6 +856,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuBufferCopy::copy(GraphicsBuf
     }
     auto completionFd = queue->submit(std::move(commandBuffer), std::move(sync));
     if (!completionFd.has_value()) {
+        qWarning() << "oof buffer";
         return std::nullopt;
     }
     if (releasePoint) {

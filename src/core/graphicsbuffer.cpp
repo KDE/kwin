@@ -112,6 +112,16 @@ bool GraphicsBuffer::alphaChannelFromDrmFormat(uint32_t format)
     return info && info->alphaBits > 0;
 }
 
+uint64_t DmaBufAttributes::byteOffset(const QPoint &pixel) const
+{
+    return pixel.y() * pitch[0] + pixel.x() * FormatInfo::get(format)->bitsPerPixel / 8;
+}
+
+uint32_t DmaBufAttributes::texelStride() const
+{
+    return pitch[0] / (FormatInfo::get(format)->bitsPerPixel / 8);
+}
+
 uint64_t HostMemoryAttributes::offset(const QPoint &pixel) const
 {
     return pixel.y() * stride + pixel.x() * FormatInfo::get(format)->bitsPerPixel / 8;
