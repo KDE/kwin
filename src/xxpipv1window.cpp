@@ -121,12 +121,12 @@ void XXPipV1Window::handleRoleCommit()
     } else {
         if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
             frameGeometry = configureEvent->gravity.apply(frameGeometry, configureEvent->bounds);
-            if (const auto anchor = confineInteractiveMove(frameGeometry, minVisibleArea())) {
+            if (const auto anchor = confineInteractiveMove(frameGeometry)) {
                 frameGeometry.moveTopLeft(*anchor);
             }
         } else if (oldWindowGeometry != m_windowGeometry) {
             frameGeometry = m_gravity.apply(frameGeometry, m_frameGeometry);
-            if (const auto anchor = confineInteractiveMove(frameGeometry, minVisibleArea())) {
+            if (const auto anchor = confineInteractiveMove(frameGeometry)) {
                 frameGeometry.moveTopLeft(*anchor);
             }
         }

@@ -1370,14 +1370,12 @@ static RegionF interactiveMoveResizeVisibleSubrectRegion(const RectF &geometry, 
  *
  * See doc/moveresizerestriction for more details on algorithm.
  */
-std::optional<QPointF> Window::confineInteractiveMove(const RectF &geometry, const QSizeF &minVisibleArea) const
+std::optional<QPointF> Window::confineInteractiveMove(const RectF &geometry) const
 {
     std::optional<QPointF> candidate;
     qreal bestScore;
 
-    const QSizeF effectiveMinVisibleArea(std::min(geometry.width(), minVisibleArea.width()),
-                                         std::min(geometry.height(), minVisibleArea.height()));
-
+    const QSizeF effectiveMinVisibleArea = minVisibleArea().boundedTo(geometry.size());
     const RegionF visibleSubrectRegion = interactiveMoveResizeVisibleSubrectRegion(geometry, Gravity::Center, effectiveMinVisibleArea);
     const QPointF anchor = geometry.topLeft();
     for (RectF rect : visibleSubrectRegion.rects()) {
@@ -1407,17 +1405,18 @@ std::optional<QPointF> Window::confineInteractiveMove(const RectF &geometry, con
  *
  * See doc/moveresizerestriction for more details on algorithm.
  */
-std::optional<QPointF> Window::confineInteractiveResize(const RectF &geometry, Gravity gravity, const QSizeF &minVisibleArea) const
+std::optional<QPointF> Window::confineInteractiveResize(const RectF &geometry, Gravity gravity) const
 {
+    QSizeF effectiveMinVisibleArea = minVisibleArea();
+
     if (gravity == Gravity::Bottom) {
         QPointF candidate = geometry.bottomLeft();
-        if (geometry.height() < minVisibleArea.height()) {
-            candidate.setY(geometry.top() + minVisibleArea.height());
+        if (geometry.height() < effectiveMinVisibleArea.height()) {
+            candidate.setY(geometry.top() + effectiveMinVisibleArea.height());
         }
         return candidate;
     }
 
-    QSizeF effectiveMinVisibleArea = minVisibleArea;
     if (gravity == Gravity::Top) {
         // only in this case is the width of the window fixed during resize
         effectiveMinVisibleArea.rwidth() = std::min(geometry.width(), effectiveMinVisibleArea.width());
@@ -1669,7 +1668,7 @@ RectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
     }
 
     if (!isUnrestrictedInteractiveMoveResize()) {
-        if (const auto anchor = confineInteractiveResize(nextMoveResizeGeom, gravity, minVisibleArea())) {
+        if (const auto anchor = confineInteractiveResize(nextMoveResizeGeom, gravity)) {
             switch (gravity) {
             case Gravity::TopLeft:
                 nextMoveResizeGeom.setTopLeft(*anchor);
@@ -1712,7 +1711,7 @@ RectF Window::nextInteractiveMoveGeometry(const RectF &rect) const
     nextMoveResizeGeom.moveTopLeft(workspace()->adjustWindowPosition(this, nextMoveResizeGeom.topLeft(), isUnrestrictedInteractiveMoveResize()));
 
     if (!isUnrestrictedInteractiveMoveResize()) {
-        if (const auto anchor = confineInteractiveMove(nextMoveResizeGeom, minVisibleArea())) {
+        if (const auto anchor = confineInteractiveMove(nextMoveResizeGeom)) {
             nextMoveResizeGeom.moveTopLeft(anchor.value());
         }
     }
