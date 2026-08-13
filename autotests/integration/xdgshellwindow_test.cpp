@@ -1169,6 +1169,8 @@ void TestXdgShellWindow::testXdgWindowGeometryIsntSet()
     // This test verifies that the effective window geometry corresponds to the
     // bounding rectangle of the main surface and its sub-surfaces if no window
     // geometry is set by the window.
+    //
+    // Note that when the window geometry changes spontaneously, the window will be centered.
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
@@ -1177,14 +1179,12 @@ void TestXdgShellWindow::testXdgWindowGeometryIsntSet()
     QCOMPARE(window->bufferGeometry().size(), QSize(200, 100));
     QCOMPARE(window->frameGeometry().size(), QSize(200, 100));
 
-    const QPointF oldPosition = window->pos();
-
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     Test::render(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->frameGeometry().topLeft(), oldPosition);
+    QCOMPARE(window->frameGeometry().topLeft(), QPointF(50, 25));
     QCOMPARE(window->frameGeometry().size(), QSize(100, 50));
-    QCOMPARE(window->bufferGeometry().topLeft(), oldPosition);
+    QCOMPARE(window->bufferGeometry().topLeft(), QPointF(50, 25));
     QCOMPARE(window->bufferGeometry().size(), QSize(100, 50));
 
     std::unique_ptr<KWayland::Client::Surface> childSurface(Test::createSurface());
@@ -1194,9 +1194,9 @@ void TestXdgShellWindow::testXdgWindowGeometryIsntSet()
     Test::render(childSurface.get(), QSize(100, 50), Qt::blue);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->frameGeometry().topLeft(), oldPosition);
+    QCOMPARE(window->frameGeometry().topLeft(), QPointF(40, 20));
     QCOMPARE(window->frameGeometry().size(), QSize(120, 60));
-    QCOMPARE(window->bufferGeometry().topLeft(), oldPosition + QPoint(20, 10));
+    QCOMPARE(window->bufferGeometry().topLeft(), QPointF(40, 20) + QPoint(20, 10));
     QCOMPARE(window->bufferGeometry().size(), QSize(100, 50));
 }
 
@@ -1214,33 +1214,31 @@ void TestXdgShellWindow::testXdgWindowGeometryAttachBuffer()
     QCOMPARE(window->bufferGeometry().size(), QSize(200, 100));
     QCOMPARE(window->frameGeometry().size(), QSize(200, 100));
 
-    const QPointF oldPosition = window->pos();
-
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     shellSurface->xdgSurface()->set_window_geometry(10, 10, 180, 80);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(frameGeometryChangedSpy.count(), 1);
-    QCOMPARE(window->frameGeometry().topLeft(), oldPosition);
+    QCOMPARE(window->frameGeometry().topLeft(), QPointF(10, 10));
     QCOMPARE(window->frameGeometry().size(), QSize(180, 80));
-    QCOMPARE(window->bufferGeometry().topLeft(), oldPosition - QPoint(10, 10));
+    QCOMPARE(window->bufferGeometry().topLeft(), QPointF(10, 10) - QPoint(10, 10));
     QCOMPARE(window->bufferGeometry().size(), QSize(200, 100));
 
     Test::render(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(Test::waylandSync());
     QCOMPARE(frameGeometryChangedSpy.count(), 1);
-    QCOMPARE(window->frameGeometry().topLeft(), oldPosition);
+    QCOMPARE(window->frameGeometry().topLeft(), QPointF(10, 10));
     QCOMPARE(window->frameGeometry().size(), QSize(180, 80));
-    QCOMPARE(window->bufferGeometry().topLeft(), oldPosition - QPoint(10, 10));
+    QCOMPARE(window->bufferGeometry().topLeft(), QPointF(10, 10) - QPoint(10, 10));
     QCOMPARE(window->bufferGeometry().size(), QSize(100, 50));
 
     shellSurface->xdgSurface()->set_window_geometry(0, 0, 100, 50);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(frameGeometryChangedSpy.count(), 2);
-    QCOMPARE(window->frameGeometry().topLeft(), oldPosition);
+    QCOMPARE(window->frameGeometry().topLeft(), QPointF(50, 25));
     QCOMPARE(window->frameGeometry().size(), QSize(100, 50));
-    QCOMPARE(window->bufferGeometry().topLeft(), oldPosition);
+    QCOMPARE(window->bufferGeometry().topLeft(), QPointF(50, 25));
     QCOMPARE(window->bufferGeometry().size(), QSize(100, 50));
 
     shellSurface.reset();
@@ -1260,15 +1258,13 @@ void TestXdgShellWindow::testXdgWindowGeometryAttachSubSurface()
     QCOMPARE(window->bufferGeometry().size(), QSize(200, 100));
     QCOMPARE(window->frameGeometry().size(), QSize(200, 100));
 
-    const QPointF oldPosition = window->pos();
-
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     shellSurface->xdgSurface()->set_window_geometry(10, 10, 180, 80);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->frameGeometry().topLeft(), oldPosition);
+    QCOMPARE(window->frameGeometry().topLeft(), QPointF(10, 10));
     QCOMPARE(window->frameGeometry().size(), QSize(180, 80));
-    QCOMPARE(window->bufferGeometry().topLeft(), oldPosition - QPoint(10, 10));
+    QCOMPARE(window->bufferGeometry().topLeft(), QPointF(10, 10) - QPoint(10, 10));
     QCOMPARE(window->bufferGeometry().size(), QSize(200, 100));
 
     std::unique_ptr<KWayland::Client::Surface> childSurface(Test::createSurface());
@@ -1277,17 +1273,17 @@ void TestXdgShellWindow::testXdgWindowGeometryAttachSubSurface()
     subSurface->setPosition(QPoint(-20, -20));
     Test::render(childSurface.get(), QSize(100, 50), Qt::blue);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QCOMPARE(window->frameGeometry().topLeft(), oldPosition);
+    QCOMPARE(window->frameGeometry().topLeft(), QPointF(10, 10));
     QCOMPARE(window->frameGeometry().size(), QSize(180, 80));
-    QCOMPARE(window->bufferGeometry().topLeft(), oldPosition - QPoint(10, 10));
+    QCOMPARE(window->bufferGeometry().topLeft(), QPointF(10, 10) - QPoint(10, 10));
     QCOMPARE(window->bufferGeometry().size(), QSize(200, 100));
 
     shellSurface->xdgSurface()->set_window_geometry(-15, -15, 50, 40);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->frameGeometry().topLeft(), oldPosition);
+    QCOMPARE(window->frameGeometry().topLeft(), QPointF(75, 30));
     QCOMPARE(window->frameGeometry().size(), QSize(50, 40));
-    QCOMPARE(window->bufferGeometry().topLeft(), oldPosition - QPoint(-15, -15));
+    QCOMPARE(window->bufferGeometry().topLeft(), QPointF(75, 30) - QPoint(-15, -15));
     QCOMPARE(window->bufferGeometry().size(), QSize(200, 100));
 }
 

@@ -25,8 +25,8 @@ XXPipV1Window::XXPipV1Window(XXPipV1Interface *shellSurface)
     setOnAllDesktops(true);
     setOnAllActivities(true);
 
-    m_gravity = Gravity::Center;
-    m_nextGravity = Gravity::Center;
+    m_spontaneousGravity = Gravity::Center;
+    m_configureGravity = Gravity::Center;
 
     connect(shellSurface, &XXPipV1Interface::initializeRequested,
             this, &XXPipV1Window::initialize);
@@ -100,11 +100,11 @@ XdgSurfaceConfigure *XXPipV1Window::sendRoleConfigure()
     XdgSurfaceConfigure *configureEvent = new XdgSurfaceConfigure();
     configureEvent->bounds = moveResizeGeometry();
     configureEvent->serial = m_shellSurface->sendConfigureSize(geometry.size());
-    configureEvent->gravity = m_nextGravity;
+    configureEvent->gravity = m_configureGravity;
     configureEvent->scale = m_nextTargetScale;
 
     if (!isInteractiveMoveResize()) {
-        m_nextGravity = Gravity::Center;
+        m_configureGravity = Gravity::Center;
     }
 
     return configureEvent;
@@ -125,7 +125,7 @@ void XXPipV1Window::handleRoleCommit()
                 frameGeometry.moveTopLeft(*anchor);
             }
         } else if (oldWindowGeometry != m_windowGeometry) {
-            frameGeometry = m_gravity.apply(frameGeometry, m_frameGeometry);
+            frameGeometry = m_spontaneousGravity.apply(frameGeometry, m_frameGeometry);
             if (const auto anchor = confineInteractiveMove(frameGeometry)) {
                 frameGeometry.moveTopLeft(*anchor);
             }
@@ -172,14 +172,6 @@ void XXPipV1Window::handleRoleCommit()
     }
 
     updateGeometry(frameGeometry);
-
-    if (const auto configureEvent = lastAcknowledgedConfigure()) {
-        if (!m_configureEvents.isEmpty()) {
-            m_gravity = configureEvent->gravity;
-        } else if (!isInteractiveResize()) {
-            m_gravity = Gravity::Center;
-        }
-    }
 }
 
 void XXPipV1Window::handleRoleDestroyed()
@@ -256,7 +248,7 @@ void XXPipV1Window::doSetPreferredColorDescription()
 bool XXPipV1Window::doStartInteractiveMoveResize()
 {
     if (interactiveMoveResizeGravity() != Gravity::Center) {
-        m_nextGravity = interactiveMoveResizeGravity();
+        m_configureGravity = interactiveMoveResizeGravity();
         scheduleConfigure();
     }
 
