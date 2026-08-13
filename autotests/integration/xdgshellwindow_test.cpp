@@ -1308,6 +1308,7 @@ void TestXdgShellWindow::testXdgWindowGeometryInteractiveResize()
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
 
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     shellSurface->xdgSurface()->set_window_geometry(10, 10, 180, 80);
