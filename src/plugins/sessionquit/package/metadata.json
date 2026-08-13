@@ -61,6 +61,7 @@
         "Description[bg]": "Показване на фона на работния плот до края на излизането от сесия",
         "Description[ca@valencia]": "Manté viu el fons de l'escriptori durant l'eixida de la sessió fins al final",
         "Description[ca]": "Manté viu el fons de l'escriptori durant la sortida de la sessió fins al final",
+        "Description[cs]": "Udržujte pozadí plochy aktivní i během odhlášení až do samého konce",
         "Description[da]": "Holder skrivebordsbaggrunden i live under log ud helt til slut",
         "Description[de]": "Beim Abmelden den Hintergrund der Arbeitsfläche bis zum Schluss behalten",
         "Description[en_GB]": "Keep the desktop background alive during logout until the end",

@@ -55,7 +55,7 @@
         ],
         "Category": "Focus",
         "Description": "Darkens the parent window of the currently active dialog",
-        "Description[ar]": "تعتم النافذة المولدة للحوار النشط حالياً",
+        "Description[ar]": "تعتم النافذة المولدة للحوار النشط حاليًا",
         "Description[be]": "Зацямненне бацькоўскага акна актыўнага дыялогавага акна",
         "Description[bg]": "Затъмняване на главния от активните прозорци",
         "Description[ca@valencia]": "Enfosquix la finestra principal del diàleg actualment actiu",
