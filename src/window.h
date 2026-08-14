@@ -1115,7 +1115,6 @@ public:
 
     bool wantsTabFocus() const;
     virtual void takeFocus();
-    virtual bool takesAsyncFocus() const;
     virtual bool wantsInput() const = 0;
     void checkWorkspacePosition(RectF oldGeometry = RectF(), LogicalOutput *oldOutput = nullptr);
 #if KWIN_BUILD_X11
