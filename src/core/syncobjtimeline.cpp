@@ -86,6 +86,9 @@ void GraphicsBufferReleasePoint::setBuffer(GraphicsBuffer *buffer)
 
 void GraphicsBufferReleasePoint::addReleaseFence(const FileDescriptor &fd)
 {
+    if (!fd.isValid()) {
+        return;
+    }
     if (m_releaseFd.isValid()) {
         m_releaseFd = SyncReleasePoint::mergeSyncFds(fd, m_releaseFd);
     } else {
@@ -109,6 +112,9 @@ SyncObjReleasePoint::~SyncObjReleasePoint()
 
 void SyncObjReleasePoint::addReleaseFence(const FileDescriptor &fd)
 {
+    if (!fd.isValid()) {
+        return;
+    }
     if (m_releaseFence.isValid()) {
         m_releaseFence = SyncReleasePoint::mergeSyncFds(m_releaseFence, fd);
     } else {
