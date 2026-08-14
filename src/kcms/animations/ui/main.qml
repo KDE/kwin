@@ -15,98 +15,90 @@ import org.kde.plasma.kcm.animations
 
 KCM.SimpleKCM {
     id: root
-
-    implicitWidth: Kirigami.Units.gridUnit * 40
-
-    ColumnLayout {
-        spacing: 0
-
-        // NOTE: FormLayouts are separate due to usage of repeaters, which
-        // otherwise place their delegates at the end
-
-        Kirigami.FormLayout {
-            id: mainLayout
-
-            twinFormLayouts: separatorLayout
-
+    Kirigami.SizeGroup {
+        id: contentItemSizeGroup
+        mode: Kirigami.SizeGroup.Width
+        items: [
+            animationSpeedSlider
+        ]
+        function appendItem(item: Item) {
+            contentItemSizeGroup.items.push(item);
+        }
+        function removeItem(item: Item) {
+            contentItemSizeGroup.items = contentItemSizeGroup.items.filter((e) => e !== item)
+        }
+    }
+    Kirigami.Form {
+        Kirigami.FormGroup {
             // We want to show the slider in a logarithmic way. ie
             // move from 4x, 3x, 2x, 1x, 0.5x, 0.25x, 0.125x
             // 0 is a special case, which means "instant speed / no animations"
-            GridLayout {
-                Kirigami.FormData.labelAlignment: Qt.AlignTop
-                Kirigami.FormData.label: i18n("Global animation speed:")
-                Kirigami.FormData.buddyFor: animationSpeedSlider
-                Layout.fillWidth: true
-                Layout.minimumWidth: Kirigami.Units.gridUnit * 16
-
-                rowSpacing: Kirigami.Units.smallSpacing
-                columnSpacing: Kirigami.Units.smallSpacing
-
-                columns: 2
-
-                QQC2.Slider {
-                    id: animationSpeedSlider
-                    Layout.fillWidth: true
-
-                    // Use same values as plasma-desktop/kcms/landingpage/ui/main.qml
-                    property var valueMapping: [
-                        4,
-                        2,
-                        1.5,
-                        1,
-                        0.75,
-                        0.5,
-                        0,
-                    ]
-
-                    from: 0
-                    to: valueMapping.length - 1
-                    stepSize: 1
-                    Kirigami.StyleHints.tickMarkStepSize: stepSize
-                    snapMode: QQC2.Slider.SnapAlways
-                    onMoved: kcm.globalsSettings.animationDurationFactor = valueMapping[value]
-                    value: {
-                        let factor = kcm.globalsSettings.animationDurationFactor
-                        let index = valueMapping.findIndex(item => item <= factor)
-                        return index >= 0 ? index : valueMapping.length - 1
+            Kirigami.FormEntry {
+                title: i18n("Global animation speed:")
+                contentItem: ColumnLayout {
+                    Kirigami.FormData.buddyFor: animationSpeedSlider
+                    spacing: Kirigami.Units.smallSpacing
+                    QQC2.Slider {
+                        id: animationSpeedSlider
+                        // Use same values as plasma-desktop/kcms/landingpage/ui/main.qml
+                        property var valueMapping: [
+                            4,
+                            2,
+                            1.5,
+                            1,
+                            0.75,
+                            0.5,
+                            0,
+                        ]
+                        from: 0
+                        to: valueMapping.length - 1
+                        stepSize: 1
+                        Kirigami.StyleHints.tickMarkStepSize: stepSize
+                        snapMode: QQC2.Slider.SnapAlways
+                        onMoved: kcm.globalsSettings.animationDurationFactor = valueMapping[value]
+                        value: {
+                            let factor = kcm.globalsSettings.animationDurationFactor
+                            let index = valueMapping.findIndex(item => item <= factor)
+                            return index >= 0 ? index : valueMapping.length - 1
+                        }
+                        // vertically center align slider with help button
+                        Layout.topMargin: Math.max(0, (animationSpeedHelpButton.height - height) / 2)
+                        KCM.SettingStateBinding {
+                            configObject: kcm.globalsSettings
+                            settingName: "animationDurationFactor"
+                        }
                     }
-
-                    KCM.SettingStateBinding {
-                        configObject: kcm.globalsSettings
-                        settingName: "animationDurationFactor"
-                    }
-                }
-
-                Kirigami.ContextualHelpButton {
-                    Layout.alignment: Qt.AlignTop
-
-                    toolTipText: xi18nc("@info:tooltip", "Some applications do not support this setting: In particular, GTK applications cannot change animation duration, but will still disable animations when <interface>animation speed</interface> is <interface>Instant</interface>.")
-                }
-
-                RowLayout {
-                    spacing: 0
-
-                    QQC2.Label {
-                        text: i18nc("Animation speed", "Slow")
-                        textFormat: Text.PlainText
-                    }
-
-                    Item {
+                    RowLayout {
+                        id: animationSpeedLegend
+                        Layout.maximumWidth: animationSpeedSlider.width
                         Layout.fillWidth: true
-                    }
-
-                    QQC2.Label {
-                        text: i18nc("Animation speed", "Instant")
-                        textFormat: Text.PlainText
+                        spacing: 0
+                        QQC2.Label {
+                            Layout.fillWidth: true
+                            text: i18nc("Animation speed", "Slow")
+                            textFormat: Text.PlainText
+                            horizontalAlignment: Text.AlignLeft
+                        }
+                        QQC2.Label {
+                            Layout.fillWidth: true
+                            text: i18nc("Animation speed", "Instant")
+                            textFormat: Text.PlainText
+                            horizontalAlignment: Text.AlignRight
+                        }
                     }
                 }
+                trailingItems: [
+                    Kirigami.ContextualHelpButton {
+                        id: animationSpeedHelpButton
+                        Layout.alignment: Qt.AlignTop
+                        toolTipText: xi18nc("@info:tooltip", "Some applications do not support this setting: In particular, GTK applications cannot change animation duration, but will still disable animations when <interface>animation speed</interface> is <interface>Instant</interface>.")
+                    }
+                ]
             }
+        }
 
-            Item {
-                Kirigami.FormData.isSection: true
-                Kirigami.FormData.label: i18nc("@title:group", "Desktop animations")
-            }
-
+        Kirigami.FormGroup {
+            title: i18nc("@title:group", "Desktop animations")
             Repeater {
                 model: [{"animationsModel": kcm.windowOpenCloseAnimations,  "label": i18nc("@label:listbox", "Window open/close:")        },
                         {"animationsModel": kcm.windowMaximizeAnimations,   "label": i18nc("@label:listbox", "Window maximize:")          },
@@ -114,44 +106,36 @@ KCM.SimpleKCM {
                         {"animationsModel": kcm.windowFullscreenAnimations, "label": i18nc("@label:listbox", "Window full screen:")       },
                         {"animationsModel": kcm.peekDesktopAnimations,      "label": i18nc("@label:listbox", "Peek at desktop:")          },
                         {"animationsModel": kcm.virtualDesktopAnimations,   "label": i18nc("@label:listbox", "Virtual desktop switching:")}]
-                delegate: RowLayout {
-                    id: animationLayout
-                    Kirigami.FormData.buddyFor: animationComboBox
-                    Kirigami.FormData.label: modelData.label
-                    Layout.fillWidth: true
-                    Layout.minimumWidth: Kirigami.Units.gridUnit * 16
-
-                    spacing: Kirigami.Units.smallSpacing
-
+                delegate: Kirigami.FormEntry {
+                    id: delegate
+                    required property var modelData
+                    title: modelData.label
                     enabled: kcm.globalsSettings.animationDurationFactor != 0
-
-                    AnimationComboBox {
+                    contentItem: AnimationComboBox {
                         id: animationComboBox
-                        Layout.fillWidth: true
-                        // Reserve space for the hidden configure button
-                        Layout.rightMargin: !animationConfigure.visible ? (animationConfigure.implicitWidth + animationLayout.spacing) : undefined
-
-                        animationsModel: modelData.animationsModel
-
+                        animationsModel: delegate.modelData.animationsModel
                         KCM.SettingHighlighter {
                             highlight: !animationComboBox.isDefault && kcm.globalsSettings.animationDurationFactor != 0
                         }
+                        Component.onCompleted: contentItemSizeGroup.appendItem(this);
+                        Component.onDestruction: contentItemSizeGroup.removeItem(this);
                     }
+                    trailingItems: [
+                        QQC2.Button {
+                            id: animationConfigure
+                            icon.name: "configure"
+                            text: i18nc("@info:tooltip", "Configure…")
+                            display: QQC2.AbstractButton.IconOnly
 
-                    QQC2.Button {
-                        id: animationConfigure
-                        icon.name: "configure"
-                        text: i18nc("@info:tooltip", "Configure…")
-                        display: QQC2.AbstractButton.IconOnly
+                            QQC2.ToolTip.text: text
+                            QQC2.ToolTip.visible: hovered
+                            QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
 
-                        QQC2.ToolTip.text: text
-                        QQC2.ToolTip.visible: hovered
-                        QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
-
-                        enabled: animationComboBox.isConfigurable
-                        visible: animationComboBox.isAnyConfigurable
-                        onClicked: kcm.configure(animationComboBox.configurePluginId, root)
-                    }
+                            enabled: animationComboBox.isConfigurable
+                            visible: animationComboBox.isAnyConfigurable
+                            onClicked: kcm.configure(animationComboBox.configurePluginId, root)
+                        }
+                    ]
                 }
             }
 
@@ -162,118 +146,57 @@ KCM.SimpleKCM {
 
             Repeater {
                 id: otherEffectsRepeater
-
                 model: kcm.otherEffects.rowCount()
-                delegate: RowLayout {
-                    id: otherAnimationLayout
-                    Kirigami.FormData.buddyFor: animationCheckBox
-                    Kirigami.FormData.label: i18nc("@option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'",
-                                                   "%1:",
-                                                   kcm.otherEffects.data(kcm.otherEffects.index(index, 0), EffectsModel.NameRole))
-                    Layout.fillWidth: true
-
+                delegate: Kirigami.FormEntry {
+                    id: delegate
                     required property int index
-
-                    spacing: Kirigami.Units.smallSpacing
-
+                    title: i18nc("@option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'",
+                                                    "%1:",
+                                                    kcm.otherEffects.data(kcm.otherEffects.index(index, 0), EffectsModel.NameRole))
                     enabled: kcm.globalsSettings.animationDurationFactor != 0
-
-                    AnimationCheckBox {
+                    contentItem: AnimationCheckBox {
                         id: animationCheckBox
-                        Layout.fillWidth: true
-                        // Reserve space for the hidden configure button
-                        Layout.rightMargin: !otherAnimationConfigure.visible ? (otherAnimationConfigure.implicitWidth + otherAnimationLayout.spacing) : undefined
-
-                        implicitWidth: 0
-
                         animationsModel: kcm.otherEffects
-                        index: otherAnimationLayout.index
-
+                        index: delegate.index
                         text: kcm.otherEffects.data(kcm.otherEffects.index(index, 0), EffectsModel.DescriptionRole)
-
-                        // Center the indicator when multi-line
-                        Binding {
-                            target: animationCheckBox.indicator.anchors
-                            property: "verticalCenter"
-                            value: animationCheckBox.verticalCenter
-                            when: animationCheckBox.contentItem.lineCount > 1
-                        }
-
-
                         KCM.SettingHighlighter {
                             highlight: !animationCheckBox.isDefault && kcm.globalsSettings.animationDurationFactor != 0
                         }
+                        Component.onCompleted: contentItemSizeGroup.appendItem(this);
+                        Component.onDestruction: contentItemSizeGroup.removeItem(this);
                     }
+                    trailingItems: [
+                        QQC2.Button {
+                            icon.name: "configure"
+                            text: i18nc("@info:tooltip", "Configure…")
+                            display: QQC2.AbstractButton.IconOnly
 
-                    QQC2.Button {
-                        id: otherAnimationConfigure
-                        icon.name: "configure"
-                        text: i18nc("@info:tooltip", "Configure…")
-                        display: QQC2.AbstractButton.IconOnly
+                            QQC2.ToolTip.text: text
+                            QQC2.ToolTip.visible: hovered
+                            QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
 
-                        QQC2.ToolTip.text: text
-                        QQC2.ToolTip.visible: hovered
-                        QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
-
-                        enabled: animationCheckBox.checked
-                        visible: animationCheckBox.isConfigurable
-                        onClicked: kcm.configure(animationCheckBox.configurePluginId, root)
-                    }
+                            enabled: animationCheckBox.checked
+                            visible: animationCheckBox.isConfigurable
+                            onClicked: kcm.configure(animationCheckBox.configurePluginId, root)
+                        }
+                    ]
                 }
             }
-        }
 
-        Kirigami.FormLayout {
-            id: separatorLayout
-
-            twinFormLayouts: mainLayout
-
-            Kirigami.Separator {
-                id: separator
-                Kirigami.FormData.isSection: true
+            Kirigami.FormSeparator {
                 visible: effectsKCMButton.visible
             }
 
-            QQC2.Button {
+            Kirigami.FormAction {
                 id: effectsKCMButton
-                Kirigami.FormData.label: i18nc("@title:group translate as short as possible", "More effects settings:")
-                Layout.preferredWidth: Kirigami.Units.gridUnit * 10
-
                 readonly property var kcmData: kcm.effectsKCMData()
-
+                title: i18nc("@title:group translate as short as possible", "More effects settings:")
                 visible: "icon" in kcmData && "name" in kcmData
-
-                // For consistency with kcm_landingpage
-                implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                                        implicitContentWidth + leftPadding + rightPadding)
-                implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                                        implicitContentHeight + topPadding + bottomPadding)
-
-                leftPadding: Kirigami.Units.largeSpacing
-                rightPadding: Kirigami.Units.largeSpacing
-                topPadding: Kirigami.Units.largeSpacing
-                bottomPadding: Kirigami.Units.largeSpacing
-
-                contentItem: RowLayout {
-                    spacing: Kirigami.Units.smallSpacing
-
-                    Kirigami.Icon {
-                        Layout.alignment: Qt.AlignCenter
-
-                        implicitWidth: Kirigami.Units.iconSizes.small
-                        implicitHeight: Kirigami.Units.iconSizes.small
-                        source: "icon" in effectsKCMButton.kcmData ? effectsKCMButton.kcmData.icon : ""
-                    }
-
-                    QQC2.Label {
-                        Layout.fillWidth: true
-                        elide: Text.ElideRight
-                        textFormat: Text.PlainText
-                        text: "name" in effectsKCMButton.kcmData ? effectsKCMButton.kcmData.name : ""
-                    }
+                action: QQC2.Action {
+                    icon.name: "icon" in effectsKCMButton.kcmData ? effectsKCMButton.kcmData.icon : ""
+                    text: "name" in effectsKCMButton.kcmData ? effectsKCMButton.kcmData.name : ""
+                    onTriggered: kcm.launchEffectsKCM()
                 }
-
-                onClicked: kcm.launchEffectsKCM()
             }
         }
     }
