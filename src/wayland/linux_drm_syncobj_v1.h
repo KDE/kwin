@@ -30,6 +30,7 @@ class KWIN_EXPORT LinuxDrmSyncObjV1Interface : public QObject, private QtWayland
 public:
     explicit LinuxDrmSyncObjV1Interface(Display *display, QObject *parent, DrmDevice *drmDevice);
 
+    void setDrmDevice(DrmDevice *drmDevice);
     void remove();
 
 private:
@@ -38,7 +39,7 @@ private:
     void wp_linux_drm_syncobj_manager_v1_destroy(Resource *resource) override;
     void wp_linux_drm_syncobj_manager_v1_destroy_global() override;
 
-    DrmDevice *const m_drmDevice;
+    DrmDevice *m_drmDevice;
 };
 
 class LinuxDrmSyncObjSurfaceV1 : private QtWaylandServer::wp_linux_drm_syncobj_surface_v1

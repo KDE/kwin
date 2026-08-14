@@ -62,6 +62,11 @@ void LinuxDrmSyncObjV1Interface::wp_linux_drm_syncobj_manager_v1_destroy(Resourc
     wl_resource_destroy(resource->handle);
 }
 
+void LinuxDrmSyncObjV1Interface::setDrmDevice(DrmDevice *drmDevice)
+{
+    m_drmDevice = drmDevice;
+}
+
 void LinuxDrmSyncObjV1Interface::remove()
 {
     QtWaylandServer::wp_linux_drm_syncobj_manager_v1::globalRemove();

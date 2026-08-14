@@ -840,7 +840,9 @@ void WaylandServer::updateSyncobjSupport()
         if (linuxVersion.majorVersion() == 6 && (linuxVersion.minorVersion() == 7 || (linuxVersion.minorVersion() == 6 && linuxVersion.patchVersion() < 19))) {
             return;
         }
-        if (!m_linuxDrmSyncObj) {
+        if (m_linuxDrmSyncObj) {
+            m_linuxDrmSyncObj->setDrmDevice((*it)->drmDevice());
+        } else {
             m_linuxDrmSyncObj = new LinuxDrmSyncObjV1Interface(m_display, m_display, (*it)->drmDevice());
         }
     } else if (m_linuxDrmSyncObj) {
