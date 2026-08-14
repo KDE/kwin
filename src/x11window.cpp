@@ -1946,7 +1946,11 @@ void X11Window::sendSyncRequest()
 
 bool X11Window::wantsInput() const
 {
-    return rules()->checkAcceptFocus(acceptsFocus() || info->supportsProtocol(NET::TakeFocusProtocol)) && isClient();
+    // Not checking whether the WM_TAKE_FOCUS is supported because many clients not wishing
+    // to accept any input at all only unset the input flag in WM_HINTS and leave WM_TAKE_FOCUS,
+    // which then leads to focus management issues that need to be worked around by adding
+    // window type checks, etc. Avoiding async focus also helps with keeping the code simple.
+    return rules()->checkAcceptFocus(acceptsFocus());
 }
 
 bool X11Window::acceptsFocus() const
