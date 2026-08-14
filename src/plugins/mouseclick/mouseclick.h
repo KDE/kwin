@@ -11,19 +11,20 @@
 
 #include "effect/effect.h"
 #include "effect/effectframe.h"
-#include "effect/timeline.h"
 #include <KLocalizedString>
 #include <QFont>
 #include <QHash>
-#include <deque>
+#include <array>
+#include <memory>
 
 namespace KWin
 {
 
 #define BUTTON_COUNT 3
 
-class EffectFrame;
-class InputDeviceTabletTool;
+class GLFramebuffer;
+class GLShader;
+class GLTexture;
 
 class MouseClickMouseEvent
 {
@@ -68,6 +69,7 @@ public:
     }
 
     inline void setPressed(bool pressed)
+
     {
         if (m_isPressed != pressed) {
             m_isPressed = pressed;
@@ -103,7 +105,6 @@ public:
     MouseClickEffect();
     ~MouseClickEffect() override;
     void reconfigure(ReconfigureFlags) override;
-    void prePaintScreen(ScreenPrePaintData &data) override;
     bool paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
     void postPaintScreen() override;
     bool isActive() const override;
@@ -120,10 +121,6 @@ public:
     QFont font() const;
     bool isEnabled() const;
 
-    bool tabletToolProximity(TabletToolProximityEvent *event) override;
-    bool tabletToolAxis(TabletToolAxisEvent *event) override;
-    bool tabletToolTip(TabletToolTipEvent *event) override;
-
 private Q_SLOTS:
     void toggleEnabled();
     void slotMouseChanged(const QPointF &pos, const QPointF &old,
@@ -131,35 +128,46 @@ private Q_SLOTS:
                           Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 
 private:
-    std::unique_ptr<EffectFrame> createEffectFrame(const QPoint &pos, const QString &text);
-    inline void drawCircle(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r);
+    struct OffscreenTarget
+    {
+        std::shared_ptr<GLTexture> texture;
+        std::shared_ptr<GLFramebuffer> framebuffer;
+    };
 
+    struct ScreenCapture
+    {
+        OffscreenTarget scene;
+        std::array<OffscreenTarget, 2> feedback;
+        int previousFrame = 0;
+    };
+
+    void loadShaders();
+
+    std::unique_ptr<EffectFrame> createEffectFrame(const QPoint &pos, const QString &text);
     inline bool isReleased(Qt::MouseButtons button, Qt::MouseButtons buttons, Qt::MouseButtons oldButtons);
     inline bool isPressed(Qt::MouseButtons button, Qt::MouseButtons buttons, Qt::MouseButtons oldButtons);
 
-    inline float computeRadius(const MouseClickMouseEvent *click, int ring);
-    inline float computeAlpha(const MouseClickMouseEvent *click, int ring);
-
-    void repaint();
-
-    void drawCircleGl(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r);
-    void paintScreenSetupGl(const RenderTarget &renderTarget, const QMatrix4x4 &projectionMatrix);
-    void paintScreenFinishGl();
-
-    TabletToolEvent &getOrCreateTabletPoint(InputDeviceTabletTool *tool);
-
-    QColor m_colors[BUTTON_COUNT];
+    QColor m_colors[3];
     int m_ringCount;
     float m_lineWidth;
     float m_ringLife;
     float m_ringMaxSize;
     bool m_showText;
     QFont m_font;
-    AnimationClock m_clock;
+    QHash<LogicalOutput *, ScreenCapture> m_screenCaptures;
 
-    std::deque<std::unique_ptr<MouseClickMouseEvent>> m_clicks;
+    std::unique_ptr<MouseClickMouseEvent> m_click;
     std::unique_ptr<MouseButton> m_buttons[BUTTON_COUNT];
-    QHash<InputDeviceTabletTool *, TabletToolEvent> m_tabletTools;
+
+    std::unique_ptr<GLShader> m_shader;
+    std::unique_ptr<GLShader> m_feedbackShader;
+    int m_modelViewProjectionMatrixLocation = -1;
+    int m_cursorColorLocation = -1;
+    int m_cursorPositionLocation = -1;
+    int m_cursorRadiusLocation = -1;
+    int m_feedbackModelViewProjectionMatrixLocation = -1;
+    int m_feedbackPreviousFrameLocation = -1;
+    int m_feedbackScreenSizeLocation = -1;
 
     bool m_enabled;
 };

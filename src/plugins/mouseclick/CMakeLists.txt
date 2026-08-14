@@ -4,6 +4,7 @@
 set(mouseclick_SOURCES
     main.cpp
     mouseclick.cpp
+    mouseclick.qrc
 )
 
 kconfig_add_kcfg_files(mouseclick_SOURCES

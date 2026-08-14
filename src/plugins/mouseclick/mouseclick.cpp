@@ -11,21 +11,27 @@
 // KConfigSkeleton
 #include "mouseclickconfig.h"
 
-#include "core/inputdevice.h"
+#include "core/output.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
-#include "input_event.h"
+#include "opengl/glframebuffer.h"
 #include "opengl/glshader.h"
 #include "opengl/glshadermanager.h"
-#include "opengl/glvertexbuffer.h"
+#include "opengl/gltexture.h"
 
 #include <QAction>
+#include <QDebug>
+#include <QMatrix4x4>
 
 #include <KConfigGroup>
 #include <KGlobalAccel>
 
-#include <cmath>
+static void ensureResources()
+{
+    // Must initialize resources manually because the effect is a static lib.
+    Q_INIT_RESOURCE(mouseclick);
+}
 
 namespace KWin
 {
@@ -34,6 +40,9 @@ MouseClickEffect::MouseClickEffect()
 {
     MouseClickConfig::instance(effects->config());
     m_enabled = false;
+    toggleEnabled();
+    ensureResources();
+    loadShaders();
 
     QAction *a = new QAction(this);
     a->setObjectName(QStringLiteral("ToggleMouseClick"));
@@ -66,87 +75,135 @@ void MouseClickEffect::reconfigure(ReconfigureFlags)
     m_font = MouseClickConfig::font();
 }
 
-void MouseClickEffect::prePaintScreen(ScreenPrePaintData &data)
-{
-    const int time = m_clock.tick(data.view).count();
-
-    for (auto &click : m_clicks) {
-        click->m_time += time;
-    }
-
-    for (int i = 0; i < BUTTON_COUNT; ++i) {
-        if (m_buttons[i]->m_isPressed) {
-            m_buttons[i]->m_time += time;
-        }
-    }
-
-    while (m_clicks.size() > 0) {
-        if (m_clicks.front()->m_time <= m_ringLife) {
-            break;
-        }
-        m_clicks.pop_front();
-    }
-
-    if (!isActive()) {
-        m_clock.reset();
-    }
-
-    effects->prePaintScreen(data);
-}
-
 bool MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
-    if (!effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen)) {
+    if (!m_enabled) {
+        return effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
+    }
+    loadShaders();
+    if (!m_shader || !m_feedbackShader) {
+        return effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
+    }
+
+    const QSize nativeSize = screen->geometry().size() * screen->scale();
+    const GLenum textureFormat = renderTarget.texture() ? renderTarget.texture()->internalFormat() : GL_RGBA8;
+    auto &capture = m_screenCaptures[screen];
+    if (!capture.scene.texture || capture.scene.texture->size() != nativeSize || capture.scene.texture->internalFormat() != textureFormat) {
+        capture = {};
+        capture.scene.texture = GLTexture::allocate(textureFormat, nativeSize);
+        if (!capture.scene.texture) {
+            m_screenCaptures.remove(screen);
+            return effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
+        }
+        capture.scene.framebuffer = std::make_shared<GLFramebuffer>(capture.scene.texture.get());
+        if (!capture.scene.framebuffer->valid()) {
+            m_screenCaptures.remove(screen);
+            return effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
+        }
+        GLFramebuffer::pushFramebuffer(capture.scene.framebuffer.get());
+        glClearColor(0, 0, 0, 0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        GLFramebuffer::popFramebuffer();
+        for (OffscreenTarget &feedback : capture.feedback) {
+            feedback.texture = GLTexture::allocate(textureFormat, nativeSize);
+            if (!feedback.texture) {
+                m_screenCaptures.remove(screen);
+                return effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
+            }
+            feedback.framebuffer = std::make_shared<GLFramebuffer>(feedback.texture.get());
+            if (!feedback.framebuffer->valid()) {
+                m_screenCaptures.remove(screen);
+                return effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
+            }
+
+            GLFramebuffer::pushFramebuffer(feedback.framebuffer.get());
+            glClearColor(0, 0, 0, 0);
+            glClear(GL_COLOR_BUFFER_BIT);
+            GLFramebuffer::popFramebuffer();
+        }
+    }
+
+    // Render all effects below this one into an offscreen texture first.
+    RenderTarget captureTarget(capture.scene.framebuffer.get(), renderTarget.colorDescription());
+    RenderViewport captureViewport(viewport.renderRect(), viewport.scale(), captureTarget, QPoint());
+    GLFramebuffer::pushFramebuffer(capture.scene.framebuffer.get());
+    const bool painted = effects->paintScreen(captureTarget, captureViewport, mask, deviceRegion, screen);
+    GLFramebuffer::popFramebuffer();
+    if (!painted) {
         return false;
     }
 
-    paintScreenSetupGl(renderTarget, viewport.projectionMatrix());
-    for (const auto &click : m_clicks) {
-        for (int i = 0; i < m_ringCount; ++i) {
-            float alpha = computeAlpha(click.get(), i);
-            float size = computeRadius(click.get(), i);
-            if (size > 0 && alpha > 0) {
-                QColor color = m_colors[click->m_button];
-                color.setAlphaF(alpha);
-                drawCircle(viewport, color, click->m_pos.x(), click->m_pos.y(), size);
-            }
-        }
+    const RectF screenRect = screen->geometry();
+    const QPointF cursor = cursorPos();
+    const QVector2D cursorPosition((cursor.x() - screenRect.x()) / screenRect.width(),
+                                   1.0 - (cursor.y() - screenRect.y()) / screenRect.height());
+    QVector2D cursorRadius(8.0 * viewport.scale() / nativeSize.width(),
+                           8.0 * viewport.scale() / nativeSize.height());
 
-        if (m_showText && click->m_frame) {
-            float frameAlpha = (click->m_time * 2.0f - m_ringLife) / m_ringLife;
-            frameAlpha = frameAlpha < 0 ? 1 : -(frameAlpha * frameAlpha) + 1;
-            click->m_frame->render(renderTarget, viewport, Region::infinite(), frameAlpha, frameAlpha);
-        }
+    if (!m_click || !m_click->m_press) {
+        cursorRadius = QVector2D(0.0 * viewport.scale() / nativeSize.width(),
+                                 0.0 * viewport.scale() / nativeSize.height());
     }
-    for (const auto &tool : std::as_const(m_tabletTools)) {
-        const int step = m_ringMaxSize * (1. - tool.m_pressure);
-        for (qreal size = m_ringMaxSize; size > 0; size -= step) {
-            drawCircle(viewport, tool.m_color, tool.m_globalPosition.x(), tool.m_globalPosition.y(), size);
-        }
+
+    const int nextFrame = 1 - capture.previousFrame;
+    const OffscreenTarget &previousFrame = capture.feedback[capture.previousFrame];
+    const OffscreenTarget &nextFeedback = capture.feedback[nextFrame];
+    GLFramebuffer::pushFramebuffer(nextFeedback.framebuffer.get());
+    glActiveTexture(GL_TEXTURE1);
+    previousFrame.texture->bind();
+    glActiveTexture(GL_TEXTURE0);
+    ShaderManager::instance()->pushShader(m_feedbackShader.get());
+    QMatrix4x4 feedbackProjectionMatrix;
+    feedbackProjectionMatrix.ortho(QRectF(QPointF(), nativeSize));
+    m_feedbackShader->setUniform(m_feedbackModelViewProjectionMatrixLocation, feedbackProjectionMatrix);
+    m_feedbackShader->setUniform("sampler", 0);
+    m_feedbackShader->setUniform(m_feedbackPreviousFrameLocation, 1);
+    m_feedbackShader->setUniform(m_cursorPositionLocation, cursorPosition);
+    m_feedbackShader->setUniform(m_cursorRadiusLocation, cursorRadius);
+    m_feedbackShader->setUniform(m_feedbackScreenSizeLocation, QVector2D(nativeSize.width(), nativeSize.height()));
+    capture.scene.texture->render(nativeSize);
+    ShaderManager::instance()->popShader();
+    glActiveTexture(GL_TEXTURE1);
+    previousFrame.texture->unbind();
+    glActiveTexture(GL_TEXTURE0);
+    GLFramebuffer::popFramebuffer();
+    capture.previousFrame = nextFrame;
+
+    glActiveTexture(GL_TEXTURE0);
+    const OffscreenTarget &feedbackFrame = capture.feedback[capture.previousFrame];
+    glActiveTexture(GL_TEXTURE1);
+    feedbackFrame.texture->bind();
+    glActiveTexture(GL_TEXTURE0);
+    ShaderManager::instance()->pushShader(m_shader.get());
+    QMatrix4x4 modelViewProjectionMatrix(viewport.projectionMatrix());
+    modelViewProjectionMatrix.translate(screenRect.x() * viewport.scale(), screenRect.y() * viewport.scale());
+    m_shader->setUniform(m_modelViewProjectionMatrixLocation, modelViewProjectionMatrix);
+    m_shader->setUniform("sampler", 0);
+    m_shader->setUniform("feedbackTexture", 1);
+
+    QColor color = Qt::transparent;
+    if (m_click && m_click->m_press) {
+        color = m_colors[m_click->m_button];
     }
-    paintScreenFinishGl();
+
+    m_shader->setUniform(m_cursorColorLocation, QVector4D(color.redF(), color.greenF(), color.blueF(), color.alphaF()));
+    // m_shader->setUniform(m_cursorPositionLocation, cursorPosition);
+    // m_shader->setUniform(m_cursorRadiusLocation, cursorRadius);
+    capture.scene.texture->render(nativeSize);
+    ShaderManager::instance()->popShader();
+    glActiveTexture(GL_TEXTURE1);
+    feedbackFrame.texture->unbind();
+    glActiveTexture(GL_TEXTURE0);
+
     return true;
 }
 
 void MouseClickEffect::postPaintScreen()
 {
     effects->postPaintScreen();
-    repaint();
-}
-
-float MouseClickEffect::computeRadius(const MouseClickMouseEvent *click, int ring)
-{
-    float ringDistance = m_ringLife / (m_ringCount * 3);
-    if (click->m_press) {
-        return ((click->m_time - ringDistance * ring) / m_ringLife) * m_ringMaxSize;
+    if (m_enabled) {
+        effects->addRepaintFull();
     }
-    return ((m_ringLife - click->m_time - ringDistance * ring) / m_ringLife) * m_ringMaxSize;
-}
-
-float MouseClickEffect::computeAlpha(const MouseClickMouseEvent *click, int ring)
-{
-    float ringDistance = m_ringLife / (m_ringCount * 3);
-    return (m_ringLife - (float)click->m_time - ringDistance * (ring)) / m_ringLife;
 }
 
 void MouseClickEffect::slotMouseChanged(const QPointF &pos, const QPointF &,
@@ -164,7 +221,7 @@ void MouseClickEffect::slotMouseChanged(const QPointF &pos, const QPointF &,
         if (isPressed(b->m_button, buttons, oldButtons)) {
             m = std::make_unique<MouseClickMouseEvent>(i, pos.toPoint(), 0, createEffectFrame(pos.toPoint(), b->m_labelDown), true);
             break;
-        } else if (isReleased(b->m_button, buttons, oldButtons) && (!b->m_isPressed || b->m_time > m_ringLife)) {
+        } else if (isReleased(b->m_button, buttons, oldButtons)) {
             // we might miss a press, thus also check !b->m_isPressed, bug #314762
             m = std::make_unique<MouseClickMouseEvent>(i, pos.toPoint(), 0, createEffectFrame(pos.toPoint(), b->m_labelUp), false);
             break;
@@ -173,9 +230,8 @@ void MouseClickEffect::slotMouseChanged(const QPointF &pos, const QPointF &,
     }
 
     if (m) {
-        m_clicks.push_back(std::move(m));
+        m_click = std::move(m);
     }
-    repaint();
 }
 
 std::unique_ptr<EffectFrame> MouseClickEffect::createEffectFrame(const QPoint &pos, const QString &text)
@@ -188,29 +244,6 @@ std::unique_ptr<EffectFrame> MouseClickEffect::createEffectFrame(const QPoint &p
     frame->setFont(m_font);
     frame->setText(text);
     return frame;
-}
-
-void MouseClickEffect::repaint()
-{
-    if (m_clicks.size() > 0) {
-        Region dirtyRegion;
-        const int radius = m_ringMaxSize + m_lineWidth;
-        for (auto &click : m_clicks) {
-            dirtyRegion += Rect(click->m_pos.x() - radius, click->m_pos.y() - radius, 2 * radius, 2 * radius);
-            if (click->m_frame) {
-                dirtyRegion += click->m_frame->geometry();
-            }
-        }
-        effects->addRepaint(dirtyRegion);
-    }
-    if (!m_tabletTools.isEmpty()) {
-        Region dirtyRegion;
-        const int radius = m_ringMaxSize + m_lineWidth;
-        for (const auto &event : std::as_const(m_tabletTools)) {
-            dirtyRegion += Rect(event.m_globalPosition.x() - radius, event.m_globalPosition.y() - radius, 2 * radius, 2 * radius);
-        }
-        effects->addRepaint(dirtyRegion);
-    }
 }
 
 bool MouseClickEffect::isReleased(Qt::MouseButtons button, Qt::MouseButtons buttons, Qt::MouseButtons oldButtons)
@@ -233,121 +266,46 @@ void MouseClickEffect::toggleEnabled()
         disconnect(effects, &EffectsHandler::mouseChanged, this, &MouseClickEffect::slotMouseChanged);
     }
 
-    m_clicks.clear();
-    m_tabletTools.clear();
+    //    m_click.clear();
 
-    for (int i = 0; i < BUTTON_COUNT; ++i) {
-        m_buttons[i]->m_time = 0;
-        m_buttons[i]->m_isPressed = false;
-    }
+    effects->addRepaintFull();
 }
 
 bool MouseClickEffect::isActive() const
 {
-    return m_enabled && (m_clicks.size() != 0 || !m_tabletTools.isEmpty());
+    return m_enabled;
 }
 
-void MouseClickEffect::drawCircle(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r)
+void MouseClickEffect::loadShaders()
 {
-    drawCircleGl(viewport, color, cx, cy, r);
-}
-
-void MouseClickEffect::drawCircleGl(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r)
-{
-    static const int num_segments = 80;
-    static const float theta = 2 * 3.1415926 / float(num_segments);
-    static const float c = cosf(theta); // precalculate the sine and cosine
-    static const float s = sinf(theta);
-    const float scale = viewport.scale();
-    float t;
-
-    float x = r; // we start at angle = 0
-    float y = 0;
-
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->reset();
-    QList<QVector2D> verts;
-    verts.reserve(num_segments * 2);
-
-    for (int ii = 0; ii < num_segments; ++ii) {
-        verts.push_back(QVector2D((x + cx) * scale, (y + cy) * scale)); // output vertex
-        // apply the rotation matrix
-        t = x;
-        x = c * x - s * y;
-        y = s * t + c * y;
-    }
-    vbo->setVertices(verts);
-    ShaderManager::instance()->getBoundShader()->setUniform(GLShader::ColorUniform::Color, color);
-    vbo->render(GL_LINE_LOOP);
-}
-
-void MouseClickEffect::paintScreenSetupGl(const RenderTarget &renderTarget, const QMatrix4x4 &projectionMatrix)
-{
-    GLShader *shader = ShaderManager::instance()->pushShader(ShaderTrait::UniformColor | ShaderTrait::TransformColorspace);
-    shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
-    shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
-
-    glLineWidth(m_lineWidth);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-}
-
-void MouseClickEffect::paintScreenFinishGl()
-{
-    glDisable(GL_BLEND);
-
-    ShaderManager::instance()->popShader();
-}
-
-TabletToolEvent &MouseClickEffect::getOrCreateTabletPoint(InputDeviceTabletTool *tool)
-{
-    auto &point = m_tabletTools[tool];
-    if (!point.m_color.isValid()) {
-        switch (tool->type()) {
-        case InputDeviceTabletTool::Type::Finger:
-        case InputDeviceTabletTool::Type::Pen:
-        case InputDeviceTabletTool::Pencil:
-        case InputDeviceTabletTool::Brush:
-        case InputDeviceTabletTool::Airbrush:
-        case InputDeviceTabletTool::Lens:
-        case InputDeviceTabletTool::Totem:
-            point.m_color = MouseClickConfig::color1();
-            break;
-        case InputDeviceTabletTool::Type::Eraser:
-            point.m_color = MouseClickConfig::color2();
-            break;
-        case KWin::InputDeviceTabletTool::Type::Mouse:
-            point.m_color = MouseClickConfig::color3();
-            break;
-            break;
+    if (!m_shader) {
+        m_shader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture,
+                                                                     QStringLiteral(":/effects/mouseclick/shaders/mouseclick.vert"),
+                                                                     QStringLiteral(":/effects/mouseclick/shaders/mouseclick.frag"));
+        if (!m_shader) {
+            qWarning("Failed to load the mouseclick shader");
+        } else {
+            m_modelViewProjectionMatrixLocation = m_shader->uniformLocation("modelViewProjectionMatrix");
+            m_cursorColorLocation = m_shader->uniformLocation("cursorColor");
+            // m_cursorPositionLocation = m_shader->uniformLocation("cursorPosition");
+            // m_cursorRadiusLocation = m_shader->uniformLocation("cursorRadius");
         }
     }
-    return point;
-}
 
-bool MouseClickEffect::tabletToolProximity(TabletToolProximityEvent *event)
-{
-    if (event->type == TabletToolProximityEvent::LeaveProximity) {
-        m_tabletTools.remove(event->tool);
+    if (!m_feedbackShader) {
+        m_feedbackShader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture,
+                                                                             QStringLiteral(":/effects/mouseclick/shaders/mouseclick.vert"),
+                                                                             QStringLiteral(":/effects/mouseclick/shaders/feedback.frag"));
+        if (!m_feedbackShader) {
+            qWarning("Failed to load the mouseclick feedback shader");
+        } else {
+            m_feedbackModelViewProjectionMatrixLocation = m_feedbackShader->uniformLocation("modelViewProjectionMatrix");
+            m_cursorPositionLocation = m_feedbackShader->uniformLocation("cursorPosition");
+            m_cursorRadiusLocation = m_feedbackShader->uniformLocation("cursorRadius");
+            m_feedbackPreviousFrameLocation = m_feedbackShader->uniformLocation("previousFrame");
+            m_feedbackScreenSizeLocation = m_feedbackShader->uniformLocation("screenSize");
+        }
     }
-    return false;
-}
-
-bool MouseClickEffect::tabletToolAxis(TabletToolAxisEvent *event)
-{
-    auto &point = getOrCreateTabletPoint(event->tool);
-    point.m_globalPosition = event->position;
-    point.m_pressure = event->pressure;
-    return false;
-}
-
-bool MouseClickEffect::tabletToolTip(TabletToolTipEvent *event)
-{
-    auto &point = getOrCreateTabletPoint(event->tool);
-    point.m_pressed = event->type == TabletToolTipEvent::Press;
-    point.m_pressure = event->pressure;
-    point.m_globalPosition = event->position;
-    return false;
 }
 
 QColor MouseClickEffect::color1() const
