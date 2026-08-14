@@ -440,7 +440,7 @@ std::shared_ptr<VulkanBuffer> VulkanDevice::importDmabufAsBuffer(const DmaBufAtt
         return nullptr;
     }
 
-    const vk::DeviceSize size = attributes->pitch[0] * attributes->width;
+    const vk::DeviceSize size = attributes->pitch[0] * attributes->height;
 
     vk::ExternalMemoryBufferCreateInfo externalInfo{
         vk::ExternalMemoryHandleTypeFlagBits::eDmaBufEXT,
