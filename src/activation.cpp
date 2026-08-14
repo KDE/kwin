@@ -396,7 +396,9 @@ bool Workspace::requestFocus(Window *window, bool force)
     }
 
     window->takeFocus();
-    setActiveWindow(window);
+    if (!window->takesAsyncFocus()) {
+        setActiveWindow(window);
+    }
 
     return true;
 }

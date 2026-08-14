@@ -1659,6 +1659,11 @@ void X11Window::takeFocus()
     }
 }
 
+bool X11Window::takesAsyncFocus() const
+{
+    return !acceptsFocus() && info->supportsProtocol(NET::TakeFocusProtocol);
+}
+
 /**
  * Returns whether the window provides context help or not. If it does,
  * you should show a help menu item or a help button like '?' and call
