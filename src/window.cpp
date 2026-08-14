@@ -670,6 +670,11 @@ void Window::takeFocus()
 {
 }
 
+bool Window::takesAsyncFocus() const
+{
+    return false;
+}
+
 bool Window::isSpecialWindow() const
 {
     // TODO

@@ -141,6 +141,7 @@ public:
     bool isCloseable() const override; ///< May be closed by the user (May have a close button)
 
     void takeFocus() override;
+    bool takesAsyncFocus() const override;
 
     void invalidateDecoration() override;
 
