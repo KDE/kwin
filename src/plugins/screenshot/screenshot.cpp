@@ -41,7 +41,7 @@ static bool shouldFilterWindowFromCapture(Window *window, std::optional<pid_t> p
     return window->excludeFromCapture() || (pidToHide.has_value() && window->pid() == *pidToHide);
 }
 
-static void convertFromGLImage(QImage &img, int w, int h, const OutputTransform &renderTargetTransformation)
+static void convertFromGLImage(QImage &img, int w, int h)
 {
     // from QtOpenGL/qgl.cpp
     // SPDX-FileCopyrightText: 2010 Nokia Corporation and /or its subsidiary(-ies)
@@ -69,12 +69,8 @@ static void convertFromGLImage(QImage &img, int w, int h, const OutputTransform 
         }
     }
 
-    QMatrix4x4 matrix;
-    // apply render target transformation
-    matrix *= renderTargetTransformation.inverted().toMatrix();
     // OpenGL textures are flipped vs QImage
-    matrix.scale(1, -1);
-    img = img.transformed(matrix.toTransform());
+    img.flip(Qt::Vertical);
 }
 
 ScreenShotManager::ScreenShotManager()
@@ -146,7 +142,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
     GLFramebuffer::pushFramebuffer(target.get());
     QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_ARGB32_Premultiplied);
     context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
-    convertFromGLImage(snapshot, snapshot.width(), snapshot.height(), OutputTransform::Normal);
+    convertFromGLImage(snapshot, snapshot.width(), snapshot.height());
     GLFramebuffer::popFramebuffer();
 
     snapshot.setDevicePixelRatio(scale);
@@ -214,7 +210,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
     GLFramebuffer::pushFramebuffer(target.get());
     QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_ARGB32_Premultiplied);
     context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
-    convertFromGLImage(snapshot, snapshot.width(), snapshot.height(), OutputTransform::Normal);
+    convertFromGLImage(snapshot, snapshot.width(), snapshot.height());
     GLFramebuffer::popFramebuffer();
 
     snapshot.setDevicePixelRatio(scale);
@@ -273,7 +269,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
     GLFramebuffer::pushFramebuffer(&offscreenTarget);
     QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_ARGB32_Premultiplied);
     context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
-    convertFromGLImage(snapshot, snapshot.width(), snapshot.height(), OutputTransform::Normal);
+    convertFromGLImage(snapshot, snapshot.width(), snapshot.height());
     GLFramebuffer::popFramebuffer();
 
     snapshot.setDevicePixelRatio(scale);
