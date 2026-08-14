@@ -36,6 +36,7 @@
 #include <QQuickRenderControl>
 #include <QQuickView>
 #include <QStyleHints>
+#include <QScopeGuard>
 
 #include <QOffscreenSurface>
 #include <QOpenGLContext>
@@ -296,6 +297,11 @@ void OffscreenQuickView::update(OutputFrame *frame)
 
     bool usingGl = d->m_glcontext != nullptr;
     EglContext *previousContext = EglContext::currentContext();
+    const auto restoreContext = qScopeGuard([previousContext]() {
+        if (previousContext) {
+            (void)previousContext->makeCurrent();
+        }
+    });
     std::unique_ptr<GLRenderTimeQuery> renderTime;
 
     if (usingGl) {
@@ -398,9 +404,6 @@ void OffscreenQuickView::update(OutputFrame *frame)
             frame->addRenderTimeQuery(std::move(renderTime));
         }
         d->m_glcontext->doneCurrent();
-        if (previousContext) {
-            (void)previousContext->makeCurrent();
-        }
     }
     d->m_item->scheduleRepaint(d->m_item->rect());
 }
