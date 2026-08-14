@@ -754,40 +754,34 @@ LoadScriptList KWin::Scripting::queryScriptsToLoad()
     }
     QMap<QString, QString> pluginStates = KConfigGroup(_config, QStringLiteral("Plugins")).entryMap();
 
-    const QStringList scriptFolders{
-        QStringLiteral("kwin-wayland/scripts/"),
-        QStringLiteral("kwin/scripts/"),
-    };
-
     LoadScriptList scriptsToLoad;
-    for (const QString &scriptFolder : scriptFolders) {
-        const auto offers = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), scriptFolder);
-        for (const KPluginMetaData &service : offers) {
-            const QString value = pluginStates.value(service.pluginId() + QLatin1StringView("Enabled"), QString());
-            const bool enabled = value.isNull() ? service.isEnabledByDefault() : QVariant(value).toBool();
-            const bool javaScript = service.value(QStringLiteral("X-Plasma-API")) == QLatin1StringView("javascript");
-            const bool declarativeScript = service.value(QStringLiteral("X-Plasma-API")) == QLatin1StringView("declarativescript");
-            if (!javaScript && !declarativeScript) {
-                continue;
-            }
 
-            if (!enabled) {
-                if (isScriptLoaded(service.pluginId())) {
-                    // unload the script
-                    unloadScript(service.pluginId());
-                }
-                continue;
-            }
-            const QString pluginName = service.pluginId();
-            // The file we want to load depends on the specified API. We could check if one or the other file exists, but that is more error prone and causes IO overhead
-            const QString relScriptPath = scriptFolder + pluginName + QLatin1StringView("/contents/") + (javaScript ? QLatin1StringView("code/main.js") : QLatin1StringView("ui/main.qml"));
-            const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, relScriptPath);
-            if (file.isEmpty()) {
-                qCDebug(KWIN_SCRIPTING) << "Could not find script file for " << pluginName;
-                continue;
-            }
-            scriptsToLoad << qMakePair(javaScript, qMakePair(file, pluginName));
+    const auto offers = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), QStringLiteral("kwin/scripts/"));
+    for (const KPluginMetaData &service : offers) {
+        const QString value = pluginStates.value(service.pluginId() + QLatin1StringView("Enabled"), QString());
+        const bool enabled = value.isNull() ? service.isEnabledByDefault() : QVariant(value).toBool();
+        const bool javaScript = service.value(QStringLiteral("X-Plasma-API")) == QLatin1StringView("javascript");
+        const bool declarativeScript = service.value(QStringLiteral("X-Plasma-API")) == QLatin1StringView("declarativescript");
+        if (!javaScript && !declarativeScript) {
+            continue;
         }
+
+        if (!enabled) {
+            if (isScriptLoaded(service.pluginId())) {
+                // unload the script
+                unloadScript(service.pluginId());
+            }
+            continue;
+        }
+        const QString pluginName = service.pluginId();
+        // The file we want to load depends on the specified API. We could check if one or the other file exists, but that is more error prone and causes IO overhead
+        const QString relScriptPath = QLatin1StringView("kwin/scripts/") + pluginName + QLatin1StringView("/contents/") + (javaScript ? QLatin1StringView("code/main.js") : QLatin1StringView("ui/main.qml"));
+        const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, relScriptPath);
+        if (file.isEmpty()) {
+            qCDebug(KWIN_SCRIPTING) << "Could not find script file for " << pluginName;
+            continue;
+        }
+        scriptsToLoad << qMakePair(javaScript, qMakePair(file, pluginName));
     }
 
     return scriptsToLoad;

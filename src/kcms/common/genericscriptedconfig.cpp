@@ -64,14 +64,9 @@ void GenericScriptedConfig::createUi()
 {
     QVBoxLayout *layout = new QVBoxLayout(widget());
 
-    QString packageRoot = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                 QLatin1StringView("kwin-wayland/") + typeName() + QLatin1Char('/') + m_packageName,
-                                                 QStandardPaths::LocateDirectory);
-    if (packageRoot.isEmpty()) {
-        packageRoot = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                             QLatin1StringView("kwin/") + typeName() + QLatin1Char('/') + m_packageName,
-                                             QStandardPaths::LocateDirectory);
-    }
+    const QString packageRoot = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                                       QLatin1StringView("kwin/") + typeName() + QLatin1Char('/') + m_packageName,
+                                                       QStandardPaths::LocateDirectory);
     if (packageRoot.isEmpty()) {
         layout->addWidget(new QLabel(i18nc("Error message", "Could not locate package metadata")));
         return;

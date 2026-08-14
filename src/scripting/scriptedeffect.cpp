@@ -174,13 +174,10 @@ static KWin::FPx2 fpx2FromScriptValue(const QJSValue &value)
 ScriptedEffect *ScriptedEffect::create(const KPluginMetaData &effect)
 {
     const QString name = effect.pluginId();
-    QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1StringView("kwin-wayland/effects/") + name + QLatin1StringView("/contents/code/main.js"));
+    const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1StringView("kwin/effects/") + name + QLatin1StringView("/contents/code/main.js"));
     if (scriptFile.isEmpty()) {
-        scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1StringView("kwin/effects/") + name + QLatin1StringView("/contents/code/main.js"));
-        if (scriptFile.isEmpty()) {
-            qCDebug(KWIN_SCRIPTING) << "Could not locate effect script" << name;
-            return nullptr;
-        }
+        qCDebug(KWIN_SCRIPTING) << "Could not locate effect script" << name;
+        return nullptr;
     }
 
     return ScriptedEffect::create(name, scriptFile, effect.value(QStringLiteral("X-KDE-Ordering"), 0), effect.value(QStringLiteral("X-KWin-Exclusive-Category")));
@@ -240,10 +237,7 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     m_scriptFile = pathToScript;
 
     // does the effect contain an KConfigXT file?
-    QString kconfigXTFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1StringView("kwin-wayland/effects/") + m_effectName + QLatin1StringView("/contents/config/main.xml"));
-    if (kconfigXTFile.isNull()) {
-        kconfigXTFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1StringView("kwin/effects/") + m_effectName + QLatin1StringView("/contents/config/main.xml"));
-    }
+    const QString kconfigXTFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1StringView("kwin/effects/") + m_effectName + QLatin1StringView("/contents/config/main.xml"));
     if (!kconfigXTFile.isNull()) {
         KConfigGroup cg = QCoreApplication::instance()->property("config").value<KSharedConfigPtr>()->group(QStringLiteral("Effect-%1").arg(m_effectName));
         QFile xmlFile(kconfigXTFile);
@@ -798,10 +792,8 @@ uint ScriptedEffect::addFragmentShader(ShaderTrait traits, const QString &fragme
 
     QString fragment;
     if (!fragmentShaderFile.isEmpty()) {
-        fragment = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1StringView("kwin-wayland/effects/") + m_effectName + QLatin1StringView("/contents/shaders/") + fragmentShaderFile);
-        if (fragment.isEmpty()) {
-            fragment = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1StringView("kwin/effects/") + m_effectName + QLatin1StringView("/contents/shaders/") + fragmentShaderFile);
-        }
+        fragment = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1StringView("kwin/effects/") + m_effectName + QLatin1StringView("/contents/shaders/") + fragmentShaderFile);
+
         // Ensure backwards compatibility with older effects,
         // which provide shaders for both "core" and legacy.
         QString coreVersion = fragment;

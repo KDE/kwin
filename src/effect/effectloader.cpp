@@ -167,13 +167,10 @@ bool ScriptedEffectLoader::loadJavascriptEffect(const KPluginMetaData &effect)
 bool ScriptedEffectLoader::loadDeclarativeEffect(const KPluginMetaData &metadata)
 {
     const QString name = metadata.pluginId();
-    QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1StringView("kwin-wayland/effects/") + name + QLatin1StringView("/contents/ui/main.qml"));
+    const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1StringView("kwin/effects/") + name + QLatin1StringView("/contents/ui/main.qml"));
     if (scriptFile.isNull()) {
-        scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1StringView("kwin/effects/") + name + QLatin1StringView("/contents/ui/main.qml"));
-        if (scriptFile.isNull()) {
-            qCWarning(KWIN_CORE) << "Could not locate the effect script";
-            return false;
-        }
+        qCWarning(KWIN_CORE) << "Could not locate the effect script";
+        return false;
     }
 
     QQmlEngine *engine = Scripting::self()->qmlEngine();
@@ -227,19 +224,12 @@ void ScriptedEffectLoader::queryAndLoadAll()
 
 QList<KPluginMetaData> ScriptedEffectLoader::findAllEffects() const
 {
-    return KPackage::PackageLoader::self()->listPackages(s_serviceType, QStringLiteral("kwin-wayland/effects"))
-        + KPackage::PackageLoader::self()->listPackages(s_serviceType, QStringLiteral("kwin/effects"));
+    return KPackage::PackageLoader::self()->listPackages(s_serviceType, QStringLiteral("kwin/effects"));
 }
 
 KPluginMetaData ScriptedEffectLoader::findEffect(const QString &name) const
 {
-    auto plugins = KPackage::PackageLoader::self()->findPackages(s_serviceType, QStringLiteral("kwin-wayland/effects"), [name](const KPluginMetaData &metadata) {
-        return metadata.pluginId().compare(name, Qt::CaseInsensitive) == 0;
-    });
-    if (!plugins.isEmpty()) {
-        return plugins.first();
-    }
-    plugins = KPackage::PackageLoader::self()->findPackages(s_serviceType, QStringLiteral("kwin/effects"), [name](const KPluginMetaData &metadata) {
+    const auto plugins = KPackage::PackageLoader::self()->findPackages(s_serviceType, QStringLiteral("kwin/effects"), [name](const KPluginMetaData &metadata) {
         return metadata.pluginId().compare(name, Qt::CaseInsensitive) == 0;
     });
     if (!plugins.isEmpty()) {
