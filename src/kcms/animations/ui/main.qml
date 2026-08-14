@@ -72,6 +72,7 @@ KCM.SimpleKCM {
                         id: animationSpeedLegend
                         Layout.maximumWidth: animationSpeedSlider.width
                         Layout.fillWidth: true
+                        Layout.bottomMargin: animationSpeedSlider.Layout.topMargin
                         spacing: 0
                         QQC2.Label {
                             Layout.fillWidth: true
