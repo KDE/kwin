@@ -454,7 +454,7 @@ void OffscreenQuickView::forwardPointerAxisEvent(PointerAxisEvent *event)
                            event->position,
                            QPoint(),
                            // Qt expects angleDelta 120 to be a "click" whereas libinput uses 15, hence multiply by 8.
-                           (event->orientation == Qt::Horizontal) ? QPoint(event->delta, 0) : QPoint(0, event->delta) * -8,
+                           ((event->orientation == Qt::Horizontal) ? QPoint(event->delta, 0) : QPoint(0, event->delta)) * -8,
                            event->buttons,
                            event->modifiers,
                            Qt::NoScrollPhase,
