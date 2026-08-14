@@ -3,7 +3,6 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2010 Martin Gräßlin <mgraesslin@kde.org>
-    SPDX-FileCopyrightText: 2010 Nokia Corporation and /or its subsidiary(-ies)
     SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
@@ -41,35 +40,9 @@ static bool shouldFilterWindowFromCapture(Window *window, std::optional<pid_t> p
     return window->excludeFromCapture() || (pidToHide.has_value() && window->pid() == *pidToHide);
 }
 
-static void convertFromGLImage(QImage &img, int w, int h)
+static void convertFromGLImage(QImage &img)
 {
-    // from QtOpenGL/qgl.cpp
-    // SPDX-FileCopyrightText: 2010 Nokia Corporation and /or its subsidiary(-ies)
-    // see https://github.com/qt/qtbase/blob/dev/src/opengl/qgl.cpp
-    if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
-        // OpenGL gives RGBA; Qt wants ARGB
-        uint *p = reinterpret_cast<uint *>(img.bits());
-        uint *end = p + w * h;
-        while (p < end) {
-            uint a = *p << 24;
-            *p = (*p >> 8) | a;
-            p++;
-        }
-    } else {
-        // OpenGL gives ABGR (i.e. RGBA backwards); Qt wants ARGB
-        for (int y = 0; y < h; y++) {
-            uint *q = reinterpret_cast<uint *>(img.scanLine(y));
-            for (int x = 0; x < w; ++x) {
-                const uint pixel = *q;
-                *q = ((pixel << 16) & 0xff0000) | ((pixel >> 16) & 0xff)
-                    | (pixel & 0xff00ff00);
-
-                q++;
-            }
-        }
-    }
-
-    // OpenGL textures are flipped vs QImage
+    img.convertTo(QImage::Format_ARGB32_Premultiplied);
     img.flip(Qt::Vertical);
 }
 
@@ -140,9 +113,9 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
     }
 
     GLFramebuffer::pushFramebuffer(target.get());
-    QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_ARGB32_Premultiplied);
+    QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBA8888_Premultiplied);
     context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
-    convertFromGLImage(snapshot, snapshot.width(), snapshot.height());
+    convertFromGLImage(snapshot);
     GLFramebuffer::popFramebuffer();
 
     snapshot.setDevicePixelRatio(scale);
@@ -208,9 +181,9 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
     }
 
     GLFramebuffer::pushFramebuffer(target.get());
-    QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_ARGB32_Premultiplied);
+    QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBA8888_Premultiplied);
     context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
-    convertFromGLImage(snapshot, snapshot.width(), snapshot.height());
+    convertFromGLImage(snapshot);
     GLFramebuffer::popFramebuffer();
 
     snapshot.setDevicePixelRatio(scale);
@@ -267,9 +240,9 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
     scene->renderer()->endFrame();
 
     GLFramebuffer::pushFramebuffer(&offscreenTarget);
-    QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_ARGB32_Premultiplied);
+    QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBA8888_Premultiplied);
     context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
-    convertFromGLImage(snapshot, snapshot.width(), snapshot.height());
+    convertFromGLImage(snapshot);
     GLFramebuffer::popFramebuffer();
 
     snapshot.setDevicePixelRatio(scale);
