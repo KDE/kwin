@@ -478,8 +478,8 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
     std::shared_ptr<VulkanTexture> srcTexture;
     if (buffer->dmabufAttributes()->modifier == DRM_FORMAT_MOD_LINEAR) {
         srcBuffer = copyVk->importBufferAsBuffer(buffer, vk::BufferUsageFlagBits::eTransferSrc);
-        qWarning() << "buffer copy with dmabuf!";
-    } else {
+    }
+    if (!srcBuffer) {
         srcTexture = copyVk->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
     }
     if (!srcBuffer && !srcTexture) {
