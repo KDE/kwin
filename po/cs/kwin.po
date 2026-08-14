@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-13 00:52+0000\n"
-"PO-Revision-Date: 2026-08-12 11:17+0200\n"
+"PO-Revision-Date: 2026-08-13 10:40+0200\n"
 "Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Poedit 3.9\n"
+"X-Generator: Lokalize 26.04.3\n"
 "X-Language: cs_CZ\n"
 "X-Source-Language: en_US\n"
 
@@ -1302,6 +1302,10 @@ msgid ""
 "mode off you will not be able to disable it again using the mouse: use the "
 "%1 keyboard shortcut instead."
 msgstr ""
+"Zvolili jste zobrazení okna v režimu celé obrazovky.\n"
+"Pokud samotná aplikace neobsahuje možnost vypnutí režimu celé obrazovky, "
+"nebudete jej moci znovu deaktivovat pomocí myši: místo toho použijte "
+"klávesovou zkratku %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:85
 #, kde-format
@@ -1311,6 +1315,10 @@ msgid ""
 "mode off you will not be able to disable it again using the mouse: use the "
 "window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
+"Zvolili jste zobrazení okna v režimu celé obrazovky.\n"
+"Pokud samotná aplikace neobsahuje možnost vypnutí režimu celé obrazovky, "
+"nebudete jej moci znovu deaktivovat pomocí myši: místo toho použijte nabídku "
+"okna, kterou aktivujete klávesovou zkratkou %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:93
 #, kde-format
@@ -1319,13 +1327,15 @@ msgid ""
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse."
 msgstr ""
+"Zvolili jste zobrazení okna v režimu celé obrazovky.\n"
+"Pokud samotná aplikace neobsahuje možnost vypnutí režimu celé obrazovky, "
+"nebudete jej moci znovu deaktivovat pomocí myši."
 
 #: helpers/dialoghelper/dialoghelper.cpp:98
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
-msgstr "Celá obrazovka"
+msgstr "Zrušit režim celé obrazovky"
 
 #: helpers/dialoghelper/dialoghelper.cpp:101
 #, kde-format
@@ -1334,6 +1344,9 @@ msgid ""
 "Without the border, you will not be able to enable the border again using "
 "the mouse: use the %1 keyboard shortcut instead."
 msgstr ""
+"Zvolili jste zobrazení okna bez rámečku.\n"
+"Bez rámečku nebude možné rámeček znovu aktivovat pomocí myši: místo toho "
+"použijte klávesovou zkratku %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:106
 #, kde-format
@@ -1343,6 +1356,9 @@ msgid ""
 "the mouse: use the window menu instead, activated using the %1 keyboard "
 "shortcut."
 msgstr ""
+"Zvolili jste zobrazení okna bez rámečku.\n"
+"Bez rámečku nebude možné rámeček znovu zapnout pomocí myši: místo toho "
+"použijte nabídku okna, kterou aktivujete klávesovou zkratkou %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:112
 #, kde-format
@@ -1351,12 +1367,14 @@ msgid ""
 "Without the border, you will not be able to enable the border again using "
 "the mouse."
 msgstr ""
+"Zvolili jste zobrazení okna bez rámečku.\n"
+"Bez rámečku již nebude možné rámeček znovu aktivovat pomocí myši."
 
 #: helpers/dialoghelper/dialoghelper.cpp:116
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
-msgstr ""
+msgstr "Obnovit rámeček"
 
 #: helpers/dialoghelper/dialoghelper.cpp:133
 #, kde-format
@@ -1372,6 +1390,9 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
+"<para><application>%1</application> neodpovídá. Chcete tuto aplikaci ukončit?"
+"</para><para><emphasis strong='true'>Ukončením této aplikace se zavřou "
+"všechna její okna. Veškerá neuložená data budou ztracena.</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:41
 #, kde-kuit-format
@@ -1382,13 +1403,15 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
+"<para>\"%1\" z <application>%2</application> neodpovídá. Chcete tuto "
+"aplikaci ukončit?</para><para><emphasis strong='true'>Ukončením této "
+"aplikace se zavřou všechna její okna. Veškerá neuložená data budou ztracena."
+"</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
-#, fuzzy, kde-format
-#| msgctxt "@action:button Terminate app"
-#| msgid "&Terminate %1"
+#, kde-format
 msgid "Terminating %1…"
-msgstr "Ukonči&t %1"
+msgstr "Ukončování %1…"
 
 #: helpers/killer/killdialog.cpp:69
 #, kde-format
@@ -1478,6 +1501,9 @@ msgid ""
 "Select window to force close with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"Vyberte okno, které chcete násilně zavřít, levým tlačítkem myši nebo "
+"stisknutím klávesy Enter.\n"
+"Stisknutím klávesy Esc nebo kliknutím pravým tlačítkem myši akci zrušíte."
 
 #: main.cpp:139 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
@@ -1555,16 +1581,21 @@ msgstr "Spustit rootless Xwayland server."
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
+"Název soketu Wayland, na kterém se má naslouchat. Pokud není zadán, použije "
+"se \"wayland-0\"."
 
 #: main_wayland.cpp:346
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr ""
+"Zobrazovací systém X11, který se má používat v režimu okna na platformě X11."
 
 #: main_wayland.cpp:350
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
+"Zobrazovací zařízení Wayland, které se má používat v režimu okna na "
+"platformě Wayland."
 
 #: main_wayland.cpp:352
 #, kde-format
@@ -1574,28 +1605,30 @@ msgstr "Vykreslovat do virtuálního framebufferu."
 #: main_wayland.cpp:354
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
-msgstr ""
+msgstr "Šířka v režimu s oknem. Výchozí šířka je 1024."
 
 #: main_wayland.cpp:358
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
-msgstr ""
+msgstr "Výška v režimu s oknem. Výchozí hodnota je 768."
 
 #: main_wayland.cpp:363
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "Zda přepnout režim v okně na režim celé obrazovky"
 
 #: main_wayland.cpp:367
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
-msgstr ""
+msgstr "Měřítko pro režim s oknem. Výchozí hodnota je 1."
 
 #: main_wayland.cpp:372
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
+"Počet oken, která se mají otevřít jako výstupy v režimu s okny. Výchozí "
+"hodnota je 1"
 
 #: main_wayland.cpp:377
 #, kde-format
@@ -1603,6 +1636,8 @@ msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
+"Waylandový soket pro příchozí připojení. Lze to kombinovat s parametrem --"
+"socket k zadání názvu soketu"
 
 #: main_wayland.cpp:381
 #, kde-format
@@ -1610,21 +1645,23 @@ msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
+"Soket XWayland, který se má používat pro příchozí připojení XWaylandu. Tuto "
+"hodnotu lze zadat vícekrát"
 
 #: main_wayland.cpp:385
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
-msgstr ""
+msgstr "Název předem nastaveného displeje xwayland"
 
 #: main_wayland.cpp:389
 #, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
-msgstr ""
+msgstr "Soket XWayland, který se má použít pro počáteční připojení XWaylandu"
 
 #: main_wayland.cpp:393
 #, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
-msgstr ""
+msgstr "Název inicializačního displeje xwayland, který byl předem nastaven"
 
 #: main_wayland.cpp:397
 #, kde-format
@@ -1634,7 +1671,7 @@ msgstr "Název souboru xauthority "
 #: main_wayland.cpp:401
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
-msgstr ""
+msgstr "Ukončí tuto instanci, aby ji mohl kwin_wayland_wrapper znovu spustit."
 
 #: main_wayland.cpp:403
 #, kde-format
@@ -1646,11 +1683,13 @@ msgstr "Vykreslovat režimem drm."
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"Načíst informace o národním prostředí z locale1 namísto z uživatelského "
+"nastavení"
 
 #: main_wayland.cpp:433
 #, kde-format
 msgid "Input method that KWin starts."
-msgstr ""
+msgstr "Vstupní metoda, kterou spouští KWin."
 
 #: main_wayland.cpp:439
 #, kde-format
@@ -1660,27 +1699,27 @@ msgstr "Spustí sezení v uzamčeném režimu."
 #: main_wayland.cpp:443
 #, kde-format
 msgid "Starts the session without lock screen support."
-msgstr ""
+msgstr "Spustí sezení bez podpory uzamčené obrazovky."
 
 #: main_wayland.cpp:448
 #, kde-format
 msgid "Starts the session without global shortcuts support."
-msgstr ""
+msgstr "Spustí sezení bez podpory globálních klávesových zkratek."
 
 #: main_wayland.cpp:453
 #, kde-format
 msgid "Disable KActivities integration."
-msgstr ""
+msgstr "Zakázat integraci KActivities."
 
 #: main_wayland.cpp:458
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
-msgstr ""
+msgstr "Ukončit po zavření aplikace pro správu sezení, kterou spustil KWin."
 
 #: main_wayland.cpp:463
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
-msgstr ""
+msgstr "Aplikace se spustí, jakmile budou spuštěny servery Wayland a Xwayland"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: plugins/blur/blur_config.ui:17
@@ -1781,7 +1820,7 @@ msgstr "Okna přes celou obrazovku"
 #, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
-msgstr ""
+msgstr "Zakázat aktivní zachycování vstupu"
 
 #: plugins/eis/eisprompter.cpp:51
 #, kde-format
@@ -1794,6 +1833,7 @@ msgstr "Vzdálené ovládání"
 msgctxt "@info"
 msgid "<application>%1</application> is asking to control input devices"
 msgstr ""
+"<application>%1</application> žádá o oprávnění ke správě vstupních zařízení"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
@@ -1801,7 +1841,7 @@ msgctxt ""
 "@option:check, %1 is the application name. This option always allow apps "
 "claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "Vždy povolit aplikace, které uvádějí, že jsou %1"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -1812,6 +1852,10 @@ msgid ""
 "revoke this permission later on <application>System Settings</application>’ "
 "“Legacy X11 App Support” page."
 msgstr ""
+"Identitu starších aplikací X11 nelze ověřit. Jakákoli aplikace, která se "
+"identifikuje jako <application>%1</application>, bude moci ovládat vstupní "
+"zařízení. Toto oprávnění můžete později zrušit na stránce \"Podpora starých "
+"aplikací X11\" v <application>Systémových nastaveních</application>."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
@@ -1933,17 +1977,15 @@ msgstr[2] "%1 sekund"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Hide cursor on inactivity:"
+#, kde-format
 msgid "Hide pointer on inactivity:"
-msgstr "Skrýt kurzor během neaktivity:"
+msgstr "Skrýt ukazatel při nečinnosti:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
-#, fuzzy, kde-format
-#| msgid "Hide cursor on typing"
+#, kde-format
 msgid "Hide pointer on typing"
-msgstr "Skrýt kurzor během psaní"
+msgstr "Skrýt ukazatel při psaní"
 
 #: plugins/invert/invert.cpp:44
 #, kde-format
@@ -2389,7 +2431,7 @@ msgstr "Meta"
 #: plugins/mousemark/mousemark_config.ui:157
 #, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr ""
+msgstr "Klávesy pro úpravu zamíření šipky:"
 
 #: plugins/nightlight/nightlightmanager.cpp:55
 #, kde-format
@@ -2407,7 +2449,7 @@ msgstr "Noční světlo bylo znovu zapnuto"
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "Vypnutí/zapnutí nočního světla"
 
 #: plugins/nightlight/nightlightmanager.cpp:393
 #, kde-format
@@ -2424,26 +2466,26 @@ msgstr "Vestavěná obrazovka"
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Přepínání mezi přehledovým zobrazením a zobrazením mřížky"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:45
 #: plugins/overview/overvieweffect.cpp:145
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "Přepínání mezi zobrazením mřížky a přehledovým zobrazením"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:50
 #, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
-msgstr "Přepnout přehled"
+msgstr "Přepnout přehledové zobrazení"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:55
 #, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "Přepnout pohled na mřížku"
+msgstr "Přepnout zobrazení mřížky"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
@@ -2455,7 +2497,7 @@ msgstr "Ignorovat minimalizovaná okna:"
 #: plugins/overview/kcm/overvieweffectkcm.ui:36
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "Uspořádání oken v zobrazení mřížky:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
 #: plugins/overview/kcm/overvieweffectkcm.ui:50
@@ -2467,19 +2509,19 @@ msgstr "Výsledky hledání zahrnují filtrovaná okna:"
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Přepínání mezi přehledovým zobrazením a zobrazením mřížky"
 
 #: plugins/overview/overvieweffect.cpp:152
 #, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
-msgstr "Přepnout přehled"
+msgstr "Přepnout přehledové zobrazení"
 
 #: plugins/overview/overvieweffect.cpp:158
 #, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "Přepnout pohled na mřížku"
+msgstr "Přepnout zobrazení mřížky"
 
 #: plugins/overview/qml/DesktopBar.qml:161
 #, kde-format
@@ -2492,10 +2534,9 @@ msgid "Add Virtual Desktop"
 msgstr "Přidat virtuální plochu"
 
 #: plugins/overview/qml/DesktopBar.qml:262
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgid "Virtual Desktop limit reached"
-msgstr "Přidat virtuální plochu"
+msgstr "Dosaženo limitu virtuálních ploch"
 
 #: plugins/overview/qml/Main.qml:427
 #, kde-format
@@ -2558,7 +2599,7 @@ msgstr "Chyba při vytváření kontextu PipeWire"
 #: plugins/screencast/pipewirecore.cpp:86
 #, kde-format
 msgid "Failed to connect PipeWire context"
-msgstr ""
+msgstr "Nepodařilo se připojit kontext PipeWire"
 
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
@@ -2566,17 +2607,17 @@ msgstr ""
 #: plugins/screencast/screencastmanager.cpp:142
 #, kde-format
 msgid "Unsupported compositing type"
-msgstr ""
+msgstr "Nepodporovaný typ kompozice"
 
 #: plugins/screencast/screencastmanager.cpp:62
 #, kde-format
 msgid "Could not find window id %1"
-msgstr ""
+msgstr "Nelze najít id okna %1"
 
 #: plugins/screencast/screencastmanager.cpp:109
 #, kde-format
 msgid "Could not find output"
-msgstr ""
+msgstr "Výstup nebyl nalezen"
 
 #: plugins/screencast/screencastmanager.cpp:147
 #, kde-format
@@ -2591,7 +2632,7 @@ msgstr "Pro sdílení obrazovky je potřeba kompozitor OpenGL"
 #: plugins/screencast/screencaststream.cpp:397
 #, kde-format
 msgid "Failed to create PipeWire stream"
-msgstr ""
+msgstr "Nepodařilo se vytvořit PipeWire stream"
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:388
 #, kde-format
@@ -2732,7 +2773,7 @@ msgstr " pixelů"
 #: plugins/thumbnailaside/thumbnailaside_config.ui:68
 #, kde-format
 msgid "&Opacity:"
-msgstr "&Krytí:"
+msgstr "&Neprůhlednost:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Opacity)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:87
@@ -2854,10 +2895,9 @@ msgstr "Nabídky:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ExcludeFullScreen)
 #: plugins/translucency/package/contents/ui/config.ui:201
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#, kde-format
 msgid "Exclude fullscreen windows"
-msgstr "Okna přes celou obrazovku"
+msgstr "Vyloučit okna v režimu celé obrazovky"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:217
@@ -3068,7 +3108,7 @@ msgstr "Celkový počet pravidel (zastaralé)"
 #: rulebooksettingsbase.kcfg:13
 #, kde-format
 msgid "Ordered list of rules groups"
-msgstr ""
+msgstr "Seřazený seznam skupin pravidel"
 
 #. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:10
@@ -3092,7 +3132,7 @@ msgstr "Smazat toto pravidlo (pro použití při importech)"
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "This rule is enabled"
-msgstr ""
+msgstr "Toto pravidlo je zapnuto"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:24
@@ -3104,7 +3144,7 @@ msgstr "Třída okna (aplikace)"
 #: rulesettings.kcfg:27
 #, kde-format
 msgid "Window class string match type"
-msgstr ""
+msgstr "Typ odpovídajícího řetězce třídy okna"
 
 #. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:33
@@ -3122,7 +3162,7 @@ msgstr "Role okna"
 #: rulesettings.kcfg:41
 #, kde-format
 msgid "Window role string match type"
-msgstr ""
+msgstr "Typ odpovídajícícho řetězce role okna"
 
 #. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:48
@@ -3134,7 +3174,7 @@ msgstr "Titulek okna"
 #: rulesettings.kcfg:51
 #, kde-format
 msgid "Window title string match type"
-msgstr ""
+msgstr "Typ odpovídajícího řetězce názvu okna"
 
 #. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:58
@@ -3146,7 +3186,7 @@ msgstr "Počítač (název)"
 #: rulesettings.kcfg:61
 #, kde-format
 msgid "Machine string match type"
-msgstr ""
+msgstr "Typ odpovídajícího řetězce stroje"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
@@ -3158,7 +3198,7 @@ msgstr "Značka okna"
 #: rulesettings.kcfg:71
 #, kde-format
 msgid "Window tag string match type"
-msgstr ""
+msgstr "Typ odpovídajícího řetězce značky okna"
 
 #. i18n: ectx: label, entry (hastransientparent), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
@@ -3170,7 +3210,7 @@ msgstr "Má nadřazené okno"
 #: rulesettings.kcfg:82
 #, kde-format
 msgid "Has parent window match type"
-msgstr ""
+msgstr "Má nadřazené okno odpovídající typ"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:89
@@ -3200,7 +3240,7 @@ msgstr "Umístění okna"
 #: rulesettings.kcfg:108
 #, kde-format
 msgid "Window position rule type"
-msgstr ""
+msgstr "Typ pravidla pro polohu okna"
 
 #. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:115
@@ -3212,7 +3252,7 @@ msgstr "Velikost okna"
 #: rulesettings.kcfg:118
 #, kde-format
 msgid "Window size rule type"
-msgstr ""
+msgstr "Typ pravidla pro velikost okna"
 
 #. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:125
@@ -3242,25 +3282,25 @@ msgstr "Typ pravidla Maximální velikost okna"
 #: rulesettings.kcfg:143
 #, kde-format
 msgid "Active opacity"
-msgstr "Aktivní krytí"
+msgstr "Aktivní neprůhlednost"
 
 #. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:149
 #, kde-format
 msgid "Active opacity rule type"
-msgstr ""
+msgstr "Typ pravidla aktivní neprůhlednosti"
 
 #. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:154
 #, kde-format
 msgid "Inactive opacity"
-msgstr "Neaktivní krytí"
+msgstr "Neaktivní neprůhlednost"
 
 #. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:160
 #, kde-format
 msgid "Inactive opacity rule type"
-msgstr ""
+msgstr "Typ pravidla neaktivní neprůhlednosti"
 
 #. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:165
@@ -3272,7 +3312,7 @@ msgstr "Ignorovat požadovanou geometrii"
 #: rulesettings.kcfg:169
 #, kde-format
 msgid "Ignore requested geometry rule type"
-msgstr ""
+msgstr "Ignorovat požadovaný typ pravidla geometrie"
 
 #. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:176
@@ -3296,7 +3336,7 @@ msgstr "Číslo obrazovky"
 #: rulesettings.kcfg:191
 #, kde-format
 msgid "Screen number rule type"
-msgstr ""
+msgstr "Typ pravidla pro číslo obrazovky"
 
 #. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:198
@@ -3314,37 +3354,37 @@ msgstr "Typ pravidla aktivity"
 #: rulesettings.kcfg:208
 #, kde-format
 msgid "Maximized vertically"
-msgstr "Maximalizované svisle"
+msgstr "Maximalizace svisle"
 
 #. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:212
 #, kde-format
 msgid "Maximized vertically rule type"
-msgstr "Pravidlo pro maximalizované svisle"
+msgstr "Typ pravidla pro maximalizaci svisle"
 
 #. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:219
 #, kde-format
 msgid "Maximized horizontally"
-msgstr "Maximalizované vodorovně"
+msgstr "Maximalizace vodorovně"
 
 #. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:223
 #, kde-format
 msgid "Maximized horizontally rule type"
-msgstr ""
+msgstr "Typ pravidla pro maximalizaci vodorovně"
 
 #. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:230
 #, kde-format
 msgid "Minimized"
-msgstr "Minimalizované"
+msgstr "Minimalizace"
 
 #. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:234
 #, kde-format
 msgid "Minimized rule type"
-msgstr ""
+msgstr "Typ pravidla pro minimalizaci"
 
 #. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:241
@@ -3356,7 +3396,7 @@ msgstr "Přeskočit pruh úloh"
 #: rulesettings.kcfg:245
 #, kde-format
 msgid "Skip taskbar rule type"
-msgstr ""
+msgstr "Typ pravidla pro přeskočení pruhu úloh"
 
 #. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:252
@@ -3368,7 +3408,7 @@ msgstr "Přeskočit přepínač ploch"
 #: rulesettings.kcfg:256
 #, kde-format
 msgid "Skip pager rule type"
-msgstr ""
+msgstr "Typ pravidla pro přeskočení přepínače ploch"
 
 #. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:263
@@ -3380,7 +3420,7 @@ msgstr "Přeskočit přepínač"
 #: rulesettings.kcfg:267
 #, kde-format
 msgid "Skip switcher rule type"
-msgstr ""
+msgstr "Typ pravidla pro přeskočení přepínače"
 
 #. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:274
@@ -3392,7 +3432,7 @@ msgstr "Ponechat nad"
 #: rulesettings.kcfg:278
 #, kde-format
 msgid "Keep above rule type"
-msgstr ""
+msgstr "Typ pravidla pro ponechání nad"
 
 #. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:285
@@ -3404,7 +3444,7 @@ msgstr "Ponechat pod"
 #: rulesettings.kcfg:289
 #, kde-format
 msgid "Keep below rule type"
-msgstr ""
+msgstr "Typ pravidla pro ponechání pod"
 
 #. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:296
@@ -3416,7 +3456,7 @@ msgstr "Celá obrazovka"
 #: rulesettings.kcfg:300
 #, kde-format
 msgid "Fullscreen rule type"
-msgstr ""
+msgstr "Typ pravidla pro celou obrazovku"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:311
@@ -3428,32 +3468,31 @@ msgstr "Bez titulku a rámu"
 #: rulesettings.kcfg:315
 #, kde-format
 msgid "No titlebar rule type"
-msgstr ""
+msgstr "Typ pravidla pro stav bez titulku a rámu"
 
 #. i18n: ectx: label, entry (decorationpolicy), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:322
 #, kde-format
 msgid "Decoration policy"
-msgstr ""
+msgstr "Podmínky dekorace"
 
 #. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
-#, fuzzy, kde-format
-#| msgid "Activity rule type"
+#, kde-format
 msgid "Decoration policy rule type"
-msgstr "Typ pravidla aktivity"
+msgstr "Typ pravidla podmínek dekorace"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:339
 #, kde-format
 msgid "Titlebar color and scheme"
-msgstr ""
+msgstr "Barva a schéma titulku"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:342
 #, kde-format
 msgid "Titlebar color rule type"
-msgstr ""
+msgstr "Typ pravidla barvy a schématu titulku"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:347
@@ -3465,7 +3504,7 @@ msgstr "Prevence ztráty zaměření"
 #: rulesettings.kcfg:353
 #, kde-format
 msgid "Focus stealing prevention rule type"
-msgstr ""
+msgstr "Typ pravidla prevence ztráty zaměření"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:358
@@ -3477,7 +3516,7 @@ msgstr "Ochrana zaměření"
 #: rulesettings.kcfg:364
 #, kde-format
 msgid "Focus protection rule type"
-msgstr ""
+msgstr "Typ pravidla ochrany zaměření"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:369
@@ -3585,12 +3624,12 @@ msgstr "Skrýt před snímky obrazovky a nahrávkami obrazovky"
 #: rulesettings.kcfg:459
 #, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
-msgstr ""
+msgstr "Typ pravidla pro skrytí před snímky obrazovky a nahrávkami obrazovky"
 
 #: scene/workspacescene.cpp:115
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
-msgstr ""
+msgstr "Přepnout efekt \"Zobrazit kompozici\""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3623,6 +3662,9 @@ msgid ""
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
+"Následující aplikace nebyly ukončeny:\n"
+"%1\n"
+"Za 2 minuty dojde k odhlášení."
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
@@ -3855,10 +3897,9 @@ msgid "Maximize Window Horizontally"
 msgstr "Maximalizovat okno vodorovně"
 
 #: useractions.cpp:836
-#, fuzzy, kde-format
-#| msgid "Resize Window"
+#, kde-format
 msgid "Restore Window"
-msgstr "Změnit velikost okna"
+msgstr "Obnovit okno"
 
 #: useractions.cpp:838
 #, kde-format
@@ -3878,7 +3919,7 @@ msgstr "Změnit velikost okna"
 #: useractions.cpp:844
 #, kde-format
 msgid "Raise Window"
-msgstr "Zdvihnout okno"
+msgstr "Okno do popředí"
 
 #: useractions.cpp:846
 #, kde-format
@@ -3898,7 +3939,7 @@ msgstr "Okno na celou obrazovku"
 #: useractions.cpp:854
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr ""
+msgstr "Přepínání titulku okna a rámečku"
 
 #: useractions.cpp:856
 #, kde-format
@@ -4028,12 +4069,12 @@ msgstr "Přepnout se na okno doleva"
 #: useractions.cpp:918
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr "Zvýšit krytí aktivního okna o 5 %"
+msgstr "Zvýšit neprůhlednost aktivního okna o 5 %"
 
 #: useractions.cpp:920
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr "Snížit krytí aktivního okna o 5 %"
+msgstr "Snížit neprůhlednost aktivního okna o 5 %"
 
 #: useractions.cpp:924
 #, kde-format
@@ -4043,22 +4084,22 @@ msgstr "Podržet okno na všech plochách"
 #: useractions.cpp:927
 #, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr ""
+msgstr "Vlastní okno rychlé dlaždice vlevo"
 
 #: useractions.cpp:929
 #, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr ""
+msgstr "Vlastní okno rychlé dlaždice vpravo"
 
 #: useractions.cpp:931
 #, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr ""
+msgstr "Vlastní okno rychlé dlaždice nahoru"
 
 #: useractions.cpp:933
 #, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr ""
+msgstr "Vlastní okno rychlé dlaždice dolů"
 
 #: useractions.cpp:944
 #, kde-format
@@ -4179,13 +4220,13 @@ msgstr "Zabít okno"
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Focused Window"
-msgstr ""
+msgstr "Ukazatel středu v zaměřeném okně"
 
 #: useractions.cpp:1018
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Screen"
-msgstr ""
+msgstr "Ukazatel středu na obrazovce"
 
 #: useractions.cpp:1083
 #, kde-format
@@ -4243,62 +4284,64 @@ msgid ""
 "Setting custom modes with too old kde-output-management-v2 protocol versions "
 "is unsupported"
 msgstr ""
+"Nastavení vlastních režimů s příliš starými verzemi protokolu kde-output-"
+"management-v2 není podporováno"
 
 #: wayland/outputmanagement_v2.cpp:575
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
-msgstr ""
+msgstr "Hodnota abm je vyšší než maximální hodnota (4): %1"
 
 #: wayland/outputmanagement_v2.cpp:673
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "Jeden z příslušných výstupů již není k dispozici"
 
 #: wayland/outputmanagement_v2.cpp:691
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
+"Zakázání všech výstupů prostřednictvím změn v konfiguraci není povoleno"
 
 #: wayland/outputmanagement_v2.cpp:701
 #, kde-format
 msgid "%1 cannot mirror itself"
-msgstr ""
+msgstr "%1 se nemůže sám zrcadlit"
 
 #: wayland/outputmanagement_v2.cpp:708
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
-msgstr ""
+msgstr "Nelze přidat vlastní režim s prázdnou velikostí"
 
 #: wayland/outputmanagement_v2.cpp:712
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
-msgstr ""
+msgstr "Nelze přidat vlastní režim s obnovovací frekvencí nulových Hz"
 
 #: wayland/outputmanagement_v2.cpp:723
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
-msgstr ""
+msgstr "Hodnota výstupu %1 je příliš záporná (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:726
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
-msgstr ""
+msgstr "Hodnota aktivovaného výstupu %1 je záporná (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:730
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
-msgstr ""
+msgstr "Hodnota výstupu %1 je příliš vysoká (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:747
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "Ovladač odmítl výstupní konfiguraci"
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The Alt key is now active."
+#, kde-format
 msgid "The session is not active"
-msgstr "Klávesa Alt je nyní aktivní."
+msgstr "Sezení není aktivní"
 
 #: window.cpp:3178
 #, kde-format
@@ -4343,6 +4386,15 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
+"Informace o podpoře KWin:\n"
+"Následující informace je třeba uvést při žádosti o podporu, např. na https://"
+"discuss.kde.org.\n"
+"Obsahují údaje o aktuálně spuštěné instanci, použitých nastaveních,\n"
+"o tom, jaký ovladač OpenGL a jaké efekty jsou spuštěny.\n"
+"Informace uvedené pod tímto úvodním textem prosím vložte do služby pro "
+"vkládání textu\n"
+"jako je https://paste.kde.org, místo toho, abyste je vkládali přímo do "
+"diskusních vláken podpory.\n"
 
 #: xwayland/xwaylandlauncher.cpp:323
 #, kde-format
