@@ -182,19 +182,17 @@ KCM.SimpleKCM {
                     ]
                 }
             }
+        }
 
-            Kirigami.FormSeparator {
-                visible: effectsKCMButton.visible
-            }
-
+        Kirigami.FormGroup {
+            id: effectsKCMGroup
+            readonly property var kcmData: kcm.effectsKCMData()
+            visible: "icon" in kcmData && "name" in kcmData
             Kirigami.FormAction {
-                id: effectsKCMButton
-                readonly property var kcmData: kcm.effectsKCMData()
                 title: i18nc("@title:group translate as short as possible", "More effects settings:")
-                visible: "icon" in kcmData && "name" in kcmData
                 action: QQC2.Action {
-                    icon.name: "icon" in effectsKCMButton.kcmData ? effectsKCMButton.kcmData.icon : ""
-                    text: "name" in effectsKCMButton.kcmData ? effectsKCMButton.kcmData.name : ""
+                    icon.name: effectsKCMGroup.kcmData.icon ?? ""
+                    text: effectsKCMGroup.kcmData.name ?? ""
                     onTriggered: kcm.launchEffectsKCM()
                 }
             }
