@@ -545,14 +545,13 @@ void InputMethod::forwardKeySym(int keySym)
     std::optional<Xkb::KeyCode> keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(keySym);
     if (!keyCode) {
         qCWarning(KWIN_VIRTUALKEYBOARD) << "Could not map keysym " << keySym << "to keycode. Trying custom keymap";
-        static const uint unmappedKeyCode = 247;
-        auto temporaryKeymap = input()->keyboard()->xkb()->keymapContentsForKeysym(unmappedKeyCode, keySym);
+        auto temporaryKeymap = input()->keyboard()->xkb()->keymapContentsForKeysym(Xkb::scratchKeycode, keySym);
         if (temporaryKeymap.isEmpty()) {
             return;
         }
         waylandServer()->seat()->keyboard()->setKeymap(temporaryKeymap);
-        waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Pressed, waylandServer()->display()->nextSerial());
-        waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Released, waylandServer()->display()->nextSerial());
+        waylandServer()->seat()->notifyKeyboardKey(Xkb::scratchKeycode, KeyboardKeyState::Pressed, waylandServer()->display()->nextSerial());
+        waylandServer()->seat()->notifyKeyboardKey(Xkb::scratchKeycode, KeyboardKeyState::Released, waylandServer()->display()->nextSerial());
         waylandServer()->seat()->keyboard()->setKeymap(input()->keyboard()->xkb()->keymapContents());
     } else {
         waylandServer()->seat()->notifyKeyboardModifiers(keyCode->modifiers, 0, 0, input()->keyboard()->xkb()->currentLayout());

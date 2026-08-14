@@ -339,12 +339,11 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *
     // clients don't seem to like having a keymap change whilst a key is pressed
     // for now send a fake release with every press and ignore other releases. We can make the keymap resetting more lazy if it's an issue IRL
     if (nativeState == KeyboardKeyState::Pressed) {
-        static const uint unmappedKeyCode = 247;
-        bool keymapUpdated = input()->keyboard()->xkb()->updateToKeymapForKeySym(unmappedKeyCode, keySym);
+        bool keymapUpdated = input()->keyboard()->xkb()->updateToKeymapForKeySym(Xkb::scratchKeycode, keySym);
         if (!keymapUpdated) {
             return;
         }
-        sendKey(device, unmappedKeyCode, KeyboardKeyState::Pressed);
+        sendKey(device, Xkb::scratchKeycode, KeyboardKeyState::Pressed);
 
         for (quint32 key : std::as_const(device->pressedKeys)) {
             sendKey(device, key, KeyboardKeyState::Released);

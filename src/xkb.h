@@ -141,6 +141,18 @@ public:
     static QList<xkb_keysym_t> keysymsFromQtKey(QKeyCombination keyQt);
 
     /**
+     * The keycode callers should pass to the two functions below.
+     *
+     * As far as xkbcommon is concerned any keycode would do, since the scratch
+     * keymap defines exactly one key. It matters to clients though: chromium
+     * translates evdev codes into its own DomCode enumeration through a fixed
+     * table and discards key events whose code is missing from that table, so
+     * this has to be a code that table knows or every chromium and electron
+     * application silently loses the key.
+     */
+    static constexpr uint scratchKeycode = 194; // KEY_F24
+
+    /**
      *  Create a temporary keymap with one custom keysym bound to a given keycode.
      *  The underlying keymap used by Xkb is unchanged
      */

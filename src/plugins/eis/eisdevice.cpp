@@ -198,12 +198,11 @@ void EisDevice::sendKeySym(xkb_keysym_t keySym, KeyboardKeyState keyState)
     // clients don't seem to like having a keymap change whilst a key is pressed
     // for now send a fake release with every press and ignore other releases. We can make the keymap resetting more lazy if it's an issue IRL
     if (keyState == KeyboardKeyState::Pressed) {
-        static const uint unmappedKeyCode = 247;
-        bool keymapUpdated = input()->keyboard()->xkb()->updateToKeymapForKeySym(unmappedKeyCode, keySym);
+        bool keymapUpdated = input()->keyboard()->xkb()->updateToKeymapForKeySym(Xkb::scratchKeycode, keySym);
         if (!keymapUpdated) {
             return;
         }
-        sendKey(unmappedKeyCode, KeyboardKeyState::Pressed);
+        sendKey(Xkb::scratchKeycode, KeyboardKeyState::Pressed);
 
         for (quint32 key : std::as_const(pressedKeys)) {
             sendKey(key, KeyboardKeyState::Released);
