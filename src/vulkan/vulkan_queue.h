@@ -10,6 +10,7 @@
 #include "kwin_export.h"
 #include "utils/filedescriptor.h"
 
+#include <QSocketNotifier>
 #include <deque>
 #include <vulkan/vulkan_raii.hpp>
 
@@ -40,16 +41,17 @@ public:
 private:
     struct SubmittedCommand
     {
-        vk::raii::Semaphore waitSemaphore;
-        vk::raii::CommandBuffer buffer;
+        vk::raii::Semaphore waitSemaphore{nullptr};
+        vk::raii::CommandBuffer buffer{nullptr};
         FileDescriptor completionSyncFd;
+        QSocketNotifier notifier{QSocketNotifier::Read};
     };
 
     VulkanDevice *const m_device;
     const uint32_t m_familyIndex;
     const vk::raii::Queue m_handle;
     const vk::raii::CommandPool m_commandPool;
-    std::deque<SubmittedCommand> m_submittedCommandBuffers;
+    std::vector<std::unique_ptr<SubmittedCommand>> m_submittedCommandBuffers;
 };
 
 }
