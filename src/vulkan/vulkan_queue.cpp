@@ -38,17 +38,6 @@ const vk::raii::Queue &VulkanQueue::handle() const
 
 vk::raii::CommandBuffer VulkanQueue::createCommandBuffer()
 {
-    // clean up old command buffers first
-    for (auto it = m_submittedCommandBuffers.begin(); it != m_submittedCommandBuffers.end();) {
-        const SubmittedCommand &cmd = *it;
-        // TODO use a QSocketNotifier per submission to do this asynchronously?
-        if (cmd.completionSyncFd.isReadable()) {
-            it = m_submittedCommandBuffers.erase(it);
-        } else {
-            it++;
-        }
-    }
-
     auto [result, buffers] = m_device->logicalDevice().allocateCommandBuffers(vk::CommandBufferAllocateInfo{
         m_commandPool,
         vk::CommandBufferLevel::ePrimary,
@@ -101,11 +90,20 @@ std::optional<FileDescriptor> VulkanQueue::submit(vk::raii::CommandBuffer &&buff
         return std::nullopt;
     }
     FileDescriptor ret{fd};
-    m_submittedCommandBuffers.push_back(SubmittedCommand{
-        .waitSemaphore = waitSemaphore ? std::move(*waitSemaphore) : nullptr,
-        .buffer = std::move(buffer),
-        .completionSyncFd = ret.duplicate(),
+    auto command = std::make_unique<SubmittedCommand>();
+    if (waitSemaphore) {
+        command->waitSemaphore = std::move(*waitSemaphore);
+    }
+    command->buffer = std::move(buffer),
+    command->completionSyncFd = ret.duplicate(),
+    command->notifier.setSocket(command->completionSyncFd.get());
+    command->notifier.setEnabled(true);
+    QObject::connect(&command->notifier, &QSocketNotifier::activated, &command->notifier, [this, cmd = command.get()]() {
+        const auto it = std::ranges::find(m_submittedCommandBuffers, cmd, &std::unique_ptr<SubmittedCommand>::get);
+        Q_ASSERT(it != m_submittedCommandBuffers.end());
+        m_submittedCommandBuffers.erase(it);
     });
+    m_submittedCommandBuffers.push_back(std::move(command));
     return ret;
 }
 
