@@ -154,7 +154,7 @@ QImage VulkanTexture::download() const
     });
     commandBuffer.end();
 
-    m_device->graphicsQueue()->submit(std::move(commandBuffer), FileDescriptor{});
+    m_device->graphicsQueue()->submit(std::move(commandBuffer), FileDescriptor{}, {});
     m_device->graphicsQueue()->waitIdle();
 
     // use mapMemory/unmapMemory (Vulkan 1.0) instead of mapMemory2/unmapMemory2 (Vulkan 1.4)
@@ -225,7 +225,7 @@ bool VulkanTexture::update(const QImage &img, const Region &region, const QPoint
         regions,
     });
     commandBuffer.end();
-    m_device->graphicsQueue()->submit(std::move(commandBuffer), FileDescriptor{});
+    m_device->graphicsQueue()->submit(std::move(commandBuffer), FileDescriptor{}, {});
 
     m_device->graphicsQueue()->waitIdle();
     return true;
@@ -279,7 +279,7 @@ std::unique_ptr<VulkanTexture> VulkanTexture::allocate(VulkanDevice *device, vk:
     };
     commandBuffer.pipelineBarrier(vk::PipelineStageFlagBits::eFragmentShader, vk::PipelineStageFlagBits::eTransfer, {}, {}, {}, toTransferSrc);
     commandBuffer.end();
-    device->graphicsQueue()->submit(std::move(commandBuffer), FileDescriptor{});
+    device->graphicsQueue()->submit(std::move(commandBuffer), FileDescriptor{}, {});
 
     // FIXME this is terrible. Instead, pass the command buffer in as
     // an argument, and leave synchronization up to the caller.
