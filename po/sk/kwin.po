@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-13 00:52+0000\n"
+"POT-Creation-Date: 2026-08-15 00:48+0000\n"
 "PO-Revision-Date: 2023-12-02 20:09+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -1653,18 +1653,12 @@ msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Názov vopred nastaveného displeja xwayland"
 
 #: main_wayland.cpp:389
-#, fuzzy, kde-format
-#| msgid ""
-#| "XWayland socket to use for Xwayland's incoming connections. This can be "
-#| "set multiple times"
+#, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
-msgstr ""
-"XWayland socket na použitie pre prichádzajúce pripojenia Xwayland. Toto je "
-"možné nastaviť viackrát"
+msgstr "Soket XWayland použitý pre inicializačné pripojenia Xwayland"
 
 #: main_wayland.cpp:393
-#, fuzzy, kde-format
-#| msgid "Name of the xwayland display that has been pre-set up"
+#, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
 msgstr "Názov vopred nastaveného displeja xwayland"
 
@@ -2461,8 +2455,7 @@ msgid "Color Temperature Preview"
 msgstr "Náhľad teploty farieb"
 
 #: plugins/outputlocator/outputlocator.cpp:26
-#, fuzzy, kde-format
-#| msgid "Built-in Screen"
+#, kde-format
 msgctxt "@label"
 msgid "Built-in Screen"
 msgstr "Vstavaná obrazovka"
@@ -3484,14 +3477,13 @@ msgstr "Typ pravidla pre žiadne záhlavie"
 #: rulesettings.kcfg:322
 #, kde-format
 msgid "Decoration policy"
-msgstr ""
+msgstr "Politika dekorácií"
 
 #. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
-#, fuzzy, kde-format
-#| msgid "Active opacity rule type"
+#, kde-format
 msgid "Decoration policy rule type"
-msgstr "Typ pravidla pre krytie aktívneho okna"
+msgstr "Typ pravidla politiky dekorácií"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:339
@@ -3640,7 +3632,7 @@ msgstr "Skryť pred snímkami a nahrávkami obrazovky, typ pravidla"
 #: scene/workspacescene.cpp:115
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
-msgstr ""
+msgstr "Prepnúť efekt „Zobraziť kompozíciu“"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -4231,13 +4223,13 @@ msgstr "Zabiť okno"
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Focused Window"
-msgstr ""
+msgstr "Vycentrovať ukazovateľ v zameranom okne"
 
 #: useractions.cpp:1018
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Screen"
-msgstr ""
+msgstr "Vycentrovať ukazovateľ na obrazovke"
 
 #: useractions.cpp:1083
 #, kde-format
@@ -4295,6 +4287,8 @@ msgid ""
 "Setting custom modes with too old kde-output-management-v2 protocol versions "
 "is unsupported"
 msgstr ""
+"Nastavenie vlastných režimov s príliš starými verziami protokolu kde-output-"
+"management-v2 nie je podporované"
 
 #: wayland/outputmanagement_v2.cpp:575
 #, kde-format
@@ -4352,7 +4346,7 @@ msgstr "Ovládač odmietol konfiguráciu výstupov"
 msgid "The session is not active"
 msgstr "Relácia nie je aktívna"
 
-#: window.cpp:3178
+#: window.cpp:3182
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
