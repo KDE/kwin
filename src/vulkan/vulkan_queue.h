@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "core/graphicsbuffer.h"
 #include "kwin_export.h"
 #include "utils/filedescriptor.h"
 
@@ -29,7 +30,7 @@ public:
     const vk::raii::Queue &handle() const;
 
     vk::raii::CommandBuffer createCommandBuffer();
-    std::optional<FileDescriptor> submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd);
+    std::optional<FileDescriptor> submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd, std::vector<GraphicsBufferRef> &&graphicsBuffers);
 
     /**
      * NOTE avoid using this if at all possible, it's obviously terrible for performance!
@@ -45,6 +46,7 @@ private:
         vk::raii::CommandBuffer buffer{nullptr};
         FileDescriptor completionSyncFd;
         QSocketNotifier notifier{QSocketNotifier::Read};
+        std::vector<GraphicsBufferRef> graphicsBuffers;
     };
 
     VulkanDevice *const m_device;

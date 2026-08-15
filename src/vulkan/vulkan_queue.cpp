@@ -50,7 +50,7 @@ vk::raii::CommandBuffer VulkanQueue::createCommandBuffer()
     return std::move(buffers.front());
 }
 
-std::optional<FileDescriptor> VulkanQueue::submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd)
+std::optional<FileDescriptor> VulkanQueue::submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd, std::vector<GraphicsBufferRef> &&graphicsBuffers)
 {
     vk::ExportFenceCreateInfo exportInfo{
         vk::ExternalFenceHandleTypeFlagBits::eSyncFd,
@@ -98,6 +98,8 @@ std::optional<FileDescriptor> VulkanQueue::submit(vk::raii::CommandBuffer &&buff
     command->completionSyncFd = ret.duplicate(),
     command->notifier.setSocket(command->completionSyncFd.get());
     command->notifier.setEnabled(true);
+    command->graphicsBuffers = std::move(graphicsBuffers);
+
     QObject::connect(&command->notifier, &QSocketNotifier::activated, &command->notifier, [this, cmd = command.get()]() {
         const auto it = std::ranges::find(m_submittedCommandBuffers, cmd, &std::unique_ptr<SubmittedCommand>::get);
         Q_ASSERT(it != m_submittedCommandBuffers.end());

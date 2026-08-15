@@ -569,7 +569,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
         m_journal.clear();
         return std::nullopt;
     }
-    auto completionFd = queue->submit(std::move(commandBuffer), std::move(sync));
+    auto completionFd = queue->submit(std::move(commandBuffer), std::move(sync), {buffer, m_currentSlot->buffer()});
     if (!completionFd.has_value()) {
         return std::nullopt;
     }
