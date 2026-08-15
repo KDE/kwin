@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-06 02:46+0000\n"
+"POT-Creation-Date: 2026-08-15 02:54+0000\n"
 "PO-Revision-Date: 2026-05-10 16:23+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -4369,7 +4369,7 @@ msgstr "சாதனநிரல் அமைப்புகளை நிரா�
 msgid "The session is not active"
 msgstr "அமர்வு செயலிலில்லை"
 
-#: window.cpp:3094
+#: window.cpp:3099
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
