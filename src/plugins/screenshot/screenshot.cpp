@@ -40,12 +40,6 @@ static bool shouldFilterWindowFromCapture(Window *window, std::optional<pid_t> p
     return window->excludeFromCapture() || (pidToHide.has_value() && window->pid() == *pidToHide);
 }
 
-static void convertFromGLImage(QImage &img)
-{
-    img.convertTo(QImage::Format_ARGB32_Premultiplied);
-    img.flip(Qt::Vertical);
-}
-
 ScreenShotManager::ScreenShotManager()
     : m_dbusInterface2(new ScreenShotDBusInterface2(this))
 {
@@ -115,7 +109,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
     GLFramebuffer::pushFramebuffer(target.get());
     QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBA8888_Premultiplied);
     context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
-    convertFromGLImage(snapshot);
+    snapshot.flip(Qt::Vertical);
     GLFramebuffer::popFramebuffer();
 
     snapshot.setDevicePixelRatio(scale);
@@ -183,7 +177,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
     GLFramebuffer::pushFramebuffer(target.get());
     QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBA8888_Premultiplied);
     context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
-    convertFromGLImage(snapshot);
+    snapshot.flip(Qt::Vertical);
     GLFramebuffer::popFramebuffer();
 
     snapshot.setDevicePixelRatio(scale);
@@ -242,7 +236,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
     GLFramebuffer::pushFramebuffer(&offscreenTarget);
     QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBA8888_Premultiplied);
     context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
-    convertFromGLImage(snapshot);
+    snapshot.flip(Qt::Vertical);
     GLFramebuffer::popFramebuffer();
 
     snapshot.setDevicePixelRatio(scale);
