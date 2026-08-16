@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+    <kcfgfile arg="true"/>
+    <group name="Effect-dwellclicker">
+        <entry name="DelayTime" type="UInt">
+            <label>Delay Time</label>
+            <default>150</default>
+        </entry>
+        <entry name="DwellTime" type="UInt">
+            <label>Dwell Time</label>
+            <default>500</default>
+        </entry>
+        <entry name="MotionThreshold" type="UInt">
+            <label>Motion Threshold</label>
+            <default>5</default>
+        </entry>
+        <entry name="DefaultButton" type="Enum">
+            <label>Default Button</label>
+            <default>10</default>
+            <choices>
+                <choice name="None" value="0"/>
+                <choice name="LeftClick" value="10"/>
+                <choice name="DoubleClick" value="11"/>
+                <choice name="DragClick" value="12"/>
+                <choice name="MiddleClick" value="13"/>
+                <choice name="RightClick" value="14"/>
+            </choices>
+        </entry>
+        <entry name="ButtonLocked" type="Bool">
+            <label>Lock Button</label>
+            <default>false</default>
+        </entry>
+        <entry name="DwellColor" type="Color">
+            <label>Dwell Color</label>
+            <default>#a0ff0000</default>
+        </entry>
+    </group>
+</kcfg>

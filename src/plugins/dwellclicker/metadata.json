@@ -1,0 +1,12 @@
+{
+    "KPlugin": {
+        "Category": "Accessibility",
+        "Name": "Dwell Clicker",
+        "Description": "Automatically performs a mouse click when the user keeps the cursor still for a set amount of time",
+        "License": "GPL",
+        "EnabledByDefault": false
+    },
+    "org.kde.kwin.effect": {
+        "internal": true
+    }
+}

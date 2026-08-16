@@ -361,6 +361,7 @@ enum Order {
     BounceKeys,
     StickyKeys,
     MouseKeys,
+    DwellClicker,
     EisInput,
 
     VirtualTerminal,

@@ -1,0 +1,16 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Sebastian Sauer <dipesh@gmx.de>
+ * SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+ */
+
+#include "dwellclicker.h"
+
+namespace KWin
+{
+
+KWIN_EFFECT_FACTORY(DwellClickerEffect,
+                    "metadata.json.stripped")
+
+}
+
+#include "main.moc"
