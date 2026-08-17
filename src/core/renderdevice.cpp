@@ -13,6 +13,7 @@
 #include "graphicsbuffer.h"
 #include "opengl/eglcontext.h"
 #include "opengl/egldisplay.h"
+#include "opengl/glplatform.h"
 #include "udmabufallocator.h"
 #include "utils/common.h"
 #include "utils/envvar.h"
@@ -88,6 +89,7 @@ RenderDevice::RenderDevice(std::unique_ptr<DrmDevice> &&device, std::unique_ptr<
     , m_deviceId(m_device->deviceId())
 {
     createVulkanDevice();
+    fetchName();
     m_allImportableFormats = getImportFormats(m_display.get(), m_vulkanDevice.get());
 }
 
@@ -99,6 +101,7 @@ RenderDevice::RenderDevice(std::unique_ptr<UDmabufAllocator> &&allocator, std::u
     , m_deviceId(deviceId)
 {
     createVulkanDevice();
+    fetchName();
     m_allImportableFormats = getImportFormats(m_display.get(), m_vulkanDevice.get());
 }
 
@@ -114,6 +117,11 @@ DrmDevice *RenderDevice::drmDevice() const
 QString RenderDevice::path() const
 {
     return m_path;
+}
+
+QString RenderDevice::name() const
+{
+    return m_name;
 }
 
 dev_t RenderDevice::deviceId() const
@@ -382,6 +390,30 @@ bool RenderDevice::isInternal() const
         return m_vulkanDevice->type() == vk::PhysicalDeviceType::eIntegratedGpu;
     }
     return m_display->type() == EglDisplay::GpuType::Internal;
+}
+
+static QString prettify(const QString &name)
+{
+    QString ret = name;
+    ret.replace(QStringLiteral("(TM)"), QChar(8482));
+    ret.replace(QStringLiteral("(R)"), QChar(174));
+    ret = ret.mid(0, ret.indexOf('('));
+    return ret.trimmed();
+}
+
+void RenderDevice::fetchName()
+{
+    if (m_vulkanDevice) {
+        m_name = prettify(m_vulkanDevice->name());
+        return;
+    }
+    auto context = eglContext();
+    if (context && context->makeCurrent()) {
+        m_name = prettify(QString::fromLatin1(context->glPlatform()->glRendererString()));
+        return;
+    }
+    // better than nothing
+    m_name = m_path;
 }
 
 }

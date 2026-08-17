@@ -26,6 +26,7 @@ VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::De
     , m_transferFormats(queryFormats(VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT))
     , m_queueProperties(std::move(queueProperties))
     , m_deviceLimits(m_physical.getProperties().limits)
+    , m_name(physicalDevice.getProperties().deviceName.data())
 {
     m_memoryProperties = physicalDevice.getMemoryProperties();
     getQueues();
@@ -328,6 +329,11 @@ bool VulkanDevice::isSoftwareRenderer() const
 vk::PhysicalDeviceType VulkanDevice::type() const
 {
     return m_type;
+}
+
+QString VulkanDevice::name() const
+{
+    return m_name;
 }
 
 const FormatModifierMap &VulkanDevice::transferFormats() const

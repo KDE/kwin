@@ -41,6 +41,7 @@ public:
 
     bool isSoftwareRenderer() const;
     vk::PhysicalDeviceType type() const;
+    QString name() const;
 
     vk::raii::DeviceMemory allocateMemory(const vk::ImageCreateInfo &imageInfo, vk::MemoryPropertyFlags memoryProperties);
     vk::raii::DeviceMemory allocateMemory(const vk::BufferCreateInfo &bufferInfo, vk::MemoryPropertyFlags memoryProperties);
@@ -104,6 +105,7 @@ private:
     std::vector<VkQueueFamilyProperties> m_queueProperties;
     vk::PhysicalDeviceMemoryProperties m_memoryProperties;
     vk::PhysicalDeviceLimits m_deviceLimits;
+    QString m_name;
 
     std::unique_ptr<VulkanQueue> m_graphicsQueue;
     std::unique_ptr<VulkanQueue> m_transferQueue;

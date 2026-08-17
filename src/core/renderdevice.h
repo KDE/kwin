@@ -44,6 +44,8 @@ public:
     DrmDevice *drmDevice() const;
     GraphicsBufferAllocator *allocator() const;
     QString path() const;
+    QString name() const;
+
     dev_t deviceId() const;
     EglDisplay *eglDisplay() const;
     /**
@@ -98,6 +100,7 @@ public:
 private:
     void handleVulkanDeviceLoss();
     void createVulkanDevice();
+    void fetchName();
 
     const std::unique_ptr<DrmDevice> m_device;
     const std::unique_ptr<UDmabufAllocator> m_udmabufAllocator;
@@ -111,6 +114,7 @@ private:
     bool m_inReset = false;
     const QString m_path;
     const dev_t m_deviceId;
+    QString m_name;
 };
 
 }
