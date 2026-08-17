@@ -121,7 +121,7 @@ QColor ColorPickerEffect::pick()
             if (!layer.preparePresentationTest()) {
                 return;
             }
-            const auto beginInfo = layer.beginFrame();
+            const auto beginInfo = layer.beginFrame(nullptr);
             if (!beginInfo) {
                 return;
             }

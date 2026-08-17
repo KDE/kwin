@@ -95,7 +95,7 @@ public:
      */
     virtual bool preparePresentationTest();
 
-    virtual std::optional<OutputLayerBeginFrameInfo> beginFrame() = 0;
+    virtual std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) = 0;
     virtual bool endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame) = 0;
 
     /**

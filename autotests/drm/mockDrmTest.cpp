@@ -464,7 +464,7 @@ void DrmTest::testModeset()
     QCOMPARE(gpu->drmOutputs().size(), 1);
     const auto output = gpu->drmOutputs().front();
     const auto layer = renderBackend->compatibleOutputLayers(output).front();
-    layer->beginFrame();
+    layer->beginFrame(nullptr);
     output->renderLoop()->prepareNewFrame();
     const auto frame = std::make_shared<OutputFrame>(output->renderLoop(), std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate()));
     layer->endFrame(Region::infinite(), Region::infinite(), frame.get());

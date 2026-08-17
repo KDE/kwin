@@ -28,7 +28,7 @@ FormatModifierMap ScreencastLayer::supportedDrmFormats() const
     return m_formats;
 }
 
-std::optional<OutputLayerBeginFrameInfo> ScreencastLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> ScreencastLayer::beginFrame(OutputFrame *frame)
 {
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer),

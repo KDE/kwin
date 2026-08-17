@@ -38,7 +38,7 @@ VirtualEglGbmLayer::~VirtualEglGbmLayer()
     releaseBuffers();
 }
 
-std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame(OutputFrame *frame)
 {
     m_scanoutBuffer.reset();
 

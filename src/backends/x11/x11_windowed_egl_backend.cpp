@@ -32,7 +32,7 @@ X11WindowedEglPrimaryLayer::~X11WindowedEglPrimaryLayer()
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(OutputFrame *frame)
 {
     if (!m_backend->openglContext()->makeCurrent()) {
         return std::nullopt;
@@ -110,7 +110,7 @@ X11WindowedEglCursorLayer::~X11WindowedEglCursorLayer()
     m_texture.reset();
 }
 
-std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame(OutputFrame *frame)
 {
     if (!m_backend->openglContext()->makeCurrent()) {
         return std::nullopt;

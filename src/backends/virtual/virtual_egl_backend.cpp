@@ -36,7 +36,7 @@ VirtualEglLayer::~VirtualEglLayer()
     (void)m_backend->openglContext()->makeCurrent();
 }
 
-std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame(OutputFrame *frame)
 {
     if (!m_backend->openglContext()->makeCurrent()) {
         return std::nullopt;

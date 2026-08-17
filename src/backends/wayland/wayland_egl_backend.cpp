@@ -53,7 +53,7 @@ GLFramebuffer *WaylandEglLayer::fbo() const
     return m_buffer->framebuffer();
 }
 
-std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame(OutputFrame *frame)
 {
     if (!m_backend->openglContext()->makeCurrent()) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
@@ -156,7 +156,7 @@ WaylandEglCursorLayer::~WaylandEglCursorLayer()
     (void)m_backend->openglContext()->makeCurrent();
 }
 
-std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame(OutputFrame *frame)
 {
     if (!m_backend->openglContext()->makeCurrent()) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";

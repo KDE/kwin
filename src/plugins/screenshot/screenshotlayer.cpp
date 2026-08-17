@@ -19,7 +19,7 @@ FormatModifierMap ScreenshotLayer::supportedDrmFormats() const
     return {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> ScreenshotLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> ScreenshotLayer::beginFrame(OutputFrame *frame)
 {
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer),

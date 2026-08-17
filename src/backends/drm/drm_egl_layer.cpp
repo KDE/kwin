@@ -50,12 +50,14 @@ EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmGpu *gpu, DrmPlane::TypeI
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame(OutputFrame *frame)
 {
     m_scanoutBuffer.reset();
+    const bool tearing = frame && (frame->presentationMode() == PresentationMode::Async || frame->presentationMode() == PresentationMode::AdaptiveAsync);
+    const auto formats = tearing && !supportedAsyncDrmFormats().isEmpty() ? supportedAsyncDrmFormats() : supportedDrmFormats();
     return m_surface.startRendering(targetRect().size(),
                                     drmOutput()->transform().combine(OutputTransform::FlipY),
-                                    supportedDrmFormats(),
+                                    formats,
                                     drmOutput()->blendingColor(),
                                     drmOutput()->layerBlendingColor(),
                                     drmOutput()->needsShadowBuffer() ? pipeline()->iccProfile() : nullptr,

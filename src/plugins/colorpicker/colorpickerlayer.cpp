@@ -19,7 +19,7 @@ FormatModifierMap ColorPickerLayer::supportedDrmFormats() const
     return {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> ColorPickerLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> ColorPickerLayer::beginFrame(OutputFrame *frame)
 {
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer),

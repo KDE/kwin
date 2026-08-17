@@ -523,7 +523,7 @@ static bool prepareRendering(RenderView *view, LogicalOutput *logicalOutput, Bac
 
 static bool renderLayer(RenderView *view, LogicalOutput *logicalOutput, BackendOutput *backendOutput, const std::shared_ptr<OutputFrame> &frame, const Region &surfaceDamage)
 {
-    auto beginInfo = view->layer()->beginFrame();
+    auto beginInfo = view->layer()->beginFrame(frame.get());
     if (!beginInfo) {
         return false;
     }

@@ -33,7 +33,7 @@ public:
     VirtualEglLayer(BackendOutput *output, VirtualEglBackend *backend);
     ~VirtualEglLayer() override;
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
     bool endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame) override;
 
     FormatModifierMap supportedDrmFormats() const override;

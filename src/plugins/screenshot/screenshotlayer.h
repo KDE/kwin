@@ -19,7 +19,7 @@ public:
     FormatModifierMap supportedDrmFormats() const override;
     void releaseBuffers() override;
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
     bool endFrame(const Region &renderedRegion, const Region &damagedRegion, OutputFrame *frame) override;
 
 private:

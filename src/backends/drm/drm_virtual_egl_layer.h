@@ -33,7 +33,7 @@ public:
     VirtualEglGbmLayer(EglGbmBackend *eglBackend, DrmVirtualOutput *output);
     ~VirtualEglGbmLayer() override;
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
     bool endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame) override;
     void releaseBuffers() override;
     FormatModifierMap supportedDrmFormats() const override;

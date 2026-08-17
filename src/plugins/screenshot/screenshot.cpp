@@ -83,7 +83,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
     if (!layer.preparePresentationTest()) {
         return std::nullopt;
     }
-    const auto beginInfo = layer.beginFrame();
+    const auto beginInfo = layer.beginFrame(nullptr);
     if (!beginInfo) {
         return std::nullopt;
     }
@@ -151,7 +151,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
     if (!layer.preparePresentationTest()) {
         return std::nullopt;
     }
-    const auto beginInfo = layer.beginFrame();
+    const auto beginInfo = layer.beginFrame(nullptr);
     if (!beginInfo) {
         return std::nullopt;
     }
