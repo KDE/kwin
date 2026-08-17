@@ -417,7 +417,7 @@ bool ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
     const auto map = vbo->map<GLVertex2D>(totalVertexCount);
     if (!map) {
-        EglContext::currentContext()->isFailed();
+        EglContext::currentContext()->setFailed();
         return true;
     }
 
