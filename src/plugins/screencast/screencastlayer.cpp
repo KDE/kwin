@@ -28,7 +28,7 @@ FormatModifierMap ScreencastLayer::supportedDrmFormats() const
     return m_formats;
 }
 
-std::optional<OutputLayerBeginFrameInfo> ScreencastLayer::doBeginFrame()
+std::optional<OutputLayerBeginFrameInfo> ScreencastLayer::beginFrame()
 {
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer),
@@ -36,7 +36,7 @@ std::optional<OutputLayerBeginFrameInfo> ScreencastLayer::doBeginFrame()
     };
 }
 
-bool ScreencastLayer::doEndFrame(const Region &renderedRegion, const Region &damagedRegion, OutputFrame *frame)
+bool ScreencastLayer::endFrame(const Region &renderedRegion, const Region &damagedRegion, OutputFrame *frame)
 {
     return true;
 }

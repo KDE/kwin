@@ -19,10 +19,10 @@ public:
     FormatModifierMap supportedDrmFormats() const override;
     void releaseBuffers() override;
 
-private:
-    std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
-    bool doEndFrame(const Region &renderedRegion, const Region &damagedRegion, OutputFrame *frame) override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
+    bool endFrame(const Region &renderedRegion, const Region &damagedRegion, OutputFrame *frame) override;
 
+private:
     GLFramebuffer *const m_buffer;
 };
 

@@ -38,7 +38,7 @@ VirtualEglGbmLayer::~VirtualEglGbmLayer()
     releaseBuffers();
 }
 
-std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::doBeginFrame()
+std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
 {
     m_scanoutBuffer.reset();
 
@@ -82,7 +82,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::doBeginFrame()
     };
 }
 
-bool VirtualEglGbmLayer::doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
+bool VirtualEglGbmLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     m_query->end();
     frame->addRenderTimeQuery(std::move(m_query));

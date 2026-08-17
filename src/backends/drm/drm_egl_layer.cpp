@@ -50,7 +50,7 @@ EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmGpu *gpu, DrmPlane::TypeI
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame()
 {
     m_scanoutBuffer.reset();
     return m_surface.startRendering(targetRect().size(),
@@ -67,7 +67,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
                                     m_requiredAlphaBits);
 }
 
-bool EglGbmLayer::doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
+bool EglGbmLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     return m_surface.endRendering(damagedDeviceRegion, frame);
 }

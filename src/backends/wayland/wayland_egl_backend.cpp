@@ -53,7 +53,7 @@ GLFramebuffer *WaylandEglLayer::fbo() const
     return m_buffer->framebuffer();
 }
 
-std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::doBeginFrame()
+std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame()
 {
     if (!m_backend->openglContext()->makeCurrent()) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
@@ -106,7 +106,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::doBeginFrame()
     };
 }
 
-bool WaylandEglLayer::doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
+bool WaylandEglLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     m_query->end();
     if (frame) {
@@ -156,7 +156,7 @@ WaylandEglCursorLayer::~WaylandEglCursorLayer()
     (void)m_backend->openglContext()->makeCurrent();
 }
 
-std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::doBeginFrame()
+std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
 {
     if (!m_backend->openglContext()->makeCurrent()) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
@@ -202,7 +202,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::doBeginFrame()
     };
 }
 
-bool WaylandEglCursorLayer::doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
+bool WaylandEglCursorLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     m_query->end();
     if (frame) {

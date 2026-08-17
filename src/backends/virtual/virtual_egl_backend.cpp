@@ -36,7 +36,7 @@ VirtualEglLayer::~VirtualEglLayer()
     (void)m_backend->openglContext()->makeCurrent();
 }
 
-std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::doBeginFrame()
+std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
 {
     if (!m_backend->openglContext()->makeCurrent()) {
         return std::nullopt;
@@ -71,7 +71,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::doBeginFrame()
     };
 }
 
-bool VirtualEglLayer::doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
+bool VirtualEglLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     m_query->end();
     if (frame) {

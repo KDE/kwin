@@ -95,8 +95,8 @@ public:
      */
     virtual bool preparePresentationTest();
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame();
-    bool endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame);
+    virtual std::optional<OutputLayerBeginFrameInfo> beginFrame() = 0;
+    virtual bool endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame) = 0;
 
     /**
      * Do checks if the current configuration of the layer could possibly work.
@@ -158,9 +158,6 @@ Q_SIGNALS:
     void repaintScheduled();
 
 protected:
-    virtual std::optional<OutputLayerBeginFrameInfo> doBeginFrame() = 0;
-    virtual bool doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame) = 0;
-
     const OutputLayerType m_type;
     Region m_repaints;
     QPointF m_hotspot;

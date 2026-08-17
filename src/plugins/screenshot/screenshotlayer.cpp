@@ -19,7 +19,7 @@ FormatModifierMap ScreenshotLayer::supportedDrmFormats() const
     return {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> ScreenshotLayer::doBeginFrame()
+std::optional<OutputLayerBeginFrameInfo> ScreenshotLayer::beginFrame()
 {
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer),
@@ -27,7 +27,7 @@ std::optional<OutputLayerBeginFrameInfo> ScreenshotLayer::doBeginFrame()
     };
 }
 
-bool ScreenshotLayer::doEndFrame(const Region &renderedRegion, const Region &damagedRegion, OutputFrame *frame)
+bool ScreenshotLayer::endFrame(const Region &renderedRegion, const Region &damagedRegion, OutputFrame *frame)
 {
     return true;
 }

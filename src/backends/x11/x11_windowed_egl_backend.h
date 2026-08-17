@@ -28,8 +28,8 @@ public:
     X11WindowedEglPrimaryLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output);
     ~X11WindowedEglPrimaryLayer() override;
 
-    std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
-    bool doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame) override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
+    bool endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame) override;
     FormatModifierMap supportedDrmFormats() const override;
     void releaseBuffers() override;
 
@@ -49,8 +49,8 @@ public:
     X11WindowedEglCursorLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output);
     ~X11WindowedEglCursorLayer() override;
 
-    std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
-    bool doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame) override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
+    bool endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame) override;
     FormatModifierMap supportedDrmFormats() const override;
     void releaseBuffers() override;
 

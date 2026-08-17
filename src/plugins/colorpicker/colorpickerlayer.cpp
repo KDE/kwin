@@ -19,7 +19,7 @@ FormatModifierMap ColorPickerLayer::supportedDrmFormats() const
     return {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> ColorPickerLayer::doBeginFrame()
+std::optional<OutputLayerBeginFrameInfo> ColorPickerLayer::beginFrame()
 {
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer),
@@ -27,7 +27,7 @@ std::optional<OutputLayerBeginFrameInfo> ColorPickerLayer::doBeginFrame()
     };
 }
 
-bool ColorPickerLayer::doEndFrame(const Region &renderedRegion, const Region &damagedRegion, OutputFrame *frame)
+bool ColorPickerLayer::endFrame(const Region &renderedRegion, const Region &damagedRegion, OutputFrame *frame)
 {
     return true;
 }
