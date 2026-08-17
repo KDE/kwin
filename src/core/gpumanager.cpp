@@ -25,6 +25,11 @@
 #include <linux/udmabuf.h>
 #endif
 
+#if KWIN_BUILD_NOTIFICATIONS
+#include <KLocalizedString>
+#include <KNotification>
+#endif
+
 namespace KWin
 {
 
@@ -250,6 +255,33 @@ void GpuManager::scanForRenderDevices()
 void GpuManager::handleUdevEvent()
 {
     while (auto udevDevice = m_udevMonitor->getDevice()) {
+        if (udevDevice->action() == QLatin1StringView("change")) {
+            auto gpu = compatibleRenderDevice(udevDevice->devNum());
+            if (!gpu) {
+                continue;
+            }
+            const auto props = udevDevice->properties();
+            const auto it = props.find(QByteArrayLiteral("WEDGED"));
+            if (it == props.end()) {
+                continue;
+            }
+            const auto actions = it->split(',');
+            if (actions.isEmpty()) {
+                qCWarning(KWIN_CORE, "Got a WEDGED event without any actions?");
+                return;
+            }
+            qCWarning(KWIN_CORE) << "GPU" << gpu->name() << gpu->path() << "was wedged:" << actions;
+#if KWIN_BUILD_NOTIFICATIONS
+            // TODO add the app name once we can get that information
+            const auto sameNameCount = std::ranges::count(m_renderDevices, gpu->name(), &RenderDevice::name);
+            if (sameNameCount > 1) {
+                KNotification::event(QStringLiteral("graphicsreset"), i18nc("@info: status", "Graphics card “%1” (%2) was reset", gpu->name(), gpu->path()));
+            } else {
+                KNotification::event(QStringLiteral("graphicsreset"), i18nc("@info: status", "Graphics card “%1” was reset", gpu->name()));
+            }
+#endif
+            continue;
+        }
         int devNum = -1;
         const bool isPrimaryNode = sscanf(udevDevice->sysName().data(), DRM_PRIMARY_MINOR_NAME "%d", &devNum) == 1;
         if (isPrimaryNode) {

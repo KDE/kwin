@@ -42,11 +42,6 @@
 #include "workspace.h"
 
 #include <KCrash>
-#if KWIN_BUILD_NOTIFICATIONS
-#include <KLocalizedString>
-#include <KNotification>
-#endif
-
 #include <QQuickWindow>
 #include <optional>
 #include <ranges>
@@ -756,9 +751,6 @@ void Compositor::composite(RenderLoop *renderLoop)
 {
     if (m_backend->checkGraphicsReset()) {
         qCDebug(KWIN_CORE) << "Graphics reset occurred";
-#if KWIN_BUILD_NOTIFICATIONS
-        KNotification::event(QStringLiteral("graphicsreset"), i18n("Desktop effects were restarted due to a graphics reset"));
-#endif
         reinitialize();
         return;
     }
