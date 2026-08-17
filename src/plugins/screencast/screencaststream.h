@@ -104,6 +104,7 @@ private:
     pw_buffer *dequeueBuffer();
     void record(Contents contents);
     void bumpBufferAge(ScreenCastBuffer *renderedBuffer);
+    std::chrono::nanoseconds frameInterval() const;
 
     std::optional<ScreenCastDmaBufTextureParams> testCreateDmaBuf(const QSize &size, quint32 format, const ModifierList &modifiers);
 
@@ -137,7 +138,7 @@ private:
     bool m_hasDmaBuf = false;
     quint32 m_drmFormat = 0;
 
-    std::optional<std::chrono::steady_clock::time_point> m_lastSent;
+    std::optional<std::chrono::steady_clock::time_point> m_nextDue;
     QTimer m_pendingFrame;
     Contents m_pendingContents = Content::None;
     QList<pw_buffer *> m_dequeuedBuffers;

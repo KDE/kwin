@@ -135,7 +135,7 @@ void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state
         m_source->pause();
         break;
     case PW_STREAM_STATE_STREAMING:
-        m_lastSent.reset();
+        m_nextDue.reset();
         m_source->resume();
         break;
     case PW_STREAM_STATE_CONNECTING:
@@ -403,11 +403,19 @@ bool ScreenCastStream::init()
 
 uint ScreenCastStream::framerate()
 {
-    if (m_pwStream) {
-        return m_videoFormat.max_framerate.num / m_videoFormat.max_framerate.denom;
+    if (m_pwStream && m_videoFormat.max_framerate.denom != 0) {
+        return (m_videoFormat.max_framerate.num + m_videoFormat.max_framerate.denom / 2) / m_videoFormat.max_framerate.denom;
     }
 
     return 0;
+}
+
+std::chrono::nanoseconds ScreenCastStream::frameInterval() const
+{
+    if (m_videoFormat.max_framerate.num == 0) {
+        return std::chrono::nanoseconds::zero();
+    }
+    return std::chrono::nanoseconds(1'000'000'000ull * m_videoFormat.max_framerate.denom / m_videoFormat.max_framerate.num);
 }
 
 uint ScreenCastStream::nodeId()
@@ -523,12 +531,10 @@ void ScreenCastStream::scheduleRecord(Contents contents)
         return;
     }
     std::chrono::milliseconds waitInterval{0};
-    if (m_videoFormat.max_framerate.num != 0 && m_lastSent.has_value()) {
+    if (frameInterval() != std::chrono::nanoseconds::zero() && m_nextDue.has_value()) {
         const auto now = std::chrono::steady_clock::now();
-        const auto frameInterval = std::chrono::milliseconds(1000 * m_videoFormat.max_framerate.denom / m_videoFormat.max_framerate.num);
-        const auto lastSentAgo = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_lastSent.value());
-        if (lastSentAgo < frameInterval) {
-            waitInterval = frameInterval - lastSentAgo;
+        if (m_nextDue.value() > now) {
+            waitInterval = std::chrono::ceil<std::chrono::milliseconds>(m_nextDue.value() - now);
         }
     }
     m_pendingFrame.start(waitInterval);
@@ -685,7 +691,14 @@ void ScreenCastStream::record(Contents contents)
     }
 
     pw_stream_queue_buffer(m_pwStream, pwBuffer);
-    m_lastSent = std::chrono::steady_clock::now();
+
+    const auto now = std::chrono::steady_clock::now();
+    const auto interval = frameInterval();
+    if (!m_nextDue.has_value() || m_nextDue.value() + interval < now) {
+        m_nextDue = now + interval;
+    } else {
+        m_nextDue.value() += interval;
+    }
 
     if (!m_source->followsStreamSize()) {
         updateStreamSize(m_source->textureSize());
@@ -774,7 +787,7 @@ QList<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2
     spa_pod_builder podBuilder = SPA_POD_BUILDER_INIT(buffer, 2048);
     spa_fraction defFramerate = SPA_FRACTION(0, 1);
     spa_fraction minFramerate = SPA_FRACTION(0, 1);
-    spa_fraction maxFramerate = SPA_FRACTION(m_source->refreshRate() / 1000, 1);
+    spa_fraction maxFramerate = SPA_FRACTION(m_source->refreshRate(), 1000);
 
     constexpr spa_rectangle streamMinSize = SPA_RECTANGLE(200, 200);
     constexpr spa_rectangle streamMaxSize = SPA_RECTANGLE(10000, 10000);
