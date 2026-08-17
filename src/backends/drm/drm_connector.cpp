@@ -327,8 +327,19 @@ bool DrmConnector::updateProperties()
     if (!equal && m_conn->count_modes > 0) {
         // reload modes
         m_driverModes.clear();
-        for (int i = 0; i < m_conn->count_modes; i++) {
-            m_driverModes.append(std::make_shared<DrmConnectorMode>(this, m_conn->modes[i]));
+        const auto modes = std::span(m_conn->modes, m_conn->count_modes);
+        auto usableModes = modes | std::views::filter([](drmModeModeInfo mode) {
+            return mode.hdisplay >= 640 && mode.vdisplay >= 480;
+        });
+        if (usableModes.empty()) {
+            // allow unusable modes, we don't have much of a choice
+            for (const auto &mode : modes) {
+                m_driverModes.append(std::make_shared<DrmConnectorMode>(this, mode));
+            }
+        } else {
+            for (const auto &mode : usableModes) {
+                m_driverModes.append(std::make_shared<DrmConnectorMode>(this, mode));
+            }
         }
         m_modes.clear();
         m_modes.append(m_driverModes);
