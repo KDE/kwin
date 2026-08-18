@@ -19,6 +19,7 @@
 #include "opengl/eglimagetexture.h"
 #include "opengl/eglutils_p.h"
 #include "utils/common.h"
+#include "utils/envvar.h"
 #include "vulkan/vulkan_device.h"
 #include "wayland/linux_drm_syncobj_v1.h"
 #include "wayland_server.h"
@@ -98,6 +99,8 @@ void EglBackend::initWayland()
     updateDmabufTranches();
 }
 
+static const auto s_dmabufV6Env = environmentVariableBoolValue("KWIN_ALLOW_DMABUF_V6");
+
 void EglBackend::updateDmabufTranches()
 {
     auto filterFormats = [this](RenderDevice *device, std::optional<uint32_t> bpc, bool withExternalOnlyYUV) {
@@ -176,11 +179,25 @@ void EglBackend::updateDmabufTranches()
         .formatTable = includeShaderConversions(filterFormats(m_renderDevice, std::nullopt, true)),
     });
 
+    const auto isIntel = [](const auto &device) {
+        return device->drmDevice() && (device->drmDevice()->isI915() || device->drmDevice()->isIntelXE());
+    };
+    const auto isNvidia = [](const auto &device) {
+        return device->drmDevice() && device->drmDevice()->isNvidia();
+    };
+
+    const auto &devices = GpuManager::s_self->renderDevices();
+    const bool skipIntel = !isIntel(m_renderDevice) && std::ranges::any_of(devices, isNvidia);
+    const bool skipNvidia = !skipIntel && !isNvidia(m_renderDevice) && std::ranges::any_of(devices, isIntel);
+
     // Other GPUs come afterwards, in no particular order.
     // Until the copy code can handle them, YUV formats are excluded from this
-    const auto &devices = GpuManager::s_self->renderDevices();
     for (const auto &device : devices) {
         if (device.get() == m_renderDevice) {
+            continue;
+        }
+        const bool needsWorkaround = (skipNvidia && isNvidia(device)) || (skipIntel && isIntel(device));
+        if (!s_dmabufV6Env.value_or(!needsWorkaround)) {
             continue;
         }
         m_tranches.append({
