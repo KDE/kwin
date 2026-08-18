@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-15 00:48+0000\n"
+"POT-Creation-Date: 2026-08-18 00:46+0000\n"
 "PO-Revision-Date: 2026-08-13 10:40+0200\n"
 "Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -3710,7 +3710,7 @@ msgstr "Alternativní procházení okny aktuální aplikace"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Alternativní procházení okny aktuální aplikace (Pozpátku)"
 
-#: tabbox/tabboxhandler.cpp:192
+#: tabbox/tabboxhandler.cpp:189
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -4343,7 +4343,7 @@ msgstr "Ovladač odmítl výstupní konfiguraci"
 msgid "The session is not active"
 msgstr "Sezení není aktivní"
 
-#: window.cpp:3182
+#: window.cpp:3177
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-15 00:48+0000\n"
+"POT-Creation-Date: 2026-08-18 00:46+0000\n"
 "PO-Revision-Date: 2026-05-21 13:41+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -3748,7 +3748,7 @@ msgstr ""
 "Alternatives Wechseln zwischen Fenstern der aktuellen Anwendung "
 "(Gegenrichtung)"
 
-#: tabbox/tabboxhandler.cpp:192
+#: tabbox/tabboxhandler.cpp:189
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -4386,7 +4386,7 @@ msgstr "Der Treiber hat die Ausgabeeinrichtung zurückgewiesen"
 msgid "The session is not active"
 msgstr "Die Sitzung ist nicht aktiv"
 
-#: window.cpp:3182
+#: window.cpp:3177
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

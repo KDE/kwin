@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-15 00:48+0000\n"
+"POT-Creation-Date: 2026-08-18 00:46+0000\n"
 "PO-Revision-Date: 2026-07-29 14:18+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -3723,7 +3723,7 @@ msgstr "Альтернативна прогулянка вікнами пото�
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Альтернативна прогулянка вікнами поточної програми (зв. порядок)"
 
-#: tabbox/tabboxhandler.cpp:192
+#: tabbox/tabboxhandler.cpp:189
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -4356,7 +4356,7 @@ msgstr "Драйвером відмовлено у налаштовування 
 msgid "The session is not active"
 msgstr "Сеанс не є активним"
 
-#: window.cpp:3182
+#: window.cpp:3177
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
