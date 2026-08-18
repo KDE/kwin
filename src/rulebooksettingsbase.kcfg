@@ -5,11 +5,25 @@
   <kcfgfile arg="true">
   </kcfgfile>
   <group name="General">
+    <!--
+      Deprecated. Kept to clean the existing configs. Remove this entry
+      some time later.
+    -->
     <entry name="count" type="Int">
       <label>Total rules count (legacy)</label>
       <default>0</default>
     </entry>
+
+    <!--
+      Deprecated. Kept to clean the existing configs. Remove this entry
+      some time later.
+    -->
     <entry name="ruleGroupList" key="rules" type="StringList">
+      <label>Ordered list of rules groups</label>
+      <default></default>
+    </entry>
+
+    <entry name="order" key="Order" type="StringList">
       <label>Ordered list of rules groups</label>
       <default></default>
     </entry>

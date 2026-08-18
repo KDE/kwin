@@ -16,6 +16,11 @@
 namespace KWin
 {
 
+static bool isMetaDataGroup(const QString &group)
+{
+    return group == "General" || group.startsWith('$');
+}
+
 RuleBookSettings::RuleBookSettings(KSharedConfig::Ptr config, QObject *parent)
     : RuleBookSettingsBase(config, parent)
 {
@@ -50,36 +55,60 @@ bool RuleBookSettings::usrSave()
         result &= settings->save();
     }
 
-    // Remove deleted groups from config
-    for (const QString &groupName : std::as_const(m_storedGroups)) {
-        if (sharedConfig()->hasGroup(groupName) && !mRuleGroupList.contains(groupName)) {
-            sharedConfig()->deleteGroup(groupName);
+    for (const auto groups = sharedConfig()->groupList(); const auto &group : groups) {
+        if (isMetaDataGroup(group)) {
+            continue;
+        }
+
+        const bool exists = std::ranges::any_of(m_list, [group](const auto &candidate) {
+            return candidate->currentGroup() == group;
+        });
+
+        if (!exists) {
+            sharedConfig()->deleteGroup(group);
         }
     }
-    m_storedGroups = mRuleGroupList;
 
     return result;
 }
 
 void RuleBookSettings::usrRead()
 {
-    qDeleteAll(m_list);
-    m_list.clear();
+    // Reset the "count" property to the default value so it gets deleted from the config.
+    // TODO Plasma 7: Drop it.
+    mCount = 0;
 
-    // Legacy path for backwards compatibility with older config files without a rules list
-    if (mRuleGroupList.isEmpty() && mCount > 0) {
-        mRuleGroupList.reserve(mCount);
-        for (int i = 1; i <= count(); i++) {
-            mRuleGroupList.append(QString::number(i));
+    // kwinrulesrc used to collect stray window rules. Purge them to migrate the config to the new format.
+    // TODO Plasma 7: Drop it.
+    if (!mRuleGroupList.isEmpty()) {
+        const KConfig kwinrulesrc(QStringLiteral("kwinrulesrc"), KConfig::SimpleConfig);
+        for (const auto availableGroups = kwinrulesrc.groupList(); const QString &groupName : availableGroups) {
+            if (isMetaDataGroup(groupName)) {
+                continue;
+            }
+            if (!mRuleGroupList.contains(groupName)) {
+                sharedConfig()->deleteGroup(groupName);
+            }
         }
-        save(); // Save the generated ruleGroupList property
+
+        mOrder = mRuleGroupList;
+        mRuleGroupList.clear();
     }
 
-    mCount = mRuleGroupList.count();
-    m_storedGroups = mRuleGroupList;
+    for (const auto availableGroups = sharedConfig()->groupList(); const QString &group : availableGroups) {
+        if (isMetaDataGroup(group)) {
+            continue;
+        }
+        if (!mOrder.contains(group)) {
+            mOrder.prepend(group);
+        }
+    }
 
-    m_list.reserve(mRuleGroupList.count());
-    for (const QString &groupName : std::as_const(mRuleGroupList)) {
+    qDeleteAll(m_list);
+    m_list.clear();
+    m_list.reserve(mOrder.count());
+
+    for (const QString &groupName : std::as_const(mOrder)) {
         auto ruleSettings = new RuleSettings(sharedConfig(), groupName, this);
         m_list.append(ruleSettings);
 
@@ -92,6 +121,10 @@ void RuleBookSettings::usrRead()
             ruleSettings->setNoborderrule(0);
             ruleSettings->setNoborder(false);
         }
+    }
+
+    if (isSaveNeeded()) {
+        save();
     }
 }
 
@@ -132,8 +165,7 @@ RuleSettings *RuleBookSettings::insertRuleSettingsAt(int row)
     settings->setDefaults();
 
     m_list.insert(row, settings);
-    mRuleGroupList.insert(row, groupName);
-    mCount++;
+    mOrder.insert(row, groupName);
 
     return settings;
 }
@@ -144,8 +176,7 @@ void RuleBookSettings::removeRuleSettingsAt(int row)
 
     delete m_list.at(row);
     m_list.removeAt(row);
-    mRuleGroupList.removeAt(row);
-    mCount--;
+    mOrder.removeAt(row);
 }
 
 void RuleBookSettings::moveRuleSettings(int srcRow, int destRow)
@@ -153,7 +184,7 @@ void RuleBookSettings::moveRuleSettings(int srcRow, int destRow)
     Q_ASSERT(srcRow >= 0 && srcRow < m_list.count() && destRow >= 0 && destRow < m_list.count());
 
     m_list.insert(destRow, m_list.takeAt(srcRow));
-    mRuleGroupList.insert(destRow, mRuleGroupList.takeAt(srcRow));
+    mOrder.insert(destRow, mOrder.takeAt(srcRow));
 }
 
 QString RuleBookSettings::generateGroupName()
