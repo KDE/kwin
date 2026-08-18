@@ -301,9 +301,7 @@ template<typename T>
 void TestXdgShellWindowRules::setWindowRule(const QString &property, const T &value, int policy)
 {
     // Initialize RuleBook with the test rule.
-    const QString ruleGroupName = QStringLiteral("test-rule");
-    m_config->group(QStringLiteral("General")).writeEntry("rules", QStringList{ruleGroupName});
-    KConfigGroup group = m_config->group(ruleGroupName);
+    KConfigGroup group = m_config->group(QStringLiteral("test-rule"));
 
     group.writeEntry(property, value);
     group.writeEntry(QStringLiteral("%1rule").arg(property), policy);
@@ -3309,9 +3307,7 @@ void TestXdgShellWindowRules::testMatchTransientParent()
 {
     QFETCH(bool, hasTransientParent);
 
-    const QString ruleGroupName = QStringLiteral("transient-test-rule");
-    m_config->group(QStringLiteral("General")).writeEntry("rules", QStringList{ruleGroupName});
-    KConfigGroup group = m_config->group(ruleGroupName);
+    KConfigGroup group = m_config->group(QStringLiteral("transient-test-rule"));
 
     group.writeEntry("above", true);
     group.writeEntry("aboverule", int(Rules::Force));
