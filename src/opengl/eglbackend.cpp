@@ -19,6 +19,7 @@
 #include "opengl/eglimagetexture.h"
 #include "opengl/eglutils_p.h"
 #include "utils/common.h"
+#include "utils/envvar.h"
 #include "vulkan/vulkan_device.h"
 #include "wayland/linux_drm_syncobj_v1.h"
 #include "wayland_server.h"
@@ -97,6 +98,8 @@ void EglBackend::initWayland()
 {
     updateDmabufTranches();
 }
+
+static const auto s_dmabufV6Env = environmentVariableBoolValue("KWIN_ALLOW_DMABUF_V6");
 
 void EglBackend::updateDmabufTranches()
 {
@@ -181,6 +184,9 @@ void EglBackend::updateDmabufTranches()
     const auto &devices = GpuManager::s_self->renderDevices();
     for (const auto &device : devices) {
         if (device.get() == m_renderDevice) {
+            continue;
+        }
+        if (!s_dmabufV6Env.value_or(true)) {
             continue;
         }
         m_tranches.append({
