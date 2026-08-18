@@ -77,7 +77,7 @@ Region RegionScreenCastSource::render(GLFramebuffer *target, const Region &buffe
     if (!m_layer->preparePresentationTest()) {
         return Region{};
     }
-    const auto beginInfo = m_layer->beginFrame(nullptr);
+    const auto beginInfo = m_layer->beginFrame();
     if (!beginInfo) {
         return Region{};
     }
