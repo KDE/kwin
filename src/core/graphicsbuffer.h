@@ -95,6 +95,22 @@ public:
     virtual const SinglePixelAttributes *singlePixelAttributes() const;
 
     /**
+     * @returns the drm format of the buffer.
+     *          May be of limited meaning with some buffer types
+     */
+    virtual uint32_t format() const = 0;
+    /**
+     * @returns the drm format modifier of the buffer.
+     *          May be of limited meaning with some buffer types
+     */
+    virtual uint64_t modifier() const = 0;
+    /**
+     * @returns the pitch / stride of the buffer.
+     *          May be of limited meaning with some buffer types
+     */
+    virtual uint32_t pitch() const = 0;
+
+    /**
      * the added release point will be referenced as long as this buffer is referenced
      */
     void addReleasePoint(const std::shared_ptr<SyncReleasePoint> &releasePoint);

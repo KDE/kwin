@@ -32,6 +32,9 @@ public:
     QSize size() const override;
     bool hasAlphaChannel() const override;
     const ShmAttributes *shmAttributes() const override;
+    uint32_t format() const override;
+    uint64_t modifier() const override;
+    uint32_t pitch() const override;
 
 private:
     ShmAttributes m_attributes;
@@ -75,6 +78,21 @@ bool ShmGraphicsBuffer::hasAlphaChannel() const
 const ShmAttributes *ShmGraphicsBuffer::shmAttributes() const
 {
     return &m_attributes;
+}
+
+uint32_t ShmGraphicsBuffer::format() const
+{
+    return m_attributes.format;
+}
+
+uint64_t ShmGraphicsBuffer::modifier() const
+{
+    return DRM_FORMAT_MOD_LINEAR;
+}
+
+uint32_t ShmGraphicsBuffer::pitch() const
+{
+    return m_attributes.stride;
 }
 
 GraphicsBuffer *ShmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)

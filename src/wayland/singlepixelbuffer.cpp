@@ -80,6 +80,21 @@ const SinglePixelAttributes *SinglePixelClientBuffer::singlePixelAttributes() co
     return &m_attributes;
 }
 
+uint32_t SinglePixelClientBuffer::format() const
+{
+    return DRM_FORMAT_ARGB16161616;
+}
+
+uint64_t SinglePixelClientBuffer::modifier() const
+{
+    return DRM_FORMAT_MOD_LINEAR;
+}
+
+uint32_t SinglePixelClientBuffer::pitch() const
+{
+    return 8;
+}
+
 void SinglePixelClientBuffer::buffer_destroy_resource(wl_resource *resource)
 {
     const auto buffer = get(resource);

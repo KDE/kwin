@@ -72,6 +72,9 @@ public:
     bool hasAlphaChannel() const override;
     const ShmAttributes *shmAttributes() const override;
     const DmaBufAttributes *udmabufAttributes() const override;
+    uint32_t format() const override;
+    uint64_t modifier() const override;
+    uint32_t pitch() const override;
 
     static ShmClientBuffer *get(wl_resource *resource);
 

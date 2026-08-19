@@ -37,6 +37,9 @@ public:
     QSize size() const override;
     bool hasAlphaChannel() const override;
     const DmaBufAttributes *dmabufAttributes() const override;
+    uint32_t format() const override;
+    uint64_t modifier() const override;
+    uint32_t pitch() const override;
 
 private:
     const DmaBufAttributes m_attributes;
@@ -104,6 +107,21 @@ bool UdmabufGraphicsBuffer::hasAlphaChannel() const
 const DmaBufAttributes *UdmabufGraphicsBuffer::dmabufAttributes() const
 {
     return &m_attributes;
+}
+
+uint32_t UdmabufGraphicsBuffer::format() const
+{
+    return m_attributes.format;
+}
+
+uint64_t UdmabufGraphicsBuffer::modifier() const
+{
+    return DRM_FORMAT_MOD_LINEAR;
+}
+
+uint32_t UdmabufGraphicsBuffer::pitch() const
+{
+    return m_attributes.pitch[0];
 }
 
 UDmabufAllocator::UDmabufAllocator()

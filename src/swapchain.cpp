@@ -130,7 +130,7 @@ std::unique_ptr<Swapchain> Swapchain::create(GraphicsBufferAllocator *allocator,
         qCWarning(KWIN_CORE) << "Failed to allocate a graphics buffer for a swapchain";
         return nullptr;
     }
-    options.modifiers = {buffer->dmabufAttributes()->modifier};
+    options.modifiers = {buffer->modifier()};
     auto slot = std::make_shared<SwapchainSlot>(buffer);
     return std::make_unique<Swapchain>(allocator, options, std::move(slot));
 }
