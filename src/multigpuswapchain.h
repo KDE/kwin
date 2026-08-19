@@ -27,12 +27,7 @@ class GraphicsBuffer;
 class OutputFrame;
 class RenderDevice;
 class VulkanDevice;
-class VulkanSwapchain;
-class VulkanSwapchainSlot;
 class SyncReleasePoint;
-class QPainterSwapchain;
-class QPainterSwapchainSlot;
-class VulkanBuffer;
 class MultiGpuCopy;
 
 class KWIN_EXPORT MultiGpuSwapchain : public QObject

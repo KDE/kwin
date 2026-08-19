@@ -13,10 +13,11 @@
 
 #include <qpa/qplatformbackingstore.h>
 
+#include "core/graphicsbuffer.h"
+
 namespace KWin
 {
 
-class GraphicsBuffer;
 class GraphicsBufferView;
 
 namespace QPA
@@ -34,7 +35,7 @@ public:
     void endPaint() override;
 
 private:
-    QPointer<GraphicsBuffer> m_buffer;
+    GraphicsBufferRef m_buffer;
     std::unique_ptr<GraphicsBufferView> m_bufferView;
 };
 

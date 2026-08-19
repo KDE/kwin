@@ -11,17 +11,18 @@
 #include "eglplatformcontext.h"
 #include "compositor.h"
 #include "core/outputbackend.h"
+#include "core/syncobjtimeline.h"
 #include "eglhelpers.h"
+#include "generic_swapchain.h"
 #include "internalwindow.h"
+#include "logging.h"
 #include "offscreensurface.h"
 #include "opengl/eglcontext.h"
 #include "opengl/egldisplay.h"
+#include "opengl/eglnativefence.h"
 #include "opengl/eglutils_p.h"
 #include "opengl/glutils.h"
-#include "swapchain.h"
 #include "window.h"
-
-#include "logging.h"
 
 namespace KWin
 {
@@ -85,10 +86,11 @@ bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
             return false;
         }
 
-        GraphicsBuffer *buffer = swapchain->acquire();
-        if (!buffer) {
+        m_currentSlot = swapchain->acquire();
+        if (!m_currentSlot) {
             return false;
         }
+        GraphicsBuffer *buffer = m_currentSlot->buffer();
 
         auto it = m_renderTargets.find(buffer);
         if (it != m_renderTargets.end()) {
@@ -154,18 +156,19 @@ void EGLPlatformContext::swapBuffers(QPlatformSurface *surface)
     if (surface->surface()->surfaceClass() == QSurface::Window) {
         Window *window = static_cast<Window *>(surface);
         InternalWindow *internalWindow = window->internalWindow();
-        if (!internalWindow) {
+        if (!internalWindow || !m_currentSlot) {
             return;
         }
 
-        glFlush(); // We need to flush pending rendering commands manually
-
+        EGLNativeFence fence(EglContext::currentContext()->displayObject());
         internalWindow->present(InternalWindowFrame{
             .buffer = m_current->buffer,
             .bufferDamage = Rect(QPoint(0, 0), m_current->buffer->size()),
             .bufferTransform = OutputTransform::FlipY,
         });
 
+        m_currentSlot->releasePoint()->addReleaseFence(fence.takeFileDescriptor());
+        m_currentSlot.reset();
         m_current.reset();
     }
 }
@@ -263,6 +266,7 @@ void EGLPlatformContext::invalidateContext()
         m_zombieRenderTargets.clear();
         m_eglContext.reset();
     }
+    m_currentSlot.reset();
 }
 
 } // namespace QPA

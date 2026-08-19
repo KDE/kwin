@@ -24,6 +24,7 @@ class GLTexture;
 class GraphicsBuffer;
 class EglDisplay;
 class EglContext;
+class SwapchainSlot;
 
 namespace QPA
 {
@@ -73,6 +74,7 @@ private:
     std::unordered_map<GraphicsBuffer *, std::shared_ptr<EGLRenderTarget>> m_renderTargets;
     std::vector<std::shared_ptr<EGLRenderTarget>> m_zombieRenderTargets;
     std::shared_ptr<EGLRenderTarget> m_current;
+    std::shared_ptr<SwapchainSlot> m_currentSlot;
     bool m_markedInvalid = false;
 };
 

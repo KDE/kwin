@@ -12,6 +12,7 @@
 #include "core/graphicsbuffer.h"
 #include "core/renderbackend.h"
 #include "core/syncobjtimeline.h"
+#include "generic_swapchain.h"
 #include "opengl/eglcontext.h"
 #include "opengl/egldisplay.h"
 #include "opengl/eglnativefence.h"
@@ -23,7 +24,6 @@
 #include "vulkan/vulkan_device.h"
 #include "vulkan/vulkan_logging.h"
 #include "vulkan/vulkan_render_time_query.h"
-#include "vulkan/vulkan_swapchain.h"
 #include "vulkan/vulkan_texture.h"
 
 namespace KWin
@@ -60,7 +60,7 @@ class VulkanMultiGpuCopy : public MultiGpuCopy
     Q_OBJECT
 
 public:
-    explicit VulkanMultiGpuCopy(RenderDevice *device, std::unique_ptr<VulkanSwapchain> &&swapchain);
+    explicit VulkanMultiGpuCopy(RenderDevice *device, std::unique_ptr<Swapchain> &&swapchain);
 
     std::optional<MultiGpuSwapchain::Ret> copy(GraphicsBuffer *buffer,
                                                const Region &damage,
@@ -72,8 +72,8 @@ public:
     uint32_t format() const override;
     uint64_t modifier() const override;
 
-    std::unique_ptr<VulkanSwapchain> m_swapchain;
-    std::shared_ptr<VulkanSwapchainSlot> m_currentSlot;
+    std::unique_ptr<Swapchain> m_swapchain;
+    std::shared_ptr<SwapchainSlot> m_currentSlot;
 };
 
 class EglMultiGpuCopy : public MultiGpuCopy
@@ -163,7 +163,7 @@ static std::optional<CopyRet> createCopy(RenderDevice *device,
                 options.format = fmt->format;
                 options.modifiers = fmt->modifiers;
                 options.render = false;
-                auto swapchain = VulkanSwapchain::create(device->vulkanDevice(), allocator, options);
+                auto swapchain = Swapchain::create(allocator, options);
                 if (swapchain) {
                     return CopyRet{
                         .copy = std::make_unique<VulkanMultiGpuCopy>(device, std::move(swapchain)),
@@ -380,8 +380,7 @@ MultiGpuCopy::MultiGpuCopy(RenderDevice *device)
 {
 }
 
-VulkanMultiGpuCopy::VulkanMultiGpuCopy(RenderDevice *device,
-                                       std::unique_ptr<VulkanSwapchain> &&swapchain)
+VulkanMultiGpuCopy::VulkanMultiGpuCopy(RenderDevice *device, std::unique_ptr<Swapchain> &&swapchain)
     : MultiGpuCopy(device)
     , m_swapchain(std::move(swapchain))
 {
@@ -421,6 +420,13 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
         return std::nullopt;
     }
 
+    const auto dstTexture = copyVk->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_DST_BIT);
+    if (!dstTexture) {
+        qCWarning(KWIN_VULKAN, "Could not import destination buffer for multi GPU copy!");
+        m_journal.clear();
+        return std::nullopt;
+    }
+
     const Rect completeRect{QPoint(), m_swapchain->size()};
     const Region toRender = (m_journal.accumulate(m_currentSlot->age(), completeRect) | damage) & completeRect;
     if (toRender.isEmpty()) {
@@ -456,7 +462,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
             vk::ImageLayout::eGeneral,
             vk::QueueFamilyExternal,
             queue->familyIndex(),
-            m_currentSlot->texture()->handle(),
+            dstTexture->handle(),
             vk::ImageSubresourceRange{
                 vk::ImageAspectFlagBits::eColor,
                 0,
@@ -514,7 +520,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
             };
         }) | std::ranges::to<std::vector>();
         commandBuffer.copyImage(srcTexture->handle(), vk::ImageLayout::eGeneral,
-                                m_currentSlot->texture()->handle(), vk::ImageLayout::eGeneral,
+                                dstTexture->handle(), vk::ImageLayout::eGeneral,
                                 regions);
     } else {
         const std::vector<vk::ImageBlit> regions = toRender.rects() | std::views::transform([](const Rect &rect) {
@@ -544,7 +550,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
             };
         }) | std::ranges::to<std::vector>();
         commandBuffer.blitImage(srcTexture->handle(), vk::ImageLayout::eGeneral,
-                                m_currentSlot->texture()->handle(), vk::ImageLayout::eGeneral,
+                                dstTexture->handle(), vk::ImageLayout::eGeneral,
                                 regions, vk::Filter::eNearest);
     }
 
