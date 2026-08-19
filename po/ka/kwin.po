@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-19 00:48+0000\n"
-"PO-Revision-Date: 2026-07-29 06:49+0200\n"
+"POT-Creation-Date: 2026-08-19 16:07+0000\n"
+"PO-Revision-Date: 2026-08-19 06:00+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -74,13 +74,13 @@ msgstr "KDE Wayland კომპოზიტორი"
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” (%2) was reset"
-msgstr ""
+msgstr "გრაფიკული ბარათი “%1” (%2) ჩამოყრილია"
 
 #: core/gpumanager.cpp:280
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” was reset"
-msgstr ""
+msgstr "გრაფიკული ბარათი “%1” ჩამოყრილია"
 
 #: core/iccprofile.cpp:396
 #, kde-format
@@ -4339,7 +4339,7 @@ msgstr "დრაივერმა უარყო გამოტანის 
 msgid "The session is not active"
 msgstr "სესია აქტიური არაა"
 
-#: window.cpp:3177
+#: window.cpp:3182
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

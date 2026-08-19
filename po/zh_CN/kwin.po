@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-19 00:48+0000\n"
+"POT-Creation-Date: 2026-08-19 16:07+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -4299,7 +4299,7 @@ msgstr "驱动程序拒绝了输出配置"
 msgid "The session is not active"
 msgstr "会话不在活动状态"
 
-#: window.cpp:3177
+#: window.cpp:3182
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4353,6 +4353,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgid "Desktop effects were restarted due to a graphics reset"
-#~ msgstr "由于显卡重置，桌面效果已重启。"

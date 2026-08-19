@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-19 00:48+0000\n"
+"POT-Creation-Date: 2026-08-19 16:07+0000\n"
 "PO-Revision-Date: 2026-08-04 08:07+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -4313,7 +4313,7 @@ msgstr "驅動程式回絕了提供的輸出配置"
 msgid "The session is not active"
 msgstr "工作階段並非作用中"
 
-#: window.cpp:3177
+#: window.cpp:3182
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

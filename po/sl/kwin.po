@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1744165 2026-08-19 01:31:10Z scripty $
+# $Id: kwin.po 1744231 2026-08-19 16:48:52Z scripty $
 # $Source$
 #
 #
@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-19 00:48+0000\n"
-"PO-Revision-Date: 2026-07-29 07:11+0200\n"
+"POT-Creation-Date: 2026-08-19 16:07+0000\n"
+"PO-Revision-Date: 2026-08-19 06:59+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -89,13 +89,13 @@ msgstr "KDE Wayland Compositor"
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” (%2) was reset"
-msgstr ""
+msgstr "Grafična kartica “%1” (%2) je bila ponastavljena"
 
 #: core/gpumanager.cpp:280
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” was reset"
-msgstr ""
+msgstr "Grafična kartica “%1” je bila ponastavljena"
 
 #: core/iccprofile.cpp:396
 #, kde-format
@@ -4355,7 +4355,7 @@ msgstr "Gonilnik je zavrnil konfiguracijo izhoda"
 msgid "The session is not active"
 msgstr "Seja ni dejavna"
 
-#: window.cpp:3177
+#: window.cpp:3182
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

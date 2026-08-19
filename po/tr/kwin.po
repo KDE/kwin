@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-19 00:48+0000\n"
-"PO-Revision-Date: 2026-07-29 11:09+0300\n"
+"POT-Creation-Date: 2026-08-19 16:07+0000\n"
+"PO-Revision-Date: 2026-08-19 13:38+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -83,13 +83,13 @@ msgstr "KDE Wayland Bileşikleştiricisi"
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” (%2) was reset"
-msgstr ""
+msgstr "Grafik kartı “%1” (%2) sıfırlanmadı"
 
 #: core/gpumanager.cpp:280
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” was reset"
-msgstr ""
+msgstr "Grafik kartı “%1” sıfırlandı"
 
 #: core/iccprofile.cpp:396
 #, kde-format
@@ -4341,7 +4341,7 @@ msgstr "Sürücü çıktı yapılandırmasını reddetti"
 msgid "The session is not active"
 msgstr "Bu oturum etkin değil"
 
-#: window.cpp:3177
+#: window.cpp:3182
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

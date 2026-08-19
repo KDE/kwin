@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-19 00:48+0000\n"
-"PO-Revision-Date: 2026-07-29 10:51+0200\n"
+"POT-Creation-Date: 2026-08-19 16:07+0000\n"
+"PO-Revision-Date: 2026-08-19 14:02+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -87,13 +87,13 @@ msgstr "KDE Wayland Compositor"
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” (%2) was reset"
-msgstr ""
+msgstr "Grafische kaart “%1” (%2) was gereset"
 
 #: core/gpumanager.cpp:280
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” was reset"
-msgstr ""
+msgstr "Grafische kaart “%1” was gereset"
 
 #: core/iccprofile.cpp:396
 #, kde-format
@@ -4367,7 +4367,7 @@ msgstr "Het apparaatstuurprogramma verwierp de uitvoerconfiguratie"
 msgid "The session is not active"
 msgstr "De sessie is niet actief"
 
-#: window.cpp:3177
+#: window.cpp:3182
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-19 00:48+0000\n"
-"PO-Revision-Date: 2026-08-13 10:40+0200\n"
+"POT-Creation-Date: 2026-08-19 16:07+0000\n"
+"PO-Revision-Date: 2026-08-19 11:47+0200\n"
 "Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -81,13 +81,13 @@ msgstr "Kompozitor KDE pro Wayland"
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” (%2) was reset"
-msgstr ""
+msgstr "Grafická karta \"%1\" (%2) byla resetována"
 
 #: core/gpumanager.cpp:280
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” was reset"
-msgstr ""
+msgstr "Grafická karta \"%1\" byla resetována"
 
 #: core/iccprofile.cpp:396
 #, kde-format
@@ -4350,7 +4350,7 @@ msgstr "Ovladač odmítl výstupní konfiguraci"
 msgid "The session is not active"
 msgstr "Sezení není aktivní"
 
-#: window.cpp:3177
+#: window.cpp:3182
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
