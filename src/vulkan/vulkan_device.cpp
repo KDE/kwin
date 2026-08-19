@@ -20,13 +20,15 @@ namespace KWin
 {
 
 VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::Device &&logicalDevice,
-                           std::vector<VkQueueFamilyProperties> &&queueProperties, vk::PhysicalDeviceType type)
+                           std::vector<VkQueueFamilyProperties> &&queueProperties, vk::PhysicalDeviceType type,
+                           std::optional<VkDeviceSize> minImportedHostPointerAlignment)
     : m_type(type)
     , m_physical(physicalDevice)
     , m_logical(std::move(logicalDevice))
     , m_transferFormats(queryFormats(VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT))
     , m_queueProperties(std::move(queueProperties))
     , m_deviceLimits(m_physical.getProperties().limits)
+    , m_minImportedHostPointerAlignment(minImportedHostPointerAlignment)
     , m_name(physicalDevice.getProperties().deviceName.data())
 {
     m_memoryProperties = physicalDevice.getMemoryProperties();
@@ -82,14 +84,19 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importBuffer(GraphicsBuffer *buffer
 
 std::shared_ptr<VulkanBuffer> VulkanDevice::importBufferAsBuffer(GraphicsBuffer *buffer, vk::BufferUsageFlags usage)
 {
-    if (!buffer->dmabufAttributes()) {
+    if (!buffer->dmabufAttributes() && !buffer->hostDataAttributes()) {
         return nullptr;
     }
     auto it = m_importedBuffers.find(buffer);
     if (it != m_importedBuffers.end()) {
         return it.value();
     }
-    std::shared_ptr<VulkanBuffer> ret = importDmabufAsBuffer(buffer->dmabufAttributes(), usage);
+    std::shared_ptr<VulkanBuffer> ret;
+    if (buffer->hostDataAttributes()) {
+        ret = importHostPointerAsBuffer(buffer->hostDataAttributes(), usage);
+    } else {
+        ret = importDmabufAsBuffer(buffer->dmabufAttributes(), usage);
+    }
     m_importedBuffers[buffer] = ret;
     connect(buffer, &QObject::destroyed, this, [this, buffer]() {
         m_importedBuffers.remove(buffer);
@@ -330,6 +337,72 @@ std::shared_ptr<VulkanBuffer> VulkanDevice::importDmabufAsBuffer(const DmaBufAtt
     return std::make_shared<VulkanBuffer>(std::move(buffer), std::move(memory), size);
 }
 
+std::shared_ptr<VulkanBuffer> VulkanDevice::importHostPointerAsBuffer(const HostMemoryAttributes *attributes, vk::BufferUsageFlags usage)
+{
+    const auto format = FormatInfo::get(attributes->format);
+    if (!format) {
+        qCWarning(KWIN_VULKAN, "Dmabuf has unknown format");
+        return nullptr;
+    }
+    auto formatIt = m_transferFormats.find(attributes->format);
+    if (formatIt == m_transferFormats.end() || !formatIt->contains(DRM_FORMAT_MOD_LINEAR)) {
+        return nullptr;
+    }
+
+    vk::ExternalMemoryBufferCreateInfo externalInfo{
+        vk::ExternalMemoryHandleTypeFlagBits::eHostAllocationEXT,
+    };
+    vk::BufferCreateInfo bufferInfo{
+        vk::BufferCreateFlags(),
+        attributes->sizeInBytes,
+        usage,
+        vk::SharingMode::eExclusive,
+        {},
+        &externalInfo,
+    };
+    auto [imageResult, buffer] = m_logical.createBuffer(bufferInfo);
+    if (imageResult != vk::Result::eSuccess) {
+        qCWarning(KWIN_VULKAN) << "creating vulkan buffer failed!" << vk::to_string(imageResult);
+        return nullptr;
+    }
+
+    const auto [result, properties] = m_logical.getMemoryHostPointerPropertiesEXT(vk::ExternalMemoryHandleTypeFlagBits::eHostAllocationEXT, attributes->data.get());
+    if (result != vk::Result::eSuccess) {
+        return nullptr;
+    }
+
+    vk::BufferMemoryRequirementsInfo2 memRequirementsInfo{buffer};
+    const vk::MemoryRequirements2 memRequirements = m_logical.getBufferMemoryRequirements2(memRequirementsInfo);
+    if (memRequirements.memoryRequirements.size > attributes->sizeInBytes) {
+        return nullptr;
+    }
+
+    const auto memoryIndex = findMemoryType(memRequirements.memoryRequirements.memoryTypeBits & properties.memoryTypeBits, {});
+    if (!memoryIndex) {
+        qCWarning(KWIN_VULKAN, "couldn't find a suitable memory type for %x & %x = %x",
+                  memRequirements.memoryRequirements.memoryTypeBits, properties.memoryTypeBits,
+                  memRequirements.memoryRequirements.memoryTypeBits & properties.memoryTypeBits);
+        return nullptr;
+    }
+
+    vk::ImportMemoryHostPointerInfoEXT importInfo(vk::ExternalMemoryHandleTypeFlagBits::eHostAllocationEXT, attributes->data.get());
+    // NOTE that this cannot use memoryRequirements.size, since it may be smaller
+    // than the buffer, and that gets the import rejected on Intel
+    vk::MemoryAllocateInfo memoryInfo(attributes->sizeInBytes, memoryIndex.value(), &importInfo);
+    auto [allocateResult, memory] = m_logical.allocateMemory(memoryInfo);
+    if (allocateResult != vk::Result::eSuccess) {
+        qCWarning(KWIN_VULKAN, "'Allocating' memory for host memory image failed: %s", vk::to_string(allocateResult).c_str());
+        return nullptr;
+    }
+
+    const vk::Result bindResult = buffer.bindMemory(memory, 0);
+    if (bindResult != vk::Result::eSuccess) {
+        qCWarning(KWIN_VULKAN) << "failed to bind image to memory";
+        return nullptr;
+    }
+    return std::make_shared<VulkanBuffer>(std::move(buffer), std::move(memory), attributes->sizeInBytes);
+}
+
 FormatModifierMap VulkanDevice::queryFormats(VkImageUsageFlags flags) const
 {
     FormatModifierMap ret;
@@ -424,6 +497,11 @@ vk::PhysicalDeviceType VulkanDevice::type() const
 QString VulkanDevice::name() const
 {
     return m_name;
+}
+
+std::optional<VkDeviceSize> VulkanDevice::minImportedHostPointerAlignment() const
+{
+    return m_minImportedHostPointerAlignment;
 }
 
 const FormatModifierMap &VulkanDevice::transferFormats() const

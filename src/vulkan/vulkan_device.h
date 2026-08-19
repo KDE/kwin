@@ -26,6 +26,7 @@ class GraphicsBuffer;
 struct DmaBufAttributes;
 class RenderDevice;
 class VulkanBuffer;
+class HostMemoryAttributes;
 
 class KWIN_EXPORT VulkanDevice : public QObject
 {
@@ -33,7 +34,8 @@ class KWIN_EXPORT VulkanDevice : public QObject
 
 public:
     explicit VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::Device &&logicalDevice,
-                          std::vector<VkQueueFamilyProperties> &&queueProperties, vk::PhysicalDeviceType type);
+                          std::vector<VkQueueFamilyProperties> &&queueProperties, vk::PhysicalDeviceType type,
+                          std::optional<VkDeviceSize> minImportedHostPointerAlignment);
     VulkanDevice(VulkanDevice &&other) = delete;
     VulkanDevice(const VulkanDevice &) = delete;
     ~VulkanDevice();
@@ -47,6 +49,8 @@ public:
 
     vk::raii::DeviceMemory allocateMemory(const vk::ImageCreateInfo &imageInfo, vk::MemoryPropertyFlags memoryProperties);
     vk::raii::DeviceMemory allocateMemory(const vk::BufferCreateInfo &bufferInfo, vk::MemoryPropertyFlags memoryProperties);
+
+    std::optional<VkDeviceSize> minImportedHostPointerAlignment() const;
 
     const FormatModifierMap &transferFormats() const;
     const vk::raii::Device &logicalDevice() const;
@@ -100,6 +104,7 @@ private:
     std::optional<uint32_t> findMemoryType(uint32_t typeBits, vk::MemoryPropertyFlags memoryPropertyFlags) const;
     std::shared_ptr<VulkanTexture> importDmabuf(const DmaBufAttributes *attributes, VkImageUsageFlags usage);
     std::shared_ptr<VulkanBuffer> importDmabufAsBuffer(const DmaBufAttributes *attributes, vk::BufferUsageFlags usage);
+    std::shared_ptr<VulkanBuffer> importHostPointerAsBuffer(const HostMemoryAttributes *attributes, vk::BufferUsageFlags usage);
 
     vk::PhysicalDeviceType m_type;
     vk::raii::PhysicalDevice m_physical;
@@ -108,6 +113,7 @@ private:
     std::vector<VkQueueFamilyProperties> m_queueProperties;
     vk::PhysicalDeviceMemoryProperties m_memoryProperties;
     vk::PhysicalDeviceLimits m_deviceLimits;
+    std::optional<VkDeviceSize> m_minImportedHostPointerAlignment;
     QString m_name;
 
     std::unique_ptr<VulkanQueue> m_graphicsQueue;

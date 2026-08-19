@@ -50,6 +50,15 @@ struct SinglePixelAttributes
     uint32_t alpha;
 };
 
+struct HostMemoryAttributes
+{
+    std::unique_ptr<std::byte[]> data;
+    QSize size;
+    uint32_t stride;
+    uint32_t format;
+    uint64_t sizeInBytes;
+};
+
 /**
  * The GraphicsBuffer class represents a chunk of memory containing graphics data.
  *
@@ -93,6 +102,7 @@ public:
     virtual const DmaBufAttributes *dmabufAttributes() const;
     virtual const ShmAttributes *shmAttributes() const;
     virtual const SinglePixelAttributes *singlePixelAttributes() const;
+    virtual const HostMemoryAttributes *hostDataAttributes() const;
 
     /**
      * @returns the drm format of the buffer.
