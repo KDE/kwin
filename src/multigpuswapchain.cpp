@@ -21,6 +21,7 @@
 #include "opengl/glshadermanager.h"
 #include "swapchain.h"
 #include "utils/envvar.h"
+#include "vulkan/vulkan_buffer.h"
 #include "vulkan/vulkan_device.h"
 #include "vulkan/vulkan_logging.h"
 #include "vulkan/vulkan_render_time_query.h"
@@ -387,6 +388,48 @@ VulkanMultiGpuCopy::VulkanMultiGpuCopy(RenderDevice *device, std::unique_ptr<Swa
     connect(m_device->vulkanDevice(), &VulkanDevice::deviceLost, this, &MultiGpuCopy::gpuReset);
 }
 
+static std::vector<vk::BufferImageCopy> bufferImageRegion(GraphicsBuffer *buffer, const Region &region)
+{
+    const uint32_t bytesPerPixel = FormatInfo::get(buffer->dmabufAttributes()->format)->bitsPerPixel / 8;
+    return region.rects() | std::views::transform([&](const Rect &rect) {
+        return vk::BufferImageCopy{
+            // offset in bytes
+            uint32_t(buffer->dmabufAttributes()->pitch[0] * rect.y() + rect.x() * bytesPerPixel),
+            // width and height in texels
+            uint32_t(buffer->dmabufAttributes()->pitch[0] / bytesPerPixel),
+            uint32_t(buffer->size().height()),
+            // image info
+            vk::ImageSubresourceLayers{
+                vk::ImageAspectFlagBits::eColor,
+                0,
+                0,
+                1,
+            },
+            vk::Offset3D{rect.left(), rect.top(), 0},
+            vk::Extent3D{uint32_t(rect.width()), uint32_t(rect.height()), 1},
+        };
+    }) | std::ranges::to<std::vector>();
+}
+
+/**
+ * This method implements 4 different copy paths, in order of preference:
+ * 1. import the source as VkImage, destination as VkBuffer, copy from image to buffer
+ *   - this only works if the destination is linear, and formats match
+ * 2. import the source as VkBuffer, destination as VkImage, copy from buffer to image
+ *   - this only works if the source is linear, and formats match
+ * 3. import source and destination as VkImage, copy from image to image
+ *   - this only works if the formats have the same texel size (for our purposes, bits per pixel)
+ * 4. import source and destination as VkImage, blit from image to image
+ *   - this works in all cases where the stride is compatible, but is slower than a copy
+ *
+ * GPUs can have very different stride alignment requirements for operations on images, and
+ * importing a dmabuf as an image into a different GPU can be successful but then yield incorrect
+ * results. It's also not possible to query the stride requirements and check them manually.
+ *
+ * With paths 1 and 2, we import the relevant dmabuf from the "other" GPU as a VkBuffer and
+ * handle the stride correctly that way.
+ * That's why they're always preferred, even if they're not faster than path 3.
+ */
 std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *buffer,
                                                                const Region &damage,
                                                                FileDescriptor &&sync,
@@ -402,16 +445,10 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
     }
 
     const auto copyVk = m_device->vulkanDevice();
+    const uint32_t swapchainBPC = FormatInfo::get(m_swapchain->format())->bitsPerPixel;
     const bool useTransferQueue = copyVk->transferQueue()
-        && FormatInfo::get(buffer->dmabufAttributes()->format)->bitsPerPixel == FormatInfo::get(m_swapchain->format())->bitsPerPixel;
+        && FormatInfo::get(buffer->dmabufAttributes()->format)->bitsPerPixel == swapchainBPC;
     const auto queue = useTransferQueue ? copyVk->transferQueue() : copyVk->graphicsQueue();
-
-    const auto srcTexture = copyVk->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
-    if (!srcTexture) {
-        qCWarning(KWIN_VULKAN, "Could not import buffer for multi GPU copy!");
-        m_journal.clear();
-        return std::nullopt;
-    }
 
     m_currentSlot = m_swapchain->acquire();
     if (!m_currentSlot) {
@@ -420,9 +457,32 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
         return std::nullopt;
     }
 
-    const auto dstTexture = copyVk->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_DST_BIT);
-    if (!dstTexture) {
+    std::shared_ptr<VulkanBuffer> dstBuffer;
+    if (useTransferQueue && buffer->dmabufAttributes()->format == m_swapchain->format() && m_swapchain->modifier() == DRM_FORMAT_MOD_LINEAR) {
+        dstBuffer = copyVk->importBufferAsBuffer(m_currentSlot->buffer(), vk::BufferUsageFlagBits::eTransferDst);
+    }
+    std::shared_ptr<VulkanTexture> dstTexture;
+    if (!dstBuffer) {
+        dstTexture = copyVk->importBuffer(m_currentSlot->buffer(), VK_IMAGE_USAGE_TRANSFER_DST_BIT);
+    }
+    if (!dstBuffer && !dstTexture) {
         qCWarning(KWIN_VULKAN, "Could not import destination buffer for multi GPU copy!");
+        m_journal.clear();
+        return std::nullopt;
+    }
+
+    // NOTE we can't have both source and destination as VkBuffer, since there's
+    // no fitting command for copying between two image-like buffers in Vulkan
+    std::shared_ptr<VulkanBuffer> srcBuffer;
+    if (!dstBuffer && useTransferQueue && buffer->dmabufAttributes()->format == m_swapchain->format() && buffer->dmabufAttributes()->modifier == DRM_FORMAT_MOD_LINEAR) {
+        srcBuffer = copyVk->importBufferAsBuffer(buffer, vk::BufferUsageFlagBits::eTransferSrc);
+    }
+    std::shared_ptr<VulkanTexture> srcTexture;
+    if (!srcBuffer) {
+        srcTexture = copyVk->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+    }
+    if (!srcBuffer && !srcTexture) {
+        qCWarning(KWIN_VULKAN, "Could not import source buffer for multi GPU copy!");
         m_journal.clear();
         return std::nullopt;
     }
@@ -452,26 +512,21 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
         query = VulkanRenderTimeQuery::begin(copyVk, commandBuffer, queue->familyIndex());
     }
 
-    std::array<vk::ImageMemoryBarrier2, 2> memoryBarriers = {
-        vk::ImageMemoryBarrier2{
+    std::vector<vk::BufferMemoryBarrier2> bufferBarriers;
+    std::vector<vk::ImageMemoryBarrier2> imageBarriers;
+
+    if (srcBuffer) {
+        bufferBarriers.push_back(vk::BufferMemoryBarrier2{
             vk::PipelineStageFlagBits2::eAllCommands,
             vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
             vk::PipelineStageFlagBits2::eAllCommands,
             vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
-            vk::ImageLayout::eGeneral,
-            vk::ImageLayout::eGeneral,
             vk::QueueFamilyExternal,
             queue->familyIndex(),
-            dstTexture->handle(),
-            vk::ImageSubresourceRange{
-                vk::ImageAspectFlagBits::eColor,
-                0,
-                1,
-                0,
-                1,
-            },
-        },
-        vk::ImageMemoryBarrier2{
+            srcBuffer->handle(),
+        });
+    } else {
+        imageBarriers.push_back(vk::ImageMemoryBarrier2{
             vk::PipelineStageFlagBits2::eAllCommands,
             vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
             vk::PipelineStageFlagBits2::eAllCommands,
@@ -488,16 +543,54 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
                 0,
                 1,
             },
-        },
-    };
+        });
+    }
+    if (dstBuffer) {
+        bufferBarriers.push_back(vk::BufferMemoryBarrier2{
+            vk::PipelineStageFlagBits2::eAllCommands,
+            vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
+            vk::PipelineStageFlagBits2::eAllCommands,
+            vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
+            vk::QueueFamilyExternal,
+            queue->familyIndex(),
+            dstBuffer->handle(),
+        });
+    } else {
+        imageBarriers.push_back(vk::ImageMemoryBarrier2{
+            vk::PipelineStageFlagBits2::eAllCommands,
+            vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
+            vk::PipelineStageFlagBits2::eAllCommands,
+            vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
+            vk::ImageLayout::eGeneral,
+            vk::ImageLayout::eGeneral,
+            vk::QueueFamilyExternal,
+            queue->familyIndex(),
+            dstTexture->handle(),
+            vk::ImageSubresourceRange{
+                vk::ImageAspectFlagBits::eColor,
+                0,
+                1,
+                0,
+                1,
+            },
+        });
+    }
     commandBuffer.pipelineBarrier2(vk::DependencyInfo{
         vk::DependencyFlags{},
         {},
-        {},
-        memoryBarriers,
+        bufferBarriers,
+        imageBarriers,
     });
 
-    if (useTransferQueue) {
+    if (srcBuffer) {
+        Q_ASSERT(dstTexture);
+        const auto regions = bufferImageRegion(buffer, toRender);
+        commandBuffer.copyBufferToImage(srcBuffer->handle(), dstTexture->handle(), vk::ImageLayout::eGeneral, regions);
+    } else if (dstBuffer) {
+        Q_ASSERT(srcTexture);
+        const auto regions = bufferImageRegion(m_currentSlot->buffer(), toRender);
+        commandBuffer.copyImageToBuffer(srcTexture->handle(), vk::ImageLayout::eGeneral, dstBuffer->handle(), regions);
+    } else if (useTransferQueue) {
         const std::vector<vk::ImageCopy> regions = toRender.rects() | std::views::transform([](const Rect &rect) {
             return vk::ImageCopy{
                 // src
@@ -554,15 +647,19 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
                                 regions, vk::Filter::eNearest);
     }
 
-    for (auto &barrier : memoryBarriers) {
+    for (auto &barrier : imageBarriers) {
+        barrier.setSrcQueueFamilyIndex(queue->familyIndex());
+        barrier.setDstQueueFamilyIndex(vk::QueueFamilyExternal);
+    }
+    for (auto &barrier : bufferBarriers) {
         barrier.setSrcQueueFamilyIndex(queue->familyIndex());
         barrier.setDstQueueFamilyIndex(vk::QueueFamilyExternal);
     }
     commandBuffer.pipelineBarrier2(vk::DependencyInfo{
         vk::DependencyFlags{},
         {},
-        {},
-        memoryBarriers,
+        bufferBarriers,
+        imageBarriers,
     });
 
     if (query) {
