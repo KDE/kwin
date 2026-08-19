@@ -742,7 +742,6 @@ private:
     std::unique_ptr<OrientationSensor> m_orientationSensor;
     std::unique_ptr<LightSensor> m_lightSensor;
     std::unique_ptr<QTimer> m_delayedLightTimer;
-    std::optional<double> m_luxAtLastBrightnessAdjust;
     std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
     KConfigWatcher::Ptr m_kdeglobalsWatcher;
 

@@ -20,185 +20,89 @@ namespace KWin
 {
 
 AutoBrightnessCurve::AutoBrightnessCurve()
-    : m_luxAtBrightness({0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+    : m_luxToBrightness({{0, 1}})
+{
+}
+
+AutoBrightnessCurve::AutoBrightnessCurve(Qt::Initialization)
 {
 }
 
 double AutoBrightnessCurve::sample(double lux) const
 {
-    if (lux >= m_luxAtBrightness.back()) {
-        return 1.0;
+    Q_ASSERT(!m_luxToBrightness.empty());
+    if (const auto higher = m_luxToBrightness.lower_bound(lux); higher == m_luxToBrightness.begin()) {
+        return higher->second;
+    } else if (const auto lower = std::prev(higher); higher == m_luxToBrightness.end()) {
+        return lower->second;
+    } else {
+        return std::lerp(lower->second, higher->second, (lux - lower->first) / (higher->first - lower->first));
     }
-    for (int i = m_luxAtBrightness.size() - 1; i > 0; i--) {
-        const double low = m_luxAtBrightness[i - 1];
-        const double high = m_luxAtBrightness[i];
-        if (lux >= low && lux <= high) {
-            const double range = high - low;
-            const double highPercent = i / double(m_luxAtBrightness.size() - 1);
-            if (qFuzzyIsNull(range)) {
-                return highPercent;
-            }
-            const double lowPercent = (i - 1) / double(m_luxAtBrightness.size() - 1);
-            const double factor = (lux - low) / range;
-            return std::clamp(std::lerp(lowPercent, highPercent, factor), 0.0, 1.0);
-        }
-    }
-    // lux is <= m_luxAtBrightness[0] -> always 0% brightness
-    return 0;
 }
 
 void AutoBrightnessCurve::adjust(double brightness, double lux)
 {
-    // This is the really difficult part about automatic brightness:
-    // Adjust the brightness curve in a way that's intuitive for the user,
-    // without the user having to care about how it works
-
-    // in lux
-    constexpr double minAbsDifference = 1;
-    // unitless factor
-    constexpr double minRelativeDifference = 0.5 / (s_controlPointCount - 1);
-
-    // the constraints on the curve are:
-    // - it must be strictly monotonic, so
-    //      - m_luxAtBrightness[i] > m_luxAtBrightness[i - 1]
-    // - the difference between two control points has to be large enough to avoid small
-    //   luminance fluctuations from triggering large brightness jumps. More specifically,
-    //      - m_luxAtBrightness[i] >= m_luxAtBrightness[i - 1] * (1 + minRelativeDifference)
-    //          - aka m_luxAtBrightness[i] / (1 + minRelativeDifference) >= m_luxAtBrightness[i - 1]
-    //      - m_luxAtBrightness[i] >= m_luxAtBrightness[i - 1] + minAbsDifference
-    // - after this method ran, adjust(lux) = brightness
-
-    const size_t lowMatch = std::floor(brightness * (m_luxAtBrightness.size() - 1));
-    if (lowMatch == m_luxAtBrightness.size() - 1) {
-        // == 100% brightness
-        m_luxAtBrightness.back() = lux;
-        double last = lux;
-        for (int i = m_luxAtBrightness.size() - 2; i >= 0; i--) {
-            m_luxAtBrightness[i] = std::min({m_luxAtBrightness[i], last / (1 + minRelativeDifference), last - minAbsDifference});
-            last = m_luxAtBrightness[i];
+    // find control point to replace (or insertion point if none match)
+    auto range = m_luxToBrightness.equal_range(lux);
+    // keep the curve non-decreasing by erasing brighter control points at lower light levels...
+    while (range.first != m_luxToBrightness.begin() && std::prev(range.first)->second >= brightness) {
+        --range.first;
+    }
+    // ...and dimmer control points at higher light levels
+    while (range.second != m_luxToBrightness.end() && range.second->second <= brightness) {
+        ++range.second;
+    }
+    // avoid proliferation of control points by retaining only the minimum
+    // and maximum lightness values that share the specified brightness value
+    if (range.first != range.second && range.first->second == brightness && range.first->first < lux) {
+        ++range.first;
+    }
+    if (range.second != range.first) {
+        if (const auto last = std::prev(range.second); last->second == brightness && last->first > lux) {
+            --range.second;
         }
-        return;
     }
-
-    // Intermediate values between control points are computed using linear interpolation. We want to
-    // end up with such low and high control points that when you interpolate between them, you land
-    // at the given lux level for the given screen brightness.
-    //
-    //               (*) high control point
-    //               /
-    //              /
-    //            (*) lux point
-    //            /
-    //           /
-    //         (*) low control point
-    //
-    // Visually, you can think of the adjustment algorithm as follows: high and low control points
-    // are distributed relative to the lux point (i.e. it acts as the pivot point for rotation and scaling)
-    // until linear interpolation produces the desired results.
-    //
-    // Given
-    //
-    //    lux = low + (high - low) * highFactor
-    //
-    // The low control point can be found based on the lux and high points as follows:
-    //
-    //    lux = low + (high - low) * highFactor
-    //    -> lux = highFactor * high + (1 - highFactor) * low
-    //    -> (1 - highFactor) * low = lux - highFactor * high
-    //    -> low = (lux - highFactor * high) / (1 - highFactor)
-    //
-    // The high control point is chosen using a "sufficiently reasonable heuristic" - the sample point
-    // influences the high control point the closer it lies to it.
-    //
-    // Given that the adjustment algorithm can be viewed as rotation and scaling around a pivot point,
-    // in order to satisfy the auto brightness curve constraints, we only need to pick the appropriate
-    // coordinates for the high control point.
-    //
-    // In order to guarantee that `m_luxAtBrightness[i] >= m_luxAtBrightness[i - 1] + minAbsDifference`
-    // is satisfied, the high control point should be at least `minAbsDifference * (1 - highFactor)` away
-    // from the lux point. In that case, the low control point and the lux point will be
-    // `minAbsDifference * highFactor` far apart from each other:
-    //
-    //     low = (lux - highFactor * high) / (1 - highFactor)
-    //         = (lux - highFactor * (lux + minAbsDifference * (1 - highFactor))) / (1 - highFactor)
-    //         ...
-    //         = lux - minAbsDifference * highFactor
-    //
-    //     distance(high, low) = high - low
-    //                         = (lux + minAbsDifference * (1 - highFactor)) - (lux - minAbsDifference * highFactor)
-    //                         = minAbsDifference
-    //
-    // Similarly, in order to guarantee the `m_luxAtBrightness[i] >= m_luxAtBrightness[i - 1] * (1 + minRelativeDifference)`
-    // constraint, the high control point should be at least `minRelativeDifference * (1 - highFactor) * lux`
-    // away from the lux point. Then, the low control point and the lux point will be
-    // `minRelativeDifference * highFactor * lux` far apart from each other (it can be confirmed by
-    // plugging in the corresponding high control point coordinate to the low control point equation).
-
-    double &low = m_luxAtBrightness[lowMatch];
-    double &high = m_luxAtBrightness[lowMatch + 1];
-
-    const double highFactor = brightness * (m_luxAtBrightness.size() - 1) - lowMatch;
-    high = std::lerp(high, lux, highFactor);
-
-    const double minHighValueRelative = lux + minRelativeDifference * (1 - highFactor) * lux;
-    const double minHighValueAbsolute = lux + minAbsDifference * (1 - highFactor);
-    high = std::max({minHighValueAbsolute, minHighValueRelative, high});
-    low = (lux - highFactor * high) / (1 - highFactor);
-
-    // ensure the curve stays strictly monotonic below the low control point (lowMatch)
-    double last = low;
-    for (int i = lowMatch - 1; i >= 0; i--) {
-        m_luxAtBrightness[i] = std::min({m_luxAtBrightness[i], last / (1 + minRelativeDifference), last - minAbsDifference});
-        last = m_luxAtBrightness[i];
-    }
-    // and do the same above the high control point (lowMatch + 1)
-    last = high;
-    for (size_t i = lowMatch + 2; i < m_luxAtBrightness.size(); i++) {
-        m_luxAtBrightness[i] = std::max({m_luxAtBrightness[i], last * (1 + minRelativeDifference), last + minAbsDifference});
-        last = m_luxAtBrightness[i];
+    const auto pos = m_luxToBrightness.erase(range.first, range.second);
+    // insert new point only if it would not fall between two points with the same brightness
+    if (pos == m_luxToBrightness.begin() || pos == m_luxToBrightness.end() || std::prev(pos)->second != pos->second) {
+        m_luxToBrightness.emplace_hint(pos, lux, brightness);
     }
 }
 
 QJsonArray AutoBrightnessCurve::toArray() const
 {
     QJsonArray ret;
-    for (const double lux : m_luxAtBrightness) {
-        ret.push_back(lux);
+    for (const auto &[lux, brightness] : m_luxToBrightness) {
+        ret.push_back(QJsonArray{lux, brightness});
     }
     return ret;
 }
 
 std::optional<AutoBrightnessCurve> AutoBrightnessCurve::fromArray(const QJsonArray &array)
 {
-    // also accept 6 control points since that is how it was in 6.6.x
-    if (array.size() != s_controlPointCount && array.size() != 6) {
+    if (array.empty()) {
         return std::nullopt;
     }
-    size_t index = 0;
-    AutoBrightnessCurve ret;
-
-    if (array.size() == 6) {
-        // this case assumes that there are 11 control points
-        static_assert(s_controlPointCount == 11);
-
-        // for the first 5 points (0%, 20%, 40%, 60%, 80%) also interpolate 10%, 30%, 50%, 70%, 90%
-        for (qsizetype i = 0; i < array.size() - 1; i++) {
-            double low = array[i].toDouble(0.0);
-            double high = array[i + 1].toDouble(0.0);
-
-            ret.m_luxAtBrightness[index] = low;
-            ret.m_luxAtBrightness[index + 1] = (low + high) / 2;
-
-            index += 2;
+    AutoBrightnessCurve ret(Qt::Uninitialized);
+    qsizetype index = 0;
+    for (const auto &value : array) {
+        double lux;
+        double brightness;
+        if (value.isArray()) {
+            const auto &point = value.toArray();
+            if (point.size() != 2 || !point[0].isDouble() || !point[1].isDouble()) {
+                return std::nullopt;
+            }
+            lux = value[0].toDouble();
+            brightness = value[1].toDouble();
+        } else if (value.isDouble()) { // import from obsolete format
+            lux = value.toDouble();
+            brightness = double(index) / (array.size() - 1);
+        } else {
+            return std::nullopt;
         }
-
-        // copy the last point normally (100%)
-        ret.m_luxAtBrightness[index] = array[array.size() - 1].toDouble(0.0);
-    } else {
-        for (const auto &value : array) {
-            ret.m_luxAtBrightness[index] = value.toDouble(0.0);
-            index++;
-        }
+        ret.adjust(brightness, lux);
+        index++;
     }
 
     return ret;

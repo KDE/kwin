@@ -247,50 +247,46 @@ void Workspace::init()
     m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
 
     const auto applyLightChanges = [this]() {
-        if (!m_lightSensor->reading()) {
+        const auto &reading = m_lightSensor->reading();
+        if (!reading) {
             return;
         }
-        const double lux = *m_lightSensor->reading();
-        m_luxAtLastBrightnessAdjust = lux;
+        const double lux = *reading;
         const auto outputs = kwinApp()->outputBackend()->outputs();
         OutputConfiguration config;
+        bool outsideDeadzone = false;
         for (BackendOutput *output : outputs) {
             if ((output->capabilities() & BackendOutput::Capability::AutomaticBrightness) && output->automaticBrightness()) {
                 const auto change = config.changeSet(output);
                 change->brightness = output->autoBrightnessCurve().sample(lux);
                 change->brightnessReason = BackendOutput::BrightnessReason::AutomaticBrightness;
+                outsideDeadzone = outsideDeadzone || std::fabs(output->brightnessSetting() / *change->brightness - 1) > s_autoBrightnessDeadzone;
             }
         }
-        applyOutputConfiguration(config);
+        if (outsideDeadzone) {
+            applyOutputConfiguration(config);
+        }
     };
 
     // constant brightness adjustments can be rather annoying and be perceived as flicker, so
-    // delay them a bit and only do anything if environment brightness changes by at least 10%
-    connect(m_lightSensor.get(), &LightSensor::readingReceived, this, [applyLightChanges, this]() {
+    // only do anything if some output's current brightness lies outside of the dead zone
+    // centered around its curve-implied brightness
+    connect(m_lightSensor.get(), &LightSensor::readingReceived, this, [applyLightChanges, this, firstReading = true]() mutable {
         if (m_delayedLightTimer->isActive()) {
             return;
         }
-        if (!m_luxAtLastBrightnessAdjust.has_value()) {
+        if (firstReading) {
+            // initial sensor reading; apply auto-brightness immediately
             applyLightChanges();
-            return;
-        }
-        const double relativeLux = *m_lightSensor->reading() / *m_luxAtLastBrightnessAdjust;
-        if (relativeLux > 1 + s_autoBrightnessDeadzone || relativeLux < 1 - s_autoBrightnessDeadzone) {
+            firstReading = false;
+        } else {
+            // subsequent sensor reading; use timer to ignore lightness transients
             m_delayedLightTimer->start();
         }
     });
     m_delayedLightTimer->setSingleShot(true);
     m_delayedLightTimer->setInterval(std::chrono::seconds(2));
-    connect(m_delayedLightTimer.get(), &QTimer::timeout, this, [applyLightChanges, this]() {
-        if (!m_lightSensor->reading()) {
-            return;
-        }
-        // check again if brightness is still changed as much as when the timer was started
-        const double relativeLux = *m_lightSensor->reading() / *m_luxAtLastBrightnessAdjust;
-        if (relativeLux > 1 + s_autoBrightnessDeadzone || relativeLux < 1 - s_autoBrightnessDeadzone) {
-            applyLightChanges();
-        }
-    });
+    connect(m_delayedLightTimer.get(), &QTimer::timeout, this, applyLightChanges);
     m_lightSensor->setEnabled(m_outputConfigStore->isAutoBrightnessActive(kwinApp()->outputBackend()->outputs()));
 
     const auto updateSensorAvailability = [this]() {

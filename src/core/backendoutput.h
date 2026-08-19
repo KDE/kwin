@@ -44,9 +44,10 @@ public:
     static std::optional<AutoBrightnessCurve> fromArray(const QJsonArray &array);
 
 private:
-    static constexpr size_t s_controlPointCount = 11;
-    // brightness in lux. First value is 0% brightness, last is 100%
-    std::array<double, s_controlPointCount> m_luxAtBrightness;
+    AutoBrightnessCurve(Qt::Initialization);
+
+    // light sensor reading in lux => brightness value
+    std::map<double, double> m_luxToBrightness;
 };
 
 class KWIN_EXPORT BackendOutput : public QObject
