@@ -9,7 +9,6 @@ target_sources(KWinQpaPlugin PRIVATE
     offscreensurface.cpp
     platformcursor.cpp
     screen.cpp
-    swapchain.cpp
     window.cpp
 )
 

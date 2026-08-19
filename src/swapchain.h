@@ -20,20 +20,17 @@
 namespace KWin
 {
 
-class VulkanDevice;
-class VulkanTexture;
-class VulkanSwapchain;
+class Swapchain;
 class SyncReleasePoint;
 class GraphicsBufferReleasePoint;
 
-class KWIN_EXPORT VulkanSwapchainSlot
+class KWIN_EXPORT SwapchainSlot
 {
 public:
-    explicit VulkanSwapchainSlot(GraphicsBuffer *buffer, std::shared_ptr<VulkanTexture> &&texture);
-    ~VulkanSwapchainSlot();
+    explicit SwapchainSlot(GraphicsBuffer *buffer);
+    ~SwapchainSlot();
 
     GraphicsBuffer *buffer() const;
-    VulkanTexture *texture() const;
     int age() const;
     bool isBusy() const;
     const FileDescriptor &releaseFd() const;
@@ -41,35 +38,33 @@ public:
 
 private:
     GraphicsBuffer *const m_buffer;
-    std::shared_ptr<VulkanTexture> m_texture;
     int m_age = 0;
     std::shared_ptr<GraphicsBufferReleasePoint> m_releasePoint;
-    friend class VulkanSwapchain;
+    friend class Swapchain;
 };
 
-class KWIN_EXPORT VulkanSwapchain
+class KWIN_EXPORT Swapchain
 {
 public:
-    explicit VulkanSwapchain(VulkanDevice *device, GraphicsBufferAllocator *allocator, const GraphicsBufferOptions &options, std::shared_ptr<VulkanSwapchainSlot> &&initialSlot);
-    ~VulkanSwapchain();
+    explicit Swapchain(GraphicsBufferAllocator *allocator, const GraphicsBufferOptions &options, std::shared_ptr<SwapchainSlot> &&initialSlot);
+    ~Swapchain();
 
     QSize size() const;
     uint32_t format() const;
     uint64_t modifier() const;
     bool scanout() const;
 
-    std::shared_ptr<VulkanSwapchainSlot> acquire();
-    void release(VulkanSwapchainSlot *slot, FileDescriptor &&releaseFd);
+    std::shared_ptr<SwapchainSlot> acquire();
+    void release(SwapchainSlot *slot, FileDescriptor &&releaseFd);
 
     void resetBufferAge();
 
-    static std::unique_ptr<VulkanSwapchain> create(VulkanDevice *device, GraphicsBufferAllocator *allocator, GraphicsBufferOptions options);
+    static std::unique_ptr<Swapchain> create(GraphicsBufferAllocator *allocator, GraphicsBufferOptions options);
 
 private:
-    VulkanDevice *const m_device;
     GraphicsBufferAllocator *const m_allocator;
     const GraphicsBufferOptions m_options;
-    std::vector<std::shared_ptr<VulkanSwapchainSlot>> m_slots;
+    std::vector<std::shared_ptr<SwapchainSlot>> m_slots;
 };
 
 }

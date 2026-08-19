@@ -212,6 +212,7 @@ target_sources(kwin PRIVATE
     scripting/workspace_wrapper.cpp
     shadow.cpp
     sm.cpp
+    swapchain.cpp
     tablet_input.cpp
     tabletmodemanager.cpp
     tiles/customtile.cpp
@@ -231,7 +232,6 @@ target_sources(kwin PRIVATE
     vulkan/vulkan_logging.cpp
     vulkan/vulkan_queue.cpp
     vulkan/vulkan_render_time_query.cpp
-    vulkan/vulkan_swapchain.cpp
     vulkan/vulkan_texture.cpp
     wayland_server.cpp
     waylandshellintegration.cpp
@@ -530,6 +530,7 @@ install(FILES
     screenedgegestures.h
     shadow.h
     sm.h
+    swapchain.h
     tablet_input.h
     tabletmodemanager.h
     touch_input.h
@@ -684,7 +685,6 @@ install(FILES
     vulkan/vulkan_logging.h
     vulkan/vulkan_queue.h
     vulkan/vulkan_render_time_query.h
-    vulkan/vulkan_swapchain.h
     vulkan/vulkan_texture.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/vulkan COMPONENT Devel
 )

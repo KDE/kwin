@@ -18,11 +18,10 @@ namespace KWin
 
 class InternalWindow;
 class EglContext;
+class Swapchain;
 
 namespace QPA
 {
-
-class Swapchain;
 
 class Window : public QPlatformWindow
 {

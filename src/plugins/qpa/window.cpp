@@ -50,8 +50,7 @@ Swapchain *Window::swapchain(const std::shared_ptr<EglContext> &context, const F
     const QSize nativeSize = geometry().size() * devicePixelRatio();
     const bool software = window()->surfaceType() == QSurface::RasterSurface; // RasterGLSurface is unsupported by us
     if (!m_swapchain || m_swapchain->size() != nativeSize
-        || !formats.contains(m_swapchain->format())
-        || m_swapchain->modifiers() != formats[m_swapchain->format()]
+        || !formats.containsFormat(m_swapchain->format(), m_swapchain->modifier())
         || (!software && m_eglContext.lock() != context)) {
         GraphicsBufferAllocator *allocator;
         if (software) {
@@ -70,11 +69,10 @@ Swapchain *Window::swapchain(const std::shared_ptr<EglContext> &context, const F
                     .software = software,
                     .scanout = false,
                 };
-                auto buffer = allocator->allocate(options);
-                if (!buffer) {
+                m_swapchain = Swapchain::create(allocator, options);
+                if (!m_swapchain) {
                     continue;
                 }
-                m_swapchain = std::make_unique<Swapchain>(allocator, options, buffer);
                 m_eglContext = context;
                 break;
             }
