@@ -9,6 +9,7 @@
 #include "vulkan_device.h"
 #include "core/gpumanager.h"
 #include "core/graphicsbuffer.h"
+#include "vulkan_buffer.h"
 #include "vulkan_logging.h"
 #include "vulkan_texture.h"
 
@@ -38,6 +39,7 @@ VulkanDevice::~VulkanDevice()
     m_graphicsQueue.reset();
     m_transferQueue.reset();
     m_importedTextures.clear();
+    m_importedBuffers.clear();
     m_logical.clear();
 }
 
@@ -70,14 +72,32 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importBuffer(GraphicsBuffer *buffer
     if (it != m_importedTextures.end()) {
         return it.value();
     }
-    auto ret = importDmabuf(buffer->dmabufAttributes(), usage);
-    if (!ret) {
+    std::shared_ptr<VulkanTexture> ret = importDmabuf(buffer->dmabufAttributes(), usage);
+    m_importedTextures[buffer] = ret;
+    if (ret) {
+        connect(buffer, &QObject::destroyed, this, [this, buffer]() {
+            m_importedTextures.remove(buffer);
+        });
+    }
+    return ret;
+}
+
+std::shared_ptr<VulkanBuffer> VulkanDevice::importBufferAsBuffer(GraphicsBuffer *buffer, vk::BufferUsageFlags usage)
+{
+    if (!buffer->dmabufAttributes()) {
         return nullptr;
     }
-    m_importedTextures[buffer] = ret;
-    connect(buffer, &QObject::destroyed, this, [this, buffer]() {
-        m_importedTextures.remove(buffer);
-    });
+    auto it = m_importedBuffers.find(buffer);
+    if (it != m_importedBuffers.end()) {
+        return it.value();
+    }
+    std::shared_ptr<VulkanBuffer> ret = importDmabufAsBuffer(buffer->dmabufAttributes(), usage);
+    m_importedBuffers[buffer] = ret;
+    if (ret) {
+        connect(buffer, &QObject::destroyed, this, [this, buffer]() {
+            m_importedBuffers.remove(buffer);
+        });
+    }
     return ret;
 }
 
@@ -238,6 +258,79 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
     }
     return std::make_shared<VulkanTexture>(this, vk::Format(format->vulkanFormat), std::move(image),
                                            std::move(deviceMemory), QSize(attributes->width, attributes->height));
+}
+
+std::shared_ptr<VulkanBuffer> VulkanDevice::importDmabufAsBuffer(const DmaBufAttributes *attributes, vk::BufferUsageFlags usage)
+{
+    const auto format = FormatInfo::get(attributes->format);
+    if (!format) {
+        qCWarning(KWIN_VULKAN, "Dmabuf has unknown format");
+        return nullptr;
+    }
+    if (attributes->modifier != DRM_FORMAT_MOD_LINEAR) {
+        return nullptr;
+    }
+    auto formatIt = m_transferFormats.find(attributes->format);
+    if (formatIt == m_transferFormats.end() || !formatIt->contains(DRM_FORMAT_MOD_LINEAR)) {
+        return nullptr;
+    }
+    if (isDisjoint(*attributes)) {
+        return nullptr;
+    }
+
+    const vk::DeviceSize size = attributes->pitch[0] * attributes->height;
+
+    vk::ExternalMemoryBufferCreateInfo externalInfo{
+        vk::ExternalMemoryHandleTypeFlagBits::eDmaBufEXT,
+    };
+    vk::BufferCreateInfo bufferInfo{
+        vk::BufferCreateFlags(),
+        size,
+        usage,
+        vk::SharingMode::eExclusive,
+        {},
+        &externalInfo,
+    };
+    auto [imageResult, buffer] = m_logical.createBuffer(bufferInfo);
+    if (imageResult != vk::Result::eSuccess) {
+        qCWarning(KWIN_VULKAN) << "creating vulkan buffer failed!" << vk::to_string(imageResult);
+        return nullptr;
+    }
+
+    FileDescriptor duplicatedFd = attributes->fd[0].duplicate();
+    const auto [memoryFdResult, memoryFdProperties] = m_logical.getMemoryFdPropertiesKHR(vk::ExternalMemoryHandleTypeFlagBits::eDmaBufEXT, duplicatedFd.get());
+    if (memoryFdResult != vk::Result::eSuccess) {
+        qCWarning(KWIN_VULKAN) << "failed to get memory fd properties!" << vk::to_string(memoryFdResult);
+        return nullptr;
+    }
+    vk::BufferMemoryRequirementsInfo2 memRequirementsInfo{buffer};
+    const vk::MemoryRequirements2 memRequirements = m_logical.getBufferMemoryRequirements2(memRequirementsInfo);
+    const auto memoryIndex = findMemoryType(memRequirements.memoryRequirements.memoryTypeBits & memoryFdProperties.memoryTypeBits, {});
+    if (!memoryIndex) {
+        qCWarning(KWIN_VULKAN, "couldn't find a suitable memory type for %x & %x = %x",
+                  memRequirements.memoryRequirements.memoryTypeBits, memoryFdProperties.memoryTypeBits,
+                  memRequirements.memoryRequirements.memoryTypeBits & memoryFdProperties.memoryTypeBits);
+        return nullptr;
+    }
+
+    vk::MemoryDedicatedAllocateInfo dedicatedInfo{{}, buffer};
+    vk::ImportMemoryFdInfoKHR importInfo(vk::ExternalMemoryHandleTypeFlagBits::eDmaBufEXT, duplicatedFd.get(), &dedicatedInfo);
+    vk::MemoryAllocateInfo memoryInfo(memRequirements.memoryRequirements.size, memoryIndex.value(), &importInfo);
+    auto [allocateResult, memory] = m_logical.allocateMemory(memoryInfo);
+    if (allocateResult != vk::Result::eSuccess) {
+        qCWarning(KWIN_VULKAN, "'Allocating' memory for dmabuf failed: %s", vk::to_string(allocateResult).c_str());
+        return nullptr;
+    }
+
+    const vk::Result bindResult = buffer.bindMemory(memory, 0);
+    if (bindResult != vk::Result::eSuccess) {
+        qCWarning(KWIN_VULKAN) << "failed to bind image to memory";
+        return nullptr;
+    }
+    // on successful import, the driver takes ownership of the file descriptor(s)
+    duplicatedFd.take();
+
+    return std::make_shared<VulkanBuffer>(std::move(buffer), std::move(memory), size);
 }
 
 FormatModifierMap VulkanDevice::queryFormats(VkImageUsageFlags flags) const
