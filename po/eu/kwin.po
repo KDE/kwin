@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-18 00:46+0000\n"
+"POT-Creation-Date: 2026-08-19 00:48+0000\n"
 "PO-Revision-Date: 2026-08-01 09:22+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -81,11 +81,17 @@ msgstr "Sakatu eskuineko kontrol tekla sarrera heltzeko"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland konposatzailea"
 
-#: compositor.cpp:760
+#: core/gpumanager.cpp:278
 #, kde-format
-msgid "Desktop effects were restarted due to a graphics reset"
+msgctxt "@info: status"
+msgid "Graphics card “%1” (%2) was reset"
 msgstr ""
-"Mahaigaineko efektuak berrabiarazi dira berrezarpen grafiko baten ondorioz"
+
+#: core/gpumanager.cpp:280
+#, kde-format
+msgctxt "@info: status"
+msgid "Graphics card “%1” was reset"
+msgstr ""
 
 #: core/iccprofile.cpp:396
 #, kde-format
@@ -4411,6 +4417,10 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland kraskatu egin da"
+
+#~ msgid "Desktop effects were restarted due to a graphics reset"
+#~ msgstr ""
+#~ "Mahaigaineko efektuak berrabiarazi dira berrezarpen grafiko baten ondorioz"
 
 #~ msgid "Disable configuration options"
 #~ msgstr "Desgaitu konfigurazio-aukerak"

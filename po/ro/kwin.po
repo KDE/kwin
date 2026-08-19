@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-18 00:46+0000\n"
+"POT-Creation-Date: 2026-08-19 00:48+0000\n"
 "PO-Revision-Date: 2026-04-13 13:13+0100\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -73,10 +73,17 @@ msgstr "Apăsați tasta Ctrl dreaptă pentru a acapara introducerea"
 msgid "KDE Wayland Compositor"
 msgstr "Compozitor KDE Wayland"
 
-#: compositor.cpp:760
+#: core/gpumanager.cpp:278
 #, kde-format
-msgid "Desktop effects were restarted due to a graphics reset"
-msgstr "Efectele de birou au fost repornite din cauza reinițializării graficii"
+msgctxt "@info: status"
+msgid "Graphics card “%1” (%2) was reset"
+msgstr ""
+
+#: core/gpumanager.cpp:280
+#, kde-format
+msgctxt "@info: status"
+msgid "Graphics card “%1” was reset"
+msgstr ""
 
 #: core/iccprofile.cpp:396
 #, kde-format
@@ -4405,6 +4412,10 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland s-a prăbușit"
+
+#~ msgid "Desktop effects were restarted due to a graphics reset"
+#~ msgstr ""
+#~ "Efectele de birou au fost repornite din cauza reinițializării graficii"
 
 #~ msgid "Disable configuration options"
 #~ msgstr "Dezactivează opțiunile de configurare"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-23 00:45+0000\n"
+"POT-Creation-Date: 2026-08-19 00:48+0000\n"
 "PO-Revision-Date: 2025-04-28 17:44+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -29,7 +29,19 @@ msgstr "لا شيء"
 msgid "Global animation speed:"
 msgstr "سرعة التحريك العامة:"
 
-#: ui/main.qml:83
+#: ui/main.qml:79
+#, kde-format
+msgctxt "Animation speed"
+msgid "Slow"
+msgstr "بطيء"
+
+#: ui/main.qml:85
+#, kde-format
+msgctxt "Animation speed"
+msgid "Instant"
+msgstr "فوري"
+
+#: ui/main.qml:95
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -42,74 +54,62 @@ msgstr ""
 "تغيير مدة الحركة، ولكنها ستظل تقوم بتعطيل الرسوم المتحركة عندما تكون "
 "<interface>سرعة التحريك</interface> هي <interface>فورية</interface>."
 
-#: ui/main.qml:90
-#, kde-format
-msgctxt "Animation speed"
-msgid "Slow"
-msgstr "بطيء"
-
-#: ui/main.qml:99
-#, kde-format
-msgctxt "Animation speed"
-msgid "Instant"
-msgstr "فوري"
-
-#: ui/main.qml:107
+#: ui/main.qml:102
 #, kde-format
 msgctxt "@title:group"
 msgid "Desktop animations"
 msgstr "تحريكات سطح المكتب"
 
-#: ui/main.qml:111
+#: ui/main.qml:104
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window open/close:"
 msgstr "فتح/غلق النافذة:"
 
-#: ui/main.qml:112
+#: ui/main.qml:105
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window maximize:"
 msgstr "تكبير النافذة:"
 
-#: ui/main.qml:113
+#: ui/main.qml:106
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window minimize:"
 msgstr "تصغير النافذة:"
 
-#: ui/main.qml:114
+#: ui/main.qml:107
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window full screen:"
 msgstr "جعل النافذة ملء الشاشة:"
 
-#: ui/main.qml:115
+#: ui/main.qml:108
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Peek at desktop:"
 msgstr "نظرة على سطح المكتب:"
 
-#: ui/main.qml:116
+#: ui/main.qml:109
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Virtual desktop switching:"
 msgstr "تبديل سطح المكتب الافتراضي:"
 
-#: ui/main.qml:144 ui/main.qml:211
+#: ui/main.qml:128 ui/main.qml:172
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
 msgstr "اضبط…"
 
-#: ui/main.qml:171
+#: ui/main.qml:155
 #, kde-format
 msgctxt ""
 "@option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'"
 msgid "%1:"
 msgstr "%1:"
 
-#: ui/main.qml:239
+#: ui/main.qml:193
 #, kde-format
 msgctxt "@title:group translate as short as possible"
 msgid "More effects settings:"

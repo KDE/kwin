@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-18 00:46+0000\n"
+"POT-Creation-Date: 2026-08-19 00:48+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -81,11 +81,17 @@ msgstr "Πατήστε το δεξί πλήκτρο control για να αρπά
 msgid "KDE Wayland Compositor"
 msgstr "Συνθέτης Wayland του KDE"
 
-#: compositor.cpp:760
+#: core/gpumanager.cpp:278
 #, kde-format
-msgid "Desktop effects were restarted due to a graphics reset"
+msgctxt "@info: status"
+msgid "Graphics card “%1” (%2) was reset"
 msgstr ""
-"Τα εφέ επιφάνειας εργασίας επανεκκινήθηκαν λόγω της επαναφοράς γραφικών"
+
+#: core/gpumanager.cpp:280
+#, kde-format
+msgctxt "@info: status"
+msgid "Graphics card “%1” was reset"
+msgstr ""
 
 #: core/iccprofile.cpp:396
 #, kde-format
@@ -4557,6 +4563,10 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Το Xwayland κατάρρευσε"
+
+#~ msgid "Desktop effects were restarted due to a graphics reset"
+#~ msgstr ""
+#~ "Τα εφέ επιφάνειας εργασίας επανεκκινήθηκαν λόγω της επαναφοράς γραφικών"
 
 #~ msgid "Disable configuration options"
 #~ msgstr "Απενεργοποίηση επιλογών διαμόρφωσης"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-18 00:46+0000\n"
+"POT-Creation-Date: 2026-08-19 00:48+0000\n"
 "PO-Revision-Date: 2026-08-07 23:34+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
@@ -76,11 +76,17 @@ msgstr "Trykk høgre «Ctrl» for å fanga inndata"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland-samansetjar"
 
-#: compositor.cpp:760
+#: core/gpumanager.cpp:278
 #, kde-format
-msgid "Desktop effects were restarted due to a graphics reset"
+msgctxt "@info: status"
+msgid "Graphics card “%1” (%2) was reset"
 msgstr ""
-"Skrivebordseffektane vart starta på nytt, på grunn av ei grafikk-nullstilling"
+
+#: core/gpumanager.cpp:280
+#, kde-format
+msgctxt "@info: status"
+msgid "Graphics card “%1” was reset"
+msgstr ""
 
 #: core/iccprofile.cpp:396
 #, kde-format
@@ -4388,3 +4394,8 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland krasja"
+
+#~ msgid "Desktop effects were restarted due to a graphics reset"
+#~ msgstr ""
+#~ "Skrivebordseffektane vart starta på nytt, på grunn av ei grafikk-"
+#~ "nullstilling"

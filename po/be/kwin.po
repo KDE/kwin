@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-18 00:46+0000\n"
+"POT-Creation-Date: 2026-08-19 00:48+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -78,10 +78,17 @@ msgstr "Каб захапіць увод, націсніце правую кла
 msgid "KDE Wayland Compositor"
 msgstr "Сродак кампазітынгу KDE Wayland"
 
-#: compositor.cpp:760
+#: core/gpumanager.cpp:278
 #, kde-format
-msgid "Desktop effects were restarted due to a graphics reset"
-msgstr "Эфекты працоўнага стала перазапушчаныя праз скід графікі"
+msgctxt "@info: status"
+msgid "Graphics card “%1” (%2) was reset"
+msgstr ""
+
+#: core/gpumanager.cpp:280
+#, kde-format
+msgctxt "@info: status"
+msgid "Graphics card “%1” was reset"
+msgstr ""
 
 #: core/iccprofile.cpp:396
 #, kde-format
@@ -4499,6 +4506,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Адбыўся збой Xwayland"
+
+#~ msgid "Desktop effects were restarted due to a graphics reset"
+#~ msgstr "Эфекты працоўнага стала перазапушчаныя праз скід графікі"
 
 #~ msgid "Disable configuration options"
 #~ msgstr "Адключыць параметры канфігурацыі"

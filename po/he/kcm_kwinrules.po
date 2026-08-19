@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-17 00:45+0000\n"
-"PO-Revision-Date: 2026-07-17 12:22+0300\n"
+"PO-Revision-Date: 2026-08-18 10:31+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 26.04.1\n"
+"X-Generator: Lokalize 26.04.3\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -612,7 +612,7 @@ msgstr "חלון עזר"
 #: rulesmodel.cpp:814
 #, kde-format
 msgid "Dock (panel)"
-msgstr "לוח עגינה (פאנל)"
+msgstr "מעגן (לוח)"
 
 #: rulesmodel.cpp:815
 #, kde-format
@@ -901,8 +901,8 @@ msgstr "כולם נבחרים"
 #, kde-format
 msgid "%1 selected"
 msgid_plural "%1 selected"
-msgstr[0] "נבחר %1"
-msgstr[1] "נבחרו שניים"
+msgstr[0] "נבחר אחד"
+msgstr[1] "נבחרו %1"
 msgstr[2] "נבחרו %1"
 msgstr[3] "נבחרו %1"
 
@@ -941,7 +941,7 @@ msgstr "מיידית"
 msgid "After %1 second"
 msgid_plural "After %1 seconds"
 msgstr[0] "לאחר שנייה"
-msgstr[1] "לאחר שתי שניות"
+msgstr[1] "לאחר %1 שניות"
 msgstr[2] "לאחר %1 שניות"
 msgstr[3] "לאחר %1 שניות"
 

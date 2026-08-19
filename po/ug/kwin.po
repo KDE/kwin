@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-18 00:46+0000\n"
+"POT-Creation-Date: 2026-08-19 00:48+0000\n"
 "PO-Revision-Date: 2026-05-31 20:05-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -70,12 +70,17 @@ msgstr "ئوڭ Ctrl بېسىلسا كىرگۈزۈشكە ئېرىشىدۇ"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland بىرىكتۈرگۈچ"
 
-#: compositor.cpp:760
+#: core/gpumanager.cpp:278
 #, kde-format
-msgid "Desktop effects were restarted due to a graphics reset"
+msgctxt "@info: status"
+msgid "Graphics card “%1” (%2) was reset"
 msgstr ""
-"كۆرسىتىش كارتىسى ئەسلىگە قايتۇرۇلغانلىقتىن ئۈستەلئۈستى ئۈنۈمى قايتا "
-"قوزغىتىلدى"
+
+#: core/gpumanager.cpp:280
+#, kde-format
+msgctxt "@info: status"
+msgid "Graphics card “%1” was reset"
+msgstr ""
 
 #: core/iccprofile.cpp:396
 #, kde-format
@@ -4386,6 +4391,11 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland يىمىرىلدى"
+
+#~ msgid "Desktop effects were restarted due to a graphics reset"
+#~ msgstr ""
+#~ "كۆرسىتىش كارتىسى ئەسلىگە قايتۇرۇلغانلىقتىن ئۈستەلئۈستى ئۈنۈمى قايتا "
+#~ "قوزغىتىلدى"
 
 #~ msgid "Disable configuration options"
 #~ msgstr "سەپلىمە تاللانمىسىنى چەكلەيدۇ"

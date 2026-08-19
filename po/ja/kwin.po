@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-18 00:46+0000\n"
+"POT-Creation-Date: 2026-08-19 00:48+0000\n"
 "PO-Revision-Date: 2026-07-23 17:22+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -83,10 +83,17 @@ msgstr "右 Ctrl で入力をキャプチャします"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland コンポジター"
 
-#: compositor.cpp:760
+#: core/gpumanager.cpp:278
 #, kde-format
-msgid "Desktop effects were restarted due to a graphics reset"
-msgstr "グラフィックスのリセットにより、デスクトップ効果が再起動しました"
+msgctxt "@info: status"
+msgid "Graphics card “%1” (%2) was reset"
+msgstr ""
+
+#: core/gpumanager.cpp:280
+#, kde-format
+msgctxt "@info: status"
+msgid "Graphics card “%1” was reset"
+msgstr ""
 
 #: core/iccprofile.cpp:396
 #, kde-format
@@ -4395,6 +4402,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland がクラッシュしました"
+
+#~ msgid "Desktop effects were restarted due to a graphics reset"
+#~ msgstr "グラフィックスのリセットにより、デスクトップ効果が再起動しました"
 
 #~ msgid "Disable configuration options"
 #~ msgstr "設定オプションを無効化"

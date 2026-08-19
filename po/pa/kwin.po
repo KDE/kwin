@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-18 00:46+0000\n"
+"POT-Creation-Date: 2026-08-19 00:48+0000\n"
 "PO-Revision-Date: 2024-01-03 14:00-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -72,10 +72,17 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: compositor.cpp:760
+#: core/gpumanager.cpp:278
 #, kde-format
-msgid "Desktop effects were restarted due to a graphics reset"
-msgstr "ਗਰਾਫਿਕਸ ਬਦਲਣ ਦੇ ਕਰਕੇ ਡੈਸਕਟਾਪ ਪ੍ਰਭਾਵ ਮੁੜ-ਚਾਲੂ ਕੀਤੇ ਗਏ ਸਨ"
+msgctxt "@info: status"
+msgid "Graphics card “%1” (%2) was reset"
+msgstr ""
+
+#: core/gpumanager.cpp:280
+#, kde-format
+msgctxt "@info: status"
+msgid "Graphics card “%1” was reset"
+msgstr ""
 
 #: core/iccprofile.cpp:396
 #, kde-format
@@ -4559,6 +4566,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid "Desktop effects were restarted due to a graphics reset"
+#~ msgstr "ਗਰਾਫਿਕਸ ਬਦਲਣ ਦੇ ਕਰਕੇ ਡੈਸਕਟਾਪ ਪ੍ਰਭਾਵ ਮੁੜ-ਚਾਲੂ ਕੀਤੇ ਗਏ ਸਨ"
 
 #~ msgid "Disable configuration options"
 #~ msgstr "ਸੰਰਚਨਾ ਚੋਣ ਅਯੋਗ"

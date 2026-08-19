@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-23 00:45+0000\n"
+"POT-Creation-Date: 2026-08-19 00:48+0000\n"
 "PO-Revision-Date: 2025-04-25 09:49+0300\n"
 "Last-Translator: Emir SARI <emir_sari@îcloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -28,7 +28,19 @@ msgstr "Yok"
 msgid "Global animation speed:"
 msgstr "Global canlandırma hızı:"
 
-#: ui/main.qml:83
+#: ui/main.qml:79
+#, kde-format
+msgctxt "Animation speed"
+msgid "Slow"
+msgstr "Yavaş"
+
+#: ui/main.qml:85
+#, kde-format
+msgctxt "Animation speed"
+msgid "Instant"
+msgstr "Anında"
+
+#: ui/main.qml:95
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -42,74 +54,62 @@ msgstr ""
 "interface> <interface>anında</interface> ise canlandırmaları devre dışı "
 "bırakacaklardır."
 
-#: ui/main.qml:90
-#, kde-format
-msgctxt "Animation speed"
-msgid "Slow"
-msgstr "Yavaş"
-
-#: ui/main.qml:99
-#, kde-format
-msgctxt "Animation speed"
-msgid "Instant"
-msgstr "Anında"
-
-#: ui/main.qml:107
+#: ui/main.qml:102
 #, kde-format
 msgctxt "@title:group"
 msgid "Desktop animations"
 msgstr "Masaüstü Canlandırmaları"
 
-#: ui/main.qml:111
+#: ui/main.qml:104
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window open/close:"
 msgstr "Pencereyi aç/kapat:"
 
-#: ui/main.qml:112
+#: ui/main.qml:105
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window maximize:"
 msgstr "Pencereyi ekranda kapla:"
 
-#: ui/main.qml:113
+#: ui/main.qml:106
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window minimize:"
 msgstr "Pencereyi simge durumuna küçült:"
 
-#: ui/main.qml:114
+#: ui/main.qml:107
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window full screen:"
 msgstr "Pencereyi tam ekran yap:"
 
-#: ui/main.qml:115
+#: ui/main.qml:108
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Peek at desktop:"
 msgstr "Masaüstüne bak:"
 
-#: ui/main.qml:116
+#: ui/main.qml:109
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Virtual desktop switching:"
 msgstr "Sanal masaüstü geçişi:"
 
-#: ui/main.qml:144 ui/main.qml:211
+#: ui/main.qml:128 ui/main.qml:172
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
 msgstr "Yapılandır…"
 
-#: ui/main.qml:171
+#: ui/main.qml:155
 #, kde-format
 msgctxt ""
 "@option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'"
 msgid "%1:"
 msgstr "%1:"
 
-#: ui/main.qml:239
+#: ui/main.qml:193
 #, kde-format
 msgctxt "@title:group translate as short as possible"
 msgid "More effects settings:"
