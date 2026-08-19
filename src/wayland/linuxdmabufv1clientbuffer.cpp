@@ -450,6 +450,21 @@ const DmaBufAttributes *LinuxDmaBufV1ClientBuffer::dmabufAttributes() const
     return &m_attrs;
 }
 
+uint32_t LinuxDmaBufV1ClientBuffer::format() const
+{
+    return m_attrs.format;
+}
+
+uint64_t LinuxDmaBufV1ClientBuffer::modifier() const
+{
+    return m_attrs.modifier;
+}
+
+uint32_t LinuxDmaBufV1ClientBuffer::pitch() const
+{
+    return m_attrs.pitch[0];
+}
+
 void LinuxDmaBufV1ClientBuffer::setDevice(dev_t deviceId)
 {
     m_attrs.device = deviceId;

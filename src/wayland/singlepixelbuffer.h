@@ -37,6 +37,9 @@ public:
     QSize size() const override;
     bool hasAlphaChannel() const override;
     const SinglePixelAttributes *singlePixelAttributes() const override;
+    uint32_t format() const override;
+    uint64_t modifier() const override;
+    uint32_t pitch() const override;
 
     static SinglePixelClientBuffer *get(wl_resource *resource);
 

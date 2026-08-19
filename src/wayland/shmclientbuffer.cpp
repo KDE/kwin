@@ -254,6 +254,20 @@ const DmaBufAttributes *ShmClientBuffer::udmabufAttributes() const
 {
     return m_udmabufAttributes ? &*m_udmabufAttributes : nullptr;
 }
+uint32_t ShmClientBuffer::format() const
+{
+    return m_shmAttributes.format;
+}
+
+uint64_t ShmClientBuffer::modifier() const
+{
+    return DRM_FORMAT_MOD_LINEAR;
+}
+
+uint32_t ShmClientBuffer::pitch() const
+{
+    return m_shmAttributes.stride;
+}
 
 ShmClientBuffer *ShmClientBuffer::get(wl_resource *resource)
 {

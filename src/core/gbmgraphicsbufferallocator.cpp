@@ -76,6 +76,9 @@ public:
     QSize size() const override;
     bool hasAlphaChannel() const override;
     const DmaBufAttributes *dmabufAttributes() const override;
+    uint32_t format() const override;
+    uint64_t modifier() const override;
+    uint32_t pitch() const override;
 
 private:
     gbm_bo *m_bo;
@@ -102,6 +105,9 @@ public:
     QSize size() const override;
     bool hasAlphaChannel() const override;
     const DmaBufAttributes *dmabufAttributes() const override;
+    uint32_t format() const override;
+    uint64_t modifier() const override;
+    uint32_t pitch() const override;
 
 private:
     int m_drmFd;
@@ -264,6 +270,21 @@ const DmaBufAttributes *GbmGraphicsBuffer::dmabufAttributes() const
     return &m_dmabufAttributes;
 }
 
+uint32_t GbmGraphicsBuffer::format() const
+{
+    return m_dmabufAttributes.format;
+}
+
+uint64_t GbmGraphicsBuffer::modifier() const
+{
+    return m_dmabufAttributes.modifier;
+}
+
+uint32_t GbmGraphicsBuffer::pitch() const
+{
+    return m_dmabufAttributes.pitch[0];
+}
+
 GraphicsBuffer::Map GbmGraphicsBuffer::map(MapFlags flags)
 {
     if (!m_mapPtr) {
@@ -323,6 +344,21 @@ bool DumbGraphicsBuffer::hasAlphaChannel() const
 const DmaBufAttributes *DumbGraphicsBuffer::dmabufAttributes() const
 {
     return &m_dmabufAttributes;
+}
+
+uint32_t DumbGraphicsBuffer::format() const
+{
+    return m_dmabufAttributes.format;
+}
+
+uint64_t DumbGraphicsBuffer::modifier() const
+{
+    return m_dmabufAttributes.modifier;
+}
+
+uint32_t DumbGraphicsBuffer::pitch() const
+{
+    return m_dmabufAttributes.pitch[0];
 }
 
 GraphicsBuffer::Map DumbGraphicsBuffer::map(MapFlags flags)
