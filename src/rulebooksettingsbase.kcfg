@@ -11,7 +11,7 @@
     </entry>
     <entry name="ruleGroupList" key="rules" type="StringList">
       <label>Ordered list of rules groups</label>
-      <default>QStringList()</default>
+      <default></default>
     </entry>
   </group>
 </kcfg>
