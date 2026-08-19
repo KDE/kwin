@@ -25,6 +25,7 @@ class VulkanTexture;
 class GraphicsBuffer;
 struct DmaBufAttributes;
 class RenderDevice;
+class VulkanBuffer;
 
 class KWIN_EXPORT VulkanDevice : public QObject
 {
@@ -38,6 +39,7 @@ public:
     ~VulkanDevice();
 
     std::shared_ptr<VulkanTexture> importBuffer(GraphicsBuffer *buffer, VkImageUsageFlags usage);
+    std::shared_ptr<VulkanBuffer> importBufferAsBuffer(GraphicsBuffer *buffer, vk::BufferUsageFlags usage);
 
     bool isSoftwareRenderer() const;
     vk::PhysicalDeviceType type() const;
@@ -97,6 +99,7 @@ private:
     FormatModifierMap queryFormats(VkImageUsageFlags flags) const;
     std::optional<uint32_t> findMemoryType(uint32_t typeBits, vk::MemoryPropertyFlags memoryPropertyFlags) const;
     std::shared_ptr<VulkanTexture> importDmabuf(const DmaBufAttributes *attributes, VkImageUsageFlags usage);
+    std::shared_ptr<VulkanBuffer> importDmabufAsBuffer(const DmaBufAttributes *attributes, vk::BufferUsageFlags usage);
 
     vk::PhysicalDeviceType m_type;
     vk::raii::PhysicalDevice m_physical;
@@ -111,6 +114,7 @@ private:
     std::unique_ptr<VulkanQueue> m_transferQueue;
 
     QHash<GraphicsBuffer *, std::shared_ptr<VulkanTexture>> m_importedTextures;
+    QHash<GraphicsBuffer *, std::shared_ptr<VulkanBuffer>> m_importedBuffers;
     bool m_lost = false;
 };
 
