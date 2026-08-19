@@ -68,7 +68,7 @@ msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
 "As above, plus any key pressed while the Control, Alt, or Meta key is also "
 "pressed"
-msgstr "和上面一样，加上按住 Ctrl、Alt、Meta 等修饰键时按下的任何按键"
+msgstr "同上，外加按住 Ctrl、Alt、Meta 等修饰键时按下的任何按键"
 
 #: ui/main.qml:90
 #, kde-format
