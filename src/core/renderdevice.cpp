@@ -185,6 +185,8 @@ static constexpr std::array s_requiredVulkanExtensions = {
     VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME,
 };
 
+static const auto s_supportHostMemoryPointer = environmentVariableBoolValue("KWIN_SUPPORT_EXTERNAL_MEMORY_HOST");
+
 static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &instance, DrmDevice *drm, const QString &path)
 {
     const auto [enumerateResult, physicalDevices] = instance.enumeratePhysicalDevices();
@@ -252,6 +254,17 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             continue;
         }
 
+        std::optional<VkDeviceSize> minImportedHostPointerAlignment;
+        const bool supportsHostMemory = std::ranges::any_of(extensionProps, [](const vk::ExtensionProperties &props) {
+            return props.extensionName == std::string_view(VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME);
+        });
+        if (supportsHostMemory && s_supportHostMemoryPointer.value_or(true)) {
+            usedExtensions.push_back(VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME);
+            const auto chain = physicalDevice.getProperties2<vk::PhysicalDeviceProperties2, vk::PhysicalDeviceExternalMemoryHostPropertiesEXT>();
+            const auto hostProperties = chain.get<vk::PhysicalDeviceExternalMemoryHostPropertiesEXT>();
+            minImportedHostPointerAlignment = hostProperties.minImportedHostPointerAlignment;
+        }
+
         std::vector<VkDeviceQueueCreateInfo> queueInfo;
         float priority = 1;
         for (uint32_t i = 0; i < queueProperties.size(); i++) {
@@ -302,7 +315,8 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             physicalDevice,
             std::move(logicalDevice),
             queueProperties | std::ranges::to<std::vector<VkQueueFamilyProperties>>(),
-            basicProperties.properties.deviceType);
+            basicProperties.properties.deviceType,
+            minImportedHostPointerAlignment);
         if (ret->transferFormats().isEmpty()) {
             continue;
         }
@@ -390,6 +404,16 @@ bool RenderDevice::isInternal() const
         return m_vulkanDevice->type() == vk::PhysicalDeviceType::eIntegratedGpu;
     }
     return m_display->type() == EglDisplay::GpuType::Internal;
+}
+
+bool RenderDevice::isIntel() const
+{
+    return m_device && (m_device->isI915() || m_device->isIntelXE());
+}
+
+bool RenderDevice::isNvidia() const
+{
+    return m_device && m_device->isNvidia();
 }
 
 static QString prettify(const QString &name)

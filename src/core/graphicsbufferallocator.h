@@ -48,6 +48,8 @@ public:
     virtual ~GraphicsBufferAllocator();
 
     virtual GraphicsBuffer *allocate(const GraphicsBufferOptions &options) = 0;
+
+    static uint64_t align(uint64_t size, uint64_t minimum);
 };
 
 } // namespace KWin

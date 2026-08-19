@@ -17,4 +17,13 @@ GraphicsBufferAllocator::~GraphicsBufferAllocator()
 {
 }
 
+uint64_t GraphicsBufferAllocator::align(uint64_t size, uint64_t minimum)
+{
+    if (auto remainder = size % minimum) {
+        return size + (minimum - remainder);
+    } else {
+        return size;
+    }
+}
+
 } // namespace KWin

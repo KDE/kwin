@@ -90,6 +90,9 @@ public:
      */
     bool isInternal() const;
 
+    bool isIntel() const;
+    bool isNvidia() const;
+
     static std::unique_ptr<RenderDevice> open(const QString &path, int authenticatedFd = -1);
     /**
      * @returns a RenderDevice without a drm device, using udmabuf for allocations
