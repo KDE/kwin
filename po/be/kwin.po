@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-19 16:07+0000\n"
+"POT-Creation-Date: 2026-08-20 00:47+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -4456,30 +4456,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Не адказвае)"
 
-#: workspace.cpp:1311
+#: workspace.cpp:1307
 #, kde-format
 msgid "Built-in Screen"
 msgstr ""
 
-#: workspace.cpp:1324
+#: workspace.cpp:1320
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr ""
 
-#: workspace.cpp:1334
+#: workspace.cpp:1330
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr ""
 
-#: workspace.cpp:1337
+#: workspace.cpp:1333
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr ""
 
-#: workspace.cpp:1806
+#: workspace.cpp:1802
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

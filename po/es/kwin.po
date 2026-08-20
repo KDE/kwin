@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-19 16:07+0000\n"
-"PO-Revision-Date: 2026-07-29 11:28+0100\n"
+"POT-Creation-Date: 2026-08-20 00:47+0000\n"
+"PO-Revision-Date: 2026-08-19 23:58+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -88,13 +88,13 @@ msgstr "Compositor de KDE Wayland"
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” (%2) was reset"
-msgstr ""
+msgstr "La tarjeta gráfica «%1» (%2) ha sido reiniciada"
 
 #: core/gpumanager.cpp:280
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” was reset"
-msgstr ""
+msgstr "La tarjeta gráfica «%1» ha sido reiniciada"
 
 #: core/iccprofile.cpp:396
 #, kde-format
@@ -4381,30 +4381,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(no responde)"
 
-#: workspace.cpp:1311
+#: workspace.cpp:1307
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Pantalla integrada"
 
-#: workspace.cpp:1324
+#: workspace.cpp:1320
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1334
+#: workspace.cpp:1330
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1337
+#: workspace.cpp:1333
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: workspace.cpp:1806
+#: workspace.cpp:1802
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4433,7 +4433,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ha fallado"
-
-#~ msgid "Desktop effects were restarted due to a graphics reset"
-#~ msgstr ""
-#~ "Se han reiniciado los efectos del escritorio debido a un reinicio gráfico"
