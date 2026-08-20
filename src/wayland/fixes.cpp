@@ -12,7 +12,9 @@ namespace KWin
 {
 
 #ifdef HAVE_ACK_GLOBAL_REMOVE
-static constexpr int s_version = 2;
+static const int s_version = ([]() {
+    return qEnvironmentVariableIsSet("KWIN_USE_FIXES_V2") ? 2 : 1;
+})();
 #else
 static constexpr int s_version = 1;
 #endif
