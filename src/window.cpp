@@ -1884,6 +1884,14 @@ void Window::setupWindowManagementInterface()
         setExcludeFromCapture(set);
     });
 
+    if (readyForPainting()) {
+        w->setReadyForPainting(true);
+    } else {
+        connect(this, &Window::readyForPaintingChanged, w, [w]() {
+            w->setReadyForPainting(true);
+        }, Qt::SingleShotConnection);
+    }
+
     for (const auto vd : std::as_const(m_desktops)) {
         w->addPlasmaVirtualDesktop(vd->id());
     }

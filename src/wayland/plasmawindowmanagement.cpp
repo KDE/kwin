@@ -24,7 +24,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 20;
+static const quint32 s_version = 21;
 static const quint32 s_activationVersion = 1;
 
 class PlasmaWindowManagementInterfacePrivate : public QtWaylandServer::org_kde_plasma_window_management
@@ -1065,6 +1065,11 @@ void PlasmaWindowInterface::setCanSetNoBorder(bool set)
 void PlasmaWindowInterface::setExcludeFromCapture(bool set)
 {
     d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_EXCLUDE_FROM_CAPTURE, set);
+}
+
+void PlasmaWindowInterface::setReadyForPainting(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_READY_FOR_PAINTING, set);
 }
 
 void PlasmaWindowInterface::setParentWindow(PlasmaWindowInterface *parentWindow)

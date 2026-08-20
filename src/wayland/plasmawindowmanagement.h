@@ -142,6 +142,7 @@ public:
     void setNoBorder(bool set);
     void setCanSetNoBorder(bool set);
     void setExcludeFromCapture(bool set);
+    void setReadyForPainting(bool set);
 
     /**
      * This method removes the Window and the Client is supposed to release the resource
