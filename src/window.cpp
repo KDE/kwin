@@ -1944,6 +1944,12 @@ void Window::setupWindowManagementInterface()
         sendToOutput(output->handle());
     });
 
+    if (readyForPainting()) {
+        w->map();
+    } else {
+        connect(this, &Window::readyForPaintingChanged, w, &PlasmaWindowInterface::map, Qt::SingleShotConnection);
+    }
+
     m_windowManagementInterface = w;
 }
 

@@ -113,6 +113,8 @@ class KWIN_EXPORT PlasmaWindowInterface : public QObject
 public:
     ~PlasmaWindowInterface() override;
 
+    void map();
+
     void setTitle(const QString &title);
     void setAppId(const QString &appId);
     void setPid(quint32 pid);

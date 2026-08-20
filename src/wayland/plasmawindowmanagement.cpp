@@ -24,7 +24,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 20;
+static const quint32 s_version = 21;
 static const quint32 s_activationVersion = 1;
 
 class PlasmaWindowManagementInterfacePrivate : public QtWaylandServer::org_kde_plasma_window_management
@@ -102,6 +102,7 @@ public:
     QString uuid;
     QString m_resourceName;
     Rect clientGeometry;
+    bool mapped = false;
 
 protected:
     Resource *org_kde_plasma_window_allocate() override;
@@ -426,6 +427,12 @@ void PlasmaWindowInterfacePrivate::sendInitialState(Resource *resource)
 
     if (clientGeometry.isValid() && resource->version() >= ORG_KDE_PLASMA_WINDOW_CLIENT_GEOMETRY_SINCE_VERSION) {
         send_client_geometry(resource->handle, clientGeometry.x(), clientGeometry.y(), clientGeometry.width(), clientGeometry.height());
+    }
+
+    if (resource->version() >= ORG_KDE_PLASMA_WINDOW_MAPPED_SINCE_VERSION) {
+        if (mapped) {
+            send_mapped(resource->handle);
+        }
     }
 
     if (resource->version() >= ORG_KDE_PLASMA_WINDOW_INITIAL_STATE_SINCE_VERSION) {
@@ -787,6 +794,18 @@ PlasmaWindowInterface::~PlasmaWindowInterface()
 {
     for (const auto resources = d->resourceMap(); auto resource : resources) {
         d->send_unmapped(resource->handle);
+    }
+}
+
+void PlasmaWindowInterface::map()
+{
+    Q_ASSERT(!d->mapped);
+    d->mapped = true;
+
+    for (const auto resources = d->resourceMap(); const auto &resource : resources) {
+        if (resource->version() >= ORG_KDE_PLASMA_WINDOW_MAPPED_SINCE_VERSION) {
+            d->send_mapped(resource->handle);
+        }
     }
 }
 
