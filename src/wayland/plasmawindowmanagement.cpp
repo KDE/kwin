@@ -426,9 +426,6 @@ void PlasmaWindowInterfacePrivate::sendInitialState(Resource *resource)
         send_geometry(resource->handle, geometry.x(), geometry.y(), geometry.width(), geometry.height());
     }
 
-    if (resource->version() >= ORG_KDE_PLASMA_WINDOW_INITIAL_STATE_SINCE_VERSION) {
-        send_initial_state(resource->handle);
-    }
     if (!m_resourceName.isEmpty()) {
         if (resource->version() >= ORG_KDE_PLASMA_WINDOW_RESOURCE_NAME_CHANGED_SINCE_VERSION) {
             send_resource_name_changed(resource->handle, m_resourceName);
@@ -437,6 +434,10 @@ void PlasmaWindowInterfacePrivate::sendInitialState(Resource *resource)
 
     if (clientGeometry.isValid() && resource->version() >= ORG_KDE_PLASMA_WINDOW_CLIENT_GEOMETRY_SINCE_VERSION) {
         send_client_geometry(resource->handle, clientGeometry.x(), clientGeometry.y(), clientGeometry.width(), clientGeometry.height());
+    }
+
+    if (resource->version() >= ORG_KDE_PLASMA_WINDOW_INITIAL_STATE_SINCE_VERSION) {
+        send_initial_state(resource->handle);
     }
 }
 
