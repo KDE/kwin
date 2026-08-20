@@ -87,7 +87,7 @@
         "Description[sv]": "Tona till skrivbordet vid inloggning",
         "Description[tr]": "Oturum açarken masaüstüne solarak geçiş yap",
         "Description[uk]": "Висвітлення стільниці під час входу",
-        "Description[zh_CN]": "登录时平滑地过渡到桌面",
+        "Description[zh_CN]": "登录时平滑过渡到桌面",
         "Description[zh_TW]": "登入時淡入桌面",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-login",
