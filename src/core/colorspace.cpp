@@ -772,99 +772,148 @@ TransferFunction::TransferFunction(Type tf, double minLuminance, double maxLumin
 {
 }
 
-double TransferFunction::encodedToNits(double encoded) const
+double TransferFunction::normalize(double nits) const
 {
-    switch (type) {
-    case TransferFunction::sRGB: {
-        if (encoded < 0.04045) {
-            return std::max(encoded / 12.92, 0.0) * (maxLuminance - minLuminance) + minLuminance;
-        } else {
-            return std::clamp(std::pow((encoded + 0.055) / 1.055, 12.0 / 5.0), 0.0, 1.0) * (maxLuminance - minLuminance) + minLuminance;
-        }
+    return (nits - minLuminance) / (maxLuminance - minLuminance);
+}
+
+double TransferFunction::sRGBEOTF(double encoded) const
+{
+    if (encoded < 0.04045) {
+        return std::max(encoded / 12.92, 0.0) * (maxLuminance - minLuminance) + minLuminance;
+    } else {
+        return std::clamp(std::pow((encoded + 0.055) / 1.055, 12.0 / 5.0), 0.0, 1.0) * (maxLuminance - minLuminance) + minLuminance;
     }
-    case TransferFunction::gamma22:
-        return std::pow(encoded, 2.2) * (maxLuminance - minLuminance) + minLuminance;
-    case TransferFunction::linear:
-        return encoded * (maxLuminance - minLuminance) + minLuminance;
-    case TransferFunction::PerceptualQuantizer: {
-        const double c1 = 0.8359375;
-        const double c2 = 18.8515625;
-        const double c3 = 18.6875;
-        const double m1_inv = 1.0 / 0.1593017578125;
-        const double m2_inv = 1.0 / 78.84375;
-        const double powed = std::pow(encoded, m2_inv);
-        const double num = std::max(powed - c1, 0.0);
-        const double den = c2 - c3 * powed;
-        return std::pow(num / den, m1_inv) * (maxLuminance - minLuminance) + minLuminance;
+}
+
+double TransferFunction::sRGBinverseEOTF(double nits) const
+{
+    const double normalized = normalize(nits);
+    if (normalized < 0.0031308) {
+        return std::max(normalized / 12.92, 0.0);
+    } else {
+        return std::clamp(std::pow(normalized, 5.0 / 12.0) * 1.055 - 0.055, 0.0, 1.0);
     }
-    case TransferFunction::BT1886: {
-        constexpr double gamma = 2.4;
-        const double minLumPow = std::pow(minLuminance, 1.0 / gamma);
-        const double tmp = std::pow(maxLuminance, 1.0 / gamma) - minLumPow;
-        const double alpha = std::pow(tmp, gamma);
-        const double beta = minLumPow / tmp;
-        return alpha * std::pow(std::max(encoded + beta, 0.0), gamma);
-    }
-    }
-    Q_UNREACHABLE();
+}
+
+double TransferFunction::gamma22EOTF(double encoded) const
+{
+    return std::pow(encoded, 2.2) * (maxLuminance - minLuminance) + minLuminance;
+}
+
+double TransferFunction::gamma22inverseEOTF(double nits) const
+{
+    return std::pow(std::clamp(normalize(nits), 0.0, 1.0), 1.0 / 2.2);
+}
+
+double TransferFunction::linearEOTF(double encoded) const
+{
+    return encoded * (maxLuminance - minLuminance) + minLuminance;
+}
+
+double TransferFunction::linearInverseEOTF(double nits) const
+{
+    return normalize(nits);
+}
+
+double TransferFunction::pqEOTF(double encoded) const
+{
+    const double c1 = 0.8359375;
+    const double c2 = 18.8515625;
+    const double c3 = 18.6875;
+    const double m1_inv = 1.0 / 0.1593017578125;
+    const double m2_inv = 1.0 / 78.84375;
+    const double powed = std::pow(encoded, m2_inv);
+    const double num = std::max(powed - c1, 0.0);
+    const double den = c2 - c3 * powed;
+    return std::pow(num / den, m1_inv) * (maxLuminance - minLuminance) + minLuminance;
+}
+
+double TransferFunction::pqInverseEOTF(double nits) const
+{
+    const double c1 = 0.8359375;
+    const double c2 = 18.8515625;
+    const double c3 = 18.6875;
+    const double m1 = 0.1593017578125;
+    const double m2 = 78.84375;
+    const double powed = std::pow(std::clamp(normalize(nits), 0.0, 1.0), m1);
+    const double num = c1 + c2 * powed;
+    const double denum = 1 + c3 * powed;
+    return std::pow(num / denum, m2);
+}
+
+double TransferFunction::bt1886EOTF(double encoded) const
+{
+    constexpr double gamma = 2.4;
+    const double minLumPow = std::pow(minLuminance, 1.0 / gamma);
+    const double tmp = std::pow(maxLuminance, 1.0 / gamma) - minLumPow;
+    const double alpha = std::pow(tmp, gamma);
+    const double beta = minLumPow / tmp;
+    return alpha * std::pow(std::max(encoded + beta, 0.0), gamma);
+}
+
+double TransferFunction::bt1886InverseEOTF(double nits) const
+{
+    constexpr double gamma = 2.4;
+    const double minLumPow = std::pow(minLuminance, 1.0 / gamma);
+    const double tmp = std::pow(maxLuminance, 1.0 / gamma) - minLumPow;
+    const double alpha = std::pow(tmp, gamma);
+    const double beta = minLumPow / tmp;
+    return std::pow(nits / alpha, 1.0 / gamma) - beta;
 }
 
 QVector3D TransferFunction::encodedToNits(const QVector3D &encoded) const
 {
-    return QVector3D(encodedToNits(encoded.x()), encodedToNits(encoded.y()), encodedToNits(encoded.z()));
-}
-
-QVector4D TransferFunction::encodedToNits(const QVector4D &encoded) const
-{
-    return QVector4D(encodedToNits(encoded.x()), encodedToNits(encoded.y()), encodedToNits(encoded.z()), encoded.w());
-}
-
-double TransferFunction::nitsToEncoded(double nits) const
-{
-    const double normalized = (nits - minLuminance) / (maxLuminance - minLuminance);
     switch (type) {
-    case TransferFunction::sRGB: {
-        if (normalized < 0.0031308) {
-            return std::max(normalized / 12.92, 0.0);
-        } else {
-            return std::clamp(std::pow(normalized, 5.0 / 12.0) * 1.055 - 0.055, 0.0, 1.0);
-        }
-    }
-    case TransferFunction::gamma22:
-        return std::pow(std::clamp(normalized, 0.0, 1.0), 1.0 / 2.2);
-    case TransferFunction::linear:
-        return normalized;
-    case TransferFunction::PerceptualQuantizer: {
-        const double c1 = 0.8359375;
-        const double c2 = 18.8515625;
-        const double c3 = 18.6875;
-        const double m1 = 0.1593017578125;
-        const double m2 = 78.84375;
-        const double powed = std::pow(std::clamp(normalized, 0.0, 1.0), m1);
-        const double num = c1 + c2 * powed;
-        const double denum = 1 + c3 * powed;
-        return std::pow(num / denum, m2);
-    }
-    case TransferFunction::BT1886: {
-        constexpr double gamma = 2.4;
-        const double minLumPow = std::pow(minLuminance, 1.0 / gamma);
-        const double tmp = std::pow(maxLuminance, 1.0 / gamma) - minLumPow;
-        const double alpha = std::pow(tmp, gamma);
-        const double beta = minLumPow / tmp;
-        return std::pow(nits / alpha, 1.0 / gamma) - beta;
-    }
+    case sRGB:
+        return QVector3D(sRGBEOTF(encoded.x()), sRGBEOTF(encoded.y()), sRGBEOTF(encoded.z()));
+    case gamma22:
+        return QVector3D(gamma22EOTF(encoded.x()), gamma22EOTF(encoded.y()), gamma22EOTF(encoded.z()));
+    case linear:
+        return QVector3D(linearEOTF(encoded.x()), linearEOTF(encoded.y()), linearEOTF(encoded.z()));
+    case PerceptualQuantizer:
+        return QVector3D(pqEOTF(encoded.x()), pqEOTF(encoded.y()), pqEOTF(encoded.z()));
+    case BT1886:
+        return QVector3D(bt1886EOTF(encoded.x()), bt1886EOTF(encoded.y()), bt1886EOTF(encoded.z()));
     }
     Q_UNREACHABLE();
 }
 
+QVector4D TransferFunction::encodedToNits(const QVector4D &encoded) const
+{
+    return QVector4D(encodedToNits(encoded.toVector3D()), encoded.w());
+}
+
 QVector3D TransferFunction::nitsToEncoded(const QVector3D &nits) const
 {
-    return QVector3D(nitsToEncoded(nits.x()), nitsToEncoded(nits.y()), nitsToEncoded(nits.z()));
+    switch (type) {
+    case sRGB:
+        return QVector3D(sRGBinverseEOTF(nits.x()), sRGBinverseEOTF(nits.y()), sRGBinverseEOTF(nits.z()));
+    case gamma22:
+        return QVector3D(gamma22inverseEOTF(nits.x()), gamma22inverseEOTF(nits.y()), gamma22inverseEOTF(nits.z()));
+    case linear:
+        return QVector3D(linearInverseEOTF(nits.x()), linearInverseEOTF(nits.y()), linearInverseEOTF(nits.z()));
+    case PerceptualQuantizer:
+        return QVector3D(pqInverseEOTF(nits.x()), pqInverseEOTF(nits.y()), pqInverseEOTF(nits.z()));
+    case BT1886:
+        return QVector3D(bt1886InverseEOTF(nits.x()), bt1886InverseEOTF(nits.y()), bt1886InverseEOTF(nits.z()));
+    }
+    Q_UNREACHABLE();
 }
 
 QVector4D TransferFunction::nitsToEncoded(const QVector4D &nits) const
 {
-    return QVector4D(nitsToEncoded(nits.x()), nitsToEncoded(nits.y()), nitsToEncoded(nits.z()), nits.w());
+    return QVector4D(nitsToEncoded(nits.toVector3D()), nits.w());
+}
+
+double TransferFunction::whiteEncodedToNits(double encoded) const
+{
+    return encodedToNits(QVector3D(encoded, encoded, encoded)).x();
+}
+
+double TransferFunction::whiteNitsToEncoded(double nits) const
+{
+    return nitsToEncoded(QVector3D(nits, nits, nits)).x();
 }
 
 bool TransferFunction::hasLinearMinLuminance() const

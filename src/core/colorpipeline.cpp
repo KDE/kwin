@@ -57,8 +57,8 @@ ColorPipeline ColorPipeline::create(const std::shared_ptr<ColorDescription> &fro
     const double maxOutputLuminance = to->maxHdrLuminance().value_or(to->referenceLuminance());
     const auto rgbInputSpace = from->transferFunction().type == TransferFunction::linear ? ColorspaceType::LinearRGB : ColorspaceType::NonLinearRGB;
     ColorPipeline ret(ValueRange{
-                          .min = from->transferFunction().nitsToEncoded(range1.min),
-                          .max = from->transferFunction().nitsToEncoded(range1.max),
+                          .min = from->transferFunction().whiteNitsToEncoded(range1.min),
+                          .max = from->transferFunction().whiteNitsToEncoded(range1.max),
                       },
                       rgbInputSpace);
     ret.addTransferFunction(from->transferFunction(), ColorspaceType::LinearRGB);
@@ -199,8 +199,8 @@ void ColorPipeline::addTransferFunction(TransferFunction tf, ColorspaceType outp
             .inputSpace = currentOutputSpace(),
             .operation = ColorTransferFunction(tf),
             .output = ValueRange{
-                .min = tf.encodedToNits(currentOutputRange().min),
-                .max = tf.encodedToNits(currentOutputRange().max),
+                .min = tf.whiteEncodedToNits(currentOutputRange().min),
+                .max = tf.whiteEncodedToNits(currentOutputRange().max),
             },
             .outputSpace = outputType,
         });
@@ -232,8 +232,8 @@ void ColorPipeline::addInverseTransferFunction(TransferFunction tf, ColorspaceTy
             .inputSpace = currentOutputSpace(),
             .operation = InverseColorTransferFunction(tf),
             .output = ValueRange{
-                .min = tf.nitsToEncoded(currentOutputRange().min),
-                .max = tf.nitsToEncoded(currentOutputRange().max),
+                .min = tf.whiteNitsToEncoded(currentOutputRange().min),
+                .max = tf.whiteNitsToEncoded(currentOutputRange().max),
             },
             .outputSpace = outputType,
         });
@@ -354,8 +354,8 @@ void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, doubl
         .input = currentOutputRange(),
         .operation = ColorTonemapper(referenceLuminance, maxInputLuminance, maxOutputLuminance),
         .output = ValueRange{
-            .min = PQ.nitsToEncoded(currentOutputRange().min),
-            .max = PQ.nitsToEncoded(maxOutputLuminance),
+            .min = PQ.pqInverseEOTF(currentOutputRange().min),
+            .max = PQ.pqInverseEOTF(maxOutputLuminance),
         },
     });
     // convert back to rgb
@@ -539,7 +539,7 @@ ColorTonemapper::ColorTonemapper(double referenceLuminance, double maxInputLumin
 
 double ColorTonemapper::map(double pqEncodedLuminance) const
 {
-    const double luminance = TransferFunction(TransferFunction::PerceptualQuantizer).encodedToNits(pqEncodedLuminance);
+    const double luminance = TransferFunction(TransferFunction::PerceptualQuantizer).pqEOTF(pqEncodedLuminance);
 
     double relativeLuminance = std::max(luminance / m_referenceLuminance, 0.0);
     // This is a modified Reinhart curve. It ensures that
@@ -548,7 +548,7 @@ double ColorTonemapper::map(double pqEncodedLuminance) const
     // f(inputRange) = outputRange
     // with inputRange -> infinity, f(1) = 0.5 (=at most reduces reference luminance by half)
     relativeLuminance = relativeLuminance * (1 + relativeLuminance * m_v) / (1.0 + relativeLuminance);
-    return TransferFunction(TransferFunction::PerceptualQuantizer).nitsToEncoded(relativeLuminance * m_referenceLuminance);
+    return TransferFunction(TransferFunction::PerceptualQuantizer).pqInverseEOTF(relativeLuminance * m_referenceLuminance);
 }
 
 ColorClamp::ColorClamp(ValueRange range)
