@@ -3,6 +3,7 @@ const int linear_EOTF = 1;
 const int PQ_EOTF = 2;
 const int gamma22_EOTF = 3;
 const int BT1886_EOTF = 4;
+const int HLG_EOTF = 5;
 
 uniform mat4 colorimetryTransform;
 

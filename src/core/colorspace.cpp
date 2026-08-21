@@ -716,6 +716,7 @@ double TransferFunction::defaultMinLuminanceFor(Type type)
     case Type::BT1886:
         return 0.01;
     case Type::PerceptualQuantizer:
+    case Type::HLG:
         return 0.005;
     }
     Q_UNREACHABLE();
@@ -732,6 +733,8 @@ double TransferFunction::defaultMaxLuminanceFor(Type type)
         return 100;
     case Type::PerceptualQuantizer:
         return 10'000;
+    case Type::HLG:
+        return 1000;
     }
     Q_UNREACHABLE();
 }
@@ -740,6 +743,7 @@ double TransferFunction::defaultReferenceLuminanceFor(Type type)
 {
     switch (type) {
     case Type::PerceptualQuantizer:
+    case Type::HLG:
         return 203;
     case Type::linear:
     case Type::sRGB:
@@ -862,6 +866,31 @@ double TransferFunction::bt1886InverseEOTF(double nits) const
     return std::pow(nits / alpha, 1.0 / gamma) - beta;
 }
 
+double TransferFunction::hlgOETF(double nits) const
+{
+    const double E = std::clamp(normalize(nits), 0.0, 1.0);
+    constexpr double a = 0.17883277;
+    constexpr double b = 0.28466892;
+    constexpr double c = 0.55991073;
+    if (E <= 1 / 12.0) {
+        return std::sqrt(3 * E);
+    } else {
+        return a * std::log(12 * E - b) + c;
+    }
+}
+
+double TransferFunction::hlgInverseOETF(double x) const
+{
+    constexpr double a = 0.17883277;
+    constexpr double b = 0.28466892;
+    constexpr double c = 0.55991073;
+    if (x < 0.5) {
+        return x * x / 3.0;
+    } else {
+        return (std::exp((x - c) / a) + b) / 12.0;
+    }
+}
+
 QVector3D TransferFunction::encodedToNits(const QVector3D &encoded) const
 {
     switch (type) {
@@ -875,6 +904,18 @@ QVector3D TransferFunction::encodedToNits(const QVector3D &encoded) const
         return QVector3D(pqEOTF(encoded.x()), pqEOTF(encoded.y()), pqEOTF(encoded.z()));
     case BT1886:
         return QVector3D(bt1886EOTF(encoded.x()), bt1886EOTF(encoded.y()), bt1886EOTF(encoded.z()));
+    case TransferFunction::HLG: {
+        // first, apply the EOTF
+        const double gamma = 1.2 * std::pow(1.111, std::log2(maxLuminance / 1000.0));
+        const double beta = std::sqrt(3 * std::pow(minLuminance / maxLuminance, 1 / gamma));
+        const QVector3D input = (1 - beta) * encoded + QVector3D(beta, beta, beta);
+        const QVector3D nits(hlgInverseOETF(input.x()), hlgInverseOETF(input.y()), hlgInverseOETF(input.z()));
+
+        // then the OOTF
+        const double Y = 0.2627 * nits.x() + 0.6780 * nits.y() + 0.0593 * nits.z();
+        const double factor = std::pow(Y, gamma - 1) / maxLuminance;
+        return factor * nits;
+    }
     }
     Q_UNREACHABLE();
 }
@@ -897,6 +938,15 @@ QVector3D TransferFunction::nitsToEncoded(const QVector3D &nits) const
         return QVector3D(pqInverseEOTF(nits.x()), pqInverseEOTF(nits.y()), pqInverseEOTF(nits.z()));
     case BT1886:
         return QVector3D(bt1886InverseEOTF(nits.x()), bt1886InverseEOTF(nits.y()), bt1886InverseEOTF(nits.z()));
+    case TransferFunction::HLG: {
+        // first apply the inverse OOTF
+        const double Y = 0.2627 * nits.x() + 0.6780 * nits.y() + 0.0593 * nits.z();
+        const double gamma = 1.2 * std::pow(1.111, std::log2(maxLuminance / 1000.0));
+        const double divisor = std::pow(Y, gamma - 1) / maxLuminance;
+
+        // then the OETF
+        return QVector3D(hlgOETF(nits.x() / divisor), hlgOETF(nits.y() / divisor), hlgOETF(nits.z() / divisor));
+    }
     }
     Q_UNREACHABLE();
 }
