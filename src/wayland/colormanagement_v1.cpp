@@ -47,6 +47,7 @@ void ColorManagerV1::wp_color_manager_v1_bind_resource(Resource *resource)
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_st2084_pq);
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_ext_linear);
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_bt1886);
+    send_supported_tf_named(resource->handle, transfer_function::transfer_function_hlg);
     if (resource->version() >= WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_COMPOUND_POWER_2_4_SINCE_VERSION) {
         send_supported_tf_named(resource->handle, transfer_function::transfer_function_compound_power_2_4);
     }
@@ -359,6 +360,9 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_set_tf_nam
     case WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_COMPOUND_POWER_2_4:
         m_transferFunctionType = TransferFunction::sRGB;
         return;
+    case WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_HLG:
+        m_transferFunctionType = TransferFunction::HLG;
+        return;
         // intentionally not supported - it's confusing and
         // deprecated in version 2 of the protocol
     case WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_SRGB:
@@ -553,6 +557,8 @@ static uint32_t kwinTFtoProtoTF(TransferFunction tf)
         return WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_GAMMA22;
     case TransferFunction::BT1886:
         return WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_BT1886;
+    case TransferFunction::HLG:
+        return WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_HLG;
     }
     Q_UNREACHABLE();
 }

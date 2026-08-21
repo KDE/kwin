@@ -217,9 +217,15 @@ void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, const st
     m_shader->setUniform(m_locations.toXYZD50, m_toXYZD50);
     m_shader->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, inputColor->transferFunction().type);
     if (inputColor->transferFunction().type == TransferFunction::BT1886) {
-        m_shader->setUniform(GLShader::Vec2Uniform::SourceTransferFunctionParams, QVector2D(inputColor->transferFunction().bt1886B(), inputColor->transferFunction().bt1886A()));
+        m_shader->setUniform(GLShader::Vec2Uniform::SourceTransferFunctionParams,
+                             QVector2D(inputColor->transferFunction().bt1886B(), inputColor->transferFunction().bt1886A()));
+    } else if (inputColor->transferFunction().type == TransferFunction::HLG) {
+        m_shader->setUniform(GLShader::Vec2Uniform::SourceTransferFunctionParams,
+                             QVector2D(inputColor->transferFunction().hlgBeta(), inputColor->transferFunction().maxLuminance));
     } else {
-        m_shader->setUniform(GLShader::Vec2Uniform::SourceTransferFunctionParams, QVector2D(inputColor->transferFunction().minLuminance, inputColor->transferFunction().maxLuminance - inputColor->transferFunction().minLuminance));
+        m_shader->setUniform(GLShader::Vec2Uniform::SourceTransferFunctionParams,
+                             QVector2D(inputColor->transferFunction().minLuminance,
+                                       inputColor->transferFunction().maxLuminance - inputColor->transferFunction().minLuminance));
     }
     m_shader->setUniform(GLShader::FloatUniform::SourceReferenceLuminance, inputColor->referenceLuminance());
     m_shader->setUniform(GLShader::FloatUniform::DestinationReferenceLuminance, inputColor->referenceLuminance());

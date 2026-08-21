@@ -163,6 +163,7 @@ public:
         PerceptualQuantizer = 2,
         gamma22 = 3,
         BT1886 = 4,
+        HLG = 5,
     };
     explicit TransferFunction(Type tf);
     explicit TransferFunction(Type tf, double minLuminance, double maxLuminance);
@@ -181,6 +182,7 @@ public:
 
     double bt1886A() const;
     double bt1886B() const;
+    double hlgBeta() const;
 
     Type type;
     /**
@@ -213,6 +215,9 @@ public:
 
 private:
     double normalize(double nits) const;
+
+    double hlgOETF(double nits) const;
+    double hlgInverseOETF(double x) const;
 };
 
 enum class YUVMatrixCoefficients {
