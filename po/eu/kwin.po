@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-20 00:47+0000\n"
-"PO-Revision-Date: 2026-08-01 09:22+0200\n"
+"PO-Revision-Date: 2026-08-20 12:07+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -85,13 +85,13 @@ msgstr "KDE Wayland konposatzailea"
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” (%2) was reset"
-msgstr ""
+msgstr "“%1” (%2) txartel-grafikoa berrezarri egin da"
 
 #: core/gpumanager.cpp:280
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” was reset"
-msgstr ""
+msgstr "“%1” txartel-grafikoa berrezarri egin da"
 
 #: core/iccprofile.cpp:396
 #, kde-format

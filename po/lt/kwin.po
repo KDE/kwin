@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-20 00:47+0000\n"
-"PO-Revision-Date: 2026-08-01 14:36+0300\n"
+"PO-Revision-Date: 2026-08-20 11:57+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -76,13 +76,13 @@ msgstr "KDE Wayland kompozitorius"
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” (%2) was reset"
-msgstr ""
+msgstr "Grafikos plokštė „%1“ (%2) buvo atstatyta"
 
 #: core/gpumanager.cpp:280
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” was reset"
-msgstr ""
+msgstr "Grafikos plokštė „%1“ buvo atstatyta"
 
 #: core/iccprofile.cpp:396
 #, kde-format
