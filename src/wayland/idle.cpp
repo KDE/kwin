@@ -25,13 +25,13 @@ void IdleInterfacePrivate::org_kde_kwin_idle_get_idle_timeout(Resource *resource
     SeatInterface *s = SeatInterface::get(seat);
     Q_ASSERT(s);
 
-    wl_resource *idleTimoutResource = wl_resource_create(resource->client(), &org_kde_kwin_idle_timeout_interface, resource->version(), id);
-    if (!idleTimoutResource) {
+    wl_resource *idleTimeoutResource = wl_resource_create(resource->client(), &org_kde_kwin_idle_timeout_interface, resource->version(), id);
+    if (!idleTimeoutResource) {
         wl_client_post_no_memory(resource->client());
         return;
     }
 
-    new IdleTimeoutInterface(std::chrono::milliseconds(timeout), idleTimoutResource);
+    new IdleTimeoutInterface(std::chrono::milliseconds(timeout), idleTimeoutResource);
 }
 
 IdleInterface::IdleInterface(Display *display, QObject *parent)
