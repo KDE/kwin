@@ -867,34 +867,11 @@ QVector4D TransferFunction::nitsToEncoded(const QVector4D &nits) const
     return QVector4D(nitsToEncoded(nits.x()), nitsToEncoded(nits.y()), nitsToEncoded(nits.z()), nits.w());
 }
 
-bool TransferFunction::isRelative() const
-{
-    switch (type) {
-    case TransferFunction::gamma22:
-    case TransferFunction::sRGB:
-    case TransferFunction::BT1886:
-        return true;
-    case TransferFunction::linear:
-    case TransferFunction::PerceptualQuantizer:
-        return false;
-    }
-    Q_UNREACHABLE();
-}
-
 bool TransferFunction::hasLinearMinLuminance() const
 {
     // With BT1886, min luminance is part of an electrical offset
     // and causes non-linear changes to the curve
     return type != TransferFunction::BT1886;
-}
-
-TransferFunction TransferFunction::relativeScaledTo(double referenceLuminance) const
-{
-    if (isRelative()) {
-        return TransferFunction(type, minLuminance * referenceLuminance / maxLuminance, referenceLuminance);
-    } else {
-        return *this;
-    }
 }
 
 double TransferFunction::bt1886A() const

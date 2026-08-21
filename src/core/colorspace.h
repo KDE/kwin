@@ -170,8 +170,6 @@ public:
     bool operator==(const TransferFunction &) const;
 
     bool hasLinearMinLuminance() const;
-    bool isRelative() const;
-    TransferFunction relativeScaledTo(double referenceLuminance) const;
     double encodedToNits(double encoded) const;
     double nitsToEncoded(double nits) const;
     QVector3D encodedToNits(const QVector3D &encoded) const;
