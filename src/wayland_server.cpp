@@ -665,6 +665,12 @@ WaylandServer::SocketPairConnection WaylandServer::createConnection()
         return ret;
     }
     ret.connection = m_display->createClient(sx[0]);
+    if (!ret.connection) {
+        close(sx[0]);
+        close(sx[1]);
+        return ret;
+    }
+
     ret.fd = sx[1];
     return ret;
 }
