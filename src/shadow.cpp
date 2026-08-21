@@ -281,9 +281,7 @@ bool Shadow::updateShadow()
     if (m_decorationShadow) {
         if (m_window) {
             if (m_window->decoration()) {
-                if (init(m_window->decoration())) {
-                    return true;
-                }
+                return init(m_window->decoration());
             }
         }
         return false;
@@ -291,24 +289,19 @@ bool Shadow::updateShadow()
 
     if (m_window && m_window->surface()) {
         if (const auto &s = m_window->surface()->shadow()) {
-            if (init(s)) {
-                return true;
-            }
+            return init(s);
         }
     }
 
     if (InternalWindow *window = qobject_cast<InternalWindow *>(m_window)) {
-        if (init(window->handle())) {
-            return true;
-        }
+        return init(window->handle());
     }
 
 #if KWIN_BUILD_X11
     if (X11Window *window = qobject_cast<X11Window *>(m_window)) {
         auto data = Shadow::readX11ShadowProperty(window->window());
         if (!data.isEmpty()) {
-            init(data);
-            return true;
+            return init(data);
         }
     }
 #endif
