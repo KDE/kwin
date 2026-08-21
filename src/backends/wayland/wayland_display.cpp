@@ -67,7 +67,7 @@ public:
         , m_quitting(false)
     {
         if (pipe2(m_quitPipe, O_CLOEXEC) == -1) {
-            qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to create quite pipe in WaylandEventThread";
+            qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to create quit pipe in WaylandEventThread";
         }
     }
 
