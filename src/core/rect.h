@@ -2357,10 +2357,10 @@ constexpr inline RectF RectF::united(const RectF &other) const noexcept
 constexpr inline RectF RectF::intersected(const RectF &other) const noexcept
 {
     if (isEmpty()) {
-        return Rect();
+        return RectF();
     }
     if (other.isEmpty()) {
-        return Rect();
+        return RectF();
     }
 
     const qreal intersectionLeft = std::max(left(), other.left());
