@@ -868,7 +868,7 @@ double TransferFunction::bt1886InverseEOTF(double nits) const
 
 double TransferFunction::hlgOETF(double nits) const
 {
-    const double E = std::clamp(normalize(nits), 0.0, 1.0);
+    const double E = std::clamp(nits / maxLuminance, 0.0, 1.0);
     constexpr double a = 0.17883277;
     constexpr double b = 0.28466892;
     constexpr double c = 0.55991073;
@@ -885,9 +885,9 @@ double TransferFunction::hlgInverseOETF(double x) const
     constexpr double b = 0.28466892;
     constexpr double c = 0.55991073;
     if (x < 0.5) {
-        return x * x / 3.0;
+        return maxLuminance * x * x / 3.0;
     } else {
-        return (std::exp((x - c) / a) + b) / 12.0;
+        return maxLuminance * (std::exp((x - c) / a) + b) / 12.0;
     }
 }
 
@@ -905,15 +905,18 @@ QVector3D TransferFunction::encodedToNits(const QVector3D &encoded) const
     case BT1886:
         return QVector3D(bt1886EOTF(encoded.x()), bt1886EOTF(encoded.y()), bt1886EOTF(encoded.z()));
     case TransferFunction::HLG: {
-        // first, apply the EOTF
-        const double gamma = 1.2 * std::pow(1.111, std::log2(maxLuminance / 1000.0));
-        const double beta = std::sqrt(3 * std::pow(minLuminance / maxLuminance, 1 / gamma));
-        const QVector3D input = (1 - beta) * encoded + QVector3D(beta, beta, beta);
+        // first, apply the black level adjustment
+        const double gamma = 1.2 + 0.42 * std::log10(maxLuminance / 1000.0);
+        const double beta = std::sqrt(3.0 * std::pow(minLuminance / maxLuminance, 1.0 / gamma));
+        const QVector3D input = (1.0 - beta) * encoded + QVector3D(beta, beta, beta);
+
+        // then the inverse OETF
         const QVector3D nits(hlgInverseOETF(input.x()), hlgInverseOETF(input.y()), hlgInverseOETF(input.z()));
 
         // then the OOTF
         const double Y = 0.2627 * nits.x() + 0.6780 * nits.y() + 0.0593 * nits.z();
-        const double factor = std::pow(Y, gamma - 1) / maxLuminance;
+        const double alpha = 1.0 / std::pow(maxLuminance, gamma - 1.0);
+        const double factor = alpha * std::pow(Y, gamma - 1.0);
         return factor * nits;
     }
     }
@@ -941,11 +944,16 @@ QVector3D TransferFunction::nitsToEncoded(const QVector3D &nits) const
     case TransferFunction::HLG: {
         // first apply the inverse OOTF
         const double Y = 0.2627 * nits.x() + 0.6780 * nits.y() + 0.0593 * nits.z();
-        const double gamma = 1.2 * std::pow(1.111, std::log2(maxLuminance / 1000.0));
-        const double divisor = std::pow(Y, gamma - 1) / maxLuminance;
+        const double gamma = 1.2 + 0.42 * std::log10(maxLuminance / 1000.0);
+        const double alpha = 1.0 / std::pow(maxLuminance, gamma - 1.0);
+        const double divisor = alpha * std::pow(Y, gamma - 1.0) / maxLuminance;
 
         // then the OETF
-        return QVector3D(hlgOETF(nits.x() / divisor), hlgOETF(nits.y() / divisor), hlgOETF(nits.z() / divisor));
+        const QVector3D output(hlgOETF(nits.x() / divisor), hlgOETF(nits.y() / divisor), hlgOETF(nits.z() / divisor));
+
+        // then the inverse black level adjustment
+        const double beta = std::sqrt(3.0 * std::pow(minLuminance / maxLuminance, 1.0 / gamma));
+        return (output - QVector3D(beta, beta, beta)) / (1.0 - beta);
     }
     }
     Q_UNREACHABLE();

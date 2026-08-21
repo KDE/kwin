@@ -9,15 +9,13 @@ uniform mat4 colorimetryTransform;
 
 uniform int sourceNamedTransferFunction;
 /**
- * x: min luminance
- * y: max luminance - min luminance
+ * Parameters specific to the transfer function
  */
 uniform vec2 sourceTransferFunctionParams;
 
 uniform int destinationNamedTransferFunction;
 /**
- * x: min luminance
- * y: max luminance - min luminance
+ * Parameters specific to the transfer function
  */
 uniform vec2 destinationTransferFunctionParams;
 
@@ -96,6 +94,67 @@ vec3 linearToSrgb(vec3 color) {
 #endif
 }
 
+vec3 hlgToNits(vec3 color, float minLuminance, float maxLuminance)
+{
+    const float a = 0.17883277;
+    const float b = 0.28466892;
+    const float c = 0.55991073;
+
+    // first, apply the black level adjustment
+    // TODO with the next shader API break, pre-compute gamma and beta
+    float gamma = 1.2 + 0.42 * log(maxLuminance / 1000.0) / log(2.0);
+    float beta = sqrt(3.0 * pow(minLuminance / maxLuminance, 1.0 / gamma));
+    vec3 adjusted = (vec3(1.0 - beta) * color + vec3(beta));
+
+    // then the inverse OETF
+    vec3 loPart = pow(adjusted, vec3(2.0)) / 3.0;
+    vec3 hiPart = (exp((adjusted - vec3(c)) / vec3(a)) + vec3(b)) / vec3(12.0);
+
+    bvec3 isLow = lessThanEqual(adjusted, vec3(0.5));
+#if __VERSION__ >= 130
+    vec3 nits = maxLuminance * mix(hiPart, loPart, isLow);
+#else
+    vec3 nits = maxLuminance * mix(hiPart, loPart, vec3(isLow.r ? 1.0 : 0.0, isLow.g ? 1.0 : 0.0, isLow.b ? 1.0 : 0.0));
+#endif
+
+    // then the OOTF
+    float Y = dot(vec3(0.2627, 0.6780, 0.0593), nits);
+    float alpha = 1.0 / pow(maxLuminance, gamma - 1.0);
+    float factor = alpha * pow(Y, gamma - 1.0);
+    return factor * nits;
+}
+
+vec3 nitsToHLG(vec3 nits, float minLuminance, float maxLuminance)
+{
+    const float a = 0.17883277;
+    const float b = 0.28466892;
+    const float c = 0.55991073;
+
+    // first apply the inverse OOTF
+    float Y = dot(vec3(0.2627, 0.6780, 0.0593), nits);
+    float gamma = 1.2 + 0.42 * log(maxLuminance / 1000.0) / log(2.0);
+    float alpha = 1.0 / pow(maxLuminance, gamma - 1.0);
+    float divisor = alpha * pow(Y, gamma - 1.0) / maxLuminance;
+
+    // then the OETF
+    vec3 normalized = nits / vec3(divisor * maxLuminance);
+    vec3 E = clamp(normalized, 0.0, 1.0);
+
+    vec3 loPart = sqrt(3.0 * E);
+    vec3 hiPart = a * log(12.0 * E - b) + c;
+
+    bvec3 isLow = lessThanEqual(E, vec3(1.0 / 12.0));
+#if __VERSION__ >= 130
+    vec3 almostHLG = mix(hiPart, loPart, isLow);
+#else
+    vec3 almostHLG = mix(hiPart, loPart, vec3(isLow.r ? 1.0 : 0.0, isLow.g ? 1.0 : 0.0, isLow.b ? 1.0 : 0.0));
+#endif
+
+    // then the inverse black level adjustment
+    float beta = sqrt(3.0 * pow(minLuminance / maxLuminance, 1.0 / gamma));
+    return (almostHLG - vec3(beta)) / (1.0 - beta);
+}
+
 const mat3 toICtCp = mat3(
     0.5,  1.613769531250,   4.378173828125,
     0.5, -3.323486328125, -4.245605468750,
@@ -155,6 +214,10 @@ vec4 encodingToNits(vec4 color, int sourceTransferFunction, float luminanceOffse
         // for bt1886, luminanceScale = a, luminanceOffset = b
         color.rgb = luminanceScale * pow(max(color.rgb + vec3(luminanceOffset), vec3(0.0)), vec3(2.4));
         color.rgb *= color.a;
+    } else if (sourceTransferFunction == HLG_EOTF) {
+        color.rgb /= max(color.a, 0.001);
+        color.rgb = hlgToNits(color.rgb, luminanceOffset, luminanceScale);
+        color.rgb *= color.a;
     }
     return color;
 }
@@ -184,6 +247,10 @@ vec4 nitsToEncoding(vec4 color, int destinationTransferFunction, float luminance
         color.rgb /= max(color.a, 0.001);
         // for bt1886, luminanceScale = a, luminanceOffset = b
         color.rgb = pow(color.rgb / luminanceScale, vec3(1.0 / 2.4)) - vec3(luminanceOffset);
+        color.rgb *= color.a;
+    } else if (destinationTransferFunction == HLG_EOTF) {
+        color.rgb /= max(color.a, 0.001);
+        color.rgb = nitsToHLG(color.rgb, luminanceOffset, luminanceScale);
         color.rgb *= color.a;
     }
     return color;

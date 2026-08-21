@@ -515,6 +515,8 @@ void GLShader::setColorspaceUniforms(const std::shared_ptr<ColorDescription> &sr
     setUniform(IntUniform::SourceNamedTransferFunction, src->transferFunction().type);
     if (src->transferFunction().type == TransferFunction::BT1886) {
         setUniform(Vec2Uniform::SourceTransferFunctionParams, QVector2D(src->transferFunction().bt1886B(), src->transferFunction().bt1886A()));
+    } else if (src->transferFunction().type == TransferFunction::HLG) {
+        setUniform(Vec2Uniform::SourceTransferFunctionParams, QVector2D(dst->transferFunction().minLuminance, dst->transferFunction().maxLuminance));
     } else {
         setUniform(Vec2Uniform::SourceTransferFunctionParams, QVector2D(src->transferFunction().minLuminance, src->transferFunction().maxLuminance - src->transferFunction().minLuminance));
     }
@@ -522,6 +524,8 @@ void GLShader::setColorspaceUniforms(const std::shared_ptr<ColorDescription> &sr
     setUniform(IntUniform::DestinationNamedTransferFunction, dst->transferFunction().type);
     if (dst->transferFunction().type == TransferFunction::BT1886) {
         setUniform(Vec2Uniform::DestinationTransferFunctionParams, QVector2D(dst->transferFunction().bt1886B(), dst->transferFunction().bt1886A()));
+    } else if (dst->transferFunction().type == TransferFunction::HLG) {
+        setUniform(Vec2Uniform::DestinationTransferFunctionParams, QVector2D(dst->transferFunction().minLuminance, dst->transferFunction().maxLuminance));
     } else {
         setUniform(Vec2Uniform::DestinationTransferFunctionParams, QVector2D(dst->transferFunction().minLuminance, dst->transferFunction().maxLuminance - dst->transferFunction().minLuminance));
     }

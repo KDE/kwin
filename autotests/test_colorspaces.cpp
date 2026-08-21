@@ -76,6 +76,9 @@ void TestColorspaces::roundtripConversion_data()
     QTest::addRow("BT709 (gamma 2.2) <-> BT2020 (linear)") << Colorimetry::BT709 << TransferFunction::gamma22 << Colorimetry::BT2020 << TransferFunction::linear << s_resolution10bit;
     QTest::addRow("BT709 (linear) <-> BT2020 (linear)") << Colorimetry::BT709 << TransferFunction::linear << Colorimetry::BT2020 << TransferFunction::linear << s_resolution10bit;
     QTest::addRow("BT709 (PQ) <-> BT2020 (linear)") << Colorimetry::BT709 << TransferFunction::PerceptualQuantizer << Colorimetry::BT2020 << TransferFunction::linear << 3 * s_resolution10bit;
+    QTest::addRow("BT2020 (HLG) <-> BT2020 (linear)") << Colorimetry::BT2020 << TransferFunction::HLG
+                                                      << Colorimetry::BT2020 << TransferFunction::linear
+                                                      << s_resolution10bit;
 }
 
 void TestColorspaces::roundtripConversion()
@@ -97,6 +100,7 @@ void TestColorspaces::roundtripConversion()
         RenderingIntent::RelativeColorimetric,
         RenderingIntent::AbsoluteColorimetricNoAdaptation,
     };
+
     for (const RenderingIntent intent : renderingIntents) {
         QVERIFY(compareVectors(dst.mapTo(src.mapTo(red, dst, intent), src, intent), red, requiredAccuracy));
         QVERIFY(compareVectors(dst.mapTo(src.mapTo(green, dst, intent), src, intent), green, requiredAccuracy));
@@ -292,25 +296,12 @@ void TestColorspaces::testXYZ()
 
 void TestColorspaces::testOpenglShader_data()
 {
+    QTest::addColumn<std::shared_ptr<ColorDescription>>("src");
+    QTest::addColumn<std::shared_ptr<ColorDescription>>("dst");
     QTest::addColumn<RenderingIntent>("intent");
     QTest::addColumn<double>("maxError");
 
-    // the allowed error here needs to be this high because of llvmpipe. With real GPU drivers it's lower
-    QTest::addRow("Perceptual") << RenderingIntent::Perceptual << 7.0;
-    QTest::addRow("RelativeColorimetric") << RenderingIntent::RelativeColorimetric << 1.5;
-    QTest::addRow("AbsoluteColorimetricNoAdaptation") << RenderingIntent::AbsoluteColorimetricNoAdaptation << 1.5;
-    QTest::addRow("RelativeColorimetricWithBPC") << RenderingIntent::RelativeColorimetricWithBPC << 1.5;
-}
-
-void TestColorspaces::testOpenglShader()
-{
-    QFETCH(RenderingIntent, intent);
-    QFETCH(double, maxError);
-
-    const auto display = EglDisplay::create(eglGetDisplay(EGL_DEFAULT_DISPLAY), nullptr);
-    const auto context = EglContext::create(display.get(), EGL_NO_CONFIG_KHR, nullptr);
-
-    const auto src = std::make_shared<ColorDescription>(ColorDescription{
+    const auto linear = std::make_shared<ColorDescription>(ColorDescription{
         Colorimetry::BT709,
         TransferFunction(TransferFunction::linear, 0, 400),
         100,
@@ -318,7 +309,7 @@ void TestColorspaces::testOpenglShader()
         200,
         400,
     });
-    const auto dst = std::make_shared<ColorDescription>(ColorDescription{
+    const auto gamma22 = std::make_shared<ColorDescription>(ColorDescription{
         Colorimetry::BT709,
         TransferFunction(TransferFunction::gamma22),
         100,
@@ -326,6 +317,34 @@ void TestColorspaces::testOpenglShader()
         100,
         100,
     });
+
+    // the allowed error here needs to be this high because of llvmpipe. With real GPU drivers it's lower
+    QTest::addRow("Perceptual") << linear << gamma22 << RenderingIntent::Perceptual << 7.0;
+    QTest::addRow("RelativeColorimetric") << linear << gamma22 << RenderingIntent::RelativeColorimetric << 1.5;
+    QTest::addRow("AbsoluteColorimetricNoAdaptation") << linear << gamma22 << RenderingIntent::AbsoluteColorimetricNoAdaptation << 1.5;
+    QTest::addRow("RelativeColorimetricWithBPC") << linear << gamma22 << RenderingIntent::RelativeColorimetricWithBPC << 1.5;
+
+    const auto hlg = std::make_shared<ColorDescription>(ColorDescription{
+        Colorimetry::BT709,
+        TransferFunction(TransferFunction::HLG, 0, 1000),
+        100,
+        0,
+        200,
+        1000,
+    });
+    QTest::addRow("Perceptual HLG") << hlg << linear << RenderingIntent::Perceptual << 4.0;
+    QTest::addRow("Perceptual HLG inverse") << linear << hlg << RenderingIntent::Perceptual << 1.0;
+}
+
+void TestColorspaces::testOpenglShader()
+{
+    QFETCH(std::shared_ptr<ColorDescription>, src);
+    QFETCH(std::shared_ptr<ColorDescription>, dst);
+    QFETCH(RenderingIntent, intent);
+    QFETCH(double, maxError);
+
+    const auto display = EglDisplay::create(eglGetDisplay(EGL_DEFAULT_DISPLAY), nullptr);
+    const auto context = EglContext::create(display.get(), EGL_NO_CONFIG_KHR, nullptr);
 
     QImage input(255, 255, QImage::Format_RGBA8888_Premultiplied);
     for (int x = 0; x < input.width(); x++) {
@@ -365,6 +384,7 @@ void TestColorspaces::testOpenglShader()
         }
     }
 
+    double error = 0;
     for (int x = 0; x < input.width(); x++) {
         for (int y = 0; y < input.height(); y++) {
             const auto glPixel = openGlResult.pixel(x, y);
@@ -372,9 +392,11 @@ void TestColorspaces::testOpenglShader()
             const auto pipePixel = pipelineResult.pixel(x, y);
             const QVector3D pipeColors = QVector3D(qRed(pipePixel), qGreen(pipePixel), qBlue(pipePixel));
             const QVector3D difference = (glColors - pipeColors);
-            QCOMPARE_LE(difference.length(), maxError);
+            error = std::max<double>(error, difference.length());
         }
     }
+    QCOMPARE_LE(error, maxError);
+    qWarning() << "max error:" << error;
 }
 
 void TestColorspaces::testIccShader_data()
