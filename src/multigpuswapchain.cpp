@@ -234,7 +234,7 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::createForSampling(RenderDe
 
     RenderDevice *sysMemDevice = GpuManager::self()->softwareDevice();
 
-    // NOTE that udmabuf has an arbitrary size limit fo 64MB as of Linux 7.2,
+    // NOTE that udmabuf has an arbitrary size limit of 64MB as of Linux 7.2,
     // so we need to have a fallback when creating the udmabuf fails.
     // Additionally, importing a dmabuf from Nvidia into a non-Nvidia GPU
     // will cause a hang because of a bug in the Nvidia driver:
