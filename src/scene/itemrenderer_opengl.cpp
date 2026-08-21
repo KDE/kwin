@@ -290,7 +290,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     renderNode.box = QVector4D(top.box.x() + top.box.width() * 0.5,
                                                top.box.y() + top.box.height() * 0.5,
                                                top.box.width() * 0.5,
-                                               top.box.height() * 0.5),
+                                               top.box.height() * 0.5);
                     renderNode.borderRadius = top.radius.toVector();
                 }
             }
