@@ -713,7 +713,7 @@ xcb_screen_t *X11WindowedBackend::screen() const
     return m_screen;
 }
 
-int X11WindowedBackend::screenNumer() const
+int X11WindowedBackend::screenNumber() const
 {
     return m_screenNumber;
 }

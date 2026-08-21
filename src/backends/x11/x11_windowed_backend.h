@@ -98,7 +98,7 @@ public:
 
     xcb_connection_t *connection() const;
     xcb_screen_t *screen() const;
-    int screenNumer() const;
+    int screenNumber() const;
     xcb_window_t rootWindow() const;
 
     bool hasXInput() const;
