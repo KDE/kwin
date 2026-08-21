@@ -170,8 +170,10 @@ public:
     bool operator==(const TransferFunction &) const;
 
     bool hasLinearMinLuminance() const;
-    double encodedToNits(double encoded) const;
-    double nitsToEncoded(double nits) const;
+
+    double whiteEncodedToNits(double encoded) const;
+    double whiteNitsToEncoded(double nits) const;
+
     QVector3D encodedToNits(const QVector3D &encoded) const;
     QVector3D nitsToEncoded(const QVector3D &nits) const;
     QVector4D encodedToNits(const QVector4D &encoded) const;
@@ -193,6 +195,24 @@ public:
     static double defaultMinLuminanceFor(Type type);
     static double defaultMaxLuminanceFor(Type type);
     static double defaultReferenceLuminanceFor(Type type);
+
+    double sRGBEOTF(double encoded) const;
+    double sRGBinverseEOTF(double nits) const;
+
+    double gamma22EOTF(double encoded) const;
+    double gamma22inverseEOTF(double nits) const;
+
+    double linearEOTF(double encoded) const;
+    double linearInverseEOTF(double nits) const;
+
+    double pqEOTF(double encoded) const;
+    double pqInverseEOTF(double nits) const;
+
+    double bt1886EOTF(double encoded) const;
+    double bt1886InverseEOTF(double nits) const;
+
+private:
+    double normalize(double nits) const;
 };
 
 enum class YUVMatrixCoefficients {
