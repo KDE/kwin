@@ -549,6 +549,9 @@ bool ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             }
             lastTraits = ShaderTrait::Border;
             shader = ShaderManager::instance()->pushShader(lastTraits);
+            if (!shader) {
+                continue;
+            }
             shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);
 
             const RectF box = renderNode.layerDebugBox->scaled(viewport.scale()).adjusted(10, 10, -10, -10);
