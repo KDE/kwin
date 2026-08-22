@@ -264,7 +264,7 @@ BackendOutput::SubPixel DrmConnector::subpixel() const
 
 bool DrmConnector::updateProperties()
 {
-    if (auto connector = drmModeGetConnector(gpu()->fd(), id())) {
+    if (auto connector = drmModeGetConnectorCurrent(gpu()->fd(), id())) {
         m_conn.reset(connector);
     } else {
         qCWarning(KWIN_DRM) << "drmModeGetConnector() failed:" << strerror(errno);
