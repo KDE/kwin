@@ -73,13 +73,13 @@ msgstr "KDE Wayland 显示特效混合器"
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” (%2) was reset"
-msgstr ""
+msgstr "显卡“%1”(%2) 已重置"
 
 #: core/gpumanager.cpp:280
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” was reset"
-msgstr ""
+msgstr "显卡“%1”已重置"
 
 #: core/iccprofile.cpp:396
 #, kde-format

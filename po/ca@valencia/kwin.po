@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-20 00:47+0000\n"
-"PO-Revision-Date: 2026-07-29 09:45+0200\n"
+"PO-Revision-Date: 2026-08-19 09:22+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -80,13 +80,13 @@ msgstr "Compositor de Wayland de KDE"
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” (%2) was reset"
-msgstr ""
+msgstr "S'ha reiniciat la targeta gràfica «%1» (%2)"
 
 #: core/gpumanager.cpp:280
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” was reset"
-msgstr ""
+msgstr "S'ha reiniciat la targeta gràfica «%1»"
 
 #: core/iccprofile.cpp:396
 #, kde-format
@@ -4427,8 +4427,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
-
-#~ msgid "Desktop effects were restarted due to a graphics reset"
-#~ msgstr ""
-#~ "Els efectes de l'escriptori s'han reiniciat a causa d'una "
-#~ "reinicialització dels gràfics"
