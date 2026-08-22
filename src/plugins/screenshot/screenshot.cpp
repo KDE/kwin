@@ -107,7 +107,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
     }
 
     GLFramebuffer::pushFramebuffer(target.get());
-    QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBA8888_Premultiplied);
+    QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBX8888);
     context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
     snapshot.flip(Qt::Vertical);
     GLFramebuffer::popFramebuffer();
@@ -175,7 +175,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
     }
 
     GLFramebuffer::pushFramebuffer(target.get());
-    QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBA8888_Premultiplied);
+    QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBX8888);
     context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
     snapshot.flip(Qt::Vertical);
     GLFramebuffer::popFramebuffer();
