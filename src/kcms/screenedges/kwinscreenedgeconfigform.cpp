@@ -28,6 +28,7 @@ KWinScreenEdgesConfigForm::KWinScreenEdgesConfigForm(QWidget *parent)
     connect(ui->kcfg_ElectricBorderTiling, &QCheckBox::stateChanged, this, &KWinScreenEdgesConfigForm::groupChanged);
 
     connect(ui->remainActiveOnFullscreen, &QCheckBox::stateChanged, this, &KWinScreenEdgesConfigForm::onChanged);
+    connect(ui->remainActiveOnFullscreen, &QCheckBox::stateChanged, this, &KWinScreenEdgesConfigForm::updateDefaultIndicators);
     connect(ui->electricBorderCornerRatioSpin, qOverload<int>(&QSpinBox::valueChanged), this, &KWinScreenEdgesConfigForm::onChanged);
     connect(ui->electricBorderCornerRatioSpin, qOverload<int>(&QSpinBox::valueChanged), this, &KWinScreenEdgesConfigForm::updateDefaultIndicators);
 }
@@ -101,7 +102,7 @@ bool KWinScreenEdgesConfigForm::isSaveNeeded() const
 
 bool KWinScreenEdgesConfigForm::isDefault() const
 {
-    return m_defaultCornerRatio == electricBorderCornerRatio() && m_remainActiveOnFullscreen == false;
+    return m_defaultCornerRatio == electricBorderCornerRatio() && !remainActiveOnFullscreen();
 }
 
 void KWinScreenEdgesConfigForm::sanitizeCooldown()
