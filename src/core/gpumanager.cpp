@@ -273,6 +273,10 @@ void GpuManager::handleUdevEvent()
 
 void GpuManager::addDevice(std::unique_ptr<RenderDevice> &&device)
 {
+    if (!m_explicitRenderNodes.has_value() && device->isSoftwareDevice()) {
+        qCInfo(KWIN_CORE, "Ignoring render device %s without hardware acceleration", qPrintable(device->drmDevice()->path()));
+        return;
+    }
     m_renderDevices.push_back(std::move(device));
     updateCompatibilityMap();
     qCDebug(KWIN_CORE, "Added render device %s", qPrintable(m_renderDevices.back()->drmDevice()->path()));
