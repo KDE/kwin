@@ -4474,8 +4474,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland krasjet"
-
-#~ msgid "Desktop effects were restarted due to a graphics reset"
-#~ msgstr ""
-#~ "Skrivebordseffekter ble staret på nytt, på grunn av en bilde-"
-#~ "tilbakestilling"
