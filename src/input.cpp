@@ -303,7 +303,9 @@ public:
             return false;
         }
 
-        ScreenLocker::KSldApp::self()->userActivity();
+        if (!event->warp) {
+            ScreenLocker::KSldApp::self()->userActivity();
+        }
 
         auto window = input()->findToplevel(event->position);
         if (window && window->isClient() && window->isLockScreen()) {
