@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-15 02:54+0000\n"
-"PO-Revision-Date: 2026-01-05 17:34+0200\n"
+"PO-Revision-Date: 2026-02-24 21:19+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -1285,7 +1285,7 @@ msgstr "aika"
 #: helpers/dialoghelper/dialoghelper.cpp:46
 #, kde-format
 msgid "The message to show (fullscreen, noborder)"
-msgstr ""
+msgstr "Näytettävä viesti (koko näyttö, ei reunoja)"
 
 #: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:146
 #, kde-format
@@ -1299,12 +1299,7 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "Tätä apuohjelmaa ei ole tarkoitus kutsua suoraan."
 
 #: helpers/dialoghelper/dialoghelper.cpp:79
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window menu instead, activated using the %1 keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1330,12 +1325,7 @@ msgstr ""
 "pikanäppäimellä %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:93
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window menu instead, activated using the %1 keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1343,30 +1333,23 @@ msgid ""
 msgstr ""
 "Ikkuna on valittu näytettäväksi koko näytön tilassa.\n"
 "Ellei ohjelmassa itsessään ole keinoa poistua koko näytön tilasta, siitä ei "
-"voi poistua hiirellä. Käytä sen sijaan ikkunavalikkoa, jonka saa näkyviin "
-"pikanäppäimellä %1."
+"voi poistua hiirellä."
 
 #: helpers/dialoghelper/dialoghelper.cpp:98
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
-msgstr "Koko näyttö"
+msgstr "Kumoa koko näyttö"
 
 #: helpers/dialoghelper/dialoghelper.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse: use the %1 keyboard shortcut instead."
 msgstr ""
 "Ikkuna on valittu näytettäväksi reunuksetta.\n"
-"Ilman reunusta sitä ei voi palauttaa näkyviin hiirellä. Käytä sen sijaan "
+"Reunuksetta sitä ei voi palauttaa näkyviin hiirellä. Käytä sen sijaan "
 "ikkunavalikkoa, jonka saa näkyviin pikanäppäimellä %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:106
@@ -1382,32 +1365,25 @@ msgstr ""
 "ikkunavalikkoa, jonka saa näkyviin pikanäppäimellä %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:112
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse."
 msgstr ""
 "Ikkuna on valittu näytettäväksi reunuksetta.\n"
-"Ilman reunusta sitä ei voi palauttaa näkyviin hiirellä. Käytä sen sijaan "
-"ikkunavalikkoa, jonka saa näkyviin pikanäppäimellä %1."
+"Reunuksetta sitä ei voi palauttaa näkyviin hiirellä."
 
 #: helpers/dialoghelper/dialoghelper.cpp:116
-#, fuzzy, kde-format
-#| msgid "&No Border"
+#, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
-msgstr "&Ei reunusta"
+msgstr "Palauta reuna"
 
 #: helpers/dialoghelper/dialoghelper.cpp:133
 #, kde-format
 msgid "Do not show again"
-msgstr ""
+msgstr "Älä näytä enää"
 
 #: helpers/killer/killdialog.cpp:37
 #, kde-kuit-format
@@ -3973,10 +3949,9 @@ msgid "Maximize Window Horizontally"
 msgstr "Suurenna ikkuna vaakasuunnassa"
 
 #: useractions.cpp:835
-#, fuzzy, kde-format
-#| msgid "Resize Window"
+#, kde-format
 msgid "Restore Window"
-msgstr "Muuta ikkunan kokoa"
+msgstr "Palauta ikkuna"
 
 #: useractions.cpp:837
 #, kde-format
