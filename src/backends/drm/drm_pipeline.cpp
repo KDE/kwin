@@ -262,7 +262,7 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPlane(DrmAtomicCommit *commit, DrmP
     if (plane->alpha.isValid()) {
         commit->addProperty(plane->alpha, plane->alpha.maxValue());
     }
-    if (plane->pixelBlendMode.isValid()) {
+    if (plane->pixelBlendMode.isValid() && plane->pixelBlendMode.hasEnum(DrmPlane::PixelBlendMode::PreMultiplied)) {
         commit->addEnum(plane->pixelBlendMode, DrmPlane::PixelBlendMode::PreMultiplied);
     }
     if (plane->zpos.isValid() && !plane->zpos.isImmutable()) {
