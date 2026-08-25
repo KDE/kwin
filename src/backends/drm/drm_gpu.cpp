@@ -568,7 +568,13 @@ static std::chrono::nanoseconds convertTimestamp(clockid_t sourceClock, clockid_
 
 void DrmGpu::pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, unsigned int usec, unsigned int crtc_id, void *user_data)
 {
-    DrmGpu *gpu = static_cast<DrmGpu *>(user_data);
+    DrmBackend *backend = static_cast<DrmBackend *>(user_data);
+    const auto &gpus = backend->gpus();
+    const auto gpuIt = std::ranges::find_if(gpus, [fd](const auto &gpu) {
+        return gpu->fd() == fd;
+    });
+    Q_ASSERT(gpuIt != gpus.end());
+    DrmGpu *gpu = gpuIt->get();
     DrmCommit *commit;
     {
         std::lock_guard lock(gpu->m_pendingCommitsMutex);

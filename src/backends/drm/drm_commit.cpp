@@ -158,7 +158,7 @@ bool DrmAtomicCommit::doCommit(uint32_t flags)
         .props_ptr = reinterpret_cast<uint64_t>(propertyIds.data()),
         .prop_values_ptr = reinterpret_cast<uint64_t>(values.data()),
         .reserved = 0,
-        .user_data = reinterpret_cast<uint64_t>(m_gpu),
+        .user_data = reinterpret_cast<uint64_t>(m_gpu->platform()),
     };
     std::unique_lock<std::mutex> lock;
     if (flags & DRM_MODE_PAGE_FLIP_EVENT) {
@@ -320,7 +320,7 @@ bool DrmLegacyCommit::doPageflip(PresentationMode mode)
         flags |= DRM_MODE_PAGE_FLIP_ASYNC;
     }
     auto lock = gpu()->lockPendingCommits();
-    const bool success = drmModePageFlip(gpu()->fd(), m_crtc->id(), m_buffer->framebufferId(), flags, gpu()) == 0;
+    const bool success = drmModePageFlip(gpu()->fd(), m_crtc->id(), m_buffer->framebufferId(), flags, gpu()->platform()) == 0;
     if (success) {
         gpu()->registerPendingCommit(lock, m_crtc->id(), this);
     }
