@@ -143,7 +143,9 @@ void XdgSurfaceWindow::moveResizeInternal(const RectF &rect, MoveResizeMode mode
         const QSizeF requestedClientSize = nextFrameSizeToClientSize(requestedFrameSize);
         const QSizeF roundedRequestedClientSize = surface()->snappedSize(requestedClientSize);
 
-        const QSizeF roundedClientSize = surface()->snappedSize(clientSize());
+        const QSizeF nextClientSize = m_configureEvents.isEmpty() ? clientSize() : std::as_const(m_configureEvents).last()->bounds.size();
+        const QSizeF roundedClientSize = surface()->snappedSize(nextClientSize);
+
         if (roundedRequestedClientSize == roundedClientSize) {
             const RectF snappedRect = RectF(rect.topLeft(), nextClientSizeToFrameSize(snapToPixels(roundedClientSize, nextTargetScale())));
             updateGeometry(m_nextGravity.apply(snappedRect, rect));
