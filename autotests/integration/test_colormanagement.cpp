@@ -353,6 +353,9 @@ static ImageDescription createImageDescription(ColorManagementSurface *surface, 
     case TransferFunction::BT1886:
         creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_BT1886);
         break;
+    case TransferFunction::HLG:
+        creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_HLG);
+        break;
     }
     creator.set_luminances(std::round(color.transferFunction().minLuminance * 10'000), std::round(color.transferFunction().maxLuminance), std::round(color.referenceLuminance()));
     creator.set_max_fall(std::round(color.maxAverageLuminance().value_or(0)));
