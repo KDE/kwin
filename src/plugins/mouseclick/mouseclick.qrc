@@ -1,0 +1,8 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/effects/mouseclick/">
+        <file>shaders/mouseclick.frag</file>
+        <file>shaders/mouseclick.vert</file>
+        <file>shaders/feedback.frag</file>
+    </qresource>
+</RCC>
