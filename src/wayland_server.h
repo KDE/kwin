@@ -247,15 +247,6 @@ private:
     void handleOutputDisabled(LogicalOutput *output);
     void updateSyncobjSupport();
 
-    class LockScreenPresentationWatcher : public QObject
-    {
-    public:
-        LockScreenPresentationWatcher(WaylandServer *server);
-
-    private:
-        QSet<LogicalOutput *> m_signaledOutputs;
-    };
-
     Display *m_display = nullptr;
     CompositorInterface *m_compositor = nullptr;
     SeatInterface *m_seat = nullptr;
@@ -304,7 +295,6 @@ private:
     PointerWarpV1 *m_pointerWarp = nullptr;
     ExtBackgroundEffectManagerV1 *m_backgroundEffect = nullptr;
 
-    std::shared_ptr<FileDescriptor> m_sleepInhibitor;
     KWIN_SINGLETON(WaylandServer)
 };
 
