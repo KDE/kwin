@@ -197,7 +197,7 @@ public:
         return *this;
     }
 
-    inline GraphicsBuffer *buffer() const
+    inline GraphicsBuffer *get() const
     {
         return m_buffer;
     }

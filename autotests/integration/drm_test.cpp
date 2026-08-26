@@ -248,7 +248,7 @@ public:
             qWarning("Allocating initial buffer on %s failed! %s", qPrintable(m_device->path()), strerror(errno));
             return false;
         }
-        auto wlbuffer = Test::linuxDmabuf()->importBuffer(m_buffer.buffer());
+        auto wlbuffer = Test::linuxDmabuf()->importBuffer(m_buffer.get());
         m_surface->attachBuffer(wlbuffer);
         m_surface->damage(QRect(QPoint(0, 0), size));
         m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -282,7 +282,7 @@ public:
                     continue;
                 }
                 m_buffer = buffer;
-                auto wlbuffer = Test::linuxDmabuf()->importBuffer(m_buffer.buffer());
+                auto wlbuffer = Test::linuxDmabuf()->importBuffer(m_buffer.get());
                 m_surface->attachBuffer(wlbuffer);
                 m_surface->damage(QRect(QPoint(0, 0), m_buffer->size()));
                 m_needsRealloc = false;

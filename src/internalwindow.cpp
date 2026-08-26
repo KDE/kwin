@@ -387,7 +387,7 @@ void InternalWindow::popupDone()
 
 GraphicsBuffer *InternalWindow::graphicsBuffer() const
 {
-    return m_graphicsBufferRef.buffer();
+    return m_graphicsBufferRef.get();
 }
 
 OutputTransform InternalWindow::bufferTransform() const

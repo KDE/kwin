@@ -320,42 +320,42 @@ QMarginsF ShadowInterface::offset() const
 
 GraphicsBuffer *ShadowInterface::left() const
 {
-    return d->left.buffer();
+    return d->left.get();
 }
 
 GraphicsBuffer *ShadowInterface::topLeft() const
 {
-    return d->topLeft.buffer();
+    return d->topLeft.get();
 }
 
 GraphicsBuffer *ShadowInterface::top() const
 {
-    return d->top.buffer();
+    return d->top.get();
 }
 
 GraphicsBuffer *ShadowInterface::topRight() const
 {
-    return d->topRight.buffer();
+    return d->topRight.get();
 }
 
 GraphicsBuffer *ShadowInterface::right() const
 {
-    return d->right.buffer();
+    return d->right.get();
 }
 
 GraphicsBuffer *ShadowInterface::bottomRight() const
 {
-    return d->bottomRight.buffer();
+    return d->bottomRight.get();
 }
 
 GraphicsBuffer *ShadowInterface::bottom() const
 {
-    return d->bottom.buffer();
+    return d->bottom.get();
 }
 
 GraphicsBuffer *ShadowInterface::bottomLeft() const
 {
-    return d->bottomLeft.buffer();
+    return d->bottomLeft.get();
 }
 
 }

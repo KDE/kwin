@@ -115,7 +115,7 @@ void WaylandLayer::commit(PresentationMode presentationMode)
         }
     }
     if (m_pendingBuffer) {
-        m_surface->attachBuffer(output->backend()->importBuffer(m_pendingBuffer.buffer()));
+        m_surface->attachBuffer(output->backend()->importBuffer(m_pendingBuffer.get()));
         m_surface->damageBuffer(QRegion(m_pendingDamage));
         // WaylandBackend::importBuffer takes care of the buffers life time from here on
         m_pendingBuffer.reset();

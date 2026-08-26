@@ -40,7 +40,7 @@ void SurfaceItem::setDestinationSize(const QSizeF &size)
 
 GraphicsBuffer *SurfaceItem::buffer() const
 {
-    return m_bufferRef.buffer();
+    return m_bufferRef.get();
 }
 
 void SurfaceItem::setBuffer(GraphicsBuffer *buffer)

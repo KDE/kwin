@@ -877,7 +877,7 @@ OutputTransform SurfaceInterface::bufferTransform() const
 
 GraphicsBuffer *SurfaceInterface::buffer() const
 {
-    return d->bufferRef.buffer();
+    return d->bufferRef.get();
 }
 
 QPointF SurfaceInterface::offset() const

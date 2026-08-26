@@ -75,7 +75,7 @@ GraphicsBufferReleasePoint::~GraphicsBufferReleasePoint()
     if (m_bufferRef && m_releaseFd.isValid()) {
         // the buffer needs to stay alive until the
         // release point is signaled
-        new SyncReferencer(m_bufferRef.buffer(), std::move(m_releaseFd));
+        new SyncReferencer(m_bufferRef.get(), std::move(m_releaseFd));
     }
 }
 

@@ -369,7 +369,7 @@ public:
     ~UDmabufReleasePoint()
     {
         if (m_sync) {
-            new SyncReferencer(m_buffer.buffer(), std::move(m_sync));
+            new SyncReferencer(m_buffer.get(), std::move(m_sync));
         }
     }
 
