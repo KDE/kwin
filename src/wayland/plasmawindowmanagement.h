@@ -144,14 +144,6 @@ public:
     void setExcludeFromCapture(bool set);
 
     /**
-     * This method removes the Window and the Client is supposed to release the resource
-     * bound for this Window.
-     *
-     * No more events should be sent afterwards.
-     */
-    void unmap();
-
-    /**
      * @returns Geometries of the taskbar entries, indicized by the
      *          surface of the panels
      */

@@ -60,7 +60,6 @@ class PlasmaWindowInterfacePrivate : public QtWaylandServer::org_kde_plasma_wind
 {
 public:
     PlasmaWindowInterfacePrivate(PlasmaWindowManagementInterface *wm, PlasmaWindowInterface *q);
-    ~PlasmaWindowInterfacePrivate();
 
     class PlasmaWindowResource : public QtWaylandServer::org_kde_plasma_window::Resource
     {
@@ -73,7 +72,6 @@ public:
     void setPid(quint32 pid);
     void setThemedIconName(const QString &iconName);
     void setIcon(const QIcon &icon);
-    void unmap();
     void setState(org_kde_plasma_window_management_state flag, bool set);
     void setParentWindow(PlasmaWindowInterface *parent);
     void setGeometry(const Rect &geometry);
@@ -87,7 +85,6 @@ public:
     QHash<SurfaceInterface *, Rect> minimizedGeometries;
     PlasmaWindowManagementInterface *wm;
 
-    bool unmapped = false;
     PlasmaWindowInterface *parentWindow = nullptr;
     QMetaObject::Connection parentWindowDestroyConnection;
     QStringList plasmaVirtualDesktops;
@@ -374,11 +371,6 @@ PlasmaWindowInterfacePrivate::PlasmaWindowInterfacePrivate(PlasmaWindowManagemen
 {
 }
 
-PlasmaWindowInterfacePrivate::~PlasmaWindowInterfacePrivate()
-{
-    unmap();
-}
-
 QtWaylandServer::org_kde_plasma_window::Resource *PlasmaWindowInterfacePrivate::org_kde_plasma_window_allocate()
 {
     return new PlasmaWindowResource;
@@ -564,19 +556,6 @@ void PlasmaWindowInterfacePrivate::setTitle(const QString &title)
 
     for (auto resource : clientResources) {
         send_title_changed(resource->handle, truncate(m_title));
-    }
-}
-
-void PlasmaWindowInterfacePrivate::unmap()
-{
-    if (unmapped) {
-        return;
-    }
-    unmapped = true;
-    const auto clientResources = resourceMap();
-
-    for (auto resource : clientResources) {
-        send_unmapped(resource->handle);
     }
 }
 
@@ -804,7 +783,12 @@ PlasmaWindowInterface::PlasmaWindowInterface(PlasmaWindowManagementInterface *wm
 {
 }
 
-PlasmaWindowInterface::~PlasmaWindowInterface() = default;
+PlasmaWindowInterface::~PlasmaWindowInterface()
+{
+    for (const auto resources = d->resourceMap(); auto resource : resources) {
+        d->send_unmapped(resource->handle);
+    }
+}
 
 void PlasmaWindowInterface::setAppId(const QString &appId)
 {
@@ -819,11 +803,6 @@ void PlasmaWindowInterface::setPid(quint32 pid)
 void PlasmaWindowInterface::setTitle(const QString &title)
 {
     d->setTitle(title);
-}
-
-void PlasmaWindowInterface::unmap()
-{
-    d->unmap();
 }
 
 QHash<SurfaceInterface *, Rect> PlasmaWindowInterface::minimizedGeometries() const
