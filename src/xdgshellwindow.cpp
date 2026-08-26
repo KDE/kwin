@@ -144,9 +144,20 @@ void XdgSurfaceWindow::moveResizeInternal(const RectF &rect, MoveResizeMode mode
         const QSizeF requestedClientSize = nextFrameSizeToClientSize(requestedFrameSize);
         const QSizeF roundedRequestedClientSize = surface()->snappedSize(requestedClientSize);
 
-        const QSizeF roundedClientSize = surface()->snappedSize(clientSize());
-        if (roundedRequestedClientSize == roundedClientSize) {
-            const RectF snappedRect = RectF(rect.topLeft(), nextClientSizeToFrameSize(snapToPixels(roundedClientSize, nextTargetScale())));
+        const QSizeF roundedCommittedClientSize = surface()->snappedSize(clientSize());
+
+        auto anyResizeSinceCommit = [this]() -> bool {
+            const QSizeF committedFrameSize = frameGeometry().size();
+            for (const auto &configureEvent : m_configureEvents) {
+                if (configureEvent->bounds.size() != committedFrameSize) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        if (roundedRequestedClientSize == roundedCommittedClientSize && !anyResizeSinceCommit()) {
+            const RectF snappedRect = RectF(rect.topLeft(), nextClientSizeToFrameSize(snapToPixels(roundedCommittedClientSize, nextTargetScale())));
             updateGeometry(m_configureGravity.apply(snappedRect, rect));
         } else {
             scheduleConfigure();
