@@ -1,0 +1,18 @@
+{
+    "KPackageStructure": "KWin/Script",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "jpetso@petsovits.com",
+                "Name": "Jakob Petsovits"
+            }
+        ],
+        "Description": "An on-screen display reminding the user that they are in a Safe Mode session",
+        "Icon": "dialog-warning",
+        "Id": "safemodeosd",
+        "License": "GPL",
+        "Name": "Safe Mode OSD",
+        "EnabledByDefault": false
+    },
+    "X-Plasma-API": "declarativescript"
+}
