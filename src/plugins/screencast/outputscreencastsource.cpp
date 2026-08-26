@@ -70,6 +70,7 @@ Region OutputScreenCastSource::render(QImage *target, const Region &bufferRepair
     if (!texture) {
         return Region{};
     }
+    texture->setContentTransform(OutputTransform::FlipY);
     GLFramebuffer buffer(texture.get());
     const Region ret = render(&buffer, Region::infinite());
     grabTexture(texture.get(), target);
