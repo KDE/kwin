@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-20 00:47+0000\n"
+"POT-Creation-Date: 2026-08-27 00:47+0000\n"
 "PO-Revision-Date: 2026-07-23 17:22+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -133,44 +133,44 @@ msgstr "ICC プロファイル \"%1\" は壊れています (白色点があり�
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "ICC プロファイル \"%1\" は壊れています (白色点が無効です)"
 
-#: core/iccprofile.cpp:437
+#: core/iccprofile.cpp:435
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr "ICC プロファイル \"%1\" は壊れています (色順応行列の解析に失敗)"
 
-#: core/iccprofile.cpp:442
+#: core/iccprofile.cpp:440
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr "ICC プロファイル \"%1\" は壊れています (色順応行列の反転に失敗)"
 
-#: core/iccprofile.cpp:455
-#, kde-format
-msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr "ICC プロファイル \"%1\" は壊れています (原色データがありません)"
-
-#: core/iccprofile.cpp:470
-#, kde-format
-msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr "ICC プロファイル \"%1\" は壊れています (原色データを計算できません)"
-
-#: core/iccprofile.cpp:479
+#: core/iccprofile.cpp:449 core/iccprofile.cpp:464 core/iccprofile.cpp:482
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "ICC プロファイル \"%1\" は壊れています (原色データが無効です)"
 
-#: core/iccprofile.cpp:495
+#: core/iccprofile.cpp:457
+#, kde-format
+msgid "ICC profile \"%1\" is broken, it has no primaries"
+msgstr "ICC プロファイル \"%1\" は壊れています (原色データがありません)"
+
+#: core/iccprofile.cpp:476
+#, kde-format
+msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
+msgstr "ICC プロファイル \"%1\" は壊れています (原色データを計算できません)"
+
+#: core/iccprofile.cpp:501
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "BToD タグのみを持つ ICC プロファイル \"%1\" には対応していません"
 
-#: core/iccprofile.cpp:533
+#: core/iccprofile.cpp:539
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "カラープロファイルに TRC タグがありません"
 
-#: core/iccprofile.cpp:540
+#: core/iccprofile.cpp:546
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "ICC プロファイル \"%1\" のトーンカーブを反転できませんでした"
@@ -4344,7 +4344,7 @@ msgstr "ドライバーが出力設定を拒否しました"
 msgid "The session is not active"
 msgstr "セッションが非アクティブです"
 
-#: window.cpp:3182
+#: window.cpp:3188
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

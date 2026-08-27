@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-20 00:47+0000\n"
+"POT-Creation-Date: 2026-08-27 00:47+0000\n"
 "PO-Revision-Date: 2026-07-29 12:30+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -122,7 +122,7 @@ msgstr "Profilo de ICC \"%1\" es rupte, il ha nulle punctoblanc"
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "Profilo de ICC \"%1\" es rupte, su punctoblanc es invalide"
 
-#: core/iccprofile.cpp:437
+#: core/iccprofile.cpp:435
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -130,7 +130,7 @@ msgstr ""
 "Profilo de ICC \"%1\" es rupte, il falleva analysar matrice de adaptation "
 "chromatic"
 
-#: core/iccprofile.cpp:442
+#: core/iccprofile.cpp:440
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -138,32 +138,32 @@ msgstr ""
 "Profilo de ICC \"%1\" es rupte, il falleva inverter matrice de adaptation "
 "chromatic"
 
-#: core/iccprofile.cpp:455
-#, kde-format
-msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr "Profilo de ICC \"%1\" es rupte, il ha nulle primaris"
-
-#: core/iccprofile.cpp:470
-#, kde-format
-msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr "Profilo de ICC \"%1\" es rupte, il non poteva calcular su primaris"
-
-#: core/iccprofile.cpp:479
+#: core/iccprofile.cpp:449 core/iccprofile.cpp:464 core/iccprofile.cpp:482
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "Profilo de ICC \"%1\" es rupte, su primaris es invalide"
 
-#: core/iccprofile.cpp:495
+#: core/iccprofile.cpp:457
+#, kde-format
+msgid "ICC profile \"%1\" is broken, it has no primaries"
+msgstr "Profilo de ICC \"%1\" es rupte, il ha nulle primaris"
+
+#: core/iccprofile.cpp:476
+#, kde-format
+msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
+msgstr "Profilo de ICC \"%1\" es rupte, il non poteva calcular su primaris"
+
+#: core/iccprofile.cpp:501
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "Profilo de ICC \"%1\" con solmente etiquettas BtoD non es supportate"
 
-#: core/iccprofile.cpp:533
+#: core/iccprofile.cpp:539
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "Profilo de color es mancante etiquettas TRC"
 
-#: core/iccprofile.cpp:540
+#: core/iccprofile.cpp:546
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "Non poteva inverter curvas de tono de Profilo de ICC \"%1\""
@@ -4355,7 +4355,7 @@ msgstr "Le driver refusava le configuration de exito"
 msgid "The session is not active"
 msgstr "Le session non es active"
 
-#: window.cpp:3182
+#: window.cpp:3188
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

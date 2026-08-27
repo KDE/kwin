@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-20 00:47+0000\n"
+"POT-Creation-Date: 2026-08-27 00:47+0000\n"
 "PO-Revision-Date: 2026-08-19 13:38+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -129,44 +129,44 @@ msgstr "ICC profili “%1” bozuk, beyaz noktası yok"
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "ICC profili “%1” bozuk, beyaz noktası geçersiz"
 
-#: core/iccprofile.cpp:437
+#: core/iccprofile.cpp:435
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr "ICC profili “%1” bozuk, kromatik uyumlandırma matrisi ayrıştırılamadı"
 
-#: core/iccprofile.cpp:442
+#: core/iccprofile.cpp:440
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr "ICC profili “%1” bozuk, kromatik uyumlandırma matrisi ters çevrilemedi"
 
-#: core/iccprofile.cpp:455
-#, kde-format
-msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr "ICC profili “%1” bozuk, ana renkleri yok"
-
-#: core/iccprofile.cpp:470
-#, kde-format
-msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr "ICC profili “%1” bozuk, ana renkleri hesaplanamadı"
-
-#: core/iccprofile.cpp:479
+#: core/iccprofile.cpp:449 core/iccprofile.cpp:464 core/iccprofile.cpp:482
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "ICC profili “%1” bozuk, ana renkleri geçersiz"
 
-#: core/iccprofile.cpp:495
+#: core/iccprofile.cpp:457
+#, kde-format
+msgid "ICC profile \"%1\" is broken, it has no primaries"
+msgstr "ICC profili “%1” bozuk, ana renkleri yok"
+
+#: core/iccprofile.cpp:476
+#, kde-format
+msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
+msgstr "ICC profili “%1” bozuk, ana renkleri hesaplanamadı"
+
+#: core/iccprofile.cpp:501
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "ICC profili “%1” yalnızca BToD künyeleri içeriyorsa desteklenmiyor"
 
-#: core/iccprofile.cpp:533
+#: core/iccprofile.cpp:539
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "Renk profilinde TRC künyeleri eksik"
 
-#: core/iccprofile.cpp:540
+#: core/iccprofile.cpp:546
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "“%1” ICC profilinin ton eğrileri ters çevrilemedi"
@@ -4341,7 +4341,7 @@ msgstr "Sürücü çıktı yapılandırmasını reddetti"
 msgid "The session is not active"
 msgstr "Bu oturum etkin değil"
 
-#: window.cpp:3182
+#: window.cpp:3188
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

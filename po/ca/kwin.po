@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-20 00:47+0000\n"
+"POT-Creation-Date: 2026-08-27 00:47+0000\n"
 "PO-Revision-Date: 2026-08-19 09:22+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -125,7 +125,7 @@ msgstr "El perfil ICC «%1» està trencat, no té punt blanc"
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "El perfil ICC «%1» està trencat, el seu punt blanc no és vàlid"
 
-#: core/iccprofile.cpp:437
+#: core/iccprofile.cpp:435
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -133,7 +133,7 @@ msgstr ""
 "El perfil ICC «%1» està trencat, ha fallat l'anàlisi de la matriu "
 "d'adaptació cromàtica"
 
-#: core/iccprofile.cpp:442
+#: core/iccprofile.cpp:440
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -141,33 +141,33 @@ msgstr ""
 "El perfil ICC «%1» està trencat, ha fallat la inversió de la matriu "
 "d'adaptació cromàtica"
 
-#: core/iccprofile.cpp:455
+#: core/iccprofile.cpp:449 core/iccprofile.cpp:464 core/iccprofile.cpp:482
+#, kde-format
+msgid "ICC profile \"%1\" is broken, its primaries are invalid"
+msgstr "El perfil ICC «%1» està trencat, els seus primaris no són vàlids"
+
+#: core/iccprofile.cpp:457
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "El perfil ICC «%1» està trencat, no té primaris"
 
-#: core/iccprofile.cpp:470
+#: core/iccprofile.cpp:476
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
 "El perfil ICC «%1» està trencat, no s'han pogut calcular els seus primaris"
 
-#: core/iccprofile.cpp:479
-#, kde-format
-msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr "El perfil ICC «%1» està trencat, els seus primaris no són vàlids"
-
-#: core/iccprofile.cpp:495
+#: core/iccprofile.cpp:501
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "No s'admet el perfil ICC «%1» amb només etiquetes BToD"
 
-#: core/iccprofile.cpp:533
+#: core/iccprofile.cpp:539
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "Manquen les etiquetes TRC del perfil de color"
 
-#: core/iccprofile.cpp:540
+#: core/iccprofile.cpp:546
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "No s'han pogut invertir les corbes de to del perfil ICC «%1»"
@@ -4368,7 +4368,7 @@ msgstr "El controlador ha rebutjat la configuració de la sortida"
 msgid "The session is not active"
 msgstr "La sessió no està activa"
 
-#: window.cpp:3182
+#: window.cpp:3188
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

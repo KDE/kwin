@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-20 00:47+0000\n"
+"POT-Creation-Date: 2026-08-27 00:47+0000\n"
 "PO-Revision-Date: 2026-08-19 17:54+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -116,44 +116,44 @@ msgstr "تشكيلة أي سي سي \"%1\" معطوبة، لا تحوي على �
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "تشكيلة أي سي سي \"%1\" معطوبة، نقطة بيضاء غير صالحة"
 
-#: core/iccprofile.cpp:437
+#: core/iccprofile.cpp:435
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr "تشكيلة أي سي سي \"%1\" معطوبة، فشل تحليل مصفوفة التكيف اللوني"
 
-#: core/iccprofile.cpp:442
+#: core/iccprofile.cpp:440
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr "تشكيلة أي سي سي \"%1\" معطوبة، فشل عكس مصفوفة التكيف اللوني"
 
-#: core/iccprofile.cpp:455
-#, kde-format
-msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr "تشكيلة أي سي سي \"%1\" معطوبة، لا تحوي على أي ملفات أساسية"
-
-#: core/iccprofile.cpp:470
-#, kde-format
-msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr "تشكيلة أي سي سي \"%1\" معطوبة، لا يمكن حساب العناصر الأساسية الخاصة به"
-
-#: core/iccprofile.cpp:479
+#: core/iccprofile.cpp:449 core/iccprofile.cpp:464 core/iccprofile.cpp:482
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "تشكيلة أي سي سي \"%1\" معطوبة، العناصر الأساسية غير صالحة"
 
-#: core/iccprofile.cpp:495
+#: core/iccprofile.cpp:457
+#, kde-format
+msgid "ICC profile \"%1\" is broken, it has no primaries"
+msgstr "تشكيلة أي سي سي \"%1\" معطوبة، لا تحوي على أي ملفات أساسية"
+
+#: core/iccprofile.cpp:476
+#, kde-format
+msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
+msgstr "تشكيلة أي سي سي \"%1\" معطوبة، لا يمكن حساب العناصر الأساسية الخاصة به"
+
+#: core/iccprofile.cpp:501
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "تشكيلة أي سي سي \"%1\" مع علامات BToD فقط غير مدعومة"
 
-#: core/iccprofile.cpp:533
+#: core/iccprofile.cpp:539
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "تشكيلة الألوان تفتقد إلى علامات TRC"
 
-#: core/iccprofile.cpp:540
+#: core/iccprofile.cpp:546
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "تعذر عكس منحنيات درجات الألوان في تشكيلة أي سي سي \"%1\""
@@ -4316,7 +4316,7 @@ msgstr "رفض السائق ضبط الإخراج"
 msgid "The session is not active"
 msgstr "الجلسة ليست نشطة"
 
-#: window.cpp:3182
+#: window.cpp:3188
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

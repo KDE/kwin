@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-20 00:47+0000\n"
+"POT-Creation-Date: 2026-08-27 00:47+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -117,44 +117,44 @@ msgstr "ICC 色彩特性文件“%1”包含错误，它没有白点信息"
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "ICC 色彩特性文件“%1”包含错误，它的白点信息无效"
 
-#: core/iccprofile.cpp:437
+#: core/iccprofile.cpp:435
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr "ICC 色彩特性文件“%1”包含错误，解析色度调整矩阵失败"
 
-#: core/iccprofile.cpp:442
+#: core/iccprofile.cpp:440
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr "ICC 色彩特性文件“%1”包含错误，反转色度调整矩阵失败"
 
-#: core/iccprofile.cpp:455
-#, kde-format
-msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr "ICC 色彩特性文件“%1”包含错误，它没有原色信息"
-
-#: core/iccprofile.cpp:470
-#, kde-format
-msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr "ICC 色彩特性文件“%1”包含错误，无法计算其原色信息"
-
-#: core/iccprofile.cpp:479
+#: core/iccprofile.cpp:449 core/iccprofile.cpp:464 core/iccprofile.cpp:482
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "ICC 色彩特性文件“%1”包含错误，它的原色信息无效"
 
-#: core/iccprofile.cpp:495
+#: core/iccprofile.cpp:457
+#, kde-format
+msgid "ICC profile \"%1\" is broken, it has no primaries"
+msgstr "ICC 色彩特性文件“%1”包含错误，它没有原色信息"
+
+#: core/iccprofile.cpp:476
+#, kde-format
+msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
+msgstr "ICC 色彩特性文件“%1”包含错误，无法计算其原色信息"
+
+#: core/iccprofile.cpp:501
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "ICC 色彩特性文件“%1”只包含 BToD 标签，系统不支持"
 
-#: core/iccprofile.cpp:533
+#: core/iccprofile.cpp:539
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "ICC 色彩特性文件缺少 TRC 标签"
 
-#: core/iccprofile.cpp:540
+#: core/iccprofile.cpp:546
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "无法反转 ICC 特性文件“%1”的阶调曲线曲线"
@@ -4299,7 +4299,7 @@ msgstr "驱动程序拒绝了输出配置"
 msgid "The session is not active"
 msgstr "会话不在活动状态"
 
-#: window.cpp:3182
+#: window.cpp:3188
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

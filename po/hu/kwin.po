@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-20 00:47+0000\n"
+"POT-Creation-Date: 2026-08-27 00:47+0000\n"
 "PO-Revision-Date: 2026-06-25 22:17+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -119,7 +119,7 @@ msgstr "A(z) „%1” ICC-profil hibás, nincs fehér pontja"
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "A(z) „%1” ICC-profil hibás, a fehér pontja érvénytelen"
 
-#: core/iccprofile.cpp:437
+#: core/iccprofile.cpp:435
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -127,7 +127,7 @@ msgstr ""
 "A(z) „%1” ICC-profil hibás, a kromatikus adaptációs mátrix feldolgozása "
 "sikertelen volt"
 
-#: core/iccprofile.cpp:442
+#: core/iccprofile.cpp:440
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -135,32 +135,32 @@ msgstr ""
 "A(z) „%1” ICC-profil hibás, a kromatikus adaptációs mátrix invertálása "
 "sikertelen volt"
 
-#: core/iccprofile.cpp:455
-#, kde-format
-msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr "A(z) „%1” ICC-profil hibás, nincsenek elsődlegesei"
-
-#: core/iccprofile.cpp:470
-#, kde-format
-msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr "A(z) „%1” ICC-profil hibás, nem sikerült kiszámolni az elsődlegeseit"
-
-#: core/iccprofile.cpp:479
+#: core/iccprofile.cpp:449 core/iccprofile.cpp:464 core/iccprofile.cpp:482
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "A(z) „%1” ICC-profil hibás, az elsődlegesei érvénytelenek"
 
-#: core/iccprofile.cpp:495
+#: core/iccprofile.cpp:457
+#, kde-format
+msgid "ICC profile \"%1\" is broken, it has no primaries"
+msgstr "A(z) „%1” ICC-profil hibás, nincsenek elsődlegesei"
+
+#: core/iccprofile.cpp:476
+#, kde-format
+msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
+msgstr "A(z) „%1” ICC-profil hibás, nem sikerült kiszámolni az elsődlegeseit"
+
+#: core/iccprofile.cpp:501
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "A csak BToD címkéket tartalmazó „%1” ICC-profil nem támogatott"
 
-#: core/iccprofile.cpp:533
+#: core/iccprofile.cpp:539
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "A színprofilból hiányoznak a TRC címkék"
 
-#: core/iccprofile.cpp:540
+#: core/iccprofile.cpp:546
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "Nem sikerült invertálni a(z) „%1” ICC-profil tónusgörbéit"
@@ -4347,7 +4347,7 @@ msgstr "Az illesztőprogram elutasította a kimenetbeállítást"
 msgid "The session is not active"
 msgstr "A munkamenet nem aktív"
 
-#: window.cpp:3182
+#: window.cpp:3188
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

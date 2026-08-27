@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-20 00:47+0000\n"
+"POT-Creation-Date: 2026-08-27 00:47+0000\n"
 "PO-Revision-Date: 2026-06-24 23:50+0200\n"
 "Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -144,7 +144,7 @@ msgstr "ICC-профиль «%1» повреждён, отсутствует т�
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "ICC-профиль «%1» повреждён, некорректная точка белого"
 
-#: core/iccprofile.cpp:437
+#: core/iccprofile.cpp:435
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -152,7 +152,7 @@ msgstr ""
 "ICC-профиль «%1» повреждён, не удалось распознать матрицу хроматической "
 "адаптации"
 
-#: core/iccprofile.cpp:442
+#: core/iccprofile.cpp:440
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -160,32 +160,32 @@ msgstr ""
 "ICC-профиль «%1» повреждён, не удалось инвертировать матрицу хроматической "
 "адаптации"
 
-#: core/iccprofile.cpp:455
-#, kde-format
-msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr "ICC-профиль «%1» повреждён, отсутствуют основные цвета"
-
-#: core/iccprofile.cpp:470
-#, kde-format
-msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr "ICC-профиль «%1» повреждён, не удалось вычислить основные цвета"
-
-#: core/iccprofile.cpp:479
+#: core/iccprofile.cpp:449 core/iccprofile.cpp:464 core/iccprofile.cpp:482
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "ICC-профиль «%1» повреждён, некорректные основные цвета"
 
-#: core/iccprofile.cpp:495
+#: core/iccprofile.cpp:457
+#, kde-format
+msgid "ICC profile \"%1\" is broken, it has no primaries"
+msgstr "ICC-профиль «%1» повреждён, отсутствуют основные цвета"
+
+#: core/iccprofile.cpp:476
+#, kde-format
+msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
+msgstr "ICC-профиль «%1» повреждён, не удалось вычислить основные цвета"
+
+#: core/iccprofile.cpp:501
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "ICC-профиль «%1» только с метками BToD не поддерживается"
 
-#: core/iccprofile.cpp:533
+#: core/iccprofile.cpp:539
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "У цветового профиля отсутствуют метки TRC"
 
-#: core/iccprofile.cpp:540
+#: core/iccprofile.cpp:546
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "Не удалось инвертировать тоновые кривые профиля ICC «%1»"
@@ -4391,7 +4391,7 @@ msgstr "Конфигурация вывода отклонена драйвер�
 msgid "The session is not active"
 msgstr "Сеанс неактивен"
 
-#: window.cpp:3182
+#: window.cpp:3188
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-20 00:47+0000\n"
+"POT-Creation-Date: 2026-08-27 00:47+0000\n"
 "PO-Revision-Date: 2026-08-19 11:47+0200\n"
 "Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -128,7 +128,7 @@ msgstr "Profil ICC \"%1\" je poškozen, neobsahuje bílý bod"
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "Profil ICC \"%1\" je poškozen, jeho bílý bod je neplatný"
 
-#: core/iccprofile.cpp:437
+#: core/iccprofile.cpp:435
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -136,7 +136,7 @@ msgstr ""
 "Profil ICC \"%1\" je poškozen, analýza matice chromatické adaptace se "
 "nezdařila"
 
-#: core/iccprofile.cpp:442
+#: core/iccprofile.cpp:440
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -144,33 +144,33 @@ msgstr ""
 "Profil ICC \"%1\" je poškozen, inverze matice chromatické adaptace se "
 "nezdařila"
 
-#: core/iccprofile.cpp:455
+#: core/iccprofile.cpp:449 core/iccprofile.cpp:464 core/iccprofile.cpp:482
+#, kde-format
+msgid "ICC profile \"%1\" is broken, its primaries are invalid"
+msgstr "Profil ICC \"%1\" je poškozen, jeho primární barvy jsou neplatné"
+
+#: core/iccprofile.cpp:457
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "Profil ICC \"%1\" je poškozen, neobsahuje žádné primární barvy"
 
-#: core/iccprofile.cpp:470
+#: core/iccprofile.cpp:476
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
 "Profil ICC \"%1\" je poškozen, nebylo možné vypočítat jeho primární barvy"
 
-#: core/iccprofile.cpp:479
-#, kde-format
-msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr "Profil ICC \"%1\" je poškozen, jeho primární barvy jsou neplatné"
-
-#: core/iccprofile.cpp:495
+#: core/iccprofile.cpp:501
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "Profil ICC \"%1\" obsahující pouze značky BToD není podporován"
 
-#: core/iccprofile.cpp:533
+#: core/iccprofile.cpp:539
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "V barevném profilu chybí značky TRC"
 
-#: core/iccprofile.cpp:540
+#: core/iccprofile.cpp:546
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "Nepodařilo se invertovat tónové křivky profilu ICC \"%1\""
@@ -4350,7 +4350,7 @@ msgstr "Ovladač odmítl výstupní konfiguraci"
 msgid "The session is not active"
 msgstr "Sezení není aktivní"
 
-#: window.cpp:3182
+#: window.cpp:3188
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

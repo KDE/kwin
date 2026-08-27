@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-20 00:47+0000\n"
+"POT-Creation-Date: 2026-08-27 00:47+0000\n"
 "PO-Revision-Date: 2025-03-15 10:38+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -128,45 +128,45 @@ msgstr "ICC-profilo \"%1\" estas difekta, ĝi ne havas blankpunkton"
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "ICC-profilo \"%1\" estas difekta, ĝia blankpunkto estas nevalida"
 
-#: core/iccprofile.cpp:437
+#: core/iccprofile.cpp:435
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr "ICC-profilo \"%1\" estas difekta, analizo de kromata matrico fiaskis"
 
-#: core/iccprofile.cpp:442
+#: core/iccprofile.cpp:440
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
 "ICC-profilo \"%1\" estas difekta, renversigo de kromata adaptomatrico fiaskis"
 
-#: core/iccprofile.cpp:455
-#, kde-format
-msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr "ICC-profilo \"%1\" estas difekta, ĝi ne havas primarojn"
-
-#: core/iccprofile.cpp:470
-#, kde-format
-msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr "ICC-profilo \"%1\" estas difekta, ne eblis kalkuli ĝiajn primarojn"
-
-#: core/iccprofile.cpp:479
+#: core/iccprofile.cpp:449 core/iccprofile.cpp:464 core/iccprofile.cpp:482
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "ICC-profilo \"%1\" estas difekta, ĝiaj primaroj estas nevalidaj"
 
-#: core/iccprofile.cpp:495
+#: core/iccprofile.cpp:457
+#, kde-format
+msgid "ICC profile \"%1\" is broken, it has no primaries"
+msgstr "ICC-profilo \"%1\" estas difekta, ĝi ne havas primarojn"
+
+#: core/iccprofile.cpp:476
+#, kde-format
+msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
+msgstr "ICC-profilo \"%1\" estas difekta, ne eblis kalkuli ĝiajn primarojn"
+
+#: core/iccprofile.cpp:501
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "ICC-profilo \"%1\" kun nur BToD-etikedoj ne estas subtenata"
 
-#: core/iccprofile.cpp:533
+#: core/iccprofile.cpp:539
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "Al kolorprofilo mankas TRC-etikedoj"
 
-#: core/iccprofile.cpp:540
+#: core/iccprofile.cpp:546
 #, fuzzy, kde-format
 #| msgid "Failed to open ICC profile \"%1\""
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
@@ -4421,7 +4421,7 @@ msgstr "La pelilo malakceptis la eligan agordon"
 msgid "The session is not active"
 msgstr "La Alt-klavo nun estas aktiva."
 
-#: window.cpp:3182
+#: window.cpp:3188
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
