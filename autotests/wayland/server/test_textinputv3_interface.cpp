@@ -107,6 +107,7 @@ private Q_SLOTS:
     void init();
     void cleanup();
     void testEnableDisable();
+    void testSurroundingTextOffsetsClamped();
     void testEvents();
     void testContentPurpose_data();
     void testContentPurpose();
@@ -353,6 +354,43 @@ void TestTextInputV3Interface::testEnableDisable()
     m_seat->setFocusedTextInputSurface(nullptr);
     QVERIFY(surfaceLeaveSpy.wait());
     QCOMPARE(surfaceLeaveSpy.count(), 1);
+}
+
+void TestTextInputV3Interface::testSurroundingTextOffsetsClamped()
+{
+    // create a surface
+    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
+    std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
+    QVERIFY(serverSurfaceCreatedSpy.wait());
+    SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();
+    QVERIFY(serverSurface);
+
+    m_serverTextInputV3 = m_seat->textInputV3();
+    QVERIFY(m_serverTextInputV3);
+
+    QSignalSpy textInputEnabledSpy(m_serverTextInputV3, &TextInputV3Interface::enabledChanged);
+    m_seat->setFocusedTextInputSurface(serverSurface);
+
+    // cursor and anchor outside the text must never end up in the stored state
+    m_clientTextInputV3->enable();
+    m_clientTextInputV3->set_surrounding_text(QStringLiteral("KDE"), 1000000, -7);
+    m_clientTextInputV3->commit();
+    QVERIFY(textInputEnabledSpy.wait());
+    m_totalCommits++;
+
+    QCOMPARE(m_serverTextInputV3->surroundingText(), QStringLiteral("KDE"));
+    QCOMPARE(m_serverTextInputV3->surroundingTextCursorPosition(), 3);
+    QCOMPARE(m_serverTextInputV3->surroundingTextSelectionAnchor(), 0);
+
+    // offsets are clamped to the UTF-8 byte length, not the UTF-16 length
+    QSignalSpy surroundingTextChangedSpy(m_serverTextInputV3, &TextInputV3Interface::surroundingTextChanged);
+    m_clientTextInputV3->set_surrounding_text(QStringLiteral("KDÉ"), 1000000, 4);
+    m_clientTextInputV3->commit();
+    QVERIFY(surroundingTextChangedSpy.wait());
+    m_totalCommits++;
+
+    QCOMPARE(m_serverTextInputV3->surroundingTextCursorPosition(), 4);
+    QCOMPARE(m_serverTextInputV3->surroundingTextSelectionAnchor(), 4);
 }
 
 void TestTextInputV3Interface::testEvents()

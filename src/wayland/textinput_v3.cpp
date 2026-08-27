@@ -10,6 +10,8 @@
 #include "surface_p.h"
 #include "textinput_v3_p.h"
 
+#include <algorithm>
+
 namespace KWin
 {
 namespace
@@ -393,9 +395,11 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_set_surrounding_text(Resourc
     if (!state->pending.enabled) {
         return;
     }
+    // input methods trust these byte offsets blindly, never store values outside the text
+    const int32_t size = int32_t(text.toUtf8().size());
     state->pending.surroundingText = text;
-    state->pending.surroundingTextCursorPosition = cursor;
-    state->pending.surroundingTextSelectionAnchor = anchor;
+    state->pending.surroundingTextCursorPosition = std::clamp(cursor, 0, size);
+    state->pending.surroundingTextSelectionAnchor = std::clamp(anchor, 0, size);
 }
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_set_content_type(Resource *resource, uint32_t hint, uint32_t purpose)
