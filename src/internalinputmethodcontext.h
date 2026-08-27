@@ -58,9 +58,8 @@ Q_SIGNALS:
 private:
     int indexFromWayland(const QString &text, int length, int base);
     QString m_surroundingText;
-    int m_cursor;
-    int m_cursorPos;
-    int m_anchorPos;
+    int m_cursorPos = 0;
+    int m_anchorPos = 0;
     uint32_t m_contentHint = 0;
     uint32_t m_contentPurpose = 0;
     QRect m_cursorRect;
