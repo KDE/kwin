@@ -12,6 +12,7 @@
 #include "wayland/shmclientbuffer.h"
 #include "wayland/shmclientbuffer_p.h"
 
+#include <QThreadPool>
 #include <drm_fourcc.h>
 #include <fcntl.h>
 #include <mutex>
@@ -62,6 +63,8 @@ static uint32_t shmFormatToDrmFormat(uint32_t shmFormat)
     }
 }
 
+std::unique_ptr<QThreadPool> ShmPool::s_cleanup = std::make_unique<QThreadPool>();
+
 ShmPool::ShmPool(ShmClientBufferIntegration *integration, wl_client *client, int id, uint32_t version, FileDescriptor &&fd, std::shared_ptr<MemoryMap> mapping)
     : QtWaylandServer::wl_shm_pool(client, id, version)
     , integration(integration)
@@ -77,6 +80,14 @@ ShmPool::ShmPool(ShmClientBufferIntegration *integration, wl_client *client, int
         }
     }
 #endif
+}
+
+ShmPool::~ShmPool()
+{
+    s_cleanup->start([map = std::move(mapping), fd = std::move(fd)]() {
+        // does nothing except cleaning up the resouces on a different thread,
+        // in order to avoid blocking the main thread with those tasks
+    });
 }
 
 void ShmPool::ref()

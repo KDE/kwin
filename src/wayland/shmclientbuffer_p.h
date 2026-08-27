@@ -13,6 +13,8 @@
 
 #include "qwayland-server-wayland.h"
 
+class QThreadPool;
+
 namespace KWin
 {
 
@@ -33,6 +35,7 @@ class ShmPool : public QtWaylandServer::wl_shm_pool
 {
 public:
     ShmPool(ShmClientBufferIntegration *integration, wl_client *client, int id, uint32_t version, FileDescriptor &&fd, std::shared_ptr<MemoryMap> mapping);
+    ~ShmPool() override;
 
     void ref();
     void unref();
@@ -48,6 +51,8 @@ protected:
     void shm_pool_create_buffer(Resource *resource, uint32_t id, int32_t offset, int32_t width, int32_t height, int32_t stride, uint32_t format) override;
     void shm_pool_destroy(Resource *resource) override;
     void shm_pool_resize(Resource *resource, int32_t size) override;
+
+    static std::unique_ptr<QThreadPool> s_cleanup;
 };
 
 struct ShmAccess
