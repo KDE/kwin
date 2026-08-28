@@ -7,6 +7,7 @@
 */
 #include "seat.h"
 #include "abstract_data_source.h"
+#include "clientconnection.h"
 #include "datacontroldevice_v1.h"
 #include "datacontrolsource_v1.h"
 #include "datadevice.h"
@@ -248,12 +249,9 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
     QObject::connect(dataDevice, &QObject::destroyed, q, dataDeviceCleanup);
 
     QObject::connect(dataDevice, &DataControlDeviceV1Interface::selectionChanged, q, [this, dataDevice] {
-        // Special klipper workaround to avoid a race
-        // If the mimetype x-kde-onlyReplaceEmpty is set, and we've had another update in the meantime, do nothing
-        // but resend selection to mimic normal event flow upon cancel and not confuse the client
-        // See https://github.com/swaywm/wlr-protocols/issues/92
+        // Only replace selection when owner is gone and not when it deliberately cleared it
         const bool isKlipperEmptyReplacement = dataDevice->selection() && dataDevice->selection()->mimeTypes().contains(QLatin1StringView("application/x-kde-onlyReplaceEmpty"));
-        if (isKlipperEmptyReplacement && currentSelection) {
+        if (isKlipperEmptyReplacement && (currentSelection || lastSelectionOwner)) {
             dataDevice->selection()->cancel();
             return;
         }
@@ -261,12 +259,9 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
     });
 
     QObject::connect(dataDevice, &DataControlDeviceV1Interface::primarySelectionChanged, q, [this, dataDevice] {
-        // Special klipper workaround to avoid a race
-        // If the mimetype x-kde-onlyReplaceEmpty is set, and we've had another update in the meantime, do nothing
-        // but resend selection to mimic normal event flow upon cancel and not confuse the client
-        // See https://github.com/swaywm/wlr-protocols/issues/92
+        // Only replace selection when owner is gone and not when it deliberately cleared it
         const bool isKlipperEmptyReplacement = dataDevice->primarySelection() && dataDevice->primarySelection()->mimeTypes().contains(QLatin1StringView("application/x-kde-onlyReplaceEmpty"));
-        if (isKlipperEmptyReplacement && currentPrimarySelection) {
+        if (isKlipperEmptyReplacement && (currentPrimarySelection || lastPrimarySelectionOwner)) {
             dataDevice->primarySelection()->cancel();
             return;
         }
@@ -1184,6 +1179,8 @@ void SeatInterface::setSelection(AbstractDataSource *selection, UInt32Serial ser
     }
 
     if (selection) {
+        // A selection coming from Xwayland has no Wayland client to watch
+        d->lastSelectionOwner = selection->client() ? ClientConnection::get(selection->client()) : nullptr;
         auto cleanup = [this, serial]() {
             setSelection(nullptr, serial);
         };
@@ -1223,6 +1220,8 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection, UInt32Ser
     }
 
     if (selection) {
+        // A selection coming from Xwayland has no Wayland client to watch
+        d->lastPrimarySelectionOwner = selection->client() ? ClientConnection::get(selection->client()) : nullptr;
         auto cleanup = [this, serial]() {
             setPrimarySelection(nullptr, serial);
         };
