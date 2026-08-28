@@ -564,6 +564,8 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
             vk::QueueFamilyExternal,
             queue->familyIndex(),
             srcBuffer->handle(),
+            0,
+            srcBuffer->size(),
         });
     } else {
         imageBarriers.push_back(vk::ImageMemoryBarrier2{
@@ -594,6 +596,8 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
             vk::QueueFamilyExternal,
             queue->familyIndex(),
             dstBuffer->handle(),
+            0,
+            dstBuffer->size(),
         });
     } else {
         imageBarriers.push_back(vk::ImageMemoryBarrier2{
