@@ -4,6 +4,7 @@ uniform sampler2D sampler;
 uniform sampler2D previousFrame;
 uniform vec2 cursorPosition;
 uniform vec2 cursorRadius;
+uniform int time;
 //float damp;
 //float phase;
 uniform vec2 screenSize;
@@ -42,7 +43,8 @@ void main()
     //new_r = clamp(new_r, 0.0, 0.4)
     vec4 result = vec4(new_r, prev_rgb.r, curr_rgb.b, 1.0);
 
-    float circleDistance = length((texcoord0 - cursorPosition) / cursorRadius);
+    float timeFactor = 1.0 - abs(min(1.0, (float(time) / 200.0)) - 0.5) * 2.0;
+    float circleDistance = length((texcoord0 - cursorPosition) / (cursorRadius * timeFactor));
     float circle = 1.0 - smoothstep(0.8, 1.0, circleDistance);
 
     fragColor = mix(result, vec4(1.0, 0.0, 0.0, 1.0), circle);

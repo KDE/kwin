@@ -75,6 +75,14 @@ void MouseClickEffect::reconfigure(ReconfigureFlags)
     m_font = MouseClickConfig::font();
 }
 
+void MouseClickEffect::prePaintScreen(ScreenPrePaintData &data)
+{
+    const int time = m_clock.tick(data.view).count();
+    if (m_click) {
+        m_click->m_time += time;
+    }
+}
+
 bool MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
     if (!m_enabled) {
@@ -141,8 +149,7 @@ bool MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const Rende
                            8.0 * viewport.scale() / nativeSize.height());
 
     if (!m_click || !m_click->m_press) {
-        cursorRadius = QVector2D(0.0 * viewport.scale() / nativeSize.width(),
-                                 0.0 * viewport.scale() / nativeSize.height());
+        // cursorRadius = QVector2D(0.0, 0.0);
     }
 
     const int nextFrame = 1 - capture.previousFrame;
@@ -157,6 +164,7 @@ bool MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const Rende
     feedbackProjectionMatrix.ortho(QRectF(QPointF(), nativeSize));
     m_feedbackShader->setUniform(m_feedbackModelViewProjectionMatrixLocation, feedbackProjectionMatrix);
     m_feedbackShader->setUniform("sampler", 0);
+    m_feedbackShader->setUniform(m_feedbackTimeLocation, int(m_click ? m_click->m_time : 0));
     m_feedbackShader->setUniform(m_feedbackPreviousFrameLocation, 1);
     m_feedbackShader->setUniform(m_cursorPositionLocation, cursorPosition);
     m_feedbackShader->setUniform(m_cursorRadiusLocation, cursorRadius);
@@ -220,10 +228,12 @@ void MouseClickEffect::slotMouseChanged(const QPointF &pos, const QPointF &,
         MouseButton *b = m_buttons[i].get();
         if (isPressed(b->m_button, buttons, oldButtons)) {
             m = std::make_unique<MouseClickMouseEvent>(i, pos.toPoint(), 0, createEffectFrame(pos.toPoint(), b->m_labelDown), true);
+            m_clock.reset();
             break;
         } else if (isReleased(b->m_button, buttons, oldButtons)) {
             // we might miss a press, thus also check !b->m_isPressed, bug #314762
             m = std::make_unique<MouseClickMouseEvent>(i, pos.toPoint(), 0, createEffectFrame(pos.toPoint(), b->m_labelUp), false);
+            m_clock.reset();
             break;
         }
         b->setPressed(b->m_button & buttons);
@@ -300,6 +310,7 @@ void MouseClickEffect::loadShaders()
             qWarning("Failed to load the mouseclick feedback shader");
         } else {
             m_feedbackModelViewProjectionMatrixLocation = m_feedbackShader->uniformLocation("modelViewProjectionMatrix");
+            m_feedbackTimeLocation = m_feedbackShader->uniformLocation("time");
             m_cursorPositionLocation = m_feedbackShader->uniformLocation("cursorPosition");
             m_cursorRadiusLocation = m_feedbackShader->uniformLocation("cursorRadius");
             m_feedbackPreviousFrameLocation = m_feedbackShader->uniformLocation("previousFrame");

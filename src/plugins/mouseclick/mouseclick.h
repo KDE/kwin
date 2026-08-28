@@ -11,7 +11,9 @@
 
 #include "effect/effect.h"
 #include "effect/effectframe.h"
+#include "effect/timeline.h"
 #include <KLocalizedString>
+#include <QElapsedTimer>
 #include <QFont>
 #include <QHash>
 #include <array>
@@ -105,6 +107,7 @@ public:
     MouseClickEffect();
     ~MouseClickEffect() override;
     void reconfigure(ReconfigureFlags) override;
+    void prePaintScreen(ScreenPrePaintData &data) override;
     bool paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
     void postPaintScreen() override;
     bool isActive() const override;
@@ -154,6 +157,7 @@ private:
     float m_ringMaxSize;
     bool m_showText;
     QFont m_font;
+    AnimationClock m_clock;
     QHash<LogicalOutput *, ScreenCapture> m_screenCaptures;
 
     std::unique_ptr<MouseClickMouseEvent> m_click;
@@ -166,6 +170,7 @@ private:
     int m_cursorPositionLocation = -1;
     int m_cursorRadiusLocation = -1;
     int m_feedbackModelViewProjectionMatrixLocation = -1;
+    int m_feedbackTimeLocation = -1;
     int m_feedbackPreviousFrameLocation = -1;
     int m_feedbackScreenSizeLocation = -1;
 
