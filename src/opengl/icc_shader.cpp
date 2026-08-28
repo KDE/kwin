@@ -108,6 +108,10 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const std
             if (it != tag->ops.end() && std::holds_alternative<ColorMatrix>(it->operation)) {
                 matrix2 = std::get<ColorMatrix>(it->operation).mat;
                 it++;
+            } else if (it != tag->ops.end() && std::holds_alternative<ColorMultiplier>(it->operation)) {
+                const auto mult = std::get<ColorMultiplier>(it->operation).factors;
+                matrix2.scale(mult);
+                it++;
             }
             if (it != tag->ops.end() && std::holds_alternative<std::shared_ptr<ColorTransformation>>(it->operation)) {
                 const auto sample = [&op = std::get<std::shared_ptr<ColorTransformation>>(it->operation)](size_t x) {
