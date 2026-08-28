@@ -613,12 +613,12 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
         m_pipeline->setMaxBpc(decideAutomaticBpcLimit().value_or(tradeoff == ColorPowerTradeoff::PreferAccuracy ? 16 : 10));
     }
 
-    if (m_nextState->colorProfileSource != ColorProfileSource::ICC || (bt2020 && !hdr)) {
-        m_pipeline->setIccProfile(nullptr);
-    } else if (hdr) {
+    if (hdr && m_nextState->hdrColorProfileSource == ColorProfileSource::ICC) {
         m_pipeline->setIccProfile(m_nextState->hdrIccProfile);
-    } else {
+    } else if (!hdr && !bt2020 && m_nextState->colorProfileSource == ColorProfileSource::ICC) {
         m_pipeline->setIccProfile(m_nextState->iccProfile);
+    } else {
+        m_pipeline->setIccProfile(nullptr);
     }
     // remove the color pipeline for the atomic test
     // otherwise it could potentially fail
