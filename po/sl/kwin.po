@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1743840 2026-08-15 03:27:46Z scripty $
+# $Id: kwin.po 1745011 2026-08-29 03:18:07Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-15 02:54+0000\n"
+"POT-Creation-Date: 2026-08-29 02:44+0000\n"
 "PO-Revision-Date: 2026-05-20 08:45+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -92,43 +92,43 @@ msgstr ""
 "Namizni učinki so bili znova zagnani zaradi ponovnega zagona grafičnega "
 "sistema"
 
-#: core/iccprofile.cpp:396
+#: core/iccprofile.cpp:402
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr "ICC profila \"%1\" ni bilo mogoče odpreti"
 
-#: core/iccprofile.cpp:398
+#: core/iccprofile.cpp:404
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "ICC profil \"%1\" ne obstaja"
 
-#: core/iccprofile.cpp:402
+#: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr "ICC profil \"%1\" ni uporaben za zaslone"
 
-#: core/iccprofile.cpp:405
+#: core/iccprofile.cpp:411
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr "ICC profil \"%1\" ima nepodprt povezovalni prostor, podprt je samo XYZ"
 
-#: core/iccprofile.cpp:408
+#: core/iccprofile.cpp:414
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr "ICC profil \"%1\" je pokvarjen, vhodno/izhodni barvni prostor ni RGB"
 
-#: core/iccprofile.cpp:421
+#: core/iccprofile.cpp:427
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr "ICC profil \"%1\" je pokvarjen, nima bele točke"
 
-#: core/iccprofile.cpp:424
+#: core/iccprofile.cpp:430
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "Profil ICC \"%1\" je pokvarjen, njegova bela točka je neveljavna"
 
-#: core/iccprofile.cpp:437
+#: core/iccprofile.cpp:443
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -136,7 +136,7 @@ msgstr ""
 "ICC profil \"%1\" je pokvarjen, razčlenjevanje kromatske prilagoditvene "
 "matrike ni uspelo"
 
-#: core/iccprofile.cpp:442
+#: core/iccprofile.cpp:448
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -144,33 +144,33 @@ msgstr ""
 "Profil ICC \"%1\" je pokvarjen, invertiranje kromatske prilagoditvene "
 "matrike ni uspelo"
 
-#: core/iccprofile.cpp:455
+#: core/iccprofile.cpp:461
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "ICC profil \"%1\" je pokvarjen, nima primarnih"
 
-#: core/iccprofile.cpp:470
+#: core/iccprofile.cpp:476
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
 "Profil ICC \"%1\" je pokvarjen, ni bilo mogoče izračunati njegovih primarnih"
 
-#: core/iccprofile.cpp:479
+#: core/iccprofile.cpp:485
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "Profil ICC \"%1\" je pokvarjen, njegovi primarni so neveljavni"
 
-#: core/iccprofile.cpp:495
+#: core/iccprofile.cpp:501
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "Profil ICC \"%1\" samo z značkami BToD ni podprt"
 
-#: core/iccprofile.cpp:533
+#: core/iccprofile.cpp:539
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "Barvni profil nima značk TRC"
 
-#: core/iccprofile.cpp:540
+#: core/iccprofile.cpp:546
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "Ni bilo mogoče invertirati tonskih krivulj ICC profila \"%1\""

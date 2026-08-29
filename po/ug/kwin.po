@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-15 02:54+0000\n"
+"POT-Creation-Date: 2026-08-29 02:44+0000\n"
 "PO-Revision-Date: 2026-02-17 23:24-0500\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -77,22 +77,22 @@ msgstr ""
 "كۆرسىتىش كارتىسى ئەسلىگە قايتۇرۇلغانلىقتىن ئۈستەلئۈستى ئۈنۈمى قايتا "
 "قوزغىتىلدى"
 
-#: core/iccprofile.cpp:396
+#: core/iccprofile.cpp:402
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr "ICC سەپلىمە ھۆججەت «%1» نى ئاچالمىدى"
 
-#: core/iccprofile.cpp:398
+#: core/iccprofile.cpp:404
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "ICC سەپلىمە ھۆججەت «%1» مەۋجۇت ئەمەس"
 
-#: core/iccprofile.cpp:402
+#: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr "ICC سەپلىمە ھۆججەت «%1» نى كۆرسەتكۈچكە ئىشلەتكىلى بولمايدۇ"
 
-#: core/iccprofile.cpp:405
+#: core/iccprofile.cpp:411
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
@@ -100,29 +100,29 @@ msgstr ""
 "ICC سەپلىمە ھۆججەت «%1» دا قوللىمايدىغان باغلىنىش بوشلۇقى بار، پەقەت XYZ "
 "نىلا قوللايدۇ"
 
-#: core/iccprofile.cpp:408
+#: core/iccprofile.cpp:414
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
 "ICC سەپلىمە ھۆججەت «%1» بۇزۇلغان، كىرگۈزۈش/چىقىرىش رەڭ بوشلۇقى RGB ئەمەس"
 
-#: core/iccprofile.cpp:421
+#: core/iccprofile.cpp:427
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr "ICC سەپلىمە ھۆججەت «%1» بۇزۇلغان، ئۇنىڭ ئاق نۇقتا ئۇچۇرى يوق"
 
-#: core/iccprofile.cpp:424
+#: core/iccprofile.cpp:430
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "ICC سەپلىمە ھۆججەت «%1» بۇزۇلغان، ئۇنىڭ ئاق نۇقتا ئۇچۇرى ئىناۋەتسىز"
 
-#: core/iccprofile.cpp:437
+#: core/iccprofile.cpp:443
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr "ICC سەپلىمە ھۆججەت «%1» بۇزۇلغان، رەڭ ماسلىقى ماترىسساسىنى يېشەلمىدى"
 
-#: core/iccprofile.cpp:442
+#: core/iccprofile.cpp:448
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -130,35 +130,35 @@ msgstr ""
 "ICC سەپلىمە ھۆججەت «%1» بۇزۇلغان، رەڭ ماسلىقى ماترىسساسىنى تەتۈرىگە "
 "ئايلاندۇرالمىدى"
 
-#: core/iccprofile.cpp:455
+#: core/iccprofile.cpp:461
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "ICC سەپلىمە ھۆججەت «%1» بۇزۇلغان، ئۇنىڭ ئاساسىي رەڭ ئۇچۇرى يوق"
 
-#: core/iccprofile.cpp:470
+#: core/iccprofile.cpp:476
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
 "ICC سەپلىمە ھۆججەت «%1» بۇزۇلغان، ئۇنىڭ ئاساسىي رەڭ ئۇچۇرىنى ھېسابلىيالمىدى"
 
-#: core/iccprofile.cpp:479
+#: core/iccprofile.cpp:485
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "ICC سەپلىمە ھۆججەت «%1» بۇزۇلغان، ئۇنىڭ ئاساسىي رەڭ ئۇچۇرى ئىناۋەتسىز"
 
-#: core/iccprofile.cpp:495
+#: core/iccprofile.cpp:501
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr ""
 "ICC سەپلىمە ھۆججەت «%1» پەقەت BToD بەلگىسىنىلا ئۆز ئىچىگە ئالغان، سىستېما "
 "قوللىمايدۇ"
 
-#: core/iccprofile.cpp:533
+#: core/iccprofile.cpp:539
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "رەڭ سەپلىمە ھۆججەتنىڭ TRC بەلگىسى كەم"
 
-#: core/iccprofile.cpp:540
+#: core/iccprofile.cpp:546
 #, fuzzy, kde-format
 #| msgid "Failed to open ICC profile \"%1\""
 msgid "Couldn't invert tone curves of ICC profile \"%1\""

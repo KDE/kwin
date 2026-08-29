@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-15 02:54+0000\n"
+"POT-Creation-Date: 2026-08-29 02:44+0000\n"
 "PO-Revision-Date: 2026-05-24 06:49+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -75,22 +75,22 @@ msgstr "KDE Wayland კომპოზიტორი"
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "სამუშაო მაგიდის ეფექტები დარესტარტდა გრაფიკის გადატვირთვის გამო"
 
-#: core/iccprofile.cpp:396
+#: core/iccprofile.cpp:402
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr "ვერ გავხსენი ICC პროფილი \"%1\""
 
-#: core/iccprofile.cpp:398
+#: core/iccprofile.cpp:404
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "ICC პროფილი \"%1\" არ არსებობს"
 
-#: core/iccprofile.cpp:402
+#: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr "ICC პროფილი \"%1\" ეკრანებისთვის გამოყენებადი არაა"
 
-#: core/iccprofile.cpp:405
+#: core/iccprofile.cpp:411
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
@@ -98,23 +98,23 @@ msgstr ""
 "ICC პროფილს \"%1\" მხარდაუჭერელი დაკავშირების სივრცე აქვს. მხარდაჭერილია, "
 "მხოლოდ, XYX"
 
-#: core/iccprofile.cpp:408
+#: core/iccprofile.cpp:414
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
 "ICC პროფილი \"%1\" გაფუჭებულია. შეყვანა/გამოტანის ფერების სივრცე RGB არაა"
 
-#: core/iccprofile.cpp:421
+#: core/iccprofile.cpp:427
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr "ICC პროფილი \"%1\" გაფუჭებულია. მას თეთრი წერტილი არ გააჩნია"
 
-#: core/iccprofile.cpp:424
+#: core/iccprofile.cpp:430
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "ICC პროფილი \"%1\" გაფუჭებულია. მისი თეთრი წერილი არასწორია"
 
-#: core/iccprofile.cpp:437
+#: core/iccprofile.cpp:443
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -122,7 +122,7 @@ msgstr ""
 "ICC პროფილი \"%1\" გაფუჭებულია. ქრომატული ადაპტაციის მატრიცის დამუშავება "
 "ჩავარდა"
 
-#: core/iccprofile.cpp:442
+#: core/iccprofile.cpp:448
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -130,33 +130,33 @@ msgstr ""
 "ICC პროფილი \"%1\" გაფუჭებულია. ქრომატული ადაპტაციის მატრიცის ინვერსია "
 "ჩავარდა"
 
-#: core/iccprofile.cpp:455
+#: core/iccprofile.cpp:461
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "ICC პროფილი \"%1\" გაფუჭებულია. მას ძირითადები არ აქვს"
 
-#: core/iccprofile.cpp:470
+#: core/iccprofile.cpp:476
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
 "ICC პროფილი \"%1\" გაფუჭებულია, რადგან მისი ძირითადების გამოთვლა შეუძლებელია"
 
-#: core/iccprofile.cpp:479
+#: core/iccprofile.cpp:485
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "ICC პროფილი \"%1\" გაფუჭებულია. მისი ძირითადები არასწორია"
 
-#: core/iccprofile.cpp:495
+#: core/iccprofile.cpp:501
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "ICC პროფილი \"%1\", მხოლოდ, BToD ჭდეებით მხარდაჭერილი არაა"
 
-#: core/iccprofile.cpp:533
+#: core/iccprofile.cpp:539
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "ფერების პროფილს TRC ჭდეები აკლია"
 
-#: core/iccprofile.cpp:540
+#: core/iccprofile.cpp:546
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "ICC პროფილის \"%1\" ტონის მრუდების ინვერსია შეუძლებელია"
