@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-27 00:47+0000\n"
+"POT-Creation-Date: 2026-08-29 00:47+0000\n"
 "PO-Revision-Date: 2026-06-01 10:08+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
@@ -39,29 +39,29 @@ msgstr ""
 "ra@ra.is, thori@mindspring.com, pjetur@pjetur.net, gudmundure@gmail.com, "
 "sv1@fellsnet.is"
 
-#: backends/wayland/wayland_output.cpp:476
+#: backends/wayland/wayland_output.cpp:486
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Ýttu á hægri Ctrl-lykil til að sleppa bendli"
 
-#: backends/wayland/wayland_output.cpp:478
+#: backends/wayland/wayland_output.cpp:488
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Ýttu á hægri Ctrl-lykil til að grípa bendil"
 
-#: backends/wayland/wayland_output.cpp:482
+#: backends/wayland/wayland_output.cpp:492
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland skjásamsetning %1"
 
-#: backends/wayland/wayland_output.cpp:485
+#: backends/wayland/wayland_output.cpp:495
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Úttak óvirkt"
 
-#: backends/wayland/wayland_output.cpp:487
+#: backends/wayland/wayland_output.cpp:497
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Úttak dimmað"
@@ -93,82 +93,82 @@ msgctxt "@info: status"
 msgid "Graphics card “%1” was reset"
 msgstr ""
 
-#: core/iccprofile.cpp:396
+#: core/iccprofile.cpp:402
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr "Gat ekki opnað ICC-litasnið \"%1\""
 
-#: core/iccprofile.cpp:398
+#: core/iccprofile.cpp:404
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "ICC-litasniðið \"%1\" er ekki til"
 
-#: core/iccprofile.cpp:402
+#: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr "ICC-litasniðið \"%1\" er ekki nothæft fyrir skjái"
 
-#: core/iccprofile.cpp:405
+#: core/iccprofile.cpp:411
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
 "ICC-litasniðið \"%1\" er með óstutt tengirými, einungis er stuðningur við XYZ"
 
-#: core/iccprofile.cpp:408
+#: core/iccprofile.cpp:414
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr "ICC-litasniðið \"%1\" er bilað, inntaks-/úttakslitrými er ekki RGB"
 
-#: core/iccprofile.cpp:421
+#: core/iccprofile.cpp:427
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr "ICC-litasniðið \"%1\" er bilað, það er ekki með neinn hvítan punkt"
 
-#: core/iccprofile.cpp:424
+#: core/iccprofile.cpp:430
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "ICC-litasniðið \"%1\" er bilað, hvítur punktur þess er ógildur"
 
-#: core/iccprofile.cpp:435
+#: core/iccprofile.cpp:441
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr "ICC-litasniðið \"%1\" er bilað, þáttun á litaaðlögunarfylki mistókst"
 
-#: core/iccprofile.cpp:440
+#: core/iccprofile.cpp:446
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
 "ICC-litasniðið \"%1\" er bilað, umsnúningur litaaðlögunarfylkis mistókst"
 
-#: core/iccprofile.cpp:449 core/iccprofile.cpp:464 core/iccprofile.cpp:482
+#: core/iccprofile.cpp:455 core/iccprofile.cpp:470 core/iccprofile.cpp:488
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "ICC-litasniðið \"%1\" er bilað, grunnlitir þess eru ógildir"
 
-#: core/iccprofile.cpp:457
+#: core/iccprofile.cpp:463
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "ICC-litasniðið \"%1\" er bilað, það er ekki með neina grunnliti"
 
-#: core/iccprofile.cpp:476
+#: core/iccprofile.cpp:482
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr "ICC-litasniðið \"%1\" er bilað, gat ekki reiknað út grunnliti þess"
 
-#: core/iccprofile.cpp:501
+#: core/iccprofile.cpp:507
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "ICC-litasniðið \"%1\" með eingöngu BToD-merki er ekki stutt"
 
-#: core/iccprofile.cpp:539
+#: core/iccprofile.cpp:545
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "Engin TRC-merki í litasniði"
 
-#: core/iccprofile.cpp:546
+#: core/iccprofile.cpp:552
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "Gat ekki snúið við litferlum ICC-litasniðsins \"%1\""
@@ -2544,25 +2544,25 @@ msgstr "Bæta við sýndarskjáborði"
 msgid "Virtual Desktop limit reached"
 msgstr "Mörkum sýndarskjáborðs náð"
 
-#: plugins/overview/qml/Main.qml:427
+#: plugins/overview/qml/Main.qml:428
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Ekkert annað sýndarskjáborð til að sýna"
 
-#: plugins/overview/qml/Main.qml:433
+#: plugins/overview/qml/Main.qml:434
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Bæta við sýndarskjáborði"
 
-#: plugins/overview/qml/Main.qml:440
+#: plugins/overview/qml/Main.qml:441
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Grunnstilla sýndarskjáborð…"
 
-#: plugins/overview/qml/Main.qml:791
+#: plugins/overview/qml/Main.qml:792
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -4336,15 +4336,21 @@ msgstr "Staðsetning virkjaða úttaksins %1 er neikvæð (%2, %3)"
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "Staðsetning úttaksins %1 er allt of stór (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:747
-#, kde-format
-msgid "The driver rejected the output configuration"
-msgstr "Rekillinn hafnaði grunnstillingu úttaksins"
-
-#: wayland/outputmanagement_v2.cpp:750
+#: wayland/outputmanagement_v2.cpp:744
 #, kde-format
 msgid "The session is not active"
 msgstr "Setan er ekki virk"
+
+#: wayland/outputmanagement_v2.cpp:747
+#, kde-format
+msgid "More displays are enabled than are supported by the graphics card."
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:750
+#, fuzzy, kde-format
+#| msgid "The driver rejected the output configuration"
+msgid "The driver rejected the output configuration: %s"
+msgstr "Rekillinn hafnaði grunnstillingu úttaksins"
 
 #: window.cpp:3188
 #, kde-format
@@ -4352,30 +4358,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(svarar ekki)"
 
-#: workspace.cpp:1307
+#: workspace.cpp:1323
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Innbyggður skjár"
 
-#: workspace.cpp:1320
+#: workspace.cpp:1336
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1330
+#: workspace.cpp:1346
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1333
+#: workspace.cpp:1349
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: workspace.cpp:1802
+#: workspace.cpp:1818
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
