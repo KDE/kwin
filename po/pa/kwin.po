@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-29 00:47+0000\n"
+"POT-Creation-Date: 2026-08-30 00:48+0000\n"
 "PO-Revision-Date: 2024-01-03 14:00-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -1559,7 +1559,7 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: main.cpp:139 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:140 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
@@ -1570,196 +1570,196 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:141 main.cpp:159
+#: main.cpp:142 main.cpp:160
 #, kde-format
 msgid "KDE window manager"
 msgstr "KDE ਵਿੰਡੋ ਮੈਨੇਜਰ"
 
-#: main.cpp:143
+#: main.cpp:144
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2019, ਕੇਡੀਈ ਡਿਵੈਲਪਰ"
 
-#: main.cpp:145
+#: main.cpp:146
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "ਮੈਥੂਸ ਇੱਟਰਿਚ"
 
-#: main.cpp:146
+#: main.cpp:147
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "ਕਰਿਸਟੀਨ ਤਿਬੀਰਨਾ"
 
-#: main.cpp:147
+#: main.cpp:148
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "ਡੇਨੀਅਲ ਐਮ. ਡੁਲਿਏ"
 
-#: main.cpp:148
+#: main.cpp:149
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "ਲੁਉਸ ਲੁਕਨਿਕ"
 
-#: main.cpp:149
+#: main.cpp:150
 #, kde-format
 msgid "Martin Flöser"
 msgstr ""
 
-#: main.cpp:150
+#: main.cpp:151
 #, kde-format
 msgid "David Edmundson"
 msgstr ""
 
-#: main.cpp:151
+#: main.cpp:152
 #, kde-format
 msgid "Roman Gilg"
 msgstr ""
 
-#: main.cpp:152
+#: main.cpp:153
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:153
+#: main.cpp:154
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "Very Huge"
 msgid "Xaver Hugl"
 msgstr "ਬਹੁਤ ਹੀ ਵੱਡਾ"
 
-#: main_wayland.cpp:339
+#: main_wayland.cpp:340
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr ""
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:343
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:347
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr ""
 
-#: main_wayland.cpp:350
+#: main_wayland.cpp:351
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 
-#: main_wayland.cpp:352
+#: main_wayland.cpp:353
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr ""
 
-#: main_wayland.cpp:354
+#: main_wayland.cpp:355
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr ""
 
-#: main_wayland.cpp:358
+#: main_wayland.cpp:359
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr ""
 
-#: main_wayland.cpp:363
+#: main_wayland.cpp:364
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
 msgstr ""
 
-#: main_wayland.cpp:367
+#: main_wayland.cpp:368
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr ""
 
-#: main_wayland.cpp:372
+#: main_wayland.cpp:373
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
 
-#: main_wayland.cpp:377
+#: main_wayland.cpp:378
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
 
-#: main_wayland.cpp:381
+#: main_wayland.cpp:382
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
 
-#: main_wayland.cpp:385
+#: main_wayland.cpp:386
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr ""
 
-#: main_wayland.cpp:389
+#: main_wayland.cpp:390
 #, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
 msgstr ""
 
-#: main_wayland.cpp:393
+#: main_wayland.cpp:394
 #, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
 msgstr ""
 
-#: main_wayland.cpp:397
+#: main_wayland.cpp:398
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr ""
 
-#: main_wayland.cpp:401
+#: main_wayland.cpp:402
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 
-#: main_wayland.cpp:403
+#: main_wayland.cpp:404
 #, kde-format
 msgid "Render through drm node."
 msgstr ""
 
-#: main_wayland.cpp:404
+#: main_wayland.cpp:405
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 
-#: main_wayland.cpp:433
+#: main_wayland.cpp:434
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr ""
 
-#: main_wayland.cpp:439
+#: main_wayland.cpp:440
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "ਸ਼ੈਸ਼ਨ ਲਾਕ ਕੀਤੇ ਮੋਡ ਵਿੱਚ ਸ਼ੁਰੂ ਕਰੋ।"
 
-#: main_wayland.cpp:443
+#: main_wayland.cpp:444
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr ""
 
-#: main_wayland.cpp:448
+#: main_wayland.cpp:449
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:453
+#: main_wayland.cpp:454
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
 
-#: main_wayland.cpp:458
+#: main_wayland.cpp:459
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr ""
 
-#: main_wayland.cpp:463
+#: main_wayland.cpp:464
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
