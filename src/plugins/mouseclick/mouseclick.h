@@ -169,6 +169,7 @@ private:
     int m_cursorColorLocation = -1;
     int m_cursorPositionLocation = -1;
     int m_cursorRadiusLocation = -1;
+    int m_feedbackCursorPositionLocation = -1;
     int m_feedbackModelViewProjectionMatrixLocation = -1;
     int m_feedbackTimeLocation = -1;
     int m_feedbackPreviousFrameLocation = -1;

@@ -166,7 +166,7 @@ bool MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const Rende
     m_feedbackShader->setUniform("sampler", 0);
     m_feedbackShader->setUniform(m_feedbackTimeLocation, int(m_click ? m_click->m_time : 0));
     m_feedbackShader->setUniform(m_feedbackPreviousFrameLocation, 1);
-    m_feedbackShader->setUniform(m_cursorPositionLocation, cursorPosition);
+    m_feedbackShader->setUniform(m_feedbackCursorPositionLocation, cursorPosition);
     m_feedbackShader->setUniform(m_cursorRadiusLocation, cursorRadius);
     m_feedbackShader->setUniform(m_feedbackScreenSizeLocation, QVector2D(nativeSize.width(), nativeSize.height()));
     capture.scene.texture->render(nativeSize);
@@ -195,7 +195,7 @@ bool MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const Rende
     }
 
     m_shader->setUniform(m_cursorColorLocation, QVector4D(color.redF(), color.greenF(), color.blueF(), color.alphaF()));
-    // m_shader->setUniform(m_cursorPositionLocation, cursorPosition);
+    m_shader->setUniform(m_cursorPositionLocation, cursorPosition);
     // m_shader->setUniform(m_cursorRadiusLocation, cursorRadius);
     capture.scene.texture->render(nativeSize);
     ShaderManager::instance()->popShader();
@@ -297,7 +297,7 @@ void MouseClickEffect::loadShaders()
         } else {
             m_modelViewProjectionMatrixLocation = m_shader->uniformLocation("modelViewProjectionMatrix");
             m_cursorColorLocation = m_shader->uniformLocation("cursorColor");
-            // m_cursorPositionLocation = m_shader->uniformLocation("cursorPosition");
+            m_cursorPositionLocation = m_shader->uniformLocation("cursorPosition");
             // m_cursorRadiusLocation = m_shader->uniformLocation("cursorRadius");
         }
     }
@@ -311,7 +311,7 @@ void MouseClickEffect::loadShaders()
         } else {
             m_feedbackModelViewProjectionMatrixLocation = m_feedbackShader->uniformLocation("modelViewProjectionMatrix");
             m_feedbackTimeLocation = m_feedbackShader->uniformLocation("time");
-            m_cursorPositionLocation = m_feedbackShader->uniformLocation("cursorPosition");
+            m_feedbackCursorPositionLocation = m_feedbackShader->uniformLocation("cursorPosition");
             m_cursorRadiusLocation = m_feedbackShader->uniformLocation("cursorRadius");
             m_feedbackPreviousFrameLocation = m_feedbackShader->uniformLocation("previousFrame");
             m_feedbackScreenSizeLocation = m_feedbackShader->uniformLocation("screenSize");
