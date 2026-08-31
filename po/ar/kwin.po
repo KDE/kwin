@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-29 02:44+0000\n"
-"PO-Revision-Date: 2026-08-10 13:43+0400\n"
+"PO-Revision-Date: 2026-08-30 17:51+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -4321,7 +4321,7 @@ msgstr "موضع الإخراج %1 كبير جدًا (%2،‏ %3)"
 #: wayland/outputmanagement_v2.cpp:721
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr "رفض السائق ضبط الإخراج"
+msgstr "رفض المُشغل ضبط الإخراج"
 
 #: wayland/outputmanagement_v2.cpp:724
 #, kde-format
