@@ -97,11 +97,9 @@ public Q_SLOTS:
     void slotWindowStartUserMovedResized(KWin::EffectWindow *w);
     void slotWindowStepUserMovedResized(KWin::EffectWindow *w, const RectF &geometry);
     void slotWindowFinishUserMovedResized(KWin::EffectWindow *w);
-    void slotWindowMaximizeStateChanged(KWin::EffectWindow *w, bool horizontal, bool vertical);
 
 private:
     void startMovedResized(EffectWindow *w);
-    void stepMovedResized(EffectWindow *w);
     bool updateWindowWobblyDatas(EffectWindow *w, qreal time);
 
     struct WindowWobblyInfos

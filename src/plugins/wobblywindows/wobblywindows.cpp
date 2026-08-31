@@ -309,7 +309,6 @@ void WobblyWindowsEffect::slotWindowAdded(EffectWindow *w)
     connect(w, &EffectWindow::windowStartUserMovedResized, this, &WobblyWindowsEffect::slotWindowStartUserMovedResized);
     connect(w, &EffectWindow::windowStepUserMovedResized, this, &WobblyWindowsEffect::slotWindowStepUserMovedResized);
     connect(w, &EffectWindow::windowFinishUserMovedResized, this, &WobblyWindowsEffect::slotWindowFinishUserMovedResized);
-    connect(w, &EffectWindow::windowMaximizedStateChanged, this, &WobblyWindowsEffect::slotWindowMaximizeStateChanged);
 }
 
 void WobblyWindowsEffect::slotWindowStartUserMovedResized(EffectWindow *w)
@@ -365,34 +364,6 @@ void WobblyWindowsEffect::slotWindowFinishUserMovedResized(EffectWindow *w)
     }
 }
 
-void WobblyWindowsEffect::slotWindowMaximizeStateChanged(EffectWindow *w, bool horizontal, bool vertical)
-{
-    if (w->isUserMove() || w->isSpecialWindow()) {
-        return;
-    }
-
-    if (m_moveWobble && m_resizeWobble) {
-        stepMovedResized(w);
-    }
-
-    if (windows.contains(w)) {
-        WindowWobblyInfos &wwi = windows[w];
-        const RectF rect = w->frameGeometry();
-        if (rect.y() != wwi.resize_original_rect.y()) {
-            wwi.can_wobble_top = true;
-        }
-        if (rect.x() != wwi.resize_original_rect.x()) {
-            wwi.can_wobble_left = true;
-        }
-        if (rect.right() != wwi.resize_original_rect.right()) {
-            wwi.can_wobble_right = true;
-        }
-        if (rect.bottom() != wwi.resize_original_rect.bottom()) {
-            wwi.can_wobble_bottom = true;
-        }
-    }
-}
-
 void WobblyWindowsEffect::startMovedResized(EffectWindow *w)
 {
     if (!windows.contains(w)) {
@@ -432,36 +403,6 @@ void WobblyWindowsEffect::startMovedResized(EffectWindow *w)
         wwi.resize_original_rect = w->frameGeometry();
     } else {
         wwi.can_wobble_top = wwi.can_wobble_left = wwi.can_wobble_right = wwi.can_wobble_bottom = true;
-    }
-}
-
-void WobblyWindowsEffect::stepMovedResized(EffectWindow *w)
-{
-    RectF new_geometry = w->frameGeometry();
-    if (!windows.contains(w)) {
-        WindowWobblyInfos new_wwi;
-        initWobblyInfo(new_wwi, new_geometry);
-        windows[w] = new_wwi;
-    }
-
-    WindowWobblyInfos &wwi = windows[w];
-    wwi.status = Free;
-
-    RectF maximized_area = effects->clientArea(MaximizeArea, w);
-    bool throb_direction_out = (new_geometry.top() == maximized_area.top() && new_geometry.bottom() == maximized_area.bottom()) || (new_geometry.left() == maximized_area.left() && new_geometry.right() == maximized_area.right());
-    qreal magnitude = throb_direction_out ? 10 : -30; // a small throb out when maximized, a larger throb inwards when restored
-    for (unsigned int j = 0; j < wwi.height; ++j) {
-        for (unsigned int i = 0; i < wwi.width; ++i) {
-            Pair v = {magnitude * (i / qreal(wwi.width - 1) - 0.5), magnitude * (j / qreal(wwi.height - 1) - 0.5)};
-            wwi.velocity[j * wwi.width + i] = v;
-        }
-    }
-
-    // constrain the middle of the window, so that any asymmetry won't cause it to drift off-center
-    for (unsigned int j = 1; j < wwi.height - 1; ++j) {
-        for (unsigned int i = 1; i < wwi.width - 1; ++i) {
-            wwi.constraint[j * wwi.width + i] = true;
-        }
     }
 }
 
