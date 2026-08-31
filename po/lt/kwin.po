@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-30 00:48+0000\n"
-"PO-Revision-Date: 2026-08-20 11:57+0300\n"
+"PO-Revision-Date: 2026-08-30 15:39+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -4358,13 +4358,12 @@ msgstr "Seansas nėra aktyvus"
 #: wayland/outputmanagement_v2.cpp:747
 #, kde-format
 msgid "More displays are enabled than are supported by the graphics card."
-msgstr ""
+msgstr "Yra įjungta daugiau ekranų nei palaiko grafikos plokštė."
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration"
+#, kde-format
 msgid "The driver rejected the output configuration: %s"
-msgstr "Tvarkyklė atmetė išvedimo konfigūraciją"
+msgstr "Tvarkyklė atmetė išvedimo konfigūraciją: %s"
 
 #: window.cpp:3188
 #, kde-format

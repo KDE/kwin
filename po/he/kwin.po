@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-30 00:48+0000\n"
-"PO-Revision-Date: 2026-08-19 09:09+0300\n"
+"PO-Revision-Date: 2026-08-30 21:41+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -4326,13 +4326,12 @@ msgstr "ההפעלה לא פעילה."
 #: wayland/outputmanagement_v2.cpp:747
 #, kde-format
 msgid "More displays are enabled than are supported by the graphics card."
-msgstr ""
+msgstr "יש יותר תצוגות פעילות מהכמות שהכרטיס הגרפי תומך."
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration"
+#, kde-format
 msgid "The driver rejected the output configuration: %s"
-msgstr "מנהל ההתקן דחה את הגדרות הפלט"
+msgstr "מנהל ההתקן דחה את הגדרות הפלט: %s"
 
 #: window.cpp:3188
 #, kde-format
