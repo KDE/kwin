@@ -69,7 +69,6 @@ var eyeOnScreenEffect = {
                     animate({
                         window: w,
                         duration: eyeOnScreenEffect.duration,
-                        delay: eyeOnScreenEffect.duration,
                         animations: [{
                             type: Effect.Scale,
                             curve: QEasingCurve.OutCubic,
