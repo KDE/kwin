@@ -471,9 +471,7 @@ void WaylandBackend::createOutputs()
     // create an output window of this size in the end
     const QSize pixelSize = m_options.outputSize * m_options.outputScale;
     for (int i = 0; i < m_options.outputCount; i++) {
-        WaylandOutput *output = createOutput(QStringLiteral("WL-%1").arg(i), pixelSize, m_options.outputScale, m_options.fullscreen, caps);
-        m_outputs << output;
-        Q_EMIT outputAdded(output);
+        createOutput(QStringLiteral("WL-%1").arg(i), pixelSize, m_options.outputScale, m_options.fullscreen, caps);
     }
 
     Q_EMIT outputsQueried();
@@ -481,7 +479,7 @@ void WaylandBackend::createOutputs()
 
 WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &size, qreal scale, bool fullscreen, BackendOutput::Capabilities capabilities)
 {
-    WaylandOutput *waylandOutput = new WaylandOutput(name, capabilities, this);
+    WaylandOutput *waylandOutput = m_outputs.emplaceBack(new WaylandOutput(name, capabilities, this));
     waylandOutput->init(size, scale, fullscreen);
 
     // Wait until the output window is configured by the host compositor.
@@ -497,6 +495,8 @@ WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &si
 
         removeOutput(waylandOutput);
     });
+
+    Q_EMIT outputAdded(waylandOutput);
 
     return waylandOutput;
 }
@@ -613,7 +613,9 @@ QList<BackendOutput *> WaylandBackend::outputs() const
 
 BackendOutput *WaylandBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, double scale)
 {
-    return createOutput(name, size * scale, scale, false, {});
+    const auto output = createOutput(name, size * scale, scale, false, {});
+    Q_EMIT outputsQueried();
+    return output;
 }
 
 void WaylandBackend::removeVirtualOutput(BackendOutput *output)
