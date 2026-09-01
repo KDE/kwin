@@ -24,6 +24,8 @@ set_target_properties(kwin PROPERTIES
    SOVERSION 6
 )
 
+target_compile_features(kwin PUBLIC cxx_std_23)
+
 target_compile_definitions(kwin PRIVATE
     -DTRANSLATION_DOMAIN=\"kwin\"
 )
