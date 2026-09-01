@@ -616,15 +616,14 @@ bool TabBox::pointerAxis(PointerAxisEvent *event)
         }
     }
 
-    // TODO feels weird to let horizontal scrolling through.
-    if (event->orientation != Qt::Vertical || event->delta == 0) {
-        return false;
+    if (event->delta) {
+        // TODO accumulate scroll.
+        const QModelIndex index = m_tabBox->nextPrev(((event->inverted ? -1 : 1) * event->delta) > 0);
+        if (index.isValid()) {
+            setCurrentIndex(index);
+        }
     }
-    // TODO accumulate scroll.
-    const QModelIndex index = m_tabBox->nextPrev(((event->inverted ? -1 : 1) * event->delta) > 0);
-    if (index.isValid()) {
-        setCurrentIndex(index);
-    }
+
     return true;
 }
 
