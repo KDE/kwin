@@ -659,7 +659,7 @@ bool TabBox::pointerAxis(PointerAxisEvent *event)
         return false;
     }
     // TODO accumulate scroll.
-    const QModelIndex index = m_tabBox->nextPrev(event->delta);
+    const QModelIndex index = m_tabBox->nextPrev(((event->inverted ? -1 : 1) * event->delta) > 0);
     if (index.isValid()) {
         setCurrentIndex(index);
     }
