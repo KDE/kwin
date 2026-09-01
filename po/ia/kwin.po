@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-30 00:48+0000\n"
+"POT-Creation-Date: 2026-09-01 00:47+0000\n"
 "PO-Revision-Date: 2026-07-29 12:30+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -3108,13 +3108,14 @@ msgid "Move Zoomed Area Downwards"
 msgstr "Move area sub zoom a basso"
 
 #. i18n: ectx: label, entry (count), group (General)
-#: rulebooksettingsbase.kcfg:9
+#: rulebooksettingsbase.kcfg:13
 #, kde-format
 msgid "Total rules count (legacy)"
 msgstr "Computo total de regulas (obsolescente)"
 
 #. i18n: ectx: label, entry (ruleGroupList), group (General)
-#: rulebooksettingsbase.kcfg:13
+#. i18n: ectx: label, entry (order), group (General)
+#: rulebooksettingsbase.kcfg:22 rulebooksettingsbase.kcfg:27
 #, kde-format
 msgid "Ordered list of rules groups"
 msgstr "Lista ordinate de gruppos de regulas"

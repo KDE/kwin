@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-30 00:48+0000\n"
+"POT-Creation-Date: 2026-09-01 00:47+0000\n"
 "PO-Revision-Date: 2026-08-04 08:07+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -3072,13 +3072,14 @@ msgid "Move Zoomed Area Downwards"
 msgstr "將縮放區域移到下方"
 
 #. i18n: ectx: label, entry (count), group (General)
-#: rulebooksettingsbase.kcfg:9
+#: rulebooksettingsbase.kcfg:13
 #, kde-format
 msgid "Total rules count (legacy)"
 msgstr "規則總數（傳統）"
 
 #. i18n: ectx: label, entry (ruleGroupList), group (General)
-#: rulebooksettingsbase.kcfg:13
+#. i18n: ectx: label, entry (order), group (General)
+#: rulebooksettingsbase.kcfg:22 rulebooksettingsbase.kcfg:27
 #, kde-format
 msgid "Ordered list of rules groups"
 msgstr "排序過的規則群組列表"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-30 00:48+0000\n"
+"POT-Creation-Date: 2026-09-01 00:47+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -3058,13 +3058,14 @@ msgid "Move Zoomed Area Downwards"
 msgstr "将缩放区域向下移动"
 
 #. i18n: ectx: label, entry (count), group (General)
-#: rulebooksettingsbase.kcfg:9
+#: rulebooksettingsbase.kcfg:13
 #, kde-format
 msgid "Total rules count (legacy)"
 msgstr "总规则数量 (旧版)"
 
 #. i18n: ectx: label, entry (ruleGroupList), group (General)
-#: rulebooksettingsbase.kcfg:13
+#. i18n: ectx: label, entry (order), group (General)
+#: rulebooksettingsbase.kcfg:22 rulebooksettingsbase.kcfg:27
 #, kde-format
 msgid "Ordered list of rules groups"
 msgstr "规则分组已排序列表"

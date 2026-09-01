@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-30 00:48+0000\n"
+"POT-Creation-Date: 2026-09-01 00:47+0000\n"
 "PO-Revision-Date: 2026-06-01 10:08+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
@@ -3103,13 +3103,14 @@ msgid "Move Zoomed Area Downwards"
 msgstr "Færa stækkað svæði niður á við"
 
 #. i18n: ectx: label, entry (count), group (General)
-#: rulebooksettingsbase.kcfg:9
+#: rulebooksettingsbase.kcfg:13
 #, kde-format
 msgid "Total rules count (legacy)"
 msgstr "Heildarfjöldi reglna (eldra)"
 
 #. i18n: ectx: label, entry (ruleGroupList), group (General)
-#: rulebooksettingsbase.kcfg:13
+#. i18n: ectx: label, entry (order), group (General)
+#: rulebooksettingsbase.kcfg:22 rulebooksettingsbase.kcfg:27
 #, kde-format
 msgid "Ordered list of rules groups"
 msgstr "Raðaður listi yfir regluflokka"
