@@ -892,8 +892,8 @@ void Device::setOutputName(const QString &name)
         auto *output = *it;
         setOutput(output);
         m_outputUuid = output->uuid();
-        writeEntry(ConfigKey::OutputUuid, m_outputUuid);
     }
+    writeEntry(ConfigKey::OutputUuid, m_outputUuid);
     Q_EMIT outputNameChanged();
 #endif
 }
