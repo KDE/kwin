@@ -41,7 +41,7 @@
 namespace KWin
 {
 
-static const int s_version = 10;
+static const int s_version = 11;
 
 SeatInterfacePrivate *SeatInterfacePrivate::get(SeatInterface *seat)
 {
@@ -421,38 +421,52 @@ QPointF SeatInterface::pointerPos() const
     return d->globalPointer.pos;
 }
 
-void SeatInterface::notifyPointerMotion(const QPointF &pos)
+std::optional<QPointF> SeatInterfacePrivate::updatePointerPosition(const QPointF &pos)
 {
-    if (!d->pointer) {
-        return;
+    if (!pointer) {
+        return std::nullopt;
     }
-    if (d->globalPointer.pos == pos) {
-        return;
+    if (globalPointer.pos == pos) {
+        return std::nullopt;
     }
-    d->globalPointer.pos = pos;
-    Q_EMIT pointerPosChanged(pos);
+    globalPointer.pos = pos;
+    Q_EMIT q->pointerPosChanged(pos);
 
-    SurfaceInterface *focusedSurface = focusedPointerSurface();
+    SurfaceInterface *focusedSurface = globalPointer.focus.surface;
     if (!focusedSurface) {
-        return;
+        return std::nullopt;
     }
-    if (d->dragInhibitsPointer(focusedSurface)) {
-        return;
+    if (dragInhibitsPointer(focusedSurface)) {
+        return std::nullopt;
     }
     if (focusedSurface->lockedPointer() && focusedSurface->lockedPointer()->isLocked()) {
-        return;
+        return std::nullopt;
     }
 
-    const auto [effectiveFocusedSurface, localPosition] = focusedSurface->mapToInputSurface(focusedPointerSurfaceTransformation().map(pos));
+    const auto [effectiveFocusedSurface, localPosition] = focusedSurface->mapToInputSurface(q->focusedPointerSurfaceTransformation().map(pos));
 
-    if (d->pointer->focusedSurface() != effectiveFocusedSurface) {
-        d->pointer->sendEnter(effectiveFocusedSurface, localPosition, display()->nextSerial());
-        if (d->keyboard) {
-            d->keyboard->setModifierFocusSurface(effectiveFocusedSurface);
+    if (pointer->focusedSurface() != effectiveFocusedSurface) {
+        pointer->sendEnter(effectiveFocusedSurface, localPosition, q->display()->nextSerial());
+        if (keyboard) {
+            keyboard->setModifierFocusSurface(effectiveFocusedSurface);
         }
     }
 
-    d->pointer->sendMotion(localPosition);
+    return localPosition;
+}
+
+void SeatInterface::notifyPointerMotion(const QPointF &pos)
+{
+    if (const auto localPosition = d->updatePointerPosition(pos)) {
+        d->pointer->sendMotion(*localPosition);
+    }
+}
+
+void SeatInterface::notifyPointerWarp(const QPointF &pos)
+{
+    if (const auto localPosition = d->updatePointerPosition(pos)) {
+        d->pointer->sendWarp(*localPosition);
+    }
 }
 
 std::chrono::milliseconds SeatInterface::timestamp() const

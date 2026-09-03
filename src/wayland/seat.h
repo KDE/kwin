@@ -204,6 +204,12 @@ public:
      */
     void notifyPointerMotion(const QPointF &pos);
     /**
+     * Updates the global pointer @p pos.
+     *
+     * Sends a pointer warp event to the focused pointer surface.
+     */
+    void notifyPointerWarp(const QPointF &pos);
+    /**
      * @returns the global pointer position
      */
     QPointF pointerPos() const;

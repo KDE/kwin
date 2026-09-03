@@ -61,6 +61,7 @@ public:
     void sendButton(quint32 button, PointerButtonState state, ClientConnection *client);
     void sendAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source, bool inverted);
     void sendMotion(const QPointF &position);
+    void sendWarp(const QPointF &position);
     void sendFrame();
 
 Q_SIGNALS:

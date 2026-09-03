@@ -2106,13 +2106,14 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
-        seat->notifyPointerMotion(event->position);
-        // absolute motion events confuse games and Wayland doesn't have a warp event yet
-        // -> send a relative motion event with a zero delta to signal the warp instead
+
         if (event->warp) {
-            seat->relativePointerMotion(QPointF(0, 0), QPointF(0, 0), event->timestamp);
-        } else if (!event->delta.isNull()) {
-            seat->relativePointerMotion(event->delta, event->deltaUnaccelerated, event->timestamp);
+            seat->notifyPointerWarp(event->position);
+        } else {
+            seat->notifyPointerMotion(event->position);
+            if (!event->delta.isNull()) {
+                seat->relativePointerMotion(event->delta, event->deltaUnaccelerated, event->timestamp);
+            }
         }
         return true;
     }
