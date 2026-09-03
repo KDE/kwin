@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-01 00:47+0000\n"
+"POT-Creation-Date: 2026-09-03 00:45+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -1897,6 +1897,44 @@ msgstr "Ανά ομάδα παραθύρων"
 msgid "Fullscreen windows"
 msgstr "Παράθυρα πλήρης οθόνης"
 
+#. i18n: ectx: label, entry (DelayTime), group (Effect-dwellclicker)
+#: plugins/dwellclicker/dwellclickerconfig.kcfg:9
+#, kde-format
+msgid "Delay Time"
+msgstr ""
+
+#. i18n: ectx: label, entry (DwellTime), group (Effect-dwellclicker)
+#: plugins/dwellclicker/dwellclickerconfig.kcfg:13
+#, kde-format
+msgid "Dwell Time"
+msgstr ""
+
+#. i18n: ectx: label, entry (MotionThreshold), group (Effect-dwellclicker)
+#: plugins/dwellclicker/dwellclickerconfig.kcfg:17
+#, kde-format
+msgid "Motion Threshold"
+msgstr ""
+
+#. i18n: ectx: label, entry (DefaultButton), group (Effect-dwellclicker)
+#: plugins/dwellclicker/dwellclickerconfig.kcfg:21
+#, fuzzy, kde-format
+#| msgid "Default"
+msgid "Default Button"
+msgstr "Προεπιλεγμένο"
+
+#. i18n: ectx: label, entry (ButtonLocked), group (Effect-dwellclicker)
+#: plugins/dwellclicker/dwellclickerconfig.kcfg:33
+#, fuzzy, kde-format
+#| msgid "Button"
+msgid "Lock Button"
+msgstr "Κουμπί"
+
+#. i18n: ectx: label, entry (DwellColor), group (Effect-dwellclicker)
+#: plugins/dwellclicker/dwellclickerconfig.kcfg:37
+#, kde-format
+msgid "Dwell Color"
+msgstr ""
+
 #: plugins/eis/eisinputcapturemanager.cpp:140
 #, fuzzy, kde-format
 #| msgid "Disable KActivities integration."
@@ -2579,7 +2617,7 @@ msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
 msgstr "Εναλλαγή εφέ αντιστροφής"
 
-#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: ectx: property (text), widget (QLabel, label_IgnoreMinimized)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
 #, kde-format
 msgid "Ignore minimized windows:"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-01 00:47+0000\n"
+"POT-Creation-Date: 2026-09-03 00:45+0000\n"
 "PO-Revision-Date: 2026-08-29 04:18+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -1811,6 +1811,44 @@ msgstr "ფანჯრების ჯგუფის მიხედვით"
 msgid "Fullscreen windows"
 msgstr "მთელ ეკრანზე გაშლილი ფანჯრებით"
 
+#. i18n: ectx: label, entry (DelayTime), group (Effect-dwellclicker)
+#: plugins/dwellclicker/dwellclickerconfig.kcfg:9
+#, kde-format
+msgid "Delay Time"
+msgstr ""
+
+#. i18n: ectx: label, entry (DwellTime), group (Effect-dwellclicker)
+#: plugins/dwellclicker/dwellclickerconfig.kcfg:13
+#, kde-format
+msgid "Dwell Time"
+msgstr ""
+
+#. i18n: ectx: label, entry (MotionThreshold), group (Effect-dwellclicker)
+#: plugins/dwellclicker/dwellclickerconfig.kcfg:17
+#, kde-format
+msgid "Motion Threshold"
+msgstr ""
+
+#. i18n: ectx: label, entry (DefaultButton), group (Effect-dwellclicker)
+#: plugins/dwellclicker/dwellclickerconfig.kcfg:21
+#, fuzzy, kde-format
+#| msgid "Default"
+msgid "Default Button"
+msgstr "ნაგულისხმევი"
+
+#. i18n: ectx: label, entry (ButtonLocked), group (Effect-dwellclicker)
+#: plugins/dwellclicker/dwellclickerconfig.kcfg:33
+#, fuzzy, kde-format
+#| msgid "Button"
+msgid "Lock Button"
+msgstr "ღილაკი"
+
+#. i18n: ectx: label, entry (DwellColor), group (Effect-dwellclicker)
+#: plugins/dwellclicker/dwellclickerconfig.kcfg:37
+#, kde-format
+msgid "Dwell Color"
+msgstr ""
+
 #: plugins/eis/eisinputcapturemanager.cpp:140
 #, kde-format
 msgctxt "@action shortcut"
@@ -2480,7 +2518,7 @@ msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
 msgstr "ბადის ხედის გადართვა"
 
-#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: ectx: property (text), widget (QLabel, label_IgnoreMinimized)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
 #, kde-format
 msgid "Ignore minimized windows:"

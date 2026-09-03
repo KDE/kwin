@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-01 00:47+0000\n"
+"POT-Creation-Date: 2026-09-03 00:45+0000\n"
 "PO-Revision-Date: 2026-08-31 18:35+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -1810,6 +1810,44 @@ msgstr "Enligt fönsterroll"
 msgid "Fullscreen windows"
 msgstr "Fullskärmsfönster"
 
+#. i18n: ectx: label, entry (DelayTime), group (Effect-dwellclicker)
+#: plugins/dwellclicker/dwellclickerconfig.kcfg:9
+#, kde-format
+msgid "Delay Time"
+msgstr ""
+
+#. i18n: ectx: label, entry (DwellTime), group (Effect-dwellclicker)
+#: plugins/dwellclicker/dwellclickerconfig.kcfg:13
+#, kde-format
+msgid "Dwell Time"
+msgstr ""
+
+#. i18n: ectx: label, entry (MotionThreshold), group (Effect-dwellclicker)
+#: plugins/dwellclicker/dwellclickerconfig.kcfg:17
+#, kde-format
+msgid "Motion Threshold"
+msgstr ""
+
+#. i18n: ectx: label, entry (DefaultButton), group (Effect-dwellclicker)
+#: plugins/dwellclicker/dwellclickerconfig.kcfg:21
+#, fuzzy, kde-format
+#| msgid "Default"
+msgid "Default Button"
+msgstr "Standard"
+
+#. i18n: ectx: label, entry (ButtonLocked), group (Effect-dwellclicker)
+#: plugins/dwellclicker/dwellclickerconfig.kcfg:33
+#, fuzzy, kde-format
+#| msgid "Button"
+msgid "Lock Button"
+msgstr "Knapp"
+
+#. i18n: ectx: label, entry (DwellColor), group (Effect-dwellclicker)
+#: plugins/dwellclicker/dwellclickerconfig.kcfg:37
+#, kde-format
+msgid "Dwell Color"
+msgstr ""
+
 #: plugins/eis/eisinputcapturemanager.cpp:140
 #, kde-format
 msgctxt "@action shortcut"
@@ -2478,7 +2516,7 @@ msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
 msgstr "Visa eller dölj rutnätsvy"
 
-#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: ectx: property (text), widget (QLabel, label_IgnoreMinimized)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
 #, kde-format
 msgid "Ignore minimized windows:"
