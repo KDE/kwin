@@ -20,6 +20,10 @@
 
 #include <qwayland-server-plasma-window-management.h>
 
+#include <cerrno>
+#include <cstring>
+#include <fcntl.h>
+
 namespace KWin
 {
 
@@ -496,6 +500,13 @@ void PlasmaWindowInterfacePrivate::setResourceName(const QString &resourceName)
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_get_icon(Resource *resource, int32_t fd)
 {
     QThreadPool::globalInstance()->start([fd, icon = m_icon]() {
+        const int flags = fcntl(fd, F_GETFL);
+        if (flags == -1 || fcntl(fd, F_SETFL, flags & ~O_NONBLOCK) == -1) {
+            qCWarning(KWIN_CORE) << Q_FUNC_INFO << "failed to make fd blocking:" << strerror(errno);
+            close(fd);
+            return;
+        }
+
         QFile file;
         if (!file.open(fd, QIODevice::WriteOnly, QFileDevice::AutoCloseHandle)) {
             close(fd);
