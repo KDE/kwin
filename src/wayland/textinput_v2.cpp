@@ -8,6 +8,8 @@
 #include "surface_p.h"
 #include "textinput_v2_p.h"
 
+#include <algorithm>
+
 namespace KWin
 {
 
@@ -372,9 +374,11 @@ void TextInputV2InterfacePrivate::zwp_text_input_v2_hide_input_panel(Resource *r
 
 void TextInputV2InterfacePrivate::zwp_text_input_v2_set_surrounding_text(Resource *resource, const QString &text, int32_t cursor, int32_t anchor)
 {
+    // input methods trust these byte offsets blindly, never store values outside the text
+    const int32_t size = int32_t(text.toUtf8().size());
     surroundingText = text;
-    surroundingTextCursorPosition = cursor;
-    surroundingTextSelectionAnchor = anchor;
+    surroundingTextCursorPosition = std::clamp(cursor, 0, size);
+    surroundingTextSelectionAnchor = std::clamp(anchor, 0, size);
     Q_EMIT q->surroundingTextChanged();
 }
 

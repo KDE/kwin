@@ -134,6 +134,21 @@ ecm_mark_as_test(testLayerShellV1Interface)
 
 
 ########################################################
+# Test TextInputV2 Interface
+########################################################
+add_executable(testTextInputV2Interface)
+qt6_generate_wayland_protocol_client_sources(testTextInputV2Interface
+    PRIVATE_CODE
+    FILES
+        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/text-input-unstable-v2.xml
+)
+target_sources(testTextInputV2Interface PRIVATE test_textinputv2_interface.cpp)
+target_link_libraries(testTextInputV2Interface Qt::Test kwin Plasma::KWaylandClient Wayland::Client)
+add_test(NAME kwayland-testTextInputV2Interface COMMAND testTextInputV2Interface)
+ecm_mark_as_test(testTextInputV2Interface)
+
+
+########################################################
 # Test TextInputV3 Interface
 ########################################################
 add_executable(testTextInputV3Interface)
