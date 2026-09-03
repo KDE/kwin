@@ -54,7 +54,7 @@ public:
         }
 
         QFile file;
-        if (!file.open(m_fileDescriptor.get(), QIODevice::WriteOnly)) {
+        if (!file.open(m_fileDescriptor.get(), QIODevice::WriteOnly | QIODevice::Unbuffered)) {
             qCWarning(KWIN_SCREENSHOT) << Q_FUNC_INFO << "failed to open pipe:" << file.errorString();
             return;
         }
