@@ -855,6 +855,28 @@ uint32_t libinput_device_config_scroll_get_default_button(struct libinput_device
     return device->defaultScrollButton;
 }
 
+enum libinput_config_scroll_button_lock_state libinput_device_config_scroll_get_default_button_lock(struct libinput_device *device)
+{
+    return device->defaultScrollButtonLock;
+}
+
+enum libinput_config_status libinput_device_config_scroll_set_button_lock(struct libinput_device *device, libinput_config_scroll_button_lock_state state)
+{
+    if (device->setScrollButtonReturnValue == 0) {
+        if (!(device->supportedScrollMethods & LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN)) {
+            return LIBINPUT_CONFIG_STATUS_UNSUPPORTED;
+        }
+        device->scrollButtonLock = state;
+        return LIBINPUT_CONFIG_STATUS_SUCCESS;
+    }
+    return LIBINPUT_CONFIG_STATUS_INVALID;
+}
+
+enum libinput_config_scroll_button_lock_state libinput_device_config_scroll_get_button_lock(struct libinput_device *device)
+{
+    return device->scrollButtonLock;
+}
+
 int libinput_device_switch_has_switch(struct libinput_device *device, enum libinput_switch sw)
 {
     switch (sw) {

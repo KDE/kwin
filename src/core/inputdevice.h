@@ -138,7 +138,7 @@ Q_SIGNALS:
     void pointerButtonChanged(quint32 button, PointerButtonState state, std::chrono::microseconds time, InputDevice *device);
     void pointerMotionAbsolute(const QPointF &position, std::chrono::microseconds time, InputDevice *device);
     void pointerMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device);
-    void pointerAxisChanged(PointerAxis axis, qreal delta, qint32 deltaV120, PointerAxisSource source, bool inverted, std::chrono::microseconds time, InputDevice *device);
+    void pointerAxisChanged(PointerAxis axis, qreal delta, qint32 deltaV120, PointerAxisSource source, bool inverted, bool autoscroll, std::chrono::microseconds time, InputDevice *device);
     void pointerFrame(InputDevice *device);
     void touchFrame(InputDevice *device);
     void touchCanceled(InputDevice *device);

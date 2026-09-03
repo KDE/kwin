@@ -81,6 +81,11 @@ public:
         return m_confined || m_locked;
     }
 
+    bool isAutoScroll() const
+    {
+        return m_autoscroll;
+    }
+
     bool focusUpdatesBlocked() override;
 
     /**
@@ -98,7 +103,7 @@ public:
     /**
      * @internal
      */
-    void processAxis(PointerAxis axis, qreal delta, qint32 deltaV120, PointerAxisSource source, bool inverted, std::chrono::microseconds time, InputDevice *device = nullptr);
+    void processAxis(PointerAxis axis, qreal delta, qint32 deltaV120, PointerAxisSource source, bool inverted, bool autoscroll, std::chrono::microseconds time, InputDevice *device = nullptr);
     /**
      * @internal
      */
@@ -195,6 +200,7 @@ private:
     bool m_locked = false;
     bool m_enableConstraints = true;
     bool m_lastOutputWasPlaceholder = true;
+    bool m_autoscroll = false;
     QPointF m_movementInEdgeBarrier;
     std::chrono::microseconds m_lastMoveTime = std::chrono::microseconds::zero();
     friend class PositionUpdateBlocker;
@@ -236,6 +242,7 @@ public:
     CursorSource *source() const;
     void setSource(CursorSource *source);
 
+    void updateScrollCursor(PointerAxis axis, qreal delta);
     void updateCursorOutputs(const QPointF &pos);
 
 Q_SIGNALS:
@@ -273,6 +280,12 @@ private:
         std::unique_ptr<ShapeCursorSource> shape;
         CursorSource *cursor = nullptr;
     } m_serverCursor;
+    struct
+    {
+        std::unique_ptr<ShapeCursorSource> shape;
+        qreal lastHorizontalDelta = 0;
+        qreal lastVerticalDelta = 0;
+    } m_scrollCursor;
 };
 
 }

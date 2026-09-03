@@ -148,6 +148,10 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(bool scrollOnButtonDown READ isScrollOnButtonDown WRITE setScrollOnButtonDown NOTIFY scrollMethodChanged)
     Q_PROPERTY(quint32 scrollButton READ scrollButton WRITE setScrollButton NOTIFY scrollButtonChanged)
 
+    Q_PROPERTY(bool scrollButtonLockEnabledByDefault READ scrollButtonLockEnabledByDefault CONSTANT)
+    Q_PROPERTY(quint32 defaultScrollButtonLock READ defaultScrollButtonLock CONSTANT)
+    Q_PROPERTY(bool scrollButtonLock READ isScrollButtonLock WRITE setScrollButtonLock NOTIFY scrollButtonLockChanged)
+
     Q_PROPERTY(qreal scrollFactor READ scrollFactor WRITE setScrollFactor NOTIFY scrollFactorChanged)
     //
     // switches
@@ -457,6 +461,19 @@ public:
         return m_scrollButton;
     }
     void setScrollButton(quint32 button);
+    quint32 defaultScrollButtonLock() const
+    {
+        return m_defaultScrollButtonLock;
+    }
+    bool scrollButtonLockEnabledByDefault() const
+    {
+        return defaultScrollButtonLock() == LIBINPUT_CONFIG_SCROLL_BUTTON_LOCK_ENABLED;
+    }
+    bool isScrollButtonLock() const
+    {
+        return m_scrollButtonLock == LIBINPUT_CONFIG_SCROLL_BUTTON_LOCK_ENABLED;
+    }
+    void setScrollButtonLock(bool set);
 
     qreal scrollFactorDefault() const
     {
@@ -806,6 +823,7 @@ Q_SIGNALS:
     void naturalScrollChanged();
     void scrollMethodChanged();
     void scrollButtonChanged();
+    void scrollButtonLockChanged();
     void scrollFactorChanged();
     void clickMethodChanged();
     void outputAreaChanged();
@@ -887,6 +905,8 @@ private:
     bool m_naturalScroll;
     enum libinput_config_scroll_method m_scrollMethod;
     quint32 m_scrollButton;
+    quint32 m_defaultScrollButtonLock;
+    enum libinput_config_scroll_button_lock_state m_scrollButtonLock;
     qreal m_defaultPointerAcceleration;
     qreal m_pointerAcceleration;
     qreal m_scrollFactor;

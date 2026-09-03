@@ -317,6 +317,7 @@ void Connection::processEvents()
                                                                   pointerEvent->scrollValueV120(axis),
                                                                   PointerAxisSource::Wheel,
                                                                   pointerEvent->device()->isNaturalScroll(),
+                                                                  false,
                                                                   pointerEvent->time(),
                                                                   pointerEvent->device());
             }
@@ -332,6 +333,7 @@ void Connection::processEvents()
                                                                   0,
                                                                   PointerAxisSource::Finger,
                                                                   pointerEvent->device()->isNaturalScroll(),
+                                                                  false,
                                                                   pointerEvent->time(),
                                                                   pointerEvent->device());
             }
@@ -347,6 +349,7 @@ void Connection::processEvents()
                                                                   0,
                                                                   PointerAxisSource::Continuous,
                                                                   pointerEvent->device()->isNaturalScroll(),
+                                                                  pointerEvent->device()->isScrollOnButtonDown(),
                                                                   pointerEvent->time(),
                                                                   pointerEvent->device());
             }

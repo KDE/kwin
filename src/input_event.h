@@ -57,6 +57,7 @@ struct PointerAxisEvent
     Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts;
     bool inverted;
     std::chrono::microseconds timestamp;
+    bool autoscroll;
 };
 
 struct PointerSwipeGestureBeginEvent

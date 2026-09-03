@@ -75,6 +75,8 @@ struct libinput_device
     quint32 scrollButton = 0;
     int setScrollButtonReturnValue = 0;
     Qt::MouseButtons supportedButtons;
+    enum libinput_config_scroll_button_lock_state defaultScrollButtonLock = LIBINPUT_CONFIG_SCROLL_BUTTON_LOCK_DISABLED;
+    enum libinput_config_scroll_button_lock_state scrollButtonLock = LIBINPUT_CONFIG_SCROLL_BUTTON_LOCK_DISABLED;
     QList<quint32> keys;
     bool enabled = true;
     bool disableEventsOnExternalMouse = false;

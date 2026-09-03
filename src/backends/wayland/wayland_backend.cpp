@@ -137,7 +137,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
         default:
             Q_UNREACHABLE();
         }
-        Q_EMIT pointerAxisChanged(axis, delta, 0, PointerAxisSource::Unknown, false, std::chrono::milliseconds(time), this);
+        Q_EMIT pointerAxisChanged(axis, delta, 0, PointerAxisSource::Unknown, false, false, std::chrono::milliseconds(time), this);
     });
 
     connect(pointer, &Pointer::frame, this, [this]() {

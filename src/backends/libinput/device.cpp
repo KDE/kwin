@@ -162,6 +162,7 @@ enum class ConfigKey {
     TabletToolRelativeMode,
     Rotation,
     OutputUuid,
+    ScrollButtonLock,
 };
 
 struct ConfigDataBase
@@ -256,6 +257,7 @@ static const QMap<ConfigKey, std::shared_ptr<ConfigDataBase>> s_configData{
     {ConfigKey::NaturalScroll, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("NaturalScroll"), &Device::setNaturalScroll, &Device::naturalScrollEnabledByDefault)},
     {ConfigKey::ScrollMethod, std::make_shared<ConfigData<quint32>>(QByteArrayLiteral("ScrollMethod"), &Device::activateScrollMethodFromInt, &Device::defaultScrollMethodToInt)},
     {ConfigKey::ScrollButton, std::make_shared<ConfigData<quint32>>(QByteArrayLiteral("ScrollButton"), &Device::setScrollButton, &Device::defaultScrollButton)},
+    {ConfigKey::ScrollButtonLock, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("ScrollButtonLock"), &Device::setScrollButtonLock, &Device::scrollButtonLockEnabledByDefault)},
     {ConfigKey::ClickMethod, std::make_shared<ConfigData<quint32>>(QByteArrayLiteral("ClickMethod"), &Device::setClickMethodFromInt, &Device::defaultClickMethodToInt)},
     {ConfigKey::ScrollFactor, std::make_shared<ConfigData<qreal>>(QByteArrayLiteral("ScrollFactor"), &Device::setScrollFactor, &Device::scrollFactorDefault)},
     {ConfigKey::Orientation, std::make_shared<ConfigData<DeviceOrientation>>()},
@@ -381,6 +383,8 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_naturalScroll(m_supportsNaturalScroll ? libinput_device_config_scroll_get_natural_scroll_enabled(m_device) : false)
     , m_scrollMethod(libinput_device_config_scroll_get_method(m_device))
     , m_scrollButton(libinput_device_config_scroll_get_button(m_device))
+    , m_defaultScrollButtonLock(libinput_device_config_scroll_get_default_button_lock(m_device))
+    , m_scrollButtonLock(libinput_device_config_scroll_get_button_lock(m_device))
     , m_defaultPointerAcceleration(libinput_device_config_accel_get_default_speed(m_device))
     , m_pointerAcceleration(libinput_device_config_accel_get_speed(m_device))
     , m_scrollFactor(1.0)
@@ -590,6 +594,27 @@ void Device::setScrollMethod(bool set, enum libinput_config_scroll_method method
             m_scrollMethod = method;
             Q_EMIT scrollMethodChanged();
             writeEntry(ConfigKey::ScrollMethod, (quint32)method);
+        }
+    }
+}
+
+void Device::setScrollButtonLock(bool set)
+{
+    if (!(m_supportedScrollMethods & LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN)) {
+        return;
+    }
+
+    enum libinput_config_scroll_button_lock_state map = set ? LIBINPUT_CONFIG_SCROLL_BUTTON_LOCK_ENABLED : LIBINPUT_CONFIG_SCROLL_BUTTON_LOCK_DISABLED;
+
+    if (!set) {
+        map = LIBINPUT_CONFIG_SCROLL_BUTTON_LOCK_DISABLED;
+    }
+
+    if (libinput_device_config_scroll_set_button_lock(m_device, map) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
+        if (m_scrollButtonLock != map) {
+            m_scrollButtonLock = map;
+            writeEntry(ConfigKey::ScrollButtonLock, set);
+            Q_EMIT scrollButtonLockChanged();
         }
     }
 }

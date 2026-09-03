@@ -187,7 +187,7 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_axis(Resource *resource, u
         return;
     }
 
-    Q_EMIT device->pointerAxisChanged(nativeAxis, wl_fixed_to_double(value), 0, PointerAxisSource::Unknown, false, currentTime(), device);
+    Q_EMIT device->pointerAxisChanged(nativeAxis, wl_fixed_to_double(value), 0, PointerAxisSource::Unknown, false, false, currentTime(), device);
     Q_EMIT device->pointerFrame(device);
 }
 

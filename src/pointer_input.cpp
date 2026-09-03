@@ -13,6 +13,7 @@
 
 #include "config-kwin.h"
 
+#include "core/inputdevice.h"
 #include "core/output.h"
 #include "cursorsource.h"
 #include "decorations/decoratedwindow.h"
@@ -330,7 +331,7 @@ void PointerInputRedirection::processButton(uint32_t button, PointerButtonState 
 }
 
 void PointerInputRedirection::processAxis(PointerAxis axis, qreal delta, qint32 deltaV120,
-                                          PointerAxisSource source, bool inverted, std::chrono::microseconds time, InputDevice *device)
+                                          PointerAxisSource source, bool inverted, bool autoscroll, std::chrono::microseconds time, InputDevice *device)
 {
     input()->setLastInputHandler(this);
     if (!inited()) {
@@ -353,7 +354,13 @@ void PointerInputRedirection::processAxis(PointerAxis axis, qreal delta, qint32 
         .modifiersRelevantForGlobalShortcuts = input()->modifiersRelevantForGlobalShortcuts(),
         .inverted = inverted,
         .timestamp = time,
+        .autoscroll = autoscroll,
     };
+
+    if (autoscroll) {
+        m_autoscroll = delta != 0;
+        m_cursor->updateScrollCursor(axis, delta);
+    }
 
     input()->processSpies(&InputEventSpy::pointerAxis, &event);
     input()->processFilters(&InputEventFilter::pointerAxis, &event);
@@ -1004,6 +1011,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     m_serverCursor.surface = std::make_unique<SurfaceCursorSource>();
     m_serverCursor.shape = std::make_unique<ShapeCursorSource>();
     m_dragCursor = std::make_unique<ShapeCursorSource>();
+    m_scrollCursor.shape = std::make_unique<ShapeCursorSource>();
 
 #if KWIN_BUILD_SCREENLOCKER
     if (kwinApp()->supportsLockScreen()) {
@@ -1029,6 +1037,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     m_decoration.cursor->setTheme(m_waylandImage.theme());
     m_serverCursor.shape->setTheme(m_waylandImage.theme());
     m_dragCursor->setTheme(m_waylandImage.theme());
+    m_scrollCursor.shape->setTheme(m_waylandImage.theme());
 
     connect(&m_waylandImage, &WaylandCursorImage::themeChanged, this, [this] {
         m_effectsCursor->setTheme(m_waylandImage.theme());
@@ -1038,6 +1047,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
         m_decoration.cursor->setTheme(m_waylandImage.theme());
         m_serverCursor.shape->setTheme(m_waylandImage.theme());
         m_dragCursor->setTheme(m_waylandImage.theme());
+        m_scrollCursor.shape->setTheme(m_waylandImage.theme());
     });
 
     connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, [this]() {
@@ -1151,6 +1161,33 @@ void CursorImage::updateServerCursor(const PointerCursor &cursor)
     reevaluteSource();
 }
 
+void CursorImage::updateScrollCursor(PointerAxis axis, qreal delta)
+{
+    if (delta != 0) {
+        if (axis == PointerAxis::Horizontal) {
+            if (m_scrollCursor.lastVerticalDelta != 0) {
+                m_scrollCursor.shape->setShape(Qt::SizeAllCursor);
+            } else {
+                m_scrollCursor.shape->setShape(Qt::SizeHorCursor);
+            }
+            m_scrollCursor.lastHorizontalDelta = delta;
+        } else {
+            if (m_scrollCursor.lastHorizontalDelta != 0) {
+                m_scrollCursor.shape->setShape(Qt::SizeAllCursor);
+            } else {
+                m_scrollCursor.shape->setShape(Qt::SizeVerCursor);
+            }
+            m_scrollCursor.lastVerticalDelta = delta;
+        }
+    } else {
+        m_scrollCursor.lastHorizontalDelta = 0;
+        m_scrollCursor.lastVerticalDelta = 0;
+        m_scrollCursor.shape->setShape(Qt::SizeAllCursor);
+    }
+
+    reevaluteSource();
+}
+
 void CursorImage::setEffectsOverrideCursor(Qt::CursorShape shape)
 {
     m_effectsCursor->setShape(shape);
@@ -1246,6 +1283,10 @@ void CursorImage::reevaluteSource()
     }
     if (m_pointer->decoration()) {
         setSource(m_decoration.cursor.get());
+        return;
+    }
+    if (m_pointer->isAutoScroll()) {
+        setSource(m_scrollCursor.shape.get());
         return;
     }
     const PointerInterface *pointer = waylandServer()->seat()->pointer();

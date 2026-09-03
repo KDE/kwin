@@ -604,7 +604,7 @@ bool ButtonRebindsFilter::sendTabletToolButton(quint32 button, bool pressed, std
 bool ButtonRebindsFilter::sendScrollWheel(double v120, std::chrono::microseconds time)
 {
     RebindScope scope;
-    Q_EMIT m_inputDevice->pointerAxisChanged(KWin::PointerAxis::Vertical, v120 > 0 ? 15 : -15, v120, KWin::PointerAxisSource::Wheel, false, time, m_inputDevice.get());
+    Q_EMIT m_inputDevice->pointerAxisChanged(KWin::PointerAxis::Vertical, v120 > 0 ? 15 : -15, v120, KWin::PointerAxisSource::Wheel, false, false, time, m_inputDevice.get());
     Q_EMIT m_inputDevice->pointerFrame(m_inputDevice.get());
     return true;
 }
