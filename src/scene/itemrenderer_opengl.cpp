@@ -209,7 +209,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
     if (auto shadowItem = qobject_cast<ShadowItem *>(item)) {
         if (!geometry.isEmpty()) {
             const auto ninePatch = static_cast<NinePatchOpenGL *>(shadowItem->ninePatch());
-            if (ninePatch->texture()) {
+            if (ninePatch && ninePatch->texture()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                     .traits = ShaderTrait::MapTexture,
                     .textures = {ninePatch->texture()},
