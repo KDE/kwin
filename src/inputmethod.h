@@ -309,6 +309,14 @@ private:
     bool m_hasPendingModifiers = false;
     bool m_activeClientSupportsTextInput = false;
     bool m_shouldShowPanel = false;
+
+    /**
+     * Whether the input method was force activated, e.g. via forceActivate().
+     *
+     * While set, a panel that gets created is allowed to show itself regardless
+     * of the input device that triggered the show request.
+     */
+    bool m_forceShow = false;
 };
 
 }

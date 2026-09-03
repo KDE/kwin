@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2026 Kristen McWilliam <kristen@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -162,6 +163,7 @@ void InputMethod::show()
 void InputMethod::hide()
 {
     m_shouldShowPanel = false;
+    m_forceShow = false;
     if (m_panel) {
         m_panel->hide();
         updateInputPanelState();
@@ -257,6 +259,7 @@ void InputMethod::setActive(bool active)
 {
     const bool wasActive = waylandServer()->inputMethod()->context();
     if (wasActive && !active) {
+        m_forceShow = false;
         waylandServer()->inputMethod()->sendDeactivate();
     }
 
@@ -302,8 +305,12 @@ void InputMethod::setPanel(InputPanelV1Window *panel)
     Q_EMIT panelChanged();
 
     if (m_shouldShowPanel) {
+        if (shouldShowOnActive() || m_forceShow) {
+            m_panel->allow();
+        }
         show();
     }
+    m_forceShow = false;
 }
 
 void InputMethod::setTrackedWindow(Window *trackedWindow)
@@ -987,6 +994,12 @@ bool InputMethod::activeClientSupportsTextInput() const
 void InputMethod::forceActivate()
 {
     setActive(true);
+    m_forceShow = true;
+    if (m_panel) {
+        m_panel->allow();
+    } else {
+        qCDebug(KWIN_VIRTUALKEYBOARD) << "No input panel available.";
+    }
     show();
 }
 
