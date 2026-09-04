@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-03 00:45+0000\n"
-"PO-Revision-Date: 2026-08-29 17:42+0100\n"
+"POT-Creation-Date: 2026-09-04 00:46+0000\n"
+"PO-Revision-Date: 2026-09-04 00:55+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -1839,39 +1839,37 @@ msgstr "Ventanas a pantalla completa"
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:9
 #, kde-format
 msgid "Delay Time"
-msgstr ""
+msgstr "Tiempo de demora"
 
 #. i18n: ectx: label, entry (DwellTime), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:13
 #, kde-format
 msgid "Dwell Time"
-msgstr ""
+msgstr "Tiempo de inmovilidad"
 
 #. i18n: ectx: label, entry (MotionThreshold), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:17
 #, kde-format
 msgid "Motion Threshold"
-msgstr ""
+msgstr "Umbral de movimiento"
 
 #. i18n: ectx: label, entry (DefaultButton), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:21
-#, fuzzy, kde-format
-#| msgid "Default"
+#, kde-format
 msgid "Default Button"
-msgstr "Predeterminada"
+msgstr "Botón predeterminada"
 
 #. i18n: ectx: label, entry (ButtonLocked), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:33
-#, fuzzy, kde-format
-#| msgid "Button"
+#, kde-format
 msgid "Lock Button"
-msgstr "Botón"
+msgstr "Botón de bloqueo"
 
 #. i18n: ectx: label, entry (DwellColor), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:37
 #, kde-format
 msgid "Dwell Color"
-msgstr ""
+msgstr "Color de inmovilidad"
 
 #: plugins/eis/eisinputcapturemanager.cpp:140
 #, kde-format
@@ -4420,7 +4418,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %s"
 msgstr "El controlador ha rechazado la configuración de salida: %s"
 
-#: window.cpp:3188
+#: window.cpp:3183
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
