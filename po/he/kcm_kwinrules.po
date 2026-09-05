@@ -10,14 +10,14 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2026-08-18 10:33+0300\n"
+"PO-Revision-Date: 2026-09-04 11:06+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 26.04.3\n"
+"X-Generator: Lokalize 26.08.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -31,9 +31,9 @@ msgid "Your emails"
 msgstr "kde-l10n-he@kde.org"
 
 #: kcmrules.cpp:28
-#, fuzzy, kde-format
+#, kde-format
 msgid "Window Rules"
-msgstr "&תפקיד החלון:"
+msgstr "כללי חלון"
 
 #: kcmrules.cpp:32
 #, kde-format
@@ -249,16 +249,14 @@ msgid "Save Rules"
 msgstr "שמירת כללים"
 
 #: package/contents/ui/main.qml:97
-#, fuzzy, kde-format
-#| msgid "&New..."
+#, kde-format
 msgid "Add New..."
-msgstr "&חדש..."
+msgstr "הוספת חדש…"
 
 #: package/contents/ui/main.qml:108
-#, fuzzy, kde-format
-#| msgid "&Import"
+#, kde-format
 msgid "Import..."
-msgstr "&ייבא"
+msgstr "ייבוא…"
 
 #: package/contents/ui/main.qml:116
 #, kde-format
@@ -266,10 +264,9 @@ msgid "Cancel Export"
 msgstr "ביטול ייצוא"
 
 #: package/contents/ui/main.qml:116
-#, fuzzy, kde-format
-#| msgid "&Export"
+#, kde-format
 msgid "Export..."
-msgstr "&ייצא"
+msgstr "ייצוא…"
 
 #: package/contents/ui/main.qml:206
 #, kde-format
@@ -329,10 +326,9 @@ msgstr ""
 "מאפייני חלון שיושפעו מהכלל"
 
 #: package/contents/ui/RulesEditor.qml:85
-#, fuzzy, kde-format
-#| msgid "&Closeable"
+#, kde-format
 msgid "Close"
-msgstr "ניתן ל&סגירה"
+msgstr "סגירה"
 
 #: package/contents/ui/RulesEditor.qml:85
 #, kde-format
@@ -509,16 +505,14 @@ msgid "Maximized vertically"
 msgstr "מוגדל אנכית"
 
 #: rulesmodel.cpp:438
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "Virtual Desktop"
-msgstr "בכל השולחנות עבודה"
+msgstr "שולחן עבודה וירטואלי"
 
 #: rulesmodel.cpp:444
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "Virtual Desktops"
-msgstr "בכל השולחנות עבודה"
+msgstr "שולחנות עבודה וירטואליים"
 
 #: rulesmodel.cpp:463
 #, kde-format
@@ -541,10 +535,9 @@ msgid "Minimized"
 msgstr "ממוזער"
 
 #: rulesmodel.cpp:494
-#, fuzzy, kde-format
-#| msgid "Sh&aded"
+#, kde-format
 msgid "Shaded"
-msgstr "&נגלל"
+msgstr ""
 
 #: rulesmodel.cpp:499
 #, kde-format
@@ -744,10 +737,9 @@ msgid "Closeable"
 msgstr "ניתן לסגירה"
 
 #: rulesmodel.cpp:640
-#, fuzzy, kde-format
-#| msgid "Window &type"
+#, kde-format
 msgid "Set window type"
-msgstr "&סוגי החלון"
+msgstr "הגדרת סוג חלון"
 
 #: rulesmodel.cpp:646
 #, kde-format
@@ -778,10 +770,9 @@ msgstr ""
 "כמו כותרת החלון במקום.<nl/><nl/>נא לשקול לדווח על זה כתקלה למפתחי היישום."
 
 #: rulesmodel.cpp:738
-#, fuzzy, kde-format
-#| msgid "Window &types:"
+#, kde-format
 msgid "All Window Types"
-msgstr "&סוגי חלונות:"
+msgstr "כל סוגי החלונות"
 
 #: rulesmodel.cpp:739
 #, kde-format
@@ -869,7 +860,7 @@ msgstr "ללא מיקום"
 #: rulesmodel.cpp:805
 #, kde-format
 msgid "Minimal Overlapping"
-msgstr ""
+msgstr "חפיפה מזערית"
 
 #: rulesmodel.cpp:806
 #, kde-format
@@ -887,10 +878,9 @@ msgid "Random"
 msgstr "אקראי"
 
 #: rulesmodel.cpp:809
-#, fuzzy, kde-format
-#| msgid "Top-Left Corner"
+#, kde-format
 msgid "In Top-Left Corner"
-msgstr "פינה שמאלית עליונה"
+msgstr "בפינה השמאלית העליונה"
 
 #: rulesmodel.cpp:810
 #, kde-format

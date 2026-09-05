@@ -4,27 +4,27 @@
 # Diego Iastrubni <elcuco@kde.org>, 2008, 2012, 2013.
 # elkana bardugo <ttv200@gmail.com>, 2016.
 # Elkana Bardugo <ttv200@gmail.com>, 2017. #zanata
+# SPDX-FileCopyrightText: 2026 Yaron Shahrabani <sh.yaron@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2017-05-16 06:54-0400\n"
-"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
-"Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2026-09-04 11:05+0300\n"
+"Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
+"Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Zanata 3.9.6\n"
+"X-Generator: Lokalize 26.08.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: blur/blur_config.ui:17
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Blur strength:"
-msgstr "&עוצמה:"
+msgstr "עוצמת טשטוש:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
@@ -42,10 +42,9 @@ msgstr "חזק"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
 #: blur/blur_config.ui:83
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Noise strength:"
-msgstr "&עוצמה:"
+msgstr "עוצמת רעש:"
 
 #: colorpicker/colorpicker.cpp:101
 #, kde-format
@@ -161,9 +160,9 @@ msgstr "מותאם אישית"
 
 #. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
 #: desktopgrid/desktopgrid_config.ui:48
-#, fuzzy, kde-format
+#, kde-format
 msgid "N&umber of rows:"
-msgstr "מספר ה&שורות:"
+msgstr "מספר &שורות:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: desktopgrid/desktopgrid_config.ui:103
@@ -175,21 +174,20 @@ msgstr "יישור של &שמות שולחנות העבודה:"
 #: desktopgrid/desktopgrid_config.ui:116
 #, kde-format
 msgid "Show buttons to alter count of virtual desktops"
-msgstr ""
+msgstr "הצגת כפתורים לשינוי כמות שולחנות העבודה הווירטואליים"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: desktopgrid/desktopgrid_config.ui:123
-#, fuzzy, kde-format
-#| msgid "&Layout mode:"
+#, kde-format
 msgid "&Grid layout mode:"
-msgstr "&סידור:"
+msgstr "מצב פריסת &רשת:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: desktopgrid/desktopgrid_config.ui:137 overview/kcm/overvieweffectkcm.ui:30
 #: windowview/kcm/windowvieweffectkcm.ui:30
 #, kde-format
 msgid "Closest"
-msgstr ""
+msgstr "הקרוב ביותר"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: desktopgrid/desktopgrid_config.ui:142 overview/kcm/overvieweffectkcm.ui:35
@@ -202,14 +200,13 @@ msgstr "טבעי"
 #: desktopgrid/desktopgrid_config.ui:147
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "ללא"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: desktopgrid/desktopgrid_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Windows layout:"
-msgstr "חלונות"
+msgstr "פריסת חלונות:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: desktopgrid/desktopgrid_config.ui:171
@@ -219,37 +216,33 @@ msgstr "הפעלה"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: diminactive/diminactive_config.ui:17
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Strength:"
-msgstr "&עוצמה:"
+msgstr "עוצמה:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
 #: diminactive/diminactive_config.ui:40
 #, kde-format
 msgid "Dim:"
-msgstr ""
+msgstr "עמעום:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
 #: diminactive/diminactive_config.ui:47
-#, fuzzy, kde-format
-#| msgid "Do not animate panels"
+#, kde-format
 msgid "Docks and panels"
-msgstr "ללא הנפשה של פאנלים"
+msgstr "מעגנים ולוחות"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: diminactive/diminactive_config.ui:54
-#, fuzzy, kde-format
-#| msgctxt "@title:group actions when clicking on desktop"
-#| msgid "Desktop"
+#, kde-format
 msgid "Desktop"
-msgstr "שולחן עבודה"
+msgstr "שולחן העבודה"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
 #: diminactive/diminactive_config.ui:61
-#, fuzzy, kde-format
+#, kde-format
 msgid "Keep above windows"
-msgstr "חלונות לא פעילים:"
+msgstr "לרחף מעל השאר"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
 #: diminactive/diminactive_config.ui:68
@@ -259,24 +252,21 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
 #: diminactive/diminactive_config.ui:75
-#, fuzzy, kde-format
+#, kde-format
 msgid "Fullscreen windows"
-msgstr "חלונות"
+msgstr "חלונות במסך מלא"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: glide/glide_config.ui:19 scale/package/contents/ui/config.ui:17
-#, fuzzy, kde-format
-#| msgid "Ring Duration:"
+#, kde-format
 msgid "Duration:"
-msgstr "משך הטבעות"
+msgstr "משך:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: glide/glide_config.ui:32 scale/package/contents/ui/config.ui:30
-#, fuzzy, kde-format
-#| msgctxt "Duration of rotation"
-#| msgid "Default"
+#, kde-format
 msgid "Default"
-msgstr "ברירת־מחדל"
+msgstr "ברירת מחדל"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
 #: glide/glide_config.ui:35 scale/package/contents/ui/config.ui:33
@@ -286,38 +276,36 @@ msgstr " אלפיות שנייה"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: glide/glide_config.ui:50
-#, fuzzy, kde-format
+#, kde-format
 msgid "Window Open Animation"
-msgstr "אנימציה"
+msgstr "הנפשת פתיחת חלון"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
 #: glide/glide_config.ui:56 glide/glide_config.ui:154
-#, fuzzy, kde-format
-#| msgid "Rotation duration:"
+#, kde-format
 msgid "Rotation edge:"
-msgstr "משך הסיבוב:"
+msgstr "קצה הטיה:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
 #: glide/glide_config.ui:93 glide/glide_config.ui:191
-#, fuzzy, kde-format
-#| msgid "Rotation duration:"
+#, kde-format
 msgid "Rotation angle:"
-msgstr "משך הסיבוב:"
+msgstr "זווית הטיה:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
 #: glide/glide_config.ui:119 glide/glide_config.ui:198
 #, kde-format
 msgid "Distance:"
-msgstr ""
+msgstr "מרחק:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
 #: glide/glide_config.ui:148
-#, fuzzy, kde-format
+#, kde-format
 msgid "Window Close Animation"
-msgstr "אנימציה"
+msgstr "הנפשת סגירת חלון"
 
 #: invert/invert.cpp:42 invert/invert_config.cpp:38
 #, kde-format
@@ -330,10 +318,9 @@ msgid "Toggle Invert Effect on Window"
 msgstr ""
 
 #: invert/invert.cpp:56
-#, fuzzy, kde-format
-#| msgid "Invert cursor keys"
+#, kde-format
 msgid "Invert Screen Colors"
-msgstr "הפוך מקשי מקלדת"
+msgstr "היפוך צבעי המסך"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: login/package/contents/ui/config.ui:17
@@ -386,24 +373,24 @@ msgid "&Height:"
 msgstr "&גובה:"
 
 #: mouseclick/mouseclick.cpp:34 mouseclick/mouseclick_config.cpp:51
-#, fuzzy, kde-format
+#, kde-format
 msgid "Toggle Mouse Click Effect"
-msgstr "החלף אפקט"
+msgstr "החלפת אפקט לחיצת עכבר"
 
 #: mouseclick/mouseclick.cpp:41
-#, fuzzy, kde-format
+#, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "שמאל"
 
 #: mouseclick/mouseclick.cpp:42
-#, fuzzy, kde-format
+#, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
-msgstr "אמצעי"
+msgstr "אמצע"
 
 #: mouseclick/mouseclick.cpp:43
-#, fuzzy, kde-format
+#, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
 msgstr "ימין"
@@ -411,12 +398,12 @@ msgstr "ימין"
 #: mouseclick/mouseclick.h:60
 #, kde-format
 msgid "↓"
-msgstr ""
+msgstr "↓"
 
 #: mouseclick/mouseclick.h:61
 #, kde-format
 msgid "↑"
-msgstr ""
+msgstr "↑"
 
 #. i18n: ectx: attribute (title), widget (QWidget, basic_tab)
 #: mouseclick/mouseclick_config.ui:21
@@ -463,9 +450,7 @@ msgstr "עובי קו:"
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, kcfg_LineWidth)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
 #: mouseclick/mouseclick_config.ui:119 mouseclick/mouseclick_config.ui:171
-#, fuzzy, kde-format
-#| msgid " pixel"
-#| msgid_plural " pixels"
+#, kde-format
 msgid " pixel"
 msgstr " פיקסל"
 
@@ -527,9 +512,7 @@ msgid "Clear Mouse Marks"
 msgstr "נקה סימוני העכבר"
 
 #: mousemark/mousemark_config.cpp:100
-#, fuzzy, kde-format
-#| msgid " pixel"
-#| msgid_plural " pixels"
+#, kde-format
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
@@ -540,7 +523,7 @@ msgstr[1] " פיקסלים"
 #: mousemark/mousemark_config.ui:23
 #, kde-format
 msgid "Wid&th:"
-msgstr ""
+msgstr "&רוחב:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: mousemark/mousemark_config.ui:36
@@ -560,12 +543,12 @@ msgstr ""
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
-msgstr ""
+msgstr "לא ידוע"
 
 #: overview/kcm/overvieweffectkcm.cpp:41 overview/overvieweffect.cpp:31
 #, kde-format
 msgid "Toggle Overview"
-msgstr ""
+msgstr "החלפת מצב סקירה"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: overview/kcm/overvieweffectkcm.ui:22
@@ -576,70 +559,65 @@ msgstr "סידור התצוגה:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
 #: overview/kcm/overvieweffectkcm.ui:56
-#, fuzzy, kde-format
-#| msgid "Background"
+#, kde-format
 msgid "Blur background:"
-msgstr "רקע"
+msgstr "טשטוש רקע:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: overview/kcm/overvieweffectkcm.ui:73
-#, fuzzy, kde-format
-#| msgid "Ignore &minimized windows"
+#, kde-format
 msgid "Ignore minimized windows:"
-msgstr "התעלם עבור חלונות &ממוזערים"
+msgstr "התעלמות מחלונות ממוזערים:"
 
 #: overview/qml/DesktopBar.qml:187
 #, kde-format
 msgid "Delete Virtual Desktop"
-msgstr ""
+msgstr "מחיקת שולחן עבודה וירטואלי"
 
 #: overview/qml/DesktopBar.qml:283
-#, fuzzy, kde-format
-#| msgctxt "@title:group actions when clicking on desktop"
-#| msgid "Desktop"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "שולחן עבודה"
+msgstr "הוספת שולחן עבודה וירטואלי"
 
 #: overview/qml/ScreenView.qml:226
-#, fuzzy, kde-format
-#| msgid "Moving windows:"
+#, kde-format
 msgid "No matching windows"
-msgstr "חלונות בתזוזה:"
+msgstr "אין חלונות תואמים"
 
 #: private/qml/WindowHeapDelegate.qml:151
 #, kde-format
 msgid "Drag Down To Close"
-msgstr ""
+msgstr "גרירה למטה לסגירה"
 
 #: private/qml/WindowHeapDelegate.qml:461
-#, fuzzy, kde-format
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
-msgstr "חלונות"
+msgstr "סגירת חלון"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InScale)
 #: scale/package/contents/ui/config.ui:46
-#, fuzzy, kde-format
+#, kde-format
 msgid "Window open scale:"
-msgstr "אנימציה"
+msgstr "קנה מידה לפתיחת חלון:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_OutScale)
 #: scale/package/contents/ui/config.ui:53
-#, fuzzy, kde-format
+#, kde-format
 msgid "Window close scale:"
-msgstr "אנימציה"
+msgstr "קנה מידה לסגירת חלון:"
 
 #: screenshot/screenshotdbusinterface1.cpp:478
 #, kde-format
 msgctxt "Notification caption that a screenshot got saved to file"
 msgid "Screenshot"
-msgstr ""
+msgstr "צילום המסך"
 
 #: screenshot/screenshotdbusinterface1.cpp:479
 #, kde-format
 msgctxt "Notification with path to screenshot file"
 msgid "Screenshot saved to %1"
-msgstr ""
+msgstr "צילום המסך נשמר אל %1"
 
 #: screenshot/screenshotdbusinterface1.cpp:800
 #: screenshot/screenshotdbusinterface2.cpp:512
@@ -658,18 +636,16 @@ msgid ""
 msgstr ""
 
 #: showfps/qml/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Ring Duration:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr "משך הטבעות"
+msgstr "משך ציור"
 
 #: showfps/qml/main.qml:162
-#, fuzzy, kde-format
-#| msgid "Ring Count:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
-msgstr "כמות הטבעות:"
+msgstr "כמות ציור"
 
 #: showfps/qml/main.qml:175
 #, kde-format
@@ -678,40 +654,39 @@ msgid "Current FPS"
 msgstr ""
 
 #: showfps/qml/main.qml:184
-#, fuzzy, kde-format
-#| msgid "Maximum &width:"
+#, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "רוחב &מירבי:"
+msgstr "תמוניות לשנייה לכל היותר"
 
 #: showfps/qml/main.qml:192
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
-msgstr ""
+msgstr "האפקט הזה הוא לא מדד ביצועים"
 
 #: showpaint/showpaint.cpp:38 showpaint/showpaint_config.cpp:38
-#, fuzzy, kde-format
+#, kde-format
 msgid "Toggle Show Paint"
-msgstr "הצג &פאנלים"
+msgstr "החלפת הצגת צביעה"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
 #: slide/slide_config.ui:17
 #, kde-format
 msgid "Gap between desktops"
-msgstr ""
+msgstr "מרווח בין שולחנות עבודה"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
 #: slide/slide_config.ui:23
 #, kde-format
 msgid "Horizontal:"
-msgstr ""
+msgstr "אופקי:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
 #: slide/slide_config.ui:46
 #, kde-format
 msgid "Vertical:"
-msgstr ""
+msgstr "אנכי:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
 #: slide/slide_config.ui:72
@@ -766,27 +741,27 @@ msgstr ""
 #: tileseditor/qml/main.qml:150
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "ריפוד:"
 
 #: tileseditor/qml/main.qml:160
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "טעינת פריסה…"
 
 #: tileseditor/qml/main.qml:274
 #, kde-format
 msgid "Close"
-msgstr ""
+msgstr "סגירה"
 
 #: tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Horizontally"
-msgstr ""
+msgstr "פיצול אופקי"
 
 #: tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Vertically"
-msgstr ""
+msgstr "פיצול אנכי"
 
 #: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
@@ -796,7 +771,7 @@ msgstr ""
 #: tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "מחיקה"
 
 #: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
 #, kde-format
@@ -807,19 +782,19 @@ msgstr "מעקב אחרי העכבר"
 #: trackmouse/trackmouse_config.ui:26
 #, kde-format
 msgid "Trigger effect with:"
-msgstr ""
+msgstr "הזנקת אפקט עם:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
 #: trackmouse/trackmouse_config.ui:33
 #, kde-format
 msgid "Keyboard shortcut:"
-msgstr ""
+msgstr "מקש קיצור:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
 #: trackmouse/trackmouse_config.ui:43
 #, kde-format
 msgid "Modifier keys:"
-msgstr ""
+msgstr "מקשי החלפה:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Alt)
 #: trackmouse/trackmouse_config.ui:65
@@ -943,10 +918,9 @@ msgid "Toggle Present Windows (Window class)"
 msgstr ""
 
 #: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:72
-#, fuzzy, kde-format
-#| msgid "Bring window to current desktop"
+#, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr "העבר חלון לשולחן עבודה נוכחי"
+msgstr "החלפת החלונות הנוכחיים (מחלקת החלון בשולחן העבודה הנוכחי)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: windowview/kcm/windowvieweffectkcm.ui:56
@@ -960,15 +934,14 @@ msgid "No Matches"
 msgstr ""
 
 #: windowview/qml/main.qml:108
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "No Windows"
-msgstr "חלונות"
+msgstr "אין חלונות"
 
 #: windowview/qml/main.qml:123
-#, fuzzy, kde-format
+#, kde-format
 msgid "Filter windows…"
-msgstr "חלונות"
+msgstr "סינון חלונות…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20
@@ -1095,16 +1068,13 @@ msgstr "גורם התקרבות:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: zoom/zoom_config.ui:66
-#, fuzzy, kde-format
-#| msgid ""
-#| "Enable tracking of the focused location. This needs QAccessible to be "
-#| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
+#, kde-format
 msgid ""
 "Enable tracking of the focused location. This needs QAccessible to be "
 "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
-"אפשר מעקב של המיקום הממוקד. זה מאפשר ל־QAccessible להיות מאופשר פר יישום "
-"(\"export QT_ACCESSIBILITY=1\")."
+"הפעלת מעקב אחר המקום עם המיקוד. דורש את הפעלת QAccessible בכל יישומון בנפרד "
+"(„export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: zoom/zoom_config.ui:69
@@ -1114,23 +1084,19 @@ msgstr "אפשר מעקב אחרי התמקדות"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: zoom/zoom_config.ui:76
-#, fuzzy, kde-format
-#| msgid ""
-#| "Enable tracking of the focused location. This needs QAccessible to be "
-#| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
+#, kde-format
 msgid ""
 "Enable tracking of the text cursor. This needs QAccessible to be enabled per "
 "application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
-"אפשר מעקב של המיקום הממוקד. זה מאפשר ל־QAccessible להיות מאופשר פר יישום "
-"(\"export QT_ACCESSIBILITY=1\")."
+"הפעלת מעקב אחר סמן הטקסט. דורש את הפעלת QAccessible בכל יישומון בנפרד "
+"(„export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: zoom/zoom_config.ui:79
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable Text Cursor Tracking"
-msgstr "אפשר מעקב אחרי התמקדות"
+msgstr "הפעלת מעקב סמן טקסט"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: zoom/zoom_config.ui:86
