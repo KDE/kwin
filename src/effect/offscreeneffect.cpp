@@ -13,6 +13,7 @@
 #include "core/renderviewport.h"
 #include "core/syncobjtimeline.h"
 #include "effect/effecthandler.h"
+#include "multigpuswapchain.h"
 #include "opengl/eglcontext.h"
 #include "opengl/egldisplay.h"
 #include "opengl/eglnativefence.h"
@@ -40,6 +41,7 @@ public:
     std::shared_ptr<EglSwapchain> m_swapchain;
     std::shared_ptr<EglSwapchainSlot> m_slot;
     std::shared_ptr<SyncReleasePoint> m_releasePoint;
+    std::shared_ptr<ColorDescription> m_colorDescription = ColorDescription::sRGB;
     bool m_isDirty = true;
     bool m_recursionGuard = false;
     GLShader *m_shader = nullptr;
@@ -125,14 +127,27 @@ bool OffscreenData::maybeRender(EffectWindow *window)
         m_slot.reset();
         return true;
     }
-    if (!m_swapchain || m_swapchain->size() != textureSize) {
+    // Capture the window in the color space the scene is blended in, so that a window with a wider
+    // color description than sRGB keeps its colors while it is redirected.
+    const std::shared_ptr<ColorDescription> &colorDescription = window->screen()->blendingColor();
+
+    const auto device = Compositor::self()->primaryDevice();
+    const FormatModifierMap &supportedFormats = device->eglDisplay()->nonExternalOnlySupportedDrmFormats();
+    // An 8 bit intermediate bands, most visibly across an HDR blending space's luminance range, so
+    // ask for 10 and let chooseFormat settle on what this device actually supports.
+    const auto chosen = MultiGpuSwapchain::chooseFormat(DRM_FORMAT_ARGB2101010, supportedFormats, supportedFormats)
+                            .value_or(DrmFormat{
+                                .format = DRM_FORMAT_ARGB8888,
+                                .modifiers = supportedFormats[DRM_FORMAT_ARGB8888],
+                            });
+
+    if (!m_swapchain || m_swapchain->size() != textureSize || m_swapchain->format() != chosen.format) {
         m_slot.reset();
 
-        const auto device = Compositor::self()->primaryDevice();
         GraphicsBufferOptions options{
             .size = textureSize,
-            .format = DRM_FORMAT_ARGB8888,
-            .modifiers = device->eglDisplay()->nonExternalOnlySupportedDrmFormats()[DRM_FORMAT_ARGB8888],
+            .format = chosen.format,
+            .modifiers = chosen.modifiers,
             .software = false,
             .scanout = false,
         };
@@ -140,6 +155,10 @@ bool OffscreenData::maybeRender(EffectWindow *window)
         if (!m_swapchain) {
             return false;
         }
+        m_isDirty = true;
+    }
+    if (m_colorDescription != colorDescription) {
+        m_colorDescription = colorDescription;
         m_isDirty = true;
     }
 
@@ -150,7 +169,7 @@ bool OffscreenData::maybeRender(EffectWindow *window)
     if (!m_slot) {
         return false;
     }
-    RenderTarget renderTarget(m_slot->framebuffer());
+    RenderTarget renderTarget(m_slot->framebuffer(), m_colorDescription);
     RenderViewport viewport(logicalGeometry, scale, renderTarget, QPoint());
     GLFramebuffer::pushFramebuffer(m_slot->framebuffer());
     glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -245,7 +264,7 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
     shader->setUniform(GLShader::IntUniform::TextureWidth, m_slot->texture()->width());
     shader->setUniform(GLShader::IntUniform::TextureHeight, m_slot->texture()->height());
-    shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
+    shader->setColorspaceUniforms(m_colorDescription, renderTarget.colorDescription(), RenderingIntent::Perceptual);
 
     const bool clipping = deviceRegion != Region::infinite();
     const Region clipRegion = clipping ? viewport.transform().map(deviceRegion, renderTarget.transformedSize()) : Region::infinite();
