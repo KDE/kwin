@@ -2,9 +2,29 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Automatically performs a mouse click when the user keeps the cursor still for a set amount of time",
+        "Description[ca]": "Realitza automàticament un clic de ratolí quan l'usuari manté el cursor quiet durant un temps determinat",
+        "Description[cs]": "Automaticky provede kliknutí myší, pokud uživatel ponechá kurzor nehybný po stanovenou dobu",
+        "Description[es]": "Realiza automáticamente un clic de ratón cuando el usuario mantiene el cursor inmóvil durante cierto tiempo",
+        "Description[ka]": "ავტომატური თაგუნას წკაპი, როცა მომხმარებელი მაჩვენებელს მითითებული ხანგრძლივობით აჩერებს ერთ ადგილას",
+        "Description[nl]": "Voert automatisch een muisklik uit wanneer de gebruiker de cursor gedurende een ingestelde tijd stilhoudt.",
+        "Description[pt_BR]": "Executa automaticamente um clique do mouse quando o usuário mantém o cursor parado por um período de tempo definido",
+        "Description[sl]": "Samodejno izvede klik miške, ko uporabnik določen čas ne premika kazalca",
+        "Description[sv]": "Utför automatiskt ett musklick när användaren håller markören stilla under en viss tid",
+        "Description[tr]": "Kullanıcı imleci belirli bir süre hareketsiz tuttuğunda kendiliğinden bir fare tıklaması gerçekleştirir",
+        "Description[uk]": "Автоматично виконує клацання кнопкою миші, якщо користувач утримує вказівник нерухомим вказаний проміжок часу",
         "EnabledByDefault": false,
         "License": "GPL",
-        "Name": "Dwell Clicker"
+        "Name": "Dwell Clicker",
+        "Name[ca]": "Clic d'estancament",
+        "Name[cs]": "Dwell Clicker",
+        "Name[es]": "Clic por inmovilidad",
+        "Name[ka]": "დაწკაპუნება დროებით გაჩერებისას",
+        "Name[nl]": "Verblijfklikker",
+        "Name[pt_BR]": "Clique por permanência",
+        "Name[sl]": "Kliker zadrževanja",
+        "Name[sv]": "Hållklicka",
+        "Name[tr]": "Bekleyince Tıklat",
+        "Name[uk]": "Клацання з затримкою"
     },
     "org.kde.kwin.effect": {
         "internal": true
