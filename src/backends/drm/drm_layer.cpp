@@ -468,7 +468,7 @@ std::shared_ptr<DrmFramebuffer> DrmPipelineLayer::importBuffer(Surface *surface,
         const QSize orientedSize = m_bufferTransform.map(slot->buffer()->size());
         const Region bufferDamage = m_bufferTransform.map(damagedDeviceRegion, orientedSize);
 
-        auto imported = surface->importSwapchain->copyRgbBuffer(slot->buffer(), bufferDamage, std::move(readFence), frame, slot->releasePoint());
+        auto imported = surface->importSwapchain->copyBuffer(slot->buffer(), bufferDamage, std::move(readFence), frame, slot->releasePoint(), ColorDescription::sRGB);
         if (!imported) {
             // this is probably caused by a GPU reset, let's not take any chances
             surface->needsRecreation = true;
