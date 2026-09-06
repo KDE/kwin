@@ -26,6 +26,7 @@ class ShowFpsScreen : public QObject
     Q_PROPERTY(int paintDuration READ paintDuration NOTIFY paintChanged)
     Q_PROPERTY(int paintAmount READ paintAmount NOTIFY paintChanged)
     Q_PROPERTY(QColor paintColor READ paintColor NOTIFY paintChanged)
+    Q_PROPERTY(QString presentationMode READ presentationMode NOTIFY presentationModeChanged)
 
 public:
     int fps() const;
@@ -33,11 +34,13 @@ public:
     int paintDuration() const;
     int paintAmount() const;
     QColor paintColor() const;
+    QString presentationMode() const;
 
 Q_SIGNALS:
     void fpsChanged();
     void maximumFpsChanged();
     void paintChanged();
+    void presentationModeChanged();
 
 public:
     void presented(OutputFrame *frame, std::chrono::nanoseconds timestamp, PresentationMode mode);
@@ -49,6 +52,7 @@ public:
     std::chrono::steady_clock::time_point m_lastFpsTime;
     int m_paintDuration = 0;
     int m_paintAmount = 0;
+    QString m_presentationMode = QStringLiteral("VSync");
 };
 
 class ShowFpsEffect : public Effect

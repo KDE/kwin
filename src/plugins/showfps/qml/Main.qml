@@ -189,7 +189,7 @@ Rectangle {
 
         Label {
             Layout.fillWidth: true
-            text: i18nc("@label", "This effect is not a benchmark")
+            text: root.effect.presentationMode
         }
     }
 }

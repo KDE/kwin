@@ -58,11 +58,35 @@ QColor ShowFpsScreen::paintColor() const
     return QColor::fromHsvF(0.3 - (0.3 * normalizedDuration), 1.0, 1.0);
 }
 
+QString ShowFpsScreen::presentationMode() const
+{
+    return m_presentationMode;
+}
+
 void ShowFpsScreen::presented(OutputFrame *frame, std::chrono::nanoseconds timestamp, PresentationMode mode)
 {
     if (auto t = frame->queryRenderTime()) {
         m_paintDuration = std::chrono::duration_cast<std::chrono::milliseconds>(t->end - t->start).count();
         Q_EMIT paintChanged();
+    }
+    QString presentMode;
+    switch (mode) {
+    case PresentationMode::VSync:
+        presentMode = QStringLiteral("VSync");
+        break;
+    case PresentationMode::Async:
+        presentMode = QStringLiteral("Tearing");
+        break;
+    case PresentationMode::AdaptiveSync:
+        presentMode = QStringLiteral("Adaptive Sync");
+        break;
+    case PresentationMode::AdaptiveAsync:
+        presentMode = QStringLiteral("Adaptive Sync + Tearing");
+        break;
+    }
+    if (m_presentationMode != presentMode) {
+        m_presentationMode = presentMode;
+        Q_EMIT presentationModeChanged();
     }
 }
 
