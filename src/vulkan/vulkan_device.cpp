@@ -393,7 +393,8 @@ FormatModifierMap VulkanDevice::queryFormats(VkImageUsageFlags flags) const
 {
     FormatModifierMap ret;
     for (const auto &[drmFormat, info] : FormatInfo::s_knownFormats) {
-        if (info.vulkanFormat == VK_FORMAT_UNDEFINED) {
+        // TODO support yuv formats
+        if (info.vulkanFormat == VK_FORMAT_UNDEFINED || info.yuv) {
             continue;
         }
         vk::DrmFormatModifierPropertiesListEXT modifierInfos;

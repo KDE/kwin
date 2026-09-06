@@ -656,14 +656,14 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                .yuv = false,
                            }},
 
-    // YUV formats. TODO support them with Vulkan
+    // YUV formats
     {DRM_FORMAT_NV12, FormatInfo{
                           .drmFormat = DRM_FORMAT_NV12,
                           .bitsPerColor = 8,
                           .alphaBits = 0,
                           .bitsPerPixel = 24,
                           .openglFormat = GL_RGBA8,
-                          .vulkanFormat = VK_FORMAT_UNDEFINED,
+                          .vulkanFormat = VK_FORMAT_G8_B8R8_2PLANE_420_UNORM,
                           .floatingPoint = false,
                           .yuv = true,
                       }},
@@ -683,7 +683,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                           .alphaBits = 0,
                           .bitsPerPixel = 24,
                           .openglFormat = GL_RGBA8,
-                          .vulkanFormat = VK_FORMAT_UNDEFINED,
+                          .vulkanFormat = VK_FORMAT_G8_B8R8_2PLANE_422_UNORM,
                           .floatingPoint = false,
                           .yuv = true,
                       }},
@@ -703,7 +703,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                           .alphaBits = 0,
                           .bitsPerPixel = 24,
                           .openglFormat = GL_RGBA8,
-                          .vulkanFormat = VK_FORMAT_UNDEFINED,
+                          .vulkanFormat = VK_FORMAT_G8_B8R8_2PLANE_444_UNORM,
                           .floatingPoint = false,
                           .yuv = true,
                       }},
@@ -753,7 +753,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                           .alphaBits = 0,
                           .bitsPerPixel = 48,
                           .openglFormat = GL_RGBA16,
-                          .vulkanFormat = VK_FORMAT_UNDEFINED,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
+                          .vulkanFormat = VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16,
+#endif
                           .floatingPoint = false,
                           .yuv = true,
                       }},
