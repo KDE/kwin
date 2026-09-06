@@ -234,6 +234,7 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const FileDe
 {
     auto attribs = buffer->dmabufAttributes();
     m_dmabufDevice = attribs->device;
+    std::shared_ptr<ColorDescription> actualColor;
     RenderDevice *compat = GpuManager::self()->compatibleRenderDevice(attribs->device);
     if (!compat) {
         qCCritical(KWIN_OPENGL, "Couldn't find a compatible GPU for a buffer");
@@ -241,6 +242,7 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const FileDe
     } else if (compat == m_renderDevice) {
         m_mgpuSwapchain.reset();
         m_releasePoint = releasePoint;
+        actualColor = color;
         if (sync.isValid()) {
             const auto fence = EGLNativeFence::importFence(m_renderDevice->eglDisplay(), sync.duplicate());
             if (!fence.waitSync()) {
@@ -256,7 +258,8 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const FileDe
             qCCritical(KWIN_OPENGL, "Couldn't create multi gpu swapchain for a buffer %s 0x%lx", qPrintable(FormatInfo::drmFormatName(attribs->format)), attribs->modifier);
             return false;
         }
-        auto imported = m_mgpuSwapchain->copyRgbBuffer(buffer, Region::infinite(), sync.duplicate(), nullptr, releasePoint);
+        auto imported = m_mgpuSwapchain->copyBuffer(buffer, Region::infinite(), sync.duplicate(),
+                                                    nullptr, releasePoint, color);
         if (!imported.has_value()) {
             return false;
         }
@@ -265,12 +268,13 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const FileDe
             return false;
         }
         buffer = imported->buffer;
+        actualColor = imported->color;
         attribs = buffer->dmabufAttributes();
         m_releasePoint = imported->releasePoint;
     }
 
     const bool isExternal = m_renderDevice->eglDisplay()->isExternalOnly(attribs->format, attribs->modifier);
-    auto texture = createTexture(m_renderDevice->eglDisplay()->importBufferAsImage(buffer, color->yuvCoefficients(), color->range()), buffer->size(), isExternal);
+    auto texture = createTexture(m_renderDevice->eglDisplay()->importBufferAsImage(buffer, actualColor->yuvCoefficients(), actualColor->range()), buffer->size(), isExternal);
     if (!texture) {
         return false;
     }
@@ -294,8 +298,10 @@ void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const File
         loadDmabufTexture(buffer, sync, releasePoint, color);
         return;
     }
+    std::shared_ptr<ColorDescription> actualColor;
     if (m_mgpuSwapchain) {
-        auto imported = m_mgpuSwapchain->copyRgbBuffer(buffer, region, sync.duplicate(), nullptr, releasePoint);
+        auto imported = m_mgpuSwapchain->copyBuffer(buffer, region, sync.duplicate(),
+                                                    nullptr, releasePoint, color);
         if (!imported.has_value()) {
             return;
         }
@@ -305,8 +311,10 @@ void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const File
         }
         buffer = imported->buffer;
         m_releasePoint = imported->releasePoint;
+        actualColor = imported->color;
     } else {
         m_releasePoint = releasePoint;
+        actualColor = color;
         if (sync.isValid()) {
             const auto fence = EGLNativeFence::importFence(m_renderDevice->eglDisplay(), sync.duplicate());
             if (!fence.waitSync()) {
@@ -315,7 +323,8 @@ void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const File
         }
     }
 
-    const EGLImage image = m_renderDevice->eglDisplay()->importBufferAsImage(buffer, color->yuvCoefficients(), color->range());
+    const EGLImage image = m_renderDevice->eglDisplay()->importBufferAsImage(buffer, actualColor->yuvCoefficients(), actualColor->range());
+
     m_texture->bind();
     glEGLImageTargetTexture2DOES(m_texture->target(), static_cast<GLeglImageOES>(image));
     m_texture->unbind();

@@ -27,6 +27,7 @@ class RenderDevice;
 class VulkanDevice;
 class SyncReleasePoint;
 class MultiGpuCopy;
+class ColorDescription;
 
 struct DrmFormat
 {
@@ -46,9 +47,11 @@ public:
         GraphicsBuffer *buffer;
         FileDescriptor sync;
         std::shared_ptr<SyncReleasePoint> releasePoint;
+        std::shared_ptr<ColorDescription> color;
     };
-    std::optional<Ret> copyRgbBuffer(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
-                                     const std::shared_ptr<SyncReleasePoint> &releasePoint);
+    std::optional<Ret> copyBuffer(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
+                                  const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                                  const std::shared_ptr<ColorDescription> &color);
 
     void resetDamageTracking();
 
