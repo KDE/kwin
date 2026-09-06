@@ -11,30 +11,60 @@
 #include "effect/effect.h"
 #include "effect/offscreenquickview.h"
 
+#include <QAbstractListModel>
 #include <QElapsedTimer>
+#include <QQueue>
 
 namespace KWin
 {
 
 class RenderView;
 
+class PaintDurationModel : public QAbstractListModel
+{
+    Q_OBJECT
+
+public:
+    explicit PaintDurationModel(ssize_t count);
+
+    int rowCount(const QModelIndex &parent) const override;
+    int columnCount(const QModelIndex &parent) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    QHash<int, QByteArray> roleNames() const override;
+
+    void push(std::chrono::nanoseconds value);
+    int value() const;
+
+    void resize(ssize_t size);
+
+private:
+    ssize_t m_maxCount;
+    QQueue<int> m_values;
+};
+
 class ShowFpsScreen : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int fps READ fps NOTIFY fpsChanged)
     Q_PROPERTY(int maximumFps READ maximumFps NOTIFY maximumFpsChanged)
-    Q_PROPERTY(int paintDuration READ paintDuration NOTIFY paintChanged)
+    Q_PROPERTY(PaintDurationModel *paintDuration READ paintDuration NOTIFY paintChanged)
+    Q_PROPERTY(PaintDurationModel *paintDurationCPU READ paintDurationCPU NOTIFY paintChanged)
     Q_PROPERTY(int paintAmount READ paintAmount NOTIFY paintChanged)
     Q_PROPERTY(QColor paintColor READ paintColor NOTIFY paintChanged)
     Q_PROPERTY(QString presentationMode READ presentationMode NOTIFY presentationModeChanged)
 
 public:
+    explicit ShowFpsScreen(uint32_t maximumFps);
+
     int fps() const;
     int maximumFps() const;
-    int paintDuration() const;
+    PaintDurationModel *paintDuration();
+    PaintDurationModel *paintDurationCPU();
     int paintAmount() const;
     QColor paintColor() const;
     QString presentationMode() const;
+
+    void setMaximumFps(uint32_t fps);
 
 Q_SIGNALS:
     void fpsChanged();
@@ -50,7 +80,8 @@ public:
     int m_newFps = 0;
     uint32_t m_maximumFps = 0;
     std::chrono::steady_clock::time_point m_lastFpsTime;
-    int m_paintDuration = 0;
+    PaintDurationModel m_paintDuration;
+    PaintDurationModel m_paintDurationCPU;
     int m_paintAmount = 0;
     QString m_presentationMode = QStringLiteral("VSync");
 };

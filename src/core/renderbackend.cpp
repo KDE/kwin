@@ -87,6 +87,29 @@ std::optional<RenderTimeSpan> OutputFrame::queryRenderTime() const
     return ret;
 }
 
+std::optional<RenderTimeSpan> OutputFrame::queryCpuRenderTime() const
+{
+    auto cpuOnly = m_renderTimeQueries | std::views::filter([](const auto &query) {
+        return dynamic_cast<CpuRenderTimeQuery *>(query.get());
+    });
+    if (cpuOnly.empty()) {
+        return RenderTimeSpan{};
+    }
+    const auto first = cpuOnly.front()->query();
+    if (!first) {
+        return std::nullopt;
+    }
+    RenderTimeSpan ret = *first;
+    for (const auto &query : cpuOnly | std::views::drop(1)) {
+        const auto opt = query->query();
+        if (!opt) {
+            return std::nullopt;
+        }
+        ret = ret | *opt;
+    }
+    return ret;
+}
+
 void OutputFrame::presented(std::chrono::nanoseconds timestamp, PresentationMode mode)
 {
     Q_ASSERT(!m_presented);

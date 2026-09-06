@@ -18,6 +18,60 @@
 namespace KWin
 {
 
+PaintDurationModel::PaintDurationModel(ssize_t count)
+    : m_maxCount(count)
+{
+    m_values.resize(count);
+}
+
+int PaintDurationModel::rowCount(const QModelIndex &parent) const
+{
+    return m_values.size();
+}
+
+int PaintDurationModel::columnCount(const QModelIndex &parent) const
+{
+    return 1;
+}
+
+QVariant PaintDurationModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid() || index.row() < 0 || index.row() >= int(m_values.size()) || role != Qt::DisplayRole) {
+        return {};
+    }
+    return m_values[index.row()];
+}
+
+QHash<int, QByteArray> PaintDurationModel::roleNames() const
+{
+    return {{Qt::DisplayRole, "value"}};
+}
+
+void PaintDurationModel::push(std::chrono::nanoseconds value)
+{
+    if (m_values.size() == m_maxCount) {
+        beginRemoveRows({}, m_maxCount - 1, m_maxCount - 1);
+        m_values.pop_back();
+        endRemoveRows();
+    }
+    beginInsertRows({}, 0, 0);
+    m_values.push_front(std::chrono::duration_cast<std::chrono::microseconds>(value).count());
+    endInsertRows();
+}
+
+int PaintDurationModel::value() const
+{
+    return m_values.empty() ? 0 : m_values.front();
+}
+
+void PaintDurationModel::resize(ssize_t size)
+{
+    m_maxCount = size;
+    beginResetModel();
+    m_values.resize(size);
+    endResetModel();
+}
+
 ShowFpsEffect::ShowFpsEffect()
 {
     connect(effects->scene(), &WorkspaceScene::viewRemoved, this, &ShowFpsEffect::removeView);
@@ -32,6 +86,13 @@ void ShowFpsEffect::removeView(RenderView *view)
     m_data.erase(view);
 }
 
+ShowFpsScreen::ShowFpsScreen(uint32_t fps)
+    : m_maximumFps(fps)
+    , m_paintDuration(fps)
+    , m_paintDurationCPU(fps)
+{
+}
+
 int ShowFpsScreen::fps() const
 {
     return m_fps;
@@ -42,9 +103,14 @@ int ShowFpsScreen::maximumFps() const
     return m_maximumFps;
 }
 
-int ShowFpsScreen::paintDuration() const
+PaintDurationModel *ShowFpsScreen::paintDuration()
 {
-    return m_paintDuration;
+    return &m_paintDuration;
+}
+
+PaintDurationModel *ShowFpsScreen::paintDurationCPU()
+{
+    return &m_paintDurationCPU;
 }
 
 int ShowFpsScreen::paintAmount() const
@@ -54,7 +120,7 @@ int ShowFpsScreen::paintAmount() const
 
 QColor ShowFpsScreen::paintColor() const
 {
-    auto normalizedDuration = std::min(1.0, m_paintDuration / 100.0);
+    auto normalizedDuration = std::min(1.0, m_paintDuration.value() / 100000.0);
     return QColor::fromHsvF(0.3 - (0.3 * normalizedDuration), 1.0, 1.0);
 }
 
@@ -65,8 +131,11 @@ QString ShowFpsScreen::presentationMode() const
 
 void ShowFpsScreen::presented(OutputFrame *frame, std::chrono::nanoseconds timestamp, PresentationMode mode)
 {
-    if (auto t = frame->queryRenderTime()) {
-        m_paintDuration = std::chrono::duration_cast<std::chrono::milliseconds>(t->end - t->start).count();
+    const auto cpu = frame->queryCpuRenderTime();
+    const auto total = frame->queryRenderTime();
+    if (cpu && total) {
+        m_paintDuration.push(total->end - total->start);
+        m_paintDurationCPU.push(cpu->end - cpu->start);
         Q_EMIT paintChanged();
     }
     QString presentMode;
@@ -88,6 +157,18 @@ void ShowFpsScreen::presented(OutputFrame *frame, std::chrono::nanoseconds times
         m_presentationMode = presentMode;
         Q_EMIT presentationModeChanged();
     }
+}
+
+void ShowFpsScreen::setMaximumFps(uint32_t fps)
+{
+    if (m_maximumFps == fps) {
+        return;
+    }
+    m_maximumFps = fps;
+    Q_EMIT maximumFpsChanged();
+
+    m_paintDuration.resize(fps);
+    m_paintDurationCPU.resize(fps);
 }
 
 class ShowFpsFeedback : public PresentationFeedback
@@ -116,23 +197,18 @@ void ShowFpsEffect::prePaintScreen(ScreenPrePaintData &data)
         return;
     }
 
+    uint32_t maximumFps = std::round(data.view->refreshRate() / 1000.0);
+
     auto &screenData = m_data[data.view];
     m_currentView = data.view;
     if (!screenData) {
-        screenData = std::make_unique<ShowFpsScreen>();
+        screenData = std::make_unique<ShowFpsScreen>(maximumFps);
     }
     data.frame->addFeedback(std::make_shared<ShowFpsFeedback>(screenData.get()), PresentationFeedbackFlags{});
 
     screenData->m_newFps += 1;
     screenData->m_paintAmount = 0;
-
-    // detect highest monitor refresh rate
-    uint32_t maximumFps = data.view->refreshRate() / 1000;
-
-    if (maximumFps != screenData->m_maximumFps) {
-        screenData->m_maximumFps = maximumFps;
-        Q_EMIT screenData->maximumFpsChanged();
-    }
+    screenData->setMaximumFps(maximumFps);
 
     if (!screenData->m_scene) {
         screenData->m_scene = std::make_unique<OffscreenQuickScene>();

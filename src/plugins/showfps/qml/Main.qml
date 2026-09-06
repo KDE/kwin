@@ -60,33 +60,31 @@ Rectangle {
                 }
             }
 
-            Charts.BarChart {
+            Charts.LineChart {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                yRange.minimum: 100
-                yRange.increment: 10
+                yRange.increment: 1000
+                yRange.minimum: 5000
 
                 xRange.from: 0
-                xRange.to: 50
-                xRange.automatic: false
+                xRange.automatic: true
 
                 indexingMode: Charts.Chart.IndexSourceValues
 
-                valueSources: Charts.HistoryProxySource {
-                    source: Charts.SingleValueSource {
-                        value: root.effect.paintDuration
-                    }
-                    maximumHistory: 100
-                    fillMode: Charts.HistoryProxySource.FillFromStart
-                }
+                valueSources: [
+                    Charts.ModelSource {
+                        model: root.effect.paintDurationCPU
+                        roleName: "value"
+                    },
+                    Charts.ModelSource {
+                        model: root.effect.paintDuration
+                        roleName: "value"
+                    },
+                ]
 
-                colorSource: Charts.HistoryProxySource {
-                    source: Charts.SingleValueSource {
-                        value: root.effect.paintColor
-                    }
-                    maximumHistory: 100
-                    fillMode: Charts.HistoryProxySource.FillFromStart
+                colorSource: Charts.ArraySource {
+                    array: ["blue", "red"]
                 }
 
                 ChartControls.GridLines {
@@ -99,7 +97,7 @@ Rectangle {
 
                     major.visible: false
 
-                    minor.frequency: 10
+                    minor.frequency: 1000
                     minor.lineWidth: 1
                     minor.color: root.gridColor
                 }

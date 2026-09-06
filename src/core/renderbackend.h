@@ -46,7 +46,7 @@ public:
                            PresentationMode mode, PresentationFeedbackFlags flags) = 0;
 };
 
-struct RenderTimeSpan
+struct KWIN_EXPORT RenderTimeSpan
 {
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::time_point{std::chrono::nanoseconds::zero()};
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::time_point{std::chrono::nanoseconds::zero()};
@@ -110,6 +110,7 @@ public:
     void setArtificialHdrHeadroom(double edr);
 
     std::optional<RenderTimeSpan> queryRenderTime() const;
+    std::optional<RenderTimeSpan> queryCpuRenderTime() const;
 
 private:
     const QPointer<RenderLoop> m_loop;
