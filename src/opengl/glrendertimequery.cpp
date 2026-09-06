@@ -80,10 +80,7 @@ std::optional<RenderTimeSpan> GLRenderTimeQuery::query()
         }
     }
 
-    // timings are pretty unpredictable in the sub-millisecond range; this minimum
-    // ensures that when CPU or GPU power states change, we don't drop any frames
-    const std::chrono::nanoseconds minimumTime = std::chrono::milliseconds(2);
-    const auto end = std::max({m_cpuProbe.start + (m_gpuProbe.end - m_gpuProbe.start), m_cpuProbe.end, m_cpuProbe.start + minimumTime});
+    const auto end = std::max(m_cpuProbe.start + (m_gpuProbe.end - m_gpuProbe.start), m_cpuProbe.end);
     return RenderTimeSpan{
         .start = m_cpuProbe.start,
         .end = end,

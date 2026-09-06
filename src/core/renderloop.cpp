@@ -147,7 +147,10 @@ void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp,
     notifyVblank(timestamp);
 
     if (renderTime) {
-        renderJournal.add(renderTime->end - renderTime->start, timestamp);
+        // timings are pretty unpredictable in the sub-millisecond range; this minimum
+        // ensures that when CPU or GPU power states change, we don't drop any frames
+        const std::chrono::nanoseconds minimumTime = std::chrono::milliseconds(2);
+        renderJournal.add(std::max(minimumTime, renderTime->end - renderTime->start), timestamp);
     }
     if (compositeTimer.isActive()) {
         // reschedule to match the new timestamp and render time
