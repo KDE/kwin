@@ -25,12 +25,11 @@ namespace KWin
 
 TextureOpenGL::~TextureOpenGL()
 {
-    qDeleteAll(m_planes);
 }
 
-QVarLengthArray<GLTexture *, 4> TextureOpenGL::planes() const
+GLTexture *TextureOpenGL::texture() const
 {
-    return m_planes;
+    return m_texture.get();
 }
 
 std::unique_ptr<ImageTextureOpenGL> ImageTextureOpenGL::create(const QImage &image)
@@ -43,7 +42,8 @@ std::unique_ptr<ImageTextureOpenGL> ImageTextureOpenGL::create(const QImage &ima
     return nullptr;
 }
 
-void ImageTextureOpenGL::attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+void ImageTextureOpenGL::attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                                const std::shared_ptr<ColorDescription> &color)
 {
     Q_UNREACHABLE();
 }
@@ -58,15 +58,15 @@ bool ImageTextureOpenGL::upload(const QImage &image)
     nativeTexture->setFilter(GL_LINEAR);
     nativeTexture->setWrapMode(GL_CLAMP_TO_EDGE);
 
-    m_planes = {nativeTexture.release()};
-    m_size = m_planes[0]->size();
+    m_texture = std::move(nativeTexture);
+    m_size = m_texture->size();
 
     return true;
 }
 
 void ImageTextureOpenGL::upload(const QImage &image, const Rect &rect)
 {
-    m_planes[0]->update(image, rect);
+    m_texture->update(image, rect);
 }
 
 BufferTextureOpenGL::BufferTextureOpenGL(EglBackend *backend)
@@ -78,22 +78,23 @@ BufferTextureOpenGL::~BufferTextureOpenGL()
 {
 }
 
-std::unique_ptr<BufferTextureOpenGL> BufferTextureOpenGL::create(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+std::unique_ptr<BufferTextureOpenGL> BufferTextureOpenGL::create(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                                                                 const std::shared_ptr<ColorDescription> &color)
 {
     auto texture = std::make_unique<BufferTextureOpenGL>(static_cast<EglBackend *>(Compositor::self()->backend()));
-    if (texture->attach(buffer, releasePoint)) {
+    if (texture->attach(buffer, releasePoint, color)) {
         return texture;
     }
 
     return nullptr;
 }
 
-bool BufferTextureOpenGL::attach(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+bool BufferTextureOpenGL::attach(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint, const std::shared_ptr<ColorDescription> &color)
 {
     if (buffer->dmabufAttributes()) {
-        return loadDmabufTexture(buffer, releasePoint);
+        return loadDmabufTexture(buffer, releasePoint, color);
     } else if (buffer->shmAttributes()) {
-        if (EGLImageKHR image = m_backend->importBufferAsImage(buffer)) {
+        if (EGLImageKHR image = m_backend->renderDevice()->eglDisplay()->importBufferAsImage(buffer, color->yuvCoefficients(), color->range())) {
             return loadUDmabufTexture(buffer, image);
         } else {
             return loadShmTexture(buffer);
@@ -106,15 +107,16 @@ bool BufferTextureOpenGL::attach(GraphicsBuffer *buffer, const std::shared_ptr<S
     }
 }
 
-void BufferTextureOpenGL::attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+void BufferTextureOpenGL::attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                                 const std::shared_ptr<ColorDescription> &color)
 {
     if (buffer->dmabufAttributes()) {
-        updateDmabufTexture(buffer, region, releasePoint);
+        updateDmabufTexture(buffer, region, releasePoint, color);
     } else if (buffer->shmAttributes()) {
-        if (EGLImageKHR image = m_backend->importBufferAsImage(buffer)) {
+        if (EGLImageKHR image = m_backend->renderDevice()->eglDisplay()->importBufferAsImage(buffer, color->yuvCoefficients(), color->range())) {
             updateUDmabufTexture(buffer, image, releasePoint);
         } else {
-            updateShmTexture(buffer, region, releasePoint);
+            updateShmTexture(buffer, region);
         }
     } else if (buffer->singlePixelAttributes()) {
         updateSinglePixelTexture(buffer, releasePoint);
@@ -130,8 +132,7 @@ void BufferTextureOpenGL::upload(const QImage &image, const Rect &rect)
 
 void BufferTextureOpenGL::reset()
 {
-    qDeleteAll(m_planes);
-    m_planes.clear();
+    m_texture.reset();
     m_bufferType = BufferType::None;
     m_size = QSize();
     m_releasePoint.reset();
@@ -176,7 +177,7 @@ bool BufferTextureOpenGL::loadShmTexture(GraphicsBuffer *buffer)
     texture->setContentTransform(OutputTransform::FlipY);
 
     m_bufferType = BufferType::Shm;
-    m_planes = {texture.release()};
+    m_texture = std::move(texture);
     m_size = buffer->size();
     const auto info = FormatInfo::get(buffer->shmAttributes()->format);
     m_isFloatingPoint = info && info->floatingPoint;
@@ -193,11 +194,11 @@ static Region simplifyDamage(const Region &damage)
     }
 }
 
-void BufferTextureOpenGL::updateShmTexture(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+void BufferTextureOpenGL::updateShmTexture(GraphicsBuffer *buffer, const Region &region)
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::Shm)) {
         reset();
-        attach(buffer, releasePoint);
+        loadShmTexture(buffer);
         return;
     }
 
@@ -206,12 +207,13 @@ void BufferTextureOpenGL::updateShmTexture(GraphicsBuffer *buffer, const Region 
         return;
     }
 
-    m_planes[0]->update(*view.image(), simplifyDamage(region) & Rect(QPoint(0, 0), m_planes[0]->size()));
+    m_texture->update(*view.image(), simplifyDamage(region) & Rect(QPoint(0, 0), m_texture->size()));
     const auto info = FormatInfo::get(buffer->shmAttributes()->format);
     m_isFloatingPoint = info && info->floatingPoint;
 }
 
-bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                                            const std::shared_ptr<ColorDescription> &color)
 {
     auto attribs = buffer->dmabufAttributes();
     m_dmabufDevice = attribs->device;
@@ -246,34 +248,12 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const std::s
         m_releasePoint = imported->releasePoint;
     }
 
-    if (auto itConv = FormatInfo::s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != FormatInfo::s_drmConversions.end()) {
-        std::vector<std::unique_ptr<GLTexture>> textures;
-        Q_ASSERT(itConv->plane.count() == uint(buffer->dmabufAttributes()->planeCount));
-
-        for (uint plane = 0; plane < itConv->plane.count(); ++plane) {
-            const auto &currentPlane = itConv->plane[plane];
-            QSize size = buffer->size();
-            size.rwidth() /= currentPlane.widthDivisor;
-            size.rheight() /= currentPlane.heightDivisor;
-
-            const bool isExternal = m_backend->eglDisplayObject()->isExternalOnly(currentPlane.format, attribs->modifier);
-            auto t = createTexture(m_backend->importBufferAsImage(buffer, plane, currentPlane.format, size), size, isExternal);
-            if (!t) {
-                return false;
-            }
-            textures.emplace_back(std::move(t));
-        }
-        for (auto &texture : textures) {
-            m_planes.append(texture.release());
-        }
-    } else {
-        const bool isExternal = m_backend->eglDisplayObject()->isExternalOnly(attribs->format, attribs->modifier);
-        auto texture = createTexture(m_backend->importBufferAsImage(buffer), buffer->size(), isExternal);
-        if (!texture) {
-            return false;
-        }
-        m_planes = {texture.release()};
+    const bool isExternal = m_backend->eglDisplayObject()->isExternalOnly(attribs->format, attribs->modifier);
+    auto texture = createTexture(m_backend->eglDisplayObject()->importBufferAsImage(buffer, color->yuvCoefficients(), color->range()), buffer->size(), isExternal);
+    if (!texture) {
+        return false;
     }
+    m_texture = std::move(texture);
 
     m_bufferType = BufferType::DmaBuf;
     m_size = buffer->size();
@@ -283,13 +263,14 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const std::s
     return true;
 }
 
-void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                                              const std::shared_ptr<ColorDescription> &color)
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::DmaBuf)
         || Q_UNLIKELY(m_dmabufDevice != buffer->dmabufAttributes()->device)
         || (m_mgpuSwapchain && !m_mgpuSwapchain->isSuitableFor(buffer))) {
         reset();
-        attach(buffer, releasePoint);
+        attach(buffer, releasePoint, color);
         return;
     }
     if (m_mgpuSwapchain) {
@@ -309,24 +290,11 @@ void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const Regi
         m_releasePoint = releasePoint;
     }
 
-    if (auto itConv = FormatInfo::s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != FormatInfo::s_drmConversions.end()) {
-        Q_ASSERT(itConv->plane.count() == uint(buffer->dmabufAttributes()->planeCount));
-        for (uint plane = 0; plane < itConv->plane.count(); ++plane) {
-            const auto &currentPlane = itConv->plane[plane];
-            QSize size = buffer->size();
-            size.rwidth() /= currentPlane.widthDivisor;
-            size.rheight() /= currentPlane.heightDivisor;
+    const EGLImage image = m_backend->eglDisplayObject()->importBufferAsImage(buffer, color->yuvCoefficients(), color->range());
+    m_texture->bind();
+    glEGLImageTargetTexture2DOES(m_texture->target(), static_cast<GLeglImageOES>(image));
+    m_texture->unbind();
 
-            m_planes[plane]->bind();
-            glEGLImageTargetTexture2DOES(m_planes[plane]->target(), static_cast<GLeglImageOES>(m_backend->importBufferAsImage(buffer, plane, currentPlane.format, size)));
-            m_planes[plane]->unbind();
-        }
-    } else {
-        Q_ASSERT(m_planes.count() == 1);
-        m_planes[0]->bind();
-        glEGLImageTargetTexture2DOES(m_planes[0]->target(), static_cast<GLeglImageOES>(m_backend->importBufferAsImage(buffer)));
-        m_planes[0]->unbind();
-    }
     const auto info = FormatInfo::get(buffer->dmabufAttributes()->format);
     m_isFloatingPoint = info && info->floatingPoint;
 }
@@ -340,7 +308,7 @@ bool BufferTextureOpenGL::loadSinglePixelTexture(GraphicsBuffer *buffer)
     if (Q_UNLIKELY(!texture)) {
         return false;
     }
-    m_planes = {texture.release()};
+    m_texture = std::move(texture);
     m_bufferType = BufferType::SinglePixel;
     m_size = QSize(1, 1);
     m_isFloatingPoint = false;
@@ -351,11 +319,11 @@ void BufferTextureOpenGL::updateSinglePixelTexture(GraphicsBuffer *buffer, const
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::SinglePixel)) {
         reset();
-        attach(buffer, releasePoint);
+        loadSinglePixelTexture(buffer);
         return;
     }
     const GraphicsBufferView view(buffer);
-    m_planes[0]->update(*view.image(), Rect(0, 0, 1, 1));
+    m_texture->update(*view.image(), Rect(0, 0, 1, 1));
 }
 
 class UDmabufReleasePoint : public SyncReleasePoint
@@ -393,7 +361,7 @@ bool BufferTextureOpenGL::loadUDmabufTexture(GraphicsBuffer *buffer, EGLImageKHR
     if (!texture) {
         return false;
     }
-    m_planes = {texture.release()};
+    m_texture = std::move(texture);
     m_bufferType = BufferType::UDmaBuf;
     m_size = buffer->size();
     const auto info = FormatInfo::get(buffer->shmAttributes()->format);
@@ -412,9 +380,9 @@ void BufferTextureOpenGL::updateUDmabufTexture(GraphicsBuffer *buffer, EGLImageK
     const bool isExternal = m_backend->eglDisplayObject()->isExternalOnly(buffer->shmAttributes()->format, DRM_FORMAT_MOD_LINEAR);
     const GLint target = isExternal ? GL_TEXTURE_EXTERNAL_OES : GL_TEXTURE_2D;
 
-    m_planes[0]->bind();
+    m_texture->bind();
     glEGLImageTargetTexture2DOES(target, image);
-    m_planes[0]->unbind();
+    m_texture->unbind();
 
     const auto info = FormatInfo::get(buffer->shmAttributes()->format);
     m_isFloatingPoint = info && info->floatingPoint;

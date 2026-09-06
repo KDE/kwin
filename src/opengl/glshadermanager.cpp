@@ -49,7 +49,6 @@ static QByteArray listDefines(ShaderTraits traits)
     ret += QByteArrayLiteral("#define TRAIT_MAP_MULTI_PLANE_TEXTURE ") + (traits & ShaderTrait::MapMultiPlaneTexture ? "1" : "0") + "\n";
     ret += QByteArrayLiteral("#define TRAIT_ROUNDED_CORNERS ") + (traits & ShaderTrait::RoundedCorners ? "1" : "0") + "\n";
     ret += QByteArrayLiteral("#define TRAIT_BORDER ") + (traits & ShaderTrait::Border ? "1" : "0") + "\n";
-    ret += QByteArrayLiteral("#define TRAIT_YUV_CONVERSION ") + (traits & ShaderTrait::YuvConversion ? "1" : "0") + "\n";
     return ret;
 }
 

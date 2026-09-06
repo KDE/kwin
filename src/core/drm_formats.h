@@ -56,17 +56,6 @@ public:
     bool containsFormat(uint32_t format, uint64_t modifier) const;
 };
 
-struct YuvFormat
-{
-    uint32_t format = DRM_FORMAT_YUYV;
-    uint32_t widthDivisor = 1;
-    uint32_t heightDivisor = 1;
-};
-struct YuvConversion
-{
-    QList<struct YuvFormat> plane = {};
-};
-
 struct KWIN_EXPORT FormatInfo
 {
     uint32_t drmFormat;
@@ -76,15 +65,9 @@ struct KWIN_EXPORT FormatInfo
     GLint openglFormat;
     VkFormat vulkanFormat;
     bool floatingPoint;
+    bool yuv;
 
-    static const QHash<uint32_t, YuvConversion> s_drmConversions;
     static const std::unordered_map<uint32_t, FormatInfo> s_knownFormats;
-
-    std::optional<YuvConversion> yuvConversion() const
-    {
-        const auto it = s_drmConversions.find(drmFormat);
-        return it != s_drmConversions.end() ? *it : std::optional<YuvConversion>{};
-    }
 
     static std::optional<FormatInfo> get(uint32_t drmFormat);
     static QString drmFormatName(uint32_t format);

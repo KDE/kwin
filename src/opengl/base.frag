@@ -30,10 +30,6 @@ uniform vec4 geometryColor;
 uniform int thickness;
 #endif
 
-#if TRAIT_YUV_CONVERSION
-uniform mat4 yuvToRgb;
-#endif
-
 #if TRAIT_MODULATE
 uniform vec4 modulation;
 #endif
@@ -72,10 +68,6 @@ void main(void)
     float f = sdfSubtract(outer, inner);
     float df = fwidth(f);
     result = geometryColor * (1.0 - clamp(0.5 + f / df, 0.0, 1.0));
-#endif
-
-#if TRAIT_YUV_CONVERSION
-    result.rgb = (yuvToRgb * vec4(result.rgb, 1.0)).rgb;
 #endif
 
 #if TRAIT_ROUNDED_CORNERS

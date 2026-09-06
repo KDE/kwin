@@ -62,7 +62,7 @@ DmaBufScreenCastBuffer *DmaBufScreenCastBuffer::create(pw_buffer *pwBuffer, cons
         return nullptr;
     }
 
-    auto texture = backend->importDmaBufAsTexture(*attrs);
+    auto texture = backend->openglContext()->importDmaBufAsTexture(*attrs);
     if (!texture) {
         buffer->drop();
         return nullptr;

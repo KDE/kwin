@@ -36,9 +36,10 @@ ItemRendererOpenGL::ItemRendererOpenGL(EglDisplay *eglDisplay)
     }
 }
 
-std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                                                           const std::shared_ptr<ColorDescription> &color)
 {
-    return BufferTextureOpenGL::create(buffer, releasePoint);
+    return BufferTextureOpenGL::create(buffer, releasePoint, color);
 }
 
 std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(const QImage &image)
@@ -219,7 +220,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
             if (ninePatch && ninePatch->texture()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                     .traits = ShaderTrait::MapTexture,
-                    .textures = {ninePatch->texture()},
+                    .texture = ninePatch->texture(),
                     .geometry = geometry,
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
@@ -238,7 +239,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
             if (atlas && atlas->texture()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                     .traits = ShaderTrait::MapTexture,
-                    .textures = {atlas->texture()},
+                    .texture = atlas->texture(),
                     .geometry = geometry,
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
@@ -253,10 +254,10 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
         auto texture = static_cast<TextureOpenGL *>(surfaceItem->texture());
-        if (texture && !texture->planes().isEmpty()) {
+        if (texture && texture->texture()) {
             if (!geometry.isEmpty()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
-                    .textures = texture->planes(),
+                    .texture = texture->texture(),
                     .geometry = geometry,
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
@@ -269,18 +270,13 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .layerDebugBox = m_debug.layerEnabled ? std::optional(item->rect()) : std::nullopt,
                 });
 
-                if (texture->planes().count() > 1) {
-                    renderNode.traits = ShaderTrait::MapMultiPlaneTexture;
-                } else if (texture->planes().front()->target() == GL_TEXTURE_EXTERNAL_OES) {
+                if (texture->texture()->target() == GL_TEXTURE_EXTERNAL_OES) {
                     renderNode.traits = ShaderTrait::MapExternalTexture;
                 } else {
                     renderNode.traits = ShaderTrait::MapTexture;
                 }
 
-                renderNode.geometry.postProcessTextureCoordinates(texture->planes().at(0)->matrix(UnnormalizedCoordinates));
-                if (surfaceItem->colorDescription()->yuvCoefficients() != YUVMatrixCoefficients::Identity) {
-                    renderNode.traits |= ShaderTrait::YuvConversion;
-                }
+                renderNode.geometry.postProcessTextureCoordinates(texture->texture()->matrix(UnnormalizedCoordinates));
 
                 if (!context->cornerStack.isEmpty()) {
                     const auto &top = context->cornerStack.top();
@@ -298,10 +294,10 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
     } else if (auto imageItem = qobject_cast<ImageItem *>(item)) {
         if (!geometry.isEmpty()) {
             auto texture = static_cast<TextureOpenGL *>(imageItem->texture());
-            if (texture && !texture->planes().isEmpty()) {
+            if (texture && texture->texture()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                     .traits = ShaderTrait::MapTexture,
-                    .textures = texture->planes(),
+                    .texture = texture->texture(),
                     .geometry = geometry,
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
@@ -311,7 +307,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .bufferReleasePoint = texture->releasePoint(),
                     .paintHole = hole,
                 });
-                renderNode.geometry.postProcessTextureCoordinates(texture->planes()[0]->matrix(UnnormalizedCoordinates));
+                renderNode.geometry.postProcessTextureCoordinates(texture->texture()->matrix(UnnormalizedCoordinates));
             }
         }
     } else if (auto borderItem = qobject_cast<OutlinedBorderItem *>(item)) {
@@ -507,9 +503,6 @@ bool ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         if (traits & ShaderTrait::TransformColorspace) {
             shader->setColorspaceUniforms(renderNode.colorDescription, renderTarget.colorDescription(), renderNode.renderingIntent);
         }
-        if (traits & ShaderTrait::YuvConversion) {
-            shader->setUniform(GLShader::Mat4Uniform::YuvToRgb, renderNode.colorDescription->yuvMatrix());
-        }
         if (traits & ShaderTrait::RoundedCorners) {
             shader->setUniform(GLShader::Vec4Uniform::Box, renderNode.box);
             shader->setUniform(GLShader::Vec4Uniform::CornerRadius, renderNode.borderRadius);
@@ -524,17 +517,17 @@ bool ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             shader->setUniform(GLShader::ColorUniform::Color, QColor(0, 0, 0, 255));
         }
 
-        for (int i = 0; i < renderNode.textures.count() && !renderNode.paintHole; ++i) {
-            glActiveTexture(GL_TEXTURE0 + i);
-            renderNode.textures[i]->bind();
+        if (renderNode.texture && !renderNode.paintHole) {
+            glActiveTexture(GL_TEXTURE0);
+            renderNode.texture->bind();
         }
 
         vbo->draw(scissorRegion, GL_TRIANGLES, renderNode.firstVertex,
                   renderNode.vertexCount, renderContext.hardwareClipping);
 
-        for (int i = 0; i < renderNode.textures.count() && !renderNode.paintHole; ++i) {
-            glActiveTexture(GL_TEXTURE0 + i);
-            renderNode.textures[i]->unbind();
+        if (renderNode.texture && !renderNode.paintHole) {
+            glActiveTexture(GL_TEXTURE0);
+            renderNode.texture->unbind();
         }
 
         if (renderNode.bufferReleasePoint) {
@@ -614,8 +607,8 @@ void ItemRendererOpenGL::visualizeFractional(const RenderViewport &viewport, con
         setBlendEnabled(true);
 
         QVector2D size;
-        if (!renderNode.textures.isEmpty()) {
-            size = QVector2D(renderNode.textures[0]->width(), renderNode.textures[0]->height());
+        if (renderNode.texture) {
+            size = QVector2D(renderNode.texture->width(), renderNode.texture->height());
         }
 
         m_debug.fractionalShader->setUniform("geometrySize", size);

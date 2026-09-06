@@ -951,7 +951,7 @@ std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(
         return std::nullopt;
     }
 
-    auto texture = backend->importDmaBufAsTexture(*attrs);
+    auto texture = backend->openglContext()->importDmaBufAsTexture(*attrs);
     if (!texture) {
         return std::nullopt;
     }

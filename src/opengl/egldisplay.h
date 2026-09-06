@@ -8,15 +8,16 @@
 */
 #pragma once
 
+#include "core/colorspace.h"
 #include "core/drm_formats.h"
 #include "kwin_export.h"
 
 #include <QByteArray>
-#include <QHash>
 #include <QList>
 #include <QObject>
 #include <QSize>
 #include <epoxy/egl.h>
+#include <map>
 #include <sys/types.h>
 
 namespace KWin
@@ -53,11 +54,13 @@ public:
     EGLImageKHR createImage(EGLContext ctx, EGLenum target, EGLClientBuffer buffer, const EGLint *attrib_list) const;
     void destroyImage(EGLImageKHR image) const;
 
-    EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &dmabuf) const;
-    EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &dmabuf, int plane, int format, const QSize &size) const;
+    EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &dmabuf,
+                                    YUVMatrixCoefficients coefficients = YUVMatrixCoefficients::Identity,
+                                    EncodingRange range = EncodingRange::Full) const;
 
-    EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer);
-    EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size);
+    EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer,
+                                    YUVMatrixCoefficients coefficients = YUVMatrixCoefficients::Identity,
+                                    EncodingRange range = EncodingRange::Full);
 
     enum class GpuType {
         Internal,
@@ -100,7 +103,7 @@ private:
         PFNEGLQUERYDMABUFMODIFIERSEXTPROC queryDmaBufModifiersEXT = nullptr;
     } m_functions;
 
-    QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> m_importCache;
+    std::map<std::tuple<GraphicsBuffer *, YUVMatrixCoefficients, EncodingRange>, EGLImageKHR> m_importCache;
 };
 
 }

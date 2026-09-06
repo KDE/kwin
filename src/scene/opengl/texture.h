@@ -28,10 +28,10 @@ class TextureOpenGL : public Texture
 public:
     ~TextureOpenGL() override;
 
-    QVarLengthArray<GLTexture *, 4> planes() const;
+    GLTexture *texture() const;
 
 protected:
-    QVarLengthArray<GLTexture *, 4> m_planes;
+    std::unique_ptr<GLTexture> m_texture;
 };
 
 class ImageTextureOpenGL : public TextureOpenGL
@@ -39,7 +39,8 @@ class ImageTextureOpenGL : public TextureOpenGL
 public:
     static std::unique_ptr<ImageTextureOpenGL> create(const QImage &image);
 
-    void attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
+    void attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                const std::shared_ptr<ColorDescription> &color) override;
 
     bool upload(const QImage &image);
     void upload(const QImage &image, const Rect &region) override;
@@ -48,13 +49,15 @@ public:
 class BufferTextureOpenGL : public TextureOpenGL
 {
 public:
-    static std::unique_ptr<BufferTextureOpenGL> create(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
+    static std::unique_ptr<BufferTextureOpenGL> create(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                                                       const std::shared_ptr<ColorDescription> &color);
 
     explicit BufferTextureOpenGL(EglBackend *backend);
     ~BufferTextureOpenGL() override;
 
-    bool attach(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
-    void attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
+    bool attach(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint, const std::shared_ptr<ColorDescription> &color);
+    void attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                const std::shared_ptr<ColorDescription> &color) override;
 
     void upload(const QImage &image, const Rect &region) override;
 
@@ -62,9 +65,11 @@ private:
     void reset();
 
     bool loadShmTexture(GraphicsBuffer *buffer);
-    void updateShmTexture(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint);
-    bool loadDmabufTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
-    void updateDmabufTexture(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint);
+    void updateShmTexture(GraphicsBuffer *buffer, const Region &region);
+    bool loadDmabufTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                           const std::shared_ptr<ColorDescription> &color);
+    void updateDmabufTexture(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                             const std::shared_ptr<ColorDescription> &color);
     bool loadSinglePixelTexture(GraphicsBuffer *buffer);
     void updateSinglePixelTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
     bool loadUDmabufTexture(GraphicsBuffer *buffer, EGLImageKHR image);

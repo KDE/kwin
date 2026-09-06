@@ -17,6 +17,7 @@ class GraphicsBuffer;
 class Rect;
 class Region;
 class SyncReleasePoint;
+class ColorDescription;
 
 class Texture
 {
@@ -28,7 +29,8 @@ public:
     std::shared_ptr<SyncReleasePoint> releasePoint() const;
     void setReleasePoint(const std::shared_ptr<SyncReleasePoint> &releasePoint);
 
-    virtual void attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint) = 0;
+    virtual void attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                        const std::shared_ptr<ColorDescription> &color) = 0;
     virtual void upload(const QImage &image, const Rect &region) = 0;
 
 protected:

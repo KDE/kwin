@@ -163,7 +163,7 @@ EglDisplay::EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions
 
 EglDisplay::~EglDisplay()
 {
-    for (const auto &image : m_importCache) {
+    for (const auto &[key, image] : m_importCache) {
         destroyImage(image);
     }
     eglTerminate(m_handle);
@@ -227,7 +227,9 @@ bool EglDisplay::isSoftwareRenderer() const
     return m_isSoftwareRenderer;
 }
 
-EGLImageKHR EglDisplay::importDmaBufAsImage(const DmaBufAttributes &dmabuf) const
+EGLImageKHR EglDisplay::importDmaBufAsImage(const DmaBufAttributes &dmabuf,
+                                            YUVMatrixCoefficients coefficients,
+                                            EncodingRange range) const
 {
     QList<EGLint> attribs;
     attribs.reserve(6 + dmabuf.planeCount * 10 + 1);
@@ -274,27 +276,26 @@ EGLImageKHR EglDisplay::importDmaBufAsImage(const DmaBufAttributes &dmabuf) cons
         }
     }
 
-    attribs << EGL_NONE;
-
-    return createImage(EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, attribs.data());
-}
-
-EGLImageKHR EglDisplay::importDmaBufAsImage(const DmaBufAttributes &dmabuf, int plane, int format, const QSize &size) const
-{
-    QList<EGLint> attribs;
-    attribs.reserve(6 + 1 * 10 + 1);
-
-    attribs << EGL_WIDTH << size.width()
-            << EGL_HEIGHT << size.height()
-            << EGL_LINUX_DRM_FOURCC_EXT << format;
-
-    attribs << EGL_DMA_BUF_PLANE0_FD_EXT << dmabuf.fd[plane].get()
-            << EGL_DMA_BUF_PLANE0_OFFSET_EXT << dmabuf.offset[plane]
-            << EGL_DMA_BUF_PLANE0_PITCH_EXT << dmabuf.pitch[plane];
-    if (dmabuf.modifier != DRM_FORMAT_MOD_INVALID) {
-        attribs << EGL_DMA_BUF_PLANE0_MODIFIER_LO_EXT << EGLint(dmabuf.modifier & 0xffffffff)
-                << EGL_DMA_BUF_PLANE0_MODIFIER_HI_EXT << EGLint(dmabuf.modifier >> 32);
+    switch (coefficients) {
+    case YUVMatrixCoefficients::Identity:
+        break;
+    case YUVMatrixCoefficients::BT601:
+        attribs << EGL_YUV_COLOR_SPACE_HINT_EXT << EGL_ITU_REC601_EXT;
+        break;
+    case YUVMatrixCoefficients::BT709:
+        attribs << EGL_YUV_COLOR_SPACE_HINT_EXT << EGL_ITU_REC709_EXT;
+        break;
+    case YUVMatrixCoefficients::BT2020:
+        attribs << EGL_YUV_COLOR_SPACE_HINT_EXT << EGL_ITU_REC2020_EXT;
+        break;
     }
+    if (range == EncodingRange::Limited) {
+        // limited range RGB isn't supported
+        attribs << EGL_SAMPLE_RANGE_HINT_EXT << EGL_YUV_NARROW_RANGE_EXT;
+    } else if (coefficients != YUVMatrixCoefficients::Identity) {
+        attribs << EGL_SAMPLE_RANGE_HINT_EXT << EGL_YUV_FULL_RANGE_EXT;
+    }
+
     attribs << EGL_NONE;
 
     return createImage(EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, attribs.data());
@@ -417,45 +418,31 @@ void EglDisplay::destroyImage(EGLImageKHR image) const
 
 static const auto s_disableUdmabuf = environmentVariableBoolValue("KWIN_DISABLE_UDMABUF_IMPORT");
 
-EGLImageKHR EglDisplay::importBufferAsImage(GraphicsBuffer *buffer)
+EGLImageKHR EglDisplay::importBufferAsImage(GraphicsBuffer *buffer,
+                                            YUVMatrixCoefficients coefficients,
+                                            EncodingRange range)
 {
     Q_ASSERT(buffer->dmabufAttributes() || buffer->shmAttributes());
 
-    std::pair key(buffer, 0);
-    auto it = m_importCache.constFind(key);
-    if (Q_LIKELY(it != m_importCache.constEnd())) {
-        return *it;
+    std::tuple key(buffer, coefficients, range);
+    auto it = m_importCache.find(key);
+    if (Q_LIKELY(it != m_importCache.end())) {
+        return it->second;
     }
 
     EGLImageKHR image = EGL_NO_IMAGE;
     if (buffer->dmabufAttributes()) {
-        image = importDmaBufAsImage(*buffer->dmabufAttributes());
+        image = importDmaBufAsImage(*buffer->dmabufAttributes(), coefficients, range);
         // On Nvidia, sampling from udmabuf just results in black,
         // and on i915 there are glitches on some systems
     } else if (buffer->udmabufAttributes() && (!m_drmDevice || !s_disableUdmabuf.value_or(m_drmDevice->isNvidia() || m_drmDevice->isI915()))) {
-        image = importDmaBufAsImage(*buffer->udmabufAttributes());
+        image = importDmaBufAsImage(*buffer->udmabufAttributes(), coefficients, range);
     }
     m_importCache[key] = image;
     connect(buffer, &QObject::destroyed, this, [this, key]() {
-        destroyImage(m_importCache.take(key));
-    });
-    return image;
-}
-
-EGLImageKHR EglDisplay::importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size)
-{
-    Q_ASSERT(buffer->dmabufAttributes());
-
-    std::pair key(buffer, plane);
-    auto it = m_importCache.constFind(key);
-    if (Q_LIKELY(it != m_importCache.constEnd())) {
-        return *it;
-    }
-
-    EGLImageKHR image = importDmaBufAsImage(*buffer->dmabufAttributes(), plane, format, size);
-    m_importCache[key] = image;
-    connect(buffer, &QObject::destroyed, this, [this, key]() {
-        destroyImage(m_importCache.take(key));
+        auto it = m_importCache.find(key);
+        destroyImage(it->second);
+        m_importCache.erase(it);
     });
     return image;
 }

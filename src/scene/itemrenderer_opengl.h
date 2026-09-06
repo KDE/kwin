@@ -23,7 +23,7 @@ public:
     struct RenderNode
     {
         ShaderTraits traits;
-        QVarLengthArray<GLTexture *, 4> textures;
+        GLTexture *texture;
         RenderGeometry geometry;
         QMatrix4x4 transformMatrix;
         int firstVertex = 0;
@@ -65,7 +65,8 @@ public:
 
     ItemRendererOpenGL(EglDisplay *eglDisplay);
 
-    std::unique_ptr<Texture> createTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
+    std::unique_ptr<Texture> createTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                                           const std::shared_ptr<ColorDescription> &color) override;
     std::unique_ptr<Texture> createTexture(const QImage &image) override;
 
     std::unique_ptr<NinePatch> createNinePatch(const QImage &image) override;

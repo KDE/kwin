@@ -220,14 +220,14 @@ private:
     double hlgInverseOETF(double x) const;
 };
 
-enum class YUVMatrixCoefficients {
+enum class YUVMatrixCoefficients : int {
     Identity,
     BT601,
     BT709,
     BT2020,
 };
 
-enum class EncodingRange {
+enum class EncodingRange : int {
     Limited,
     Full,
 };

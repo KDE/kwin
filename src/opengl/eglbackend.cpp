@@ -103,7 +103,7 @@ static const auto s_dmabufV6Env = environmentVariableBoolValue("KWIN_ALLOW_DMABU
 
 void EglBackend::updateDmabufTranches()
 {
-    auto filterFormats = [this](RenderDevice *device, std::optional<uint32_t> bpc, bool withExternalOnlyYUV) {
+    auto filterFormats = [this](RenderDevice *device, std::optional<uint32_t> bpc) {
         FormatModifierMap set;
         auto allFormats = device->eglDisplay()->allSupportedDrmFormats();
         auto nonExternalOnly = device->eglDisplay()->nonExternalOnlySupportedDrmFormats();
@@ -117,19 +117,14 @@ void EglBackend::updateDmabufTranches()
                 continue;
             }
 
-            const bool externalOnlySupported = withExternalOnlyYUV && info && info->yuvConversion();
-            ModifierList modifiers = externalOnlySupported ? *it : nonExternalOnly[it.key()];
-
-            if (externalOnlySupported && !modifiers.empty()) {
-                if (auto yuv = info->yuvConversion()) {
-                    for (auto plane : std::as_const(yuv->plane)) {
-                        const auto planeModifiers = allFormats.value(plane.format);
-                        erase_if(modifiers, [&planeModifiers](uint64_t mod) {
-                            return !planeModifiers.contains(mod);
-                        });
-                    }
-                }
+            ModifierList modifiers = *it;
+            // Work around Xwayland breaking with the Nvidia driver
+            // if linear is advertised by the compositor, since it uses
+            // all advertised modifiers (for 8 bpc rgb formats) for rendering
+            if (!nonExternalOnly[it.key()].contains(DRM_FORMAT_MOD_LINEAR)) {
+                modifiers.removeOne(DRM_FORMAT_MOD_LINEAR);
             }
+
             for (const auto &tranche : std::as_const(m_tranches)) {
                 if (modifiers.empty()) {
                     break;
@@ -150,33 +145,23 @@ void EglBackend::updateDmabufTranches()
         return set;
     };
 
-    auto includeShaderConversions = [](FormatModifierMap &&formats) -> FormatModifierMap {
-        for (auto format : FormatInfo::s_drmConversions.keys()) {
-            auto &modifiers = formats[format];
-            if (modifiers.empty()) {
-                modifiers = {DRM_FORMAT_MOD_LINEAR};
-            }
-        }
-        return formats;
-    };
-
     m_tranches.clear();
 
     // put the "main" device first, with EGL format+modifiers
     m_tranches.append({
         .device = m_renderDevice->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-        .formatTable = filterFormats(m_renderDevice, 10, false),
+        .formatTable = filterFormats(m_renderDevice, 10),
     });
     m_tranches.append({
         .device = m_renderDevice->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-        .formatTable = filterFormats(m_renderDevice, 8, false),
+        .formatTable = filterFormats(m_renderDevice, 8),
     });
     m_tranches.append({
         .device = m_renderDevice->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-        .formatTable = includeShaderConversions(filterFormats(m_renderDevice, std::nullopt, true)),
+        .formatTable = filterFormats(m_renderDevice, std::nullopt),
     });
 
     // Other GPUs come afterwards, in no particular order.
@@ -192,17 +177,17 @@ void EglBackend::updateDmabufTranches()
         m_tranches.append({
             .device = device->deviceId(),
             .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-            .formatTable = filterFormats(device.get(), 10, false),
+            .formatTable = filterFormats(device.get(), 10),
         });
         m_tranches.append({
             .device = device->deviceId(),
             .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-            .formatTable = filterFormats(device.get(), 8, false),
+            .formatTable = filterFormats(device.get(), 8),
         });
         m_tranches.push_back({
             .device = device->deviceId(),
             .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-            .formatTable = filterFormats(device.get(), std::nullopt, false),
+            .formatTable = filterFormats(device.get(), std::nullopt),
         });
     }
 
@@ -252,21 +237,6 @@ QList<LinuxDmaBufV1Feedback::Tranche> EglBackend::tranches() const
     return m_tranches;
 }
 
-EGLImageKHR EglBackend::importBufferAsImage(GraphicsBuffer *buffer)
-{
-    return m_renderDevice->eglDisplay()->importBufferAsImage(buffer);
-}
-
-EGLImageKHR EglBackend::importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size)
-{
-    return m_renderDevice->eglDisplay()->importBufferAsImage(buffer, plane, format, size);
-}
-
-std::shared_ptr<GLTexture> EglBackend::importDmaBufAsTexture(const DmaBufAttributes &attributes) const
-{
-    return m_context->importDmaBufAsTexture(attributes);
-}
-
 bool EglBackend::testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice)
 {
     RenderDevice *device = GpuManager::self()->compatibleRenderDevice(targetDevice);
@@ -281,22 +251,9 @@ bool EglBackend::testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice)
         // allow falling back to EGL
     }
 
-    const auto info = FormatInfo::get(buffer->dmabufAttributes()->format);
-    if (info && info->yuvConversion()) {
-        // YUV buffers need to be imported plane for plane
-        const auto planes = info->yuvConversion()->plane;
-        if (buffer->dmabufAttributes()->planeCount != planes.size()) {
-            return false;
-        }
-        for (int i = 0; i < planes.size(); i++) {
-            if (!device->eglDisplay()->importBufferAsImage(buffer, i, planes[i].format, QSize(buffer->size().width() / planes[i].widthDivisor, buffer->size().height() / planes[i].heightDivisor))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    // other formats can be imported normally
+    // NOTE for YUV buffers this uses whatever default values
+    // the OpenGL driver chooses, since we don't know yet which
+    // parameters the client will use with the buffer later on
     return device->eglDisplay()->importBufferAsImage(buffer) != EGL_NO_IMAGE_KHR;
 }
 
