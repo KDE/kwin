@@ -8,6 +8,7 @@
 
 #include "showfpseffect.h"
 #include "core/output.h"
+#include "core/renderbackend.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
 #include "scene/workspacescene.h"
@@ -57,19 +58,48 @@ QColor ShowFpsScreen::paintColor() const
     return QColor::fromHsvF(0.3 - (0.3 * normalizedDuration), 1.0, 1.0);
 }
 
+void ShowFpsScreen::presented(OutputFrame *frame, std::chrono::nanoseconds timestamp, PresentationMode mode)
+{
+    if (auto t = frame->queryRenderTime()) {
+        m_paintDuration = std::chrono::duration_cast<std::chrono::milliseconds>(t->end - t->start).count();
+        Q_EMIT paintChanged();
+    }
+}
+
+class ShowFpsFeedback : public PresentationFeedback
+{
+public:
+    explicit ShowFpsFeedback(ShowFpsScreen *screen)
+        : m_screen(screen)
+    {
+    }
+
+    void presented(OutputFrame *frame, std::chrono::nanoseconds timestamp,
+                   PresentationMode mode, PresentationFeedbackFlags flags) override
+    {
+        if (m_screen) {
+            m_screen->presented(frame, timestamp, mode);
+        }
+    }
+
+    const QPointer<ShowFpsScreen> m_screen;
+};
+
 void ShowFpsEffect::prePaintScreen(ScreenPrePaintData &data)
 {
     effects->prePaintScreen(data);
+    if (!data.frame) {
+        return;
+    }
 
     auto &screenData = m_data[data.view];
     m_currentView = data.view;
     if (!screenData) {
         screenData = std::make_unique<ShowFpsScreen>();
     }
+    data.frame->addFeedback(std::make_shared<ShowFpsFeedback>(screenData.get()), PresentationFeedbackFlags{});
 
     screenData->m_newFps += 1;
-
-    screenData->m_paintDurationTimer.restart();
     screenData->m_paintAmount = 0;
 
     // detect highest monitor refresh rate
@@ -114,15 +144,6 @@ bool ShowFpsEffect::paintScreen(const RenderTarget &renderTarget, const RenderVi
         screenData->m_paintAmount += rect.width() * rect.height();
     }
     return true;
-}
-
-void ShowFpsEffect::postPaintScreen()
-{
-    effects->postPaintScreen();
-
-    auto &screenData = m_data[m_currentView];
-    screenData->m_paintDuration = screenData->m_paintDurationTimer.elapsed();
-    Q_EMIT screenData->paintChanged();
 }
 
 bool ShowFpsEffect::supported()

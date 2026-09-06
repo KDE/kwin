@@ -40,6 +40,8 @@ Q_SIGNALS:
     void paintChanged();
 
 public:
+    void presented(OutputFrame *frame, std::chrono::nanoseconds timestamp, PresentationMode mode);
+
     std::unique_ptr<OffscreenQuickScene> m_scene;
     int m_fps = 0;
     int m_newFps = 0;
@@ -47,7 +49,6 @@ public:
     std::chrono::steady_clock::time_point m_lastFpsTime;
     int m_paintDuration = 0;
     int m_paintAmount = 0;
-    QElapsedTimer m_paintDurationTimer;
 };
 
 class ShowFpsEffect : public Effect
@@ -60,7 +61,6 @@ public:
 
     void prePaintScreen(ScreenPrePaintData &data) override;
     bool paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
-    void postPaintScreen() override;
 
     static bool supported();
 

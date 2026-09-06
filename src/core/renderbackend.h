@@ -27,6 +27,7 @@ class PresentationFeedback;
 class RenderLoop;
 class SyncTimeline;
 class RenderDevice;
+class OutputFrame;
 
 enum class PresentationFeedbackFlag {
     ZeroCopy = 0x1,
@@ -41,7 +42,7 @@ public:
     PresentationFeedback(PresentationFeedback &&move) = default;
     virtual ~PresentationFeedback() = default;
 
-    virtual void presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp,
+    virtual void presented(OutputFrame *frame, std::chrono::nanoseconds timestamp,
                            PresentationMode mode, PresentationFeedbackFlags flags) = 0;
 };
 
@@ -108,9 +109,9 @@ public:
     std::optional<double> artificialHdrHeadroom() const;
     void setArtificialHdrHeadroom(double edr);
 
-private:
     std::optional<RenderTimeSpan> queryRenderTime() const;
 
+private:
     const QPointer<RenderLoop> m_loop;
     const std::chrono::nanoseconds m_refreshDuration;
     const std::chrono::steady_clock::time_point m_targetPageflipTime;

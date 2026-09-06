@@ -47,6 +47,8 @@ private:
         std::chrono::nanoseconds start{0};
         std::chrono::nanoseconds end{0};
     } m_gpuProbe;
+
+    std::optional<RenderTimeSpan> m_result;
 };
 
 }

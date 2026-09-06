@@ -66,6 +66,9 @@ void GLRenderTimeQuery::end()
 
 std::optional<RenderTimeSpan> GLRenderTimeQuery::query()
 {
+    if (m_result) {
+        return m_result;
+    }
     Q_ASSERT(m_hasResult);
     if (m_gpuProbe.query) {
         const auto previousContext = EglContext::currentContext();
@@ -81,10 +84,11 @@ std::optional<RenderTimeSpan> GLRenderTimeQuery::query()
         }
     }
 
-    return RenderTimeSpan{
+    m_result = RenderTimeSpan{
         .start = m_cpuStart,
         .end = m_cpuStart + (m_gpuProbe.end - m_gpuProbe.start),
     };
+    return m_result;
 }
 
 }

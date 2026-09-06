@@ -64,7 +64,7 @@ PresentationTimeFeedback::~PresentationTimeFeedback()
     }
 }
 
-void PresentationTimeFeedback::presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp,
+void PresentationTimeFeedback::presented(OutputFrame *frame, std::chrono::nanoseconds timestamp,
                                          PresentationMode mode, PresentationFeedbackFlags presentationFlags)
 {
     if (m_presented) {
@@ -89,7 +89,7 @@ void PresentationTimeFeedback::presented(std::chrono::nanoseconds refreshCycleDu
     wl_resource *tmp;
     wl_resource_for_each_safe (resource, tmp, &resources) {
         // TODO with adaptive sync, send an estimation of the current actual refresh rate?
-        uint32_t refreshDuration = refreshCycleDuration.count();
+        uint32_t refreshDuration = frame->refreshDuration().count();
         if (adaptiveSync && wl_resource_get_version(resource) == 1) {
             // version 1 requires sending zero when the refresh rate isn't stable
             refreshDuration = 0;

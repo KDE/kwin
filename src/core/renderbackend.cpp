@@ -97,7 +97,7 @@ void OutputFrame::presented(std::chrono::nanoseconds timestamp, PresentationMode
         RenderLoopPrivate::get(m_loop)->notifyFrameCompleted(timestamp, renderTime, mode, this);
     }
     for (const auto &[feedback, flags] : m_feedbacks) {
-        feedback->presented(m_refreshDuration, timestamp, mode, flags);
+        feedback->presented(this, timestamp, mode, flags);
     }
 }
 
