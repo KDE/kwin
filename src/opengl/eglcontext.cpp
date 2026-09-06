@@ -263,9 +263,11 @@ bool EglContext::isValid() const
     return EGL_NO_CONTEXT;
 }
 
-std::shared_ptr<GLTexture> EglContext::importDmaBufAsTexture(const DmaBufAttributes &attributes) const
+std::shared_ptr<GLTexture> EglContext::importDmaBufAsTexture(const DmaBufAttributes &attributes,
+                                                             YUVMatrixCoefficients coefficients,
+                                                             EncodingRange range) const
 {
-    EGLImageKHR image = m_display->importDmaBufAsImage(attributes);
+    EGLImageKHR image = m_display->importDmaBufAsImage(attributes, coefficients, range);
     if (image != EGL_NO_IMAGE_KHR) {
         const auto info = FormatInfo::get(attributes.format);
         return EGLImageTexture::create(m_display, image, info->openglFormat, QSize(attributes.width, attributes.height), m_display->isExternalOnly(attributes.format, attributes.modifier));

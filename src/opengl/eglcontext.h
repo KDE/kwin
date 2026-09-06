@@ -46,7 +46,9 @@ public:
 
     [[nodiscard]] bool makeCurrent();
     void doneCurrent() const;
-    std::shared_ptr<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes) const;
+    std::shared_ptr<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes,
+                                                     YUVMatrixCoefficients coefficients = YUVMatrixCoefficients::Identity,
+                                                     EncodingRange range = EncodingRange::Full) const;
     GLTexture *importDmaBufAsTexture(GraphicsBuffer *buffer);
     GLFramebuffer *importDmaBufAsFbo(GraphicsBuffer *buffer);
 

@@ -43,7 +43,8 @@ public:
                                                        const Region &damage,
                                                        FileDescriptor &&sync,
                                                        OutputFrame *frame,
-                                                       const std::shared_ptr<SyncReleasePoint> &releasePoint) = 0;
+                                                       const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                                                       const std::shared_ptr<ColorDescription> &color) = 0;
     virtual void resetDamageTracking() = 0;
     virtual QSize size() const = 0;
     virtual uint32_t format() const = 0;
@@ -69,7 +70,8 @@ public:
                                                const Region &damage,
                                                FileDescriptor &&sync,
                                                OutputFrame *frame,
-                                               const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
+                                               const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                                               const std::shared_ptr<ColorDescription> &color) override;
     void resetDamageTracking() override;
     QSize size() const override;
     uint32_t format() const override;
@@ -91,7 +93,8 @@ public:
                                                const Region &damage,
                                                FileDescriptor &&sync,
                                                OutputFrame *frame,
-                                               const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
+                                               const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                                               const std::shared_ptr<ColorDescription> &color) override;
     void resetDamageTracking() override;
     QSize size() const override;
     uint32_t format() const override;
@@ -106,7 +109,8 @@ private:
     std::optional<MultiGpuSwapchain::Ret> cpuCopy(GraphicsBuffer *buffer,
                                                   const Region &damage,
                                                   OutputFrame *frame,
-                                                  const std::shared_ptr<SyncReleasePoint> &releasePoint);
+                                                  const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                                                  const std::shared_ptr<ColorDescription> &color);
 };
 
 std::optional<DrmFormat> MultiGpuSwapchain::chooseFormat(uint32_t inputFormat, const FormatModifierMap &srcFormats, const FormatModifierMap &dstFormats)
@@ -448,15 +452,16 @@ MultiGpuSwapchain::~MultiGpuSwapchain()
 {
 }
 
-std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyRgbBuffer(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
-                                                                       const std::shared_ptr<SyncReleasePoint> &releasePoint)
+std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyBuffer(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
+                                                                    const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                                                                    const std::shared_ptr<ColorDescription> &color)
 {
     if (!m_firstCopy) {
         return std::nullopt;
     }
-    auto ret = m_firstCopy->copy(buffer, damage, std::move(sync), frame, releasePoint);
+    auto ret = m_firstCopy->copy(buffer, damage, std::move(sync), frame, releasePoint, color);
     if (m_secondCopy && ret) {
-        ret = m_secondCopy->copy(ret->buffer, damage, std::move(ret->sync), frame, std::move(ret->releasePoint));
+        ret = m_secondCopy->copy(ret->buffer, damage, std::move(ret->sync), frame, std::move(ret->releasePoint), ret->color);
     }
     return ret;
 }
@@ -524,13 +529,15 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
                                                                const Region &damage,
                                                                FileDescriptor &&sync,
                                                                OutputFrame *frame,
-                                                               const std::shared_ptr<SyncReleasePoint> &releasePoint)
+                                                               const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                                                               const std::shared_ptr<ColorDescription> &color)
 {
     if (damage.isEmpty() && m_currentSlot) {
         return MultiGpuSwapchain::Ret{
             .buffer = m_currentSlot->buffer(),
             .sync = m_currentSlot->releaseFd().duplicate(),
             .releasePoint = m_currentSlot->releasePoint(),
+            .color = color,
         };
     }
 
@@ -585,6 +592,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
             .buffer = m_currentSlot->buffer(),
             .sync = m_currentSlot->releaseFd().duplicate(),
             .releasePoint = m_currentSlot->releasePoint(),
+            .color = color,
         };
     }
     m_journal.add(damage);
@@ -779,6 +787,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
         .buffer = m_currentSlot->buffer(),
         .sync = std::move(*completionFd),
         .releasePoint = m_currentSlot->releasePoint(),
+        .color = color,
     };
 }
 
@@ -812,13 +821,16 @@ EglMultiGpuCopy::EglMultiGpuCopy(RenderDevice *device, std::shared_ptr<Swapchain
 }
 
 std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::copy(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
-                                                            const std::shared_ptr<SyncReleasePoint> &releasePoint)
+                                                            const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                                                            const std::shared_ptr<ColorDescription> &color)
 {
+    const auto rgbColor = color->yuvCoefficients() == YUVMatrixCoefficients::Identity ? color : color->withYuvCoefficients(YUVMatrixCoefficients::Identity, EncodingRange::Full);
     if (damage.isEmpty() && m_currentSlot) {
         return MultiGpuSwapchain::Ret{
             .buffer = m_currentSlot->buffer(),
             .sync = m_currentSlot->releaseFd().duplicate(),
             .releasePoint = m_currentSlot->releasePoint(),
+            .color = rgbColor,
         };
     }
 
@@ -839,7 +851,7 @@ std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::copy(GraphicsBuffer *buff
     importFence.waitSync();
 
     if (m_swapchain->options().software) {
-        return cpuCopy(buffer, damage, frame, releasePoint);
+        return cpuCopy(buffer, damage, frame, releasePoint, color);
     }
 
     std::unique_ptr<GLRenderTimeQuery> renderTime;
@@ -851,7 +863,7 @@ std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::copy(GraphicsBuffer *buff
         m_journal.clear();
         return std::nullopt;
     }
-    auto sourceTex = m_context->importDmaBufAsTexture(buffer);
+    auto sourceTex = m_context->importDmaBufAsTexture(*buffer->dmabufAttributes(), color->yuvCoefficients(), color->range());
     if (!sourceTex) {
         m_journal.clear();
         return std::nullopt;
@@ -898,13 +910,15 @@ std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::copy(GraphicsBuffer *buff
         .buffer = m_currentSlot->buffer(),
         .sync = fence.takeFileDescriptor(),
         .releasePoint = m_currentSlot->releasePoint(),
+        .color = rgbColor,
     };
 }
 
 std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::cpuCopy(GraphicsBuffer *buffer,
                                                                const Region &damage,
                                                                OutputFrame *frame,
-                                                               const std::shared_ptr<SyncReleasePoint> &releasePoint)
+                                                               const std::shared_ptr<SyncReleasePoint> &releasePoint,
+                                                               const std::shared_ptr<ColorDescription> &color)
 {
     std::unique_ptr<CpuRenderTimeQuery> copyTime;
     if (frame) {
@@ -956,6 +970,7 @@ std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::cpuCopy(GraphicsBuffer *b
         .buffer = slot->buffer(),
         .sync = FileDescriptor{},
         .releasePoint = slot->releasePoint(),
+        .color = color,
     };
 }
 
