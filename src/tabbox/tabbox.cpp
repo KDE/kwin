@@ -478,6 +478,7 @@ bool TabBox::haveActiveClient()
 
 void TabBox::show()
 {
+    m_scrollAccumulator.reset();
     Q_EMIT tabBoxAdded(m_tabBoxMode);
     if (isDisplayed()) {
         m_isShown = false;
@@ -654,11 +655,17 @@ bool TabBox::pointerAxis(PointerAxisEvent *event)
         }
     }
 
-    if (event->delta) {
-        // TODO accumulate scroll.
-        const QModelIndex index = m_tabBox->nextPrev(((event->inverted ? -1 : 1) * event->delta) > 0);
-        if (index.isValid()) {
-            setCurrentIndex(index);
+    if (event->delta || event->deltaV120) {
+        const qreal scrollSteps = m_scrollAccumulator.accumulate(event);
+        if (scrollSteps != 0) {
+            const bool forward = ((event->inverted ? -1 : 1) * scrollSteps) > 0;
+            const int steps = qAbs(static_cast<int>(scrollSteps));
+            for (int i = 0; i < steps; ++i) {
+                const QModelIndex index = m_tabBox->nextPrev(forward);
+                if (index.isValid()) {
+                    setCurrentIndex(index);
+                }
+            }
         }
     }
 

@@ -987,28 +987,26 @@ private:
     QMap<quint32, QPointF> m_touchPoints;
 };
 
-class MouseWheelAccumulator
+qreal MouseWheelAccumulator::accumulate(PointerAxisEvent *event)
 {
-public:
-    qreal accumulate(PointerAxisEvent *event)
-    {
-        const qreal delta = event->deltaV120 != 0 ? event->deltaV120 / 120.0 : event->delta / 15.0;
-        if (std::signbit(m_scrollDistance) != std::signbit(delta)) {
-            m_scrollDistance = 0;
-        }
-        m_scrollDistance += delta;
-        if (std::abs(m_scrollDistance) >= 1.0) {
-            const qreal ret = m_scrollDistance;
-            m_scrollDistance = std::fmod(m_scrollDistance, 1.0f);
-            return ret - m_scrollDistance;
-        } else {
-            return 0;
-        }
+    const qreal delta = event->deltaV120 != 0 ? event->deltaV120 / 120.0 : event->delta / 15.0;
+    if (std::signbit(m_scrollDistance) != std::signbit(delta)) {
+        m_scrollDistance = 0;
     }
+    m_scrollDistance += delta;
+    if (std::abs(m_scrollDistance) >= 1.0) {
+        const qreal ret = m_scrollDistance;
+        m_scrollDistance = std::fmod(m_scrollDistance, 1.0f);
+        return ret - m_scrollDistance;
+    } else {
+        return 0;
+    }
+}
 
-private:
-    qreal m_scrollDistance = 0;
-};
+void MouseWheelAccumulator::reset()
+{
+    m_scrollDistance = 0;
+}
 
 #if KWIN_BUILD_GLOBALSHORTCUTS
 class GlobalShortcutFilter : public InputEventFilter

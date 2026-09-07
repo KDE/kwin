@@ -298,6 +298,7 @@ private:
     QList<ElectricBorder> m_borderActivate, m_borderAlternativeActivate;
     QHash<ElectricBorder, QAction *> m_touchActivate;
     QHash<ElectricBorder, QAction *> m_touchAlternativeActivate;
+    MouseWheelAccumulator m_scrollAccumulator;
 };
 
 } // namespace TabBox

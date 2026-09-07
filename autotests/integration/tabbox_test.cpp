@@ -39,6 +39,8 @@ private Q_SLOTS:
     void testCapsLock();
     void testKeyboardFocus();
     void testActiveClientOutsideModel();
+    void testScrollAccumulates();
+    void testScrollDoesNotAccumulateAcrossDirectionChanges();
 };
 
 void TabBoxTest::initTestCase()
@@ -601,6 +603,135 @@ void TabBoxTest::testActiveClientOutsideModel()
     QVERIFY(Test::waitForWindowClosed(r1));
     leftSurface1.reset();
     QVERIFY(Test::waitForWindowClosed(l1));
+
+    // restore the MultiScreenMode so that it doesn't leak into other tests
+    group.writeEntry("MultiScreenMode", "0");
+    group.sync();
+    workspace()->slotReconfigure();
+}
+
+void TabBoxTest::testScrollAccumulates()
+{
+#if !KWIN_BUILD_GLOBALSHORTCUTS
+    QSKIP("Can't test shortcuts without shortcuts");
+    return;
+#endif
+
+    // three windows, mirroring the setup of testMoveForward
+    std::unique_ptr<KWayland::Client::Surface> surface1(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.get()));
+    auto c1 = Test::renderAndWaitForShown(surface1.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(c1);
+    std::unique_ptr<KWayland::Client::Surface> surface2(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.get()));
+    auto c2 = Test::renderAndWaitForShown(surface2.get(), QSize(100, 50), Qt::red);
+    QVERIFY(c2);
+    QVERIFY(c2->isActive());
+    std::unique_ptr<KWayland::Client::Surface> surface3(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface3(Test::createXdgToplevelSurface(surface3.get()));
+    auto c3 = Test::renderAndWaitForShown(surface3.get(), QSize(100, 50), Qt::red);
+    QVERIFY(c3);
+    QVERIFY(c3->isActive());
+
+    QSignalSpy tabboxAddedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxAdded);
+    QSignalSpy tabboxClosedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxClosed);
+
+    // open the switcher
+    quint32 timestamp = 0;
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyPressed(KEY_TAB, timestamp++);
+    Test::keyboardKeyReleased(KEY_TAB, timestamp++);
+    QVERIFY(tabboxAddedSpy.wait());
+    QVERIFY(workspace()->tabbox()->isGrabbed());
+
+    // six small high-resolution events (24/120 each) make up more than one
+    // wheel notch, so they must advance the highlight exactly one step.
+    // Six is a multiple of the window count, so a broken implementation that
+    // switches on every event would wrap back to the start and fail below.
+    const auto before = workspace()->tabbox()->currentClient();
+    for (int i = 0; i < 6; ++i) {
+        Test::pointerAxisVertical(0, timestamp++, 24, PointerAxisSource::Wheel);
+    }
+    auto after = workspace()->tabbox()->currentClient();
+    QVERIFY(after);
+    QVERIFY(after != before);
+
+    // three more events only accumulate 0.8 (including the carried-over 0.2),
+    // not enough for another notch
+    for (int i = 0; i < 3; ++i) {
+        Test::pointerAxisVertical(0, timestamp++, 24, PointerAxisSource::Wheel);
+    }
+    QCOMPARE(workspace()->tabbox()->currentClient(), after);
+
+    // the last event completes the notch and advances once more
+    Test::pointerAxisVertical(0, timestamp++, 24, PointerAxisSource::Wheel);
+    auto after2 = workspace()->tabbox()->currentClient();
+    QVERIFY(after2);
+    QVERIFY(after2 != after);
+
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    QCOMPARE(tabboxClosedSpy.count(), 1);
+    QCOMPARE(workspace()->tabbox()->isGrabbed(), false);
+
+    surface3.reset();
+    QVERIFY(Test::waitForWindowClosed(c3));
+    surface2.reset();
+    QVERIFY(Test::waitForWindowClosed(c2));
+    surface1.reset();
+    QVERIFY(Test::waitForWindowClosed(c1));
+}
+
+void TabBoxTest::testScrollDoesNotAccumulateAcrossDirectionChanges()
+{
+#if !KWIN_BUILD_GLOBALSHORTCUTS
+    QSKIP("Can't test shortcuts without shortcuts");
+    return;
+#endif
+
+    std::unique_ptr<KWayland::Client::Surface> surface1(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.get()));
+    auto c1 = Test::renderAndWaitForShown(surface1.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(c1);
+    std::unique_ptr<KWayland::Client::Surface> surface2(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.get()));
+    auto c2 = Test::renderAndWaitForShown(surface2.get(), QSize(100, 50), Qt::red);
+    QVERIFY(c2);
+    QVERIFY(c2->isActive());
+
+    QSignalSpy tabboxAddedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxAdded);
+    QSignalSpy tabboxClosedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxClosed);
+
+    quint32 timestamp = 0;
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyPressed(KEY_TAB, timestamp++);
+    Test::keyboardKeyReleased(KEY_TAB, timestamp++);
+    QVERIFY(tabboxAddedSpy.wait());
+    QVERIFY(workspace()->tabbox()->isGrabbed());
+
+    // 0.6 of a notch in one direction, not enough to switch
+    const auto before = workspace()->tabbox()->currentClient();
+    for (int i = 0; i < 3; ++i) {
+        Test::pointerAxisVertical(0, timestamp++, 24, PointerAxisSource::Wheel);
+    }
+    QCOMPARE(workspace()->tabbox()->currentClient(), before);
+
+    // reversing the direction discards the partial forward scroll; one full
+    // notch backwards switches exactly one step
+    for (int i = 0; i < 5; ++i) {
+        Test::pointerAxisVertical(0, timestamp++, -24, PointerAxisSource::Wheel);
+    }
+    auto after = workspace()->tabbox()->currentClient();
+    QVERIFY(after);
+    QVERIFY(after != before);
+
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    QCOMPARE(tabboxClosedSpy.count(), 1);
+    QCOMPARE(workspace()->tabbox()->isGrabbed(), false);
+
+    surface2.reset();
+    QVERIFY(Test::waitForWindowClosed(c2));
+    surface1.reset();
+    QVERIFY(Test::waitForWindowClosed(c1));
 }
 
 WAYLANDTEST_MAIN(TabBoxTest)

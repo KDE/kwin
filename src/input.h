@@ -72,6 +72,16 @@ struct TouchDownEvent;
 struct TouchMotionEvent;
 struct TouchUpEvent;
 
+class MouseWheelAccumulator
+{
+public:
+    qreal accumulate(PointerAxisEvent *event);
+    void reset();
+
+private:
+    qreal m_scrollDistance = 0;
+};
+
 namespace Decoration
 {
 
