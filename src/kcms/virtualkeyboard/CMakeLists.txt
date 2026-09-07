@@ -19,4 +19,5 @@ target_link_libraries(kcm_virtualkeyboard PRIVATE
     KF6::KCMUtils
     KF6::Service
     KF6::KCMUtilsQuick
+    Qt::Qml
 )
