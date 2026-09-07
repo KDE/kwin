@@ -387,7 +387,7 @@
 ></term>
 <listitem>
 <para
->Redimensiona la finestra per a omplir l'alçada i l'amplada de la pantalla. </para>
+>Redimensiona la finestra per a omplir l'altura i l'amplada de la pantalla. </para>
 </listitem>
 </varlistentry>
 
@@ -398,7 +398,7 @@
 ></term>
 <listitem>
 <para
->Redimensiona la finestra a l'alçada de la pantalla. </para>
+>Redimensiona la finestra a l'altura de la pantalla. </para>
 </listitem>
 </varlistentry>
 
@@ -705,7 +705,7 @@
 ></term>
 <listitem>
 <para
->Redimensiona la finestra a l'alçada i l'amplada de la pantalla. </para>
+>Redimensiona la finestra a l'altura i l'amplada de la pantalla. </para>
 </listitem>
 </varlistentry>
 
@@ -716,7 +716,7 @@
 ></term>
 <listitem>
 <para
->Redimensiona la finestra a l'alçada de la pantalla. </para>
+>Redimensiona la finestra a l'altura de la pantalla. </para>
 </listitem>
 </varlistentry>
 

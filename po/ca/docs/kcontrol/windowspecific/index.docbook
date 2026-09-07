@@ -661,9 +661,9 @@
 >Detecta les propietats de la finestra</guilabel
 > omplirà els valors específics dels atributs. Per a més informació, vegeu <link linkend="window-matching"
 >Coincidència de la finestra</link
->. Per exemple, els valors d'alçada i amplada de l'atribut de <guilabel
+>. Per exemple, els valors d'altura i amplada de l'atribut de <guilabel
 >Mida</guilabel
-> són establerts a l'alçada i amplada detectades a la finestra.</para
+> són establerts a l'altura i amplada detectades a la finestra.</para
 ></tip>
 </para>
 <para
@@ -715,7 +715,7 @@
 ></term>
     <listitem>
     <para
->L'amplada i alçada de la finestra.</para>
+>L'amplada i altura de la finestra.</para>
      </listitem>
   </varlistentry>
   <varlistentry
@@ -871,7 +871,7 @@
 >Alterna la possibilitat de complir amb relació d'aspecte sol·licitada per la finestra o per a <emphasis
 >incrementar la base</emphasis
 >. Per a entendre aquest atribut, es requereix alguna ambientació. En poques paraules, les finestres han de demanar al gestor de finestres, un increment de la base: el nombre mínim de píxels <emphasis
->alçada</emphasis
+>altura</emphasis
 > X <emphasis
 >amplada</emphasis
 > per a demanar el canvi de mida. Típicament, és 1x1. Tot i que, altres finestres, per exemple, els emuladors de terminal o els editors, utilitzen una lletra fixa i demanen l'increment de la seva base en funció de la mida d'un caràcter.</para>
