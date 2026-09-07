@@ -216,6 +216,11 @@ void ShowFpsEffect::prePaintScreen(ScreenPrePaintData &data)
     screenData->m_scene->update(data.frame);
 }
 
+bool ShowFpsEffect::blocksDirectScanout() const
+{
+    return false;
+}
+
 bool ShowFpsEffect::supported()
 {
     return effects->isOpenGLCompositing();

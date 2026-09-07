@@ -89,6 +89,7 @@ public:
     ~ShowFpsEffect() override;
 
     void prePaintScreen(ScreenPrePaintData &data) override;
+    bool blocksDirectScanout() const override;
 
     static bool supported();
 
