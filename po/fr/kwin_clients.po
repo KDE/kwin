@@ -79,7 +79,7 @@ msgstr "Taille de bouton :"
 #: aurorae/themes/plastik/package/contents/ui/config.ui:14
 #, kde-format
 msgid "Config Dialog"
-msgstr "Boîte de dialogue de configuration"
+msgstr "Boite de dialogue de configuration"
 
 #. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:23
