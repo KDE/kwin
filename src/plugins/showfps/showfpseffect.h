@@ -33,7 +33,6 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     void push(std::chrono::nanoseconds value);
-    int value() const;
 
     void resize(ssize_t size);
 
@@ -49,8 +48,6 @@ class ShowFpsScreen : public QObject
     Q_PROPERTY(int maximumFps READ maximumFps NOTIFY maximumFpsChanged)
     Q_PROPERTY(PaintDurationModel *paintDuration READ paintDuration NOTIFY paintChanged)
     Q_PROPERTY(PaintDurationModel *paintDurationCPU READ paintDurationCPU NOTIFY paintChanged)
-    Q_PROPERTY(int paintAmount READ paintAmount NOTIFY paintChanged)
-    Q_PROPERTY(QColor paintColor READ paintColor NOTIFY paintChanged)
     Q_PROPERTY(QString presentationMode READ presentationMode NOTIFY presentationModeChanged)
 
 public:
@@ -60,8 +57,6 @@ public:
     int maximumFps() const;
     PaintDurationModel *paintDuration();
     PaintDurationModel *paintDurationCPU();
-    int paintAmount() const;
-    QColor paintColor() const;
     QString presentationMode() const;
 
     void setMaximumFps(uint32_t fps);
@@ -82,7 +77,6 @@ public:
     std::chrono::steady_clock::time_point m_lastFpsTime;
     PaintDurationModel m_paintDuration;
     PaintDurationModel m_paintDurationCPU;
-    int m_paintAmount = 0;
     QString m_presentationMode = QStringLiteral("VSync");
 };
 
@@ -95,7 +89,6 @@ public:
     ~ShowFpsEffect() override;
 
     void prePaintScreen(ScreenPrePaintData &data) override;
-    bool paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
 
     static bool supported();
 

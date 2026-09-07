@@ -59,11 +59,6 @@ void PaintDurationModel::push(std::chrono::nanoseconds value)
     endInsertRows();
 }
 
-int PaintDurationModel::value() const
-{
-    return m_values.empty() ? 0 : m_values.front();
-}
-
 void PaintDurationModel::resize(ssize_t size)
 {
     m_maxCount = size;
@@ -88,8 +83,8 @@ void ShowFpsEffect::removeView(RenderView *view)
 
 ShowFpsScreen::ShowFpsScreen(uint32_t fps)
     : m_maximumFps(fps)
-    , m_paintDuration(fps)
-    , m_paintDurationCPU(fps)
+    , m_paintDuration(2 * fps)
+    , m_paintDurationCPU(2 * fps)
 {
 }
 
@@ -111,17 +106,6 @@ PaintDurationModel *ShowFpsScreen::paintDuration()
 PaintDurationModel *ShowFpsScreen::paintDurationCPU()
 {
     return &m_paintDurationCPU;
-}
-
-int ShowFpsScreen::paintAmount() const
-{
-    return m_paintAmount;
-}
-
-QColor ShowFpsScreen::paintColor() const
-{
-    auto normalizedDuration = std::min(1.0, m_paintDuration.value() / 100000.0);
-    return QColor::fromHsvF(0.3 - (0.3 * normalizedDuration), 1.0, 1.0);
 }
 
 QString ShowFpsScreen::presentationMode() const
@@ -167,8 +151,8 @@ void ShowFpsScreen::setMaximumFps(uint32_t fps)
     m_maximumFps = fps;
     Q_EMIT maximumFpsChanged();
 
-    m_paintDuration.resize(fps);
-    m_paintDurationCPU.resize(fps);
+    m_paintDuration.resize(2 * fps);
+    m_paintDurationCPU.resize(2 * fps);
 }
 
 class ShowFpsFeedback : public PresentationFeedback
@@ -207,7 +191,6 @@ void ShowFpsEffect::prePaintScreen(ScreenPrePaintData &data)
     data.frame->addFeedback(std::make_shared<ShowFpsFeedback>(screenData.get()), PresentationFeedbackFlags{});
 
     screenData->m_newFps += 1;
-    screenData->m_paintAmount = 0;
     screenData->setMaximumFps(maximumFps);
 
     if (!screenData->m_scene) {
@@ -231,22 +214,6 @@ void ShowFpsEffect::prePaintScreen(ScreenPrePaintData &data)
     const auto rect = data.view->viewport();
     screenData->m_scene->setGeometry(QRect(rect.x() + rect.width() - 300, rect.y(), 300, 150));
     screenData->m_scene->update(data.frame);
-}
-
-bool ShowFpsEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
-{
-    if (!effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen)) {
-        return false;
-    }
-
-    auto &screenData = m_data[m_currentView];
-    Region repaintRegion = deviceRegion & viewport.deviceRect();
-    // we keep repainting this area, so it shouldn't be counted
-    repaintRegion -= viewport.mapToDeviceCoordinatesAligned(Rect(screenData->m_scene->geometry()));
-    for (const Rect &rect : repaintRegion.rects()) {
-        screenData->m_paintAmount += rect.width() * rect.height();
-    }
-    return true;
 }
 
 bool ShowFpsEffect::supported()

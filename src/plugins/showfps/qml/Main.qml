@@ -109,58 +109,6 @@ Rectangle {
                     font: Kirigami.Theme.smallFont
                 }
             }
-
-            Charts.BarChart {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-
-                yRange.minimum: Qt.application.screens[0].width * Qt.application.screens[0].height
-                yRange.increment: 500000
-
-                xRange.from: 0
-                xRange.to: 50
-                xRange.automatic: false
-
-                indexingMode: Charts.Chart.IndexSourceValues
-
-                valueSources: Charts.HistoryProxySource {
-                    source: Charts.SingleValueSource {
-                        value: root.effect.paintAmount
-                    }
-                    maximumHistory: 100
-                    fillMode: Charts.HistoryProxySource.FillFromStart
-                }
-
-                colorSource: Charts.HistoryProxySource {
-                    source: Charts.SingleValueSource {
-                        value: root.effect.paintColor
-                    }
-                    maximumHistory: 100
-                    fillMode: Charts.HistoryProxySource.FillFromStart
-                }
-
-                ChartControls.GridLines {
-                    anchors.fill: parent
-                    z: -1
-
-                    chart: parent
-
-                    direction: ChartControls.GridLines.Vertical;
-
-                    major.visible: false
-
-                    minor.frequency: 100000
-                    minor.lineWidth: 1
-                    minor.color: root.gridColor
-                }
-
-                Label {
-                    anchors.top: parent.top
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: i18nc("@label", "Paint Amount")
-                    font: Kirigami.Theme.smallFont
-                }
-            }
         }
 
         RowLayout {
