@@ -113,6 +113,14 @@ public:
     bool automaticRepaint() const;
     void setAutomaticRepaint(bool set);
 
+    /**
+     * Set whether or not frames will be scheduled automatically.
+     * If false, this view will only be repainted when the compositor
+     * renders a frame anyways.
+     * The default is true.
+     */
+    void setAutomaticFrame(bool set);
+
     void setDevicePixelRatio(qreal dpr);
 
     /**

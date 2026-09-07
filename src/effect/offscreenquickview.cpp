@@ -85,6 +85,7 @@ public:
     bool m_visible = true;
     bool m_hasAlphaChannel = true;
     bool m_automaticRepaint = true;
+    bool m_automaticFrame = true;
 
     std::optional<qreal> m_explicitDpr;
 
@@ -257,6 +258,11 @@ void OffscreenQuickView::setAutomaticRepaint(bool set)
     }
 }
 
+void OffscreenQuickView::setAutomaticFrame(bool set)
+{
+    d->m_automaticFrame = set;
+}
+
 void OffscreenQuickView::setDevicePixelRatio(qreal dpr)
 {
     d->m_explicitDpr = dpr;
@@ -267,7 +273,7 @@ void OffscreenQuickView::handleSceneChanged()
     if (d->m_visible) {
         if (d->m_automaticRepaint) {
             d->m_repaintTimer->start();
-        } else {
+        } else if (d->m_automaticFrame) {
             d->m_item->scheduleFrame();
         }
     }
@@ -276,10 +282,10 @@ void OffscreenQuickView::handleSceneChanged()
 
 void OffscreenQuickView::handleRenderRequested()
 {
-    if (d->m_visible) {
+    if (d->m_visible && d->m_automaticFrame) {
         if (d->m_automaticRepaint) {
             d->m_repaintTimer->start();
-        } else {
+        } else if (d->m_automaticFrame) {
             d->m_item->scheduleFrame();
         }
     }
@@ -621,6 +627,9 @@ QSize OffscreenQuickView::size() const
 void OffscreenQuickView::setGeometry(const Rect &rect)
 {
     const Rect oldGeometry = d->m_view->geometry();
+    if (oldGeometry == rect) {
+        return;
+    }
     d->m_view->setGeometry(rect);
     // QWindow::setGeometry() won't sync output if there's no platform window.
     d->m_view->setScreen(QGuiApplication::screenAt(rect.center()));

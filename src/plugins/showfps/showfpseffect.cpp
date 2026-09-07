@@ -212,6 +212,8 @@ void ShowFpsEffect::prePaintScreen(ScreenPrePaintData &data)
 
     if (!screenData->m_scene) {
         screenData->m_scene = std::make_unique<OffscreenQuickScene>();
+        screenData->m_scene->setAutomaticRepaint(false);
+        screenData->m_scene->setAutomaticFrame(false);
         screenData->m_scene->loadFromModule(QStringLiteral("org.kde.kwin.showfps"), QStringLiteral("Main"), {{QStringLiteral("effect"), QVariant::fromValue(screenData.get())}});
         if (!screenData->m_scene->rootItem()) {
             // main-fallback.qml has less dependencies than main.qml, so it should work on any system where kwin compiles
@@ -228,6 +230,7 @@ void ShowFpsEffect::prePaintScreen(ScreenPrePaintData &data)
 
     const auto rect = data.view->viewport();
     screenData->m_scene->setGeometry(QRect(rect.x() + rect.width() - 300, rect.y(), 300, 150));
+    screenData->m_scene->update(data.frame);
 }
 
 bool ShowFpsEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
