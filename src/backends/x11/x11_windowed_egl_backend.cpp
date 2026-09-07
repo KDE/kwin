@@ -66,8 +66,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
     Region repaint = Region::infinite();
     m_output->clearExposedArea();
 
-    m_query = std::make_unique<GLRenderTimeQuery>(m_backend->openglContextRef());
-    m_query->begin();
+    m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer->framebuffer()),
         .repaint = repaint,
@@ -76,8 +75,8 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
 
 bool X11WindowedEglPrimaryLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
-    m_query->end();
-    if (frame) {
+    if (frame && m_query) {
+        m_query->end();
         frame->addRenderTimeQuery(std::move(m_query));
     }
     EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
@@ -124,10 +123,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame(O
         }
         m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
     }
-    if (!m_query) {
-        m_query = std::make_unique<GLRenderTimeQuery>(m_backend->openglContextRef());
-    }
-    m_query->begin();
+    m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_framebuffer.get()),
         .repaint = Region::infinite(),
@@ -144,8 +140,8 @@ bool X11WindowedEglCursorLayer::endFrame(const Region &renderedDeviceRegion, con
     GLFramebuffer::popFramebuffer();
 
     static_cast<X11WindowedOutput *>(m_output.get())->cursor()->update(buffer.mirrored(false, true), hotspot());
-    m_query->end();
-    if (frame) {
+    if (frame && m_query) {
+        m_query->end();
         frame->addRenderTimeQuery(std::move(m_query));
     }
 

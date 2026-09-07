@@ -797,8 +797,7 @@ std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::copy(GraphicsBuffer *buff
 
     std::unique_ptr<GLRenderTimeQuery> renderTime;
     if (frame) {
-        renderTime = std::make_unique<GLRenderTimeQuery>(context);
-        renderTime->begin();
+        renderTime = GLRenderTimeQuery::begin(context);
     }
     m_currentSlot = m_swapchain->acquire();
     if (!m_currentSlot) {

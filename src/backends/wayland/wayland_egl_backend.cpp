@@ -98,8 +98,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame(OutputFrame
     }
 
     const Region repair = bufferAgeEnabled ? m_damageJournal.accumulate(m_buffer->age(), Region::infinite()) : Region::infinite();
-    m_query = std::make_unique<GLRenderTimeQuery>(m_backend->openglContextRef());
-    m_query->begin();
+    m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer->framebuffer(), m_color),
         .repaint = repair,
@@ -108,8 +107,8 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame(OutputFrame
 
 bool WaylandEglLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
-    m_query->end();
-    if (frame) {
+    if (frame && m_query) {
+        m_query->end();
         frame->addRenderTimeQuery(std::move(m_query));
     }
     // Flush rendering commands to the dmabuf.
@@ -194,8 +193,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame(Outpu
         return std::nullopt;
     }
 
-    m_query = std::make_unique<GLRenderTimeQuery>(m_backend->openglContextRef());
-    m_query->begin();
+    m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer->framebuffer()),
         .repaint = Region::infinite(),
@@ -204,8 +202,8 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame(Outpu
 
 bool WaylandEglCursorLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
-    m_query->end();
-    if (frame) {
+    if (frame && m_query) {
+        m_query->end();
         frame->addRenderTimeQuery(std::move(m_query));
     }
     // Flush rendering commands to the dmabuf.

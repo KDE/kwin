@@ -62,8 +62,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame(OutputFrame
         return std::nullopt;
     }
 
-    m_query = std::make_unique<GLRenderTimeQuery>(m_backend->openglContextRef());
-    m_query->begin();
+    m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
 
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_current->framebuffer()),
@@ -73,8 +72,8 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame(OutputFrame
 
 bool VirtualEglLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
-    m_query->end();
-    if (frame) {
+    if (frame && m_query) {
+        m_query->end();
         frame->addRenderTimeQuery(std::move(m_query));
     }
     glFlush(); // flush pending rendering commands.

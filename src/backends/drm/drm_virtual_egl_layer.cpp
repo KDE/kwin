@@ -72,8 +72,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame(OutputFr
 
     m_currentSlot = slot;
 
-    m_query = std::make_unique<GLRenderTimeQuery>(m_eglBackend->openglContextRef());
-    m_query->begin();
+    m_query = GLRenderTimeQuery::begin(m_eglBackend->openglContextRef());
 
     const Region repair = m_damageJournal.accumulate(slot->age(), Region::infinite());
     return OutputLayerBeginFrameInfo{
@@ -84,8 +83,10 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame(OutputFr
 
 bool VirtualEglGbmLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
-    m_query->end();
-    frame->addRenderTimeQuery(std::move(m_query));
+    if (m_query) {
+        m_query->end();
+        frame->addRenderTimeQuery(std::move(m_query));
+    }
     glFlush();
     m_damageJournal.add(damagedDeviceRegion);
 

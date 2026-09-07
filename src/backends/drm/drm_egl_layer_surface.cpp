@@ -129,8 +129,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         }
     }
 
-    m_surface->compositingTimeQuery = std::make_unique<GLRenderTimeQuery>(m_surface->context);
-    m_surface->compositingTimeQuery->begin();
+    m_surface->compositingTimeQuery = GLRenderTimeQuery::begin(m_surface->context);
     if (m_surface->needsShadowBuffer) {
         if (!m_surface->shadowSwapchain || m_surface->shadowSwapchain->size() != m_surface->gbmSwapchain->size()) {
             const auto formats = m_eglBackend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats();
@@ -264,8 +263,8 @@ bool EglGbmLayerSurface::endRendering(const Region &damagedDeviceRegion, OutputF
     } else {
         m_surface->damageJournal.add(damagedDeviceRegion);
     }
-    m_surface->compositingTimeQuery->end();
-    if (frame) {
+    if (frame && m_surface->compositingTimeQuery) {
+        m_surface->compositingTimeQuery->end();
         frame->addRenderTimeQuery(std::move(m_surface->compositingTimeQuery));
     }
     glFlush();

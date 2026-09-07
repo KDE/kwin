@@ -310,8 +310,7 @@ void OffscreenQuickView::update(OutputFrame *frame)
             return;
         }
         if (frame) {
-            renderTime = std::make_unique<GLRenderTimeQuery>();
-            renderTime->begin();
+            renderTime = GLRenderTimeQuery::begin();
         }
 
         qreal dpr = d->m_view->screen() ? d->m_view->screen()->devicePixelRatio() : 1.0;
