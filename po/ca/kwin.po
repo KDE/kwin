@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-04 00:46+0000\n"
-"PO-Revision-Date: 2026-09-03 09:50+0200\n"
+"PO-Revision-Date: 2026-09-06 17:25+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -1615,7 +1615,7 @@ msgstr "L'amplada del mode de finestra. L'amplada per defecte és 1024."
 #: main_wayland.cpp:359
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
-msgstr "L'alçada del mode de finestra. L'alçada per defecte és 768."
+msgstr "L'altura del mode de finestra. L'altura per defecte és 768."
 
 #: main_wayland.cpp:364
 #, kde-format

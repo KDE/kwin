@@ -24,14 +24,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-04 00:46+0000\n"
-"PO-Revision-Date: 2026-06-24 23:50+0200\n"
+"PO-Revision-Date: 2026-09-06 19:32+0200\n"
 "Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 26.04.2\n"
+"X-Generator: Lokalize 26.08.0\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
@@ -96,13 +96,13 @@ msgstr "Графический сервер Wayland для KDE"
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” (%2) was reset"
-msgstr ""
+msgstr "Выполнен сброс видеокарты «%1» (%2)"
 
 #: core/gpumanager.cpp:280
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” was reset"
-msgstr ""
+msgstr "Графическая карта «%1» сброшена"
 
 #: core/iccprofile.cpp:402
 #, kde-format
@@ -1855,39 +1855,37 @@ msgstr "Распахнутые на весь экран окна"
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:9
 #, kde-format
 msgid "Delay Time"
-msgstr ""
+msgstr "Время задержки"
 
 #. i18n: ectx: label, entry (DwellTime), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:13
 #, kde-format
 msgid "Dwell Time"
-msgstr ""
+msgstr "Время задержки автоматического нажатия кнопки мыши"
 
 #. i18n: ectx: label, entry (MotionThreshold), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:17
 #, kde-format
 msgid "Motion Threshold"
-msgstr ""
+msgstr "Порог движения"
 
 #. i18n: ectx: label, entry (DefaultButton), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:21
-#, fuzzy, kde-format
-#| msgid "Default"
+#, kde-format
 msgid "Default Button"
-msgstr "По умолчанию"
+msgstr "Кнопка по умолчанию"
 
 #. i18n: ectx: label, entry (ButtonLocked), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:33
-#, fuzzy, kde-format
-#| msgid "Button"
+#, kde-format
 msgid "Lock Button"
-msgstr "Кнопка"
+msgstr "Заблокировать кнопку"
 
 #. i18n: ectx: label, entry (DwellColor), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:37
 #, kde-format
 msgid "Dwell Color"
-msgstr ""
+msgstr "Цвет щелчка с задержкой"
 
 #: plugins/eis/eisinputcapturemanager.cpp:140
 #, kde-format
@@ -2538,8 +2536,7 @@ msgid "Color Temperature Preview"
 msgstr "Предварительный просмотр цветовой температуры"
 
 #: plugins/outputlocator/outputlocator.cpp:26
-#, fuzzy, kde-format
-#| msgid "Built-in Screen"
+#, kde-format
 msgctxt "@label"
 msgid "Built-in Screen"
 msgstr "Встроенный экран"
@@ -3558,14 +3555,13 @@ msgstr "Тип правила сокрытия заголовка и грани�
 #: rulesettings.kcfg:322
 #, kde-format
 msgid "Decoration policy"
-msgstr ""
+msgstr "Правило оформления"
 
 #. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
-#, fuzzy, kde-format
-#| msgid "Active opacity rule type"
+#, kde-format
 msgid "Decoration policy rule type"
-msgstr "Тип правила прозрачности активного"
+msgstr "Тип правила оформления"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:339
@@ -3714,7 +3710,7 @@ msgstr "Тип правила «Скрыть из снимков экрана и
 #: scene/workspacescene.cpp:115
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
-msgstr ""
+msgstr "Включить или выключить индикацию графических эффектов"
 
 # BUGME: should not be translatable --aspotashev
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
@@ -4307,13 +4303,13 @@ msgstr "Принудительно закрыть окно"
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Focused Window"
-msgstr ""
+msgstr "Переместить указатель в центр активного окна"
 
 #: useractions.cpp:1018
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Screen"
-msgstr ""
+msgstr "Переместить указатель в центр экрана"
 
 #: useractions.cpp:1083
 #, kde-format
@@ -4371,6 +4367,8 @@ msgid ""
 "Setting custom modes with too old kde-output-management-v2 protocol versions "
 "is unsupported"
 msgstr ""
+"Настройка пользовательских режимов со слишком старыми версиями протокола kde-"
+"output-management-v2 не поддерживается."
 
 #: wayland/outputmanagement_v2.cpp:575
 #, kde-format
@@ -4428,13 +4426,12 @@ msgstr "Сеанс неактивен"
 #: wayland/outputmanagement_v2.cpp:747
 #, kde-format
 msgid "More displays are enabled than are supported by the graphics card."
-msgstr ""
+msgstr "Включено больше экранов, чем поддерживается видеокартой."
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration"
+#, kde-format
 msgid "The driver rejected the output configuration: %s"
-msgstr "Конфигурация вывода отклонена драйвером"
+msgstr "Конфигурация вывода отклонена драйвером: %s"
 
 #: window.cpp:3183
 #, kde-format
