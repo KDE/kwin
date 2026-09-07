@@ -327,7 +327,6 @@ bool X11Window::track(xcb_window_t w)
     if (Xcb::Extensions::self()->isShapeAvailable()) {
         xcb_shape_select_input(kwinApp()->x11Connection(), w, true);
     }
-    detectShape();
     updateShapeRegion();
     getWmOpaqueRegion();
     getSkipCloseAnimation();
@@ -400,7 +399,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     if (Xcb::Extensions::self()->isShapeAvailable()) {
         xcb_shape_select_input(kwinApp()->x11Connection(), window(), true);
     }
-    detectShape();
     updateShapeRegion();
     detectNoBorder();
     fetchIconicName();
@@ -933,23 +931,13 @@ DecorationMode X11Window::preferredDecorationMode() const
         if (!m_clientFrameExtents.isNull()) {
             return DecorationMode::Client;
         } else if (m_wantsNoDecoration) {
-            return wantsServerDropShadow() ? DecorationMode::Shadow : DecorationMode::None;
+            return DecorationMode::None;
         } else {
             return DecorationMode::Server;
         }
     }
 
     Q_UNREACHABLE();
-}
-
-bool X11Window::wantsServerDropShadow() const
-{
-    if (!Decoration::DecorationBridge::supportedStyles().contains(KDecoration3::Style::Shadow)) {
-        return false;
-    } else {
-        static const bool wants = environmentVariableBoolValue("KWIN_X11_USE_SSD_DROP_SHADOW").value_or(true);
-        return wants && !is_shape;
-    }
 }
 
 static QPointF gravityReferencePoint(const QMarginsF &margins, xcb_gravity_t gravity)
@@ -4003,11 +3991,6 @@ void X11Window::getSkipCloseAnimation()
 {
     Xcb::Property property = fetchSkipCloseAnimation();
     readSkipCloseAnimation(property);
-}
-
-void X11Window::detectShape()
-{
-    is_shape = Xcb::Extensions::self()->hasShape(window());
 }
 
 //********************************************

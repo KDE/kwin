@@ -305,7 +305,6 @@ private:
     Xcb::Property fetchSkipCloseAnimation() const;
     void readSkipCloseAnimation(Xcb::Property &prop);
     void getSkipCloseAnimation();
-    void detectShape();
 
     void configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, qreal rh, int gravity, bool from_tool);
     void getSyncCounter();
@@ -341,7 +340,6 @@ private:
     void updateDecoration(bool check_workspace_pos, bool force = false);
     void createDecoration(KDecoration3::Style style, bool force);
     void destroyDecoration();
-    bool wantsServerDropShadow() const;
 
     void checkOutput();
     void handleXwaylandScaleChanged();
@@ -384,7 +382,6 @@ private:
     DecorationPolicy m_decorationPolicy = DecorationPolicy::ClientPreference;
     bool m_wantsNoDecoration = false;
     bool ignore_focus_stealing = false; ///< Don't apply focus stealing prevention to this client
-    bool is_shape = false;
 
     enum FullScreenMode {
         FullScreenNone,
