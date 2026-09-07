@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: None
+# SPDX-License-Identifier: CC0-1.0
+
+[steam]
+Description=Window settings for steam
+decorationpolicy=shadow
+decorationpolicyrule=2
+types=1
+wmclass=steamwebhelper steam
+wmclasscomplete=true
+wmclassmatch=1
