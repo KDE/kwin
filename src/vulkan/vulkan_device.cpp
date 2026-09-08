@@ -259,8 +259,37 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
     for (FileDescriptor &fd : duplicatedFds) {
         fd.take();
     }
+
+    vk::ImageViewCreateInfo viewInfo{
+        vk::ImageViewCreateFlags{},
+        image,
+        vk::ImageViewType::e2D,
+        vk::Format(format->vulkanFormat),
+        vk::ComponentMapping{},
+        vk::ImageSubresourceRange{
+            vk::ImageAspectFlagBits::eColor,
+            0,
+            1,
+            0,
+            1,
+        },
+    };
+    auto [viewResult, view] = m_logical.createImageView(viewInfo);
+    if (viewResult != vk::Result::eSuccess) {
+        return nullptr;
+    }
+
+    vk::raii::Sampler sampler{nullptr};
+    if (usage & vk::ImageUsageFlagBits::eSampled) {
+        sampler = VulkanTexture::createSampler(this);
+        if (!*sampler) {
+            return nullptr;
+        }
+    }
+
     return std::make_shared<VulkanTexture>(this, vk::Format(format->vulkanFormat), std::move(image),
-                                           std::move(deviceMemory), QSize(attributes->width, attributes->height));
+                                           std::move(view), std::move(sampler), std::move(deviceMemory),
+                                           QSize(attributes->width, attributes->height));
 }
 
 std::shared_ptr<VulkanBuffer> VulkanDevice::importDmabufAsBuffer(const DmaBufAttributes *attributes, vk::BufferUsageFlags usage)

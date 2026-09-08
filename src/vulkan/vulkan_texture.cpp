@@ -54,11 +54,14 @@ std::optional<vk::Format> VulkanTexture::qImageToVulkanFormat(QImage::Format for
 }
 
 VulkanTexture::VulkanTexture(VulkanDevice *device, vk::Format format, vk::raii::Image &&image,
+                             vk::raii::ImageView &&view, vk::raii::Sampler &&sampler,
                              std::vector<vk::raii::DeviceMemory> &&memory, const QSize &size)
     : m_device(device)
     , m_format(format)
     , m_memory(std::move(memory))
     , m_image(std::move(image))
+    , m_view(std::move(view))
+    , m_sampler(std::move(sampler))
     , m_size(size)
 {
 }
@@ -75,6 +78,16 @@ QSize VulkanTexture::size() const
 const vk::raii::Image &VulkanTexture::handle() const
 {
     return m_image;
+}
+
+const vk::raii::ImageView &VulkanTexture::view() const
+{
+    return m_view;
+}
+
+const vk::raii::Sampler &VulkanTexture::sampler() const
+{
+    return m_sampler;
 }
 
 vk::Format VulkanTexture::format() const
@@ -252,16 +265,36 @@ std::unique_ptr<VulkanTexture> VulkanTexture::allocate(VulkanDevice *device, vk:
         {}, // queue family indices
         vk::ImageLayout::eUndefined,
     };
-    auto memory = device->allocateMemory(info, vk::MemoryPropertyFlagBits::eDeviceLocal);
-    if (!*memory) {
-        return nullptr;
-    }
     auto [result, image] = device->logicalDevice().createImage(info);
     if (result != vk::Result::eSuccess) {
         qCWarning(KWIN_VULKAN) << "creating image failed!" << vk::to_string(result);
         return nullptr;
     }
+
+    auto memory = device->allocateMemory(info, vk::MemoryPropertyFlagBits::eDeviceLocal);
+    if (!*memory) {
+        return nullptr;
+    }
     image.bindMemory(memory, 0);
+
+    vk::ImageViewCreateInfo viewInfo{
+        vk::ImageViewCreateFlags{},
+        image,
+        vk::ImageViewType::e2D,
+        format,
+        vk::ComponentMapping{},
+        vk::ImageSubresourceRange{
+            vk::ImageAspectFlagBits::eColor,
+            0,
+            1,
+            0,
+            1,
+        },
+    };
+    auto [viewResult, view] = device->logicalDevice().createImageView(viewInfo);
+    if (viewResult != vk::Result::eSuccess) {
+        return nullptr;
+    }
 
     // we will only use the general image layout everywhere else,
     // so transition the image here once and then never again.
@@ -285,9 +318,17 @@ std::unique_ptr<VulkanTexture> VulkanTexture::allocate(VulkanDevice *device, vk:
     // an argument, and leave synchronization up to the caller.
     device->graphicsQueue()->waitIdle();
 
+    vk::raii::Sampler sampler{nullptr};
+    if (usage & vk::ImageUsageFlagBits::eSampled) {
+        sampler = createSampler(device);
+        if (!*sampler) {
+            return nullptr;
+        }
+    }
+
     std::vector<vk::raii::DeviceMemory> mem;
     mem.push_back(std::move(memory));
-    return std::make_unique<VulkanTexture>(device, format, std::move(image), std::move(mem), size);
+    return std::make_unique<VulkanTexture>(device, format, std::move(image), std::move(view), std::move(sampler), std::move(mem), size);
 }
 
 std::unique_ptr<VulkanTexture> VulkanTexture::upload(VulkanDevice *device, const QImage &image, vk::ImageUsageFlags usage)
@@ -302,6 +343,33 @@ std::unique_ptr<VulkanTexture> VulkanTexture::upload(VulkanDevice *device, const
     }
     ret->update(image);
     return ret;
+}
+
+vk::raii::Sampler VulkanTexture::createSampler(VulkanDevice *device)
+{
+    vk::SamplerCreateInfo samplerInfo{
+        vk::SamplerCreateFlags{},
+        vk::Filter::eLinear, // mag filter
+        vk::Filter::eLinear, // min filter
+        vk::SamplerMipmapMode::eNearest,
+        vk::SamplerAddressMode::eClampToBorder,
+        vk::SamplerAddressMode::eClampToBorder,
+        vk::SamplerAddressMode::eClampToBorder,
+        0,
+        false, // enable anisotropy
+        0, // maxAnisotropy
+        false, // enable compare
+        vk::CompareOp::eNever,
+        0, // min lod
+        0, // max lod
+        vk::BorderColor::eFloatTransparentBlack,
+        true, // unnormalized coordinates
+    };
+    auto [samplerResult, sampler] = device->logicalDevice().createSampler(samplerInfo);
+    if (samplerResult != vk::Result::eSuccess) {
+        return nullptr;
+    }
+    return std::move(sampler);
 }
 
 }

@@ -25,8 +25,10 @@ public:
     static std::optional<vk::Format> qImageToVulkanFormat(QImage::Format format);
     static std::unique_ptr<VulkanTexture> allocate(VulkanDevice *device, vk::Format format, const QSize &size, vk::ImageUsageFlags usage);
     static std::unique_ptr<VulkanTexture> upload(VulkanDevice *device, const QImage &image, vk::ImageUsageFlags usage);
+    static vk::raii::Sampler createSampler(VulkanDevice *device);
 
     explicit VulkanTexture(VulkanDevice *device, vk::Format format, vk::raii::Image &&image,
+                           vk::raii::ImageView &&view, vk::raii::Sampler &&sampler,
                            std::vector<vk::raii::DeviceMemory> &&memory, const QSize &size);
     VulkanTexture(VulkanTexture &&other) = delete;
     VulkanTexture(const VulkanTexture &) = delete;
@@ -44,6 +46,8 @@ public:
     QImage download() const;
 
     const vk::raii::Image &handle() const;
+    const vk::raii::ImageView &view() const;
+    const vk::raii::Sampler &sampler() const;
     vk::Format format() const;
     QSize size() const;
 
@@ -52,6 +56,8 @@ private:
     vk::Format m_format;
     std::vector<vk::raii::DeviceMemory> m_memory;
     vk::raii::Image m_image;
+    vk::raii::ImageView m_view;
+    vk::raii::Sampler m_sampler;
     QSize m_size;
 };
 
