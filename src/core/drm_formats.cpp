@@ -8,6 +8,8 @@
 */
 #include "drm_formats.h"
 
+#include <QDebug>
+
 namespace KWin
 {
 
@@ -674,4 +676,14 @@ QString FormatInfo::drmFormatName(uint32_t format)
         format);
 }
 
+}
+
+QDebug &operator<<(QDebug &s, const KWin::FormatModifierMap &map)
+{
+    s << "FormatModifierMap{\n";
+    for (auto it = map.begin(); it != map.end(); it++) {
+        s << KWin::FormatInfo::drmFormatName(it.key()) << it.value() << "\n";
+    }
+    s << "}";
+    return s;
 }
