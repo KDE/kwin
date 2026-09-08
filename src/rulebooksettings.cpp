@@ -95,7 +95,12 @@ void RuleBookSettings::usrRead()
         mRuleGroupList.clear();
     }
 
-    for (const auto availableGroups = sharedConfig()->groupList(); const QString &group : availableGroups) {
+    const auto availableGroups = sharedConfig()->groupList();
+    mOrder.removeIf([&availableGroups](const QString &groupName) {
+        return !availableGroups.contains(groupName);
+    });
+
+    for (const QString &group : availableGroups) {
         if (isMetaDataGroup(group)) {
             continue;
         }
