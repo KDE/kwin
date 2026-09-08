@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2026 Kristen McWilliam <kristen@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -137,7 +138,7 @@ void InputMethod::init()
 
 void InputMethod::show()
 {
-    m_shouldShowPanel = true;
+    m_showRequested = true;
 
     // If the panel has something to display, show it (e.g. if we hid it from kwin rather than the IM hiding itself)
     // Otherwise, ensure the input context is current and the IM will see to having itself shown if there's something to show.
@@ -161,7 +162,8 @@ void InputMethod::show()
 
 void InputMethod::hide()
 {
-    m_shouldShowPanel = false;
+    m_showRequested = false;
+    m_forceShowRequested = false;
     if (m_panel) {
         m_panel->hide();
         updateInputPanelState();
@@ -257,6 +259,7 @@ void InputMethod::setActive(bool active)
 {
     const bool wasActive = waylandServer()->inputMethod()->context();
     if (wasActive && !active) {
+        m_forceShowRequested = false;
         waylandServer()->inputMethod()->sendDeactivate();
     }
 
@@ -301,9 +304,13 @@ void InputMethod::setPanel(InputPanelV1Window *panel)
     updateInputPanelState();
     Q_EMIT panelChanged();
 
-    if (m_shouldShowPanel) {
+    if (m_showRequested) {
+        if (shouldShowOnActive() || m_forceShowRequested) {
+            m_panel->allow();
+        }
         show();
     }
+    m_forceShowRequested = false;
 }
 
 void InputMethod::setTrackedWindow(Window *trackedWindow)
@@ -319,7 +326,7 @@ void InputMethod::setTrackedWindow(Window *trackedWindow)
         disconnect(m_trackedWindow, &Window::frameGeometryChanged, this, &InputMethod::cursorRectangleChanged);
     }
     m_trackedWindow = trackedWindow;
-    m_shouldShowPanel = false;
+    m_showRequested = false;
     if (m_trackedWindow) {
         connect(m_trackedWindow, &Window::frameGeometryChanged, this, &InputMethod::updateInputPanelState, Qt::QueuedConnection);
         connect(m_trackedWindow, &Window::frameGeometryChanged, this, &InputMethod::cursorRectangleChanged);
@@ -987,6 +994,12 @@ bool InputMethod::activeClientSupportsTextInput() const
 void InputMethod::forceActivate()
 {
     setActive(true);
+    m_forceShowRequested = true;
+    if (m_panel) {
+        m_panel->allow();
+    } else {
+        qCDebug(KWIN_VIRTUALKEYBOARD) << "No input panel available.";
+    }
     show();
 }
 
