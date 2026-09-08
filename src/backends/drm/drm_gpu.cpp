@@ -586,24 +586,13 @@ static std::chrono::nanoseconds convertTimestamp(clockid_t sourceClock, clockid_
 
 void DrmGpu::pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, unsigned int usec, unsigned int crtc_id, void *user_data)
 {
-    DrmBackend *backend = static_cast<DrmBackend *>(user_data);
-    const auto &gpus = backend->gpus();
-    const auto gpuIt = std::ranges::find_if(gpus, [fd](const auto &gpu) {
-        return gpu->fd() == fd;
-    });
-    Q_ASSERT(gpuIt != gpus.end());
-    DrmGpu *gpu = gpuIt->get();
-    DrmCommit *commit;
-    {
-        std::lock_guard lock(gpu->m_pendingCommitsMutex);
-        auto it = gpu->m_pendingCommits.find(crtc_id);
-        if (it == gpu->m_pendingCommits.end()) {
-            qCWarning(KWIN_DRM, "Got a pageflip event on CRTC %u we didn't ask for!", crtc_id);
-            return;
-        }
-        commit = it->second;
-        gpu->m_pendingCommits.erase(it);
+    const auto commit = DrmCommit::take(reinterpret_cast<uintptr_t>(user_data));
+    if (!commit) {
+        // The commit may have been destroyed while the device was paused, or
+        // this may be a duplicate event. Neither may complete a newer commit.
+        return;
     }
+    const auto gpu = commit->gpu();
     const bool defunct = std::erase_if(gpu->m_defunctCommits, [commit](const auto &defunct) {
         return defunct.get() == commit;
     }) != 0;
@@ -646,17 +635,6 @@ void DrmGpu::addDefunctCommit(std::unique_ptr<DrmCommit> &&commit)
 {
     Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
     m_defunctCommits.push_back(std::move(commit));
-}
-
-std::unique_lock<std::mutex> DrmGpu::lockPendingCommits()
-{
-    return std::unique_lock(m_pendingCommitsMutex);
-}
-
-void DrmGpu::registerPendingCommit(std::unique_lock<std::mutex> &lock, uint32_t crtcId, DrmCommit *commit)
-{
-    Q_ASSERT(lock.owns_lock() && lock.mutex() == &m_pendingCommitsMutex);
-    m_pendingCommits[crtcId] = commit;
 }
 
 void DrmGpu::removeOutput(DrmOutput *output)

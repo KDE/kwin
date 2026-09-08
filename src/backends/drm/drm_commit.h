@@ -9,6 +9,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <xf86drmMode.h>
 
 #include <QHash>
@@ -44,13 +45,21 @@ public:
     virtual void pageFlipped(std::chrono::nanoseconds timestamp) = 0;
     void setDefunct();
 
+    static DrmCommit *take(uintptr_t id);
+
     static std::expected<void, OutputError> errnoToError();
 
 protected:
     DrmCommit(DrmGpu *gpu);
+    DrmCommit(const DrmCommit &other);
+
+    uintptr_t registerPageflip();
 
     DrmGpu *const m_gpu;
     bool m_defunct = false;
+
+private:
+    std::optional<uintptr_t> m_id;
 };
 
 class DrmAtomicCommit : public DrmCommit
