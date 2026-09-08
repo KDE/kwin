@@ -257,7 +257,7 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
             dataDevice->selection()->cancel();
             return;
         }
-        q->setSelection(dataDevice->selection(), display->nextSerial());
+        q->setSelection(dataDevice->selection(), display->serial());
     });
 
     QObject::connect(dataDevice, &DataControlDeviceV1Interface::primarySelectionChanged, q, [this, dataDevice] {
