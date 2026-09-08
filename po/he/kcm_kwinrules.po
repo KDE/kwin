@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2026-09-04 11:06+0300\n"
+"PO-Revision-Date: 2026-09-07 08:22+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -643,10 +643,9 @@ msgid "Shortcut"
 msgstr "קיצור דרך"
 
 #: rulesmodel.cpp:571
-#, fuzzy, kde-format
-#| msgid "&No titlebar and frame"
+#, kde-format
 msgid "No titlebar and frame"
-msgstr "&ללא מסגרת וכותרת"
+msgstr "ללא שורת כותרת ומסגרת"
 
 #: rulesmodel.cpp:571 rulesmodel.cpp:576 rulesmodel.cpp:582 rulesmodel.cpp:587
 #: rulesmodel.cpp:592 rulesmodel.cpp:603 rulesmodel.cpp:614 rulesmodel.cpp:622
@@ -823,7 +822,7 @@ msgstr "תפריט עצמאי"
 #: rulesmodel.cpp:749
 #, kde-format
 msgid "On Screen Display"
-msgstr ""
+msgstr "תצוגת מסך עליונה"
 
 #: rulesmodel.cpp:759
 #, kde-format
