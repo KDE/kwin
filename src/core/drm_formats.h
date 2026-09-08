@@ -76,3 +76,5 @@ struct KWIN_EXPORT FormatInfo
 };
 
 }
+
+QDebug &operator<<(QDebug &s, const KWin::FormatModifierMap &map);
