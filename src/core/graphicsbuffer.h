@@ -238,10 +238,17 @@ public:
         return m_buffer;
     }
 
-    inline operator bool() const
+    inline explicit operator bool() const
     {
         return m_buffer;
     }
+
+    inline bool operator==(GraphicsBuffer *buffer) const
+    {
+        return m_buffer == buffer;
+    }
+
+    inline bool operator==(const GraphicsBufferRef &other) const = default;
 
 private:
     GraphicsBuffer *m_buffer;
