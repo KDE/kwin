@@ -122,23 +122,31 @@ void GLTexture::update(const QImage &image, const Region &region, const QPoint &
     const auto context = EglContext::currentContext();
     GLenum glFormat;
     GLenum type;
-    QImage::Format uploadFormat;
+    QImage im = image;
+
+    bind();
+
     if (context->supportsARGB32Textures()) {
         glFormat = GL_BGRA_EXT;
         type = GL_UNSIGNED_BYTE;
-        uploadFormat = QImage::Format_ARGB32_Premultiplied;
+
+        if (im.hasAlphaChannel() || !supportsSwizzle()) {
+            if (im.format() != QImage::Format_ARGB32_Premultiplied) {
+                im.convertTo(QImage::Format_ARGB32_Premultiplied);
+            }
+        } else {
+            if (im.format() != QImage::Format_RGB32) {
+                im.convertTo(QImage::Format_RGB32);
+            }
+            setSwizzle(GL_RED, GL_GREEN, GL_BLUE, GL_ONE);
+        }
     } else {
         glFormat = GL_RGBA;
         type = GL_UNSIGNED_BYTE;
-        uploadFormat = QImage::Format_RGBA8888_Premultiplied;
+        if (im.format() != QImage::Format_RGBA8888_Premultiplied) {
+            im.convertTo(QImage::Format_RGBA8888_Premultiplied);
+        }
     }
-
-    QImage im = image;
-    if (im.format() != uploadFormat) {
-        im.convertTo(uploadFormat);
-    }
-
-    bind();
 
     for (const Rect &rect : region.rects()) {
         Q_ASSERT(im.depth() % 8 == 0);
@@ -447,25 +455,35 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
     GLenum internalFormat;
     GLenum format;
     GLenum type;
-    QImage::Format uploadFormat;
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    QImage im = image;
+
     if (context->supportsARGB32Textures()) {
         internalFormat = GL_BGRA_EXT;
         format = GL_BGRA_EXT;
         type = GL_UNSIGNED_BYTE;
-        uploadFormat = QImage::Format_ARGB32_Premultiplied;
+
+        if (im.hasAlphaChannel() || !supportsSwizzle()) {
+            if (im.format() != QImage::Format_ARGB32_Premultiplied) {
+                im.convertTo(QImage::Format_ARGB32_Premultiplied);
+            }
+        } else {
+            if (im.format() != QImage::Format_RGB32) {
+                im.convertTo(QImage::Format_RGB32);
+            }
+            glTexParameteri(texture, GL_TEXTURE_SWIZZLE_A, GL_ONE);
+        }
     } else {
         internalFormat = GL_RGBA;
         format = GL_RGBA;
         type = GL_UNSIGNED_BYTE;
-        uploadFormat = QImage::Format_RGBA8888_Premultiplied;
+        if (im.format() != QImage::Format_RGBA8888_Premultiplied) {
+            im.convertTo(QImage::Format_RGBA8888_Premultiplied);
+        }
     }
 
-    QImage im = image;
-    if (im.format() != uploadFormat) {
-        im.convertTo(uploadFormat);
-    }
-
-    glBindTexture(GL_TEXTURE_2D, texture);
     glPixelStorei(GL_UNPACK_ROW_LENGTH, im.bytesPerLine() / (im.depth() / 8));
     glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, im.width(), im.height(), 0, format, type, im.constBits());
     glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
