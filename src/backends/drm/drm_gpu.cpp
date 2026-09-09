@@ -66,6 +66,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     , m_atomicModeSetting(false)
     , m_platform(backend)
 {
+    qWarning() << "constructed GPU" << m_drmDevice->path() << "with fd" << fd;
     uint64_t capability = 0;
 
     if (drmGetCap(fd, DRM_CAP_CURSOR_WIDTH, &capability) == 0) {
@@ -155,6 +156,7 @@ DrmGpu::~DrmGpu()
         GpuManager::self()->removeDevice(m_kmsRenderDevice);
         m_kmsRenderDevice = nullptr;
     }
+    qWarning() << "deleting GPU" << m_drmDevice->path() << "with fd" << m_fd;
     m_platform->session()->closeRestricted(m_fd);
 }
 
@@ -587,6 +589,7 @@ static std::chrono::nanoseconds convertTimestamp(clockid_t sourceClock, clockid_
 
 void DrmGpu::pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, unsigned int usec, unsigned int crtc_id, void *user_data)
 {
+    qWarning() << "processing pageflip event with fd" << fd;
     DrmBackend *backend = static_cast<DrmBackend *>(user_data);
     const auto &gpus = backend->gpus();
     const auto gpuIt = std::ranges::find_if(gpus, [fd](const auto &gpu) {
