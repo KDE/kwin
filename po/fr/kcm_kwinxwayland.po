@@ -23,10 +23,10 @@ msgid ""
 "time.<nl/><nl/>If you use any of these apps, you can choose your preferred "
 "balance of security and compatibility here."
 msgstr ""
-"Les anciennes applications sous X11 ayant des raccourcis globaux et d’autres "
+"Les anciennes applications sous X11 ayant des raccourcis globaux et d'autres "
 "fonctionnalités accessibles avec exécution en arrière-plan doivent pouvoir "
 "écouter les frappes de touche en permanence. <nl/><nl/>Si vous utilisez "
-"l’une de ces applications, vous pouvez sélectionner ici votre compromis "
+"l'une de ces applications, vous pouvez sélectionner ici votre compromis "
 "préféré entre sécurité et compatibilité."
 
 #: ui/main.qml:49

@@ -79,7 +79,7 @@ msgstr "Conserver au dessus des autres fenêtres"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr "Masquer des captures et des enregistrements d’écran"
+msgstr "Masquer des captures et des enregistrements d'écran"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -230,7 +230,7 @@ msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
 msgstr ""
 "Toujours afficher le bouton « Masquer de la capture et de l'enregistrement "
-"d’écran »"
+"d'écran »"
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format

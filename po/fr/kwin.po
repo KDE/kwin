@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-04 00:46+0000\n"
-"PO-Revision-Date: 2026-08-30 09:17+0200\n"
+"PO-Revision-Date: 2026-09-07 10:00+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -1858,43 +1858,37 @@ msgstr "Fenêtre en plein écran"
 
 #. i18n: ectx: label, entry (DelayTime), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:9
-#, fuzzy, kde-format
-#| msgid "Delay Time"
+#, kde-format
 msgid "Delay Time"
 msgstr "Durée de la temporisation"
 
 #. i18n: ectx: label, entry (DwellTime), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:13
-#, fuzzy, kde-format
-#| msgid "Dwell Time"
+#, kde-format
 msgid "Dwell Time"
 msgstr "Durée de maintien"
 
 #. i18n: ectx: label, entry (MotionThreshold), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:17
-#, fuzzy, kde-format
-#| msgid "Motion Threshold"
+#, kde-format
 msgid "Motion Threshold"
 msgstr "Seuil de mouvement"
 
 #. i18n: ectx: label, entry (DefaultButton), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:21
-#, fuzzy, kde-format
-#| msgid "Default Button"
+#, kde-format
 msgid "Default Button"
 msgstr "Bouton par défaut"
 
 #. i18n: ectx: label, entry (ButtonLocked), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:33
-#, fuzzy, kde-format
-#| msgid "Lock Button"
+#, kde-format
 msgid "Lock Button"
 msgstr "Verrouiller le bouton"
 
 #. i18n: ectx: label, entry (DwellColor), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:37
-#, fuzzy, kde-format
-#| msgid "Dwell Color"
+#, kde-format
 msgid "Dwell Color"
 msgstr "Couleur de maintien"
 
@@ -3716,7 +3710,7 @@ msgstr "Type de règle concernant le déchirement"
 #: rulesettings.kcfg:455
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr "Masquer des captures et des enregistrements d’écran"
+msgstr "Masquer des captures et des enregistrements d'écran"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
@@ -3724,7 +3718,7 @@ msgstr "Masquer des captures et des enregistrements d’écran"
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr ""
 "Masquer à partir du type de règles pour les captures et des enregistrements "
-"d’écran"
+"d'écran"
 
 #: scene/workspacescene.cpp:115
 #, kde-format
@@ -4423,7 +4417,7 @@ msgstr "Impossible d'ajouter un mode personnalisé avec une taille vide"
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 "Impossible d'ajouter un mode personnalisé avec une fréquence de "
-"rafraîchissement de 0 Hz"
+"rafraichissement de 0 Hz"
 
 #: wayland/outputmanagement_v2.cpp:723
 #, kde-format
