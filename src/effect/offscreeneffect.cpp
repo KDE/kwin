@@ -211,6 +211,7 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
 
     RenderGeometry geometry;
     geometry.setVertexSnappingMode(m_vertexSnappingMode);
+    geometry.reserve(quads.count() * 6);
     for (auto &quad : quads) {
         geometry.appendWindowQuad(quad, scale);
     }
