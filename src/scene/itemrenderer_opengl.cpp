@@ -221,7 +221,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                     .traits = ShaderTrait::MapTexture,
                     .texture = ninePatch->texture(),
-                    .geometry = geometry,
+                    .geometry = std::move(geometry),
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
                     .hasAlpha = true,
@@ -240,7 +240,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                     .traits = ShaderTrait::MapTexture,
                     .texture = atlas->texture(),
-                    .geometry = geometry,
+                    .geometry = std::move(geometry),
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
                     .hasAlpha = true,
@@ -258,7 +258,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
             if (!geometry.isEmpty()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                     .texture = texture->texture(),
-                    .geometry = geometry,
+                    .geometry = std::move(geometry),
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
                     .hasAlpha = surfaceItem->hasAlphaChannel(),
@@ -298,7 +298,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                     .traits = ShaderTrait::MapTexture,
                     .texture = texture->texture(),
-                    .geometry = geometry,
+                    .geometry = std::move(geometry),
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
                     .hasAlpha = imageItem->image().hasAlphaChannel(),
@@ -318,7 +318,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
             const RectF innerRect = outerRect.adjusted(thickness, thickness, -thickness, -thickness);
             context->renderNodes.append(RenderNode{
                 .traits = ShaderTrait::Border,
-                .geometry = geometry,
+                .geometry = std::move(geometry),
                 .transformMatrix = context->transformStack.top(),
                 .opacity = context->opacityStack.top(),
                 .hasAlpha = true,
