@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-29 02:44+0000\n"
-"PO-Revision-Date: 2026-08-30 09:17+0200\n"
+"PO-Revision-Date: 2026-09-07 10:00+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -3699,7 +3699,7 @@ msgstr "Type de règle concernant le déchirement"
 #: rulesettings.kcfg:478
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr "Masquer des captures et des enregistrements d’écran"
+msgstr "Masquer des captures et des enregistrements d'écran"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
@@ -3707,7 +3707,7 @@ msgstr "Masquer des captures et des enregistrements d’écran"
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr ""
 "Masquer à partir du type de règles pour les captures et des enregistrements "
-"d’écran"
+"d'écran"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -4390,7 +4390,7 @@ msgstr "Impossible d'ajouter un mode personnalisé avec une taille vide"
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 "Impossible d'ajouter un mode personnalisé avec une fréquence de "
-"rafraîchissement de 0 Hz"
+"rafraichissement de 0 Hz"
 
 #: wayland/outputmanagement_v2.cpp:697
 #, kde-format
