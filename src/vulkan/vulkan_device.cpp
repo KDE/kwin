@@ -276,7 +276,7 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
         image,
         vk::ImageViewType::e2D,
         vk::Format(format->vulkanFormat),
-        vk::ComponentMapping{},
+        format->swizzles,
         vk::ImageSubresourceRange{
             vk::ImageAspectFlagBits::eColor,
             0,

@@ -64,6 +64,7 @@ struct KWIN_EXPORT FormatInfo
     uint32_t bitsPerPixel;
     GLint openglFormat;
     VkFormat vulkanFormat;
+    VkComponentMapping swizzles;
     bool floatingPoint;
     bool yuv;
 
