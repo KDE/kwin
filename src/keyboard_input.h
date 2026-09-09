@@ -86,7 +86,7 @@ private:
     QMetaObject::Connection m_activeWindowSurfaceChangedConnection;
     std::unique_ptr<KeyStateChangedSpy> m_keyStateChangedSpy;
     std::unique_ptr<ModifiersChangedSpy> m_modifiersChangedSpy;
-    KeyboardLayout *m_keyboardLayout = nullptr;
+    std::unique_ptr<KeyboardLayout> m_keyboardLayout;
     QList<uint32_t> m_pressedKeys;
     QList<uint32_t> m_filteredKeys;
     std::unique_ptr<KeyboardRepeat> m_keyRepeatSpy;

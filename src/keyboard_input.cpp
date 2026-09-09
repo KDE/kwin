@@ -117,7 +117,7 @@ Qt::KeyboardModifiers KeyboardInputRedirection::modifiersRelevantForGlobalShortc
 
 KeyboardLayout *KeyboardInputRedirection::keyboardLayout() const
 {
-    return m_keyboardLayout;
+    return m_keyboardLayout.get();
 }
 
 QList<uint32_t> KeyboardInputRedirection::pressedKeys() const
@@ -160,9 +160,10 @@ void KeyboardInputRedirection::init()
     m_input->installInputEventSpy(m_keyStateChangedSpy.get());
     m_modifiersChangedSpy = std::make_unique<ModifiersChangedSpy>(m_input);
     m_input->installInputEventSpy(m_modifiersChangedSpy.get());
-    m_keyboardLayout = new KeyboardLayout(m_xkb.get(), config);
+
+    m_keyboardLayout = std::make_unique<KeyboardLayout>(m_xkb.get(), config);
     m_keyboardLayout->init();
-    m_input->installInputEventSpy(m_keyboardLayout);
+    m_input->installInputEventSpy(m_keyboardLayout.get());
 
     m_keyRepeatSpy = std::make_unique<KeyboardRepeat>(m_xkb.get());
     connect(m_keyRepeatSpy.get(), &KeyboardRepeat::keyRepeat, this,
