@@ -52,7 +52,20 @@ public:
 
     std::optional<VkDeviceSize> minImportedHostPointerAlignment() const;
 
+    /**
+     * Formats usable for
+     * - transfer src
+     * - transfer dst
+     */
     const FormatModifierMap &transferFormats() const;
+    /**
+     * Formats usable for
+     * - storage image
+     * - transfer src
+     * - transfer dst
+     */
+    const FormatModifierMap &storageFormats() const;
+
     const vk::raii::Device &logicalDevice() const;
 
     VulkanQueue *graphicsQueue() const;
@@ -111,6 +124,7 @@ private:
     vk::raii::PhysicalDevice m_physical;
     vk::raii::Device m_logical;
     FormatModifierMap m_transferFormats;
+    FormatModifierMap m_storageFormats;
     std::vector<VkQueueFamilyProperties> m_queueProperties;
     vk::PhysicalDeviceMemoryProperties m_memoryProperties;
     vk::PhysicalDeviceLimits m_deviceLimits;

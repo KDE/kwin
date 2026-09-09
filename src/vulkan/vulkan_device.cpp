@@ -26,6 +26,7 @@ VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::De
     , m_physical(physicalDevice)
     , m_logical(std::move(logicalDevice))
     , m_transferFormats(queryFormats(vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eTransferDst))
+    , m_storageFormats(queryFormats(vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eStorage))
     , m_queueProperties(std::move(queueProperties))
     , m_deviceLimits(m_physical.getProperties().limits)
     , m_minImportedHostPointerAlignment(minImportedHostPointerAlignment)
@@ -546,6 +547,11 @@ std::optional<VkDeviceSize> VulkanDevice::minImportedHostPointerAlignment() cons
 const FormatModifierMap &VulkanDevice::transferFormats() const
 {
     return m_transferFormats;
+}
+
+const FormatModifierMap &VulkanDevice::storageFormats() const
+{
+    return m_storageFormats;
 }
 
 const vk::raii::Device &VulkanDevice::logicalDevice() const
