@@ -74,30 +74,13 @@ bool DrmBackend::initialize()
 {
     m_explicitGpus = GpuManager::splitPathList(qEnvironmentVariable("KWIN_DRM_DEVICES"));
 
-    connect(m_session, &Session::devicePaused, this, [this](dev_t deviceId) {
-        if (const auto gpu = findGpu(deviceId)) {
-            gpu->setRemoved();
-            updateOutputs();
+    connect(m_session, &Session::activeChanged, this, [this](bool active) {
+        if (active) {
+            scanGpus();
+        } else {
+            std::ranges::for_each(m_gpus, &DrmGpu::setRemoved);
         }
-    });
-    connect(m_session, &Session::deviceResumed, this, [this](dev_t deviceId) {
-        if (findGpu(deviceId)) {
-            return;
-        }
-        drmDevice *device = nullptr;
-        if (drmGetDeviceFromDevId(deviceId, 0, &device) != 0) {
-            qCWarning(KWIN_DRM, "drmGetDeviceFromDevId failed! %s", strerror(errno));
-            return;
-        }
-        if (!(device->available_nodes & (1 << DRM_NODE_PRIMARY))) {
-            drmFreeDevice(&device);
-            return;
-        }
-        const auto gpu = addGpu(device->nodes[DRM_NODE_PRIMARY]);
-        if (gpu) {
-            updateOutputs();
-        }
-        drmFreeDevice(&device);
+        updateOutputs();
     });
     connect(m_session, &Session::awoke, this, [this]() {
         // some drivers for old GPUs have problems after suspend, which
@@ -113,18 +96,7 @@ bool DrmBackend::initialize()
         }
     });
 
-    if (!m_explicitGpus.isEmpty()) {
-        for (const QString &fileName : m_explicitGpus) {
-            addGpu(fileName);
-        }
-    } else {
-        const auto devices = m_udev->listGPUs();
-        for (const auto &device : devices) {
-            if (device->seat() == m_session->seat()) {
-                addGpu(device->devNode());
-            }
-        }
-    }
+    scanGpus();
 
     // setup udevMonitor
     if (m_udevMonitor) {
@@ -183,6 +155,22 @@ void DrmBackend::handleUdevEvent()
             if (gpu) {
                 qCDebug(KWIN_DRM) << "Received change event for monitored drm device" << gpu->drmDevice()->path();
                 updateOutputs(gpu);
+            }
+        }
+    }
+}
+
+void DrmBackend::scanGpus()
+{
+    if (!m_explicitGpus.isEmpty()) {
+        for (const QString &fileName : m_explicitGpus) {
+            addGpu(fileName);
+        }
+    } else {
+        const auto devices = m_udev->listGPUs();
+        for (const auto &device : devices) {
+            if (device->seat() == m_session->seat()) {
+                addGpu(device->devNode());
             }
         }
     }
