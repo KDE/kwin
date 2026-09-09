@@ -25,7 +25,7 @@ VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::De
     : m_type(type)
     , m_physical(physicalDevice)
     , m_logical(std::move(logicalDevice))
-    , m_transferFormats(queryFormats(VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT))
+    , m_transferFormats(queryFormats(vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eTransferDst))
     , m_queueProperties(std::move(queueProperties))
     , m_deviceLimits(m_physical.getProperties().limits)
     , m_minImportedHostPointerAlignment(minImportedHostPointerAlignment)
@@ -65,7 +65,7 @@ void VulkanDevice::getQueues()
     m_graphicsQueue = VulkanQueue::create(this, std::distance(m_queueProperties.begin(), it));
 }
 
-std::shared_ptr<VulkanTexture> VulkanDevice::importBuffer(GraphicsBuffer *buffer, VkImageUsageFlags usage)
+std::shared_ptr<VulkanTexture> VulkanDevice::importBuffer(GraphicsBuffer *buffer, vk::ImageUsageFlags usage)
 {
     if (!buffer->dmabufAttributes()) {
         return nullptr;
@@ -131,7 +131,7 @@ static bool isDisjoint(const DmaBufAttributes &attributes)
     return false;
 }
 
-std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes *attributes, VkImageUsageFlags usage)
+std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes *attributes, vk::ImageUsageFlags usage)
 {
     const auto format = FormatInfo::get(attributes->format);
     if (!format) {
@@ -172,7 +172,7 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
         1,
         vk::SampleCountFlagBits::e1,
         vk::ImageTiling::eDrmFormatModifierEXT,
-        vk::ImageUsageFlags(usage),
+        usage,
         vk::SharingMode::eExclusive,
         // the queue family index is ignored with share mode exclusive,
         // instead Vulkan implicitly assigns ownership to the first queue
@@ -403,7 +403,7 @@ std::shared_ptr<VulkanBuffer> VulkanDevice::importHostPointerAsBuffer(const Host
     return std::make_shared<VulkanBuffer>(std::move(buffer), std::move(memory), attributes->sizeInBytes);
 }
 
-FormatModifierMap VulkanDevice::queryFormats(VkImageUsageFlags flags) const
+FormatModifierMap VulkanDevice::queryFormats(vk::ImageUsageFlags flags) const
 {
     FormatModifierMap ret;
     for (const auto &[drmFormat, info] : FormatInfo::s_knownFormats) {
@@ -437,7 +437,7 @@ FormatModifierMap VulkanDevice::queryFormats(VkImageUsageFlags flags) const
                 vk::Format(info.vulkanFormat),
                 vk::ImageType::e2D,
                 vk::ImageTiling::eDrmFormatModifierEXT,
-                vk::ImageUsageFlags(flags),
+                flags,
                 vk::ImageCreateFlags(),
                 &externalInfo,
             };

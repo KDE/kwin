@@ -245,7 +245,7 @@ bool EglBackend::testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice)
     }
 
     if (device != m_renderDevice && device->vulkanDevice() && device->vulkanDevice()->transferFormats().containsFormat(buffer->dmabufAttributes()->format, buffer->dmabufAttributes()->modifier)) {
-        if (device->vulkanDevice()->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_SRC_BIT)) {
+        if (device->vulkanDevice()->importBuffer(buffer, vk::ImageUsageFlagBits::eTransferSrc)) {
             return true;
         }
         // allow falling back to EGL

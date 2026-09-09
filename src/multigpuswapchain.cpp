@@ -497,7 +497,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
     }
     std::shared_ptr<VulkanTexture> dstTexture;
     if (!dstBuffer) {
-        dstTexture = copyVk->importBuffer(m_currentSlot->buffer(), VK_IMAGE_USAGE_TRANSFER_DST_BIT);
+        dstTexture = copyVk->importBuffer(m_currentSlot->buffer(), vk::ImageUsageFlagBits::eTransferDst);
     }
     if (!dstBuffer && !dstTexture) {
         qCWarning(KWIN_VULKAN, "Could not import destination buffer for multi GPU copy!");
@@ -513,7 +513,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
     }
     std::shared_ptr<VulkanTexture> srcTexture;
     if (!srcBuffer) {
-        srcTexture = copyVk->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+        srcTexture = copyVk->importBuffer(buffer, vk::ImageUsageFlagBits::eTransferSrc);
     }
     if (!srcBuffer && !srcTexture) {
         qCWarning(KWIN_VULKAN, "Could not import source buffer for multi GPU copy!");
