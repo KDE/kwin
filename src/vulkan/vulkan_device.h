@@ -37,6 +37,7 @@ public:
     static constexpr auto s_imageSampleFlags = vk::ImageUsageFlagBits::eSampled
         | vk::ImageUsageFlagBits::eTransferSrc
         | vk::ImageUsageFlagBits::eTransferDst;
+    static constexpr auto s_imageStorageFlags = s_imageSampleFlags | vk::ImageUsageFlagBits::eStorage;
 
     explicit VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::Device &&logicalDevice,
                           std::vector<vk::QueueFamilyProperties> &&queueProperties, vk::PhysicalDeviceType type,
@@ -58,6 +59,8 @@ public:
     std::optional<VkDeviceSize> minImportedHostPointerAlignment() const;
 
     const FormatModifierMap &sampleFormats() const;
+    const FormatModifierMap &storageFormats() const;
+
     const vk::raii::Device &logicalDevice() const;
 
     VulkanQueue *graphicsQueue() const;
@@ -115,6 +118,7 @@ private:
     vk::raii::PhysicalDevice m_physical;
     vk::raii::Device m_logical;
     FormatModifierMap m_sampleFormats;
+    FormatModifierMap m_storageFormats;
     std::vector<vk::QueueFamilyProperties> m_queueProperties;
     vk::PhysicalDeviceMemoryProperties m_memoryProperties;
     vk::PhysicalDeviceLimits m_deviceLimits;
