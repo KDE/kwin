@@ -74,7 +74,7 @@ void InputMethodGrabV1::sendKeymap(const QByteArray &keymap)
 
 void InputMethodGrabV1::sendKey(quint32 serial, quint32 timestamp, quint32 key, KeyboardKeyState state)
 {
-    quint32 waylandState;
+    quint32 waylandState = WL_KEYBOARD_KEY_STATE_PRESSED;
     switch (state) {
     case KeyboardKeyState::Pressed:
         waylandState = WL_KEYBOARD_KEY_STATE_PRESSED;
