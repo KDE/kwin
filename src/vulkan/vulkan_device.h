@@ -40,7 +40,7 @@ public:
     VulkanDevice(const VulkanDevice &) = delete;
     ~VulkanDevice();
 
-    std::shared_ptr<VulkanTexture> importBuffer(GraphicsBuffer *buffer, VkImageUsageFlags usage);
+    std::shared_ptr<VulkanTexture> importBuffer(GraphicsBuffer *buffer, vk::ImageUsageFlags usage);
     std::shared_ptr<VulkanBuffer> importBufferAsBuffer(GraphicsBuffer *buffer, vk::BufferUsageFlags usage);
 
     bool isSoftwareRenderer() const;
@@ -100,9 +100,9 @@ Q_SIGNALS:
 
 private:
     void getQueues();
-    FormatModifierMap queryFormats(VkImageUsageFlags flags) const;
+    FormatModifierMap queryFormats(vk::ImageUsageFlags flags) const;
     std::optional<uint32_t> findMemoryType(uint32_t typeBits, vk::MemoryPropertyFlags memoryPropertyFlags) const;
-    std::shared_ptr<VulkanTexture> importDmabuf(const DmaBufAttributes *attributes, VkImageUsageFlags usage);
+    std::shared_ptr<VulkanTexture> importDmabuf(const DmaBufAttributes *attributes, vk::ImageUsageFlags usage);
     std::shared_ptr<VulkanBuffer> importDmabufAsBuffer(const DmaBufAttributes *attributes, vk::BufferUsageFlags usage);
     std::shared_ptr<VulkanBuffer> importHostPointerAsBuffer(const HostMemoryAttributes *attributes, vk::BufferUsageFlags usage);
 
