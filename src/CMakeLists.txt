@@ -701,7 +701,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         CODE "execute_process(
         COMMAND ${SETCAP_EXECUTABLE}
         CAP_SYS_NICE=+ep
-        \$ENV{DESTDIR}${KDE_INSTALL_FULL_LIBEXECDIR}/kwin_wayland)"
+        \$ENV{DESTDIR}${CMAKE_INSTALL_FULL_BINDIR}/kwin_wayland)"
     )
 endif()
 
