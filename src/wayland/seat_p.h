@@ -76,10 +76,8 @@ public:
     // the last thing copied into the clipboard content
     AbstractDataSource *currentSelection = nullptr;
     UInt32Serial currentSelectionSerial = 0;
-    QPointer<ClientConnection> lastSelectionOwner;
     AbstractDataSource *currentPrimarySelection = nullptr;
     UInt32Serial currentPrimarySelectionSerial = 0;
-    QPointer<ClientConnection> lastPrimarySelectionOwner;
 
     // Pointer related members
     struct Pointer
