@@ -26,7 +26,6 @@ class UdevMonitor;
 class UdevDevice;
 
 class Cursor;
-class DrmAuthHandle;
 class DrmGpu;
 class DrmVirtualOutput;
 class DrmRenderBackend;
@@ -86,7 +85,6 @@ private:
     QList<BackendOutput *> m_outputs;
 
     QStringList m_explicitGpus;
-    QHash<QString, std::shared_ptr<DrmAuthHandle>> m_gpuAuthHandles;
     std::vector<std::unique_ptr<DrmGpu>> m_gpus;
     QList<DrmVirtualOutput *> m_virtualOutputs;
     DrmRenderBackend *m_renderBackend = nullptr;
