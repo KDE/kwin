@@ -452,7 +452,7 @@ void RenderDevice::fetchName()
 FileDescriptor RenderDevice::clearBuffer(GraphicsBuffer *buffer)
 {
     if (m_vulkanDevice && m_vulkanDevice->transferFormats().containsFormat(buffer->format(), buffer->modifier())) {
-        auto texture = m_vulkanDevice->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_DST_BIT);
+        auto texture = m_vulkanDevice->importBuffer(buffer, vk::ImageUsageFlagBits::eTransferDst);
         if (!texture) {
             return FileDescriptor{};
         }
@@ -497,7 +497,7 @@ QImage RenderDevice::download(GraphicsBuffer *buffer)
     if (m_vulkanDevice
         && m_vulkanDevice->transferFormats().containsFormat(buffer->format(), buffer->modifier())
         && VulkanTexture::vulkanToQImageFormat(vk::Format(FormatInfo::get(buffer->format())->vulkanFormat))) {
-        auto texture = m_vulkanDevice->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+        auto texture = m_vulkanDevice->importBuffer(buffer, vk::ImageUsageFlagBits::eTransferSrc);
         if (!texture) {
             return QImage{};
         }
@@ -537,7 +537,7 @@ bool RenderDevice::download(GraphicsBuffer *source, FileDescriptor &&sync, QImag
     if (m_vulkanDevice
         && m_vulkanDevice->transferFormats().containsFormat(source->format(), source->modifier())
         && VulkanTexture::qImageToVulkanFormat(target.format()) == vk::Format(FormatInfo::get(source->format())->vulkanFormat)) {
-        const auto texture = m_vulkanDevice->importBuffer(source, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+        const auto texture = m_vulkanDevice->importBuffer(source, vk::ImageUsageFlagBits::eTransferSrc);
         if (!texture) {
             return false;
         }
