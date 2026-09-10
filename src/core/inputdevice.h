@@ -77,6 +77,12 @@ public:
 
     virtual Type type() const = 0;
     virtual QList<Capability> capabilities() const = 0;
+
+    uint64_t pressedButtons() const;
+    void notifyButtonState(uint32_t button, bool pressed);
+
+private:
+    uint64_t m_buttons = 0;
 };
 
 struct InputDeviceTabletPadModeGroup

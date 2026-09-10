@@ -2289,6 +2289,11 @@ public:
 
         if (event->type == TabletToolProximityEvent::EnterProximity) {
             tool->sendProximityIn(tablet);
+            for (uint32_t i = 0; i < 64; i++) {
+                if (event->tool->pressedButtons() & (1ul << i)) {
+                    tool->sendButton(i, true);
+                }
+            }
             tool->sendMotion(surfaceLocalPos);
         } else {
             tool->sendProximityOut();
