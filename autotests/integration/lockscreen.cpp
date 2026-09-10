@@ -23,13 +23,9 @@
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/keyboard.h>
-#include <KWayland/Client/pointer.h>
 #include <KWayland/Client/registry.h>
-#include <KWayland/Client/seat.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/touch.h>
 
 // screenlocker
 #include <KScreenLocker/KsldApp>
@@ -81,7 +77,6 @@ private:
     WindowHandle showWindow();
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
-    KWayland::Client::Seat *m_seat = nullptr;
     KWayland::Client::ShmPool *m_shm = nullptr;
 };
 
@@ -219,7 +214,6 @@ void LockScreenTest::init()
     m_connection = Test::waylandConnection();
     m_compositor = Test::waylandCompositor();
     m_shm = Test::waylandShmPool();
-    m_seat = Test::waylandSeat();
 
     workspace()->setActiveOutput(QPoint(640, 512));
     input()->pointer()->warp(QPoint(640, 512));
@@ -250,10 +244,10 @@ void LockScreenTest::testStackingOrder()
 
 void LockScreenTest::testPointer()
 {
-    std::unique_ptr<KWayland::Client::Pointer> pointer(m_seat->createPointer());
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer != nullptr);
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy leftSpy(pointer.get(), &KWayland::Client::Pointer::left);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy leftSpy(pointer.get(), &Test::WlPointer::left);
 
     auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
@@ -293,10 +287,10 @@ void LockScreenTest::testPointer()
 
 void LockScreenTest::testPointerButton()
 {
-    std::unique_ptr<KWayland::Client::Pointer> pointer(m_seat->createPointer());
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer != nullptr);
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy buttonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy buttonChangedSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
 
     auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
@@ -332,10 +326,10 @@ void LockScreenTest::testPointerButton()
 
 void LockScreenTest::testPointerAxis()
 {
-    std::unique_ptr<KWayland::Client::Pointer> pointer(m_seat->createPointer());
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer != nullptr);
-    QSignalSpy axisChangedSpy(pointer.get(), &KWayland::Client::Pointer::axisChanged);
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    QSignalSpy axisChangedSpy(pointer.get(), &Test::WlPointer::axisChanged);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
 
     auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
@@ -370,11 +364,11 @@ void LockScreenTest::testPointerAxis()
 
 void LockScreenTest::testKeyboard()
 {
-    std::unique_ptr<KWayland::Client::Keyboard> keyboard(m_seat->createKeyboard());
+    auto keyboard = Test::kwinSeat()->getKeyboard();
     QVERIFY(keyboard != nullptr);
-    QSignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy leftSpy(keyboard.get(), &KWayland::Client::Keyboard::left);
-    QSignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    QSignalSpy enteredSpy(keyboard.get(), &Test::WlKeyboard::enter);
+    QSignalSpy leftSpy(keyboard.get(), &Test::WlKeyboard::leave);
+    QSignalSpy keyChangedSpy(keyboard.get(), &Test::WlKeyboard::key);
 
     auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
@@ -385,15 +379,15 @@ void LockScreenTest::testKeyboard()
     KEYPRESS(KEY_A);
     QVERIFY(keyChangedSpy.wait());
     QCOMPARE(keyChangedSpy.count(), 1);
-    QCOMPARE(keyChangedSpy.at(0).at(0).value<quint32>(), quint32(KEY_A));
-    QCOMPARE(keyChangedSpy.at(0).at(1).value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Pressed);
-    QCOMPARE(keyChangedSpy.at(0).at(2).value<quint32>(), quint32(1));
+    QCOMPARE(keyChangedSpy.at(0).at(2).value<quint32>(), quint32(KEY_A));
+    QCOMPARE(keyChangedSpy.at(0).at(3).value<Test::WlKeyboard::key_state>(), Test::WlKeyboard::key_state::key_state_pressed);
+    QCOMPARE(keyChangedSpy.at(0).at(1).value<quint32>(), quint32(1));
     KEYRELEASE(KEY_A);
     QVERIFY(keyChangedSpy.wait());
     QCOMPARE(keyChangedSpy.count(), 2);
-    QCOMPARE(keyChangedSpy.at(1).at(0).value<quint32>(), quint32(KEY_A));
-    QCOMPARE(keyChangedSpy.at(1).at(1).value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Released);
-    QCOMPARE(keyChangedSpy.at(1).at(2).value<quint32>(), quint32(2));
+    QCOMPARE(keyChangedSpy.at(1).at(2).value<quint32>(), quint32(KEY_A));
+    QCOMPARE(keyChangedSpy.at(1).at(3).value<Test::WlKeyboard::key_state>(), Test::WlKeyboard::key_state::key_state_released);
+    QCOMPARE(keyChangedSpy.at(1).at(1).value<quint32>(), quint32(2));
 
     LOCK;
     QVERIFY(leftSpy.wait());
@@ -412,12 +406,12 @@ void LockScreenTest::testKeyboard()
     QVERIFY(keyChangedSpy.wait());
     QCOMPARE(keyChangedSpy.count(), 4);
     QCOMPARE(enteredSpy.count(), 2);
-    QCOMPARE(keyChangedSpy.at(2).at(0).value<quint32>(), quint32(KEY_C));
-    QCOMPARE(keyChangedSpy.at(3).at(0).value<quint32>(), quint32(KEY_C));
-    QCOMPARE(keyChangedSpy.at(2).at(2).value<quint32>(), quint32(5));
-    QCOMPARE(keyChangedSpy.at(3).at(2).value<quint32>(), quint32(6));
-    QCOMPARE(keyChangedSpy.at(2).at(1).value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Pressed);
-    QCOMPARE(keyChangedSpy.at(3).at(1).value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Released);
+    QCOMPARE(keyChangedSpy.at(2).at(2).value<quint32>(), quint32(KEY_C));
+    QCOMPARE(keyChangedSpy.at(3).at(2).value<quint32>(), quint32(KEY_C));
+    QCOMPARE(keyChangedSpy.at(2).at(1).value<quint32>(), quint32(5));
+    QCOMPARE(keyChangedSpy.at(3).at(1).value<quint32>(), quint32(6));
+    QCOMPARE(keyChangedSpy.at(2).at(3).value<Test::WlKeyboard::key_state>(), Test::WlKeyboard::key_state::key_state_pressed);
+    QCOMPARE(keyChangedSpy.at(3).at(3).value<Test::WlKeyboard::key_state>(), Test::WlKeyboard::key_state::key_state_released);
 }
 
 class TestObject : public QObject
@@ -794,14 +788,13 @@ void LockScreenTest::testKeyboardLockShortcut()
 
 void LockScreenTest::testTouch()
 {
-    auto touch = m_seat->createTouch(m_seat);
+    auto touch = Test::kwinSeat()->getTouch();
     QVERIFY(touch);
-    QVERIFY(touch->isValid());
     auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
-    QSignalSpy sequenceStartedSpy(touch, &KWayland::Client::Touch::sequenceStarted);
-    QSignalSpy cancelSpy(touch, &KWayland::Client::Touch::sequenceCanceled);
-    QSignalSpy pointRemovedSpy(touch, &KWayland::Client::Touch::pointRemoved);
+    QSignalSpy sequenceStartedSpy(touch.get(), &Test::WlTouch::sequenceStarted);
+    QSignalSpy cancelSpy(touch.get(), &Test::WlTouch::sequenceCanceled);
+    QSignalSpy touchUpSpy(touch.get(), &Test::WlTouch::touchUp);
 
     quint32 timestamp = 1;
     Test::touchDown(1, QPointF(25, 25), timestamp++);
@@ -812,7 +805,7 @@ void LockScreenTest::testTouch()
     QVERIFY(cancelSpy.wait());
 
     Test::touchUp(1, timestamp++);
-    QVERIFY(!pointRemovedSpy.wait(10));
+    QVERIFY(!touchUpSpy.wait(10));
     Test::touchDown(1, QPointF(25, 25), timestamp++);
     Test::touchMotion(1, QPointF(26, 26), timestamp++);
     Test::touchUp(1, timestamp++);
@@ -822,8 +815,8 @@ void LockScreenTest::testTouch()
     QVERIFY(sequenceStartedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 2);
     Test::touchUp(1, timestamp++);
-    QVERIFY(pointRemovedSpy.wait());
-    QCOMPARE(pointRemovedSpy.count(), 1);
+    QVERIFY(touchUpSpy.wait());
+    QCOMPARE(touchUpSpy.count(), 1);
 }
 
 }
