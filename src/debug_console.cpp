@@ -579,7 +579,7 @@ void DebugConsoleFilter::tabletToolTipEvent(TabletToolTipEvent *event)
         + timestampRow(event->timestamp)
         + timestampRowUsec(event->timestamp)
         + deviceRow(event->device)
-        + tableRow(i18n("Tip"), event->type == TabletToolTipEvent::Press ? i18n("Down") : i18n("Up"))
+        + tableRow(i18n("Tip"), event->type == TabletToolTipEvent::Release ? i18n("Up") : i18n("Down"))
         + tableRow(i18n("Position"),
                    QStringLiteral("%1,%2").arg(QString::number(event->position.x()), QString::number(event->position.y())))
         + tableRow(i18n("Tilt"),

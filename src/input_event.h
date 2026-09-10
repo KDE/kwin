@@ -189,6 +189,7 @@ struct TabletToolTipEvent
 public:
     enum Type {
         Press,
+        Pressed,
         Release,
     };
 

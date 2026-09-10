@@ -2766,7 +2766,13 @@ void tabletToolTipEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal y
 {
     auto tablet = static_cast<WaylandTestApplication *>(kwinApp())->virtualTablet();
     auto tool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();
-    Q_EMIT tablet->tabletToolTipEvent(pos, pressure, xTilt, yTilt, rotation, distance, tipDown, sliderPosition, tool, std::chrono::milliseconds(time), tablet);
+    const DownState newState = tipDown ? DownState::Down : DownState::Up;
+    std::optional<DownState> downChange;
+    if (tool->down() != newState) {
+        downChange = newState;
+    }
+    tool->setDown(newState);
+    Q_EMIT tablet->tabletToolTipEvent(pos, pressure, xTilt, yTilt, rotation, distance, downChange, sliderPosition, tool, std::chrono::milliseconds(time), tablet);
 }
 
 XdgToplevelWindow::XdgToplevelWindow(const std::function<void(KWayland::Client::Surface *surface, XdgToplevel *toplevel)> &setup)

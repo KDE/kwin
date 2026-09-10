@@ -332,7 +332,7 @@ void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal 
     input()->setLastInputHandler(this);
 }
 
-void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
+void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, std::optional<DownState> downChange, qreal sliderPosition, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
 {
     if (!inited()) {
         return;
@@ -340,22 +340,26 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
 
     ensureTabletTool(tool);
 
-    if (tipDown && !device->tabletToolIsRelative()) {
+    if (tool->down() == DownState::Down && !device->tabletToolIsRelative()) {
         setPosition(tool, pos);
     }
 
-    if (!tipDown) {
+    if (tool->down() == DownState::Up) {
         m_tipDown = false;
     }
 
     update();
 
-    if (tipDown) {
+    if (tool->down() == DownState::Down) {
         m_tipDown = true;
     }
 
+    TabletToolTipEvent::Type type = TabletToolTipEvent::Pressed;
+    if (downChange) {
+        type = *downChange == DownState::Down ? TabletToolTipEvent::Press : TabletToolTipEvent::Release;
+    }
     TabletToolTipEvent ev{
-        .type = tipDown ? TabletToolTipEvent::Press : TabletToolTipEvent::Release,
+        .type = type,
         .device = device,
         .rotation = rotation,
         .position = m_lastPosition,
@@ -371,7 +375,7 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
     input()->processSpies(&InputEventSpy::tabletToolTipEvent, &ev);
     input()->processFilters(&InputEventFilter::tabletToolTipEvent, &ev);
     input()->setLastInputHandler(this);
-    if (tipDown) {
+    if (downChange == DownState::Down) {
         const uint32_t serial = waylandServer()->seat()->display()->serial();
         input()->setLastInteractionSerial(serial);
         if (auto f = focus()) {

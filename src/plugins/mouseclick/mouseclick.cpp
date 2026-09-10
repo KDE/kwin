@@ -344,7 +344,7 @@ bool MouseClickEffect::tabletToolAxis(TabletToolAxisEvent *event)
 bool MouseClickEffect::tabletToolTip(TabletToolTipEvent *event)
 {
     auto &point = getOrCreateTabletPoint(event->tool);
-    point.m_pressed = event->type == TabletToolTipEvent::Press;
+    point.m_pressed = event->type != TabletToolTipEvent::Release;
     point.m_pressure = event->pressure;
     point.m_globalPosition = event->position;
     return false;

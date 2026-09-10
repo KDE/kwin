@@ -1581,7 +1581,7 @@ public:
 
         const QPointF globalPos = event->position;
         const QPointF localPos = globalPos - internal->position();
-        const Qt::MouseButtons buttons = event->type == TabletToolTipEvent::Press ? Qt::LeftButton : Qt::NoButton;
+        const Qt::MouseButtons buttons = event->type == TabletToolTipEvent::Release ? Qt::NoButton : Qt::LeftButton;
 
         QWindowSystemInterface::handleTabletEvent(internal, std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count(), m_tabletDevice.get(), localPos, globalPos, buttons, event->pressure, event->xTilt, event->yTilt, event->sliderPosition, event->rotation, event->distance, input()->keyboardModifiers());
 
@@ -1809,7 +1809,7 @@ public:
         const QPointF globalPos = event->position;
         const QPointF p = event->position - decoration->window()->pos();
 
-        const bool isPressed = event->type == TabletToolTipEvent::Press;
+        const bool isPressed = event->type != TabletToolTipEvent::Release;
         QMouseEvent e(isPressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
                       p,
                       event->position,
@@ -2370,11 +2370,16 @@ public:
             return emulateTabletEvent(event);
         }
 
-        if (event->type == TabletToolTipEvent::Press) {
-            tool->sendMotion(surfaceLocalPos);
+        switch (event->type) {
+        case TabletToolTipEvent::Press:
             tool->sendDown();
-        } else {
+            [[fallthrough]];
+        case TabletToolTipEvent::Pressed:
+            tool->sendMotion(surfaceLocalPos);
+            break;
+        case TabletToolTipEvent::Release:
             tool->sendUp();
+            break;
         }
 
         if (tool->hasCapability(TabletToolV2Interface::Pressure)) {
@@ -2432,6 +2437,8 @@ public:
         case TabletToolTipEvent::Release:
             input()->pointer()->processButton(qtMouseButtonToButton(Qt::LeftButton),
                                               PointerButtonState::Released, event->timestamp);
+            break;
+        case TabletToolTipEvent::Pressed:
             break;
         }
         return true;

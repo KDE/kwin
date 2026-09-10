@@ -102,6 +102,16 @@ void InputDeviceTabletTool::setProximity(ProximityState proximity)
     m_proximity = proximity;
 }
 
+DownState InputDeviceTabletTool::down() const
+{
+    return m_down;
+}
+
+void InputDeviceTabletTool::setDown(DownState state)
+{
+    m_down = state;
+}
+
 } // namespace KWin
 
 #include "moc_inputdevice.cpp"

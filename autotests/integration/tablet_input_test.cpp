@@ -139,7 +139,6 @@ void TabletInputTest::testBasics()
     QVERIFY(frame.wait());
     QCOMPARE(proximityIn.count(), 1);
     QCOMPARE(proximityOut.count(), 0);
-    QEXPECT_FAIL("", "KWin currently sends too many 'down' events", Continue);
     QCOMPARE(down.count(), 1);
     QCOMPARE(up.count(), 0);
     QCOMPARE(motion.count(), 4);
@@ -161,7 +160,6 @@ void TabletInputTest::testBasics()
     // tip lifted
     Test::tabletToolTipEvent(QPointF(50, 50), 1, -0.5, 0.5, 0.5, 0, false, 0, time++);
     QVERIFY(frame.wait());
-    QEXPECT_FAIL("", "KWin currently sends too many 'down' events", Continue);
     QCOMPARE(down.count(), 1);
     QCOMPARE(up.count(), 1);
 

@@ -49,6 +49,11 @@ enum class ProximityState {
     Out,
 };
 
+enum class DownState {
+    Down,
+    Up,
+};
+
 class KWIN_EXPORT InputDeviceTabletTool : public QObject
 {
     Q_OBJECT
@@ -86,8 +91,12 @@ public:
     ProximityState proximity() const;
     void setProximity(ProximityState proximity);
 
+    DownState down() const;
+    void setDown(DownState state);
+
 private:
     ProximityState m_proximity = ProximityState::Out;
+    DownState m_down = DownState::Up;
 };
 
 struct InputDeviceTabletPadModeGroup
@@ -172,7 +181,7 @@ Q_SIGNALS:
     void tabletToolAxisEventRelative(const QPointF &delta,
                                      qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
     void tabletToolProximityEvent(const QPointF &pos, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, std::optional<ProximityState> proximityChange, qreal sliderPosition, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
-    void tabletToolTipEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
+    void tabletToolTipEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, std::optional<DownState> downChange, qreal sliderPosition, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
     void tabletToolButtonEvent(uint button, bool isPressed, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
     void tabletPadButtonEvent(uint button, bool isPressed, quint32 group, quint32 mode, bool isModeSwitch, std::chrono::microseconds time, InputDevice *device);
     void tabletPadStripEvent(int number, qreal position, bool isFinger, quint32 group, quint32 mode, std::chrono::microseconds time, InputDevice *device);

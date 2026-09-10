@@ -757,10 +757,10 @@ bool QuickSceneEffect::tabletToolTip(TabletToolTipEvent *event)
     auto mouseEvent = new KWin::PointerButtonEvent{
         .device = event->device,
         .position = event->position,
-        .state = event->type == TabletToolTipEvent::Press ? PointerButtonState::Pressed : PointerButtonState::Released,
+        .state = event->type == TabletToolTipEvent::Release ? PointerButtonState::Released : PointerButtonState::Pressed,
         .button = Qt::LeftButton,
         .nativeButton = 0, // not used
-        .buttons = event->type == TabletToolTipEvent::Press ? Qt::LeftButton : Qt::NoButton,
+        .buttons = event->type == TabletToolTipEvent::Release ? Qt::NoButton : Qt::LeftButton,
         .modifiers = Qt::NoModifier,
         .modifiersRelevantForShortcuts = Qt::NoModifier,
         .timestamp = event->timestamp,

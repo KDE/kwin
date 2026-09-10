@@ -560,15 +560,22 @@ void Connection::processEvents()
                 tte->device()->setSupportsPressureRange(true);
                 libinput_tablet_tool_config_pressure_range_set(tte->tool(), tte->device()->pressureRangeMin(), tte->device()->pressureRangeMax());
             }
+            const auto tool = getOrCreateTool(tte->tool());
+            const DownState newState = tte->isTipDown() ? DownState::Down : DownState::Up;
+            std::optional<DownState> downChange;
+            if (tool->down() != newState) {
+                downChange = newState;
+            }
+            tool->setDown(newState);
             Q_EMIT event->device()->tabletToolTipEvent(tabletToolPosition(tte),
                                                        tte->device()->pressureCurve().valueForProgress(tte->pressure()),
                                                        tte->xTilt(),
                                                        tte->yTilt(),
                                                        tte->rotation(),
                                                        tte->distance(),
-                                                       tte->isTipDown(),
+                                                       downChange,
                                                        tte->sliderPosition(),
-                                                       getOrCreateTool(tte->tool()),
+                                                       tool,
                                                        tte->time(),
                                                        tte->device());
             break;
