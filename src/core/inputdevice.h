@@ -44,6 +44,11 @@ enum class SwitchState {
     On,
 };
 
+enum class ProximityState {
+    In,
+    Out,
+};
+
 class KWIN_EXPORT InputDeviceTabletTool : public QObject
 {
     Q_OBJECT
@@ -77,6 +82,12 @@ public:
 
     virtual Type type() const = 0;
     virtual QList<Capability> capabilities() const = 0;
+
+    ProximityState proximity() const;
+    void setProximity(ProximityState proximity);
+
+private:
+    ProximityState m_proximity = ProximityState::Out;
 };
 
 struct InputDeviceTabletPadModeGroup
@@ -160,7 +171,7 @@ Q_SIGNALS:
     void tabletToolAxisEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
     void tabletToolAxisEventRelative(const QPointF &delta,
                                      qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
-    void tabletToolProximityEvent(const QPointF &pos, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipNear, qreal sliderPosition, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
+    void tabletToolProximityEvent(const QPointF &pos, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, std::optional<ProximityState> proximityChange, qreal sliderPosition, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
     void tabletToolTipEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
     void tabletToolButtonEvent(uint button, bool isPressed, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
     void tabletPadButtonEvent(uint button, bool isPressed, quint32 group, quint32 mode, bool isModeSwitch, std::chrono::microseconds time, InputDevice *device);

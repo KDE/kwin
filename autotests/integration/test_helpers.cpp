@@ -2739,7 +2739,13 @@ void tabletToolProximityEvent(const QPointF &pos, qreal xTilt, qreal yTilt, qrea
 {
     auto tablet = static_cast<WaylandTestApplication *>(kwinApp())->virtualTablet();
     auto tool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();
-    Q_EMIT tablet->tabletToolProximityEvent(pos, xTilt, yTilt, rotation, distance, tipNear, sliderPosition, tool, std::chrono::milliseconds(time), tablet);
+    const ProximityState newState = tipNear ? ProximityState::In : ProximityState::Out;
+    std::optional<ProximityState> proximityChange;
+    if (tool->proximity() != newState) {
+        proximityChange = newState;
+    }
+    tool->setProximity(newState);
+    Q_EMIT tablet->tabletToolProximityEvent(pos, xTilt, yTilt, rotation, distance, proximityChange, sliderPosition, tool, std::chrono::milliseconds(time), tablet);
 }
 
 void tabletToolAxisEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, quint32 time)

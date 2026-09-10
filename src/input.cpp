@@ -1772,7 +1772,7 @@ public:
         if (!decoration) {
             return false;
         }
-        if (event->type == TabletToolProximityEvent::EnterProximity) {
+        if (event->type != TabletToolProximityEvent::LeaveProximity) {
             const QPointF p = event->position - decoration->window()->pos();
             QHoverEvent e(QEvent::HoverMove, p, p);
             QCoreApplication::instance()->sendEvent(decoration->decoration(), &e);
@@ -2283,11 +2283,16 @@ public:
             return emulateTabletEvent(event);
         }
 
-        if (event->type == TabletToolProximityEvent::EnterProximity) {
+        switch (event->type) {
+        case TabletToolProximityEvent::EnterProximity:
             tool->sendProximityIn(tablet);
+            [[fallthrough]];
+        case TabletToolProximityEvent::InProximity:
             tool->sendMotion(surfaceLocalPos);
-        } else {
+            break;
+        case TabletToolProximityEvent::LeaveProximity:
             tool->sendProximityOut();
+            break;
         }
 
         if (tool->hasCapability(TabletToolV2Interface::Tilt)) {
@@ -2402,6 +2407,7 @@ public:
 
         switch (event->type) {
         case TabletToolProximityEvent::EnterProximity:
+        case TabletToolProximityEvent::InProximity:
             input()->pointer()->processMotionAbsolute(event->position, event->timestamp);
             break;
         case TabletToolProximityEvent::LeaveProximity:

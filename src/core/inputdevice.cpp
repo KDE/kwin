@@ -92,6 +92,16 @@ bool InputDevice::tabletToolIsRelative() const
     return false;
 }
 
+ProximityState InputDeviceTabletTool::proximity() const
+{
+    return m_proximity;
+}
+
+void InputDeviceTabletTool::setProximity(ProximityState proximity)
+{
+    m_proximity = proximity;
+}
+
 } // namespace KWin
 
 #include "moc_inputdevice.cpp"

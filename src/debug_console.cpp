@@ -541,7 +541,7 @@ void DebugConsoleFilter::tabletToolProximityEvent(TabletToolProximityEvent *even
         + timestampRow(event->timestamp)
         + timestampRowUsec(event->timestamp)
         + deviceRow(event->device)
-        + tableRow(i18n("Proximity"), event->type == TabletToolProximityEvent::EnterProximity ? i18n("In") : i18n("Out"))
+        + tableRow(i18n("Proximity"), event->type == TabletToolProximityEvent::LeaveProximity ? i18n("Out") : i18n("In"))
         + tableRow(i18n("Position"),
                    QStringLiteral("%1,%2").arg(QString::number(event->position.x()), QString::number(event->position.y())))
         + tableRow(i18n("Tilt"),

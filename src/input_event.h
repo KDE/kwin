@@ -168,6 +168,7 @@ struct TabletToolProximityEvent
 public:
     enum Type {
         EnterProximity,
+        InProximity,
         LeaveProximity,
     };
 

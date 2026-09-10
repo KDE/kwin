@@ -535,14 +535,21 @@ void Connection::processEvents()
                 tte->device()->setSupportsPressureRange(true);
                 libinput_tablet_tool_config_pressure_range_set(tte->tool(), tte->device()->pressureRangeMin(), tte->device()->pressureRangeMax());
             }
+            const auto tool = getOrCreateTool(tte->tool());
+            const ProximityState newState = tte->isNearby() ? ProximityState::In : ProximityState::Out;
+            std::optional<ProximityState> proximityChange;
+            if (tool->proximity() != newState) {
+                proximityChange = newState;
+            }
+            tool->setProximity(newState);
             Q_EMIT event->device()->tabletToolProximityEvent(tabletToolPosition(tte),
                                                              tte->xTilt(),
                                                              tte->yTilt(),
                                                              tte->rotation(),
                                                              tte->distance(),
-                                                             tte->isNearby(),
+                                                             proximityChange,
                                                              tte->sliderPosition(),
-                                                             getOrCreateTool(tte->tool()),
+                                                             tool,
                                                              tte->time(),
                                                              tte->device());
             break;
