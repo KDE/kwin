@@ -30,6 +30,8 @@
 #include <QDBusReply>
 #include <QTimer>
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -99,10 +101,11 @@ void NightLightManager::hardReset()
 {
     cancelAllTimers();
 
-    updateTransitionTimings(QDateTime::currentDateTime());
+    const QDateTime now = QDateTime::currentDateTime();
+    updateTransitionTimings(now);
     updateTargetTemperature();
 
-    if (isEnabled() && !isInhibited()) {
+    if ((isEnabled() || isTemporarilyActivated(now)) && !isInhibited()) {
         setRunning(true);
         commitGammaRamps(currentTargetTemperature());
     }
@@ -150,6 +153,24 @@ void NightLightManager::uninhibit()
 bool NightLightManager::isEnabled() const
 {
     return m_active;
+}
+
+bool NightLightManager::isTemporarilyActivated(const QDateTime &dateTime) const
+{
+    if (m_activatedUntilDateTime.isNull()) {
+        return false;
+    } else {
+        return m_activatedUntilDateTime - dateTime > 1min;
+    }
+}
+
+bool NightLightManager::isTemporarilyDeactivated(const QDateTime &dateTime) const
+{
+    if (m_deactivatedUntilDateTime.isNull()) {
+        return false;
+    } else {
+        return m_deactivatedUntilDateTime - dateTime > 1min;
+    }
 }
 
 bool NightLightManager::isRunning() const
@@ -229,14 +250,23 @@ void NightLightManager::readConfig()
 
     m_dayTargetTemperature = std::clamp(m_settings->dayTemperature(), MIN_TEMPERATURE, DEFAULT_DAY_TEMPERATURE);
     m_nightTargetTemperature = std::clamp(m_settings->nightTemperature(), MIN_TEMPERATURE, DEFAULT_DAY_TEMPERATURE);
+
+    m_activatedUntilDateTime = m_settings->activatedUntil();
+    m_deactivatedUntilDateTime = m_settings->deactivatedUntil();
+    if (!m_activatedUntilDateTime.isNull() && !m_deactivatedUntilDateTime.isNull()) {
+        m_activatedUntilDateTime = QDateTime();
+        m_deactivatedUntilDateTime = QDateTime();
+    }
 }
 
 void NightLightManager::resetAllTimers()
 {
     cancelAllTimers();
-    setRunning(isEnabled() && !isInhibited());
+
+    const QDateTime now = QDateTime::currentDateTime();
+    setRunning((isEnabled() || isTemporarilyActivated(now)) && !isInhibited());
     // we do this also for active being false in order to reset the temperature back to the day value
-    updateTransitionTimings(QDateTime::currentDateTime());
+    updateTransitionTimings(now);
     updateTargetTemperature();
     resetQuickAdjustTimer(currentTargetTemperature());
 }
@@ -246,6 +276,7 @@ void NightLightManager::cancelAllTimers()
     m_slowUpdateStartTimer.reset();
     m_slowUpdateTimer.reset();
     m_quickAdjustTimer.reset();
+    m_activateOrDeactivateTimer.reset();
 }
 
 void NightLightManager::resetQuickAdjustTimer(int targetTemperature)
@@ -306,13 +337,45 @@ void NightLightManager::resetSlowUpdateTimers()
         return;
     }
 
+    const QDateTime dateTime = QDateTime::currentDateTime();
+
+    if (!m_activatedUntilDateTime.isNull() || !m_deactivatedUntilDateTime.isNull()) {
+        const QDateTime rescheduleDateTime = !m_activatedUntilDateTime.isNull() ? m_activatedUntilDateTime : m_deactivatedUntilDateTime;
+        const auto rescheduleInterval = rescheduleDateTime - dateTime;
+        if (rescheduleInterval > 1min) {
+            m_activateOrDeactivateTimer = std::make_unique<QTimer>();
+            m_activateOrDeactivateTimer->setSingleShot(true);
+            m_activateOrDeactivateTimer->setInterval(rescheduleInterval);
+            connect(m_activateOrDeactivateTimer.get(), &QTimer::timeout, this, &NightLightManager::resetAllTimers);
+            m_activateOrDeactivateTimer->start();
+            return;
+        }
+
+        if (!m_activatedUntilDateTime.isNull()) {
+            m_activatedUntilDateTime = QDateTime();
+
+            m_settings->setActivatedUntil(m_activatedUntilDateTime);
+            m_settings->save();
+
+            Q_EMIT activatedUntilChanged();
+        }
+
+        if (!m_deactivatedUntilDateTime.isNull()) {
+            m_deactivatedUntilDateTime = QDateTime();
+
+            m_settings->setDeactivatedUntil(m_deactivatedUntilDateTime);
+            m_settings->save();
+
+            Q_EMIT deactivatedUntilChanged();
+        }
+    }
+
     // There is no need for starting the slow update timer. Screen color temperature
     // will be constant all the time now.
     if (m_mode == NightLightMode::Constant) {
         return;
     }
 
-    const QDateTime dateTime = QDateTime::currentDateTime();
     updateTransitionTimings(dateTime);
     updateTargetTemperature();
 
@@ -402,9 +465,63 @@ void NightLightManager::stopPreview()
     }
 }
 
+QDateTime NightLightManager::activatedUntil() const
+{
+    return m_activatedUntilDateTime;
+}
+
+QDateTime NightLightManager::deactivatedUntil() const
+{
+    return m_deactivatedUntilDateTime;
+}
+
+void NightLightManager::activateUntil(const QDateTime &dateTime)
+{
+    if (m_activatedUntilDateTime == dateTime) {
+        return;
+    }
+
+    const auto oldDeactivatedUntil = m_deactivatedUntilDateTime;
+    m_activatedUntilDateTime = dateTime;
+    m_deactivatedUntilDateTime = QDateTime();
+
+    m_settings->setActivatedUntil(m_activatedUntilDateTime);
+    m_settings->setDeactivatedUntil(m_deactivatedUntilDateTime);
+    m_settings->save();
+
+    resetAllTimers();
+
+    Q_EMIT activatedUntilChanged();
+    if (!oldDeactivatedUntil.isNull()) {
+        Q_EMIT deactivatedUntilChanged();
+    }
+}
+
+void NightLightManager::deactivateUntil(const QDateTime &dateTime)
+{
+    if (m_deactivatedUntilDateTime == dateTime) {
+        return;
+    }
+
+    const auto oldActivatedUntil = m_activatedUntilDateTime;
+    m_deactivatedUntilDateTime = dateTime;
+    m_activatedUntilDateTime = QDateTime();
+
+    m_settings->setActivatedUntil(m_activatedUntilDateTime);
+    m_settings->setDeactivatedUntil(m_deactivatedUntilDateTime);
+    m_settings->save();
+
+    resetAllTimers();
+
+    Q_EMIT deactivatedUntilChanged();
+    if (!oldActivatedUntil.isNull()) {
+        Q_EMIT activatedUntilChanged();
+    }
+}
+
 void NightLightManager::updateTargetTemperature()
 {
-    const int targetTemperature = mode() != NightLightMode::Constant && daylight() ? m_dayTargetTemperature : m_nightTargetTemperature;
+    const int targetTemperature = daylight() ? m_dayTargetTemperature : m_nightTargetTemperature;
 
     if (m_targetTemperature == targetTemperature) {
         return;
@@ -420,7 +537,15 @@ void NightLightManager::updateTransitionTimings(const QDateTime &dateTime)
     const auto oldPrev = m_prev;
     const auto oldNext = m_next;
 
-    if (!m_active) {
+    if (isTemporarilyActivated(dateTime)) {
+        setDaylight(false);
+        m_next = DateTimes();
+        m_prev = DateTimes();
+    } else if (isTemporarilyDeactivated(dateTime)) {
+        setDaylight(true);
+        m_next = DateTimes();
+        m_prev = DateTimes();
+    } else if (!m_active) {
         setDaylight(true);
         m_next = DateTimes();
         m_prev = DateTimes();
@@ -491,11 +616,19 @@ int NightLightManager::currentTargetTemperature() const
         return DEFAULT_DAY_TEMPERATURE;
     }
 
-    if (m_mode == NightLightMode::Constant) {
+    const QDateTime dateTime = QDateTime::currentDateTime();
+
+    if (isTemporarilyActivated(dateTime)) {
         return m_nightTargetTemperature;
     }
 
-    const QDateTime dateTime = QDateTime::currentDateTime();
+    if (isTemporarilyDeactivated(dateTime)) {
+        return m_dayTargetTemperature;
+    }
+
+    if (m_mode == NightLightMode::Constant) {
+        return m_nightTargetTemperature;
+    }
 
     auto f = [this, dateTime](int target1, int target2) -> int {
         if (dateTime <= m_prev.first) {
