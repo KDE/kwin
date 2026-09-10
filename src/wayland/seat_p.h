@@ -92,6 +92,7 @@ public:
         struct Focus
         {
             SurfaceInterface *surface = nullptr;
+            QPointer<SurfaceInterface> effectiveSurface;
             QMetaObject::Connection destroyConnection;
             QPointF offset = QPointF();
             QMatrix4x4 transformation;
@@ -102,6 +103,8 @@ public:
     Pointer globalPointer;
     void updatePointerButtonSerial(quint32 button, quint32 serial);
     void updatePointerButtonState(quint32 button, Pointer::State state);
+    std::optional<QPointF> updatePointerPosition(const QPointF &pos);
+    void updatePointerFocus();
 
     // Keyboard related members
     struct Keyboard

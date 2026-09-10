@@ -2130,8 +2130,6 @@ void PointerInputTest::testImplicitGrab()
 
 void PointerInputTest::testImplicitGrabOnSubsurface()
 {
-    QSKIP("Implicit grabs on subsurfaces are not handled correctly yet");
-
     auto pointer = Test::kwinSeat()->getPointer();
     QSignalSpy enterSpy(pointer.get(), &Test::WlPointer::entered);
     QSignalSpy leaveSpy(pointer.get(), &Test::WlPointer::left);

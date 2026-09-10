@@ -443,16 +443,35 @@ void SeatInterface::notifyPointerMotion(const QPointF &pos)
         return;
     }
 
-    const auto [effectiveFocusedSurface, localPosition] = focusedSurface->mapToInputSurface(focusedPointerSurfaceTransformation().map(pos));
+    d->updatePointerFocus();
+    if (!d->globalPointer.focus.effectiveSurface) {
+        return;
+    }
+    const QPointF localPosition = focusedSurface->mapToChild(d->globalPointer.focus.effectiveSurface, focusedPointerSurfaceTransformation().map(pos));
+    d->pointer->sendMotion(localPosition);
+}
 
-    if (d->pointer->focusedSurface() != effectiveFocusedSurface) {
-        d->pointer->sendEnter(effectiveFocusedSurface, localPosition, display()->nextSerial());
-        if (d->keyboard) {
-            d->keyboard->setModifierFocusSurface(effectiveFocusedSurface);
-        }
+void SeatInterfacePrivate::updatePointerFocus()
+{
+    SurfaceInterface *focusedSurface = globalPointer.focus.surface;
+    if (!focusedSurface) {
+        return;
+    }
+    const bool implicitGrab = std::ranges::any_of(globalPointer.buttonStates, [](Pointer::State state) {
+        return state == Pointer::State::Pressed;
+    });
+    if (implicitGrab) {
+        // the focused surface must stay the same
+        return;
     }
 
-    d->pointer->sendMotion(localPosition);
+    const auto [effectiveFocusedSurface, localPosition] = focusedSurface->mapToInputSurface(q->focusedPointerSurfaceTransformation().map(globalPointer.pos));
+    if (pointer->focusedSurface() != effectiveFocusedSurface) {
+        pointer->sendEnter(effectiveFocusedSurface, localPosition, q->display()->nextSerial());
+        if (keyboard) {
+            keyboard->setModifierFocusSurface(effectiveFocusedSurface);
+        }
+    }
 }
 
 std::chrono::milliseconds SeatInterface::timestamp() const
@@ -559,6 +578,7 @@ void SeatInterface::notifyPointerEnter(SurfaceInterface *surface, const QPointF 
 
     d->globalPointer.pos = position;
     const auto [effectiveFocusedSurface, localPosition] = surface->mapToInputSurface(focusedPointerSurfaceTransformation().map(position));
+    d->globalPointer.focus.effectiveSurface = effectiveFocusedSurface;
     d->pointer->sendEnter(effectiveFocusedSurface, localPosition, serial);
     if (d->keyboard) {
         d->keyboard->setModifierFocusSurface(effectiveFocusedSurface);
@@ -707,6 +727,11 @@ void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state
     }
 
     d->pointer->sendButton(button, state, serial);
+
+    if (state == PointerButtonState::Released) {
+        // button release stops implicit grabs
+        d->updatePointerFocus();
+    }
 }
 
 void SeatInterface::notifyPointerFrame()
