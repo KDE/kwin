@@ -119,5 +119,55 @@
         the constant mode, this property holds a value of 0.
     -->
     <property name="scheduledTransitionDuration" type="u" access="read"/>
+
+    <!--
+        This property holds a Unix timestamp that specifies the date and time until
+        which Night Light should be active. The timestamp is in seconds since Epoch.
+
+        If activateUtil() has not been called, this property holds a value of 0.
+
+        Since 6.9
+    -->
+    <property name="activatedUntil" type="t" access="read"/>
+
+    <!--
+        Temporarily activate Night Light.
+
+        The specified Unix timestamp indicates the date and time until which Night
+        Light should be active. The timestamp is in seconds since Epoch.
+
+        If deactivateUntil() was called previously, the deactivatedUntil will be reset.
+
+        If Night Light is always off, it will be active until the specified date and time.
+
+        Since 6.9
+    -->
+    <method name="activateUntil">
+        <arg name="timestamp" type="t" direction="in"/>
+    </method>
+
+    <!--
+        This property holds a Unix timestamp that specifies the date and time until
+        which Night Light should be inactive. The timestamp is in seconds since Epoch.
+
+        If deactivateUtil() has not been called, this property holds a value of 0.
+
+        Since 6.9
+    -->
+    <property name="deactivatedUntil" type="t" access="read"/>
+
+    <!--
+        Temporarily deactivate Night Light.
+
+        The specified Unix timestamp indicates the date and time until which Night
+        Light should be inactive. The timestamp is in seconds since Epoch.
+
+        If activateUntil() was called previously, the activatedUntil will be reset.
+
+        Since 6.9
+    -->
+    <method name="deactivateUntil">
+        <arg name="timestamp" type="t" direction="in"/>
+    </method>
   </interface>
 </node>

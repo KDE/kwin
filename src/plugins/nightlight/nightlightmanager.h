@@ -109,6 +109,8 @@ public:
      * Returns @c true if Night Light is enabled; otherwise @c false.
      */
     bool isEnabled() const;
+    bool isTemporarilyActivated(const QDateTime &dateTime) const;
+    bool isTemporarilyDeactivated(const QDateTime &dateTime) const;
 
     /**
      * Returns @c true if Night Light is currently running; otherwise @c false.
@@ -175,6 +177,32 @@ public:
      */
     void stopPreview();
 
+    /**
+     * Returns the date and time until which Night Light has been activated. If activateUntil()
+     * was not called, an invalid QDateTime will be returned.
+     */
+    QDateTime activatedUntil() const;
+
+    /**
+     * Returns the date and time until which Night Light has been deactivated. If deactivateUntil()
+     * was not called, an invalid QDateTime will be returned.
+     */
+    QDateTime deactivatedUntil() const;
+
+    /**
+     * Activates Night Light until the specified @a dateTime.
+     *
+     * deactivatedUntil() will be reset.
+     */
+    void activateUntil(const QDateTime &dateTime);
+
+    /**
+     * Deactivates Night Light until the specified @a dateTime.
+     *
+     * activatedUntil() will be reset.
+     */
+    void deactivateUntil(const QDateTime &dateTime);
+
 public Q_SLOTS:
     void quickAdjust(int targetTemperature);
 
@@ -224,6 +252,16 @@ Q_SIGNALS:
      */
     void scheduledTransitionTimingsChanged();
 
+    /**
+     * Emitted whenever the activated until date and time changes.
+     */
+    void activatedUntilChanged();
+
+    /**
+     * Emitted whenever the deactivated until date and time changes.
+     */
+    void deactivatedUntilChanged();
+
 private:
     void readConfig();
     void hardReset();
@@ -257,6 +295,9 @@ private:
     std::unique_ptr<NightLightState> m_stateConfig;
     std::unique_ptr<KDarkLightScheduleProvider> m_darkLightScheduler;
 
+    QDateTime m_activatedUntilDateTime;
+    QDateTime m_deactivatedUntilDateTime;
+
     // Specifies whether Night Light is enabled.
     bool m_active = false;
 
@@ -279,6 +320,7 @@ private:
     std::unique_ptr<QTimer> m_slowUpdateTimer;
     std::unique_ptr<QTimer> m_quickAdjustTimer;
     std::unique_ptr<QTimer> m_previewTimer;
+    std::unique_ptr<QTimer> m_activateOrDeactivateTimer;
 
     int m_currentTemperature = DEFAULT_DAY_TEMPERATURE;
     int m_targetTemperature = DEFAULT_DAY_TEMPERATURE;

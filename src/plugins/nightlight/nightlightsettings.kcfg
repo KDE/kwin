@@ -21,5 +21,19 @@
         <entry name="NightTemperature" type="Int">
             <default>4500</default>
         </entry>
+
+        <entry name="ActivatedUntil" type="DateTime">
+            <label>
+                Specifies the date and time until which Night Light must be temporarily active.
+            </label>
+            <default></default>
+        </entry>
+
+        <entry name="DeactivatedUntil" type="DateTime">
+            <label>
+                Specifies the date and time until which Night Light must be temporarily inactive.
+            </label>
+            <default></default>
+        </entry>
     </group>
 </kcfg>

@@ -99,6 +99,18 @@ NightLightDBusInterface::NightLightDBusInterface(NightLightManager *parent)
         });
     });
 
+    connect(m_manager, &NightLightManager::activatedUntilChanged, this, [this] {
+        announceChangedProperties({
+            {QStringLiteral("activatedUntil"), activatedUntil()},
+        });
+    });
+
+    connect(m_manager, &NightLightManager::deactivatedUntilChanged, this, [this] {
+        announceChangedProperties({
+            {QStringLiteral("deactivatedUntil"), deactivatedUntil()},
+        });
+    });
+
     new NightLightAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/NightLight"), this);
     QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.KWin.NightLight"));
@@ -177,6 +189,16 @@ quint32 NightLightDBusInterface::scheduledTransitionDuration() const
     return quint32(m_manager->scheduledTransitionDuration());
 }
 
+quint64 NightLightDBusInterface::activatedUntil() const
+{
+    return m_manager->activatedUntil().toSecsSinceEpoch();
+}
+
+quint64 NightLightDBusInterface::deactivatedUntil() const
+{
+    return m_manager->deactivatedUntil().toSecsSinceEpoch();
+}
+
 uint NightLightDBusInterface::inhibit()
 {
     const QString serviceName = QDBusContext::message().service();
@@ -229,6 +251,16 @@ void NightLightDBusInterface::preview(uint previewTemp)
 void NightLightDBusInterface::stopPreview()
 {
     m_manager->stopPreview();
+}
+
+void NightLightDBusInterface::activateUntil(quint64 timestamp)
+{
+    m_manager->activateUntil(QDateTime::fromSecsSinceEpoch(timestamp));
+}
+
+void NightLightDBusInterface::deactivateUntil(quint64 timestamp)
+{
+    m_manager->deactivateUntil(QDateTime::fromSecsSinceEpoch(timestamp));
 }
 
 }
