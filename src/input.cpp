@@ -2276,16 +2276,18 @@ public:
         TabletToolV2Interface *tool = seat->tool(event->tool);
         TabletV2Interface *tablet = seat->tablet(event->device);
 
-        const auto [surface, surfaceLocalPos] = window->surface()->mapToInputSurface(window->mapToLocal(event->position));
-        tool->setCurrentSurface(surface);
+        const QPointF localPos = window->mapToLocal(event->position);
+        if (!event->tool->hasImplicitGrab() || !tool->currentSurface()) {
+            const auto surface = window->surface()->inputSurfaceAt(localPos);
+            tool->setCurrentSurface(surface, tablet);
+        }
 
-        if (!tool->isClientSupported() || !tablet->isSurfaceSupported(surface)) {
+        if (!tool->isClientSupported() || !tablet->isSurfaceSupported(tool->currentSurface())) {
             return emulateTabletEvent(event);
         }
 
         switch (event->type) {
         case TabletToolProximityEvent::EnterProximity:
-            tool->sendProximityIn(tablet);
             for (uint32_t i = 0; i < 64; i++) {
                 if (event->tool->pressedButtons() & (1ul << i)) {
                     tool->sendButton(i, true);
@@ -2293,27 +2295,27 @@ public:
             }
             [[fallthrough]];
         case TabletToolProximityEvent::InProximity:
-            tool->sendMotion(surfaceLocalPos);
+            tool->sendMotion(window->surface()->mapToChild(tool->currentSurface(), localPos));
+
+            if (tool->hasCapability(TabletToolV2Interface::Tilt)) {
+                tool->sendTilt(event->xTilt, event->yTilt);
+            }
+            if (tool->hasCapability(TabletToolV2Interface::Rotation)) {
+                tool->sendRotation(event->rotation);
+            }
+            if (tool->hasCapability(TabletToolV2Interface::Distance)) {
+                tool->sendDistance(event->distance);
+            }
+            if (tool->hasCapability(TabletToolV2Interface::Slider)) {
+                tool->sendSlider(event->sliderPosition);
+            }
+            tool->sendFrame(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
             break;
         case TabletToolProximityEvent::LeaveProximity:
-            tool->sendProximityOut();
+            tool->setCurrentSurface(nullptr, tablet);
             break;
         }
 
-        if (tool->hasCapability(TabletToolV2Interface::Tilt)) {
-            tool->sendTilt(event->xTilt, event->yTilt);
-        }
-        if (tool->hasCapability(TabletToolV2Interface::Rotation)) {
-            tool->sendRotation(event->rotation);
-        }
-        if (tool->hasCapability(TabletToolV2Interface::Distance)) {
-            tool->sendDistance(event->distance);
-        }
-        if (tool->hasCapability(TabletToolV2Interface::Slider)) {
-            tool->sendSlider(event->sliderPosition);
-        }
-
-        tool->sendFrame(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
         return true;
     }
 
@@ -2328,14 +2330,17 @@ public:
         TabletToolV2Interface *tool = seat->tool(event->tool);
         TabletV2Interface *tablet = seat->tablet(event->device);
 
-        const auto [surface, surfaceLocalPos] = window->surface()->mapToInputSurface(window->mapToLocal(event->position));
-        tool->setCurrentSurface(surface);
+        const QPointF localPos = window->mapToLocal(event->position);
+        if (!event->tool->hasImplicitGrab() || !tool->currentSurface()) {
+            const auto surface = window->surface()->inputSurfaceAt(localPos);
+            tool->setCurrentSurface(surface, tablet);
+        }
 
-        if (!tool->isClientSupported() || !tablet->isSurfaceSupported(surface)) {
+        if (!tool->isClientSupported() || !tablet->isSurfaceSupported(tool->currentSurface())) {
             return emulateTabletEvent(event);
         }
 
-        tool->sendMotion(surfaceLocalPos);
+        tool->sendMotion(window->surface()->mapToChild(tool->currentSurface(), localPos));
 
         if (tool->hasCapability(TabletToolV2Interface::Pressure)) {
             tool->sendPressure(event->pressure);
@@ -2368,10 +2373,22 @@ public:
         TabletToolV2Interface *tool = seat->tool(event->tool);
         TabletV2Interface *tablet = seat->tablet(event->device);
 
-        const auto [surface, surfaceLocalPos] = window->surface()->mapToInputSurface(window->mapToLocal(event->position));
-        tool->setCurrentSurface(surface);
+        const bool hadImplicitGrab = event->type == TabletToolTipEvent::Release;
+        const QPointF localPos = window->mapToLocal(event->position);
+        if ((!event->tool->hasImplicitGrab() && !hadImplicitGrab) || !tool->currentSurface()) {
+            const auto surface = window->surface()->inputSurfaceAt(localPos);
+            tool->setCurrentSurface(surface, tablet);
+        }
+        // the event needs to be sent to the surface with the grab,
+        // but the surface needs to be updated aftewards
+        const auto releaseImplicitGrab = qScopeGuard([&]() {
+            if (hadImplicitGrab && !event->tool->hasImplicitGrab()) {
+                const auto surface = window->surface()->inputSurfaceAt(localPos);
+                tool->setCurrentSurface(surface, tablet);
+            }
+        });
 
-        if (!tool->isClientSupported() || !tablet->isSurfaceSupported(surface)) {
+        if (!tool->isClientSupported() || !tablet->isSurfaceSupported(tool->currentSurface())) {
             return emulateTabletEvent(event);
         }
 
@@ -2380,7 +2397,7 @@ public:
             tool->sendDown();
             [[fallthrough]];
         case TabletToolTipEvent::Pressed:
-            tool->sendMotion(surfaceLocalPos);
+            tool->sendMotion(window->surface()->mapToChild(tool->currentSurface(), localPos));
             break;
         case TabletToolTipEvent::Release:
             tool->sendUp();
@@ -2469,6 +2486,22 @@ public:
             return false;
         }
         tool->sendButton(event->button, event->pressed);
+
+        if (!event->tool->hasImplicitGrab()) {
+            // implicit grab is released, update the focused surface
+            TabletSeatV2Interface *seat = waylandServer()->tabletManagerV2()->seat(waylandServer()->seat());
+            TabletToolV2Interface *tool = seat->tool(event->tool);
+            TabletV2Interface *tablet = seat->tablet(event->device);
+
+            Window *window = input()->tablet()->focus();
+            if (window && window->surface()) {
+                const QPointF localPos = window->mapToLocal(input()->tablet()->position());
+                const auto surface = window->surface()->inputSurfaceAt(localPos);
+                tool->setCurrentSurface(surface, tablet);
+            } else {
+                tool->setCurrentSurface(nullptr, tablet);
+            }
+        }
         return true;
     }
 

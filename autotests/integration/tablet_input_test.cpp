@@ -11,6 +11,8 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
+#include <KWayland/Client/subsurface.h>
+
 namespace KWin
 {
 
@@ -23,6 +25,8 @@ private Q_SLOTS:
     void cleanup();
 
     void testBasics();
+    void testImplicitGrab();
+    void testImplicitGrabOnSubsurface();
 
 private:
     KWayland::Client::Compositor *m_compositor = nullptr;
@@ -180,6 +184,142 @@ void TabletInputTest::testBasics()
 
     Test::tabletToolProximityEvent(QPointF(50, 50), 0, 0, 0, 0, false, 0, time++);
     QVERIFY(frame.wait());
+
+    Test::tabletToolButtonReleased(1, time++);
+}
+
+void TabletInputTest::testImplicitGrab()
+{
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show(QSize(100, 100)));
+    window.m_window->move(QPointF(0, 0));
+
+    // This test verifies that implicit grabs works as expected on toplevel surfaces
+    std::unique_ptr<Test::WpTabletSeatV2> tabletSeat = Test::tabletManager()->createSeat(Test::kwinSeat());
+
+    QSignalSpy toolAddedSpy(tabletSeat.get(), &Test::WpTabletSeatV2::toolAdded);
+    QVERIFY(toolAddedSpy.wait());
+    Test::WpTabletToolV2 *tabletTool = toolAddedSpy.last().at(0).value<Test::WpTabletToolV2 *>();
+    QVERIFY(Test::waitForWaylandTabletTool(tabletTool));
+
+    uint32_t time = 0;
+    QSignalSpy frame(tabletTool, &Test::WpTabletToolV2::frame);
+    QSignalSpy proximityIn(tabletTool, &Test::WpTabletToolV2::proximityIn);
+    QSignalSpy proximityOut(tabletTool, &Test::WpTabletToolV2::proximityOut);
+    QSignalSpy down(tabletTool, &Test::WpTabletToolV2::down);
+    QSignalSpy up(tabletTool, &Test::WpTabletToolV2::up);
+
+    Test::tabletToolProximityEvent(QPointF(50, 50), 0, 0, 0, 0, true, 0, time++);
+    QVERIFY(frame.wait());
+    QCOMPARE(proximityIn.count(), 1);
+    QCOMPARE(tabletTool->enteredSurface(), *window.m_surface);
+
+    // while a button is pressed, moving the tool out of the
+    // surface should keep it focused
+    Test::tabletToolButtonPressed(1, time++);
+    Test::tabletToolProximityEvent(QPointF(150, 150), 0, 0, 0, 0, true, 0, time++);
+    QVERIFY(frame.wait());
+    QCOMPARE(proximityIn.count(), 1);
+    QCOMPARE(proximityOut.count(), 0);
+
+    // releasing the button should trigger the proximity out event
+    Test::tabletToolButtonReleased(1, time++);
+    QVERIFY(frame.wait());
+    QCOMPARE(proximityIn.count(), 1);
+    QCOMPARE(proximityOut.count(), 1);
+
+    // same for when the tip is down
+    Test::tabletToolProximityEvent(QPointF(50, 50), 0, 0, 0, 0, true, 0, time++);
+    QVERIFY(frame.wait());
+    QCOMPARE(proximityIn.count(), 2);
+
+    Test::tabletToolTipEvent(QPointF(50, 50), 1, 0, 0, 0, 0, true, 0, time++);
+    QVERIFY(frame.wait());
+    QCOMPARE(proximityIn.count(), 2);
+    QCOMPARE(down.count(), 1);
+    QCOMPARE(up.count(), 0);
+
+    Test::tabletToolTipEvent(QPointF(150, 150), 1, 0, 0, 0, 0, true, 0, time++);
+    QVERIFY(frame.wait());
+    QCOMPARE(proximityOut.count(), 1);
+    QCOMPARE(down.count(), 1);
+    QCOMPARE(up.count(), 0);
+
+    Test::tabletToolTipEvent(QPointF(150, 150), 1, 0, 0, 0, 0, false, 0, time++);
+    QVERIFY(frame.wait());
+    QCOMPARE(proximityOut.count(), 2);
+    QCOMPARE(down.count(), 1);
+    QCOMPARE(up.count(), 1);
+
+    Test::tabletToolProximityEvent(QPointF(150, 150), 0, 0, 0, 0, false, 0, time++);
+}
+
+void TabletInputTest::testImplicitGrabOnSubsurface()
+{
+    // This test verifies that implicit grabs also work as expected between subsurfaces
+    std::unique_ptr<Test::WpTabletSeatV2> tabletSeat = Test::tabletManager()->createSeat(Test::kwinSeat());
+
+    QSignalSpy toolAddedSpy(tabletSeat.get(), &Test::WpTabletSeatV2::toolAdded);
+    QVERIFY(toolAddedSpy.wait());
+    Test::WpTabletToolV2 *tabletTool = toolAddedSpy.last().at(0).value<Test::WpTabletToolV2 *>();
+    QVERIFY(Test::waitForWaylandTabletTool(tabletTool));
+
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show(QSize(100, 100)));
+    window.m_window->move(QPointF(0, 0));
+
+    auto surface = Test::createSurface();
+    auto subsurface = Test::createSubSurface(surface.get(), window.m_surface.get());
+    Test::render(surface.get(), QSize(50, 50), Qt::blue);
+    QVERIFY(window.presentWait());
+
+    uint32_t time = 0;
+    QSignalSpy frame(tabletTool, &Test::WpTabletToolV2::frame);
+    QSignalSpy proximityIn(tabletTool, &Test::WpTabletToolV2::proximityIn);
+    QSignalSpy proximityOut(tabletTool, &Test::WpTabletToolV2::proximityOut);
+    QSignalSpy down(tabletTool, &Test::WpTabletToolV2::down);
+    QSignalSpy up(tabletTool, &Test::WpTabletToolV2::up);
+
+    Test::tabletToolProximityEvent(QPointF(25, 25), 0, 0, 0, 0, true, 0, time++);
+    QVERIFY(frame.wait());
+    QCOMPARE(proximityIn.count(), 1);
+    QCOMPARE(tabletTool->enteredSurface(), *surface);
+
+    // while a button is pressed, moving the tool out of the
+    // subsurface should keep it focused
+    Test::tabletToolButtonPressed(1, time++);
+    Test::tabletToolProximityEvent(QPointF(75, 75), 0, 0, 0, 0, true, 0, time++);
+    QVERIFY(frame.wait());
+    QCOMPARE(proximityOut.count(), 0);
+
+    // releasing the button should trigger the leave event
+    Test::tabletToolButtonReleased(1, time++);
+    QVERIFY(frame.wait());
+    QCOMPARE(proximityOut.count(), 1);
+    QCOMPARE(proximityIn.count(), 2);
+    QCOMPARE(tabletTool->enteredSurface(), *window.m_surface);
+
+    // same for when the tip is down
+    Test::tabletToolProximityEvent(QPointF(25, 25), 0, 0, 0, 0, true, 0, time++);
+    Test::tabletToolTipEvent(QPointF(25, 25), 1, 0, 0, 0, 0, true, 0, time++);
+    QVERIFY(frame.wait());
+    QCOMPARE(proximityIn.count(), 3);
+    QCOMPARE(proximityOut.count(), 2);
+    QCOMPARE(down.count(), 1);
+    QCOMPARE(up.count(), 0);
+    QCOMPARE(tabletTool->enteredSurface(), *surface);
+
+    Test::tabletToolTipEvent(QPointF(75, 75), 1, 0, 0, 0, 0, true, 0, time++);
+    QVERIFY(frame.wait());
+    QCOMPARE(proximityOut.count(), 2);
+    QCOMPARE(down.count(), 1);
+    QCOMPARE(up.count(), 0);
+
+    Test::tabletToolTipEvent(QPointF(75, 75), 1, 0, 0, 0, 0, false, 0, time++);
+    QVERIFY(frame.wait());
+    QCOMPARE(proximityOut.count(), 3);
+    QCOMPARE(down.count(), 1);
+    QCOMPARE(up.count(), 1);
 }
 
 }

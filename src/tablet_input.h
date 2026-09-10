@@ -78,6 +78,7 @@ private:
     void setPosition(InputDeviceTabletTool *tool, const QPointF &position);
 
     QPointF m_lastPosition;
+    QPointer<InputDevice> m_lastDevice;
     QMetaObject::Connection m_decorationGeometryConnection;
     QMetaObject::Connection m_decorationDestroyedConnection;
     QHash<InputDeviceTabletTool *, Cursor *> m_cursorByTool;

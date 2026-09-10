@@ -17,6 +17,7 @@
 #include "pointer_input.h"
 #include "wayland/display.h"
 #include "wayland/seat.h"
+#include "wayland/surface.h"
 #include "wayland/tablet_v2.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -233,6 +234,7 @@ void TabletInputRedirection::tabletToolAxisEvent(const QPointF &pos, qreal press
         return;
     }
 
+    m_lastDevice = device;
     ensureTabletTool(tool);
     setPosition(tool, pos);
 
@@ -265,6 +267,7 @@ void TabletInputRedirection::tabletToolAxisEventRelative(const QPointF &delta,
         return;
     }
 
+    m_lastDevice = device;
     ensureTabletTool(tool);
     setPosition(tool, m_lastPosition + delta);
 
@@ -295,6 +298,7 @@ void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal 
         return;
     }
 
+    m_lastDevice = device;
     ensureTabletTool(tool);
 
     if (tool->proximity() == ProximityState::In) {
@@ -306,7 +310,6 @@ void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal 
             setPosition(tool, pos);
         }
     }
-
     update();
 
     TabletToolProximityEvent::Type type = TabletToolProximityEvent::InProximity;
@@ -338,20 +341,16 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
         return;
     }
 
+    m_lastDevice = device;
     ensureTabletTool(tool);
 
     if (tool->down() == DownState::Down && !device->tabletToolIsRelative()) {
         setPosition(tool, pos);
     }
 
-    if (tool->down() == DownState::Up) {
-        m_tipDown = false;
-    }
-
-    update();
-
     if (tool->down() == DownState::Down) {
         m_tipDown = true;
+        update();
     }
 
     TabletToolTipEvent::Type type = TabletToolTipEvent::Pressed;
@@ -384,6 +383,12 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
             d->window()->setLastUsageSerial(serial);
         }
     }
+
+    // potentially release implicit grab
+    if (tool->down() == DownState::Up) {
+        m_tipDown = false;
+        update();
+    }
 }
 
 void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPressed, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
@@ -396,9 +401,8 @@ void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPre
         .time = time,
     };
 
+    m_lastDevice = device;
     ensureTabletTool(tool);
-
-    m_buttonDown = isPressed;
 
     input()->processSpies(&InputEventSpy::tabletToolButtonEvent, &event);
     input()->processFilters(&InputEventFilter::tabletToolButtonEvent, &event);
@@ -412,10 +416,17 @@ void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPre
             d->window()->setLastUsageSerial(serial);
         }
     }
+
+    // potentially release implicit grab
+    m_buttonDown = tool->pressedButtons() != 0;
+    if (!m_buttonDown) {
+        update();
+    }
 }
 
 void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPressed, quint32 group, quint32 mode, bool isModeSwitch, std::chrono::microseconds time, InputDevice *device)
 {
+    m_lastDevice = device;
     TabletPadButtonEvent event{
         .device = device,
         .button = button,
@@ -441,6 +452,7 @@ void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPres
 
 void KWin::TabletInputRedirection::tabletPadStripEvent(int number, qreal position, bool isFinger, quint32 group, quint32 mode, std::chrono::microseconds time, InputDevice *device)
 {
+    m_lastDevice = device;
     TabletPadStripEvent event{
         .device = device,
         .number = number,
@@ -458,6 +470,7 @@ void KWin::TabletInputRedirection::tabletPadStripEvent(int number, qreal positio
 
 void KWin::TabletInputRedirection::tabletPadRingEvent(int number, qreal position, bool isFinger, quint32 group, quint32 mode, std::chrono::microseconds time, InputDevice *device)
 {
+    m_lastDevice = device;
     TabletPadRingEvent event{
         .device = device,
         .number = number,
@@ -475,6 +488,7 @@ void KWin::TabletInputRedirection::tabletPadRingEvent(int number, qreal position
 
 void KWin::TabletInputRedirection::tabletPadDialEvent(int number, double delta, quint32 group, std::chrono::microseconds time, InputDevice *device)
 {
+    m_lastDevice = device;
     TabletPadDialEvent event{
         .device = device,
         .number = number,
@@ -535,7 +549,38 @@ void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedWindowImpl *
 
 void TabletInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
 {
-    // This method is left blank intentionally.
+    if (!m_lastDevice) {
+        return;
+    }
+    const auto seat = findTabletSeat();
+    const auto tools = seat->tools();
+    const auto tablet = seat->tablet(m_lastDevice);
+
+    if (focusOld) {
+        for (const auto &[device, tool] : tools.asKeyValueRange()) {
+            if (!tool->currentSurface()) {
+                continue;
+            }
+            if (device->pressedButtons()) {
+                for (uint32_t i = 0; i < device->pressedButtons(); i++) {
+                    if (device->pressedButtons() & (1 << i)) {
+                        tool->sendButton(i, false);
+                    }
+                }
+            }
+            if (device->down() == DownState::Down) {
+                tool->sendUp();
+            }
+            tool->setCurrentSurface(nullptr, tablet);
+        }
+    }
+    if (focusNow) {
+        for (const auto &[device, tool] : tools.asKeyValueRange()) {
+            const auto localPos = focusNow->mapToLocal(position());
+            const auto surface = focusNow->surface()->inputSurfaceAt(localPos);
+            tool->setCurrentSurface(surface, tablet);
+        }
+    }
 }
 
 }

@@ -97,6 +97,8 @@ public:
     uint64_t pressedButtons() const;
     void notifyButtonState(uint32_t button, bool pressed);
 
+    bool hasImplicitGrab() const;
+
 private:
     ProximityState m_proximity = ProximityState::Out;
     DownState m_down = DownState::Up;

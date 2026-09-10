@@ -224,7 +224,6 @@ public:
     bool m_removed = false;
     QPointer<InputDeviceTabletTool> m_device;
     QPointer<SurfaceInterface> m_surface;
-    QPointer<TabletV2Interface> m_lastTablet;
     const uint32_t m_type;
     const uint32_t m_hardwareSerialHigh, m_hardwareSerialLow;
     const uint32_t m_hardwareIdHigh, m_hardwareIdLow;
@@ -276,13 +275,12 @@ SurfaceInterface *TabletToolV2Interface::currentSurface() const
     return d->m_surface;
 }
 
-void TabletToolV2Interface::setCurrentSurface(SurfaceInterface *surface)
+void TabletToolV2Interface::setCurrentSurface(SurfaceInterface *surface, TabletV2Interface *tablet)
 {
     if (d->m_surface == surface) {
         return;
     }
 
-    TabletV2Interface *const lastTablet = d->m_lastTablet;
     if (d->m_surface && d->resourceMap().contains(*d->m_surface->client())) {
         sendProximityOut();
         sendFrame(0);
@@ -290,16 +288,13 @@ void TabletToolV2Interface::setCurrentSurface(SurfaceInterface *surface)
 
     d->m_surface = surface;
 
-    if (lastTablet && surface && lastTablet->d->resourceForSurface(surface)) {
-        sendProximityIn(lastTablet);
-    } else {
-        d->m_lastTablet = lastTablet;
+    if (!surface) {
+        return;
     }
 
-    if (surface != nullptr) {
-        if (auto *const cursor = d->m_cursors.value(*surface->client())) {
-            Q_EMIT cursorChanged(cursor);
-        }
+    sendProximityIn(tablet);
+    if (auto *const cursor = d->m_cursors.value(*surface->client())) {
+        Q_EMIT cursorChanged(cursor);
     }
 }
 
@@ -352,7 +347,6 @@ void TabletToolV2Interface::sendFrame(uint32_t time)
 
     if (d->m_cleanup) {
         d->m_surface = nullptr;
-        d->m_lastTablet = nullptr;
         d->m_cleanup = false;
     }
 }
@@ -400,7 +394,6 @@ void TabletToolV2Interface::sendProximityIn(TabletV2Interface *tablet)
         d->send_proximity_in(resource->handle, serial, tabletResource, d->m_surface->resource());
     }
     d->m_proximitySerial = serial;
-    d->m_lastTablet = tablet;
 }
 
 void TabletToolV2Interface::sendProximityOut()
@@ -1126,6 +1119,11 @@ TabletToolV2Interface *TabletSeatV2Interface::toolByImplicitGrabSerial(quint32 s
         }
     }
     return nullptr;
+}
+
+QHash<InputDeviceTabletTool *, TabletToolV2Interface *> TabletSeatV2Interface::tools() const
+{
+    return d->m_tools;
 }
 
 TabletManagerV2Interface::~TabletManagerV2Interface() = default;

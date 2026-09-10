@@ -694,6 +694,7 @@ public:
     ~WpTabletToolV2() override;
 
     bool ready() const;
+    ::wl_surface *enteredSurface() const;
 
 Q_SIGNALS:
     void done();
@@ -717,6 +718,7 @@ protected:
 
 private:
     bool m_ready = false;
+    ::wl_surface *m_enteredSurface = nullptr;
 };
 
 class WpPrimarySelectionOfferV1 : public QObject, public QtWayland::zwp_primary_selection_offer_v1

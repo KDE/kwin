@@ -2261,6 +2261,11 @@ bool WpTabletToolV2::ready() const
     return m_ready;
 }
 
+::wl_surface *WpTabletToolV2::enteredSurface() const
+{
+    return m_enteredSurface;
+}
+
 void WpTabletToolV2::zwp_tablet_tool_v2_done()
 {
     m_ready = true;
@@ -2289,11 +2294,13 @@ void WpTabletToolV2::zwp_tablet_tool_v2_frame(uint32_t time)
 
 void WpTabletToolV2::zwp_tablet_tool_v2_proximity_in(uint32_t serial, ::zwp_tablet_v2 *tablet, ::wl_surface *surface)
 {
+    m_enteredSurface = surface;
     Q_EMIT proximityIn();
 }
 
 void WpTabletToolV2::zwp_tablet_tool_v2_proximity_out()
 {
+    m_enteredSurface = nullptr;
     Q_EMIT proximityOut();
 }
 

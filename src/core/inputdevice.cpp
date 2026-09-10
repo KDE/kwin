@@ -126,6 +126,11 @@ void InputDeviceTabletTool::notifyButtonState(uint32_t button, bool pressed)
     }
 }
 
+bool InputDeviceTabletTool::hasImplicitGrab() const
+{
+    return m_buttons != 0 || m_down == DownState::Down;
+}
+
 } // namespace KWin
 
 #include "moc_inputdevice.cpp"
