@@ -290,7 +290,7 @@ void TabletToolV2Interface::setCurrentSurface(SurfaceInterface *surface)
 
     d->m_surface = surface;
 
-    if (lastTablet && lastTablet->d->resourceForSurface(surface)) {
+    if (lastTablet && surface && lastTablet->d->resourceForSurface(surface)) {
         sendProximityIn(lastTablet);
     } else {
         d->m_lastTablet = lastTablet;
