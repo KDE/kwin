@@ -581,10 +581,12 @@ void Connection::processEvents()
             break;
         }
         case LIBINPUT_EVENT_TABLET_TOOL_BUTTON: {
-            auto *tabletEvent = static_cast<TabletToolButtonEvent *>(event.get());
+            const auto tabletEvent = static_cast<TabletToolButtonEvent *>(event.get());
+            const auto tool = getOrCreateTool(tabletEvent->tool());
+            tool->notifyButtonState(tabletEvent->buttonId(), tabletEvent->isButtonPressed());
             Q_EMIT event->device()->tabletToolButtonEvent(tabletEvent->buttonId(),
                                                           tabletEvent->isButtonPressed(),
-                                                          getOrCreateTool(tabletEvent->tool()), tabletEvent->time(), tabletEvent->device());
+                                                          tool, tabletEvent->time(), tabletEvent->device());
             break;
         }
         case LIBINPUT_EVENT_TABLET_PAD_BUTTON: {

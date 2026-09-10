@@ -94,9 +94,13 @@ public:
     DownState down() const;
     void setDown(DownState state);
 
+    uint64_t pressedButtons() const;
+    void notifyButtonState(uint32_t button, bool pressed);
+
 private:
     ProximityState m_proximity = ProximityState::Out;
     DownState m_down = DownState::Up;
+    uint64_t m_buttons = 0;
 };
 
 struct InputDeviceTabletPadModeGroup

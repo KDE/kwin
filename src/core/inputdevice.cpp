@@ -112,6 +112,20 @@ void InputDeviceTabletTool::setDown(DownState state)
     m_down = state;
 }
 
+uint64_t InputDeviceTabletTool::pressedButtons() const
+{
+    return m_buttons;
+}
+
+void InputDeviceTabletTool::notifyButtonState(uint32_t button, bool pressed)
+{
+    if (pressed) {
+        m_buttons |= (1 << button);
+    } else {
+        m_buttons &= ~(1 << button);
+    }
+}
+
 } // namespace KWin
 
 #include "moc_inputdevice.cpp"

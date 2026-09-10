@@ -2286,6 +2286,11 @@ public:
         switch (event->type) {
         case TabletToolProximityEvent::EnterProximity:
             tool->sendProximityIn(tablet);
+            for (uint32_t i = 0; i < 64; i++) {
+                if (event->tool->pressedButtons() & (1ul << i)) {
+                    tool->sendButton(i, true);
+                }
+            }
             [[fallthrough]];
         case TabletToolProximityEvent::InProximity:
             tool->sendMotion(surfaceLocalPos);

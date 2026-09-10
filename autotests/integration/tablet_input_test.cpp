@@ -169,6 +169,17 @@ void TabletInputTest::testBasics()
     QCOMPARE(proximityIn.count(), 1);
     QCOMPARE(proximityOut.count(), 1);
     QCOMPARE(up.count(), 1);
+
+    // proximity enter with a button pressed
+    Test::tabletToolButtonPressed(1, time++);
+    Test::tabletToolProximityEvent(QPointF(50, 50), 0, 0, 0, 0, true, 0, time++);
+    QVERIFY(frame.wait());
+    QCOMPARE(button.count(), 5);
+    QCOMPARE(button.last().at(1).value<uint32_t>(), 1);
+    QCOMPARE(button.last().at(2).value<uint32_t>(), 1);
+
+    Test::tabletToolProximityEvent(QPointF(50, 50), 0, 0, 0, 0, false, 0, time++);
+    QVERIFY(frame.wait());
 }
 
 }

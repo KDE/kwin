@@ -2725,6 +2725,7 @@ void tabletToolButtonPressed(quint32 button, quint32 time)
 {
     auto tablet = static_cast<WaylandTestApplication *>(kwinApp())->virtualTablet();
     auto tool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();
+    tool->notifyButtonState(button, true);
     Q_EMIT tablet->tabletToolButtonEvent(button, true, tool, std::chrono::milliseconds(time), tablet);
 }
 
@@ -2732,6 +2733,7 @@ void tabletToolButtonReleased(quint32 button, quint32 time)
 {
     auto tablet = static_cast<WaylandTestApplication *>(kwinApp())->virtualTablet();
     auto tool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();
+    tool->notifyButtonState(button, false);
     Q_EMIT tablet->tabletToolButtonEvent(button, false, tool, std::chrono::milliseconds(time), tablet);
 }
 
