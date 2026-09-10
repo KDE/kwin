@@ -267,6 +267,11 @@ CursorShapeDeviceV1::CursorShapeDeviceV1(CursorShapeManagerV1 *manager, KWayland
 {
 }
 
+CursorShapeDeviceV1::CursorShapeDeviceV1(CursorShapeManagerV1 *manager, WlPointer *pointer)
+    : QtWayland::wp_cursor_shape_device_v1(manager->get_pointer(pointer->object()))
+{
+}
+
 CursorShapeDeviceV1::~CursorShapeDeviceV1()
 {
     destroy();
@@ -1369,6 +1374,17 @@ std::unique_ptr<AutoHideScreenEdgeV1> createAutoHideScreenEdgeV1(KWayland::Clien
 }
 
 std::unique_ptr<CursorShapeDeviceV1> createCursorShapeDeviceV1(KWayland::Client::Pointer *pointer)
+{
+    CursorShapeManagerV1 *manager = s_waylandConnection->cursorShapeManagerV1;
+    if (!manager) {
+        qWarning() << "Could not create a wp_cursor_shape_device_v1 because wp_cursor_shape_manager_v1 global is not bound";
+        return nullptr;
+    }
+
+    return std::make_unique<CursorShapeDeviceV1>(manager, pointer);
+}
+
+std::unique_ptr<CursorShapeDeviceV1> createCursorShapeDeviceV1(WlPointer *pointer)
 {
     CursorShapeManagerV1 *manager = s_waylandConnection->cursorShapeManagerV1;
     if (!manager) {
@@ -2557,8 +2573,14 @@ WlPointer::~WlPointer()
     return m_enteredSurface;
 }
 
+void WlPointer::setCursor(KWayland::Client::Surface *surface, const QPoint &hotspot)
+{
+    set_cursor(m_enterSerial, surface ? *surface : nullptr, hotspot.x(), hotspot.y());
+}
+
 void WlPointer::pointer_enter(uint32_t serial, ::wl_surface *surface, wl_fixed_t surface_x, wl_fixed_t surface_y)
 {
+    m_enterSerial = serial;
     m_enteredSurface = surface;
     Q_EMIT entered(serial, surface, QPointF(wl_fixed_to_double(surface_x), wl_fixed_to_double(surface_y)));
 }
@@ -2577,6 +2599,11 @@ void WlPointer::pointer_motion(uint32_t time, wl_fixed_t surface_x, wl_fixed_t s
 void WlPointer::pointer_button(uint32_t serial, uint32_t time, uint32_t button, uint32_t state)
 {
     Q_EMIT buttonStateChanged(serial, time, button, state);
+}
+
+void WlPointer::pointer_axis(uint32_t time, uint32_t axis, wl_fixed_t value)
+{
+    Q_EMIT axisChanged(time, axis, wl_fixed_to_double(value));
 }
 
 WlTouch::WlTouch(::wl_touch *object)
