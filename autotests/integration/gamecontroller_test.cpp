@@ -18,8 +18,6 @@
 #include <KConfigGroup>
 #include <KIdleTime>
 #include <KSharedConfig>
-#include <KWayland/Client/pointer.h>
-#include <KWayland/Client/seat.h>
 
 #include <QPluginLoader>
 #include <QTemporaryDir>
@@ -338,9 +336,9 @@ void TestGameController::testPointerMapping()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
     QVERIFY(window != nullptr);
 
-    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy buttonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    auto pointer = Test::kwinSeat()->getPointer();
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy buttonChangedSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
 
     const QRectF startGeometry = window->frameGeometry();
     input()->pointer()->warp(startGeometry.center());
@@ -378,8 +376,7 @@ void TestGameController::testPointerMapping()
 
     QCOMPARE(buttonChangedSpy.count(), 1);
     QCOMPARE(buttonChangedSpy.at(0).at(2).value<qint32>(), expectedButton);
-    QCOMPARE(buttonChangedSpy.at(0).at(0).value<KWayland::Client::Pointer::ButtonState>(),
-             KWayland::Client::Pointer::ButtonState::Pressed);
+    QCOMPARE(buttonChangedSpy.at(0).at(3).value<uint32_t>(), uint32_t(Test::WlPointer::button_state_pressed));
 
     QVERIFY(libevdev_uinput_write_event(m_uinput, EV_ABS, analogAxis, 0) == 0);
     QVERIFY(libevdev_uinput_write_event(m_uinput, EV_SYN, SYN_REPORT, 0) == 0);
@@ -387,8 +384,7 @@ void TestGameController::testPointerMapping()
     buttonChangedSpy.clear();
     QCOMPARE(buttonChangedSpy.count(), 1);
     QCOMPARE(buttonChangedSpy.at(0).at(2).value<qint32>(), 0);
-    QCOMPARE(buttonChangedSpy.at(0).at(0).value<KWayland::Client::Pointer::ButtonState>(),
-             KWayland::Client::Pointer::ButtonState::Released);
+    QCOMPARE(buttonChangedSpy.at(0).at(3).value<uint32_t>(), uint32_t(Test::WlPointer::button_state_released));
 }
 
 void TestGameController::testAnalogStickPointerMovement_data()
@@ -445,9 +441,9 @@ void TestGameController::testAnalogStickPointerMovement()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(500, 500), Qt::blue);
     QVERIFY(window != nullptr);
 
-    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy motionSpy(pointer.get(), &KWayland::Client::Pointer::motion);
+    auto pointer = Test::kwinSeat()->getPointer();
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy motionSpy(pointer.get(), &Test::WlPointer::motion);
 
     // Position pointer in center of window
     const QRectF startGeometry = window->frameGeometry();
