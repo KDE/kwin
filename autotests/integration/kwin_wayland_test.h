@@ -1177,6 +1177,20 @@ class WlTouch : public QObject, public QtWayland::wl_touch
 public:
     explicit WlTouch(::wl_touch *object);
     ~WlTouch() override;
+
+Q_SIGNALS:
+    void sequenceStarted();
+    void sequenceEnded();
+    void sequenceCanceled();
+    void touchDown(uint32_t serial, uint32_t time, ::wl_surface *surface, int32_t id, const QPointF &position);
+    void touchUp(uint32_t serial, uint32_t time, int32_t id);
+
+private:
+    void touch_down(uint32_t serial, uint32_t time, ::wl_surface *surface, int32_t id, wl_fixed_t x, wl_fixed_t y) override;
+    void touch_up(uint32_t serial, uint32_t time, int32_t id) override;
+    void touch_cancel() override;
+
+    QSet<int32_t> m_touchIds;
 };
 
 class CommitTimingManager : public QtWayland::wp_commit_timing_manager_v1
