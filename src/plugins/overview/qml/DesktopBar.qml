@@ -43,7 +43,8 @@ Item {
         flickableDirection: Flickable.HorizontalFlick
 
         Grid {
-            spacing: Kirigami.Units.largeSpacing
+            // Larger than normal to avoid chunky highlights overlapping
+            spacing: Kirigami.Units.largeSpacing * 2
             columns: verticalDesktopBar ? 1 : desktopCount + 1
 
             Repeater {
