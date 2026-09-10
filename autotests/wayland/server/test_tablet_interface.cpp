@@ -488,14 +488,14 @@ void TestTabletInterface::testAdd()
     QCOMPARE(m_tabletSeatClient->m_tools.count(), 1);
 
     QVERIFY(!m_tool->isClientSupported()); // There's no surface in it yet
-    m_tool->setCurrentSurface(nullptr);
+    m_tool->setCurrentSurface(nullptr, m_tablet);
     QVERIFY(!m_tool->isClientSupported()); // There's no surface in it
 
     QCOMPARE(m_surfaces.count(), 3);
     for (SurfaceInterface *surface : m_surfaces) {
-        m_tool->setCurrentSurface(surface);
+        m_tool->setCurrentSurface(surface, m_tablet);
     }
-    m_tool->setCurrentSurface(nullptr);
+    m_tool->setCurrentSurface(nullptr, m_tablet);
 }
 
 void TestTabletInterface::testAddPad()
@@ -544,15 +544,13 @@ void TestTabletInterface::testInteractSimple()
     QSignalSpy frameSpy(tabletSeatClient->m_tools[0], &Tool::frame);
 
     QVERIFY(!m_tool->isClientSupported());
-    m_tool->setCurrentSurface(m_surfaces[0]);
+    m_tool->setCurrentSurface(m_surfaces[0], m_tablet);
     QVERIFY(m_tool->isClientSupported() && m_tablet->isSurfaceSupported(m_surfaces[0]));
-    m_tool->sendProximityIn(m_tablet);
     m_tool->sendPressure(0);
     m_tool->sendFrame(s_serial++);
     m_tool->sendMotion({3, 3});
     m_tool->sendFrame(s_serial++);
-    m_tool->sendProximityOut();
-    QVERIFY(m_tool->isClientSupported());
+    m_tool->setCurrentSurface(nullptr, m_tablet);
     m_tool->sendFrame(s_serial++);
     QVERIFY(!m_tool->isClientSupported());
 
@@ -574,19 +572,17 @@ void TestTabletInterface::testInteractSurfaceChange()
     QSignalSpy frameSpy(tabletSeatClient->m_tools[0], &Tool::frame);
 
     QVERIFY(!m_tool->isClientSupported());
-    m_tool->setCurrentSurface(m_surfaces[0]);
+    m_tool->setCurrentSurface(m_surfaces[0], m_tablet);
     QVERIFY(m_tool->isClientSupported() && m_tablet->isSurfaceSupported(m_surfaces[0]));
-    m_tool->sendProximityIn(m_tablet);
     m_tool->sendPressure(0);
     m_tool->sendFrame(s_serial++);
 
-    m_tool->setCurrentSurface(m_surfaces[1]);
+    m_tool->setCurrentSurface(m_surfaces[1], m_tablet);
     QVERIFY(m_tool->isClientSupported());
 
     m_tool->sendMotion({3, 3});
     m_tool->sendFrame(s_serial++);
-    m_tool->sendProximityOut();
-    QVERIFY(m_tool->isClientSupported());
+    m_tool->setCurrentSurface(nullptr, m_tablet);
     m_tool->sendFrame(s_serial++);
     QVERIFY(!m_tool->isClientSupported());
 

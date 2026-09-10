@@ -556,6 +556,8 @@ void Connection::processEvents()
                 tte->device()->setSupportsPressureRange(true);
                 libinput_tablet_tool_config_pressure_range_set(tte->tool(), tte->device()->pressureRangeMin(), tte->device()->pressureRangeMax());
             }
+            const auto tool = getOrCreateTool(tte->tool());
+            tool->setDown(tte->isTipDown());
             Q_EMIT event->device()->tabletToolTipEvent(tabletToolPosition(tte),
                                                        tte->device()->pressureCurve().valueForProgress(tte->pressure()),
                                                        tte->xTilt(),
@@ -564,7 +566,7 @@ void Connection::processEvents()
                                                        tte->distance(),
                                                        tte->isTipDown(),
                                                        tte->sliderPosition(),
-                                                       getOrCreateTool(tte->tool()),
+                                                       tool,
                                                        tte->time(),
                                                        tte->device());
             break;

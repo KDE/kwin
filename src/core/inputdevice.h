@@ -81,8 +81,14 @@ public:
     uint64_t pressedButtons() const;
     void notifyButtonState(uint32_t button, bool pressed);
 
+    void setDown(bool down);
+    bool down() const;
+
+    bool hasImplicitGrab() const;
+
 private:
     uint64_t m_buttons = 0;
+    bool m_down = false;
 };
 
 struct InputDeviceTabletPadModeGroup
