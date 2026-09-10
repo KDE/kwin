@@ -438,16 +438,34 @@ std::optional<QPointF> SeatInterfacePrivate::updatePointerPosition(const QPointF
         return std::nullopt;
     }
 
-    const auto [effectiveFocusedSurface, localPosition] = focusedSurface->mapToInputSurface(q->focusedPointerSurfaceTransformation().map(pos));
+    updatePointerFocus();
+    if (!globalPointer.focus.effectiveSurface) {
+        return std::nullopt;
+    }
+    return focusedSurface->mapToChild(globalPointer.focus.effectiveSurface, q->focusedPointerSurfaceTransformation().map(pos));
+}
 
+void SeatInterfacePrivate::updatePointerFocus()
+{
+    SurfaceInterface *focusedSurface = globalPointer.focus.surface;
+    if (!focusedSurface) {
+        return;
+    }
+    const bool implicitGrab = std::ranges::any_of(globalPointer.buttonStates, [](Pointer::State state) {
+        return state == Pointer::State::Pressed;
+    });
+    if (implicitGrab) {
+        // the focused surface must stay the same
+        return;
+    }
+
+    const auto [effectiveFocusedSurface, localPosition] = focusedSurface->mapToInputSurface(q->focusedPointerSurfaceTransformation().map(globalPointer.pos));
     if (pointer->focusedSurface() != effectiveFocusedSurface) {
         pointer->sendEnter(effectiveFocusedSurface, localPosition, q->display()->nextSerial());
         if (keyboard) {
             keyboard->setModifierFocusSurface(effectiveFocusedSurface);
         }
     }
-
-    return localPosition;
 }
 
 void SeatInterface::notifyPointerMotion(const QPointF &pos)
@@ -568,6 +586,7 @@ void SeatInterface::notifyPointerEnter(SurfaceInterface *surface, const QPointF 
 
     d->globalPointer.pos = position;
     const auto [effectiveFocusedSurface, localPosition] = surface->mapToInputSurface(focusedPointerSurfaceTransformation().map(position));
+    d->globalPointer.focus.effectiveSurface = effectiveFocusedSurface;
     d->pointer->sendEnter(effectiveFocusedSurface, localPosition, serial);
     if (d->keyboard) {
         d->keyboard->setModifierFocusSurface(effectiveFocusedSurface);
@@ -716,6 +735,11 @@ void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state
     }
 
     d->pointer->sendButton(button, state, serial);
+
+    if (state == PointerButtonState::Released) {
+        // button release stops implicit grabs
+        d->updatePointerFocus();
+    }
 }
 
 void SeatInterface::notifyPointerFrame()
