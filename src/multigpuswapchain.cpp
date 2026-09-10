@@ -102,13 +102,7 @@ public:
     std::shared_ptr<EglSwapchainSlot> m_currentSlot;
 };
 
-struct DrmFormat
-{
-    uint32_t format;
-    ModifierList modifiers;
-};
-
-static std::optional<DrmFormat> chooseFormat(uint32_t inputFormat, const FormatModifierMap &srcFormats, const FormatModifierMap &dstFormats)
+std::optional<DrmFormat> MultiGpuSwapchain::chooseFormat(uint32_t inputFormat, const FormatModifierMap &srcFormats, const FormatModifierMap &dstFormats)
 {
     auto modifiers = srcFormats[inputFormat].intersected(dstFormats[inputFormat]);
     modifiers.erase(DRM_FORMAT_MOD_INVALID);
@@ -163,7 +157,7 @@ static std::optional<CopyRet> createCopy(RenderDevice *device,
     if (device->vulkanDevice()) {
         auto retModifiers = device->vulkanDevice()->transferFormats()[sourceFormat].intersected(sourceModifiers);
         if (!retModifiers.empty()) {
-            const auto fmt = chooseFormat(sourceFormat, device->vulkanDevice()->transferFormats(), formats);
+            const auto fmt = MultiGpuSwapchain::chooseFormat(sourceFormat, device->vulkanDevice()->transferFormats(), formats);
             if (fmt) {
                 options.format = fmt->format;
                 options.modifiers = fmt->modifiers;
@@ -187,7 +181,7 @@ static std::optional<CopyRet> createCopy(RenderDevice *device,
     if (retModifiers.empty()) {
         return std::nullopt;
     }
-    const auto fmt = chooseFormat(sourceFormat, device->eglDisplay()->nonExternalOnlySupportedDrmFormats(), formats);
+    const auto fmt = MultiGpuSwapchain::chooseFormat(sourceFormat, device->eglDisplay()->nonExternalOnlySupportedDrmFormats(), formats);
     if (!fmt) {
         return std::nullopt;
     }

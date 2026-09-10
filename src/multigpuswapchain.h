@@ -30,6 +30,12 @@ class VulkanDevice;
 class SyncReleasePoint;
 class MultiGpuCopy;
 
+struct DrmFormat
+{
+    uint32_t format;
+    ModifierList modifiers;
+};
+
 class KWIN_EXPORT MultiGpuSwapchain : public QObject
 {
     Q_OBJECT
@@ -54,6 +60,8 @@ public:
     bool needsRecreation() const;
 
     bool isSuitableFor(GraphicsBuffer *buffer) const;
+
+    static std::optional<DrmFormat> chooseFormat(uint32_t inputFormat, const FormatModifierMap &srcFormats, const FormatModifierMap &dstFormats);
 
     static std::unique_ptr<MultiGpuSwapchain> createForSampling(RenderDevice *sourceDevice, RenderDevice *targetDevice, uint32_t format, uint64_t modifier, const QSize &size, const FormatModifierMap &importFormats);
 
