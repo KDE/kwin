@@ -110,6 +110,8 @@ public:
      * Returns @c true if Night Light is enabled; otherwise @c false.
      */
     bool isEnabled() const;
+    bool isTemporarilyActivated(const QDateTime &dateTime) const;
+    bool isTemporarilyDeactivated(const QDateTime &dateTime) const;
 
     /**
      * Returns @c true if Night Light is currently running; otherwise @c false.
@@ -176,6 +178,58 @@ public:
      */
     void stopPreview();
 
+    /**
+     * Returns the date and time until which Night Light has been activated. If activateUntil()
+     * was not called, an invalid QDateTime will be returned.
+     */
+    QDateTime activatedUntil() const;
+
+    /**
+     * Returns @c true if Night Light is kept active until the user manually turns it off; otherwise
+     * returns @c false.
+     */
+    bool activatedManual() const;
+
+    /**
+     * Returns the date and time until which Night Light has been deactivated. If deactivateUntil()
+     * was not called, an invalid QDateTime will be returned.
+     */
+    QDateTime deactivatedUntil() const;
+
+    /**
+     * Returns @c true if Night Light is kept inactive until the user manually resumes it; otherwise
+     * returns @c false.
+     */
+    bool deactivatedManual() const;
+
+    /**
+     * Activates Night Light until the specified @a dateTime.
+     *
+     * Mutually exclusive with activateManual().
+     */
+    void activateUntil(const QDateTime &dateTime);
+
+    /**
+     * Activates Night Light until the user manually turns it off.
+     *
+     * Mutually exclusive with activateUntil().
+     */
+    void activateManual(bool on);
+
+    /**
+     * Deactivates Night Light until the specified @a dateTime.
+     *
+     * Mutually exclusive with deactivateManual().
+     */
+    void deactivateUntil(const QDateTime &dateTime);
+
+    /**
+     * Deactivates Night Light until the user manually resumes it.
+     *
+     * Mutually exclusive with deactivateUntil().
+     */
+    void deactivateManual(bool off);
+
 public Q_SLOTS:
     void quickAdjust(int targetTemperature);
 
@@ -225,6 +279,11 @@ Q_SIGNALS:
      */
     void scheduledTransitionTimingsChanged();
 
+    void activatedUntilChanged();
+    void activatedManualChanged();
+    void deactivatedUntilChanged();
+    void deactivatedManualChanged();
+
 private:
     void readConfig();
     void hardReset();
@@ -252,12 +311,19 @@ private:
     void setMode(NightLightMode mode);
     void setDaylight(bool daylight);
 
+    void tryActivateOrDeactivate(std::function<void()> callback);
+
     NightLightDBusInterface *m_iface;
     KSystemClockSkewNotifier *m_skewNotifier;
 
     std::unique_ptr<NightLightSettings> m_settings;
     std::unique_ptr<NightLightState> m_stateConfig;
     std::unique_ptr<KDarkLightScheduleProvider> m_darkLightScheduler;
+
+    QDateTime m_activatedUntilDateTime;
+    QDateTime m_deactivatedUntilDateTime;
+    bool m_activatedManual = false;
+    bool m_deactivatedManual = false;
 
     // Specifies whether Night Light is enabled.
     bool m_active = false;
@@ -281,6 +347,7 @@ private:
     std::unique_ptr<QTimer> m_slowUpdateTimer;
     std::unique_ptr<QTimer> m_quickAdjustTimer;
     std::unique_ptr<QTimer> m_previewTimer;
+    std::unique_ptr<QTimer> m_activateOrDeactivateTimer;
 
     int m_currentTemperature = DEFAULT_DAY_TEMPERATURE;
     int m_targetTemperature = DEFAULT_DAY_TEMPERATURE;

@@ -35,6 +35,10 @@ class NightLightDBusInterface : public QObject, public QDBusContext
     Q_PROPERTY(quint32 previousTransitionDuration READ previousTransitionDuration)
     Q_PROPERTY(quint64 scheduledTransitionDateTime READ scheduledTransitionDateTime)
     Q_PROPERTY(quint32 scheduledTransitionDuration READ scheduledTransitionDuration)
+    Q_PROPERTY(quint64 activatedUntil READ activatedUntil)
+    Q_PROPERTY(bool activatedManual READ activatedManual)
+    Q_PROPERTY(quint64 deactivatedUntil READ deactivatedUntil)
+    Q_PROPERTY(bool deactivatedManual READ deactivatedManual)
 
 public:
     explicit NightLightDBusInterface(NightLightManager *parent);
@@ -52,6 +56,10 @@ public:
     quint32 previousTransitionDuration() const;
     quint64 scheduledTransitionDateTime() const;
     quint32 scheduledTransitionDuration() const;
+    quint64 activatedUntil() const;
+    bool activatedManual() const;
+    quint64 deactivatedUntil() const;
+    bool deactivatedManual() const;
 
 public Q_SLOTS:
     /**
@@ -74,6 +82,10 @@ public Q_SLOTS:
      * @since 5.25
      */
     void stopPreview();
+    void activateUntil(quint64 timestamp);
+    void activateManual(bool on);
+    void deactivateUntil(quint64 timestamp);
+    void deactivateManual(bool off);
 
 private Q_SLOTS:
     void removeInhibitorService(const QString &serviceName);

@@ -99,6 +99,30 @@ NightLightDBusInterface::NightLightDBusInterface(NightLightManager *parent)
         });
     });
 
+    connect(m_manager, &NightLightManager::activatedUntilChanged, this, [this] {
+        announceChangedProperties({
+            {QStringLiteral("activatedUntil"), activatedUntil()},
+        });
+    });
+
+    connect(m_manager, &NightLightManager::activatedManualChanged, this, [this] {
+        announceChangedProperties({
+            {QStringLiteral("activatedManual"), activatedManual()},
+        });
+    });
+
+    connect(m_manager, &NightLightManager::deactivatedUntilChanged, this, [this] {
+        announceChangedProperties({
+            {QStringLiteral("deactivatedUntil"), deactivatedUntil()},
+        });
+    });
+
+    connect(m_manager, &NightLightManager::deactivatedManualChanged, this, [this] {
+        announceChangedProperties({
+            {QStringLiteral("deactivatedManual"), deactivatedManual()},
+        });
+    });
+
     new NightLightAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/NightLight"), this);
     QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.KWin.NightLight"));
@@ -177,6 +201,26 @@ quint32 NightLightDBusInterface::scheduledTransitionDuration() const
     return quint32(m_manager->scheduledTransitionDuration());
 }
 
+quint64 NightLightDBusInterface::activatedUntil() const
+{
+    return m_manager->activatedUntil().toSecsSinceEpoch();
+}
+
+bool NightLightDBusInterface::activatedManual() const
+{
+    return m_manager->activatedManual();
+}
+
+quint64 NightLightDBusInterface::deactivatedUntil() const
+{
+    return m_manager->deactivatedUntil().toSecsSinceEpoch();
+}
+
+bool NightLightDBusInterface::deactivatedManual() const
+{
+    return m_manager->deactivatedManual();
+}
+
 uint NightLightDBusInterface::inhibit()
 {
     const QString serviceName = QDBusContext::message().service();
@@ -229,6 +273,36 @@ void NightLightDBusInterface::preview(uint previewTemp)
 void NightLightDBusInterface::stopPreview()
 {
     m_manager->stopPreview();
+}
+
+static QDateTime timestampToDateTime(quint64 timestamp)
+{
+    if (!timestamp) {
+        // We want a null QDateTime, not a QDateTime representing the start of the Unix epoch.
+        return QDateTime();
+    } else {
+        return QDateTime::fromSecsSinceEpoch(timestamp);
+    }
+}
+
+void NightLightDBusInterface::activateUntil(quint64 timestamp)
+{
+    m_manager->activateUntil(timestampToDateTime(timestamp));
+}
+
+void NightLightDBusInterface::activateManual(bool on)
+{
+    m_manager->activateManual(on);
+}
+
+void NightLightDBusInterface::deactivateUntil(quint64 timestamp)
+{
+    m_manager->deactivateUntil(timestampToDateTime(timestamp));
+}
+
+void NightLightDBusInterface::deactivateManual(bool off)
+{
+    m_manager->deactivateManual(off);
 }
 
 }

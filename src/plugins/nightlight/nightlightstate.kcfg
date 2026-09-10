@@ -14,5 +14,33 @@
         <entry name="State" type="String">
             <default></default>
         </entry>
+
+        <entry name="ActivatedUntil" type="DateTime">
+            <label>
+                Specifies the date and time until which Night Light must be temporarily active.
+            </label>
+            <default></default>
+        </entry>
+
+        <entry name="ActivatedManual" type="Bool">
+            <label>
+                Night Light is activated until manually disabled.
+            </label>
+            <default>false</default>
+        </entry>
+
+        <entry name="DeactivatedUntil" type="DateTime">
+            <label>
+                Specifies the date and time until which Night Light must be temporarily inactive.
+            </label>
+            <default></default>
+        </entry>
+
+        <entry name="DeactivatedManual" type="Bool">
+            <label>
+                Night Light is suspended until manually turned back on.
+            </label>
+            <default>false</default>
+        </entry>
     </group>
 </kcfg>

@@ -124,5 +124,99 @@
         the constant mode, this property holds a value of 0.
     -->
     <property name="scheduledTransitionDuration" type="u" access="read"/>
+
+    <!--
+        This property holds a Unix timestamp that specifies the date and time until
+        which Night Light should be active. The timestamp is in seconds.
+
+        If activateUtil() has not been called, this property holds a value of 0.
+
+        activatedManual and activatedUntil are mutually exclusive.
+
+        Since 6.9
+    -->
+    <property name="activatedUntil" type="t" access="read"/>
+
+    <!--
+        This property indicates whether Night Light is active until manually disabled.
+
+        activatedManual and activatedUntil are mutually exclusive.
+
+        Since 6.9
+    -->
+    <property name="activatedManual" type="b" access="read"/>
+
+    <!--
+        Temporarily activate Night Light.
+
+        The specified Unix timestamp indicates the date and time until which Night
+        Light should be active. The timestamp is in seconds.
+
+        The deactivatedUntil will be reset.
+
+        If Night Light is always off, it will be active until the specified date and time.
+
+        Since 6.9
+    -->
+    <method name="activateUntil">
+        <arg name="timestamp" type="t" direction="in"/>
+    </method>
+
+    <!--
+        Temporarily activate Night Light until it is manually disabled.
+
+        The on argument indicates whether Night Light has to be active. Passing
+        false will reset the activatedManual property.
+
+        Since 6.9
+    -->
+    <method name="activateManual">
+        <arg name="on" type="b" direction="in"/>
+    </method>
+
+    <!--
+        This property holds a Unix timestamp that specifies the date and time until
+        which Night Light should be inactive. The timestamp is in seconds.
+
+        If deactivateUtil() has not been called, this property holds a value of 0.
+
+        Since 6.9
+    -->
+    <property name="deactivatedUntil" type="t" access="read"/>
+
+    <!--
+        This property indicates whether Night Light is inactive until manually enabled.
+
+        deactivatedManual and deactivatedUntil are mutually exclusive.
+
+        Since 6.9
+    -->
+    <property name="deactivatedManual" type="b" access="read"/>
+
+    <!--
+        Temporarily deactivate Night Light.
+
+        The specified Unix timestamp indicates the date and time until which Night
+        Light should be inactive. The timestamp is in seconds.
+
+        The activatedUntil will be reset.
+
+        Since 6.9
+    -->
+    <method name="deactivateUntil">
+        <arg name="timestamp" type="t" direction="in"/>
+    </method>
+
+    <!--
+        Temporarily deactivate Night Light until it is manually enabled.
+
+        The off argument indicates whether Night Light has to be inactive. Passing
+        false will reset the deactivatedManual property.
+
+        Since 6.9
+    -->
+    <method name="deactivateManual">
+        <arg name="off" type="b" direction="in"/>
+    </method>
   </interface>
 </node>
