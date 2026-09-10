@@ -30,8 +30,6 @@
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/output.h>
-#include <KWayland/Client/pointer.h>
-#include <KWayland/Client/seat.h>
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
 
@@ -1495,11 +1493,10 @@ void TestXdgShellWindow::testPointerInputTransform()
     // screen coordinates to the surface-local coordinates.
 
     // Get a wl_pointer object on the client side.
-    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
-    QVERIFY(pointer->isValid());
-    QSignalSpy pointerEnteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy pointerMotionSpy(pointer.get(), &KWayland::Client::Pointer::motion);
+    QSignalSpy pointerEnteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy pointerMotionSpy(pointer.get(), &Test::WlPointer::motion);
 
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -2673,11 +2670,11 @@ void TestXdgShellWindow::testPopupDismissedOnFocusChange()
 
     std::unique_ptr<KWayland::Client::Surface> parentSurface = Test::createSurface();
     std::unique_ptr<Test::XdgToplevel> parentToplevel = Test::createXdgToplevelSurface(parentSurface.get());
-    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
+    auto pointer = Test::kwinSeat()->getPointer();
     Window *parent = Test::renderAndWaitForShown(parentSurface.get(), QSize(200, 200), Qt::cyan);
     QVERIFY(parent);
 
-    QSignalSpy buttonSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy buttonSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
     input()->pointer()->warp(parent->frameGeometry().center());
     // simulate press
     quint32 timestamp = 1;
@@ -2690,7 +2687,7 @@ void TestXdgShellWindow::testPopupDismissedOnFocusChange()
 
     std::unique_ptr<KWayland::Client::Surface> childSurface = Test::createSurface();
     std::unique_ptr<Test::XdgPopup> popup = Test::createXdgPopupSurface(childSurface.get(), parentToplevel->xdgSurface(), positioner.get());
-    popup->grab(*Test::waylandSeat(), buttonSpy.first().first().value<quint32>());
+    popup->grab(Test::kwinSeat()->object(), buttonSpy.first().first().value<quint32>());
     QPointer<Window> child = Test::renderAndWaitForShown(childSurface.get(), QSize(10, 10), Qt::cyan);
     QVERIFY(child);
 
