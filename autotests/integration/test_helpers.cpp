@@ -2616,6 +2616,30 @@ WlTouch::~WlTouch()
     release();
 }
 
+void WlTouch::touch_down(uint32_t serial, uint32_t time, ::wl_surface *surface, int32_t id, wl_fixed_t x, wl_fixed_t y)
+{
+    if (m_touchIds.isEmpty()) {
+        Q_EMIT sequenceStarted();
+    }
+    m_touchIds.insert(id);
+    Q_EMIT touchDown(serial, time, surface, id, QPointF(wl_fixed_to_double(x), wl_fixed_to_double(y)));
+}
+
+void WlTouch::touch_up(uint32_t serial, uint32_t time, int32_t id)
+{
+    m_touchIds.remove(id);
+    Q_EMIT touchUp(serial, time, id);
+    if (m_touchIds.isEmpty()) {
+        Q_EMIT sequenceEnded();
+    }
+}
+
+void WlTouch::touch_cancel()
+{
+    m_touchIds.clear();
+    Q_EMIT sequenceCanceled();
+}
+
 CommitTimingManager::CommitTimingManager(::wl_registry *registry, uint32_t id, int version)
     : QtWayland::wp_commit_timing_manager_v1(registry, id, version)
 {
