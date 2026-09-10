@@ -18,6 +18,7 @@
 
 #include <QCoreApplication>
 #include <QThread>
+#include <mutex>
 #include <set>
 
 using namespace std::chrono_literals;
@@ -25,14 +26,46 @@ using namespace std::chrono_literals;
 namespace KWin
 {
 
+// IDs must not be reused when a DrmGpu is recreated on the same DRM file
+// descriptor: the kernel can still deliver events from the previous GPU.
+static uintptr_t s_nextCommitId = 1;
+static std::mutex s_commitsMutex;
+static QHash<uintptr_t, DrmCommit *> s_commits;
+
 DrmCommit::DrmCommit(DrmGpu *gpu)
     : m_gpu(gpu)
 {
 }
 
+DrmCommit::DrmCommit(const DrmCommit &other)
+    : DrmCommit(other.m_gpu)
+{
+    m_defunct = other.m_defunct;
+}
+
 DrmCommit::~DrmCommit()
 {
     Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
+    if (m_id) {
+        std::lock_guard lock(s_commitsMutex);
+        s_commits.remove(*m_id);
+    }
+}
+
+uintptr_t DrmCommit::registerPageflip()
+{
+    // Register before the ioctl: the pageflip event can arrive before it returns.
+    std::lock_guard lock(s_commitsMutex);
+    Q_ASSERT(!m_id);
+    m_id = s_nextCommitId++;
+    s_commits.emplace(*m_id, this);
+    return *m_id;
+}
+
+DrmCommit *DrmCommit::take(uintptr_t id)
+{
+    std::lock_guard lock(s_commitsMutex);
+    return s_commits.take(id);
 }
 
 DrmGpu *DrmCommit::gpu() const
@@ -179,18 +212,11 @@ std::expected<void, OutputError> DrmAtomicCommit::doCommit(uint32_t flags)
         .props_ptr = reinterpret_cast<uint64_t>(propertyIds.data()),
         .prop_values_ptr = reinterpret_cast<uint64_t>(values.data()),
         .reserved = 0,
-        .user_data = reinterpret_cast<uint64_t>(m_gpu->platform()),
+        .user_data = flags & DRM_MODE_PAGE_FLIP_EVENT ? registerPageflip() : 0,
     };
-    std::unique_lock<std::mutex> lock;
-    if (flags & DRM_MODE_PAGE_FLIP_EVENT) {
-        lock = m_gpu->lockPendingCommits();
-    }
     const bool success = drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_ATOMIC, &commitData) == 0;
     if (!success) {
         return errnoToError();
-    }
-    if (flags & DRM_MODE_PAGE_FLIP_EVENT) {
-        m_gpu->registerPendingCommit(lock, *m_crtc, this);
     }
     return {};
 }
@@ -343,12 +369,7 @@ bool DrmLegacyCommit::doPageflip(PresentationMode mode)
     if (mode == PresentationMode::Async || mode == PresentationMode::AdaptiveAsync) {
         flags |= DRM_MODE_PAGE_FLIP_ASYNC;
     }
-    auto lock = gpu()->lockPendingCommits();
-    const bool success = drmModePageFlip(gpu()->fd(), m_crtc->id(), m_buffer->framebufferId(), flags, gpu()->platform()) == 0;
-    if (success) {
-        gpu()->registerPendingCommit(lock, m_crtc->id(), this);
-    }
-    return success;
+    return drmModePageFlip(gpu()->fd(), m_crtc->id(), m_buffer->framebufferId(), flags, reinterpret_cast<void *>(registerPageflip())) == 0;
 }
 
 void DrmLegacyCommit::pageFlipped(std::chrono::nanoseconds timestamp)
