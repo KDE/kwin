@@ -119,13 +119,14 @@ public:
     bool hasCapability(Capability capability) const;
 
     /**
-     * Sets the surface the events will be sent to.
+     * Sets the surface the events will be sent to, and sends
+     * proximity in and out events to match the focus change.
      *
      * Make sure the surface supports being sent events to.
      *
      * @see TabletV2Interface::isSurfaceSupported
      */
-    void setCurrentSurface(SurfaceInterface *surface);
+    void setCurrentSurface(SurfaceInterface *surface, TabletV2Interface *tablet);
     SurfaceInterface *currentSurface() const;
 
     bool isClientSupported() const;
@@ -133,8 +134,6 @@ public:
     quint32 proximitySerial() const;
     std::optional<quint32> downSerial() const;
 
-    void sendProximityIn(TabletV2Interface *tablet);
-    void sendProximityOut();
     void sendUp();
     void sendDown();
     void sendPressure(qreal pressure);
@@ -163,6 +162,9 @@ private:
                                    quint32 hil,
                                    const QList<Capability> &capability,
                                    InputDeviceTabletTool *device);
+    void sendProximityIn(TabletV2Interface *tablet);
+    void sendProximityOut();
+
     std::unique_ptr<TabletToolV2InterfacePrivate> d;
 };
 
@@ -324,6 +326,7 @@ public:
 
     bool hasImplicitGrab(quint32 serial) const;
     TabletToolV2Interface *toolByImplicitGrabSerial(quint32 serial) const;
+    QHash<InputDeviceTabletTool *, TabletToolV2Interface *> tools() const;
 
 private:
     friend class TabletManagerV2InterfacePrivate;
