@@ -700,12 +700,20 @@ Q_SIGNALS:
     void down(uint32_t serial);
     void up();
     void motion(const QPointF &position);
+    void frame();
+    void proximityIn();
+    void proximityOut();
+    void button(uint32_t serial, uint32_t button, uint32_t state);
 
 protected:
     void zwp_tablet_tool_v2_done() override;
     void zwp_tablet_tool_v2_down(uint32_t serial) override;
     void zwp_tablet_tool_v2_up() override;
     void zwp_tablet_tool_v2_motion(wl_fixed_t x, wl_fixed_t y) override;
+    void zwp_tablet_tool_v2_frame(uint32_t time) override;
+    void zwp_tablet_tool_v2_proximity_in(uint32_t serial, ::zwp_tablet_v2 *tablet, ::wl_surface *surface) override;
+    void zwp_tablet_tool_v2_proximity_out() override;
+    void zwp_tablet_tool_v2_button(uint32_t serial, uint32_t button, uint32_t state) override;
 
 private:
     bool m_ready = false;

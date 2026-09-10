@@ -2282,6 +2282,26 @@ void WpTabletToolV2::zwp_tablet_tool_v2_motion(wl_fixed_t x, wl_fixed_t y)
     Q_EMIT motion(QPointF(wl_fixed_to_double(x), wl_fixed_to_double(y)));
 }
 
+void WpTabletToolV2::zwp_tablet_tool_v2_frame(uint32_t time)
+{
+    Q_EMIT frame();
+}
+
+void WpTabletToolV2::zwp_tablet_tool_v2_proximity_in(uint32_t serial, ::zwp_tablet_v2 *tablet, ::wl_surface *surface)
+{
+    Q_EMIT proximityIn();
+}
+
+void WpTabletToolV2::zwp_tablet_tool_v2_proximity_out()
+{
+    Q_EMIT proximityOut();
+}
+
+void WpTabletToolV2::zwp_tablet_tool_v2_button(uint32_t serial, uint32_t buttonIndex, uint32_t state)
+{
+    Q_EMIT button(serial, buttonIndex, state);
+}
+
 WpTabletPadV2::WpTabletPadV2(::zwp_tablet_pad_v2 *id)
     : QtWayland::zwp_tablet_pad_v2(id)
 {
