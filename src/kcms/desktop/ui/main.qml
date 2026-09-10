@@ -82,6 +82,7 @@ KCM.ScrollViewKCM {
                     title: renameLayout.visible ? "" : model ? model.display : ""
                     elide: Text.ElideRight
                     displayHint: QQC2.Button.IconOnly
+                    textFormat: Text.PlainText
                     actions: [
                         Kirigami.Action {
                             id: renameAction
