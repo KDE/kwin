@@ -2,6 +2,8 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Automatically performs a mouse click when the user keeps the cursor still for a set amount of time",
+        "Description[ar]": "يقوم آليًا بتنفيذ نقرة بالفأرة عندما يبقي المستخدم المؤشر ثابتًا لمدة زمنية محددة",
+        "Description[bg]": "Автоматично извършва кликване с мишката, когато показалецът остане неподвижен за определено време",
         "Description[ca@valencia]": "Realitza automàticament un clic de ratolí quan l'usuari manté el cursor quiet durant un temps determinat",
         "Description[ca]": "Realitza automàticament un clic de ratolí quan l'usuari manté el cursor quiet durant un temps determinat",
         "Description[cs]": "Automaticky provede kliknutí myší, pokud uživatel ponechá kurzor nehybný po stanovenou dobu",
@@ -18,9 +20,12 @@
         "Description[sv]": "Utför automatiskt ett musklick när användaren håller markören stilla under en viss tid",
         "Description[tr]": "Kullanıcı imleci belirli bir süre hareketsiz tuttuğunda kendiliğinden bir fare tıklaması gerçekleştirir",
         "Description[uk]": "Автоматично виконує клацання кнопкою миші, якщо користувач утримує вказівник нерухомим вказаний проміжок часу",
+        "Description[zh_CN]": "用户光标保持静止一段时间后，自动点击鼠标",
         "EnabledByDefault": false,
         "License": "GPL",
         "Name": "Dwell Clicker",
+        "Name[ar]": "ناقر دويل",
+        "Name[bg]": "Автоматично кликване при задържане",
         "Name[ca@valencia]": "Clic d'estancament",
         "Name[ca]": "Clic d'estancament",
         "Name[cs]": "Dwell Clicker",
@@ -36,7 +41,8 @@
         "Name[sl]": "Kliker zadrževanja",
         "Name[sv]": "Hållklicka",
         "Name[tr]": "Bekleyince Tıklat",
-        "Name[uk]": "Клацання з затримкою"
+        "Name[uk]": "Клацання з затримкою",
+        "Name[zh_CN]": "悬停点击"
     },
     "org.kde.kwin.effect": {
         "internal": true
