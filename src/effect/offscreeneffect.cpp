@@ -134,8 +134,8 @@ bool OffscreenData::maybeRender(EffectWindow *window)
     const auto device = Compositor::self()->primaryDevice();
     const FormatModifierMap &supportedFormats = device->eglDisplay()->nonExternalOnlySupportedDrmFormats();
     // An 8 bit intermediate bands, most visibly across an HDR blending space's luminance range, so
-    // ask for 10 and let chooseFormat settle on what this device actually supports.
-    const auto chosen = MultiGpuSwapchain::chooseFormat(DRM_FORMAT_ARGB2101010, supportedFormats, supportedFormats)
+    // ask for 16 and let chooseFormat settle on what this device actually supports.
+    const auto chosen = MultiGpuSwapchain::chooseFormat(DRM_FORMAT_ARGB16161616, supportedFormats, supportedFormats)
                             .value_or(DrmFormat{
                                 .format = DRM_FORMAT_ARGB8888,
                                 .modifiers = supportedFormats[DRM_FORMAT_ARGB8888],
