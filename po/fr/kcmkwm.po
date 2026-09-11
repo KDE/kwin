@@ -561,12 +561,12 @@ msgstr "Clic d&roit :"
 #: ui/WindowActions.qml:20 ui/WindowActions.qml:51
 #, kde-format
 msgid "Focus, raise, and click through"
-msgstr "Donner  le focus, mettre en avant et enchaîner les clics"
+msgstr "Donner le focus, mettre en avant et enchainer les clics"
 
 #: ui/WindowActions.qml:21 ui/WindowActions.qml:52
 #, kde-format
 msgid "Focus and click through"
-msgstr "Donner  le focus et enchaîner les clics"
+msgstr "Donner le focus et enchainer les clics"
 
 #: ui/WindowActions.qml:27
 #, kde-format
@@ -608,7 +608,7 @@ msgstr "Actions sur la fenêtre interne n'ayant pas le focus"
 #, kde-format
 msgid "Focus, click through, and raise on release"
 msgstr ""
-"Donner le focus, enchaîner les clics et faire apparaitre au relâchement"
+"Donner le focus, enchainer les clics et faire apparaitre au relâchement"
 
 #: ui/WindowActions.qml:103
 #, kde-format
