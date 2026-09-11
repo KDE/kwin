@@ -24,6 +24,67 @@
 namespace KWin
 {
 
+// Table of GL formats/types associated with different values of QImage::Format.
+// Zero values indicate a direct upload is not feasible.
+//
+// Note: Blending is set up to expect premultiplied data, so the non-premultiplied
+// Format_ARGB32 must be converted to Format_ARGB32_Premultiplied ahead of time.
+struct ImageFormat
+{
+    GLenum internalFormat;
+    GLenum format;
+    GLenum type;
+} static const formatTable[] = {
+    {0, 0, 0}, // QImage::Format_Invalid
+    {0, 0, 0}, // QImage::Format_Mono
+    {0, 0, 0}, // QImage::Format_MonoLSB
+    {0, 0, 0}, // QImage::Format_Indexed8
+    {GL_BGRA_EXT, GL_BGRA_EXT, GL_UNSIGNED_BYTE}, // QImage::Format_RGB32
+    {0, 0, 0}, // QImage::Format_ARGB32
+    {GL_BGRA_EXT, GL_BGRA_EXT, GL_UNSIGNED_BYTE}, // QImage::Format_ARGB32_Premultiplied
+    {GL_RGB565, GL_RGB, GL_UNSIGNED_SHORT_5_6_5}, // QImage::Format_RGB16
+    {0, 0, 0}, // QImage::Format_ARGB8565_Premultiplied
+    {0, 0, 0}, // QImage::Format_RGB666
+    {0, 0, 0}, // QImage::Format_ARGB6666_Premultiplied
+    {0, 0, 0}, // QImage::Format_RGB555
+    {0, 0, 0}, // QImage::Format_ARGB8555_Premultiplied
+    {GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE}, // QImage::Format_RGB888
+    {0, 0, 0}, // QImage::Format_RGB444
+    {0, 0, 0}, // QImage::Format_ARGB4444_Premultiplied
+    {GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE}, // QImage::Format_RGBX8888
+    {0, 0, 0}, // QImage::Format_RGBA8888
+    {GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE}, // QImage::Format_RGBA8888_Premultiplied
+    {GL_RGB10_A2, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV}, // QImage::Format_BGR30
+    {GL_RGB10_A2, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV}, // QImage::Format_A2BGR30_Premultiplied
+    {0, 0, 0}, // QImage::Format_RGB30
+    {0, 0, 0}, // QImage::Format_A2RGB30_Premultiplied
+    {GL_R8, GL_RED, GL_UNSIGNED_BYTE}, // QImage::Format_Alpha8
+    {GL_R8, GL_RED, GL_UNSIGNED_BYTE}, // QImage::Format_Grayscale8
+    {GL_RGBA16, GL_RGBA, GL_UNSIGNED_SHORT}, // QImage::Format_RGBX64
+    {0, 0, 0}, // QImage::Format_RGBA64
+    {GL_RGBA16, GL_RGBA, GL_UNSIGNED_SHORT}, // QImage::Format_RGBA64_Premultiplied
+    {GL_R16, GL_RED, GL_UNSIGNED_SHORT}, // QImage::Format_Grayscale16
+    {0, 0, 0}, // QImage::Format_BGR888
+    {GL_RGB16F, GL_RGBA, GL_HALF_FLOAT}, // QImage::Format_RGBX16FPx4
+    {0, 0, 0}, // QImage::Format_RGBA16FPx4
+    {GL_RGBA16F, GL_RGBA, GL_HALF_FLOAT}, // QImage::Format_RGBA16FPx4_Premultiplied
+    {GL_RGB32F, GL_RGBA, GL_FLOAT}, // QImage::Format_RGBX32FPx4
+    {0, 0, 0}, // QImage::Format_RGBA32FPx4
+    {GL_RGBA32F, GL_RGBA, GL_FLOAT}, // QImage::Format_RGBA32FPx4_Premultiplied
+};
+
+static const ImageFormat *findFormat(const QImage &image, const EglContext *context)
+{
+    const auto index = static_cast<size_t>(image.format());
+    if (index < sizeof(formatTable) / sizeof(formatTable[0])) {
+        const auto &format = formatTable[index];
+        if (format.internalFormat && (format.format != GL_BGRA_EXT || context->supportsARGB32Textures())) {
+            return &format;
+        }
+    }
+    return nullptr;
+}
+
 GLTexture::GLTexture(GLenum target)
     : d(std::make_unique<GLTexturePrivate>())
 {
@@ -123,7 +184,11 @@ void GLTexture::update(const QImage &image, const Region &region, const QPoint &
     GLenum glFormat;
     GLenum type;
     QImage::Format uploadFormat;
-    if (context->supportsARGB32Textures()) {
+    if (const auto format = findFormat(image, context)) {
+        glFormat = format->format;
+        type = format->type;
+        uploadFormat = image.format();
+    } else if (context->supportsARGB32Textures()) {
         glFormat = GL_BGRA_EXT;
         type = GL_UNSIGNED_BYTE;
         uploadFormat = QImage::Format_ARGB32_Premultiplied;
@@ -448,7 +513,12 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
     GLenum format;
     GLenum type;
     QImage::Format uploadFormat;
-    if (context->supportsARGB32Textures()) {
+    if (const auto imageFormat = findFormat(image, context)) {
+        internalFormat = imageFormat->internalFormat;
+        format = imageFormat->format;
+        type = imageFormat->type;
+        uploadFormat = image.format();
+    } else if (context->supportsARGB32Textures()) {
         internalFormat = GL_BGRA_EXT;
         format = GL_BGRA_EXT;
         type = GL_UNSIGNED_BYTE;
