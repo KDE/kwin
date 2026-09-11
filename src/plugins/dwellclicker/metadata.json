@@ -2,6 +2,8 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Automatically performs a mouse click when the user keeps the cursor still for a set amount of time",
+        "Description[ar]": "يقوم آليًا بتنفيذ نقرة بالفأرة عندما يبقي المستخدم المؤشر ثابتًا لمدة زمنية محددة",
+        "Description[bg]": "Автоматично извършва кликване с мишката, когато показалецът остане неподвижен за определено време",
         "Description[ca@valencia]": "Realitza automàticament un clic de ratolí quan l'usuari manté el cursor quiet durant un temps determinat",
         "Description[ca]": "Realitza automàticament un clic de ratolí quan l'usuari manté el cursor quiet durant un temps determinat",
         "Description[cs]": "Automaticky provede kliknutí myší, pokud uživatel ponechá kurzor nehybný po stanovenou dobu",
@@ -21,6 +23,8 @@
         "EnabledByDefault": false,
         "License": "GPL",
         "Name": "Dwell Clicker",
+        "Name[ar]": "ناقر دويل",
+        "Name[bg]": "Автоматично кликване при задържане",
         "Name[ca@valencia]": "Clic d'estancament",
         "Name[ca]": "Clic d'estancament",
         "Name[cs]": "Dwell Clicker",
