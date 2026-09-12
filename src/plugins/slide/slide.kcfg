@@ -15,5 +15,8 @@
         <entry name="SlideBackground" type="Bool">
             <default>true</default>
         </entry>
+        <entry name="GapColor" type="Color">
+            <default>0,0,0</default>
+        </entry>
     </group>
 </kcfg>

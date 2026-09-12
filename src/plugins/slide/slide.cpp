@@ -89,6 +89,10 @@ void SlideEffect::reconfigure(ReconfigureFlags)
     m_hGap = SlideConfig::horizontalGap();
     m_vGap = SlideConfig::verticalGap();
     m_slideBackground = SlideConfig::slideBackground();
+    m_gapColor = SlideConfig::gapColor();
+    // The gap is cleared, not blended, so a translucent color would only
+    // darken unpredictably. Follow mousemark and force opacity here.
+    m_gapColor.setAlphaF(1.0);
 }
 
 void SlideEffectScreen::reconfigure()
@@ -135,6 +139,11 @@ void SlideEffectScreen::prePaintScreen(ScreenPrePaintData &data)
     if (m_state == State::Inactive) {
         return;
     }
+
+    // Past the guard above a slide is running, so the gap is about to be
+    // visible. Nothing has to undo this: the data is rebuilt every frame.
+    data.backgroundColor = m_parent->gapColor();
+
     const QList<VirtualDesktop *> desktops = effects->desktops();
     const int w = effects->desktopGridWidth();
     const int h = effects->desktopGridHeight();

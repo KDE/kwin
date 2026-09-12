@@ -125,6 +125,7 @@ class SlideEffect : public Effect
     Q_PROPERTY(int horizontalGap READ horizontalGap)
     Q_PROPERTY(int verticalGap READ verticalGap)
     Q_PROPERTY(bool slideBackground READ slideBackground)
+    Q_PROPERTY(QColor gapColor READ gapColor)
 
 public:
     SlideEffect();
@@ -147,6 +148,7 @@ public:
     int horizontalGap() const;
     int verticalGap() const;
     bool slideBackground() const;
+    QColor gapColor() const;
 
 private Q_SLOTS:
     void desktopChanged(VirtualDesktop *old, VirtualDesktop *current, EffectWindow *with, LogicalOutput *output);
@@ -163,6 +165,7 @@ private:
     int m_hGap;
     int m_vGap;
     bool m_slideBackground;
+    QColor m_gapColor;
 
     bool m_switchingActivity = false;
     QHash<LogicalOutput *, SlideEffectScreen> m_slideEffectScreens;
@@ -181,6 +184,11 @@ inline int SlideEffect::verticalGap() const
 inline bool SlideEffect::slideBackground() const
 {
     return m_slideBackground;
+}
+
+inline QColor SlideEffect::gapColor() const
+{
+    return m_gapColor;
 }
 
 inline bool SlideEffect::isActive() const
