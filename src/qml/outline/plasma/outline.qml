@@ -5,12 +5,12 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 import QtQuick
-import QtQuick.Window
+import QtQuick.Window as QuickWindow
 import org.kde.kwin
 import org.kde.ksvg as KSvg
 import org.kde.kirigami as Kirigami
 
-Window {
+QuickWindow.Window {
     id: window
 
     readonly property int animationDuration: Kirigami.Units.longDuration
