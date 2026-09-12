@@ -41,6 +41,7 @@ public:
     std::shared_ptr<EglSwapchainSlot> m_slot;
     std::shared_ptr<SyncReleasePoint> m_releasePoint;
     bool m_isDirty = true;
+    bool m_recursionGuard = false;
     GLShader *m_shader = nullptr;
     RenderGeometry::VertexSnappingMode m_vertexSnappingMode = RenderGeometry::VertexSnappingMode::Round;
     QMetaObject::Connection m_windowDamagedConnection;
@@ -159,11 +160,16 @@ bool OffscreenData::maybeRender(EffectWindow *window)
     data.setOpacity(1.0);
 
     const int mask = Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_WINDOW_TRANSLUCENT;
+    // This method can be called from redirect, in which case drawWindow
+    // will call on the effect again to render itself
+    m_recursionGuard = true;
     if (!effects->drawWindow(renderTarget, viewport, window, mask, Region::infinite(), data)) {
         m_slot.reset();
         m_swapchain.reset();
+        m_recursionGuard = false;
         return false;
     }
+    m_recursionGuard = false;
 
     GLFramebuffer::popFramebuffer();
     EGLNativeFence fence(m_swapchain->context()->displayObject());
@@ -268,7 +274,7 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
 bool OffscreenEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
     const auto it = d->windows.find(window);
-    if (it == d->windows.end()) {
+    if (it == d->windows.end() || it->second->m_recursionGuard) {
         return effects->drawWindow(renderTarget, viewport, window, mask, deviceRegion, data);
     }
     OffscreenData *offscreenData = it->second.get();
@@ -365,7 +371,7 @@ bool CrossFadeEffect::drawWindow(const RenderTarget &renderTarget, const RenderV
         }
     }
 
-    if (it == d->windows.end()) {
+    if (it == d->windows.end() || it->second->m_recursionGuard) {
         return true;
     }
     CrossFadeWindowData *offscreenData = it->second.get();
