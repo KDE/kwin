@@ -10,6 +10,7 @@
 
 #include "core/region.h"
 
+#include <QColor>
 #include <QMatrix4x4>
 #include <memory>
 
@@ -57,7 +58,13 @@ public:
     virtual void beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport);
     virtual void endFrame();
 
-    virtual void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion) = 0;
+    /*!
+     * Clears the background of \a deviceRegion to \a color.
+     *
+     * An invalid \a color clears to fully transparent black, which is what
+     * callers that have no opinion about the background should pass.
+     */
+    virtual void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion, const QColor &color) = 0;
     [[nodiscard]] virtual bool renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) = 0;
 
     virtual void setLayerDebugging(bool enable);

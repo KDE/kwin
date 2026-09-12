@@ -145,7 +145,7 @@ void WindowThumbnailSource::update()
     const int mask = Scene::PAINT_WINDOW_TRANSFORMED;
     ItemRenderer *renderer = kwinApp()->scene()->renderer(m_renderDevice);
     renderer->beginFrame(offscreenRenderTarget, offscreenViewport);
-    renderer->renderBackground(offscreenRenderTarget, offscreenViewport, offscreenRenderTarget.transformedRect());
+    renderer->renderBackground(offscreenRenderTarget, offscreenViewport, offscreenRenderTarget.transformedRect(), QColor());
     renderer->renderItem(offscreenRenderTarget, offscreenViewport, m_handle->windowItem(), mask, Region::infinite(), WindowPaintData{}, {}, {});
     renderer->endFrame();
 

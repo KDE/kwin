@@ -12,6 +12,8 @@
 #include "core/renderviewport.h"
 #include "scene/scene.h"
 
+#include <QColor>
+
 namespace KWin
 {
 
@@ -103,6 +105,8 @@ protected:
         Region deviceDamage;
         int mask = 0;
         QList<Phase2Data> phase2Data;
+        // Invalid unless an effect asked for a specific background this frame.
+        QColor backgroundColor;
     };
 
     // The screen that is being currently painted

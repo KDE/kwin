@@ -15,6 +15,8 @@
 #include <KPluginFactory>
 #include <KSharedConfig>
 
+#include <QColor>
+
 class QKeyEvent;
 
 namespace KWin
@@ -534,6 +536,14 @@ public:
      * \variable KWin::ScreenPrePaintData::frame
      */
     OutputFrame *frame = nullptr;
+
+    /*!
+     * \variable KWin::ScreenPrePaintData::backgroundColor
+     *
+     * The color the scene background is cleared to for this frame. An
+     * invalid color means the default, fully transparent black.
+     */
+    QColor backgroundColor;
 };
 
 /*!

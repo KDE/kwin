@@ -550,6 +550,7 @@ void WorkspaceScene::prePaint(SceneView *delegate, OutputFrame *frame)
     effects->prePaintScreen(prePaintData);
     m_paintContext.deviceDamage = painted_delegate->mapToDeviceCoordinatesAligned(prePaintData.paint) & painted_delegate->deviceRect();
     m_paintContext.mask = prePaintData.mask;
+    m_paintContext.backgroundColor = prePaintData.backgroundColor;
     m_paintContext.phase2Data.clear();
 
     if (m_paintContext.mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) {
@@ -728,7 +729,7 @@ bool WorkspaceScene::finalPaintScreen(const RenderTarget &renderTarget, const Re
 bool WorkspaceScene::paintGenericScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int, LogicalOutput *screen)
 {
     auto &renderer = m_renderers[painted_delegate->renderDevice()];
-    renderer->renderBackground(renderTarget, viewport, Region::infinite());
+    renderer->renderBackground(renderTarget, viewport, Region::infinite(), m_paintContext.backgroundColor);
 
     for (const Phase2Data &paintData : std::as_const(m_paintContext.phase2Data)) {
         if (!paintWindow(renderTarget, viewport, paintData.item, paintData.mask, paintData.deviceRegion)) {
@@ -769,7 +770,7 @@ bool WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
         }
     }
 
-    renderer->renderBackground(renderTarget, viewport, visible);
+    renderer->renderBackground(renderTarget, viewport, visible, m_paintContext.backgroundColor);
 
     for (const Phase2Data &paintData : std::as_const(m_paintContext.phase2Data)) {
         if (!paintWindow(renderTarget, viewport, paintData.item, paintData.mask, paintData.deviceRegion)) {

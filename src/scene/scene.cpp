@@ -438,7 +438,7 @@ void ItemView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffse
     RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), renderTarget, deviceOffset);
     auto renderer = m_item->scene()->renderer(renderDevice());
     renderer->beginFrame(renderTarget, renderViewport);
-    renderer->renderBackground(renderTarget, renderViewport, globalRegion);
+    renderer->renderBackground(renderTarget, renderViewport, globalRegion, QColor());
     WindowPaintData data;
     renderer->renderItem(renderTarget, renderViewport, m_item, 0, globalRegion, data, [this](Item *toRender) {
         return toRender != m_item;
@@ -568,7 +568,7 @@ void ItemTreeView::paint(const RenderTarget &renderTarget, const QPoint &deviceO
     RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), renderTarget, deviceOffset);
     auto renderer = m_item->scene()->renderer(renderDevice());
     renderer->beginFrame(renderTarget, renderViewport);
-    renderer->renderBackground(renderTarget, renderViewport, deviceRegion);
+    renderer->renderBackground(renderTarget, renderViewport, deviceRegion, QColor());
     WindowPaintData data;
     renderer->renderItem(renderTarget, renderViewport, m_item, 0, deviceRegion, data, {}, {});
     renderer->endFrame();

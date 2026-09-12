@@ -6,6 +6,7 @@
 
 #include "scene/itemrenderer_opengl.h"
 #include "core/colorpipeline.h"
+#include "core/colorspace.h"
 #include "core/pixelgrid.h"
 #include "core/renderdevice.h"
 #include "core/rendertarget.h"
@@ -355,14 +356,27 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
     return true;
 }
 
-void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion)
+void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion, const QColor &color)
 {
+    // A clear writes encoded values into the render target without running a
+    // shader, so the conversion cannot be folded into shader uniforms and has
+    // to happen here. Transparent black is the same in every color
+    // description, so the default needs no conversion at all.
+    QVector4D clearColor(0, 0, 0, 0);
+    if (color.isValid()) {
+        const QVector3D mapped = ColorDescription::sRGB->mapTo(QVector3D(color.redF(), color.greenF(), color.blueF()),
+                                                               *renderTarget.colorDescription(),
+                                                               RenderingIntent::Perceptual);
+        // An explicit background is opaque: a translucent clear in a
+        // premultiplied target has nothing to blend with and only darkens.
+        clearColor = QVector4D(mapped, 1.0);
+    }
+    glClearColor(clearColor.x(), clearColor.y(), clearColor.z(), clearColor.w());
+
     const auto clipped = deviceRegion & renderTarget.transformedRect();
     if (clipped == renderTarget.transformedRect()) {
-        glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
     } else if (!clipped.isEmpty()) {
-        glClearColor(0, 0, 0, 0);
         glEnable(GL_SCISSOR_TEST);
 
         const auto targetSize = renderTarget.size();
