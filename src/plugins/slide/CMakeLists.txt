@@ -30,6 +30,7 @@ if (KWIN_BUILD_KCMS)
         KF6::KCMUtils
         KF6::CoreAddons
         KF6::I18n
+        KF6::WidgetsAddons
         Qt::DBus
         KWinEffectsInterface
     )

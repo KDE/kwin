@@ -28,6 +28,22 @@ SlideEffectConfig::SlideEffectConfig(QObject *parent, const KPluginMetaData &dat
     m_ui.setupUi(widget());
     SlideConfig::instance(KWIN_CONFIG);
     addConfig(SlideConfig::self(), widget());
+
+    // The gap is the cleared framebuffer showing through, so it is only ever
+    // visible while the background slides along with the desktops. Left
+    // stationary the wallpaper covers the output at all times and the color
+    // has nothing to show through, so follow the checkbox rather than leaving
+    // a control that silently does nothing.
+    //
+    // The initial state is applied here rather than through a connection in
+    // the .ui file: that would only react to a change, and loading a stored
+    // false into an already unchecked box emits nothing.
+    auto followSlideBackground = [this](bool enabled) {
+        m_ui.label_GapColor->setEnabled(enabled);
+        m_ui.kcfg_GapColor->setEnabled(enabled);
+    };
+    connect(m_ui.kcfg_SlideBackground, &QCheckBox::toggled, this, followSlideBackground);
+    followSlideBackground(m_ui.kcfg_SlideBackground->isChecked());
 }
 
 SlideEffectConfig::~SlideEffectConfig()
