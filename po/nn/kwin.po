@@ -4428,10 +4428,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland krasja"
-
-#~ msgid "OpenGL compositing is required for screencasting"
-#~ msgstr "Krev OpenGL-samansetjing for skjermdeling"
-
-#~ msgctxt "@label"
-#~ msgid "Paint Amount"
-#~ msgstr "Oppteikningsmengd"
