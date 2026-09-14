@@ -135,6 +135,7 @@ public:
         QByteArrayLiteral("org_kde_plasma_activation_feedback"),
         QByteArrayLiteral("kde_lockscreen_overlay_v1"),
         QByteArrayLiteral("wp_security_context_manager_v1"),
+        QByteArrayLiteral("ext_data_control_manager_v1"),
     };
 
     const QSet<QByteArray> inputmethodInterfaces = {"zwp_input_panel_v1", "zwp_input_method_v1"};
