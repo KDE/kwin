@@ -114,6 +114,11 @@ private:
 
 void PointerInputTest::initTestCase()
 {
+    KConfig kxkbrc("kxkbrc");
+    kxkbrc.group(QStringLiteral("Layout")).writeEntry("LayoutList", "us");
+    kxkbrc.group(QStringLiteral("Layout")).writeEntry("VariantList", "altgr-intl");
+    kxkbrc.sync();
+
     qRegisterMetaType<KWin::Window *>();
     QVERIFY(waylandServer()->init(qAppName()));
 

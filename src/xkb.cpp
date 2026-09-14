@@ -808,6 +808,9 @@ void Xkb::updateModifiers()
     if (xkb_state_mod_index_is_active(m_state.get(), m_metaModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
         mods |= Qt::MetaModifier;
     }
+    if (xkb_state_mod_index_is_active(m_state.get(), m_mod5Modifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
+        mods |= Qt::GroupSwitchModifier;
+    }
     if (m_keysym >= XKB_KEY_KP_Space && m_keysym <= XKB_KEY_KP_Equal) {
         mods |= Qt::KeypadModifier;
     }
@@ -915,7 +918,9 @@ Qt::KeyboardModifiers Xkb::modifiersRelevantForGlobalShortcuts(uint32_t scanCode
     if (xkb_state_mod_index_is_active(m_state.get(), m_metaModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
         mods |= Qt::MetaModifier;
     }
-
+    if (xkb_state_mod_index_is_active(m_state.get(), m_mod5Modifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
+        mods |= Qt::GroupSwitchModifier;
+    }
     if (m_keysym >= XKB_KEY_KP_Space && m_keysym <= XKB_KEY_KP_Equal) {
         mods |= Qt::KeypadModifier;
     }
