@@ -28,6 +28,7 @@ namespace KWin
 {
 
 class NightLightDBusInterface;
+class NightLightSettings;
 
 typedef QPair<QDateTime, QDateTime> DateTimes;
 
@@ -254,6 +255,7 @@ private:
     NightLightDBusInterface *m_iface;
     KSystemClockSkewNotifier *m_skewNotifier;
 
+    std::unique_ptr<NightLightSettings> m_settings;
     std::unique_ptr<NightLightState> m_stateConfig;
     std::unique_ptr<KDarkLightScheduleProvider> m_darkLightScheduler;
 

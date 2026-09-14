@@ -37,9 +37,8 @@ static const int QUICK_ADJUST_DURATION = 2000;
 static const int TEMPERATURE_STEP = 50;
 
 NightLightManager::NightLightManager()
+    : m_settings(std::make_unique<NightLightSettings>(kwinApp()->config()))
 {
-    NightLightSettings::instance(kwinApp()->config());
-
     m_iface = new NightLightDBusInterface(this);
     m_skewNotifier = new KSystemClockSkewNotifier(this);
     connect(m_skewNotifier, &KSystemClockSkewNotifier::skewed, this, &NightLightManager::resetAllTimers);
@@ -195,13 +194,12 @@ qint64 NightLightManager::scheduledTransitionDuration() const
 
 void NightLightManager::readConfig()
 {
-    NightLightSettings *settings = NightLightSettings::self();
-    settings->load();
+    m_settings->load();
 
-    setEnabled(settings->active());
+    setEnabled(m_settings->active());
 
-    const NightLightMode mode = settings->mode();
-    switch (settings->mode()) {
+    const NightLightMode mode = m_settings->mode();
+    switch (m_settings->mode()) {
     case NightLightMode::Constant:
     case NightLightMode::DarkLight:
         setMode(mode);
@@ -229,8 +227,8 @@ void NightLightManager::readConfig()
         m_darkLightScheduler.reset();
     }
 
-    m_dayTargetTemperature = std::clamp(settings->dayTemperature(), MIN_TEMPERATURE, DEFAULT_DAY_TEMPERATURE);
-    m_nightTargetTemperature = std::clamp(settings->nightTemperature(), MIN_TEMPERATURE, DEFAULT_DAY_TEMPERATURE);
+    m_dayTargetTemperature = std::clamp(m_settings->dayTemperature(), MIN_TEMPERATURE, DEFAULT_DAY_TEMPERATURE);
+    m_nightTargetTemperature = std::clamp(m_settings->nightTemperature(), MIN_TEMPERATURE, DEFAULT_DAY_TEMPERATURE);
 }
 
 void NightLightManager::resetAllTimers()
