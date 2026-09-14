@@ -4427,10 +4427,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland се срина"
-
-#~ msgid "OpenGL compositing is required for screencasting"
-#~ msgstr "Изисква се OpenGL композитор за предаването на екрана"
-
-#~ msgctxt "@label"
-#~ msgid "Paint Amount"
-#~ msgstr "Степен на оцветяване:"
