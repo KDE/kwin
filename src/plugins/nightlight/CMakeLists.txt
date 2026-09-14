@@ -25,6 +25,7 @@ kconfig_target_kcfg_file(nightlight
 kconfig_target_kcfg_file(nightlight
     FILE nightlightstate.kcfg
     CLASS_NAME NightLightState
+    NAME_SPACE KWin
     MUTATORS
 )
 

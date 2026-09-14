@@ -21,7 +21,6 @@
 
 class KDarkLightScheduleProvider;
 class KSystemClockSkewNotifier;
-class NightLightState;
 class QTimer;
 
 namespace KWin
@@ -29,6 +28,7 @@ namespace KWin
 
 class NightLightDBusInterface;
 class NightLightSettings;
+class NightLightState;
 
 typedef QPair<QDateTime, QDateTime> DateTimes;
 
