@@ -79,7 +79,7 @@ KCM.ScrollViewKCM {
 
             contentItem: StackLayout {
                 Kirigami.TitleSubtitleWithActions {
-                    title: renameLayout.visible ? "" : model ? model.display : ""
+                    title: renameLayout.visible ? "" : model ? xi18nc("@label/rich", "%1", model.display) : ""
                     elide: Text.ElideRight
                     displayHint: QQC2.Button.IconOnly
                     actions: [
