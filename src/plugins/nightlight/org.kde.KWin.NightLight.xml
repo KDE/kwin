@@ -81,7 +81,7 @@
     <!--
         This property holds a value to indicate the operating mode.
 
-        Valid modes: 0 - automatic, 1 - location, 2 - timings, 3 - constant.
+        Valid modes: 0 - always on, 1 - from sunset to sunrise.
     -->
     <property name="mode" type="u" access="read"/>
 
