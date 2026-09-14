@@ -83,7 +83,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame(OutputFr
 
 bool VirtualEglGbmLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
-    if (m_query) {
+    if (frame && m_query) {
         m_query->end();
         frame->addRenderTimeQuery(std::move(m_query));
     }
