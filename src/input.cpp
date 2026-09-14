@@ -1292,9 +1292,16 @@ private:
 namespace
 {
 
+static bool isGlobalWindowActionModifier(Qt::KeyboardModifiers modifiers)
+{
+    const auto commandAllModifier = options->commandAllModifier();
+    return modifiers == commandAllModifier
+        || (commandAllModifier == Qt::AltModifier && modifiers == Qt::GroupSwitchModifier);
+}
+
 static std::optional<Options::MouseCommand> globalWindowAction(Qt::MouseButton button, Qt::KeyboardModifiers modifiers)
 {
-    if (modifiers != options->commandAllModifier()) {
+    if (!isGlobalWindowActionModifier(modifiers)) {
         return std::nullopt;
     }
     if (workspace()->globalShortcutsDisabled()) {
@@ -1356,7 +1363,7 @@ std::optional<Options::MouseCommand> globalWindowWheelAction(PointerAxisEvent *e
     if (event->orientation != Qt::Vertical) {
         return std::nullopt;
     }
-    if (event->modifiersRelevantForGlobalShortcuts != options->commandAllModifier()) {
+    if (!isGlobalWindowActionModifier(event->modifiersRelevantForGlobalShortcuts)) {
         return std::nullopt;
     }
     if (input()->pointer()->isConstrained() || workspace()->globalShortcutsDisabled()) {
