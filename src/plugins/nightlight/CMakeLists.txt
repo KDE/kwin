@@ -12,7 +12,15 @@ ecm_qt_declare_logging_category(nightlight
     DEFAULT_SEVERITY Critical
 )
 
-kconfig_add_kcfg_files(nightlight nightlightsettings.kcfgc)
+kconfig_target_kcfg_file(nightlight
+    FILE nightlightsettings.kcfg
+    CLASS_NAME NightLightSettings
+    USE_ENUM_TYPES
+    NAME_SPACE KWin
+    INCLUDE_FILES
+        nightlightmanager.h
+    MUTATORS
+)
 
 kconfig_target_kcfg_file(nightlight
     FILE nightlightstate.kcfg
