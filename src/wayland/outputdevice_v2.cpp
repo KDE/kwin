@@ -290,6 +290,7 @@ public:
 
     Resource *createResource(OutputDeviceV2InterfacePrivate::Resource *output);
     Resource *findResource(OutputDeviceV2InterfacePrivate::Resource *output) const;
+    void removeResources(OutputDeviceV2InterfacePrivate::Resource *output);
 
     void bindResource(Resource *resource);
 
@@ -455,6 +456,9 @@ BackendOutput *OutputDeviceV2Interface::handle() const
 
 void OutputDeviceV2InterfacePrivate::kde_output_device_v2_release(Resource *resource)
 {
+    for (const auto &mode : std::as_const(m_modes)) {
+        OutputDeviceModeV2InterfacePrivate::get(mode.get())->removeResources(resource);
+    }
     wl_resource_destroy(resource->handle);
 }
 
@@ -1301,6 +1305,7 @@ OutputDeviceModeV2InterfacePrivate::~OutputDeviceModeV2InterfacePrivate()
     const auto map = resourceMap();
     for (Resource *resource : map) {
         send_removed(resource->handle);
+        wl_resource_destroy(resource->handle);
     }
 }
 
@@ -1321,6 +1326,17 @@ OutputDeviceModeV2InterfacePrivate::Resource *OutputDeviceModeV2InterfacePrivate
         }
     }
     return nullptr;
+}
+
+void OutputDeviceModeV2InterfacePrivate::removeResources(OutputDeviceV2InterfacePrivate::Resource *output)
+{
+    const auto resources = resourceMap();
+    for (auto resource : resources) {
+        auto modeResource = static_cast<ModeResource *>(resource);
+        if (modeResource->output == output) {
+            wl_resource_destroy(modeResource->handle);
+        }
+    }
 }
 
 OutputDeviceModeV2InterfacePrivate::Resource *OutputDeviceModeV2InterfacePrivate::kde_output_device_mode_v2_allocate()
