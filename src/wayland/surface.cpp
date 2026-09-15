@@ -500,6 +500,7 @@ RawSurfaceAttachedState *SurfaceInterface::addExtension(RawSurfaceExtension *ext
 
 void SurfaceInterface::removeExtension(RawSurfaceExtension *extension)
 {
+    d->current->extensions.erase(extension);
     d->pending->extensions.erase(extension);
 
     if (d->subsurface.transaction) {
