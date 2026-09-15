@@ -1838,6 +1838,7 @@ XdgPopupWindow::XdgPopupWindow(XdgPopupInterface *shellSurface)
 {
     setOutput(workspace()->activeOutput());
     setMoveResizeOutput(workspace()->activeOutput());
+    setSkipSwitcher(true);
 
     m_windowType = WindowType::Unknown;
 
