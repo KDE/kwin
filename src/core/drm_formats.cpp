@@ -642,6 +642,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                .floatingPoint = false,
                                .yuv = true,
                            }},
+#ifdef DRM_FORMAT_XVUY2101010
     {DRM_FORMAT_XVUY2101010, FormatInfo{
                                  .drmFormat = DRM_FORMAT_XVUY2101010,
                                  .bitsPerColor = 10,
@@ -652,6 +653,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                  .floatingPoint = false,
                                  .yuv = true,
                              }},
+#endif
 };
 
 std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
