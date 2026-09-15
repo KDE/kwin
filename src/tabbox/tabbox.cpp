@@ -416,6 +416,9 @@ void TabBox::watchWindow(Window *window)
 
 void TabBox::handleWindowAdded(Window *window)
 {
+    if (window->skipSwitcher()) {
+        return;
+    }
     watchWindow(window);
     reset(true);
 }
