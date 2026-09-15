@@ -529,11 +529,16 @@ void GLShader::setColorspaceUniforms(const std::shared_ptr<ColorDescription> &sr
         setUniform(Vec2Uniform::DestinationTransferFunctionParams, QVector2D(dst->transferFunction().minLuminance, dst->transferFunction().maxLuminance - dst->transferFunction().minLuminance));
     }
     setUniform(FloatUniform::DestinationReferenceLuminance, dst->referenceLuminance());
-    setUniform(FloatUniform::MaxDestinationLuminance, dst->maxHdrLuminance().value_or(10'000));
+
+    const double maxSrcLuminance = src->maxHdrLuminance().value_or(src->referenceLuminance()) * dst->referenceLuminance() / src->referenceLuminance();
     if (!s_disableTonemapping && intent == RenderingIntent::Perceptual) {
-        setUniform(FloatUniform::MaxTonemappingLuminance, src->maxHdrLuminance().value_or(src->referenceLuminance()) * dst->referenceLuminance() / src->referenceLuminance());
+        // do tonemapping
+        setUniform(FloatUniform::MaxTonemappingLuminance, maxSrcLuminance);
+        setUniform(FloatUniform::MaxDestinationLuminance, dst->maxHdrLuminance().value_or(10'000));
     } else {
-        setUniform(FloatUniform::MaxTonemappingLuminance, dst->maxHdrLuminance().value_or(10'000));
+        // clip to src luminance
+        setUniform(FloatUniform::MaxTonemappingLuminance, maxSrcLuminance);
+        setUniform(FloatUniform::MaxDestinationLuminance, maxSrcLuminance);
     }
     setUniform(Mat4Uniform::DestinationToLMS, dst->containerColorimetry().toLMS());
     setUniform(Mat4Uniform::LMSToDestination, dst->containerColorimetry().fromLMS());

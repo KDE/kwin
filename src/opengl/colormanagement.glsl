@@ -168,7 +168,7 @@ const mat3 fromICtCp = mat3(
 vec3 doTonemapping(vec3 color) {
     if (maxTonemappingLuminance < maxDestinationLuminance * 1.01) {
         // clipping is enough
-        return clamp(color.rgb, vec3(0.0), vec3(maxDestinationLuminance));
+        return clamp(color.rgb, vec3(0.0), vec3(maxTonemappingLuminance));
     }
 
     // convert to ICtCp, to properly split luminance and color

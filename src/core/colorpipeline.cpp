@@ -86,8 +86,8 @@ ColorPipeline ColorPipeline::create(const std::shared_ptr<ColorDescription> &fro
                || maxLum < from->transferFunction().maxLuminance
                || matrixOutputRange.max > maxOutputLuminance * eta) {
         ret.addClamp(ValueRange{
-            .min = to->minLuminance(),
-            .max = maxOutputLuminance,
+            .min = std::max(matrixOutputRange.min, to->minLuminance()),
+            .max = std::min(matrixOutputRange.max, maxOutputLuminance),
         });
     }
 
