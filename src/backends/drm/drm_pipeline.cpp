@@ -506,8 +506,8 @@ bool DrmPipeline::presentAsync(OutputLayer *layer, std::optional<std::chrono::na
 void DrmPipeline::applyPendingChanges()
 {
     m_next = m_pending;
-    m_commitThread->setModeInfo(m_pending.mode->refreshRate(), m_pending.mode->vblankTime());
-    m_output->renderLoop()->setPresentationSafetyMargin(m_commitThread->safetyMargin());
+    const auto safetyMargin = m_commitThread->setModeInfo(m_pending.mode->refreshRate(), m_pending.mode->vblankTime());
+    m_output->renderLoop()->setPresentationSafetyMargin(safetyMargin);
     m_output->renderLoop()->setRefreshRate(m_pending.mode->refreshRate());
 }
 
@@ -524,9 +524,9 @@ DrmGpu *DrmPipeline::gpu() const
 void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp)
 {
     RenderLoopPrivate::get(m_output->renderLoop())->notifyVblank(timestamp);
-    m_commitThread->pageFlipped(timestamp);
+    const auto safetyMargin = m_commitThread->pageFlipped(timestamp);
     // the commit thread adjusts the safety margin on every commit
-    m_output->renderLoop()->setPresentationSafetyMargin(m_commitThread->safetyMargin());
+    m_output->renderLoop()->setPresentationSafetyMargin(safetyMargin);
     m_output->maybeUpdateDpmsState();
     if (gpu()->needsModeset()) {
         gpu()->maybeModeset(nullptr, nullptr);
@@ -745,11 +745,6 @@ std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(TransferFunction::Type t
         },
     };
     return DrmBlob::create(gpu(), &data, sizeof(data));
-}
-
-std::chrono::nanoseconds DrmPipeline::presentationDeadline() const
-{
-    return m_commitThread->safetyMargin();
 }
 
 }

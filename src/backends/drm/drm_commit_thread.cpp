@@ -76,9 +76,10 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                 continue;
             }
             const auto now = std::chrono::steady_clock::now();
-            if (m_targetPageflipTime > now + m_safetyMargin) {
+            const auto wakeupTime = m_targetPageflipTime - m_safetyMargin;
+            if (wakeupTime > now) {
                 lock.unlock();
-                std::this_thread::sleep_until(m_targetPageflipTime - m_safetyMargin);
+                std::this_thread::sleep_until(wakeupTime);
                 lock.lock();
                 // the main thread might've modified the list
                 if (m_commits.empty()) {
@@ -361,7 +362,7 @@ void DrmCommitThread::clearDroppedCommits()
 // is actually applied. Waiting for the commit returning seems to work on Intel and AMD, but not with NVidia
 static const std::chrono::microseconds s_safetyMarginMinimum{environmentVariableIntValue("KWIN_DRM_OVERRIDE_SAFETY_MARGIN").value_or(1000)};
 
-void DrmCommitThread::setModeInfo(uint32_t maximum, std::chrono::nanoseconds vblankTime)
+std::chrono::nanoseconds DrmCommitThread::setModeInfo(uint32_t maximum, std::chrono::nanoseconds vblankTime)
 {
     std::unique_lock lock(m_mutex);
     m_minVblankInterval = std::chrono::nanoseconds(1'000'000'000'000ull / maximum);
@@ -369,9 +370,10 @@ void DrmCommitThread::setModeInfo(uint32_t maximum, std::chrono::nanoseconds vbl
     // the 1.5ms on top of that was chosen experimentally, for the time it takes to commit + scheduling inaccuracies
     m_baseSafetyMargin = vblankTime + s_safetyMarginMinimum;
     m_safetyMargin = m_baseSafetyMargin + m_additionalSafetyMargin;
+    return m_safetyMargin;
 }
 
-void DrmCommitThread::pageFlipped(std::chrono::nanoseconds timestamp)
+std::chrono::nanoseconds DrmCommitThread::pageFlipped(std::chrono::nanoseconds timestamp)
 {
     std::unique_lock lock(m_mutex);
     if (m_pageflipTimeoutDetected) {
@@ -384,6 +386,7 @@ void DrmCommitThread::pageFlipped(std::chrono::nanoseconds timestamp)
         m_targetPageflipTime = estimateNextVblank(std::chrono::steady_clock::now());
         m_commitPending.notify_all();
     }
+    return m_safetyMargin;
 }
 
 bool DrmCommitThread::pageflipsPending()
@@ -397,11 +400,6 @@ TimePoint DrmCommitThread::estimateNextVblank(TimePoint now) const
     // the pageflip timestamp may be in the future
     const uint64_t pageflipsSince = now >= m_lastPageflip ? (now - m_lastPageflip) / m_minVblankInterval : 0;
     return m_lastPageflip + m_minVblankInterval * (pageflipsSince + 1);
-}
-
-std::chrono::nanoseconds DrmCommitThread::safetyMargin() const
-{
-    return m_safetyMargin;
 }
 
 void DrmCommitThread::handlePing()
