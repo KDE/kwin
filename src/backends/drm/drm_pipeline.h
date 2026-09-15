@@ -69,7 +69,6 @@ public:
 
     QList<DrmPipelineLayer *> layers() const;
     void setLayers(const QList<DrmPipelineLayer *> &layers);
-    std::chrono::nanoseconds presentationDeadline() const;
 
     DrmCrtc *crtc() const;
     std::shared_ptr<DrmConnectorMode> mode() const;
