@@ -22,6 +22,7 @@ Item {
     readonly property real columnHeight: desktopHeight + Kirigami.Units.gridUnit
     readonly property real columnWidth: desktopWidth + Kirigami.Units.gridUnit
     readonly property int desktopCount: desktopRepeater.count
+    readonly property int highlightThickness: Kirigami.Units.smallSpacing
 
     property bool verticalDesktopBar
     property KWinComponents.WindowModel windowModel
@@ -34,8 +35,8 @@ Item {
 
     Flickable {
         anchors.fill: parent
-        leftMargin: Math.max((width - contentWidth) / 2, 0)
-        topMargin: Math.max((height - contentHeight) / 2, 0)
+        leftMargin: Math.max(((width - contentWidth) / 2) + bar.highlightThickness, 0)
+        topMargin: Math.max(((height - contentHeight) / 2) + bar.highlightThickness, 0)
         contentWidth: contentItem.childrenRect.width
         contentHeight: contentItem.childrenRect.height
         interactive: contentWidth > width
@@ -43,7 +44,7 @@ Item {
         flickableDirection: Flickable.HorizontalFlick
 
         Grid {
-            spacing: Kirigami.Units.largeSpacing
+            spacing: Kirigami.Units.largeSpacing + bar.highlightThickness
             columns: verticalDesktopBar ? 1 : desktopCount + 1
 
             Repeater {
@@ -299,7 +300,7 @@ Item {
                 required property bool hovered
                 visible: active || hovered
                 anchors.fill: parent
-                anchors.margins: -Kirigami.Units.smallSpacing
+                anchors.margins: -bar.highlightThickness
                 radius: Kirigami.Units.cornerRadius
                 color: Kirigami.Theme.highlightColor
                 opacity: !active && hovered ? 0.5 : 1.0
