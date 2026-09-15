@@ -511,7 +511,7 @@ void Item::scheduleFrame(std::optional<std::chrono::steady_clock::time_point> ta
         }
         const Rect geometry = paintedDeviceArea(view, rect());
         if (!geometry.isEmpty()) {
-            view->scheduleRepaint(this);
+            view->scheduleRepaint(this, targetTime);
         }
     }
 }
