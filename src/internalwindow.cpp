@@ -42,6 +42,7 @@ InternalWindow::InternalWindow(QWindow *handle)
     setOnAllDesktops(true);
     setOpacity(m_handle->opacity());
     setSkipCloseAnimation(m_handle->property(s_skipClosePropertyName).toBool());
+    setSkipSwitcher(true);
     updateColorScheme();
     updateShadow();
 
