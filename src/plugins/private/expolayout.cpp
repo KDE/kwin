@@ -678,11 +678,10 @@ QList<QRectF> ExpoLayout::layout(const QRectF &area, const QList<QRectF> &window
                             shortSide * m_relativeMarginBottom);
 
     const qreal effectiveMinSizeFactor = std::min(m_relativeMinLength, 1.0);
-    const QRectF minSize(0, 0, effectiveMinSizeFactor * area.width(), effectiveMinSizeFactor * area.height());
+    const QSizeF minSize = effectiveMinSizeFactor * area.size();
 
     // windows bigger than 4x the area are considered ill-behaved and their sizes are clipped
-    const qreal effectiveMaxSizeFactor = 4;
-    const QRectF maxSize(0, 0, effectiveMaxSizeFactor * area.width(), effectiveMaxSizeFactor * area.height());
+    const QSizeF maxSize = 4 * area.size();
 
     QList<QPointF> centers;
     for (const QRectF &windowSize : windowSizes) {
@@ -703,7 +702,7 @@ QList<QRectF> ExpoLayout::layout(const QRectF &area, const QList<QRectF> &window
     }
 }
 
-QList<QRectF> ExpoLayout::adjustSizes(const QRectF &minSize, const QRectF &maxSize, const QMarginsF &margins, const QList<QRectF> &windowSizes)
+QList<QRectF> ExpoLayout::adjustSizes(const QSizeF &minSize, const QSizeF &maxSize, const QMarginsF &margins, const QList<QRectF> &windowSizes)
 {
     QList<QRectF> adjustedSizes;
     for (QRectF windowSize : windowSizes) {

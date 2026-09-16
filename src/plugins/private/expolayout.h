@@ -123,7 +123,7 @@ protected:
      * @param maxSize. Then add @param margins to each window size, and @return
      * the adjusted window sizes.
      */
-    QList<QRectF> adjustSizes(const QRectF &minSize, const QRectF &maxSize, const QMarginsF &margins, const QList<QRectF> &windowSizes);
+    QList<QRectF> adjustSizes(const QSizeF &minSize, const QSizeF &maxSize, const QMarginsF &margins, const QList<QRectF> &windowSizes);
 
     /**
      * @brief Use binary search to find a good packing of the @param windowSizes
