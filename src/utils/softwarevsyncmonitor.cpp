@@ -57,6 +57,11 @@ void SoftwareVsyncMonitor::arm()
     m_softwareClock.start(std::chrono::duration_cast<std::chrono::milliseconds>(m_vblankTimestamp - currentTime));
 }
 
+void SoftwareVsyncMonitor::disarm()
+{
+    m_softwareClock.stop();
+}
+
 } // namespace KWin
 
 #include "moc_softwarevsyncmonitor.cpp"

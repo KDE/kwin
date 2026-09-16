@@ -131,12 +131,11 @@ void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state
             m_pwNodeId = pw_stream_get_node_id(m_pwStream);
             Q_EMIT ready(nodeId(), objectSerial());
         }
-        m_pendingFrame.stop();
+        m_vsync->disarm();
         m_pendingContents = Contents();
         m_source->pause();
         break;
     case PW_STREAM_STATE_STREAMING:
-        m_nextDue.reset();
         m_source->resume();
         break;
     case PW_STREAM_STATE_CONNECTING:
@@ -245,6 +244,8 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
         m_source->resize(negotiatedSize);
     }
 
+    m_vsync->setRefreshRate(framerate());
+
     auto modifierProperty = spa_pod_find_prop(format, nullptr, SPA_FORMAT_VIDEO_modifier);
     if (modifierProperty) {
         const uint32_t valueCount = SPA_POD_CHOICE_N_VALUES(&modifierProperty->value);
@@ -339,6 +340,7 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
     , m_pwCore(pwCore)
     , m_source(source)
     , m_resolution(source->textureSize())
+    , m_vsync(SoftwareVsyncMonitor::create())
 {
     connect(source, &ScreenCastSource::frame, this, [this]() {
         scheduleRecord(Content::Video);
@@ -368,9 +370,9 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
         _this->onStreamParamChanged(id, param);
     };
 
-    m_pendingFrame.setSingleShot(true);
-    connect(&m_pendingFrame, &QTimer::timeout, this, [this] {
-        record(m_pendingContents);
+    m_vsync->setRefreshRate(framerate());
+    connect(m_vsync.get(), &SoftwareVsyncMonitor::vblankOccurred, this, [this](std::chrono::nanoseconds timestamp) {
+        record(timestamp, m_pendingContents);
         m_pendingContents = Contents();
     });
 }
@@ -408,19 +410,12 @@ bool ScreenCastStream::init()
 
 uint ScreenCastStream::framerate()
 {
-    if (m_pwStream && m_videoFormat.max_framerate.denom != 0) {
-        return (m_videoFormat.max_framerate.num + m_videoFormat.max_framerate.denom / 2) / m_videoFormat.max_framerate.denom;
+    constexpr uint32_t maxFramerate = 1'000'000;
+    if (m_pwStream && m_videoFormat.max_framerate.num != 0 && m_videoFormat.max_framerate.denom != 0) {
+        return std::min((1000 * m_videoFormat.max_framerate.num) / m_videoFormat.max_framerate.denom, maxFramerate);
     }
 
-    return 0;
-}
-
-std::chrono::nanoseconds ScreenCastStream::frameInterval() const
-{
-    if (m_videoFormat.max_framerate.num == 0) {
-        return std::chrono::nanoseconds::zero();
-    }
-    return std::chrono::nanoseconds(1'000'000'000ull * m_videoFormat.max_framerate.denom / m_videoFormat.max_framerate.num);
+    return maxFramerate;
 }
 
 uint ScreenCastStream::nodeId()
@@ -499,7 +494,7 @@ void ScreenCastStream::close()
     }
 
     m_closed = true;
-    m_pendingFrame.stop();
+    m_vsync->disarm();
 
     disconnect(m_cursor.changedConnection);
     m_cursor.changedConnection = {};
@@ -532,17 +527,7 @@ void ScreenCastStream::scheduleRecord(Contents contents)
 
     m_pendingContents |= contents;
 
-    if (m_pendingFrame.isActive()) {
-        return;
-    }
-    std::chrono::milliseconds waitInterval{0};
-    if (frameInterval() != std::chrono::nanoseconds::zero() && m_nextDue.has_value()) {
-        const auto now = std::chrono::steady_clock::now();
-        if (m_nextDue.value() > now) {
-            waitInterval = std::chrono::ceil<std::chrono::milliseconds>(m_nextDue.value() - now);
-        }
-    }
-    m_pendingFrame.start(waitInterval);
+    m_vsync->arm();
 }
 
 pw_buffer *ScreenCastStream::dequeueBuffer()
@@ -596,7 +581,7 @@ pw_buffer *ScreenCastStream::dequeueBuffer()
     return pwBuffer;
 }
 
-void ScreenCastStream::record(Contents contents)
+void ScreenCastStream::record(std::chrono::nanoseconds timestamp, Contents contents)
 {
     struct pw_buffer *pwBuffer = dequeueBuffer();
     if (!pwBuffer) {
@@ -635,11 +620,6 @@ void ScreenCastStream::record(Contents contents)
     }
 
     spa_meta_sync_timeline *synctmeta = nullptr;
-
-    // Use one timestamp for this record operation. Sample it before video
-    // rendering, readback and buffer synchronization add latency.
-    const auto timestamp = std::chrono::duration_cast<std::chrono::nanoseconds>(
-        std::chrono::steady_clock::now().time_since_epoch());
     Region damage;
     if (effectiveContents & Content::Video) {
         if (auto memfd = dynamic_cast<MemFdScreenCastBuffer *>(buffer)) {
@@ -693,14 +673,6 @@ void ScreenCastStream::record(Contents contents)
     }
 
     pw_stream_queue_buffer(m_pwStream, pwBuffer);
-
-    const auto now = std::chrono::steady_clock::now();
-    const auto interval = frameInterval();
-    if (!m_nextDue.has_value() || m_nextDue.value() + interval < now) {
-        m_nextDue = now + interval;
-    } else {
-        m_nextDue.value() += interval;
-    }
 
     if (!m_source->followsStreamSize()) {
         updateStreamSize(m_source->textureSize());
