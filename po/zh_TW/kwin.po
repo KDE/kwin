@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-10 00:48+0000\n"
-"PO-Revision-Date: 2026-08-04 08:07+0900\n"
+"POT-Creation-Date: 2026-09-16 02:45+0000\n"
+"PO-Revision-Date: 2026-09-15 14:58+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -85,13 +85,13 @@ msgstr "KDE Wayland 合成器"
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” (%2) was reset"
-msgstr ""
+msgstr "顯示卡「%1」（%2）已重設"
 
 #: core/gpumanager.cpp:280
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” was reset"
-msgstr ""
+msgstr "顯示卡「%1」已重設"
 
 #: core/iccprofile.cpp:402
 #, kde-format
@@ -1806,39 +1806,37 @@ msgstr "全螢幕視窗"
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:9
 #, kde-format
 msgid "Delay Time"
-msgstr ""
+msgstr "延遲時間"
 
 #. i18n: ectx: label, entry (DwellTime), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:13
 #, kde-format
 msgid "Dwell Time"
-msgstr ""
+msgstr "停留時間"
 
 #. i18n: ectx: label, entry (MotionThreshold), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:17
 #, kde-format
 msgid "Motion Threshold"
-msgstr ""
+msgstr "動作閥值"
 
 #. i18n: ectx: label, entry (DefaultButton), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:21
-#, fuzzy, kde-format
-#| msgid "Default"
+#, kde-format
 msgid "Default Button"
-msgstr "預設"
+msgstr "預設按鈕"
 
 #. i18n: ectx: label, entry (ButtonLocked), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:33
-#, fuzzy, kde-format
-#| msgid "Button"
+#, kde-format
 msgid "Lock Button"
-msgstr "按鍵"
+msgstr "鎖定按鈕"
 
 #. i18n: ectx: label, entry (DwellColor), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:37
 #, kde-format
 msgid "Dwell Color"
-msgstr ""
+msgstr "停留色彩"
 
 #: plugins/eis/eisinputcapturemanager.cpp:140
 #, kde-format
@@ -2541,17 +2539,17 @@ msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "切換格線檢視"
 
-#: plugins/overview/qml/DesktopBar.qml:161
+#: plugins/overview/qml/DesktopBar.qml:162
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "刪除虛擬桌面"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:261
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "新增虛擬桌面"
 
-#: plugins/overview/qml/DesktopBar.qml:262
+#: plugins/overview/qml/DesktopBar.qml:263
 #, kde-format
 msgid "Virtual Desktop limit reached"
 msgstr "已達虛擬桌面限制"
@@ -4339,13 +4337,12 @@ msgstr "工作階段並非作用中"
 #: wayland/outputmanagement_v2.cpp:747
 #, kde-format
 msgid "More displays are enabled than are supported by the graphics card."
-msgstr ""
+msgstr "啟用的顯示器數量比顯示卡所支援的還要多。"
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration"
+#, kde-format
 msgid "The driver rejected the output configuration: %s"
-msgstr "驅動程式回絕了提供的輸出配置"
+msgstr "驅動程式回絕了提供的輸出配置：%s"
 
 #: window.cpp:3183
 #, kde-format
