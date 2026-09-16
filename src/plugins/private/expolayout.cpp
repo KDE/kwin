@@ -679,16 +679,20 @@ QList<RectF> ExpoLayout::layout(const RectF &area, const QList<RectF> &windowSiz
                             shortSide * m_relativeMarginTop,
                             shortSide * m_relativeMarginRight,
                             shortSide * m_relativeMarginBottom);
-    const qreal minLength = m_relativeMinLength * shortSide;
-    const RectF minSize = RectF(0, 0, minLength, minLength);
+
+    const qreal effectiveMinSizeFactor = std::min(m_relativeMinLength, 1.0);
+    const RectF minSize(0, 0, effectiveMinSizeFactor * area.width(), effectiveMinSizeFactor * area.height());
+
+    // windows bigger than 4x the area are considered ill-behaved and their sizes are clipped
+    const qreal effectiveMaxSizeFactor = 4;
+    const RectF maxSize(0, 0, effectiveMaxSizeFactor * area.width(), effectiveMaxSizeFactor * area.height());
 
     QList<QPointF> centers;
     for (const RectF &windowSize : windowSizes) {
         centers.push_back(windowSize.center());
     }
 
-    // windows bigger than 4x the area are considered ill-behaved and their sizes are clipped
-    const auto adjustedSizes = adjustSizes(minSize, RectF(0, 0, 4 * area.width(), 4 * area.height()), margins, windowSizes);
+    const auto adjustedSizes = adjustSizes(minSize, maxSize, margins, windowSizes);
 
     if (placementMode() == PlacementMode::Rows) {
         LayeredPacking bestPacking = findGoodPacking(area, adjustedSizes, centers, m_idealWidthRatio, m_searchTolerance);
