@@ -127,7 +127,7 @@ protected:
      * @param maxSize. Then add @param margins to each window size, and @return
      * the adjusted window sizes.
      */
-    QList<RectF> adjustSizes(const RectF &minSize, const RectF &maxSize, const QMarginsF &margins, const QList<RectF> &windowSizes);
+    QList<RectF> adjustSizes(const QSizeF &minSize, const QSizeF &maxSize, const QMarginsF &margins, const QList<RectF> &windowSizes);
 
     /**
      * @brief Use binary search to find a good packing of the @param windowSizes
