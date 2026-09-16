@@ -326,7 +326,9 @@ public:
             return false;
         }
 
-        ScreenLocker::KSldApp::self()->userActivity();
+        if (event->state == PointerButtonState::Pressed) {
+            ScreenLocker::KSldApp::self()->userActivity();
+        }
 
         auto window = input()->findToplevel(event->position);
         if (window && window->isClient() && window->isLockScreen()) {
@@ -380,7 +382,9 @@ public:
             return false;
         }
 
-        ScreenLocker::KSldApp::self()->userActivity();
+        if (event->state == KeyboardKeyState::Pressed) {
+            ScreenLocker::KSldApp::self()->userActivity();
+        }
 
         // send event to KSldApp for global accel
         // if event is set to accepted it means a whitelisted shortcut was triggered
