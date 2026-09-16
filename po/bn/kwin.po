@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-10 00:48+0000\n"
+"POT-Creation-Date: 2026-09-16 00:47+0000\n"
 "PO-Revision-Date: 2009-01-09 21:22-0800\n"
 "Last-Translator: Deepayan Sarkar <deepayan.sarkar@gmail.com>\n"
 "Language-Team: en_US <kde-translation@bengalinux.org>\n"
@@ -2619,19 +2619,19 @@ msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "উইণ্ডো উঁচু/নিচু পরিবর্তন কর"
 
-#: plugins/overview/qml/DesktopBar.qml:161
+#: plugins/overview/qml/DesktopBar.qml:162
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "ডেস্ক&টপে পাঠাও"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:261
 #, fuzzy, kde-format
 #| msgid "Show Desktop Grid"
 msgid "Add Virtual Desktop"
 msgstr "ডেস্কটপ গ্রিড দেখাও"
 
-#: plugins/overview/qml/DesktopBar.qml:262
+#: plugins/overview/qml/DesktopBar.qml:263
 #, fuzzy, kde-format
 #| msgid "Show Desktop Grid"
 msgid "Virtual Desktop limit reached"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-10 00:48+0000\n"
+"POT-Creation-Date: 2026-09-16 00:47+0000\n"
 "PO-Revision-Date: 2011-07-11 12:17+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <kde-l10n-kn@kde.org>\n"
@@ -2633,19 +2633,19 @@ msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "ವಿಲೋಮ ಪರಿಣಾಮಗಳನ್ನು ಅಂತರಣಗೊಳಿಸು"
 
-#: plugins/overview/qml/DesktopBar.qml:161
+#: plugins/overview/qml/DesktopBar.qml:162
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "ಗಣಕತೆರೆಗೆ(&D)"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:261
 #, fuzzy, kde-format
 #| msgid "Show Desktop"
 msgid "Add Virtual Desktop"
 msgstr "ಗಣಕತೆರೆಯನ್ನು ತೋರಿಸು"
 
-#: plugins/overview/qml/DesktopBar.qml:262
+#: plugins/overview/qml/DesktopBar.qml:263
 #, fuzzy, kde-format
 #| msgid "Show Desktop"
 msgid "Virtual Desktop limit reached"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-10 00:48+0000\n"
+"POT-Creation-Date: 2026-09-16 00:47+0000\n"
 "PO-Revision-Date: 2024-10-18 17:18+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -2629,17 +2629,17 @@ msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "Toggle Grid View"
 
-#: plugins/overview/qml/DesktopBar.qml:161
+#: plugins/overview/qml/DesktopBar.qml:162
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Delete Virtual Desktop"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:261
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Add Virtual Desktop"
 
-#: plugins/overview/qml/DesktopBar.qml:262
+#: plugins/overview/qml/DesktopBar.qml:263
 #, fuzzy, kde-format
 #| msgid "Add Virtual Desktop"
 msgid "Virtual Desktop limit reached"
