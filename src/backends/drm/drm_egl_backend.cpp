@@ -45,6 +45,9 @@ bool EglGbmBackend::initializeEgl()
     if (!initClientExtensions()) {
         return false;
     }
+    if (!m_backend->primaryGpu()->renderDevice()) {
+        return false;
+    }
     setRenderDevice(m_backend->primaryGpu()->renderDevice());
     return true;
 }
