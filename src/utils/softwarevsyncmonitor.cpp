@@ -18,8 +18,7 @@ std::unique_ptr<SoftwareVsyncMonitor> SoftwareVsyncMonitor::create()
 
 SoftwareVsyncMonitor::SoftwareVsyncMonitor()
 {
-    connect(&m_softwareClock, &QTimer::timeout, this, &SoftwareVsyncMonitor::handleSyntheticVsync);
-    m_softwareClock.setSingleShot(true);
+    connect(&m_softwareClock, &PreciseTimer::timeout, this, &SoftwareVsyncMonitor::handleSyntheticVsync);
 }
 
 int SoftwareVsyncMonitor::refreshRate() const
@@ -54,7 +53,7 @@ void SoftwareVsyncMonitor::arm()
 
     m_vblankTimestamp = alignTimestamp(std::max(currentTime, m_vblankTimestamp + 1ns), vblankInterval);
 
-    m_softwareClock.start(std::chrono::duration_cast<std::chrono::milliseconds>(m_vblankTimestamp - currentTime));
+    m_softwareClock.start(m_vblankTimestamp);
 }
 
 void SoftwareVsyncMonitor::disarm()
