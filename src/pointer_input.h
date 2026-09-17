@@ -71,6 +71,8 @@ public:
     void removeEffectsOverrideCursor();
     void setWindowSelectionCursor(const QByteArray &shape);
     void removeWindowSelectionCursor();
+    void addBusyCursor();
+    void removeBusyCursor();
 
     void updatePointerConstraints();
 
@@ -238,6 +240,8 @@ public:
     void removeEffectsOverrideCursor();
     void setWindowSelectionCursor(const QByteArray &shape);
     void removeWindowSelectionCursor();
+    void addBusyCursor();
+    void removeBusyCursor();
 
     CursorTheme theme() const;
     CursorSource *source() const;
@@ -268,6 +272,9 @@ private:
     std::unique_ptr<ShapeCursorSource> m_moveResizeCursor;
     std::unique_ptr<ShapeCursorSource> m_windowSelectionCursor;
     std::unique_ptr<ShapeCursorSource> m_dragCursor;
+    std::unique_ptr<ShapeCursorSource> m_busyCursor;
+
+    int m_busyCursorCounter = 0;
 
     struct
     {
