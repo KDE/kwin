@@ -897,9 +897,9 @@ std::optional<DrmAbstractColorOp::Scaling> DrmMultiplier::outputScaling(const Co
         remaining.scale(1.0 / scaling);
         if (!isFuzzyIdentity(remaining)) {
             return Scaling{
-                .scaling = ColorMatrix(remaining.inverted()),
+                .scaling = ColorMultiplier(scaling),
                 .inverse = ColorOp{
-                    .input = op.output * (1.0 / scaling),
+                    .input = op.input * scaling,
                     .inputSpace = op.inputSpace,
                     .operation = ColorMatrix(remaining),
                     .output = op.output,
