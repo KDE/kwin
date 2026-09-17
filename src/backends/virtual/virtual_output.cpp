@@ -24,7 +24,7 @@ VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal, const QSize 
     , m_backend(parent)
     , m_vsyncMonitor(SoftwareVsyncMonitor::create())
 {
-    connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &VirtualOutput::vblank);
+    connect(m_vsyncMonitor.get(), &SoftwareVsyncMonitor::vblankOccurred, this, &VirtualOutput::vblank);
 
     static int identifier = -1;
     m_identifier = ++identifier;

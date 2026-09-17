@@ -7,7 +7,6 @@
 #pragma once
 
 #include "utils/precisetimer.h"
-#include "utils/vsyncmonitor.h"
 
 #include <memory>
 
@@ -22,7 +21,7 @@ namespace KWin
  *
  * The vblank interval can be changed by calling the setRefreshRate() function.
  */
-class KWIN_EXPORT SoftwareVsyncMonitor : public VsyncMonitor
+class KWIN_EXPORT SoftwareVsyncMonitor : public QObject
 {
     Q_OBJECT
 
@@ -33,8 +32,11 @@ public:
     void setRefreshRate(int refreshRate);
 
 public Q_SLOTS:
-    void arm() override;
+    void arm();
     void disarm();
+
+Q_SIGNALS:
+    void vblankOccurred(std::chrono::nanoseconds timestamp);
 
 private:
     explicit SoftwareVsyncMonitor();
