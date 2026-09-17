@@ -22,7 +22,7 @@ namespace KWin
 
 DrmVirtualOutput::DrmVirtualOutput(DrmBackend *backend, const QString &name, const QString &description, const QSize &size, qreal scale, Capabilities capabilities)
     : m_backend(backend)
-    , m_vsyncMonitor(VsyncSource::create())
+    , m_vsyncMonitor(std::make_unique<VsyncSource>())
 {
     connect(m_vsyncMonitor.get(), &VsyncSource::vblankOccurred, this, &DrmVirtualOutput::vblank);
 

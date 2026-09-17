@@ -22,7 +22,7 @@ namespace KWin
 VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal, const QSize &physicalSizeInMM, OutputTransform panelOrientation, const QByteArray &edid, std::optional<QByteArray> edidIdentifierOverride, const std::optional<QString> &connectorName, const std::optional<QByteArray> &mstPath, BackendOutput::Capabilities capabilities)
     : BackendOutput()
     , m_backend(parent)
-    , m_vsyncMonitor(VsyncSource::create())
+    , m_vsyncMonitor(std::make_unique<VsyncSource>())
 {
     connect(m_vsyncMonitor.get(), &VsyncSource::vblankOccurred, this, &VirtualOutput::vblank);
 

@@ -8,8 +8,6 @@
 
 #include "utils/precisetimer.h"
 
-#include <memory>
-
 namespace KWin
 {
 
@@ -23,7 +21,7 @@ class KWIN_EXPORT VsyncSource : public QObject
     Q_OBJECT
 
 public:
-    static std::unique_ptr<VsyncSource> create();
+    explicit VsyncSource();
 
     int refreshRate() const;
     void setRefreshRate(int refreshRate);
@@ -36,7 +34,6 @@ Q_SIGNALS:
     void vblankOccurred(std::chrono::nanoseconds timestamp);
 
 private:
-    explicit VsyncSource();
     void handleSyntheticVsync();
 
     PreciseTimer m_softwareClock;
