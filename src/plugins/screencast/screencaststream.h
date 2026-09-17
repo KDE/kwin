@@ -10,6 +10,7 @@
 
 #include "core/drm_formats.h"
 #include "utils/damagejournal.h"
+#include "utils/softwarevsyncmonitor.h"
 #include "wayland/screencast_v1.h"
 
 #include <QHash>
@@ -61,7 +62,6 @@ public:
     Q_DECLARE_FLAGS(Contents, Content)
 
     bool init();
-    uint framerate();
     uint nodeId();
     uint64_t objectSerial() const;
     QString error() const
@@ -103,9 +103,12 @@ private:
                          struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
                          const ModifierList &modifiers, quint32 modifiersFlags);
     pw_buffer *dequeueBuffer();
-    void record(Contents contents);
+    void record(std::chrono::nanoseconds timestamp, Contents contents);
     void bumpBufferAge(ScreenCastBuffer *renderedBuffer);
-    std::chrono::nanoseconds frameInterval() const;
+    /**
+     * @returns the framerate in mHz
+     */
+    uint framerate();
 
     std::optional<ScreenCastDmaBufTextureParams> testCreateDmaBuf(RenderDevice *device, const QSize &size, quint32 format, const ModifierList &modifiers);
 
@@ -139,8 +142,7 @@ private:
     bool m_hasDmaBuf = false;
     quint32 m_drmFormat = 0;
 
-    std::optional<std::chrono::steady_clock::time_point> m_nextDue;
-    QTimer m_pendingFrame;
+    std::unique_ptr<SoftwareVsyncMonitor> m_vsync;
     Contents m_pendingContents = Content::None;
     QList<pw_buffer *> m_dequeuedBuffers;
 

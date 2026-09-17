@@ -34,6 +34,7 @@ public:
 
 public Q_SLOTS:
     void arm() override;
+    void disarm();
 
 private:
     explicit SoftwareVsyncMonitor();
