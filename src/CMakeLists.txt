@@ -615,9 +615,9 @@ install(FILES
     utils/realtime.h
     utils/resource.h
     utils/serial.h
-    utils/softwarevsyncmonitor.h
     utils/udev.h
     utils/version.h
+    utils/vsyncsource.h
     utils/xcbutils.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/utils COMPONENT Devel)
 

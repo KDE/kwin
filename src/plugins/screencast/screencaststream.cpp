@@ -340,7 +340,7 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
     , m_pwCore(pwCore)
     , m_source(source)
     , m_resolution(source->textureSize())
-    , m_vsync(SoftwareVsyncMonitor::create())
+    , m_vsync(VsyncSource::create())
 {
     connect(source, &ScreenCastSource::frame, this, [this]() {
         scheduleRecord(Content::Video);
@@ -371,7 +371,7 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
     };
 
     m_vsync->setRefreshRate(framerate());
-    connect(m_vsync.get(), &SoftwareVsyncMonitor::vblankOccurred, this, [this](std::chrono::nanoseconds timestamp) {
+    connect(m_vsync.get(), &VsyncSource::vblankOccurred, this, [this](std::chrono::nanoseconds timestamp) {
         record(timestamp, m_pendingContents);
         m_pendingContents = Contents();
     });

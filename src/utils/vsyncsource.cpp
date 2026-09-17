@@ -4,34 +4,34 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "utils/softwarevsyncmonitor.h"
+#include "utils/vsyncsource.h"
 
 using namespace std::chrono_literals;
 
 namespace KWin
 {
 
-std::unique_ptr<SoftwareVsyncMonitor> SoftwareVsyncMonitor::create()
+std::unique_ptr<VsyncSource> VsyncSource::create()
 {
-    return std::unique_ptr<SoftwareVsyncMonitor>{new SoftwareVsyncMonitor()};
+    return std::unique_ptr<VsyncSource>{new VsyncSource()};
 }
 
-SoftwareVsyncMonitor::SoftwareVsyncMonitor()
+VsyncSource::VsyncSource()
 {
-    connect(&m_softwareClock, &PreciseTimer::timeout, this, &SoftwareVsyncMonitor::handleSyntheticVsync);
+    connect(&m_softwareClock, &PreciseTimer::timeout, this, &VsyncSource::handleSyntheticVsync);
 }
 
-int SoftwareVsyncMonitor::refreshRate() const
+int VsyncSource::refreshRate() const
 {
     return m_refreshRate;
 }
 
-void SoftwareVsyncMonitor::setRefreshRate(int refreshRate)
+void VsyncSource::setRefreshRate(int refreshRate)
 {
     m_refreshRate = refreshRate;
 }
 
-void SoftwareVsyncMonitor::handleSyntheticVsync()
+void VsyncSource::handleSyntheticVsync()
 {
     Q_EMIT vblankOccurred(m_vblankTimestamp);
 }
@@ -42,7 +42,7 @@ T alignTimestamp(const T &timestamp, const T &alignment)
     return timestamp + ((alignment - (timestamp % alignment)) % alignment);
 }
 
-void SoftwareVsyncMonitor::arm()
+void VsyncSource::arm()
 {
     if (m_softwareClock.isActive()) {
         return;
@@ -56,11 +56,11 @@ void SoftwareVsyncMonitor::arm()
     m_softwareClock.start(m_vblankTimestamp);
 }
 
-void SoftwareVsyncMonitor::disarm()
+void VsyncSource::disarm()
 {
     m_softwareClock.stop();
 }
 
 } // namespace KWin
 
-#include "moc_softwarevsyncmonitor.cpp"
+#include "moc_vsyncsource.cpp"

@@ -10,8 +10,8 @@ target_sources(kwin PRIVATE
     proximitysensor.cpp
     ramfile.cpp
     realtime.cpp
-    softwarevsyncmonitor.cpp
     udev.cpp
+    vsyncsource.cpp
 )
 if (KWIN_BUILD_X11)
     target_sources(kwin PRIVATE xcbutils.cpp)
