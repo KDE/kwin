@@ -15,7 +15,7 @@
 namespace KWin
 {
 
-class SoftwareVsyncMonitor;
+class VsyncSource;
 class VirtualBackend;
 class OutputFrame;
 
@@ -46,7 +46,7 @@ private:
 
     std::unique_ptr<OutputLayer> m_layer;
     VirtualBackend *m_backend;
-    std::unique_ptr<SoftwareVsyncMonitor> m_vsyncMonitor;
+    std::unique_ptr<VsyncSource> m_vsyncMonitor;
     int m_gammaSize = 200;
     bool m_gammaResult = true;
     int m_identifier;

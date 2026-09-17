@@ -14,19 +14,16 @@ namespace KWin
 {
 
 /**
- * The SoftwareVsyncMonitor class provides synthetic vblank events with constant interval.
- *
- * The software vsync monitor can never fail and it is always available. It can be used as
- * fallback if hardware based approaches to monitor vsync events are unavailable.
+ * The VsyncSource class provides synthetic vblank events with constant interval.
  *
  * The vblank interval can be changed by calling the setRefreshRate() function.
  */
-class KWIN_EXPORT SoftwareVsyncMonitor : public QObject
+class KWIN_EXPORT VsyncSource : public QObject
 {
     Q_OBJECT
 
 public:
-    static std::unique_ptr<SoftwareVsyncMonitor> create();
+    static std::unique_ptr<VsyncSource> create();
 
     int refreshRate() const;
     void setRefreshRate(int refreshRate);
@@ -39,7 +36,7 @@ Q_SIGNALS:
     void vblankOccurred(std::chrono::nanoseconds timestamp);
 
 private:
-    explicit SoftwareVsyncMonitor();
+    explicit VsyncSource();
     void handleSyntheticVsync();
 
     PreciseTimer m_softwareClock;

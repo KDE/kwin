@@ -10,7 +10,7 @@
 
 #include "core/drm_formats.h"
 #include "utils/damagejournal.h"
-#include "utils/softwarevsyncmonitor.h"
+#include "utils/vsyncsource.h"
 #include "wayland/screencast_v1.h"
 
 #include <QHash>
@@ -142,7 +142,7 @@ private:
     bool m_hasDmaBuf = false;
     quint32 m_drmFormat = 0;
 
-    std::unique_ptr<SoftwareVsyncMonitor> m_vsync;
+    std::unique_ptr<VsyncSource> m_vsync;
     Contents m_pendingContents = Content::None;
     QList<pw_buffer *> m_dequeuedBuffers;
 

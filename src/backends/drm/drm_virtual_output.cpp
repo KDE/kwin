@@ -15,16 +15,16 @@
 #include "drm_gpu.h"
 #include "drm_layer.h"
 #include "drm_render_backend.h"
-#include "utils/softwarevsyncmonitor.h"
+#include "utils/vsyncsource.h"
 
 namespace KWin
 {
 
 DrmVirtualOutput::DrmVirtualOutput(DrmBackend *backend, const QString &name, const QString &description, const QSize &size, qreal scale, Capabilities capabilities)
     : m_backend(backend)
-    , m_vsyncMonitor(SoftwareVsyncMonitor::create())
+    , m_vsyncMonitor(VsyncSource::create())
 {
-    connect(m_vsyncMonitor.get(), &SoftwareVsyncMonitor::vblankOccurred, this, &DrmVirtualOutput::vblank);
+    connect(m_vsyncMonitor.get(), &VsyncSource::vblankOccurred, this, &DrmVirtualOutput::vblank);
 
     auto mode = std::make_shared<OutputMode>(OutputModeline(size, 60000, OutputModeline::Flag::Preferred));
     m_renderLoop->setRefreshRate(mode->refreshRate());

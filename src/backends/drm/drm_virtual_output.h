@@ -16,7 +16,7 @@
 namespace KWin
 {
 
-class SoftwareVsyncMonitor;
+class VsyncSource;
 class VirtualBackend;
 class DrmBackend;
 class DrmOutputLayer;
@@ -46,7 +46,7 @@ private:
     DrmBackend *const m_backend;
     std::unique_ptr<DrmOutputLayer> m_layer;
     std::shared_ptr<OutputFrame> m_frame;
-    std::unique_ptr<SoftwareVsyncMonitor> m_vsyncMonitor;
+    std::unique_ptr<VsyncSource> m_vsyncMonitor;
 };
 
 }

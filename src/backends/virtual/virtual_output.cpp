@@ -14,7 +14,7 @@
 #include "core/outputlayer.h"
 #include "core/renderbackend.h"
 #include "core/renderloop.h"
-#include "utils/softwarevsyncmonitor.h"
+#include "utils/vsyncsource.h"
 
 namespace KWin
 {
@@ -22,9 +22,9 @@ namespace KWin
 VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal, const QSize &physicalSizeInMM, OutputTransform panelOrientation, const QByteArray &edid, std::optional<QByteArray> edidIdentifierOverride, const std::optional<QString> &connectorName, const std::optional<QByteArray> &mstPath, BackendOutput::Capabilities capabilities)
     : BackendOutput()
     , m_backend(parent)
-    , m_vsyncMonitor(SoftwareVsyncMonitor::create())
+    , m_vsyncMonitor(VsyncSource::create())
 {
-    connect(m_vsyncMonitor.get(), &SoftwareVsyncMonitor::vblankOccurred, this, &VirtualOutput::vblank);
+    connect(m_vsyncMonitor.get(), &VsyncSource::vblankOccurred, this, &VirtualOutput::vblank);
 
     static int identifier = -1;
     m_identifier = ++identifier;

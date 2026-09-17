@@ -13,7 +13,7 @@
 #include "opengl/eglswapchain.h"
 #include "opengl/glrendertimequery.h"
 #include "opengl/glutils.h"
-#include "utils/softwarevsyncmonitor.h"
+#include "utils/vsyncsource.h"
 #include "virtual_backend.h"
 #include "virtual_logging.h"
 #include "virtual_output.h"
