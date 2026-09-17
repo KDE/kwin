@@ -251,12 +251,13 @@ void SurfaceItemWayland::handlePrepareFrame(std::chrono::nanoseconds timestamp)
     m_surface->tryApplyState(timestamp);
 }
 
-void SurfaceItemWayland::handleFramePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+void SurfaceItemWayland::handleFramePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::steady_clock::time_point targetTimestamp)
 {
     if (!m_surface) {
         return;
     }
-    m_surface->frameRendered(timestamp.count());
+    const auto msec = std::chrono::duration_cast<std::chrono::milliseconds>(targetTimestamp.time_since_epoch());
+    m_surface->frameRendered(msec.count());
     if (frame) {
         // FIXME make frame always valid
         if (auto feedback = m_surface->presentationFeedback(output)) {

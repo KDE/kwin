@@ -736,7 +736,7 @@ void Item::collectItems(QList<QPointer<Item>> &list, LogicalOutput *filter, Scen
     }
 }
 
-void Item::framePainted(SceneView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+void Item::framePainted(SceneView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::steady_clock::time_point targetTimestamp)
 {
     // this temporary list + the nullptr checks are required
     // because items may apply changes in framePainted that
@@ -747,7 +747,7 @@ void Item::framePainted(SceneView *view, LogicalOutput *output, OutputFrame *fra
     collectItems(list, output, view);
     for (QPointer<Item> item : list) {
         if (item) {
-            item->handleFramePainted(view, output, frame, timestamp);
+            item->handleFramePainted(view, output, frame, targetTimestamp);
         }
     }
 }
@@ -775,7 +775,7 @@ bool Item::isAncestorOf(const Item *item) const
     });
 }
 
-void Item::handleFramePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+void Item::handleFramePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::steady_clock::time_point targetTimestamp)
 {
 }
 
