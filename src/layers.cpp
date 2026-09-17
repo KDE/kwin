@@ -241,7 +241,7 @@ Window *Workspace::findDesktop(VirtualDesktop *desktop, LogicalOutput *output) c
         if (window->isDeleted()) {
             continue;
         }
-        if (window->isClient() && window->isOnDesktop(desktop) && window->isOnOutput(output) && window->isDesktop() && window->isShown()) {
+        if (window->isClient() && window->isOnDesktop(desktop) && window->isOnOutput(output) && window->isDesktop() && window->isShown() && window->wantsInput()) {
             return window;
         }
     }
