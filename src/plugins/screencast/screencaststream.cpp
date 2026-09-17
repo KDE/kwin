@@ -588,6 +588,8 @@ void ScreenCastStream::record(std::chrono::nanoseconds timestamp, Contents conte
         return;
     }
 
+    m_source->setNextPresentationTimestamp(timestamp, framerate());
+
     struct spa_buffer *spa_buffer = pwBuffer->buffer;
     struct spa_data *spa_data = spa_buffer->datas;
 
