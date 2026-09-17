@@ -562,13 +562,15 @@ bool DrmGpu::isIdle() const
     });
 }
 
-static std::chrono::nanoseconds convertTimestamp(const timespec &timestamp)
+static std::chrono::steady_clock::time_point convertTimestamp(const timespec &timestamp)
 {
-    return std::chrono::seconds(timestamp.tv_sec) + std::chrono::nanoseconds(timestamp.tv_nsec);
+    return std::chrono::steady_clock::time_point{
+        std::chrono::seconds(timestamp.tv_sec) + std::chrono::nanoseconds(timestamp.tv_nsec),
+    };
 }
 
-static std::chrono::nanoseconds convertTimestamp(clockid_t sourceClock, clockid_t targetClock,
-                                                 const timespec &timestamp)
+static std::chrono::steady_clock::time_point convertTimestamp(clockid_t sourceClock, clockid_t targetClock,
+                                                              const timespec &timestamp)
 {
     if (sourceClock == targetClock) {
         return convertTimestamp(timestamp);
@@ -605,9 +607,9 @@ void DrmGpu::pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, un
     // into a time_t cuts off the most-significant bit (after the
     // year 2038), similarly long can't hold all the bits of an
     // unsigned multiplication.
-    std::chrono::nanoseconds timestamp = convertTimestamp(gpu->presentationClock(), CLOCK_MONOTONIC,
-                                                          {static_cast<time_t>(sec), static_cast<long>(usec * 1000)});
-    if (timestamp == std::chrono::nanoseconds::zero()) {
+    auto timestamp = convertTimestamp(gpu->presentationClock(), CLOCK_MONOTONIC,
+                                      {static_cast<time_t>(sec), static_cast<long>(usec * 1000)});
+    if (timestamp.time_since_epoch() == std::chrono::nanoseconds::zero()) {
         // in some cases this can happen a lot,
         // see https://gitlab.freedesktop.org/drm/amd/-/issues/4359 for example
         static uint64_t s_warningCounter = 0;
@@ -618,7 +620,7 @@ void DrmGpu::pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, un
             qCDebug(KWIN_DRM, "Got invalid timestamp (sec: %u, usec: %u) on gpu %s",
                     sec, usec, qPrintable(gpu->drmDevice()->path()));
         }
-        timestamp = std::chrono::steady_clock::now().time_since_epoch();
+        timestamp = std::chrono::steady_clock::now();
     }
     commit->pageFlipped(timestamp);
 }
@@ -841,7 +843,7 @@ void DrmGpu::doModeset()
     m_forceModeset = false;
     if (ret) {
         for (const auto &[pipeline, frame] : m_pendingModesetFrames) {
-            frame->presented(std::chrono::steady_clock::now().time_since_epoch(), PresentationMode::VSync);
+            frame->presented(std::chrono::steady_clock::now(), PresentationMode::VSync);
         }
     } else {
         qCCritical(KWIN_DRM, "Modeset failed: %s", qPrintable(ret.error().message));

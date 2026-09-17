@@ -752,7 +752,7 @@ void Item::framePainted(SceneView *view, LogicalOutput *output, OutputFrame *fra
     }
 }
 
-void Item::prepareFrame(SceneView *view, LogicalOutput *output, std::chrono::nanoseconds timestamp)
+void Item::prepareFrame(SceneView *view, LogicalOutput *output, std::chrono::steady_clock::time_point timestamp)
 {
     QList<QPointer<Item>> list;
     list.reserve(100);
@@ -764,7 +764,7 @@ void Item::prepareFrame(SceneView *view, LogicalOutput *output, std::chrono::nan
     }
 }
 
-void Item::handlePrepareFrame(std::chrono::nanoseconds timestamp)
+void Item::handlePrepareFrame(std::chrono::steady_clock::time_point timestamp)
 {
 }
 

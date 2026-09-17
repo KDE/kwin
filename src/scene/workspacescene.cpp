@@ -518,7 +518,7 @@ double WorkspaceScene::desiredHdrHeadroom() const
 void WorkspaceScene::frame(SceneView *delegate, OutputFrame *frame)
 {
     LogicalOutput *logicalOutput = delegate->logicalOutput();
-    const std::chrono::steady_clock::time_point frameTime{logicalOutput->backendOutput()->renderLoop()->nextPresentationTimestamp()};
+    const auto frameTime = logicalOutput->backendOutput()->renderLoop()->nextPresentationTimestamp();
     m_containerItem->framePainted(delegate, logicalOutput, frame, frameTime);
     if (m_overlayItem) {
         m_overlayItem->framePainted(delegate, logicalOutput, frame, frameTime);

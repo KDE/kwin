@@ -375,14 +375,14 @@ std::chrono::nanoseconds DrmCommitThread::setModeInfo(uint32_t maximum, std::chr
     return m_safetyMargin;
 }
 
-std::chrono::nanoseconds DrmCommitThread::pageFlipped(std::chrono::nanoseconds timestamp)
+std::chrono::nanoseconds DrmCommitThread::pageFlipped(std::chrono::steady_clock::time_point timestamp)
 {
     std::unique_lock lock(m_mutex);
     if (m_pageflipTimeoutDetected) {
         qCCritical(KWIN_DRM, "Pageflip arrived after all, %lums after the commit", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - m_lastCommitTime).count());
         m_pageflipTimeoutDetected = false;
     }
-    m_lastPageflip = TimePoint(timestamp);
+    m_lastPageflip = timestamp;
     m_committed.reset();
     if (!m_commits.empty()) {
         m_targetPageflipTime = estimateNextVblank(std::chrono::steady_clock::now());

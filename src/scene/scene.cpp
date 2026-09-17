@@ -191,7 +191,7 @@ void RenderView::setRenderOffset(const QPoint &offset)
 SceneView::SceneView(Scene *scene, LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer, RenderDevice *renderDevice)
     : RenderView(logicalOutput, backendOutput, layer, renderDevice)
     , m_scene(scene)
-    , m_nextPresentationTimestamp(std::chrono::steady_clock::now().time_since_epoch())
+    , m_nextPresentationTimestamp(std::chrono::steady_clock::now())
 {
     m_scene->addView(this);
 }
@@ -251,7 +251,7 @@ void SceneView::setScale(qreal scale)
     addDeviceRepaint(deviceRect());
 }
 
-void SceneView::setNextPresentationTimestamp(std::chrono::nanoseconds timestamp, uint32_t refreshRate)
+void SceneView::setNextPresentationTimestamp(std::chrono::steady_clock::time_point timestamp, uint32_t refreshRate)
 {
     m_nextPresentationTimestamp = timestamp;
     m_refreshRate = refreshRate;
@@ -267,7 +267,7 @@ qreal SceneView::scale() const
     return m_scale;
 }
 
-std::chrono::nanoseconds SceneView::nextPresentationTimestamp() const
+std::chrono::steady_clock::time_point SceneView::nextPresentationTimestamp() const
 {
     return m_nextPresentationTimestamp;
 }
@@ -387,7 +387,7 @@ RectF ItemView::viewport() const
     return calculateViewport(m_item->rect());
 }
 
-std::chrono::nanoseconds ItemView::nextPresentationTimestamp() const
+std::chrono::steady_clock::time_point ItemView::nextPresentationTimestamp() const
 {
     return m_parentView->nextPresentationTimestamp();
 }

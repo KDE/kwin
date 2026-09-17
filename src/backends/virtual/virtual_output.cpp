@@ -152,7 +152,7 @@ void VirtualOutput::resize(const QSize &size)
     Q_EMIT m_backend->outputsQueried();
 }
 
-void VirtualOutput::vblank(std::chrono::nanoseconds timestamp)
+void VirtualOutput::vblank(std::chrono::steady_clock::time_point timestamp)
 {
     if (m_frame) {
         m_frame->presented(timestamp, PresentationMode::VSync);

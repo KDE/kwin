@@ -42,7 +42,7 @@ public:
     PresentationFeedback(PresentationFeedback &&move) = default;
     virtual ~PresentationFeedback() = default;
 
-    virtual void presented(OutputFrame *frame, std::chrono::nanoseconds timestamp,
+    virtual void presented(OutputFrame *frame, std::chrono::steady_clock::time_point timestamp,
                            PresentationMode mode, PresentationFeedbackFlags flags) = 0;
 };
 
@@ -84,7 +84,7 @@ public:
     explicit OutputFrame(RenderLoop *loop, std::chrono::nanoseconds refreshDuration);
     ~OutputFrame();
 
-    void presented(std::chrono::nanoseconds timestamp, PresentationMode mode);
+    void presented(std::chrono::steady_clock::time_point timestamp, PresentationMode mode);
 
     void addFeedback(std::shared_ptr<PresentationFeedback> &&feedback, PresentationFeedbackFlags flags);
 

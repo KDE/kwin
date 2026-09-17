@@ -110,7 +110,7 @@ std::optional<RenderTimeSpan> OutputFrame::queryCpuRenderTime() const
     return ret;
 }
 
-void OutputFrame::presented(std::chrono::nanoseconds timestamp, PresentationMode mode)
+void OutputFrame::presented(std::chrono::steady_clock::time_point timestamp, PresentationMode mode)
 {
     Q_ASSERT(!m_presented);
     m_presented = true;

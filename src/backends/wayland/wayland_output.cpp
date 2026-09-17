@@ -224,7 +224,7 @@ static void handlePresented(void *data,
     if (refresh != 0) {
         refreshRate = 1'000'000'000'000 / refresh;
     }
-    reinterpret_cast<WaylandOutput *>(data)->framePresented(timestamp, refreshRate);
+    reinterpret_cast<WaylandOutput *>(data)->framePresented(std::chrono::steady_clock::time_point{timestamp}, refreshRate);
 }
 
 static void handleSyncOutput(void *data, struct wp_presentation_feedback *, struct wl_output *)
@@ -345,7 +345,7 @@ void WaylandOutput::frameDiscarded()
     m_frames.pop_front();
 }
 
-void WaylandOutput::framePresented(std::chrono::nanoseconds timestamp, uint32_t refreshRate)
+void WaylandOutput::framePresented(std::chrono::steady_clock::time_point timestamp, uint32_t refreshRate)
 {
     if (refreshRate != this->refreshRate()) {
         m_refreshRate = refreshRate;
@@ -362,7 +362,7 @@ void WaylandOutput::framePresented(std::chrono::nanoseconds timestamp, uint32_t 
         // is done compositing the frame on the CPU side, not before!
         // This is the best estimate we currently have for the commit deadline, but
         // it should be replaced with something more accurate when possible.
-        const auto difference = timestamp - t->time_since_epoch();
+        const auto difference = timestamp - *t;
         m_renderLoop->setPresentationSafetyMargin(difference + std::chrono::milliseconds(1));
     }
     frame.outputFrame->presented(timestamp, PresentationMode::VSync);

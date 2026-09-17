@@ -39,12 +39,13 @@ void PreciseTimer::timerFdReadable()
     }
 }
 
-void PreciseTimer::start(std::chrono::nanoseconds deadline)
+void PreciseTimer::start(std::chrono::steady_clock::time_point deadline)
 {
     drain();
 
-    const auto seconds = std::chrono::duration_cast<std::chrono::seconds>(deadline);
-    const auto nanoseconds = deadline - seconds;
+    const auto deadlineDuration = deadline.time_since_epoch();
+    const auto seconds = std::chrono::duration_cast<std::chrono::seconds>(deadlineDuration);
+    const auto nanoseconds = deadlineDuration - seconds;
     itimerspec spec = {};
     spec.it_value.tv_sec = seconds.count();
     spec.it_value.tv_nsec = nanoseconds.count();

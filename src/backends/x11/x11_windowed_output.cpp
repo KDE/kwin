@@ -306,7 +306,7 @@ void X11WindowedOutput::setSize(const QSize &pixelSize)
 void X11WindowedOutput::handlePresentCompleteNotify(xcb_present_complete_notify_event_t *event)
 {
     std::chrono::microseconds timestamp(event->ust);
-    m_frame->presented(timestamp, PresentationMode::VSync);
+    m_frame->presented(std::chrono::steady_clock::time_point{timestamp}, PresentationMode::VSync);
     m_frame.reset();
 }
 

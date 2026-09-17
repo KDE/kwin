@@ -11,11 +11,11 @@ namespace KWin
 
 ColorPickerSceneView::ColorPickerSceneView(Scene *scene, LogicalOutput *logicalOutput, OutputLayer *layer, RenderDevice *renderDevice)
     : SceneView(scene, logicalOutput, nullptr, layer, renderDevice)
-    , m_presentationTimestamp(std::chrono::steady_clock::now().time_since_epoch())
+    , m_presentationTimestamp(std::chrono::steady_clock::now())
 {
 }
 
-std::chrono::nanoseconds ColorPickerSceneView::nextPresentationTimestamp() const
+std::chrono::steady_clock::time_point ColorPickerSceneView::nextPresentationTimestamp() const
 {
     return m_presentationTimestamp;
 }

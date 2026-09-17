@@ -103,7 +103,7 @@ public:
     std::expected<void, OutputError> present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
 
     void frameDiscarded();
-    void framePresented(std::chrono::nanoseconds timestamp, uint32_t refreshRate);
+    void framePresented(std::chrono::steady_clock::time_point timestamp, uint32_t refreshRate);
 
     void applyChanges(const OutputConfiguration &config) override;
 

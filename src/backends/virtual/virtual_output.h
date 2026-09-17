@@ -40,7 +40,7 @@ public:
     OutputLayer *outputLayer() const;
 
 private:
-    void vblank(std::chrono::nanoseconds timestamp);
+    void vblank(std::chrono::steady_clock::time_point timestamp);
 
     friend class VirtualBackend;
 

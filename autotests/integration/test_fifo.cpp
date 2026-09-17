@@ -85,10 +85,11 @@ public:
         destroy();
     }
 
-    void setTimestamp(std::chrono::nanoseconds time)
+    void setTimestamp(std::chrono::steady_clock::time_point time)
     {
-        const uint64_t seconds = time / 1s;
-        const uint64_t nanos = (time - std::chrono::seconds(seconds)).count();
+        const auto duration = time.time_since_epoch();
+        const uint64_t seconds = duration / 1s;
+        const uint64_t nanos = (duration - std::chrono::seconds(seconds)).count();
         set_timestamp(seconds >> 32, seconds & 0xFFFFFFFF, nanos);
     }
 };
@@ -182,8 +183,8 @@ void FifoTest::testFifo()
             QVERIFY(spies[i].wait(100));
             if (i > 0) {
                 // each frame should be presented in the refresh cycle after the last one
-                const auto thisTimestamp = spies[i].last().at(0).value<std::chrono::nanoseconds>();
-                const auto lastTimestamp = spies[i - 1].last().at(0).value<std::chrono::nanoseconds>();
+                const auto thisTimestamp = spies[i].last().at(0).value<std::chrono::steady_clock::time_point>();
+                const auto lastTimestamp = spies[i - 1].last().at(0).value<std::chrono::steady_clock::time_point>();
                 const auto refreshDuration = spies[i].last().at(1).value<std::chrono::nanoseconds>();
                 const auto diff = thisTimestamp - lastTimestamp;
                 QCOMPARE_GT(diff, refreshDuration / 2);
@@ -440,8 +441,8 @@ void FifoTest::testBarrierNotClearedByEmptyCommit()
     QVERIFY(secondSpy.wait(100));
 
     // the second frame should be presented in the refresh cycle after the first one
-    const auto thisTimestamp = secondSpy.last().at(0).value<std::chrono::nanoseconds>();
-    const auto lastTimestamp = firstSpy.last().at(0).value<std::chrono::nanoseconds>();
+    const auto thisTimestamp = secondSpy.last().at(0).value<std::chrono::steady_clock::time_point>();
+    const auto lastTimestamp = firstSpy.last().at(0).value<std::chrono::steady_clock::time_point>();
     const auto refreshDuration = secondSpy.last().at(1).value<std::chrono::nanoseconds>();
     const auto diff = thisTimestamp - lastTimestamp;
     QCOMPARE_GT(diff, refreshDuration / 2);
@@ -461,7 +462,7 @@ void FifoTest::testFifoOnUnmappedSurface()
     for (size_t i = 0; i < frames.size(); i++) {
         fifo->set_barrier();
         fifo->wait_barrier();
-        timer->setTimestamp(std::chrono::steady_clock::now().time_since_epoch() + 50ms);
+        timer->setTimestamp(std::chrono::steady_clock::now() + 50ms);
         frames[i] = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*window.m_surface));
         window.m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
@@ -510,7 +511,7 @@ void FifoTest::testFifoOnSubsurfaceOfUnmappedToplevel()
     for (size_t i = 0; i < frames.size(); i++) {
         fifo->set_barrier();
         fifo->wait_barrier();
-        timer->setTimestamp(std::chrono::steady_clock::now().time_since_epoch() + 50ms);
+        timer->setTimestamp(std::chrono::steady_clock::now() + 50ms);
         frames[i] = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
@@ -638,7 +639,7 @@ void FifoTest::testFifoWithExplicitReset()
         frames[i] = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
         fifo->set_barrier();
         fifo->wait_barrier();
-        timer->setTimestamp(std::chrono::steady_clock::now().time_since_epoch() + 50ms);
+        timer->setTimestamp(std::chrono::steady_clock::now() + 50ms);
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
     fifo->set_barrier();
@@ -676,9 +677,9 @@ void FifoTest::testFifoCommitTiming()
 
     std::deque<std::unique_ptr<Test::WpPresentationFeedback>> frames;
 
-    auto lastTarget = std::chrono::steady_clock::now().time_since_epoch();
+    auto lastTarget = std::chrono::steady_clock::now();
     auto refreshDuration = std::chrono::nanoseconds(1'000'000) / workspace()->outputs().front()->refreshRate();
-    std::optional<std::chrono::nanoseconds> lastPresentation;
+    std::optional<std::chrono::steady_clock::time_point> lastPresentation;
 
     for (size_t i = 0; i < 10; i++) {
         if (frames.size() >= 3) {
@@ -686,7 +687,7 @@ void FifoTest::testFifoCommitTiming()
             QVERIFY(presented.wait());
 
             refreshDuration = presented.last()[1].value<std::chrono::nanoseconds>();
-            const auto timestamp = presented.last()[0].value<std::chrono::nanoseconds>();
+            const auto timestamp = presented.last()[0].value<std::chrono::steady_clock::time_point>();
             if (lastPresentation) {
                 const auto duration = timestamp - *lastPresentation;
                 QCOMPARE_GE(duration, refreshDuration / 2);
@@ -718,7 +719,7 @@ void FifoTest::testCommitTiming()
 
     auto timer = std::make_unique<CommitTimerV1>(Test::connection()->commitTiming->get_timer(*window.m_surface));
 
-    const auto start = std::chrono::steady_clock::now().time_since_epoch();
+    const auto start = std::chrono::steady_clock::now();
     std::array targetTimes{
         start + 50ms,
         start + 150ms,
@@ -740,7 +741,7 @@ void FifoTest::testCommitTiming()
     };
     for (size_t i = 0; i < frames.size(); i++) {
         QVERIFY(spies[i].count() || spies[i].wait());
-        QCOMPARE_GE(spies[i].last().first().value<std::chrono::nanoseconds>(), targetTimes[i]);
+        QCOMPARE_GE(spies[i].last().first().value<std::chrono::steady_clock::time_point>(), targetTimes[i]);
     }
 }
 

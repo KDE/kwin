@@ -17,7 +17,7 @@ RenderLoopDrivenQAnimationDriver::RenderLoopDrivenQAnimationDriver(QObject *pare
 {
 }
 
-void RenderLoopDrivenQAnimationDriver::advanceToNextFrame(std::chrono::nanoseconds nextFramePresentationTime)
+void RenderLoopDrivenQAnimationDriver::advanceToNextFrame(std::chrono::steady_clock::time_point nextFramePresentationTime)
 {
     Q_ASSERT(isRunning());
     if (m_nextTime && m_nextTime >= nextFramePresentationTime) {

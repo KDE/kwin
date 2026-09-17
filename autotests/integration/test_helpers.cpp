@@ -2070,7 +2070,7 @@ bool WpPresentationFeedback::zeroCopy() const
 void WpPresentationFeedback::wp_presentation_feedback_presented(uint32_t tv_sec_hi, uint32_t tv_sec_lo, uint32_t tv_nsec, uint32_t refresh, uint32_t seq_hi, uint32_t seq_lo, uint32_t flags)
 {
     m_flags = flags;
-    const std::chrono::nanoseconds timestamp = std::chrono::seconds((uint64_t(tv_sec_hi) << 32) | tv_sec_lo) + std::chrono::nanoseconds(tv_nsec);
+    const std::chrono::steady_clock::time_point timestamp{std::chrono::seconds((uint64_t(tv_sec_hi) << 32) | tv_sec_lo) + std::chrono::nanoseconds(tv_nsec)};
     Q_EMIT presented(timestamp, std::chrono::nanoseconds(refresh));
 }
 

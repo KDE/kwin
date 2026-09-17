@@ -39,7 +39,7 @@ public:
 
     wl_list resources;
 
-    void presented(OutputFrame *frame, std::chrono::nanoseconds timestamp,
+    void presented(OutputFrame *frame, std::chrono::steady_clock::time_point timestamp,
                    PresentationMode mode, PresentationFeedbackFlags flags) override;
 
 private:

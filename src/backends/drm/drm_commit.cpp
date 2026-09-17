@@ -221,7 +221,7 @@ std::expected<void, OutputError> DrmAtomicCommit::doCommit(uint32_t flags)
     return {};
 }
 
-void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp)
+void DrmAtomicCommit::pageFlipped(std::chrono::steady_clock::time_point timestamp)
 {
     Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
     for (const auto &[plane, buffer] : m_buffers) {
@@ -372,7 +372,7 @@ bool DrmLegacyCommit::doPageflip(PresentationMode mode)
     return drmModePageFlip(gpu()->fd(), m_crtc->id(), m_buffer->framebufferId(), flags, reinterpret_cast<void *>(registerPageflip())) == 0;
 }
 
-void DrmLegacyCommit::pageFlipped(std::chrono::nanoseconds timestamp)
+void DrmLegacyCommit::pageFlipped(std::chrono::steady_clock::time_point timestamp)
 {
     Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
     m_crtc->setCurrent(m_buffer);

@@ -61,7 +61,7 @@ std::expected<void, OutputError> DrmVirtualOutput::present(const QList<OutputLay
     return {};
 }
 
-void DrmVirtualOutput::vblank(std::chrono::nanoseconds timestamp)
+void DrmVirtualOutput::vblank(std::chrono::steady_clock::time_point timestamp)
 {
     if (m_frame) {
         m_frame->presented(timestamp, PresentationMode::VSync);

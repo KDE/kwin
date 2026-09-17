@@ -31,10 +31,9 @@ void VsyncSource::handleSyntheticVsync()
     Q_EMIT vblankOccurred(m_vblankTimestamp);
 }
 
-template<typename T>
-T alignTimestamp(const T &timestamp, const T &alignment)
+std::chrono::steady_clock::time_point alignTimestamp(std::chrono::steady_clock::time_point timestamp, std::chrono::nanoseconds alignment)
 {
-    return timestamp + ((alignment - (timestamp % alignment)) % alignment);
+    return timestamp + ((alignment - (timestamp.time_since_epoch() % alignment)) % alignment);
 }
 
 void VsyncSource::arm()
@@ -43,7 +42,7 @@ void VsyncSource::arm()
         return;
     }
 
-    const std::chrono::nanoseconds currentTime(std::chrono::steady_clock::now().time_since_epoch());
+    const auto currentTime = std::chrono::steady_clock::now();
     const std::chrono::nanoseconds vblankInterval(1'000'000'000'000ull / m_refreshRate);
 
     m_vblankTimestamp = alignTimestamp(std::max(currentTime, m_vblankTimestamp + 1ns), vblankInterval);

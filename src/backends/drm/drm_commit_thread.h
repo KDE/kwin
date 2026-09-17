@@ -42,7 +42,7 @@ public:
     /**
      * @return the current presentation safety margin
      */
-    std::chrono::nanoseconds pageFlipped(std::chrono::nanoseconds timestamp);
+    std::chrono::nanoseconds pageFlipped(std::chrono::steady_clock::time_point timestamp);
     bool pageflipsPending();
 
 private:

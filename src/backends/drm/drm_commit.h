@@ -42,7 +42,7 @@ public:
     virtual ~DrmCommit();
 
     DrmGpu *gpu() const;
-    virtual void pageFlipped(std::chrono::nanoseconds timestamp) = 0;
+    virtual void pageFlipped(std::chrono::steady_clock::time_point timestamp) = 0;
     void setDefunct();
 
     static DrmCommit *take(uintptr_t id);
@@ -84,7 +84,7 @@ public:
     std::expected<void, OutputError> commit();
     std::expected<void, OutputError> commitModeset();
 
-    void pageFlipped(std::chrono::nanoseconds timestamp) override;
+    void pageFlipped(std::chrono::steady_clock::time_point timestamp) override;
 
     bool areBuffersReadable() const;
     void setDeadline(std::chrono::steady_clock::time_point deadline);
@@ -130,7 +130,7 @@ public:
 
     bool doModeset(DrmConnector *connector, DrmConnectorMode *mode);
     bool doPageflip(PresentationMode mode);
-    void pageFlipped(std::chrono::nanoseconds timestamp) override;
+    void pageFlipped(std::chrono::steady_clock::time_point timestamp) override;
 
 private:
     DrmPipeline *const m_pipeline;

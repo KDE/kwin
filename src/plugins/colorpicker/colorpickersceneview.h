@@ -18,11 +18,11 @@ class ColorPickerSceneView : public SceneView
 public:
     ColorPickerSceneView(Scene *scene, LogicalOutput *logicalOutput, OutputLayer *layer, RenderDevice *renderDevice);
 
-    std::chrono::nanoseconds nextPresentationTimestamp() const override;
+    std::chrono::steady_clock::time_point nextPresentationTimestamp() const override;
     uint refreshRate() const override;
 
 private:
-    std::chrono::nanoseconds m_presentationTimestamp;
+    std::chrono::steady_clock::time_point m_presentationTimestamp;
 };
 
 } // namespace KWin

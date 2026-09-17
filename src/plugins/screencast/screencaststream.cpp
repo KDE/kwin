@@ -371,7 +371,7 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
     };
 
     m_vsync->setRefreshRate(framerate());
-    connect(m_vsync.get(), &VsyncSource::vblankOccurred, this, [this](std::chrono::nanoseconds timestamp) {
+    connect(m_vsync.get(), &VsyncSource::vblankOccurred, this, [this](std::chrono::steady_clock::time_point timestamp) {
         record(timestamp, m_pendingContents);
         m_pendingContents = Contents();
     });
@@ -581,7 +581,7 @@ pw_buffer *ScreenCastStream::dequeueBuffer()
     return pwBuffer;
 }
 
-void ScreenCastStream::record(std::chrono::nanoseconds timestamp, Contents contents)
+void ScreenCastStream::record(std::chrono::steady_clock::time_point timestamp, Contents contents)
 {
     struct pw_buffer *pwBuffer = dequeueBuffer();
     if (!pwBuffer) {
@@ -702,14 +702,14 @@ void ScreenCastStream::updateStreamSize(const QSize &resolution)
     pw_stream_update_params(m_pwStream, params.data(), params.count());
 }
 
-void ScreenCastStream::addHeader(spa_buffer *spaBuffer, std::chrono::nanoseconds timestamp)
+void ScreenCastStream::addHeader(spa_buffer *spaBuffer, std::chrono::steady_clock::time_point timestamp)
 {
     spa_meta_header *spaHeader = (spa_meta_header *)spa_buffer_find_meta_data(spaBuffer, SPA_META_Header, sizeof(spa_meta_header));
     if (spaHeader) {
         spaHeader->flags = 0;
         spaHeader->dts_offset = 0;
         spaHeader->seq = m_sequential++;
-        spaHeader->pts = timestamp.count();
+        spaHeader->pts = timestamp.time_since_epoch().count();
     }
 }
 

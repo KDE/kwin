@@ -23,7 +23,7 @@ static std::chrono::nanoseconds mix(std::chrono::nanoseconds duration1, std::chr
     return std::chrono::nanoseconds(int64_t(std::round(duration1.count() * ratio + duration2.count() * (1 - ratio))));
 }
 
-void RenderJournal::add(std::chrono::nanoseconds renderTime, std::chrono::nanoseconds presentationTimestamp)
+void RenderJournal::add(std::chrono::nanoseconds renderTime, std::chrono::steady_clock::time_point presentationTimestamp)
 {
     const auto timeDifference = m_lastAdd ? presentationTimestamp - *m_lastAdd : 10s;
     m_lastAdd = presentationTimestamp;

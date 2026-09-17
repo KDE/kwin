@@ -33,7 +33,7 @@ public:
      *
      * If the timer is already running, it will be stopped and restarted.
      */
-    void start(std::chrono::nanoseconds deadline);
+    void start(std::chrono::steady_clock::time_point deadline);
 
     /**
      * Stops the timer if it was already running, no-op otherwise.

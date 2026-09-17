@@ -38,7 +38,7 @@ void RenderLoopPrivate::scheduleNextRepaint(std::optional<std::chrono::steady_cl
     if (kwinApp()->isTerminating() || preparingNewFrame) {
         return;
     }
-    const std::chrono::nanoseconds presentNotBeforeTime = presentNotBefore.value_or(std::chrono::steady_clock::now()).time_since_epoch();
+    const auto presentNotBeforeTime = presentNotBefore.value_or(std::chrono::steady_clock::now());
     if (compositeTimer.isActive() && presentNotBeforeTime >= lastPresentNotBefore) {
         // this would present later than what we already scheduled for,
         // so we can ignore it
@@ -47,14 +47,14 @@ void RenderLoopPrivate::scheduleNextRepaint(std::optional<std::chrono::steady_cl
     scheduleRepaint(nextPresentationTimestamp, presentNotBeforeTime);
 }
 
-void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimestamp, std::chrono::nanoseconds presentNotBefore)
+void RenderLoopPrivate::scheduleRepaint(std::chrono::steady_clock::time_point lastTargetTimestamp, std::chrono::steady_clock::time_point presentNotBefore)
 {
     pendingReschedule.reset();
     const std::chrono::nanoseconds vblankInterval(1'000'000'000'000ull / refreshRate);
-    const std::chrono::nanoseconds currentTime(std::chrono::steady_clock::now().time_since_epoch());
+    const auto currentTime = std::chrono::steady_clock::now();
     presentNotBefore = std::max(presentNotBefore, currentTime);
 
-    std::chrono::nanoseconds targetTimestamp;
+    std::chrono::steady_clock::time_point targetTimestamp{};
 
     // Estimate when it's a good time to perform the next compositing cycle.
     // the 1ms on top of the safety margin is required for timer and scheduler inaccuracies
@@ -137,7 +137,7 @@ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimes
 
     lastPresentNotBefore = presentNotBefore;
 
-    const std::chrono::nanoseconds nextRenderTimestamp = nextPresentationTimestamp - expectedCompositingTime;
+    const std::chrono::steady_clock::time_point nextRenderTimestamp = nextPresentationTimestamp - expectedCompositingTime;
     compositeTimer.start(nextRenderTimestamp);
 }
 
@@ -151,7 +151,7 @@ void RenderLoopPrivate::notifyFrameDropped()
     }
 }
 
-void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::optional<RenderTimeSpan> renderTime, PresentationMode mode, OutputFrame *frame)
+void RenderLoopPrivate::notifyFrameCompleted(std::chrono::steady_clock::time_point timestamp, std::optional<RenderTimeSpan> renderTime, PresentationMode mode, OutputFrame *frame)
 {
     if (output && s_printDebugInfo && !m_debugOutput) {
         m_debugOutput = std::fstream(qPrintable("kwin perf statistics " + output->name() + ".csv"), std::ios::out);
@@ -161,8 +161,15 @@ void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp,
         auto times = renderTime.value_or(RenderTimeSpan{});
         const bool vrr = mode == PresentationMode::AdaptiveSync || mode == PresentationMode::AdaptiveAsync;
         const bool tearing = mode == PresentationMode::Async || mode == PresentationMode::AdaptiveAsync;
-        *m_debugOutput << frame->targetPageflipTime().time_since_epoch().count() << "," << timestamp.count() << "," << times.start.time_since_epoch().count() << "," << times.end.time_since_epoch().count()
-                       << "," << safetyMargin.count() << "," << frame->refreshDuration().count() << "," << (vrr ? 1 : 0) << "," << (tearing ? 1 : 0) << "," << frame->predictedRenderTime().count() << "\n";
+        *m_debugOutput << frame->targetPageflipTime().time_since_epoch().count() << ","
+                       << timestamp.time_since_epoch().count() << ","
+                       << times.start.time_since_epoch().count()
+                       << "," << times.end.time_since_epoch().count()
+                       << "," << safetyMargin.count()
+                       << "," << frame->refreshDuration().count()
+                       << "," << (vrr ? 1 : 0)
+                       << "," << (tearing ? 1 : 0)
+                       << "," << frame->predictedRenderTime().count() << "\n";
     }
 
     Q_ASSERT(pendingFrameCount > 0);
@@ -176,7 +183,7 @@ void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp,
         const std::chrono::nanoseconds minimumTime = std::chrono::milliseconds(2);
         renderJournal.add(std::max(minimumTime, renderTime->end - renderTime->start), timestamp);
     }
-    const auto now = std::chrono::steady_clock::now().time_since_epoch();
+    const auto now = std::chrono::steady_clock::now();
     if (compositeTimer.isActive() && now > lastPresentNotBefore) {
         // reschedule to match the new timestamp and render time
         scheduleRepaint(lastPresentationTimestamp, now);
@@ -188,16 +195,16 @@ void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp,
     Q_EMIT q->framePresented(q, timestamp, mode);
 }
 
-void RenderLoopPrivate::notifyVblank(std::chrono::nanoseconds timestamp)
+void RenderLoopPrivate::notifyVblank(std::chrono::steady_clock::time_point timestamp)
 {
     if (lastPresentationTimestamp <= timestamp) {
         lastPresentationTimestamp = timestamp;
     } else {
         qCDebug(KWIN_CORE,
                 "Got invalid presentation timestamp: %lld (current %lld)",
-                static_cast<long long>(timestamp.count()),
-                static_cast<long long>(lastPresentationTimestamp.count()));
-        lastPresentationTimestamp = std::chrono::steady_clock::now().time_since_epoch();
+                static_cast<long long>(timestamp.time_since_epoch().count()),
+                static_cast<long long>(lastPresentationTimestamp.time_since_epoch().count()));
+        lastPresentationTimestamp = std::chrono::steady_clock::now();
     }
 }
 
@@ -269,7 +276,7 @@ void RenderLoop::setRefreshRate(int refreshRate)
     Q_EMIT refreshRateChanged();
 
     if (d->compositeTimer.isActive()) {
-        d->scheduleRepaint(d->lastPresentationTimestamp, std::chrono::steady_clock::now().time_since_epoch());
+        d->scheduleRepaint(d->lastPresentationTimestamp, std::chrono::steady_clock::now());
     }
 }
 
@@ -323,12 +330,12 @@ bool RenderLoop::activeWindowControlsVrrRefreshRate() const
     }).value_or(false);
 }
 
-std::chrono::nanoseconds RenderLoop::lastPresentationTimestamp() const
+std::chrono::steady_clock::time_point RenderLoop::lastPresentationTimestamp() const
 {
     return d->lastPresentationTimestamp;
 }
 
-std::chrono::nanoseconds RenderLoop::nextPresentationTimestamp() const
+std::chrono::steady_clock::time_point RenderLoop::nextPresentationTimestamp() const
 {
     return d->nextPresentationTimestamp;
 }

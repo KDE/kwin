@@ -59,7 +59,7 @@ public:
     DrmConnector *connector() const;
     DrmGpu *gpu() const;
 
-    void pageFlipped(std::chrono::nanoseconds timestamp);
+    void pageFlipped(std::chrono::steady_clock::time_point timestamp);
     bool modesetPresentPending() const;
     void resetModesetPresentPending();
     DrmCommitThread *commitThread() const;

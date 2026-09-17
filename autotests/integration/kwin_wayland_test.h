@@ -936,7 +936,7 @@ public:
     bool zeroCopy() const;
 
 Q_SIGNALS:
-    void presented(std::chrono::nanoseconds timestamp, std::chrono::nanoseconds refreshDuration);
+    void presented(std::chrono::steady_clock::time_point timestamp, std::chrono::nanoseconds refreshDuration);
     void discarded();
 
 private:

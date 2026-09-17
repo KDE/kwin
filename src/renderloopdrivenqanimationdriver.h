@@ -24,7 +24,7 @@ class RenderLoopDrivenQAnimationDriver : public QAnimationDriver
 public:
     explicit RenderLoopDrivenQAnimationDriver(QObject *parent = nullptr);
 
-    void advanceToNextFrame(std::chrono::nanoseconds nextPresentation);
+    void advanceToNextFrame(std::chrono::steady_clock::time_point nextPresentation);
 
     /*
      * The overrides are for Qt's usage
@@ -34,9 +34,9 @@ public:
     qint64 elapsed() const override;
 
 private:
-    std::optional<std::chrono::nanoseconds> m_nextTime = std::nullopt;
+    std::optional<std::chrono::steady_clock::time_point> m_nextTime = std::nullopt;
     // the elapsed time is a relative offset to when the animationDriver starts
-    std::optional<std::chrono::nanoseconds> m_offset = std::nullopt;
+    std::optional<std::chrono::steady_clock::time_point> m_offset = std::nullopt;
 };
 
 } // namespace KWin

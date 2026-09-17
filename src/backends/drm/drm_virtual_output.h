@@ -40,7 +40,7 @@ public:
     void resize(const QSize &size) override;
 
 private:
-    void vblank(std::chrono::nanoseconds timestamp);
+    void vblank(std::chrono::steady_clock::time_point timestamp);
 
     DrmBackend *const m_backend;
     std::shared_ptr<DrmOutputLayer> m_layer;

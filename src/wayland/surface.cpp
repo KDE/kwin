@@ -1374,11 +1374,10 @@ void SurfaceInterface::setPointerLocked(bool locked)
     }
 }
 
-void SurfaceInterface::tryApplyState(std::chrono::nanoseconds timestamp)
+void SurfaceInterface::tryApplyState(std::chrono::steady_clock::time_point timestamp)
 {
     if (d->firstTransaction) {
-        // TODO port the other timestamps to use an actual timestamp type as well
-        d->firstTransaction->tryApply(std::chrono::steady_clock::time_point(timestamp));
+        d->firstTransaction->tryApply(timestamp);
     }
 }
 

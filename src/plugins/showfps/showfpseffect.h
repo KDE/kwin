@@ -68,7 +68,7 @@ Q_SIGNALS:
     void presentationModeChanged();
 
 public:
-    void presented(OutputFrame *frame, std::chrono::nanoseconds timestamp, PresentationMode mode);
+    void presented(OutputFrame *frame, std::chrono::steady_clock::time_point timestamp, PresentationMode mode);
 
     std::unique_ptr<OffscreenQuickScene> m_scene;
     int m_fps = 0;

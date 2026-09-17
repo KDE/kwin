@@ -114,7 +114,7 @@ std::expected<void, OutputError> DrmPipeline::commitPipelinesLegacy(const QList<
         for (DrmPipeline *pipeline : pipelines) {
             pipeline->applyPendingChanges();
             if (mode == CommitMode::CommitModeset && pipeline->activePending()) {
-                pipeline->pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
+                pipeline->pageFlipped(std::chrono::steady_clock::now());
             }
         }
         for (DrmObject *obj : unusedObjects) {

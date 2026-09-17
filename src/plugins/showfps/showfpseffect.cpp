@@ -113,7 +113,7 @@ QString ShowFpsScreen::presentationMode() const
     return m_presentationMode;
 }
 
-void ShowFpsScreen::presented(OutputFrame *frame, std::chrono::nanoseconds timestamp, PresentationMode mode)
+void ShowFpsScreen::presented(OutputFrame *frame, std::chrono::steady_clock::time_point timestamp, PresentationMode mode)
 {
     const auto cpu = frame->queryCpuRenderTime();
     const auto total = frame->queryRenderTime();
@@ -163,7 +163,7 @@ public:
     {
     }
 
-    void presented(OutputFrame *frame, std::chrono::nanoseconds timestamp,
+    void presented(OutputFrame *frame, std::chrono::steady_clock::time_point timestamp,
                    PresentationMode mode, PresentationFeedbackFlags flags) override
     {
         if (m_screen) {

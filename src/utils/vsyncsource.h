@@ -31,14 +31,14 @@ public Q_SLOTS:
     void disarm();
 
 Q_SIGNALS:
-    void vblankOccurred(std::chrono::nanoseconds timestamp);
+    void vblankOccurred(std::chrono::steady_clock::time_point timestamp);
 
 private:
     void handleSyntheticVsync();
 
     PreciseTimer m_softwareClock;
     int m_refreshRate = 60000;
-    std::chrono::nanoseconds m_vblankTimestamp = std::chrono::nanoseconds::zero();
+    std::chrono::steady_clock::time_point m_vblankTimestamp{};
 };
 
 } // namespace KWin

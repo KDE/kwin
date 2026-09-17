@@ -42,7 +42,7 @@ FilteredSceneView::FilteredSceneView(Scene *scene, LogicalOutput *output, Output
 
 void FilteredSceneView::prePaint(OutputFrame *frame)
 {
-    m_nextPresentationTimestamp = std::chrono::steady_clock::now().time_since_epoch();
+    m_nextPresentationTimestamp = std::chrono::steady_clock::now();
     SceneView::prePaint(frame);
 }
 

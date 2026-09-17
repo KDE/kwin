@@ -178,7 +178,7 @@ public:
     void removeEffect();
 
     void collectItems(QList<QPointer<Item>> &list, LogicalOutput *filter, SceneView *viewFilter);
-    void prepareFrame(SceneView *view, LogicalOutput *output, std::chrono::nanoseconds timestamp);
+    void prepareFrame(SceneView *view, LogicalOutput *output, std::chrono::steady_clock::time_point timestamp);
     void framePainted(SceneView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::steady_clock::time_point targetTimestamp);
 
     bool isAncestorOf(const Item *item) const;
@@ -208,7 +208,7 @@ Q_SIGNALS:
 
 protected:
     virtual WindowQuadList buildQuads(ItemRenderer *renderer) const;
-    virtual void handlePrepareFrame(std::chrono::nanoseconds timestamp);
+    virtual void handlePrepareFrame(std::chrono::steady_clock::time_point timestamp);
     virtual void handleFramePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::steady_clock::time_point targetTimestamp);
     virtual void releaseResources(RenderDevice *device);
     void discardQuads();

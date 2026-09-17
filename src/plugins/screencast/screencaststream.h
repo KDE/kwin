@@ -94,7 +94,7 @@ private:
     void updateStreamSize(const QSize &resolution);
     void coreFailed(const QString &errorMessage);
     void addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor);
-    void addHeader(spa_buffer *spaBuffer, std::chrono::nanoseconds timestamp);
+    void addHeader(spa_buffer *spaBuffer, std::chrono::steady_clock::time_point timestamp);
     void corruptHeader(spa_buffer *spaBuffer);
     void addDamage(spa_buffer *spaBuffer, const Region &damagedRegion);
     void newStreamParams();
@@ -103,7 +103,7 @@ private:
                          struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
                          const ModifierList &modifiers, quint32 modifiersFlags);
     pw_buffer *dequeueBuffer();
-    void record(std::chrono::nanoseconds timestamp, Contents contents);
+    void record(std::chrono::steady_clock::time_point timestamp, Contents contents);
     void bumpBufferAge(ScreenCastBuffer *renderedBuffer);
     /**
      * @returns the framerate in mHz

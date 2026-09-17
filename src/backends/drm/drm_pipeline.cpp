@@ -172,7 +172,7 @@ std::expected<void, OutputError> DrmPipeline::commitPipelinesAtomic(const QList<
         for (const auto pipeline : pipelines) {
             pipeline->m_next.needsModeset = pipeline->m_pending.needsModeset = false;
         }
-        commit->pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
+        commit->pageFlipped(std::chrono::steady_clock::now());
         return {};
     }
     case CommitMode::Test: {
@@ -546,7 +546,7 @@ DrmGpu *DrmPipeline::gpu() const
     return m_connector->gpu();
 }
 
-void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp)
+void DrmPipeline::pageFlipped(std::chrono::steady_clock::time_point timestamp)
 {
     RenderLoopPrivate::get(m_output->renderLoop())->notifyVblank(timestamp);
     const auto safetyMargin = m_commitThread->pageFlipped(timestamp);

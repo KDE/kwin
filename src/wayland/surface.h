@@ -373,7 +373,7 @@ public:
     void clearFifoBarrier(std::optional<std::chrono::nanoseconds> refreshDuration = std::nullopt);
     bool hasFifoBarrier() const;
 
-    void tryApplyState(std::chrono::nanoseconds timestamp);
+    void tryApplyState(std::chrono::steady_clock::time_point timestamp);
 
     /**
      * Registers the specified @a extension. Returns the pending state for the extension.

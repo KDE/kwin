@@ -64,17 +64,17 @@ PresentationTimeFeedback::~PresentationTimeFeedback()
     }
 }
 
-void PresentationTimeFeedback::presented(OutputFrame *frame, std::chrono::nanoseconds timestamp,
+void PresentationTimeFeedback::presented(OutputFrame *frame, std::chrono::steady_clock::time_point timestamp,
                                          PresentationMode mode, PresentationFeedbackFlags presentationFlags)
 {
     if (m_presented) {
         return;
     }
     m_presented = true;
-    const auto secs = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
+    const auto secs = std::chrono::duration_cast<std::chrono::seconds>(timestamp.time_since_epoch());
     const uint32_t tvSecHi = secs.count() >> 32;
     const uint32_t tvSecLo = secs.count() & 0xffffffff;
-    const uint32_t tvNsec = (timestamp - secs).count();
+    const uint32_t tvNsec = (timestamp.time_since_epoch() - secs).count();
 
     const bool adaptiveSync = mode == PresentationMode::AdaptiveSync || mode == PresentationMode::AdaptiveAsync;
     uint32_t flags = WP_PRESENTATION_FEEDBACK_KIND_HW_CLOCK | WP_PRESENTATION_FEEDBACK_KIND_HW_COMPLETION;

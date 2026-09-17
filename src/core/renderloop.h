@@ -80,16 +80,14 @@ public:
 
     /**
      * Returns the timestamp of the last frame that has been presented on the screen.
-     * The returned timestamp is sourced from the monotonic clock.
      */
-    std::chrono::nanoseconds lastPresentationTimestamp() const;
+    std::chrono::steady_clock::time_point lastPresentationTimestamp() const;
 
     /**
      * If a repaint has been scheduled, this function returns the expected time when
-     * the next frame will be presented on the screen. The returned timestamp is sourced
-     * from the monotonic clock.
+     * the next frame will be presented on the screen
      */
-    std::chrono::nanoseconds nextPresentationTimestamp() const;
+    std::chrono::steady_clock::time_point nextPresentationTimestamp() const;
 
     void setPresentationMode(PresentationMode mode);
 
@@ -115,7 +113,7 @@ Q_SIGNALS:
      * This signal is emitted when a frame has been actually presented on the screen.
      * @a timestamp indicates the time when it took place.
      */
-    void framePresented(RenderLoop *loop, std::chrono::nanoseconds timestamp, PresentationMode mode);
+    void framePresented(RenderLoop *loop, std::chrono::steady_clock::time_point timestamp, PresentationMode mode);
 
     /**
      * This signal is emitted when the render loop wants a new frame to be composited.

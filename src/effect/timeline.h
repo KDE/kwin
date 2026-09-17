@@ -40,11 +40,11 @@ public:
      *
      * Returns the number of milliseconds elapsed between this and the last tick().
      */
-    std::chrono::milliseconds tick(std::chrono::nanoseconds timestamp, uint refreshRate = 0);
+    std::chrono::milliseconds tick(std::chrono::steady_clock::time_point timestamp, uint refreshRate = 0);
     std::chrono::milliseconds tick(const RenderView *view);
 
 private:
-    std::optional<std::chrono::nanoseconds> m_lastTimestamp;
+    std::optional<std::chrono::steady_clock::time_point> m_lastTimestamp;
 };
 
 /**
@@ -93,7 +93,7 @@ public:
      * limit the delta time between consecutive frames to minimize stuttering if a frame has missed
      * its target vblank. If the specified refresh rate is @c 0, the delta time is not limited.
      */
-    void advance(std::chrono::nanoseconds timestamp, uint refreshRate = 0);
+    void advance(std::chrono::steady_clock::time_point timestamp, uint refreshRate = 0);
     void advance(const RenderView *view);
 
     /**

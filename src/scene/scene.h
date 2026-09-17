@@ -55,7 +55,7 @@ public:
     virtual bool shouldRenderHole(Item *item) const;
     virtual bool presentationIsZeroCopy(Item *item) const;
     virtual double desiredHdrHeadroom() const = 0;
-    virtual std::chrono::nanoseconds nextPresentationTimestamp() const = 0;
+    virtual std::chrono::steady_clock::time_point nextPresentationTimestamp() const = 0;
     virtual uint refreshRate() const = 0;
 
     /**
@@ -110,12 +110,12 @@ public:
     Scene *scene() const;
     RectF viewport() const override;
     qreal scale() const override;
-    std::chrono::nanoseconds nextPresentationTimestamp() const override;
+    std::chrono::steady_clock::time_point nextPresentationTimestamp() const override;
     uint refreshRate() const override;
 
     void setViewport(const RectF &viewport);
     void setScale(qreal scale);
-    void setNextPresentationTimestamp(std::chrono::nanoseconds timestamp, uint32_t refreshRate);
+    void setNextPresentationTimestamp(std::chrono::steady_clock::time_point timestamp, uint32_t refreshRate);
 
     SurfaceItem *scanoutCandidate() const override;
     virtual void prePaint(OutputFrame *frame = nullptr);
@@ -152,7 +152,7 @@ protected:
     QList<RenderView *> m_exclusiveViews;
     QList<RenderView *> m_underlayViews;
     QList<std::function<bool(Window *)>> m_windowFilters;
-    std::chrono::nanoseconds m_nextPresentationTimestamp;
+    std::chrono::steady_clock::time_point m_nextPresentationTimestamp;
     uint32_t m_refreshRate = 60'000;
 };
 
@@ -165,7 +165,7 @@ public:
     qreal scale() const override;
     QPointF hotspot() const override;
     RectF viewport() const override;
-    std::chrono::nanoseconds nextPresentationTimestamp() const override;
+    std::chrono::steady_clock::time_point nextPresentationTimestamp() const override;
     uint refreshRate() const override;
     bool isVisible() const override;
     SurfaceItem *scanoutCandidate() const override;

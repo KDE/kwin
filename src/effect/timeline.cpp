@@ -19,7 +19,7 @@ void AnimationClock::reset()
     m_lastTimestamp.reset();
 }
 
-std::chrono::milliseconds AnimationClock::tick(std::chrono::nanoseconds timestamp, uint refreshRate)
+std::chrono::milliseconds AnimationClock::tick(std::chrono::steady_clock::time_point timestamp, uint refreshRate)
 {
     std::chrono::milliseconds delta = std::chrono::milliseconds::zero();
     if (m_lastTimestamp) {
@@ -90,7 +90,7 @@ qreal TimeLine::value() const
         d->direction == Backward ? 1.0 - t : t);
 }
 
-void TimeLine::advance(std::chrono::nanoseconds timestamp, uint refreshRate)
+void TimeLine::advance(std::chrono::steady_clock::time_point timestamp, uint refreshRate)
 {
     if (d->done) {
         return;
