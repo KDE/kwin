@@ -1132,6 +1132,7 @@ void Window::stopDelayedInteractiveMoveResize()
 
 void Window::updateInteractiveMoveResize(const QPointF &global, Qt::KeyboardModifiers modifiers)
 {
+    const QPointF previousAnchor = interactiveMoveResizeAnchor();
     setInteractiveMoveResizeAnchor(global);
     setInteractiveMoveResizeModifiers(modifiers);
 
@@ -1144,9 +1145,18 @@ void Window::updateInteractiveMoveResize(const QPointF &global, Qt::KeyboardModi
             return; // we're still waiting for the client or the timeout
         }
 
-        if (m_tile && m_tile->supportsResizeGravity(gravity)) {
-            m_tile->resizeFromGravity(gravity, global.x(), global.y());
-            return;
+        if (m_tile) {
+            const QPointF delta = global - previousAnchor;
+
+            const bool isCustomTile = m_tile->quickTileMode() == QuickTileFlag::Custom;
+            const Gravity effectiveGravity = isCustomTile ? m_tile->resolveResizeGravity(gravity) : gravity;
+            if (m_tile->supportsResizeGravity(effectiveGravity)) {
+                m_tile->resizeFromGravity(effectiveGravity, delta);
+                return;
+            }
+            if (isCustomTile) {
+                return;
+            }
         }
 
         nextMoveResizeGeom = nextInteractiveResizeGeometry(global);

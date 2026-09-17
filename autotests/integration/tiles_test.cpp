@@ -71,6 +71,8 @@ private Q_SLOTS:
     void testWindowInteraction();
     void testAssignedTileDeletion();
     void resizeTileFromWindow();
+    void resizeTileFromWindowKeepsPointerOffset();
+    void resizeUnconstrainedTileEdge();
     void shortcuts();
     void testPerDesktopTiles();
     void sendToOutput();
@@ -432,20 +434,21 @@ void TilesTest::resizeTileFromWindow()
     states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
-    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(516, 508));
+    // The pointer moved by (8, 0), so only the right edge moves by eight pixels.
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(514, 506));
 
     // Now render new size.
     root->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(rootSurface.get(), toplevelConfigureRequestedSpy.last().first().value<QSize>(), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->frameGeometry(), RectF(4, 4, 516, 508));
+    QCOMPARE(window->frameGeometry(), RectF(4, 4, 514, 506));
 
-    QTRY_COMPARE(tileGeometryChangedSpy.count(), 2);
+    QTRY_COMPARE(tileGeometryChangedSpy.count(), 1);
     QCOMPARE(window->tile(), topLeftTile);
-    QCOMPARE(topLeftTile->windowGeometry(), Rect(4, 4, 516, 508));
-    QCOMPARE(bottomLeftTile->windowGeometry(), Rect(4, 516, 516, 504));
-    QCOMPARE(leftTile->windowGeometry(), Rect(4, 4, 516, 1016));
-    QCOMPARE(middleTile->windowGeometry(), Rect(524, 4, 434, 1016));
+    QCOMPARE(topLeftTile->windowGeometry(), Rect(4, 4, 514, 506));
+    QCOMPARE(bottomLeftTile->windowGeometry(), Rect(4, 514, 514, 506));
+    QCOMPARE(leftTile->windowGeometry(), Rect(4, 4, 514, 1016));
+    QCOMPARE(middleTile->windowGeometry(), Rect(522, 4, 436, 1016));
 
     // Resize vertically
     workspace()->slotWindowResize();
@@ -474,20 +477,118 @@ void TilesTest::resizeTileFromWindow()
     states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
-    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(518, 518));
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(514, 514));
 
     // Now render new size.
     root->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(rootSurface.get(), toplevelConfigureRequestedSpy.last().first().value<QSize>(), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->frameGeometry(), RectF(4, 4, 518, 518));
+    QCOMPARE(window->frameGeometry(), RectF(4, 4, 514, 514));
 
-    QTRY_COMPARE(tileGeometryChangedSpy.count(), 5);
+    QTRY_COMPARE(tileGeometryChangedSpy.count(), 2);
     QCOMPARE(window->tile(), topLeftTile);
-    QCOMPARE(topLeftTile->windowGeometry(), Rect(4, 4, 518, 518));
-    QCOMPARE(bottomLeftTile->windowGeometry(), Rect(4, 526, 518, 494));
-    QCOMPARE(leftTile->windowGeometry(), Rect(4, 4, 518, 1016));
-    QCOMPARE(middleTile->windowGeometry(), Rect(526, 4, 432, 1016));
+    QCOMPARE(topLeftTile->windowGeometry(), Rect(4, 4, 514, 514));
+    QCOMPARE(bottomLeftTile->windowGeometry(), Rect(4, 522, 514, 498));
+    QCOMPARE(leftTile->windowGeometry(), Rect(4, 4, 514, 1016));
+    QCOMPARE(middleTile->windowGeometry(), Rect(522, 4, 436, 1016));
+}
+
+void TilesTest::resizeTileFromWindowKeepsPointerOffset()
+{
+    createComplexLayout();
+
+    auto leftTile = qobject_cast<CustomTile *>(m_rootTile->childTiles().first());
+    QVERIFY(leftTile);
+    auto middleTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[1]);
+    QVERIFY(middleTile);
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::cyan);
+    QVERIFY(window);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+
+    leftTile->manage(window);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().first().value<QSize>(), Qt::blue);
+    QTRY_COMPARE(window->frameGeometry(), leftTile->windowGeometry());
+
+    const RectF initialLeftTileGeometry = leftTile->relativeGeometry();
+    const RectF initialMiddleTileGeometry = middleTile->relativeGeometry();
+    const QPointF pressPosition(window->x() + window->width() * 0.75, window->y() + window->height() * 0.5);
+
+    input()->pointer()->warp(pressPosition);
+    window->performMousePressCommand(Options::MouseResize, pressPosition);
+    QVERIFY(window->isInteractiveResize());
+
+    // Starting a resize from within the window must not move the tile edge to the pointer.
+    window->updateInteractiveMoveResize(pressPosition, Qt::KeyboardModifiers());
+    QCOMPARE(leftTile->relativeGeometry(), initialLeftTileGeometry);
+    QCOMPARE(middleTile->relativeGeometry(), initialMiddleTileGeometry);
+
+    // Keep the offset through consecutive moves, reversal, a stationary pointer and returning to the start.
+    for (const int offset : {8, 16, 4, 4, 0}) {
+        window->updateInteractiveMoveResize(pressPosition + QPointF(offset, 0), Qt::KeyboardModifiers());
+        QCOMPARE(leftTile->relativeGeometry().right(), initialLeftTileGeometry.right() + qreal(offset) / m_output->geometry().width());
+        QCOMPARE(middleTile->relativeGeometry().left(), initialMiddleTileGeometry.left() + qreal(offset) / m_output->geometry().width());
+    }
+}
+
+void TilesTest::resizeUnconstrainedTileEdge()
+{
+    createComplexLayout();
+
+    auto verticalParentTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[1]);
+    QVERIFY(verticalParentTile);
+    auto topTile = qobject_cast<CustomTile *>(verticalParentTile->childTiles().first());
+    QVERIFY(topTile);
+    auto bottomTile = qobject_cast<CustomTile *>(verticalParentTile->childTiles().last());
+    QVERIFY(bottomTile);
+    auto leftTile = qobject_cast<CustomTile *>(m_rootTile->childTiles().first());
+    QVERIFY(leftTile);
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::cyan);
+    QVERIFY(window);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+
+    bottomTile->manage(window);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().first().value<QSize>(), Qt::blue);
+    QTRY_COMPARE(window->frameGeometry(), bottomTile->windowGeometry());
+
+    const RectF initialTopTileGeometry = topTile->relativeGeometry();
+    const RectF initialBottomTileGeometry = bottomTile->relativeGeometry();
+    const RectF initialLeftTileGeometry = leftTile->relativeGeometry();
+    const QPointF pressPosition(window->x() + window->width() * 0.25, window->y() + window->height() * 0.75);
+
+    input()->pointer()->warp(pressPosition);
+    window->performMousePressCommand(Options::MouseResize, pressPosition);
+    QVERIFY(window->isInteractiveResize());
+    QCOMPARE(window->interactiveMoveResizeGravity(), Gravity(Gravity::BottomLeft));
+
+    // The requested bottom edge is at the output boundary, so the available
+    // top edge is used while the left edge remains independently resizable.
+    window->updateInteractiveMoveResize(pressPosition + QPointF(-8, -8), Qt::KeyboardModifiers());
+
+    QCOMPARE(window->tile(), bottomTile);
+    QCOMPARE(bottomTile->relativeGeometry().left(), initialBottomTileGeometry.left() - 8.0 / m_output->geometry().width());
+    QCOMPARE(bottomTile->relativeGeometry().top(), initialBottomTileGeometry.top() - 8.0 / m_output->geometry().height());
+    QCOMPARE(topTile->relativeGeometry().bottom(), initialTopTileGeometry.bottom() - 8.0 / m_output->geometry().height());
+    QCOMPARE(leftTile->relativeGeometry().right(), initialLeftTileGeometry.right() - 8.0 / m_output->geometry().width());
 }
 
 void TilesTest::shortcuts()

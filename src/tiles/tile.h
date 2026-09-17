@@ -111,6 +111,13 @@ public:
     virtual bool supportsResizeGravity(Gravity gravity);
 
     /*!
+     * Resolves the requested resize gravity to edges that can move this tile.
+     * If an edge touches the output boundary, the opposite inner edge is used
+     * when possible.
+     */
+    Gravity resolveResizeGravity(Gravity gravity);
+
+    /*!
      * Geometry of the tile in units between 0 and 1 relative to the screen geometry
      */
     RectF relativeGeometry() const;
@@ -171,7 +178,7 @@ public:
      */
     void visitDescendants(std::function<void(Tile *child)> callback);
 
-    void resizeFromGravity(Gravity gravity, int x_root, int y_root);
+    void resizeFromGravity(Gravity gravity, const QPointF &delta);
 
     /*!
      * \qmlmethod void Tile::resizeByPixels(real delta, enumeration edge)

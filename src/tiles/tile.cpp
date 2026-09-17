@@ -105,6 +105,76 @@ bool Tile::supportsResizeGravity(Gravity gravity)
     }
 }
 
+Gravity Tile::resolveResizeGravity(Gravity gravity)
+{
+    if (supportsResizeGravity(gravity)) {
+        return gravity;
+    }
+
+    const auto resolveEdge = [this](Gravity preferred, Gravity fallback) {
+        if (supportsResizeGravity(preferred)) {
+            return preferred;
+        }
+        if (supportsResizeGravity(fallback)) {
+            return fallback;
+        }
+        return Gravity(Gravity::Center);
+    };
+
+    Gravity horizontal = Gravity::Center;
+    Gravity vertical = Gravity::Center;
+
+    switch (gravity) {
+    case Gravity::Left:
+    case Gravity::TopLeft:
+    case Gravity::BottomLeft:
+        horizontal = resolveEdge(Gravity::Left, Gravity::Right);
+        break;
+    case Gravity::Right:
+    case Gravity::TopRight:
+    case Gravity::BottomRight:
+        horizontal = resolveEdge(Gravity::Right, Gravity::Left);
+        break;
+    default:
+        break;
+    }
+
+    switch (gravity) {
+    case Gravity::Top:
+    case Gravity::TopLeft:
+    case Gravity::TopRight:
+        vertical = resolveEdge(Gravity::Top, Gravity::Bottom);
+        break;
+    case Gravity::Bottom:
+    case Gravity::BottomLeft:
+    case Gravity::BottomRight:
+        vertical = resolveEdge(Gravity::Bottom, Gravity::Top);
+        break;
+    default:
+        break;
+    }
+
+    if (horizontal == Gravity::Left) {
+        if (vertical == Gravity::Top) {
+            return Gravity::TopLeft;
+        }
+        if (vertical == Gravity::Bottom) {
+            return Gravity::BottomLeft;
+        }
+        return Gravity::Left;
+    }
+    if (horizontal == Gravity::Right) {
+        if (vertical == Gravity::Top) {
+            return Gravity::TopRight;
+        }
+        if (vertical == Gravity::Bottom) {
+            return Gravity::BottomRight;
+        }
+        return Gravity::Right;
+    }
+    return vertical;
+}
+
 void Tile::setGeometryFromWindow(const RectF &geom)
 {
     setGeometryFromAbsolute(geom + QMarginsF(m_padding, m_padding, m_padding, m_padding));
@@ -297,40 +367,40 @@ Tile *Tile::rootTile() const
     return candidate;
 }
 
-void Tile::resizeFromGravity(Gravity gravity, int x_root, int y_root)
+void Tile::resizeFromGravity(Gravity gravity, const QPointF &delta)
 {
     if (!m_parentTile) {
         return;
     }
 
     const RectF outGeom = m_tiling->output()->geometryF();
-    const QPointF relativePos = QPointF((x_root - outGeom.x()) / outGeom.width(), (y_root - outGeom.y()) / outGeom.height());
+    const QPointF relativeDelta(delta.x() / outGeom.width(), delta.y() / outGeom.height());
     RectF newGeom = m_relativeGeometry;
 
     switch (gravity) {
     case Gravity::TopLeft:
-        newGeom.setTopLeft(relativePos - QPointF(m_padding / outGeom.width(), m_padding / outGeom.height()));
+        newGeom.setTopLeft(newGeom.topLeft() + relativeDelta);
         break;
     case Gravity::BottomRight:
-        newGeom.setBottomRight(relativePos + QPointF(m_padding / outGeom.width(), m_padding / outGeom.height()));
+        newGeom.setBottomRight(newGeom.bottomRight() + relativeDelta);
         break;
     case Gravity::BottomLeft:
-        newGeom.setBottomLeft(relativePos + QPointF(-m_padding / outGeom.width(), m_padding / outGeom.height()));
+        newGeom.setBottomLeft(newGeom.bottomLeft() + relativeDelta);
         break;
     case Gravity::TopRight:
-        newGeom.setTopRight(relativePos + QPointF(m_padding / outGeom.width(), -m_padding / outGeom.height()));
+        newGeom.setTopRight(newGeom.topRight() + relativeDelta);
         break;
     case Gravity::Top:
-        newGeom.setTop(relativePos.y() - m_padding / outGeom.height());
+        newGeom.setTop(newGeom.top() + relativeDelta.y());
         break;
     case Gravity::Bottom:
-        newGeom.setBottom(relativePos.y() + m_padding / outGeom.height());
+        newGeom.setBottom(newGeom.bottom() + relativeDelta.y());
         break;
     case Gravity::Left:
-        newGeom.setLeft(relativePos.x() - m_padding / outGeom.width());
+        newGeom.setLeft(newGeom.left() + relativeDelta.x());
         break;
     case Gravity::Right:
-        newGeom.setRight(relativePos.x() + m_padding / outGeom.width());
+        newGeom.setRight(newGeom.right() + relativeDelta.x());
         break;
     case Gravity::Center:
         Q_UNREACHABLE();
