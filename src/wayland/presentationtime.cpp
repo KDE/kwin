@@ -14,7 +14,7 @@ namespace KWin
 
 PresentationTime::PresentationTime(Display *display, QObject *parent)
     : QObject(parent)
-    , QtWaylandServer::wp_presentation(*display, 2)
+    , QtWaylandServer::wp_presentation(*display, 3)
 {
 }
 
@@ -80,6 +80,9 @@ void PresentationTimeFeedback::presented(OutputFrame *frame, std::chrono::nanose
     uint32_t flags = WP_PRESENTATION_FEEDBACK_KIND_HW_CLOCK | WP_PRESENTATION_FEEDBACK_KIND_HW_COMPLETION;
     if (mode == PresentationMode::VSync || mode == PresentationMode::AdaptiveSync) {
         flags |= WP_PRESENTATION_FEEDBACK_KIND_VSYNC;
+    }
+    if (mode == PresentationMode::VSync) {
+        flags |= WP_PRESENTATION_FEEDBACK_KIND_FIXED_RATE;
     }
     if (presentationFlags.testFlag(PresentationFeedbackFlag::ZeroCopy)) {
         flags |= WP_PRESENTATION_FEEDBACK_KIND_ZERO_COPY;
