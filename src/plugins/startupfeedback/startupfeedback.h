@@ -62,6 +62,7 @@ private:
         BouncingFeedback,
         BlinkingFeedback,
         PassiveFeedback,
+        ChangeShapeFeedback,
     };
 
     struct Startup
@@ -81,7 +82,8 @@ private:
 #endif
     QString m_currentStartup;
     QMap<QString, Startup> m_startups;
-    bool m_active;
+    bool m_itemActive;
+    bool m_cursorShapeActive;
     int m_frame;
     int m_progress;
     AnimationClock m_clock;

@@ -29,6 +29,7 @@
 #include "cursor.h"
 #include "cursorsource.h"
 #include "effect/effecthandler.h"
+#include "pointer_input.h"
 #include "scene/imageitem.h"
 #include "scene/workspacescene.h"
 #include "workspace.h"
@@ -61,7 +62,8 @@ StartupFeedbackEffect::StartupFeedbackEffect()
 #if KWIN_BUILD_X11
     , m_startupInfo(new KStartupInfo(KStartupInfo::CleanOnCantDetect, this))
 #endif
-    , m_active(false)
+    , m_itemActive(false)
+    , m_cursorShapeActive(false)
     , m_frame(0)
     , m_progress(0)
     , m_type(BouncingFeedback)
@@ -125,8 +127,11 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
 #endif
     const bool busyBlinking = c.readEntry("Blinking", false);
     const bool busyBouncing = c.readEntry("Bouncing", true);
+    const bool changeShape = c.readEntry("ChangeShape", true);
     if (!busyCursor) {
         m_type = NoFeedback;
+    } else if (changeShape) {
+        m_type = ChangeShapeFeedback;
     } else if (busyBouncing) {
         m_type = BouncingFeedback;
     } else if (busyBlinking) {
@@ -134,7 +139,7 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
     } else {
         m_type = PassiveFeedback;
     }
-    if (m_active) {
+    if (m_itemActive || m_cursorShapeActive) {
         stop();
         start(m_startups[m_currentStartup]);
     }
@@ -144,10 +149,10 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data)
 {
     const int time = m_clock.tick(data.view).count();
 
-    if (m_active && effects->isCursorHidden()) {
+    if (m_itemActive && effects->isCursorHidden()) {
         stop();
     }
-    if (m_active) {
+    if (m_itemActive) {
         switch (m_type) {
         case BouncingFeedback: {
             m_progress = (m_progress + time) % BOUNCE_DURATION;
@@ -176,7 +181,7 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data)
 
 void StartupFeedbackEffect::postPaintScreen()
 {
-    if (m_active) {
+    if (m_itemActive) {
         m_item->scheduleFrame();
     }
     effects->postPaintScreen();
@@ -239,11 +244,19 @@ void StartupFeedbackEffect::start(const Startup &startup)
         return;
     }
 
+    if (m_type == ChangeShapeFeedback) {
+        if (!m_cursorShapeActive) {
+            input()->pointer()->addBusyCursor();
+            m_cursorShapeActive = true;
+        }
+        return;
+    }
+
     const LogicalOutput *output = effects->screenAt(effects->cursorPos().toPoint());
     if (!output) {
         return;
     }
-    m_active = true;
+    m_itemActive = true;
 
     // read details about the mouse-cursor theme define per default
     KConfigGroup mousecfg(effects->inputConfig(), QStringLiteral("Mouse"));
@@ -278,10 +291,14 @@ void StartupFeedbackEffect::start(const Startup &startup)
 
 void StartupFeedbackEffect::stop()
 {
-    if (!m_active) {
+    if (m_cursorShapeActive) {
+        input()->pointer()->removeBusyCursor();
+        m_cursorShapeActive = false;
+    }
+    if (!m_itemActive) {
         return;
     }
-    m_active = false;
+    m_itemActive = false;
     m_clock.reset();
     m_item.reset();
 }
@@ -339,7 +356,7 @@ QPointF StartupFeedbackEffect::feedbackOffset() const
 
 bool StartupFeedbackEffect::isActive() const
 {
-    return m_active;
+    return m_itemActive;
 }
 
 } // namespace
