@@ -1339,6 +1339,7 @@ void CursorImage::reevaluteSource()
     }
     if (m_busyCursorCounter > 0) {
         setSource(m_busyCursor.get());
+        return;
     }
     setSource(m_fallbackCursor.get());
 }
