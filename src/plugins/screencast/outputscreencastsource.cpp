@@ -66,6 +66,11 @@ void OutputScreenCastSource::setRenderCursor(bool enable)
     }
 }
 
+void OutputScreenCastSource::setNextPresentationTimestamp(std::chrono::nanoseconds timestamp, uint32_t refreshRate)
+{
+    m_sceneView->setNextPresentationTimestamp(timestamp, refreshRate);
+}
+
 Region OutputScreenCastSource::render(QImage *target, const Region &bufferRepair)
 {
     auto texture = GLTexture::allocate(GL_RGBA8, target->size());

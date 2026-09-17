@@ -585,6 +585,8 @@ void ScreenCastStream::record(Contents contents)
         return;
     }
 
+    m_source->setNextPresentationTimestamp(timestamp, framerate());
+
     struct spa_buffer *spa_buffer = pwBuffer->buffer;
     struct spa_data *spa_data = spa_buffer->datas;
 

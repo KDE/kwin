@@ -106,6 +106,11 @@ void WindowScreenCastSource::setRenderCursor(bool enable)
     m_renderCursor = enable;
 }
 
+void WindowScreenCastSource::setNextPresentationTimestamp(std::chrono::nanoseconds timestamp, uint32_t refreshRate)
+{
+    // TODO use the timestamp for rendering, once we have a SceneView to do that with
+}
+
 Region WindowScreenCastSource::render(QImage *target, const Region &bufferDamage)
 {
     const auto offscreenTexture = GLTexture::allocate(GL_RGBA8, target->size());
