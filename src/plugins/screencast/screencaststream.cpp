@@ -340,7 +340,7 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
     , m_pwCore(pwCore)
     , m_source(source)
     , m_resolution(source->textureSize())
-    , m_vsync(VsyncSource::create())
+    , m_vsync(std::make_unique<VsyncSource>())
 {
     connect(source, &ScreenCastSource::frame, this, [this]() {
         scheduleRecord(Content::Video);

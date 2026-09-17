@@ -11,11 +11,6 @@ using namespace std::chrono_literals;
 namespace KWin
 {
 
-std::unique_ptr<VsyncSource> VsyncSource::create()
-{
-    return std::unique_ptr<VsyncSource>{new VsyncSource()};
-}
-
 VsyncSource::VsyncSource()
 {
     connect(&m_softwareClock, &PreciseTimer::timeout, this, &VsyncSource::handleSyntheticVsync);
