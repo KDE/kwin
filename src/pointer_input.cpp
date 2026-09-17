@@ -999,6 +999,24 @@ void PointerInputRedirection::removeWindowSelectionCursor()
     m_cursor->removeWindowSelectionCursor();
 }
 
+void PointerInputRedirection::addBusyCursor()
+{
+    if (!inited()) {
+        return;
+    }
+    update();
+    m_cursor->addBusyCursor();
+}
+
+void PointerInputRedirection::removeBusyCursor()
+{
+    if (!inited()) {
+        return;
+    }
+    update();
+    m_cursor->removeBusyCursor();
+}
+
 CursorImage::CursorImage(PointerInputRedirection *parent)
     : QObject(parent)
     , m_pointer(parent)
@@ -1011,6 +1029,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     m_serverCursor.surface = std::make_unique<SurfaceCursorSource>();
     m_serverCursor.shape = std::make_unique<ShapeCursorSource>();
     m_dragCursor = std::make_unique<ShapeCursorSource>();
+    m_busyCursor = std::make_unique<ShapeCursorSource>();
     m_scrollCursor.shape = std::make_unique<ShapeCursorSource>();
 
 #if KWIN_BUILD_SCREENLOCKER
@@ -1029,6 +1048,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     connect(workspace(), &Workspace::windowAdded, this, setupMoveResizeConnection);
 
     m_fallbackCursor->setShape(Qt::ArrowCursor);
+    m_busyCursor->setShape(Qt::BusyCursor);
 
     m_effectsCursor->setTheme(m_waylandImage.theme());
     m_fallbackCursor->setTheme(m_waylandImage.theme());
@@ -1037,6 +1057,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     m_decoration.cursor->setTheme(m_waylandImage.theme());
     m_serverCursor.shape->setTheme(m_waylandImage.theme());
     m_dragCursor->setTheme(m_waylandImage.theme());
+    m_busyCursor->setTheme(m_waylandImage.theme());
     m_scrollCursor.shape->setTheme(m_waylandImage.theme());
 
     connect(&m_waylandImage, &WaylandCursorImage::themeChanged, this, [this] {
@@ -1047,6 +1068,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
         m_decoration.cursor->setTheme(m_waylandImage.theme());
         m_serverCursor.shape->setTheme(m_waylandImage.theme());
         m_dragCursor->setTheme(m_waylandImage.theme());
+        m_busyCursor->setTheme(m_waylandImage.theme());
         m_scrollCursor.shape->setTheme(m_waylandImage.theme());
     });
 
@@ -1214,6 +1236,22 @@ void CursorImage::removeWindowSelectionCursor()
     reevaluteSource();
 }
 
+void CursorImage::addBusyCursor()
+{
+    m_busyCursorCounter++;
+    if (m_busyCursorCounter == 1) {
+        reevaluteSource();
+    }
+}
+
+void CursorImage::removeBusyCursor()
+{
+    m_busyCursorCounter--;
+    if (m_busyCursorCounter == 0) {
+        reevaluteSource();
+    }
+}
+
 WaylandCursorImage::WaylandCursorImage(QObject *parent)
     : QObject(parent)
 {
@@ -1291,8 +1329,16 @@ void CursorImage::reevaluteSource()
     }
     const PointerInterface *pointer = waylandServer()->seat()->pointer();
     if (pointer && pointer->focusedSurface()) {
+        if (m_busyCursorCounter > 0 && m_serverCursor.cursor == m_serverCursor.shape.get()
+            && m_serverCursor.shape->shape() == m_fallbackCursor->shape()) {
+            setSource(m_busyCursor.get());
+            return;
+        }
         setSource(m_serverCursor.cursor);
         return;
+    }
+    if (m_busyCursorCounter > 0) {
+        setSource(m_busyCursor.get());
     }
     setSource(m_fallbackCursor.get());
 }
