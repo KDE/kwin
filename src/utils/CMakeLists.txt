@@ -12,7 +12,6 @@ target_sources(kwin PRIVATE
     realtime.cpp
     softwarevsyncmonitor.cpp
     udev.cpp
-    vsyncmonitor.cpp
 )
 if (KWIN_BUILD_X11)
     target_sources(kwin PRIVATE xcbutils.cpp)

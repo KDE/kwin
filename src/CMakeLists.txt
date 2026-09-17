@@ -618,7 +618,6 @@ install(FILES
     utils/softwarevsyncmonitor.h
     utils/udev.h
     utils/version.h
-    utils/vsyncmonitor.h
     utils/xcbutils.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/utils COMPONENT Devel)
 

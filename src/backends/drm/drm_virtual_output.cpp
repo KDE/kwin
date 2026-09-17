@@ -24,7 +24,7 @@ DrmVirtualOutput::DrmVirtualOutput(DrmBackend *backend, const QString &name, con
     : m_backend(backend)
     , m_vsyncMonitor(SoftwareVsyncMonitor::create())
 {
-    connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &DrmVirtualOutput::vblank);
+    connect(m_vsyncMonitor.get(), &SoftwareVsyncMonitor::vblankOccurred, this, &DrmVirtualOutput::vblank);
 
     auto mode = std::make_shared<OutputMode>(OutputModeline(size, 60000, OutputModeline::Flag::Preferred));
     m_renderLoop->setRefreshRate(mode->refreshRate());
