@@ -215,14 +215,19 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
     renderer->beginFrame(renderTarget, viewport);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    renderer->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, Region::infinite(), WindowPaintData{}, [flags, w = window->windowItem()](Item *item) {
+    const bool success = renderer->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, Region::infinite(), WindowPaintData{}, [flags, w = window->windowItem()](Item *item) {
         const bool deco = flags & ScreenShotFlag::ScreenShotIncludeDecoration;
         const bool shadow = deco && (flags & ScreenShotFlag::ScreenShotIncludeShadow);
         return (!deco && item == w->decorationItem())
             || (!shadow && item == w->shadowItem());
     }, {});
+    if (!success) {
+        return std::nullopt;
+    }
     if ((flags & ScreenShotFlag::ScreenShotIncludeCursor) && scene->cursorItem()->isVisible()) {
-        renderer->renderItem(renderTarget, viewport, scene->cursorItem(), 0, Region::infinite(), WindowPaintData{}, {}, {});
+        if (!renderer->renderItem(renderTarget, viewport, scene->cursorItem(), 0, Region::infinite(), WindowPaintData{}, {}, {})) {
+            return std::nullopt;
+        }
     }
     renderer->endFrame();
 
