@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-15 02:47+0000\n"
-"PO-Revision-Date: 2026-04-14 04:48+0200\n"
+"PO-Revision-Date: 2026-09-17 05:05+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -67,7 +67,7 @@ msgstr "სამუშაო მაგიდის დამატება"
 #, kde-kuit-format
 msgctxt "@label/rich"
 msgid "%1"
-msgstr ""
+msgstr "%1"
 
 #: ui/main.qml:90
 #, kde-format

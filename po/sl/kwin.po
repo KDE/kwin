@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1746497 2026-09-16 03:17:33Z scripty $
+# $Id: kwin.po 1746615 2026-09-18 03:14:23Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-16 02:45+0000\n"
+"POT-Creation-Date: 2026-09-18 02:41+0000\n"
 "PO-Revision-Date: 2026-09-03 07:30+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -2670,7 +2670,7 @@ msgstr "Ni bilo mogoče najti outputa"
 msgid "Invalid region"
 msgstr "Neveljavna regija"
 
-#: plugins/screencast/screencaststream.cpp:402
+#: plugins/screencast/screencaststream.cpp:404
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Kreiranje toka PipeWire ni uspelo"
@@ -4386,7 +4386,7 @@ msgstr "Več zaslonov je omogočenih, kot jih je podprtih z grafično kartico."
 msgid "The driver rejected the output configuration: %s"
 msgstr "Gonilnik je zavrnil konfiguracijo izhoda: %s"
 
-#: window.cpp:3183
+#: window.cpp:3178
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

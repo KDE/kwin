@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-16 02:45+0000\n"
+"POT-Creation-Date: 2026-09-18 02:41+0000\n"
 "PO-Revision-Date: 2026-09-06 17:25+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -2676,7 +2676,7 @@ msgstr "No s'ha pogut trobar l'eixida"
 msgid "Invalid region"
 msgstr "Regió no vàlida"
 
-#: plugins/screencast/screencaststream.cpp:402
+#: plugins/screencast/screencaststream.cpp:404
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Ha fallat mentre es creava el flux de PipeWire"
@@ -4402,7 +4402,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %s"
 msgstr "El controlador ha rebutjat la configuració de l'eixida: %s"
 
-#: window.cpp:3183
+#: window.cpp:3178
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
