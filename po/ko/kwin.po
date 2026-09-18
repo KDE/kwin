@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-17 00:46+0000\n"
+"POT-Creation-Date: 2026-09-18 00:47+0000\n"
 "PO-Revision-Date: 2026-05-26 22:25+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -2642,7 +2642,7 @@ msgstr "출력을 찾을 수 없음"
 msgid "Invalid region"
 msgstr "잘못된 영역"
 
-#: plugins/screencast/screencaststream.cpp:402
+#: plugins/screencast/screencaststream.cpp:404
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire 스트림을 만들 수 없음"
@@ -4348,7 +4348,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %s"
 msgstr "드라이버에서 출력 설정을 거부함"
 
-#: window.cpp:3178
+#: window.cpp:3188
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

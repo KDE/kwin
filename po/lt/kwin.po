@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-17 00:46+0000\n"
+"POT-Creation-Date: 2026-09-18 00:47+0000\n"
 "PO-Revision-Date: 2026-09-05 00:20+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -2667,7 +2667,7 @@ msgstr "Nepavyko rasti išvesties"
 msgid "Invalid region"
 msgstr "Neteisinga sritis"
 
-#: plugins/screencast/screencaststream.cpp:402
+#: plugins/screencast/screencaststream.cpp:404
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Nepavyko sukurti PipeWire srauto"
@@ -4391,7 +4391,7 @@ msgstr "Yra įjungta daugiau ekranų nei palaiko grafikos plokštė."
 msgid "The driver rejected the output configuration: %s"
 msgstr "Tvarkyklė atmetė išvedimo konfigūraciją: %s"
 
-#: window.cpp:3178
+#: window.cpp:3188
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

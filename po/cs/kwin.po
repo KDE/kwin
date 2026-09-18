@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-17 00:46+0000\n"
+"POT-Creation-Date: 2026-09-18 00:47+0000\n"
 "PO-Revision-Date: 2026-09-03 11:57+0200\n"
 "Last-Translator: Libor Filipek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -2667,7 +2667,7 @@ msgstr "Výstup nebyl nalezen"
 msgid "Invalid region"
 msgstr "Neplatná oblast"
 
-#: plugins/screencast/screencaststream.cpp:402
+#: plugins/screencast/screencaststream.cpp:404
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Nepodařilo se vytvořit PipeWire stream"
@@ -4381,7 +4381,7 @@ msgstr "Je povoleno více displejů, než kolik grafická karta podporuje."
 msgid "The driver rejected the output configuration: %s"
 msgstr "Ovladač odmítl výstupní konfiguraci: %s"
 
-#: window.cpp:3178
+#: window.cpp:3188
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-17 00:46+0000\n"
+"POT-Creation-Date: 2026-09-18 00:47+0000\n"
 "PO-Revision-Date: 2026-05-31 20:05-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -2650,7 +2650,7 @@ msgstr "چىقىرىشنى تاپالمىدى"
 msgid "Invalid region"
 msgstr "ئىناۋەتسىز رايون"
 
-#: plugins/screencast/screencaststream.cpp:402
+#: plugins/screencast/screencaststream.cpp:404
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire ئېقىمىنى قۇرالمىدى"
@@ -4367,7 +4367,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %s"
 msgstr "قوزغاتقۇ چىقىرىش سەپلىمىسىنى رەت قىلدى"
 
-#: window.cpp:3178
+#: window.cpp:3188
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
