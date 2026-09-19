@@ -1305,7 +1305,7 @@ OutputDeviceModeV2InterfacePrivate::~OutputDeviceModeV2InterfacePrivate()
     const auto map = resourceMap();
     for (Resource *resource : map) {
         send_removed(resource->handle);
-        wl_resource_destroy(resource->handle);
+        // Don't call wl_resource_destroy immediately before the client handles removed so ids don't get reused
     }
 }
 
