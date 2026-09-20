@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-18 02:41+0000\n"
-"PO-Revision-Date: 2026-05-21 13:41+0200\n"
+"PO-Revision-Date: 2026-09-17 20:12+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.12.3\n"
+"X-Generator: Lokalize 26.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -81,13 +81,13 @@ msgstr "KDE-Wayland-Compositor"
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” (%2) was reset"
-msgstr ""
+msgstr "Grafikkarte „%1“ (%2) wurde zurückgesetzt"
 
 #: core/gpumanager.cpp:280
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” was reset"
-msgstr ""
+msgstr "Grafikkarte „%1“ wurde zurückgesetzt"
 
 #: core/iccprofile.cpp:402
 #, kde-format
@@ -1850,39 +1850,37 @@ msgstr "Vollbildfenster"
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:9
 #, kde-format
 msgid "Delay Time"
-msgstr ""
+msgstr "Verzögerungsdauer"
 
 #. i18n: ectx: label, entry (DwellTime), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:13
 #, kde-format
 msgid "Dwell Time"
-msgstr ""
+msgstr "Verweildauer"
 
 #. i18n: ectx: label, entry (MotionThreshold), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:17
 #, kde-format
 msgid "Motion Threshold"
-msgstr ""
+msgstr "Bewegungsschwellwert"
 
 #. i18n: ectx: label, entry (DefaultButton), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:21
-#, fuzzy, kde-format
-#| msgid "Default"
+#, kde-format
 msgid "Default Button"
-msgstr "Voreinstellung"
+msgstr "Standard-Knopf"
 
 #. i18n: ectx: label, entry (ButtonLocked), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:33
-#, fuzzy, kde-format
-#| msgid "Button"
+#, kde-format
 msgid "Lock Button"
-msgstr "Knopf"
+msgstr "Sperrknopf"
 
 #. i18n: ectx: label, entry (DwellColor), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:37
 #, kde-format
 msgid "Dwell Color"
-msgstr ""
+msgstr "Verweilfarbe"
 
 # Eingabeaufnahme oder Einfangen der Eingabe?
 #: plugins/eis/eisinputcapturemanager.cpp:140
@@ -2529,8 +2527,7 @@ msgid "Color Temperature Preview"
 msgstr "Farbtemperaturvorschau"
 
 #: plugins/outputlocator/outputlocator.cpp:26
-#, fuzzy, kde-format
-#| msgid "Built-in Screen"
+#, kde-format
 msgctxt "@label"
 msgid "Built-in Screen"
 msgstr "Integrierter Bildschirm"
@@ -3732,9 +3729,9 @@ msgid ""
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
-"Die folgenden Anwendungen haben sich nicht beendet:\n"
+"Die folgenden Anwendungen wurden nicht beendet:\n"
 "%1\n"
-"Die Abmeldung wird trotzdem in 2 Minuten durchgeführt."
+"Die Abmeldung wird in 2 Minuten trotzdem durchgeführt."
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
@@ -4294,13 +4291,13 @@ msgstr "Fenster beseitigen"
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Focused Window"
-msgstr ""
+msgstr "Zeiger im fokussierten Fenster zentrieren"
 
 #: useractions.cpp:1018
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Screen"
-msgstr ""
+msgstr "Zeiger im Bildschirm zentrieren"
 
 #: useractions.cpp:1083
 #, kde-format
@@ -4419,12 +4416,12 @@ msgstr "Die Sitzung ist nicht aktiv"
 #, kde-format
 msgid "More displays are enabled than are supported by the graphics card."
 msgstr ""
+"Es sind mehr Anzeigen aktiviert als von der Grafikkarte unterstützt werden."
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration"
+#, kde-format
 msgid "The driver rejected the output configuration: %s"
-msgstr "Der Treiber hat die Ausgabeeinrichtung zurückgewiesen"
+msgstr "Der Treiber hat die Ausgabeeinrichtung zurückgewiesen: %s"
 
 #: window.cpp:3178
 #, kde-format

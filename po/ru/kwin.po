@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-18 02:41+0000\n"
-"PO-Revision-Date: 2026-09-06 19:32+0200\n"
+"PO-Revision-Date: 2026-09-19 20:19+0300\n"
 "Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -2621,7 +2621,7 @@ msgstr "Достигнут предел рабочих столов"
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "Нет ни одного рабочего стола для показа"
+msgstr "Нет других рабочих столов"
 
 #: plugins/overview/qml/Main.qml:434
 #, kde-format
@@ -2633,7 +2633,7 @@ msgstr "Добавить рабочий стол"
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Настроить рабочие столы..."
+msgstr "Настроить рабочие столы…"
 
 #: plugins/overview/qml/Main.qml:792
 #, kde-format
