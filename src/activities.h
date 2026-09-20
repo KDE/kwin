@@ -84,7 +84,7 @@ Q_SIGNALS:
     void removed(const QString &id);
 
 public Q_SLOTS:
-    void notifyCurrentDesktopChanged(VirtualDesktop *desktop, LogicalOutput *output);
+    void notifyCurrentDesktopChanged(KWin::VirtualDesktop *desktop, KWin::LogicalOutput *output);
 
 private Q_SLOTS:
     void slotServiceStatusChanged();

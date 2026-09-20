@@ -43,8 +43,8 @@ protected:
     void apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads) override;
 
 private Q_SLOTS:
-    void slotWindowAdded(EffectWindow *w);
-    void slotWindowClosed(EffectWindow *w);
+    void slotWindowAdded(KWin::EffectWindow *w);
+    void slotWindowClosed(KWin::EffectWindow *w);
 
 private:
     bool isSheetWindow(EffectWindow *w) const;

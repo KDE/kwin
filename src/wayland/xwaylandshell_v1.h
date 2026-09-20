@@ -53,7 +53,7 @@ public:
     XwaylandSurfaceV1Interface *findSurface(uint64_t serial) const;
 
 Q_SIGNALS:
-    void surfaceAssociated(XwaylandSurfaceV1Interface *surface);
+    void surfaceAssociated(KWin::XwaylandSurfaceV1Interface *surface);
 
 private:
     std::unique_ptr<XwaylandShellV1InterfacePrivate> d;

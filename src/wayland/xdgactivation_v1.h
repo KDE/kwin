@@ -42,7 +42,7 @@ public:
 
 Q_SIGNALS:
     /// Notifies about the @p surface being activated using @p token.
-    void activateRequested(SurfaceInterface *surface, const QString &token);
+    void activateRequested(KWin::SurfaceInterface *surface, const QString &token);
 
 private:
     friend class XdgActivationV1InterfacePrivate;

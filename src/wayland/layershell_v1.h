@@ -45,7 +45,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted when a new layer surface @a surface has been created.
      */
-    void surfaceCreated(LayerSurfaceV1Interface *surface);
+    void surfaceCreated(KWin::LayerSurfaceV1Interface *surface);
 
 private:
     std::unique_ptr<LayerShellV1InterfacePrivate> d;

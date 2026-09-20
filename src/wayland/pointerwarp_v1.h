@@ -25,7 +25,7 @@ public:
     explicit PointerWarpV1(Display *display, QObject *parent);
 
 Q_SIGNALS:
-    void warpRequested(SurfaceInterface *surface, PointerInterface *pointer, const QPointF &point, uint32_t serial);
+    void warpRequested(KWin::SurfaceInterface *surface, KWin::PointerInterface *pointer, const QPointF &point, uint32_t serial);
 
 private:
     void wp_pointer_warp_v1_destroy(Resource *resource) override;

@@ -178,8 +178,8 @@ public Q_SLOTS:
     void remove(KWin::Window *window);
     void setSeparateScreenFocus(bool enabled);
     void setActiveWindow(KWin::Window *window);
-    void addDesktop(VirtualDesktop *desktop);
-    void removeDesktop(VirtualDesktop *desktop);
+    void addDesktop(KWin::VirtualDesktop *desktop);
+    void removeDesktop(KWin::VirtualDesktop *desktop);
 
 private:
     using Chain = QList<Window *>;

@@ -38,7 +38,7 @@ public:
     virtual bool moveFilter(Window *target, const QPointF &position) = 0;
 
 Q_SIGNALS:
-    void finish(Drag *self);
+    void finish(KWin::Xwl::Drag *self);
 
 private:
     Q_DISABLE_COPY(Drag)

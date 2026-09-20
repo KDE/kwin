@@ -99,12 +99,12 @@ public Q_SLOTS:
     void reserve();
     void unreserve();
     void unreserve(QObject *object);
-    void setBorder(ElectricBorder border);
-    void setAction(ElectricBorderAction action);
-    void setGeometry(const Rect &geometry);
+    void setBorder(KWin::ElectricBorder border);
+    void setAction(KWin::ElectricBorderAction action);
+    void setGeometry(const KWin::Rect &geometry);
     void updateApproaching(const QPointF &point);
 Q_SIGNALS:
-    void approaching(ElectricBorder border, qreal factor, const Rect &geometry);
+    void approaching(KWin::ElectricBorder border, qreal factor, const KWin::Rect &geometry);
     void activatesForTouchGestureChanged();
 
 protected:
@@ -355,7 +355,7 @@ Q_SIGNALS:
      * far away the mouse is from the approaching area. The values are clamped into [0.0,1.0] with
      * @c 0.0 meaning far away from the border, @c 1.0 in trigger distance.
      */
-    void approaching(ElectricBorder border, qreal factor, const Rect &geometry);
+    void approaching(KWin::ElectricBorder border, qreal factor, const KWin::Rect &geometry);
 
 private:
     enum {

@@ -73,7 +73,7 @@ Q_SIGNALS:
      * Emitted when a client binds to a given output
      * @internal
      */
-    void bound(ClientConnection *client, wl_resource *boundResource);
+    void bound(KWin::ClientConnection *client, wl_resource *boundResource);
 
 private:
     std::unique_ptr<OutputInterfacePrivate> d;

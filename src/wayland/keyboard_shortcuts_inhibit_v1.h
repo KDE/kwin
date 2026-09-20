@@ -68,7 +68,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted when a keyboard shortcuts inhibitor @a inhibitor is created.
      */
-    void inhibitorCreated(KeyboardShortcutsInhibitorV1Interface *inhibitor);
+    void inhibitorCreated(KWin::KeyboardShortcutsInhibitorV1Interface *inhibitor);
 
 private:
     friend class KeyboardShortcutsInhibitorV1InterfacePrivate;

@@ -29,7 +29,7 @@ public:
     RegionF shape() const override;
 
 private Q_SLOTS:
-    void handlePresented(const InternalWindowFrame &frame);
+    void handlePresented(const KWin::InternalWindowFrame &frame);
 
 private:
     InternalWindow *m_window;

@@ -46,7 +46,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted when a new \a decoration has been created.
      */
-    void decorationCreated(XdgToplevelDecorationV1Interface *decoration);
+    void decorationCreated(KWin::XdgToplevelDecorationV1Interface *decoration);
 
 private:
     std::unique_ptr<XdgDecorationManagerV1InterfacePrivate> d;

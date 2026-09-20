@@ -54,8 +54,8 @@ public:
     QHash<LogicalOutput *, Screen *> screens() const;
 
 private Q_SLOTS:
-    void handleOutputEnabled(LogicalOutput *output);
-    void handleOutputDisabled(LogicalOutput *output);
+    void handleOutputEnabled(KWin::LogicalOutput *output);
+    void handleOutputDisabled(KWin::LogicalOutput *output);
     void handleWorkspaceCreated();
 
 private:

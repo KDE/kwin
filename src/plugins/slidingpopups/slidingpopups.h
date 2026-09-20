@@ -50,14 +50,14 @@ public:
     bool blocksDirectScanout() const override;
 
 private Q_SLOTS:
-    void slotWindowAdded(EffectWindow *w);
-    void slotWindowClosed(EffectWindow *w);
-    void slotWindowDeleted(EffectWindow *w);
-    void slotWaylandSlideOnShowChanged(EffectWindow *w);
-    void slotWindowHiddenChanged(EffectWindow *w);
+    void slotWindowAdded(KWin::EffectWindow *w);
+    void slotWindowClosed(KWin::EffectWindow *w);
+    void slotWindowDeleted(KWin::EffectWindow *w);
+    void slotWaylandSlideOnShowChanged(KWin::EffectWindow *w);
+    void slotWindowHiddenChanged(KWin::EffectWindow *w);
 
-    void slideIn(EffectWindow *w);
-    void slideOut(EffectWindow *w);
+    void slideIn(KWin::EffectWindow *w);
+    void slideOut(KWin::EffectWindow *w);
     void stopAnimations();
 
 private:

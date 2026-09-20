@@ -127,8 +127,8 @@ public:
     void addDefunctCommit(std::unique_ptr<DrmCommit> &&commit);
 
 Q_SIGNALS:
-    void outputAdded(BackendOutput *output);
-    void outputRemoved(BackendOutput *output);
+    void outputAdded(KWin::BackendOutput *output);
+    void outputRemoved(KWin::BackendOutput *output);
     void renderDeviceChanged();
 
 private:

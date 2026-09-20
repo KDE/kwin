@@ -200,7 +200,7 @@ private Q_SLOTS:
     /**
      * Called when any reserve screen edge is triggered.
      */
-    bool slotBorderActivated(ElectricBorder border);
+    bool slotBorderActivated(KWin::ElectricBorder border);
 
 private:
     /**

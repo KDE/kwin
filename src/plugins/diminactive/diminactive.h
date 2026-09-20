@@ -51,13 +51,13 @@ public:
     bool dimFullScreen() const;
 
 private Q_SLOTS:
-    void windowActivated(EffectWindow *w);
-    void windowAdded(EffectWindow *w);
-    void windowClosed(EffectWindow *w);
-    void windowDeleted(EffectWindow *w);
+    void windowActivated(KWin::EffectWindow *w);
+    void windowAdded(KWin::EffectWindow *w);
+    void windowClosed(KWin::EffectWindow *w);
+    void windowDeleted(KWin::EffectWindow *w);
     void activeFullScreenEffectChanged();
 
-    void updateActiveWindow(EffectWindow *w);
+    void updateActiveWindow(KWin::EffectWindow *w);
 
 private:
     void dimWindow(WindowPaintData &data, qreal strength);

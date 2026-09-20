@@ -75,8 +75,8 @@ protected:
     bool blocksDirectScanout() const override;
 
 private Q_SLOTS:
-    void handleWindowDamaged(EffectWindow *window);
-    void handleWindowDeleted(EffectWindow *window);
+    void handleWindowDamaged(KWin::EffectWindow *window);
+    void handleWindowDeleted(KWin::EffectWindow *window);
 
 private:
     void setupConnections();

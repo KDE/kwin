@@ -85,7 +85,7 @@ public:
     SurfaceInterface *surface() const;
 
 public Q_SLOTS:
-    void update(SurfaceInterface *surface, const QPointF &hotspot);
+    void update(KWin::SurfaceInterface *surface, const QPointF &hotspot);
 
 private:
     void refresh();

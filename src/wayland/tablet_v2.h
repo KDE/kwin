@@ -150,7 +150,7 @@ public:
     static TabletToolV2Interface *get(wl_resource *resource);
 
 Q_SIGNALS:
-    void cursorChanged(const TabletCursorSourceV2 &cursor);
+    void cursorChanged(const KWin::TabletCursorSourceV2 &cursor);
 
 private:
     friend class TabletSeatV2InterfacePrivate;

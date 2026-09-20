@@ -44,7 +44,7 @@ private Q_SLOTS:
     void handleBufferSourceBoxChanged();
     void handleBufferTransformChanged();
 
-    void handleChildSubSurfaceRemoved(SubSurfaceInterface *child);
+    void handleChildSubSurfaceRemoved(KWin::SubSurfaceInterface *child);
     void handleChildSubSurfacesChanged();
     void handleSubSurfacePositionChanged();
     void handleSurfaceMappedChanged();

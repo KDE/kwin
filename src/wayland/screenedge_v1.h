@@ -31,7 +31,7 @@ public:
     ~ScreenEdgeManagerV1Interface() override;
 
 Q_SIGNALS:
-    void edgeRequested(AutoHideScreenEdgeV1Interface *edge);
+    void edgeRequested(KWin::AutoHideScreenEdgeV1Interface *edge);
 
 private:
     std::unique_ptr<ScreenEdgeManagerV1InterfacePrivate> d;

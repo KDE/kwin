@@ -1276,7 +1276,7 @@ public:
      *
      * Sets the maximization according to \a vertically and \a horizontally.
      */
-    Q_INVOKABLE void setMaximize(bool vertically, bool horizontally, const RectF &restore = RectF());
+    Q_INVOKABLE void setMaximize(bool vertically, bool horizontally, const KWin::RectF &restore = RectF());
 
     QPalette palette();
     const Decoration::DecorationPalette *decorationPalette();
@@ -1607,7 +1607,7 @@ Q_SIGNALS:
      * \since 4.11
      * \a oldOutput The window's previous output.
      */
-    void outputChanged(LogicalOutput *oldOutput);
+    void outputChanged(KWin::LogicalOutput *oldOutput);
     void skipCloseAnimationChanged();
     /*!
      * Emitted whenever the window role of the window changes.
@@ -1674,13 +1674,13 @@ Q_SIGNALS:
     void colorSchemeChanged();
     void captionChanged();
     void captionNormalChanged();
-    void maximizedAboutToChange(MaximizeMode mode);
+    void maximizedAboutToChange(KWin::MaximizeMode mode);
     void maximizedChanged();
     void transientChanged();
     void modalChanged();
     void quickTileModeChanged();
     void moveResizedChanged();
-    void moveResizeCursorChanged(CursorShape);
+    void moveResizeCursorChanged(KWin::CursorShape);
     void interactiveMoveResizeStarted();
     void interactiveMoveResizeStepped(const KWin::RectF &geometry);
     void interactiveMoveResizeFinished();

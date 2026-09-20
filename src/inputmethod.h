@@ -217,7 +217,7 @@ Q_SIGNALS:
     /*!
      * Emitted when the visibility \l InputMethod::mode of the on-screen keyboard changes.
      */
-    void modeChanged(VirtualKeyboardVisibility mode);
+    void modeChanged(KWin::InputMethod::VirtualKeyboardVisibility mode);
 
     /*!
      * Emitted when the on-screen keyboard is shown or hidden.

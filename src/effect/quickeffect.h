@@ -129,7 +129,7 @@ public Q_SLOTS:
     void scheduleRepaint();
 
 Q_SIGNALS:
-    void currentDesktopChanged(VirtualDesktop *newDesktop);
+    void currentDesktopChanged(KWin::VirtualDesktop *newDesktop);
 
 private:
     QuickSceneEffect *m_effect;
@@ -223,7 +223,7 @@ public:
     /*!
      * Returns the scene view on the specified screen
      */
-    Q_INVOKABLE KWin::QuickSceneView *viewForScreen(LogicalOutput *screen) const;
+    Q_INVOKABLE KWin::QuickSceneView *viewForScreen(KWin::LogicalOutput *screen) const;
 
     /*!
      * \qmlmethod SceneView QuickSceneEffect::viewAt(point pos)
@@ -337,8 +337,8 @@ public:
     Q_INVOKABLE void checkItemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item);
 
 Q_SIGNALS:
-    void itemDraggedOutOfScreen(QQuickItem *item, QList<LogicalOutput *> screens);
-    void itemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item, LogicalOutput *screen);
+    void itemDraggedOutOfScreen(QQuickItem *item, QList<KWin::LogicalOutput *> screens);
+    void itemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item, KWin::LogicalOutput *screen);
     void activeViewChanged(KWin::QuickSceneView *view);
     void delegateChanged();
     void activated();

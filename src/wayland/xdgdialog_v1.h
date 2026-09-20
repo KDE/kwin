@@ -32,7 +32,7 @@ public:
     XdgDialogV1Interface *dialogForToplevel(XdgToplevelInterface *toplevel) const;
 
 Q_SIGNALS:
-    void dialogCreated(XdgDialogV1Interface *dialog);
+    void dialogCreated(KWin::XdgDialogV1Interface *dialog);
 
 private:
     std::unique_ptr<XdgDialogWmV1InterfacePrivate> d;
