@@ -26,7 +26,7 @@ class GraphicsBuffer;
 struct DmaBufAttributes;
 class RenderDevice;
 class VulkanBuffer;
-class HostMemoryAttributes;
+struct HostMemoryAttributes;
 
 class KWIN_EXPORT VulkanDevice : public QObject
 {
