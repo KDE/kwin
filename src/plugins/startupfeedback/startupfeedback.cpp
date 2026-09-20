@@ -108,6 +108,7 @@ StartupFeedbackEffect::StartupFeedbackEffect()
 
 StartupFeedbackEffect::~StartupFeedbackEffect()
 {
+    stop();
 }
 
 bool StartupFeedbackEffect::supported()
