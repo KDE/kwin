@@ -148,7 +148,7 @@ bool OffscreenData::maybeRender(EffectWindow *window)
             .size = textureSize,
             .format = chosen.format,
             .modifiers = chosen.modifiers,
-            .software = false,
+            .software = device->isSoftwareDevice(),
             .scanout = false,
         };
         m_swapchain = EglSwapchain::create(device, options);
