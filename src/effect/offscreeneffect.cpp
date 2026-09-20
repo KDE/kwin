@@ -133,7 +133,7 @@ bool OffscreenData::maybeRender(EffectWindow *window)
             .size = textureSize,
             .format = DRM_FORMAT_ARGB8888,
             .modifiers = device->eglDisplay()->nonExternalOnlySupportedDrmFormats()[DRM_FORMAT_ARGB8888],
-            .software = false,
+            .software = device->isSoftwareDevice(),
             .scanout = false,
         };
         m_swapchain = EglSwapchain::create(device, options);
