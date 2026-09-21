@@ -70,6 +70,8 @@ public:
 
     QPointer<QQmlComponent> delegate;
     bool alpha = false;
+    bool interactive = true; // should handle input
+    bool interacting = false; // whether handling input
     QUrl source;
     struct
     {
@@ -305,6 +307,11 @@ bool QuickSceneEffect::alpha() const
     return d->alpha;
 }
 
+bool QuickSceneEffect::interactive() const
+{
+    return d->interactive;
+}
+
 void QuickSceneEffect::loadFromModule(const QString &uri, const QString &typeName)
 {
     if (isRunning()) {
@@ -344,7 +351,7 @@ void QuickSceneEffect::setDelegate(QQmlComponent *delegate)
     }
 }
 
-void QuickSceneEffect::setAlpha(bool alpha)
+void QuickSceneEffect::setAlpha(const bool alpha)
 {
     if (d->alpha == alpha) {
         return;
@@ -355,6 +362,20 @@ void QuickSceneEffect::setAlpha(bool alpha)
 
     for (auto &view : d->views) {
         view.second.get()->setAlpha(alpha);
+    }
+}
+
+void QuickSceneEffect::setInteractive(const bool interactive)
+{
+    if (d->interactive == interactive) {
+        return;
+    }
+
+    d->interactive = interactive;
+    interactiveChanged();
+
+    if (d->running && (d->interactive != d->interacting)) {
+        d->interactive ? startInteracting() : stopInteracting();
     }
 }
 
@@ -582,17 +603,8 @@ void QuickSceneEffect::startInternal()
         return;
     }
 
-    if (!effects->grabKeyboard(this)) {
-        return;
-    }
-
-    effects->startMouseInterception(this, Qt::ArrowCursor);
-
-    effects->setActiveFullScreenEffect(this);
     d->running = true;
-
-    // Install an event filter to monitor cursor shape changes.
-    qApp->installEventFilter(this);
+    startInteracting();
 
     if (d->viewCachingEnabled && !d->views.empty()) {
         const QList<LogicalOutput *> screens = effects->screens();
@@ -656,11 +668,42 @@ void QuickSceneEffect::stopInternal()
     }
 
     d->running = false;
+    stopInteracting();
+    effects->addRepaintFull();
+}
+
+void QuickSceneEffect::startInteracting()
+{
+    if (d->interacting || !d->interactive) {
+        return;
+    }
+
+    if (!effects->grabKeyboard(this)) {
+        return;
+    }
+
+    effects->startMouseInterception(this, Qt::ArrowCursor);
+
+    effects->setActiveFullScreenEffect(this);
+
+    // Install an event filter to monitor cursor shape changes.
+    qApp->installEventFilter(this);
+
+    d->interacting = true;
+}
+
+void QuickSceneEffect::stopInteracting()
+{
+    if (!d->interacting) {
+        return;
+    }
+
     qApp->removeEventFilter(this);
     effects->ungrabKeyboard();
     effects->stopMouseInterception(this);
     effects->setActiveFullScreenEffect(nullptr);
-    effects->addRepaintFull();
+
+    d->interacting = false;
 }
 
 void QuickSceneEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
@@ -760,6 +803,10 @@ void QuickSceneEffect::pointerAxis(PointerAxisEvent *event)
 
 bool QuickSceneEffect::tabletToolAxis(TabletToolAxisEvent *event)
 {
+    if (!d->interacting) {
+        return false;
+    }
+
     auto mouseEvent = new PointerMotionEvent{
         .device = event->device,
         .position = event->position,
@@ -777,6 +824,10 @@ bool QuickSceneEffect::tabletToolAxis(TabletToolAxisEvent *event)
 
 bool QuickSceneEffect::tabletToolTip(TabletToolTipEvent *event)
 {
+    if (!d->interacting) {
+        return false;
+    }
+
     auto mouseEvent = new KWin::PointerButtonEvent{
         .device = event->device,
         .position = event->position,
@@ -795,6 +846,10 @@ bool QuickSceneEffect::tabletToolTip(TabletToolTipEvent *event)
 
 bool QuickSceneEffect::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
+    if (!d->interacting) {
+        return false;
+    }
+
     for (const auto &[screen, screenView] : d->views) {
         if (screenView->geometry().contains(pos.toPoint())) {
             activateView(screenView.get());
@@ -806,6 +861,10 @@ bool QuickSceneEffect::touchDown(qint32 id, const QPointF &pos, std::chrono::mic
 
 bool QuickSceneEffect::touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
+    if (!d->interacting) {
+        return false;
+    }
+
     for (const auto &[screen, screenView] : d->views) {
         if (screenView->geometry().contains(pos.toPoint())) {
             return screenView->forwardTouchMotion(id, pos, time);
@@ -816,6 +875,10 @@ bool QuickSceneEffect::touchMotion(qint32 id, const QPointF &pos, std::chrono::m
 
 bool QuickSceneEffect::touchUp(qint32 id, std::chrono::microseconds time)
 {
+    if (!d->interacting) {
+        return false;
+    }
+
     for (const auto &[screen, screenView] : d->views) {
         if (screenView->forwardTouchUp(id, time)) {
             return true;

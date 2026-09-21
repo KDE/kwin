@@ -199,6 +199,13 @@ class KWIN_EXPORT QuickSceneEffect : public Effect
      */
     Q_PROPERTY(bool alpha READ alpha WRITE setAlpha NOTIFY alphaChanged)
 
+    /*!
+     * \property bool
+     *
+     * Whether the effect should receive events or pass them through
+     */
+    Q_PROPERTY(bool interactive READ interactive WRITE setInteractive NOTIFY interactiveChanged)
+
 public:
     /*!
      * Constructs a QtQuick scene effect with the given \a parent.
@@ -287,7 +294,10 @@ public:
     void setDelegate(QQmlComponent *delegate);
 
     bool alpha() const;
-    void setAlpha(bool alpha);
+    void setAlpha(const bool alpha);
+
+    bool interactive() const;
+    void setInteractive(const bool interactive);
 
     /*!
      * Returns the source URL.
@@ -352,6 +362,7 @@ Q_SIGNALS:
     void activeViewChanged(KWin::QuickSceneView *view);
     void delegateChanged();
     void alphaChanged();
+    void interactiveChanged();
     void activated();
     void deactivated();
 
@@ -372,6 +383,8 @@ private:
     void removeScreen(LogicalOutput *screen);
     void startInternal();
     void stopInternal();
+    void startInteracting();
+    void stopInteracting();
     void clearCachedViews();
 
     std::unique_ptr<QuickSceneEffectPrivate> d;
