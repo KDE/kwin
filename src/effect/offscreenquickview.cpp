@@ -83,7 +83,7 @@ public:
     // Used for either software QtQuick rendering and nonGL kwin rendering
     bool m_useBlit = false;
     bool m_visible = true;
-    bool m_hasAlphaChannel = true;
+    bool m_alpha = false;
     bool m_automaticRepaint = true;
     bool m_automaticFrame = true;
 
@@ -151,7 +151,7 @@ private:
     OffscreenQuickView *const m_view;
 };
 
-OffscreenQuickView::OffscreenQuickView(ExportMode exportMode, bool alpha)
+OffscreenQuickView::OffscreenQuickView(ExportMode exportMode)
     : d(new OffscreenQuickView::Private)
 {
     d->m_renderControl = std::make_unique<QQuickRenderControl>();
@@ -161,7 +161,6 @@ OffscreenQuickView::OffscreenQuickView(ExportMode exportMode, bool alpha)
     d->m_view->setFlags(Qt::FramelessWindowHint);
     d->m_view->setColor(Qt::transparent);
 
-    d->m_hasAlphaChannel = alpha;
     if (exportMode == ExportMode::Image) {
         d->m_useBlit = true;
     }
@@ -179,9 +178,6 @@ OffscreenQuickView::OffscreenQuickView(ExportMode exportMode, bool alpha)
         format.setOption(QSurfaceFormat::ResetNotification);
         format.setDepthBufferSize(16);
         format.setStencilBufferSize(8);
-        if (alpha) {
-            format.setAlphaBufferSize(8);
-        }
 
         d->m_view->setFormat(format);
 
@@ -332,7 +328,7 @@ void OffscreenQuickView::update(OutputFrame *frame)
             fboFormat.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
             fboFormat.setInternalTextureFormat(GL_RGBA8);
 
-            const uint32_t format = d->m_hasAlphaChannel ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888;
+            const uint32_t format = d->m_alpha ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888;
             if (d->m_scanoutDevice) {
                 GraphicsBufferOptions options{
                     .size = nativeSize,
@@ -566,9 +562,20 @@ qreal OffscreenQuickView::opacity() const
     return d->m_view->opacity();
 }
 
-bool OffscreenQuickView::hasAlphaChannel() const
+void OffscreenQuickView::setAlpha(const bool alpha)
 {
-    return d->m_hasAlphaChannel;
+    if (d->m_alpha == alpha) {
+        return;
+    }
+
+    d->m_alpha = alpha;
+
+    d->m_surfaceNeedsReallocation = true;
+}
+
+bool OffscreenQuickView::alpha() const
+{
+    return d->m_alpha;
 }
 
 QQuickItem *OffscreenQuickView::contentItem() const
@@ -716,8 +723,8 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
     }
 }
 
-OffscreenQuickScene::OffscreenQuickScene(OffscreenQuickView::ExportMode exportMode, bool alpha)
-    : OffscreenQuickView(exportMode, alpha)
+OffscreenQuickScene::OffscreenQuickScene(OffscreenQuickView::ExportMode exportMode)
+    : OffscreenQuickView(exportMode)
     , d(new OffscreenQuickScene::Private(this))
 {
 }

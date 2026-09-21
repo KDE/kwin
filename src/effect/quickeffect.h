@@ -83,7 +83,7 @@ public:
     /*!
      * Constructs a scene view for the given \a effect and \a screen.
      */
-    explicit QuickSceneView(QuickSceneEffect *effect, LogicalOutput *screen, bool alpha);
+    explicit QuickSceneView(QuickSceneEffect *effect, LogicalOutput *screen);
     ~QuickSceneView() override;
 
     QuickSceneEffect *effect() const;
@@ -195,7 +195,7 @@ class KWIN_EXPORT QuickSceneEffect : public Effect
     /*!
      * \property bool
      *
-     * Whether the effect needs to be transparent or not (changes after creation are ignored)
+     * Whether the effect needs to be transparent or not
      */
     Q_PROPERTY(bool alpha READ alpha WRITE setAlpha NOTIFY alphaChanged)
 

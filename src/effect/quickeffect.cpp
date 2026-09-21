@@ -42,7 +42,7 @@ public:
 
     void setInitialState(QObject *object) override
     {
-        m_view = std::make_unique<QuickSceneView>(m_effect, m_screen, m_effect->alpha());
+        m_view = std::make_unique<QuickSceneView>(m_effect, m_screen);
         m_view->setAutomaticRepaint(false);
         m_view->setRootItem(qobject_cast<QQuickItem *>(object));
     }
@@ -94,12 +94,15 @@ bool QuickSceneEffectPrivate::isItemOnScreen(QQuickItem *item, LogicalOutput *sc
     return it != views.end() && item->window() == it->second->window();
 }
 
-QuickSceneView::QuickSceneView(QuickSceneEffect *effect, LogicalOutput *screen, bool alpha)
-    : OffscreenQuickView(ExportMode::Texture, alpha)
+QuickSceneView::QuickSceneView(QuickSceneEffect *effect, LogicalOutput *screen)
+    : OffscreenQuickView(ExportMode::Texture)
     , m_effect(effect)
     , m_screen(screen)
 {
     setGeometry(screen->geometry());
+    setAlpha(effect->alpha());
+    // TODO: Connection here on effect to keep alpha up to date, or continue to set alpha on d->views on change?
+    // or even in incubator set initial?
     connect(screen, &LogicalOutput::geometryChanged, this, [this, screen]() {
         setGeometry(screen->geometry());
     });
@@ -299,7 +302,6 @@ QQmlComponent *QuickSceneEffect::delegate() const
 
 bool QuickSceneEffect::alpha() const
 {
-    qWarning() << "!!!!" << "alpha asked, is" << d->alpha;
     return d->alpha;
 }
 
@@ -350,6 +352,10 @@ void QuickSceneEffect::setAlpha(bool alpha)
 
     d->alpha = alpha;
     alphaChanged();
+
+    for (auto &view : d->views) {
+        view.second.get()->setAlpha(alpha);
+    }
 }
 
 QuickSceneView *QuickSceneEffect::viewForScreen(LogicalOutput *screen) const
