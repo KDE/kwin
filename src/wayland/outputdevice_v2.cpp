@@ -19,7 +19,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 25;
+static const quint32 s_version = 26;
 
 class OutputDeviceRegistryV2Private : public QtWaylandServer::kde_output_device_registry_v2
 {
@@ -304,6 +304,7 @@ public:
 
 protected:
     Resource *kde_output_device_mode_v2_allocate() override;
+    void kde_output_device_mode_v2_release(Resource *resource) override;
 };
 
 OutputDeviceV2InterfacePrivate::OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, BackendOutput *handle)
@@ -1326,6 +1327,11 @@ OutputDeviceModeV2InterfacePrivate::Resource *OutputDeviceModeV2InterfacePrivate
 OutputDeviceModeV2InterfacePrivate::Resource *OutputDeviceModeV2InterfacePrivate::kde_output_device_mode_v2_allocate()
 {
     return new ModeResource;
+}
+
+void OutputDeviceModeV2InterfacePrivate::kde_output_device_mode_v2_release(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
 }
 
 std::weak_ptr<OutputMode> OutputDeviceModeV2Interface::handle() const
