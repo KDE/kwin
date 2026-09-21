@@ -685,11 +685,12 @@ std::pair<QList<Compositor::LayerData>, std::expected<void, OutputError>> Compos
                 view = std::make_unique<ItemTreeView>(sceneView, item, logicalOutput, backendOutput, layer);
                 connect(layer, &OutputLayer::repaintScheduled, view.get(), [logicalOutput, backendOutput, cursorView = view.get()]() {
                     // this just deals with moving the plane asynchronously, for improved latency.
-                    // enabling and disabling the cursor image still happen in composite()
+                    // enabling, disabling and updating the cursor image still happen in composite()
                     const auto outputLayer = cursorView->layer();
                     if (!outputLayer->isEnabled()
                         || !outputLayer->deviceRepaints().isEmpty()
-                        || !cursorView->isVisible()) {
+                        || !cursorView->isVisible()
+                        || cursorView->needsRepaint()) {
                         // composite() handles this
                         return;
                     }
@@ -704,9 +705,6 @@ std::pair<QList<Compositor::LayerData>, std::expected<void, OutputError>> Compos
                     }
                     outputLayer->setTargetRect(mapGlobalLogicalToOutputDeviceCoordinates(cursorView->viewport(), logicalOutput, backendOutput));
                     outputLayer->setEnabled(true);
-                    if (cursorView->needsRepaint() && prepareRendering(cursorView, logicalOutput, backendOutput, 8)) {
-                        renderLayer(cursorView, logicalOutput, backendOutput, nullptr, cursorView->collectDamage());
-                    }
                     if (backendOutput->presentAsync(outputLayer, maxVrrCursorDelay)) {
                         // prevent composite() from also pushing an update with the cursor layer
                         // to avoid adding cursor updates that are synchronized with primary layer updates
