@@ -42,8 +42,7 @@ public:
 
     void setInitialState(QObject *object) override
     {
-        const bool alpha = object->property("hasAlphaChannel").toBool();
-        m_view = std::make_unique<QuickSceneView>(m_effect, m_screen, alpha);
+        m_view = std::make_unique<QuickSceneView>(m_effect, m_screen, m_effect->alpha());
         m_view->setAutomaticRepaint(false);
         m_view->setRootItem(qobject_cast<QQuickItem *>(object));
     }
@@ -70,6 +69,7 @@ public:
     bool isItemOnScreen(QQuickItem *item, LogicalOutput *screen) const;
 
     QPointer<QQmlComponent> delegate;
+    bool alpha = false;
     QUrl source;
     struct
     {
@@ -297,6 +297,12 @@ QQmlComponent *QuickSceneEffect::delegate() const
     return d->delegate.get();
 }
 
+bool QuickSceneEffect::alpha() const
+{
+    qWarning() << "!!!!" << "alpha asked, is" << d->alpha;
+    return d->alpha;
+}
+
 void QuickSceneEffect::loadFromModule(const QString &uri, const QString &typeName)
 {
     if (isRunning()) {
@@ -334,6 +340,16 @@ void QuickSceneEffect::setDelegate(QQmlComponent *delegate)
         }
         Q_EMIT delegateChanged();
     }
+}
+
+void QuickSceneEffect::setAlpha(bool alpha)
+{
+    if (d->alpha == alpha) {
+        return;
+    }
+
+    d->alpha = alpha;
+    alphaChanged();
 }
 
 QuickSceneView *QuickSceneEffect::viewForScreen(LogicalOutput *screen) const

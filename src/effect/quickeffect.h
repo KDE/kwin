@@ -192,6 +192,13 @@ class KWIN_EXPORT QuickSceneEffect : public Effect
      */
     Q_PROPERTY(QQmlComponent *delegate READ delegate WRITE setDelegate NOTIFY delegateChanged)
 
+    /*!
+     * \property bool
+     *
+     * Whether the effect needs to be transparent or not (changes after creation are ignored)
+     */
+    Q_PROPERTY(bool alpha READ alpha WRITE setAlpha NOTIFY alphaChanged)
+
 public:
     /*!
      * Constructs a QtQuick scene effect with the given \a parent.
@@ -279,6 +286,9 @@ public:
     QQmlComponent *delegate() const;
     void setDelegate(QQmlComponent *delegate);
 
+    bool alpha() const;
+    void setAlpha(bool alpha);
+
     /*!
      * Returns the source URL.
      */
@@ -341,6 +351,7 @@ Q_SIGNALS:
     void itemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item, KWin::LogicalOutput *screen);
     void activeViewChanged(KWin::QuickSceneView *view);
     void delegateChanged();
+    void alphaChanged();
     void activated();
     void deactivated();
 
