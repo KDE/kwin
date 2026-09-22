@@ -490,9 +490,9 @@ Xkb::Xkb(bool followLocale1)
             locale = QByteArrayLiteral("C");
         }
 
-        m_compose.table = xkb_compose_table_new_from_locale(m_context, locale.constData(), XKB_COMPOSE_COMPILE_NO_FLAGS);
+        m_compose.table = XkbComposeTablePtr(xkb_compose_table_new_from_locale(m_context, locale.constData(), XKB_COMPOSE_COMPILE_NO_FLAGS));
         if (m_compose.table) {
-            m_compose.state = xkb_compose_state_new(m_compose.table, XKB_COMPOSE_STATE_NO_FLAGS);
+            m_compose.state = XkbComposeStatePtr(xkb_compose_state_new(m_compose.table.get(), XKB_COMPOSE_STATE_NO_FLAGS));
         }
     }
 
@@ -509,8 +509,6 @@ Xkb::Xkb(bool followLocale1)
 
 Xkb::~Xkb()
 {
-    xkb_compose_state_unref(m_compose.state);
-    xkb_compose_table_unref(m_compose.table);
     xkb_context_unref(m_context);
 }
 
@@ -773,14 +771,14 @@ void Xkb::updateKey(uint32_t key, KeyboardKeyState state)
     xkb_state_update_key(m_state.get(), key + EVDEV_OFFSET, static_cast<xkb_key_direction>(state));
     if (m_compose.state) {
         if (state == KeyboardKeyState::Pressed) {
-            xkb_compose_state_feed(m_compose.state, sym);
+            xkb_compose_state_feed(m_compose.state.get(), sym);
         }
-        switch (xkb_compose_state_get_status(m_compose.state)) {
+        switch (xkb_compose_state_get_status(m_compose.state.get())) {
         case XKB_COMPOSE_NOTHING:
             m_keysym = sym;
             break;
         case XKB_COMPOSE_COMPOSED:
-            m_keysym = xkb_compose_state_get_one_sym(m_compose.state);
+            m_keysym = xkb_compose_state_get_one_sym(m_compose.state.get());
             break;
         default:
             m_keysym = XKB_KEY_NoSymbol;

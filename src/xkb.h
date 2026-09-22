@@ -8,6 +8,7 @@
 */
 #pragma once
 #include "input.h"
+#include <xkbcommon/xkbcommon-compose.h>
 #include <xkbcommon/xkbcommon.h>
 
 #include <kwin_export.h>
@@ -54,6 +55,26 @@ struct StateDeleter
 };
 
 using XkbStatePtr = std::unique_ptr<xkb_state, StateDeleter>;
+
+struct ComposeTableDeleter
+{
+    void operator()(xkb_compose_table *data) const
+    {
+        xkb_compose_table_unref(data);
+    }
+};
+
+using XkbComposeTablePtr = std::unique_ptr<xkb_compose_table, ComposeTableDeleter>;
+
+struct ComposeStateDeleter
+{
+    void operator()(xkb_compose_state *data) const
+    {
+        xkb_compose_state_unref(data);
+    }
+};
+
+using XkbComposeStatePtr = std::unique_ptr<xkb_compose_state, ComposeStateDeleter>;
 
 class KWIN_EXPORT Xkb : public QObject
 {
@@ -228,8 +249,8 @@ private:
 
     struct
     {
-        xkb_compose_table *table = nullptr;
-        xkb_compose_state *state = nullptr;
+        XkbComposeTablePtr table = nullptr;
+        XkbComposeStatePtr state = nullptr;
     } m_compose;
     LEDs m_leds;
     KConfigGroup m_configGroup;
