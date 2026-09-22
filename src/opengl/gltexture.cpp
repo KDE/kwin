@@ -483,15 +483,21 @@ std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSiz
     glBindTexture(GL_TEXTURE_2D, texture);
 
     const auto context = EglContext::currentContext();
-    // The format parameter in glTexSubImage() must match the internal format
-    // of the texture, so it's important that we allocate the texture with
-    // the format that will be used in update() and clear().
-    const GLenum format = context->supportsARGB32Textures() ? GL_BGRA_EXT : GL_RGBA;
-    glTexImage2D(GL_TEXTURE_2D, 0, format, size.width(), size.height(), 0,
-                 format, GL_UNSIGNED_BYTE, nullptr);
+    GLenum format = GL_RGBA;
+    GLenum type = GL_UNSIGNED_BYTE;
+    if (internalFormat == GL_RGBA16F || internalFormat == GL_RGBA32F) {
+        format = GL_RGBA;
+        type = GL_FLOAT;
+    } else {
+        // The format parameter in glTexSubImage() must match the internal format
+        // of the texture, so it's important that we allocate the texture with
+        // the format that will be used in update() and clear().
+        internalFormat = context->supportsARGB32Textures() ? GL_BGRA_EXT : GL_RGBA;
+        format = internalFormat;
+    }
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, size.width(), size.height(), 0,
+                 format, type, nullptr);
 
-    // The internalFormat is technically not correct, but it means that code that calls
-    // internalFormat() won't need to be specialized for GLES2.
     glBindTexture(GL_TEXTURE_2D, 0);
     return std::unique_ptr<GLTexture>(new GLTexture(GL_TEXTURE_2D, texture, internalFormat, size, levels, true, OutputTransform{}));
 }

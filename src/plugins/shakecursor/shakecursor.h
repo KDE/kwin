@@ -21,6 +21,9 @@ namespace KWin
 class Cursor;
 class CursorItem;
 class ShapeCursorSource;
+class GLTexture;
+class GLFramebuffer;
+class GLShader;
 
 class ShakeCursorItem : public Item
 {
@@ -49,6 +52,8 @@ public:
     bool isActive() const override;
     void reconfigure(ReconfigureFlags flags) override;
     void pointerMotion(PointerMotionEvent *event) override;
+    bool paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
+    void postPaintScreen() override;
 
 private:
     void magnify(qreal magnification);
@@ -66,6 +71,19 @@ private:
     CursorTheme m_cursorTheme;
     qreal m_targetMagnification = 1.0;
     qreal m_currentMagnification = 1.0;
+
+    bool m_useShader = false;
+    bool m_resourcesInit = false;
+    std::unique_ptr<GLTexture> m_offscreenTexture;
+    std::unique_ptr<GLFramebuffer> m_offscreenFb;
+
+    std::unique_ptr<GLTexture> m_positionsTexture;
+    std::unique_ptr<GLFramebuffer> m_positionsFb;
+    std::unique_ptr<GLShader> m_blackHoleShader;
+    std::unique_ptr<GLShader> m_blackHolePhysicsShader;
+    std::unique_ptr<GLShader> m_blackHoleInitShader;
+    double m_blackHoleSize = 0;
+    QPointF m_blackHolePosition;
 };
 
 } // namespace KWin

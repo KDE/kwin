@@ -4,6 +4,7 @@ target_sources(shakecursor PRIVATE
     main.cpp
     shakecursor.cpp
     shakedetector.cpp
+    shakecursor.qrc
 )
 
 kconfig_add_kcfg_files(shakecursor

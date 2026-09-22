@@ -9,10 +9,20 @@
 #include "cursorsource.h"
 #include "effect/effecthandler.h"
 #include "input_event.h"
+#include "opengl/glframebuffer.h"
+#include "opengl/glshader.h"
+#include "opengl/glshadermanager.h"
+#include "opengl/gltexture.h"
 #include "plugins/shakecursor/shakecursorconfig.h"
 #include "pointer_input.h"
 #include "scene/imageitem.h"
 #include "scene/workspacescene.h"
+
+static void ensureResources()
+{
+    // Must initialize resources manually because the effect is a static lib.
+    Q_INIT_RESOURCE(shakecursor);
+}
 
 namespace KWin
 {
@@ -92,6 +102,7 @@ void ShakeCursorEffect::inflate()
 void ShakeCursorEffect::deflate()
 {
     animateTo(1.0);
+    m_useShader = false;
 }
 
 void ShakeCursorEffect::animateTo(qreal magnification)
@@ -120,7 +131,7 @@ void ShakeCursorEffect::pointerMotion(PointerMotionEvent *event)
         return;
     }
 
-    if (m_shakeDetector.update(event)) {
+    if (m_shakeDetector.update(event) && !m_useShader) {
         inflate();
         m_deflateTimer.start(2000);
     }
@@ -156,6 +167,166 @@ void ShakeCursorEffect::magnify(qreal magnification)
             });
         }
         m_cursorItem->setTransform(QTransform::fromScale(magnification, magnification));
+    }
+    const bool newUseShader = m_currentMagnification >= 10;
+    if (m_useShader != newUseShader) {
+        effects->addRepaintFull();
+        m_useShader = newUseShader;
+        if (m_useShader) {
+            m_blackHoleSize = 10;
+            m_blackHolePosition = m_cursorItem->position();
+            disconnect(m_cursor, &Cursor::posChanged, m_cursorItem.get(), nullptr);
+
+            effects->showCursor();
+        }
+    }
+}
+
+bool ShakeCursorEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
+{
+    if (!m_resourcesInit) {
+        m_resourcesInit = true;
+        ensureResources();
+    }
+    if (!m_useShader) {
+        m_positionsTexture.reset();
+        return effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
+    }
+    m_deflateTimer.stop();
+
+    if (!m_offscreenTexture || m_offscreenTexture->size() != renderTarget.size()) {
+        m_offscreenTexture = GLTexture::allocate(GL_RGBA16, renderTarget.size());
+        if (!m_offscreenTexture) {
+            return false;
+        }
+        m_offscreenTexture->setWrapMode(GL_CLAMP_TO_BORDER);
+        m_offscreenFb = std::make_unique<GLFramebuffer>(m_offscreenTexture.get());
+        if (!m_offscreenFb->valid()) {
+            m_offscreenTexture.reset();
+            m_offscreenFb.reset();
+            return false;
+        }
+    }
+
+    RenderTarget offscreen(m_offscreenFb.get(), renderTarget.colorDescription());
+    GLFramebuffer::pushFramebuffer(m_offscreenFb.get());
+    if (!effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen)) {
+        return false;
+    }
+    GLFramebuffer::popFramebuffer();
+
+    if (!m_blackHoleShader) {
+        m_blackHoleShader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace, QByteArray(),
+                                                                              QStringLiteral(":/effects/shakecursor/black_hole.frag"));
+        if (!m_blackHoleShader) {
+            deflate();
+            return false;
+        }
+    }
+    if (!m_blackHolePhysicsShader) {
+        m_blackHolePhysicsShader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QByteArray(),
+                                                                                     QStringLiteral(":/effects/shakecursor/black_hole_physics.frag"));
+        if (!m_blackHolePhysicsShader) {
+            deflate();
+            return false;
+        }
+    }
+    if (!m_blackHoleInitShader) {
+        m_blackHoleInitShader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QByteArray(),
+                                                                                  QStringLiteral(":/effects/shakecursor/black_hole_init.frag"));
+        if (!m_blackHoleInitShader) {
+            deflate();
+            return false;
+        }
+    }
+
+    if (!m_positionsTexture || m_positionsTexture->size() != renderTarget.size()) {
+        m_positionsTexture = GLTexture::allocate(GL_RGBA32F, renderTarget.size());
+        if (!m_positionsTexture) {
+            return false;
+        }
+        m_positionsFb = std::make_unique<GLFramebuffer>(m_positionsTexture.get());
+        if (!m_positionsFb->valid()) {
+            m_positionsTexture.reset();
+            m_positionsFb.reset();
+            return false;
+        }
+
+        GLFramebuffer::pushFramebuffer(m_positionsFb.get());
+
+        ShaderBinder binder(m_blackHoleInitShader.get());
+        QMatrix4x4 proj;
+        proj.ortho(QRect(QPoint(), m_offscreenTexture->size()));
+        m_blackHoleInitShader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, proj);
+        m_blackHoleInitShader->setUniform("size", QVector2D(renderTarget.size().width(), renderTarget.size().height()));
+        m_offscreenTexture->render(m_offscreenTexture->size());
+
+        GLFramebuffer::popFramebuffer();
+    }
+
+    const auto relativeCursor = m_blackHolePosition * viewport.scale() - viewport.deviceRect().topLeft();
+
+    {
+        // move pixels
+        ShaderBinder binder(m_blackHolePhysicsShader.get());
+        GLFramebuffer::pushFramebuffer(m_positionsFb.get());
+
+        QMatrix4x4 proj;
+        proj.ortho(QRect(QPoint(), m_offscreenTexture->size()));
+        m_blackHolePhysicsShader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, proj);
+
+        m_blackHolePhysicsShader->setUniform("blackHolePosition", QVector3D(relativeCursor.x(), relativeCursor.y(), 0));
+        m_blackHolePhysicsShader->setUniform("size", QVector2D(renderTarget.size().width(), renderTarget.size().height()));
+        m_blackHolePhysicsShader->setUniform("diameter", m_blackHoleSize);
+        m_blackHolePhysicsShader->setUniform("timestep", 1'000.0 / screen->refreshRate());
+
+        m_positionsTexture->render(deviceRegion, m_positionsTexture->size(), true);
+
+        m_positionsTexture->bind();
+        glTextureBarrierNV();
+        m_positionsTexture->unbind();
+
+        GLFramebuffer::popFramebuffer();
+    }
+
+    // render the result
+
+    ShaderBinder binder(m_blackHoleShader.get());
+    QMatrix4x4 proj = renderTarget.transform().toMatrix();
+    proj.scale(1, -1);
+    proj.ortho(QRect(QPoint(), m_offscreenTexture->size()));
+    m_blackHoleShader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, proj);
+    m_blackHoleShader->setColorspaceUniforms(renderTarget.colorDescription(), renderTarget.colorDescription(), RenderingIntent::Perceptual);
+
+    m_blackHoleShader->setUniform("blackHolePosition", QVector3D(relativeCursor.x(), relativeCursor.y(), 0));
+    m_blackHoleShader->setUniform("size", QVector2D(renderTarget.size().width(), renderTarget.size().height()));
+    m_blackHoleShader->setUniform("diameter", m_blackHoleSize);
+
+    m_blackHoleShader->setUniform("positions", 1);
+    glActiveTexture(GL_TEXTURE1);
+    m_positionsTexture->bind();
+
+    m_blackHoleShader->setUniform("screen", 0);
+    glActiveTexture(GL_TEXTURE0);
+
+    m_offscreenTexture->render(deviceRegion, m_offscreenTexture->size(), true);
+
+    m_blackHoleSize = m_blackHoleSize * (1.0 + 75.0 / screen->refreshRate());
+    if (m_blackHoleSize < 100) {
+        m_blackHoleSize += 200'000 / screen->refreshRate();
+    }
+    if (m_blackHoleSize > 3'000) {
+        deflate();
+    }
+
+    return true;
+}
+
+void ShakeCursorEffect::postPaintScreen()
+{
+    effects->postPaintScreen();
+    if (m_useShader) {
+        effects->addRepaintFull();
     }
 }
 
