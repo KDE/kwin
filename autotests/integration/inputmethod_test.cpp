@@ -758,7 +758,7 @@ void InputMethodTest::testFakeEventFallback()
     kwinApp()->inputMethod()->setActive(true);
     QVERIFY(inputMethodActiveSpy.count() || inputMethodActiveSpy.wait());
 
-    auto keyboard = new Test::SimpleKeyboard(window);
+    auto keyboard = std::make_unique<Test::SimpleKeyboard>();
     auto context = Test::inputMethod()->context();
     QVERIFY(context);
 

@@ -310,7 +310,7 @@ void FakeInputTest::testKeySym()
     QVERIFY(window->isActive());
     QCOMPARE(window->frameGeometry().size(), QSize(1280, 1024));
 
-    auto keyboard = new Test::SimpleKeyboard(window);
+    auto keyboard = std::make_unique<Test::SimpleKeyboard>();
 
     auto sendKey = [fakeInput](uint32_t keySym) {
         fakeInput->keyboard_keysym(keySym, WL_KEYBOARD_KEY_STATE_PRESSED);
@@ -329,7 +329,7 @@ void FakeInputTest::testKeySym()
 
     QTRY_COMPARE(keyboard->receviedText(), QString("aB äÄ 안😊f"));
 
-    QSignalSpy keySymReceivedSpy(keyboard, &Test::SimpleKeyboard::keySymRecevied);
+    QSignalSpy keySymReceivedSpy(keyboard.get(), &Test::SimpleKeyboard::keySymRecevied);
     QSignalSpy modifiersChangedSpy(keyboard->keyboard(), &KWayland::Client::Keyboard::modifiersChanged);
 
     fakeInput->keyboard_keysym(XKB_KEY_Control_L, WL_KEYBOARD_KEY_STATE_PRESSED);

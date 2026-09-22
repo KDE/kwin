@@ -341,13 +341,13 @@ void Test::setOutputConfig(const QList<OutputInfo> &infos)
     }
 }
 
-Test::SimpleKeyboard::SimpleKeyboard(QObject *parent)
-    : QObject(parent)
-    , m_keyboard(Test::waylandSeat()->createKeyboard(parent))
+Test::SimpleKeyboard::SimpleKeyboard()
+    : QObject()
+    , m_keyboard(Test::waylandSeat()->createKeyboard())
 {
     static const int EVDEV_OFFSET = 8;
 
-    connect(m_keyboard, &KWayland::Client::Keyboard::keymapChanged, this, [this](int fd, uint32_t size) {
+    connect(m_keyboard.get(), &KWayland::Client::Keyboard::keymapChanged, this, [this](int fd, uint32_t size) {
         char *map_shm = static_cast<char *>(
             mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, 0));
         close(fd);
@@ -369,7 +369,7 @@ Test::SimpleKeyboard::SimpleKeyboard(QObject *parent)
         Q_ASSERT(m_state);
     });
 
-    connect(m_keyboard, &KWayland::Client::Keyboard::modifiersChanged, this, [this](quint32 depressed, quint32 latched, quint32 locked, quint32 group) {
+    connect(m_keyboard.get(), &KWayland::Client::Keyboard::modifiersChanged, this, [this](quint32 depressed, quint32 latched, quint32 locked, quint32 group) {
         if (!m_state) {
             return;
         }
@@ -382,7 +382,7 @@ Test::SimpleKeyboard::SimpleKeyboard(QObject *parent)
             group);
     });
 
-    connect(m_keyboard, &KWayland::Client::Keyboard::keyChanged, this, [this](quint32 key, KWayland::Client::Keyboard::KeyState state, quint32 time) {
+    connect(m_keyboard.get(), &KWayland::Client::Keyboard::keyChanged, this, [this](quint32 key, KWayland::Client::Keyboard::KeyState state, quint32 time) {
         if (!m_state) {
             return;
         }
@@ -407,7 +407,7 @@ Test::SimpleKeyboard::SimpleKeyboard(QObject *parent)
 
 KWayland::Client::Keyboard *Test::SimpleKeyboard::keyboard()
 {
-    return m_keyboard;
+    return m_keyboard.get();
 }
 
 void Test::SimpleKeyboard::clearReceivedText()
