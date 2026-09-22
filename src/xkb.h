@@ -45,6 +45,16 @@ struct KeyMapDeleter
 
 using XkbKeymapPtr = std::unique_ptr<xkb_keymap, KeyMapDeleter>;
 
+struct StateDeleter
+{
+    void operator()(xkb_state *data) const
+    {
+        xkb_state_unref(data);
+    }
+};
+
+using XkbStatePtr = std::unique_ptr<xkb_state, StateDeleter>;
+
 class KWIN_EXPORT Xkb : public QObject
 {
     Q_OBJECT
@@ -107,7 +117,7 @@ public:
 
     xkb_state *state() const
     {
-        return m_state;
+        return m_state.get();
     }
 
     quint32 currentLayout() const
@@ -198,7 +208,7 @@ private:
     xkb_context *m_context;
     XkbKeymapPtr m_keymap;
     QStringList m_layoutList;
-    xkb_state *m_state;
+    XkbStatePtr m_state;
     xkb_mod_index_t m_shiftModifier;
     xkb_mod_index_t m_capsModifier;
     xkb_mod_index_t m_controlModifier;
