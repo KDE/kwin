@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-18 02:41+0000\n"
-"PO-Revision-Date: 2026-09-17 20:12+0200\n"
+"PO-Revision-Date: 2026-09-19 18:43+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -1675,20 +1675,15 @@ msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Name der vorkonfigurierten XWayland-Anzeige"
 
 #: main_wayland.cpp:390
-#, fuzzy, kde-format
-#| msgid ""
-#| "XWayland socket to use for Xwayland's incoming connections. This can be "
-#| "set multiple times"
+#, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
 msgstr ""
-"XWayland-Socket, der für eingehende Verbindungen verwendet werden soll. Kann "
-"mehrfach angegeben werden"
+"XWayland-Socket, der für XWayland-init-Verbindungen verwendet werden soll"
 
 #: main_wayland.cpp:394
-#, fuzzy, kde-format
-#| msgid "Name of the xwayland display that has been pre-set up"
+#, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
-msgstr "Name der vorkonfigurierten XWayland-Anzeige"
+msgstr "Name der vorkonfigurierten XWayland-init-Anzeige"
 
 #: main_wayland.cpp:398
 #, kde-format
@@ -3540,14 +3535,13 @@ msgstr "Regelart für ohne Titelleiste und Rahmen"
 #: rulesettings.kcfg:322
 #, kde-format
 msgid "Decoration policy"
-msgstr ""
+msgstr "Dekorationsregel"
 
 #. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
-#, fuzzy, kde-format
-#| msgid "Active opacity rule type"
+#, kde-format
 msgid "Decoration policy rule type"
-msgstr "Regelart für Deckkraft (aktiv)"
+msgstr "Regelart für Dekorationsregel"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:339
@@ -3696,7 +3690,7 @@ msgstr "„Vor Bildschirmfotos und -aufzeichnungen verbergen“-Regelart"
 #: scene/workspacescene.cpp:115
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
-msgstr ""
+msgstr "„Compositing anzeigen“-Effekt umschalten"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
