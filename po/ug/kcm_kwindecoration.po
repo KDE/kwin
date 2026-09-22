@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-05-31 20:01-0400\n"
+"PO-Revision-Date: 2026-09-22 18:03+0900\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
-"Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
+"Language-Team: Uyghur <kde-i18n-doc@kde.org>\n"
 "Language: ug\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,9 +97,6 @@ msgid ""
 "full path will attempt to find a theme in that directory, and then apply "
 "that if one can be deduced."
 msgstr ""
-"تەڭشەيدىغان KWin كۆزنەك بېزەك ئۆرنىكىنىڭ ئىسمى. تولۇق يولى بېرىلسە شۇ "
-"يولدىكى مۇندەرىجىدىن ئۆرنەكنى ئىزدەيدۇ ۋە ئۆرنەك بەلگىلىگەن ئىسىم "
-"ئىشلىتىلىدۇ."
 
 #: kwin-applywindowdecoration.cpp:36
 #, kde-format
@@ -146,8 +143,6 @@ msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
 "unrecoverable error. You may find that simply trying again will work."
 msgstr ""
-"ئۆرنەك تەڭشىكىنى ساقلىيالمىدى - سەۋەبى ئېنىق ئەمەس، ئەمما ئەسلىگە كەلتۈرگىلى "
-"بولمايدىغان خاتالىق. ئۇنى قايتا سىناپ باقسىڭىز مەسىلە ھەل بولۇشى مۇمكىن."
 
 #: kwin-applywindowdecoration.cpp:109
 #, kde-format
@@ -155,7 +150,6 @@ msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
 "options: %2"
 msgstr ""
-"«%1» ئۆرنەكنى تاپالمىدى. ئۆرنەك تۆۋەندىكى تاللانمىدىن بىرى بولۇشى كېرەك: %2"
 
 #: kwin-applywindowdecoration.cpp:114
 #, kde-format

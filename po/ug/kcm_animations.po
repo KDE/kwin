@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-19 00:48+0000\n"
-"PO-Revision-Date: 2026-05-31 20:01-0400\n"
+"PO-Revision-Date: 2026-09-22 18:03+0900\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur <kde-i18n-doc@kde.org>\n"
 "Language: ug\n"
@@ -104,7 +104,7 @@ msgstr "سەپلە…"
 msgctxt ""
 "@option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'"
 msgid "%1:"
-msgstr "%1:"
+msgstr ""
 
 #: ui/main.qml:193
 #, kde-format

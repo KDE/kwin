@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-14 00:45+0000\n"
-"PO-Revision-Date: 2026-05-31 20:02-0400\n"
+"PO-Revision-Date: 2026-09-22 18:03+0900\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
-"Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
+"Language-Team: Uyghur <kde-i18n-doc@kde.org>\n"
 "Language: ug\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -263,8 +263,6 @@ msgid ""
 "The currently selected window will be highlighted by fading out all other "
 "windows. This option requires desktop effects to be active."
 msgstr ""
-"نۆۋەتتىكى كۆزنەكنى گەۋدىلەندۈرۈش ئۈچۈن باشقا كۆزنەكلەرنى سۇسلاشتۇرىدۇ. بۇ "
-"تاللانمىغا ئۈستەلئۈستى ئۈنۈمى قوزغىتىلغان بولۇشى زۆرۈر."
 
 #. i18n: ectx: property (text), widget (QLabel, label_HighlightWindows)
 #: main.ui:634
@@ -302,7 +300,7 @@ msgstr "كېچىكىش:"
 #: main.ui:720
 #, kde-format
 msgid " ms"
-msgstr " ms"
+msgstr ""
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:735
