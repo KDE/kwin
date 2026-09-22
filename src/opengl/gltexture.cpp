@@ -484,6 +484,7 @@ std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSiz
 
     const auto context = EglContext::currentContext();
     GLenum format = GL_RGBA;
+    GLenum texImageInternalFormat = internalFormat;
     GLenum type = GL_UNSIGNED_BYTE;
     if (internalFormat == GL_RGBA16F || internalFormat == GL_RGBA32F) {
         format = GL_RGBA;
@@ -492,10 +493,10 @@ std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSiz
         // The format parameter in glTexSubImage() must match the internal format
         // of the texture, so it's important that we allocate the texture with
         // the format that will be used in update() and clear().
-        internalFormat = context->supportsARGB32Textures() ? GL_BGRA_EXT : GL_RGBA;
-        format = internalFormat;
+        format = context->supportsARGB32Textures() ? GL_BGRA_EXT : GL_RGBA;
+        texImageInternalFormat = format;
     }
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, size.width(), size.height(), 0,
+    glTexImage2D(GL_TEXTURE_2D, 0, texImageInternalFormat, size.width(), size.height(), 0,
                  format, type, nullptr);
 
     glBindTexture(GL_TEXTURE_2D, 0);

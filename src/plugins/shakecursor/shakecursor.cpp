@@ -179,6 +179,7 @@ void ShakeCursorEffect::magnify(qreal magnification)
         effects->addRepaintFull();
         m_blackHoleStartMagnification = m_currentMagnification;
         m_blackHoleSize = 10;
+        m_whiteHoleSize = 0;
         m_blackHoleStartPosition = m_cursorItem->position();
         m_blackHolePosition = m_cursorItem->position() + QPointF(5, 10) * m_currentMagnification;
         disconnect(m_cursor, &Cursor::posChanged, m_cursorItem.get(), nullptr);
@@ -305,6 +306,7 @@ bool ShakeCursorEffect::paintScreen(const RenderTarget &renderTarget, const Rend
     m_blackHoleShader->setUniform("blackHolePosition", QVector3D(relativeCursor.x(), relativeCursor.y(), 0));
     m_blackHoleShader->setUniform("size", QVector2D(renderTarget.size().width(), renderTarget.size().height()));
     m_blackHoleShader->setUniform("diameter", m_blackHoleSize);
+    m_blackHoleShader->setUniform("whiteHoleDiameter", m_whiteHoleSize);
 
     m_blackHoleShader->setUniform("positions", 1);
     glActiveTexture(GL_TEXTURE1);
@@ -330,6 +332,15 @@ bool ShakeCursorEffect::paintScreen(const RenderTarget &renderTarget, const Rend
     }
 
     if (m_blackHoleSize > 2'500) {
+        if (m_whiteHoleSize < 20) {
+            m_whiteHoleSize = std::max(m_whiteHoleSize, 10.0);
+            m_whiteHoleSize += 1'000'000 / screen->refreshRate();
+        } else {
+            m_whiteHoleSize += 500'000 / screen->refreshRate();
+            m_whiteHoleSize *= 1.0 + 1'000.0 / screen->refreshRate();
+        }
+    }
+    if (m_whiteHoleSize >= 2'500) {
         deflate();
     }
 

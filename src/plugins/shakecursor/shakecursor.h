@@ -83,6 +83,7 @@ private:
     std::unique_ptr<GLShader> m_blackHolePhysicsShader;
     std::unique_ptr<GLShader> m_blackHoleInitShader;
     double m_blackHoleSize = 0;
+    double m_whiteHoleSize = 0;
     QPointF m_blackHolePosition;
     QPointF m_blackHoleStartPosition;
     double m_blackHoleStartMagnification = 0;
