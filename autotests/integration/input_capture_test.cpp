@@ -46,12 +46,12 @@ public:
         auto msg = QDBusMessage::createMethodCall(QDBusConnection::sessionBus().baseService(), kwinInputCapturePath, kwinInputCaptureManagerInterface, QStringLiteral("addInputCapture"));
         msg << static_cast<uint>(capabilities);
         QDBusReply<QDBusObjectPath> captureReply = QDBusConnection::sessionBus().call(msg);
-        QVERIFY2(captureReply.isValid(), QTest::toString(captureReply.error()));
+        QVERIFY2(captureReply.isValid(), qPrintable(captureReply.error().message()));
         dbusPath = captureReply.value().path();
 
         msg = QDBusMessage::createMethodCall(QDBusConnection::sessionBus().baseService(), dbusPath, kwinInputCaptureInterface, QStringLiteral("connectToEIS"));
         QDBusReply<QDBusUnixFileDescriptor> eisReply = QDBusConnection::sessionBus().call(msg);
-        QVERIFY2(eisReply.isValid(), QTest::toString(eisReply.error()));
+        QVERIFY2(eisReply.isValid(), qPrintable(eisReply.error().message()));
         eifd = eisReply.value().takeFileDescriptor();
 
         const QList<std::tuple<uint, QPoint, QPoint>> barriers = {
@@ -63,7 +63,7 @@ public:
         msg = QDBusMessage::createMethodCall(QDBusConnection::sessionBus().baseService(), dbusPath, kwinInputCaptureInterface, QStringLiteral("enable"));
         msg << QVariant::fromValue(barriers);
         QDBusReply<void> enableReply = QDBusConnection::sessionBus().call(msg);
-        QVERIFY2(enableReply.isValid(), QTest::toString(enableReply.error()));
+        QVERIFY2(enableReply.isValid(), qPrintable(enableReply.error().message()));
     }
 
     ~InputCapture()
@@ -340,7 +340,7 @@ void TestInputCapture::testInputCapture()
     auto msg = QDBusMessage::createMethodCall(QDBusConnection::sessionBus().baseService(), capture.dbusPath, kwinInputCaptureInterface, QStringLiteral("release"));
     msg << QVariant::fromValue(QPointF(1, 1)) << true;
     QDBusReply<void> releaseReply = QDBusConnection::sessionBus().call(msg);
-    QVERIFY2(releaseReply.isValid(), QTest::toString(releaseReply.error()));
+    QVERIFY2(releaseReply.isValid(), qPrintable(releaseReply.error().message()));
     QCOMPARE(input()->globalPointer(), QPoint(1, 1));
 
     // We receive a warp from the release
@@ -365,7 +365,7 @@ void TestInputCapture::testInputCapture()
     msg = QDBusMessage::createMethodCall(QDBusConnection::sessionBus().baseService(), kwinInputCapturePath, kwinInputCaptureManagerInterface, QStringLiteral("removeInputCapture"));
     msg << QDBusObjectPath(capture.dbusPath);
     QDBusReply<void> removeReply = QDBusConnection::sessionBus().call(msg);
-    QVERIFY2(removeReply.isValid(), QTest::toString(removeReply.error()));
+    QVERIFY2(removeReply.isValid(), qPrintable(removeReply.error().message()));
 
     ei_unref(ei);
 }
@@ -474,7 +474,7 @@ void TestInputCapture::testModifierHandling()
     auto msg = QDBusMessage::createMethodCall(QDBusConnection::sessionBus().baseService(), kwinInputCapturePath, kwinInputCaptureManagerInterface, QStringLiteral("removeInputCapture"));
     msg << QDBusObjectPath(capture.dbusPath);
     QDBusReply<void> removeReply = QDBusConnection::sessionBus().call(msg);
-    QVERIFY2(removeReply.isValid(), QTest::toString(removeReply.error()));
+    QVERIFY2(removeReply.isValid(), qPrintable(removeReply.error().message()));
 
     ei_unref(ei);
 }

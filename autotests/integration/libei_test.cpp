@@ -81,7 +81,7 @@ public:
             QDBusMessage msg = QDBusMessage::createMethodCall(QDBusConnection::sessionBus().baseService(), QString::fromLatin1(s_remoteDesktopPath), QString::fromLatin1(s_remoteDesktopInterface), QStringLiteral("disconnect"));
             msg << m_cookie;
             const QDBusReply<void> reply = QDBusConnection::sessionBus().call(msg);
-            QVERIFY2(reply.isValid(), QTest::toString(reply.error()));
+            QVERIFY2(reply.isValid(), qPrintable(reply.error().message()));
         }
     }
 
