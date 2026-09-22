@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2026-03-01 16:33+0100\n"
+"PO-Revision-Date: 2026-09-19 18:43+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.12.2\n"
+"X-Generator: Lokalize 26.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -347,7 +347,7 @@ msgstr "Deckkraft vergrößern"
 #: mouse.ui:501 mouse.ui:563
 #, kde-format
 msgid "Do nothing"
-msgstr "Keine Aktion"
+msgstr "Nichts tun"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: actions.ui:318
@@ -593,7 +593,7 @@ msgid ""
 msgstr ""
 "Wenn aktiviert, dürfen Anwendungen die Position ihrer Fenster "
 "wiederherstellen, sofern sie dazu in der Lage sind. Dies ignoriert den oben "
-"eingestellten Platzierungsmodus."
+"eingestellten Positionierungsmodus."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:116
@@ -679,52 +679,52 @@ msgstr "Fenster auf aktuelle virtuelle Arbeitsfläche holen"
 #: focus.ui:22
 #, kde-format
 msgid "Window &activation policy:"
-msgstr "Regeln zur Fenster&aktivierung:"
+msgstr "Regel zur Fenster&fokussierung:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, windowFocusPolicy)
 #: focus.ui:32
 #, kde-format
 msgid "With this option you can specify how and when windows will be focused."
 msgstr ""
-"Mit dieser Option können Sie einstellen, wie und unter welcher Bedingung "
-"Fenster aktiviert werden."
+"Mit dieser Option können Sie festlegen, wie und wann Fenster fokussiert "
+"werden."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:36
 #, kde-format
 msgctxt "sassa asas"
 msgid "Click to focus"
-msgstr "Aktivierung nach Klick"
+msgstr "Fokus nach Klick"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:41
 #, kde-format
 msgid "Click to focus (mouse precedence)"
-msgstr "Aktivierung nach Klick – Vorrang für Maus"
+msgstr "Fokus nach Klick – Vorrang für Maus"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:46
 #, kde-format
 msgid "Focus follows mouse"
-msgstr "Aktivierung bei Mauskontakt"
+msgstr "Fokus bei Mauszeigerkontakt"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:51
 #, kde-format
 msgid "Focus follows mouse (mouse precedence)"
-msgstr "Aktivierung bei Mauskontakt – Vorrang für Maus"
+msgstr "Fokus bei Mauszeigerkontakt – Vorrang für Maus"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:56
 #, kde-format
 msgid "Focus under mouse"
-msgstr "Aktivierung unter Mauszeiger"
+msgstr "Fokus unter Mauszeiger"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:61
 #, kde-format
 msgid "Focus strictly under mouse"
-msgstr "Aktivierung genau unter Mauszeiger"
+msgstr "Fokus genau unter Mauszeiger"
 
 #. i18n: ectx: property (text), widget (QLabel, delayFocusOnLabel)
 #: focus.ui:69
@@ -746,7 +746,7 @@ msgstr ""
 #: focus.ui:101
 #, kde-format
 msgid "Focus &stealing prevention:"
-msgstr "Verhindern unerwün&schter Aktivierung"
+msgstr "Verhindern unerwün&schter Fokussierung:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:114
@@ -871,16 +871,16 @@ msgid ""
 "when you click somewhere into the window contents. To change it for inactive "
 "windows, you need to change the settings in the Actions tab."
 msgstr ""
-"Die Aktivierung dieser Einstellung bringt aktive Fenster automatisch in den "
-"Vordergrund, sobald sie irgendwo in den Fensterinhalt klicken. Um eine "
-"Änderung für inaktive Fenster vorzunehmen, müssen Sie die Einstellungen auf "
-"der Karteikarte „Aktionen“ anpassen."
+"Ist diese Einstellung aktiviert, wird das aktive Fenster in den Vordergrund "
+"gebracht, sobald Sie irgendwo in den Fensterinhalt klicken. Um eine Änderung "
+"für inaktive Fenster vorzunehmen, müssen Sie die Einstellungen auf der "
+"Karteikarte „Aktionen“ anpassen."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ClickRaise)
 #: focus.ui:156
 #, kde-format
 msgid "&Click raises active window"
-msgstr "&Aktives Fenster mit Klick nach vorn holen"
+msgstr "Ein &Klick holt das aktive Fenster nach vorn"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AutoRaise)
 #: focus.ui:165
@@ -889,8 +889,9 @@ msgid ""
 "When this option is enabled, a window in the background will automatically "
 "come to the front when the mouse pointer has been over it for some time."
 msgstr ""
-"Ist diese Einstellung aktiv, kommt ein Fenster im Hintergrund automatisch in "
-"den Vordergrund, sobald der Mauszeiger eine Weile darüber gelegen hat."
+"Ist diese Einstellung aktiviert, kommt ein Fenster im Hintergrund "
+"automatisch in den Vordergrund, sobald sich der Mauszeiger eine Weile "
+"darüber befindet."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AutoRaise)
 #: focus.ui:168
@@ -922,11 +923,11 @@ msgid ""
 "for example) is the screen containing the mouse pointer. When disabled, the "
 "active screen is the screen containing the focused window."
 msgstr ""
-"Wenn diese Einstellung aktiviert ist, wird der aktive Bildschirm (auf dem "
+"Ist diese Einstellung aktiviert, wird der aktive Bildschirm (auf dem "
 "beispielsweise neue Fenster erscheinen) durch den Mauszeiger bestimmt. Es "
-"ist immer der Bildschirm aktiv, auf dem sich der Mauszeiger befindet. Wenn "
-"diese Einstellung deaktiviert ist, ist der aktive Bildschirm der, auf dem "
-"sich das jeweils aktive Fenster befindet."
+"ist immer der Bildschirm aktiv, auf dem sich der Mauszeiger befindet. Ist "
+"diese Einstellung deaktiviert, ist der aktive Bildschirm der, auf dem sich "
+"das derzeit aktive Fenster befindet."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
 #: focus.ui:206
@@ -941,14 +942,14 @@ msgid ""
 "When this option is enabled, focus operations are limited only to the active "
 "screen"
 msgstr ""
-"Wenn diese Einstellung aktiviert ist, werden Aktivierungsaktionen nur auf "
-"den jeweils aktiven Bildschirm bezogen."
+"Ist diese Einstellung aktiviert, beziehen sich Fokussierungsaktionen nur auf "
+"den jeweils aktiven Bildschirm"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:216
 #, kde-format
 msgid "&Separate screen focus"
-msgstr "&Aktivierungsaktionen nur für aktiven Bildschirm anwenden"
+msgstr "&Fokussieraktionen nur auf aktiven Bildschirm anwenden"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
 #: focus.ui:229
@@ -959,7 +960,7 @@ msgstr "Beschreibung der Aktivierungsregel"
 #: main.cpp:73
 #, kde-format
 msgid "&Focus"
-msgstr "&Aktivierung"
+msgstr "&Fokus"
 
 #: main.cpp:79
 #, kde-format
@@ -1048,8 +1049,8 @@ msgid ""
 msgstr ""
 "<p><h1>Fensterverhalten</h1>Hier können Sie festlegen, wie sich Fenster "
 "verhalten, sobald Sie sie verschieben, sie anklicken oder ihre Größe ändern. "
-"Sie können außerdem bestimmen, wie die Aktivierung und Platzierung neuer "
-"Fenster gehandhabt werden soll. </p><p>Bitte beachten Sie, dass diese "
+"Sie können außerdem bestimmen, wie die Fokussierung und Positionierung neuer "
+"Fenster gehandhabt werden soll.</p><p>Bitte beachten Sie, dass diese "
 "Einstellungen nur bei der Verwendung von KWin als Fensterverwaltung "
 "funktionieren. Falls Sie eine andere Fensterverwaltung einsetzen, lesen Sie "
 "bitte in der zugehörigen Dokumentation nach, welche Einstellungen möglich "
@@ -1346,8 +1347,8 @@ msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
 "This behavior is common on other operating systems and likely what you want."
 msgstr ""
-"<em>Aktivierung nach Klick:</em> Ein Fenster wird aktiv, wenn Sie mit der "
-"Maus hinein klicken. Dieses Verhalten ist in vielen Betriebssystemen "
+"<em>Fokus nach Klick:</em> Ein Fenster wird aktiviert, wenn Sie mit der Maus "
+"hinein klicken. Dieses Verhalten ist in vielen anderen Betriebssystemen "
 "gebräuchlich und wahrscheinlich die gewünschte Einstellung."
 
 #: windows.cpp:101
@@ -1359,11 +1360,11 @@ msgid ""
 "preferred candidate. Unusual, but possible variant of <em>Click to focus</"
 "em>."
 msgstr ""
-"<em>Aktivierung nach Klick – Vorrang für Maus:</em> Dies ist fast wie "
-"<em>Aktivierung nach Klick</em>. Wenn ein aktives Fenster durch das System "
-"gewählt werden muss, z. B. wenn das zurzeit aktive Fenster geschlossen "
-"wurde, ist das Fenster unter dem Mauszeiger der bevorzugte Kandidat. "
-"Ungewöhnliche aber mögliche Variante von <em>Aktivierung nach Klick</em>."
+"<em>Fokus nach Klick – Vorrang für Maus:</em> Dies ist fast wie <em>Fokus "
+"nach Klick</em>. Wenn ein aktives Fenster durch das System gewählt werden "
+"muss (z. B. weil das zurzeit aktive Fenster geschlossen wurde), ist das "
+"Fenster unter dem Mauszeiger der bevorzugte Kandidat. Ungewöhnliche, aber "
+"mögliche Variante von <em>Fokus nach Klick</em>."
 
 #: windows.cpp:106
 #, kde-format
@@ -1373,11 +1374,11 @@ msgid ""
 "<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
 "to focus</em> just without having to actually click."
 msgstr ""
-"<em>Aktivierung bei Mauskontakt:</em> Durch Verschieben des Mauszeigers in "
+"<em>Fokus bei Mauszeigerkontakt:</em> Durch Verschieben des Mauszeigers in "
 "ein Fenster wird es aktiviert. Fenster, die zufälligerweise unter dem "
-"Mauszeiger erscheinen, werden nicht aktiviert. Das <em>Verhindern "
-"unerwünschter Aktivierung</em> funktioniert normal. Dies ist wie "
-"<em>Aktivierung nach Klick</em>, nur ohne tatsächlich klicken zu müssen."
+"Mauszeiger erscheinen, werden nicht fokussiert. Das <em>Verhindern "
+"unerwünschter Fokussierung</em> funktioniert normal. Dies ist wie <em>Fokus "
+"nach Klick</em>, nur ohne tatsächlich klicken zu müssen."
 
 #: windows.cpp:110
 #, kde-format
@@ -1387,13 +1388,12 @@ msgid ""
 "closed) the window under the mouse is the preferred candidate. Choose this, "
 "if you want a hover controlled focus."
 msgstr ""
-"Dies ist fast wie <em>Aktivierung bei Mauskontakt</em>. Wenn ein aktives "
-"Fenster durch das System gewählt werden muss, z. B. wenn das gerade aktive "
-"Fenster geschlossen wurde, ist das Fenster unter dem Mauszeiger der "
-"bevorzugte Kandidat. Wählen Sie diese Einstellung für eine durch Mauskontakt "
-"gesteuerte Aktivierung."
+"Dies ist fast wie <em>Fokus bei Mauskontakt</em>. Wenn ein aktives Fenster "
+"durch das System gewählt werden muss (z. B. weil das gerade aktive Fenster "
+"geschlossen wurde), ist das Fenster unter dem Mauszeiger der bevorzugte "
+"Kandidat. Wählen Sie diese Einstellung für eine durch Mauskontakt gesteuerte "
+"Aktivierung."
 
-# Hier brauche ich eine zweite Meinung bzgl. "tabbox". Die bisherige Übersetzung sagt "Zwischen Arbeitsflächen umschalten", was eigentlich keinen Sinn ergibt.
 #: windows.cpp:115
 #, kde-format
 msgid ""
@@ -1403,12 +1403,12 @@ msgid ""
 "not work. You very likely want to use <em>Focus follows mouse (mouse "
 "precedence)</em> instead!"
 msgstr ""
-"<em>Aktivierung unter Mauszeiger:</em> Es bleibt immer das Fenster unter dem "
-"Mauszeiger aktiviert.<br/> <strong>Warnung:</strong> <em>Verhinderung "
+"<em>Fokus unter Mauszeiger:</em> Es wird immer das Fenster unter dem "
+"Mauszeiger fokussiert.<br/><strong>Warnung:</strong> <em>Verhindern "
 "unerwünschter Aktivierung</em> und der <em>Anwendungsumschalter („Alt+Tab“)</"
 "em> widersprechen dieser Regelung und werden nicht funktionieren. Sie "
-"sollten stattdessen besser <em>Aktivierung bei Mauskontakt – Vorrang für "
-"Maus</em> verwenden."
+"sollten stattdessen eher <em>Fokus bei Mauskontakt – Vorrang für Maus</em> "
+"verwenden."
 
 #: windows.cpp:119
 #, kde-format
@@ -1420,13 +1420,13 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
-"<em>Aktivierung genau unter Mauszeiger:</em>Es bleibt immer das Fenster "
-"unter dem Mauszeiger aktiviert, im Zweifelsfall auch gar keins – genau wie "
-"das Aktivierungsverhalten in einer nicht verwalteten veralteten X11-Umgebung."
-"<br/><strong>Warnung:</strong><em>Verhinderung unerwünschter Aktivierung</"
-"em> und der <em>Anwendungsumschalter („Alt+Tab“)</em> widersprechen dieser "
-"Regelung und werden nicht funktionieren.Sie sollten stattdessen besser "
-"<em>Aktivierung bei Mauskontakt – Vorrang für Maus</em> verwenden."
+"<em>Fokus genau unter Mauszeiger:</em>Es ist immer das Fenster unter dem "
+"Mauszeiger fokussiert (im Zweifelsfall gar keines). Dies ähnelt dem "
+"Fokusverhalten in einer nicht verwalteten veralteten X11-Umgebung.<br/"
+"><strong>Warnung:</strong> <em>Verhindern unerwünschter Aktivierung</em> und "
+"der <em>Anwendungsumschalter („Alt+Tab“)</em> widersprechen dieser Regelung "
+"und werden nicht funktionieren. Sie sollten stattdessen eher <em>Fokus bei "
+"Mauskontakt – Vorrang für Maus</em> verwenden."
 
 #~ msgid "Cascaded"
 #~ msgstr "Gestaffelt"
