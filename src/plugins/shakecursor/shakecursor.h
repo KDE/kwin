@@ -84,6 +84,8 @@ private:
     std::unique_ptr<GLShader> m_blackHoleInitShader;
     double m_blackHoleSize = 0;
     QPointF m_blackHolePosition;
+    QPointF m_blackHoleStartPosition;
+    double m_blackHoleStartMagnification = 0;
 };
 
 } // namespace KWin

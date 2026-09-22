@@ -76,7 +76,7 @@ bool ShakeCursorEffect::supported()
 
 bool ShakeCursorEffect::isActive() const
 {
-    return m_currentMagnification != 1.0;
+    return m_currentMagnification != 1.0 || m_useShader;
 }
 
 void ShakeCursorEffect::reconfigure(ReconfigureFlags flags)
@@ -101,8 +101,11 @@ void ShakeCursorEffect::inflate()
 
 void ShakeCursorEffect::deflate()
 {
+    if (m_useShader) {
+        effects->addRepaintFull();
+        m_useShader = false;
+    }
     animateTo(1.0);
-    m_useShader = false;
 }
 
 void ShakeCursorEffect::animateTo(qreal magnification)
@@ -139,6 +142,9 @@ void ShakeCursorEffect::pointerMotion(PointerMotionEvent *event)
 
 void ShakeCursorEffect::magnify(qreal magnification)
 {
+    if (m_useShader) {
+        return;
+    }
     if (magnification == 1.0) {
         m_currentMagnification = 1.0;
         if (m_cursorItem) {
@@ -168,17 +174,15 @@ void ShakeCursorEffect::magnify(qreal magnification)
         }
         m_cursorItem->setTransform(QTransform::fromScale(magnification, magnification));
     }
-    const bool newUseShader = m_currentMagnification >= 10;
-    if (m_useShader != newUseShader) {
+    if (m_currentMagnification >= 10) {
+        m_useShader = true;
         effects->addRepaintFull();
-        m_useShader = newUseShader;
-        if (m_useShader) {
-            m_blackHoleSize = 10;
-            m_blackHolePosition = m_cursorItem->position();
-            disconnect(m_cursor, &Cursor::posChanged, m_cursorItem.get(), nullptr);
-
-            effects->showCursor();
-        }
+        m_blackHoleStartMagnification = m_currentMagnification;
+        m_blackHoleSize = 10;
+        m_blackHoleStartPosition = m_cursorItem->position();
+        m_blackHolePosition = m_cursorItem->position() + QPointF(5, 10) * m_currentMagnification;
+        disconnect(m_cursor, &Cursor::posChanged, m_cursorItem.get(), nullptr);
+        effects->showCursor();
     }
 }
 
@@ -311,11 +315,21 @@ bool ShakeCursorEffect::paintScreen(const RenderTarget &renderTarget, const Rend
 
     m_offscreenTexture->render(deviceRegion, m_offscreenTexture->size(), true);
 
-    m_blackHoleSize = m_blackHoleSize * (1.0 + 75.0 / screen->refreshRate());
-    if (m_blackHoleSize < 100) {
-        m_blackHoleSize += 200'000 / screen->refreshRate();
+    m_blackHoleSize += 200'000 / screen->refreshRate();
+    m_blackHoleSize *= 1.0 + 35.0 / screen->refreshRate();
+
+    m_currentMagnification = std::max(1.0, m_currentMagnification - 10'000.0 / screen->refreshRate());
+    if (m_currentMagnification > 1) {
+        m_cursorItem->setTransform(QTransform::fromScale(m_currentMagnification, m_currentMagnification));
+        m_cursorItem->setPosition(QPointF{
+            std::lerp(m_blackHolePosition.x(), m_blackHoleStartPosition.x(), m_currentMagnification / m_blackHoleStartMagnification),
+            std::lerp(m_blackHolePosition.y(), m_blackHoleStartPosition.y(), m_currentMagnification / m_blackHoleStartMagnification),
+        });
+    } else {
+        m_cursorItem.reset();
     }
-    if (m_blackHoleSize > 3'000) {
+
+    if (m_blackHoleSize > 2'500) {
         deflate();
     }
 
