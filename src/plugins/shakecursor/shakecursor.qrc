@@ -1,0 +1,7 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/effects/shakecursor/">
+  <file>black_hole.frag</file>
+  <file>black_hole_physics.frag</file>
+  <file>black_hole_init.frag</file>
+</qresource>
+</RCC>
