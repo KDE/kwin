@@ -512,7 +512,6 @@ Xkb::~Xkb()
     xkb_compose_state_unref(m_compose.state);
     xkb_compose_table_unref(m_compose.table);
     xkb_state_unref(m_state);
-    xkb_keymap_unref(m_keymap);
     xkb_context_unref(m_context);
 }
 
@@ -532,7 +531,7 @@ void Xkb::reconfigure()
         return;
     }
 
-    xkb_keymap *keymap = nullptr;
+    XkbKeymapPtr keymap = nullptr;
     if (!qEnvironmentVariableIsSet("KWIN_XKB_DEFAULT_KEYMAP")) {
         if (m_followLocale1) {
             keymap = loadKeymapFromLocale1();
@@ -545,7 +544,7 @@ void Xkb::reconfigure()
         keymap = loadDefaultKeymap();
     }
     if (keymap) {
-        updateKeymap(keymap);
+        updateKeymap(std::move(keymap));
     } else {
         qCWarning(KWIN_XKB) << "Could not create default xkb keymap";
     }
@@ -581,7 +580,7 @@ void Xkb::applyEnvironmentRules(xkb_rule_names &ruleNames)
     }
 }
 
-xkb_keymap *Xkb::loadKeymapFromConfig()
+XkbKeymapPtr Xkb::loadKeymapFromConfig()
 {
     // load config
     if (!m_configGroup.isValid()) {
@@ -608,18 +607,18 @@ xkb_keymap *Xkb::loadKeymapFromConfig()
 
     m_layoutList = QString::fromLatin1(ruleNames.layout).split(QLatin1Char(','));
 
-    return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
+    return XkbKeymapPtr(xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS));
 }
 
-xkb_keymap *Xkb::loadDefaultKeymap()
+XkbKeymapPtr Xkb::loadDefaultKeymap()
 {
     xkb_rule_names ruleNames = {};
     applyEnvironmentRules(ruleNames);
     m_layoutList = QString::fromLatin1(ruleNames.layout).split(QLatin1Char(','));
-    return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
+    return XkbKeymapPtr(xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS));
 }
 
-xkb_keymap *Xkb::loadKeymapFromLocale1()
+XkbKeymapPtr Xkb::loadKeymapFromLocale1()
 {
     OrgFreedesktopDBusPropertiesInterface locale1Properties(s_locale1Interface, "/org/freedesktop/locale1", QDBusConnection::systemBus(), this);
     const QVariantMap properties = locale1Properties.GetAll(s_locale1Interface);
@@ -641,16 +640,15 @@ xkb_keymap *Xkb::loadKeymapFromLocale1()
 
     m_layoutList = QString::fromLatin1(ruleNames.layout).split(QLatin1Char(','));
 
-    return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
+    return XkbKeymapPtr(xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS));
 }
 
-void Xkb::updateKeymap(xkb_keymap *keymap)
+void Xkb::updateKeymap(XkbKeymapPtr &&keymap)
 {
     Q_ASSERT(keymap);
-    xkb_state *state = xkb_state_new(keymap);
+    xkb_state *state = xkb_state_new(keymap.get());
     if (!state) {
         qCWarning(KWIN_XKB) << "Could not create XKB state";
-        xkb_keymap_unref(keymap);
         return;
     }
 
@@ -665,24 +663,23 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
 
     // now release the old ones
     xkb_state_unref(m_state);
-    xkb_keymap_unref(m_keymap);
 
-    m_keymap = keymap;
+    m_keymap = std::move(keymap);
     m_state = state;
 
-    m_shiftModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_SHIFT);
-    m_capsModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_CAPS);
-    m_controlModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_CTRL);
-    m_altModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_ALT);
-    m_metaModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_LOGO);
-    m_numModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_NUM);
-    m_mod5Modifier = xkb_keymap_mod_get_index(m_keymap, "Mod5");
+    m_shiftModifier = xkb_keymap_mod_get_index(m_keymap.get(), XKB_MOD_NAME_SHIFT);
+    m_capsModifier = xkb_keymap_mod_get_index(m_keymap.get(), XKB_MOD_NAME_CAPS);
+    m_controlModifier = xkb_keymap_mod_get_index(m_keymap.get(), XKB_MOD_NAME_CTRL);
+    m_altModifier = xkb_keymap_mod_get_index(m_keymap.get(), XKB_MOD_NAME_ALT);
+    m_metaModifier = xkb_keymap_mod_get_index(m_keymap.get(), XKB_MOD_NAME_LOGO);
+    m_numModifier = xkb_keymap_mod_get_index(m_keymap.get(), XKB_MOD_NAME_NUM);
+    m_mod5Modifier = xkb_keymap_mod_get_index(m_keymap.get(), "Mod5");
 
-    m_numLock = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_NUM);
-    m_capsLock = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_CAPS);
-    m_scrollLock = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_SCROLL);
-    m_composeLed = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_COMPOSE);
-    m_kanaLed = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_KANA);
+    m_numLock = xkb_keymap_led_get_index(m_keymap.get(), XKB_LED_NAME_NUM);
+    m_capsLock = xkb_keymap_led_get_index(m_keymap.get(), XKB_LED_NAME_CAPS);
+    m_scrollLock = xkb_keymap_led_get_index(m_keymap.get(), XKB_LED_NAME_SCROLL);
+    m_composeLed = xkb_keymap_led_get_index(m_keymap.get(), XKB_LED_NAME_COMPOSE);
+    m_kanaLed = xkb_keymap_led_get_index(m_keymap.get(), XKB_LED_NAME_KANA);
 
     m_currentLayout = xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
 
@@ -751,7 +748,7 @@ QByteArray Xkb::keymapContents() const
         return {};
     }
 
-    UniqueCPtr<char> keymapString(xkb_keymap_get_as_string(m_keymap, XKB_KEYMAP_FORMAT_TEXT_V1));
+    UniqueCPtr<char> keymapString(xkb_keymap_get_as_string(m_keymap.get(), XKB_KEYMAP_FORMAT_TEXT_V1));
     if (!keymapString) {
         return {};
     }
@@ -873,7 +870,7 @@ QString Xkb::layoutName(xkb_layout_index_t index) const
     if (!m_keymap) {
         return QString{};
     }
-    return QString::fromLocal8Bit(xkb_keymap_layout_get_name(m_keymap, index));
+    return QString::fromLocal8Bit(xkb_keymap_layout_get_name(m_keymap.get(), index));
 }
 
 QString Xkb::layoutName() const
@@ -988,7 +985,7 @@ bool Xkb::shouldKeyRepeat(quint32 key) const
     if (!m_keymap) {
         return false;
     }
-    return xkb_keymap_key_repeats(m_keymap, key + EVDEV_OFFSET) != 0;
+    return xkb_keymap_key_repeats(m_keymap.get(), key + EVDEV_OFFSET) != 0;
 }
 
 void Xkb::switchToNextLayout()
@@ -996,7 +993,7 @@ void Xkb::switchToNextLayout()
     if (!m_keymap || !m_state) {
         return;
     }
-    const xkb_layout_index_t numLayouts = xkb_keymap_num_layouts(m_keymap);
+    const xkb_layout_index_t numLayouts = xkb_keymap_num_layouts(m_keymap.get());
     const xkb_layout_index_t nextLayout = (xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE) + 1) % numLayouts;
     switchToLayout(nextLayout);
 }
@@ -1235,7 +1232,7 @@ quint32 Xkb::numberOfLayouts() const
     if (!m_keymap) {
         return 0;
     }
-    return xkb_keymap_num_layouts(m_keymap);
+    return xkb_keymap_num_layouts(m_keymap.get());
 }
 
 void Xkb::setSeat(SeatInterface *seat)
@@ -1249,17 +1246,17 @@ std::optional<Xkb::KeyCode> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)
         return {};
     }
     auto layout = xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
-    const xkb_keycode_t max = xkb_keymap_max_keycode(m_keymap);
-    for (xkb_keycode_t keycode = xkb_keymap_min_keycode(m_keymap); keycode < max; keycode++) {
-        uint levelCount = xkb_keymap_num_levels_for_key(m_keymap, keycode, layout);
+    const xkb_keycode_t max = xkb_keymap_max_keycode(m_keymap.get());
+    for (xkb_keycode_t keycode = xkb_keymap_min_keycode(m_keymap.get()); keycode < max; keycode++) {
+        uint levelCount = xkb_keymap_num_levels_for_key(m_keymap.get(), keycode, layout);
         for (uint currentLevel = 0; currentLevel < levelCount; currentLevel++) {
             const xkb_keysym_t *syms;
-            uint num_syms = xkb_keymap_key_get_syms_by_level(m_keymap, keycode, layout, currentLevel, &syms);
+            uint num_syms = xkb_keymap_key_get_syms_by_level(m_keymap.get(), keycode, layout, currentLevel, &syms);
             for (uint sym = 0; sym < num_syms; sym++) {
                 if (syms[sym] == keysym) {
                     xkb_mod_mask_t masks[1]; // this function returns every way to shift to this level, we just need 1
                     int nMasks = xkb_keymap_key_get_mods_for_level(
-                        m_keymap, keycode, layout, currentLevel,
+                        m_keymap.get(), keycode, layout, currentLevel,
                         masks, 1);
                     xkb_mod_mask_t modifiers = 0;
                     if (nMasks > 0) {
@@ -1329,7 +1326,7 @@ QByteArray Xkb::keymapContentsForKeysym(xkb_keycode_t newKeycode, xkb_keysym_t c
     if (!keymap) {
         return {};
     }
-    UniqueCPtr<char> keymapString(xkb_keymap_get_as_string(keymap, XKB_KEYMAP_FORMAT_TEXT_V1));
+    UniqueCPtr<char> keymapString(xkb_keymap_get_as_string(keymap.get(), XKB_KEYMAP_FORMAT_TEXT_V1));
     if (!keymapString) {
         return {};
     }
@@ -1342,12 +1339,12 @@ bool Xkb::updateToKeymapForKeySym(xkb_keycode_t newKeycode, xkb_keysym_t customS
     if (!keymap) {
         return false;
     }
-    updateKeymap(keymap);
+    updateKeymap(std::move(keymap));
     return true;
 }
 
-xkb_keymap *Xkb::createKeymapForKeysym(xkb_keycode_t newKeycode,
-                                       xkb_keysym_t customSym)
+XkbKeymapPtr Xkb::createKeymapForKeysym(xkb_keycode_t newKeycode,
+                                        xkb_keysym_t customSym)
 {
     char symName[64];
     if (xkb_keysym_get_name(customSym, symName, sizeof(symName)) <= 0) {
@@ -1382,7 +1379,7 @@ xkb_keymap *Xkb::createKeymapForKeysym(xkb_keycode_t newKeycode,
         qWarning() << "Could not create new keymap for keysym" << customSym;
         return {};
     }
-    return newMap;
+    return XkbKeymapPtr(newMap);
 }
 
 QList<xkb_keysym_t> Xkb::textToKeySyms(const QString &inputString)
