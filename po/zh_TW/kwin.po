@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-18 00:47+0000\n"
-"PO-Revision-Date: 2026-09-15 14:58+0900\n"
+"PO-Revision-Date: 2026-09-21 22:06+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -3888,12 +3888,12 @@ msgstr "最大化視窗"
 #: useractions.cpp:832
 #, kde-format
 msgid "Maximize Window Vertically"
-msgstr "垂直最大化視窗"
+msgstr "最大化視窗（垂直）"
 
 #: useractions.cpp:834
 #, kde-format
 msgid "Maximize Window Horizontally"
-msgstr "水平最大化視窗"
+msgstr "最大化視窗（水平）"
 
 #: useractions.cpp:836
 #, kde-format
@@ -3928,7 +3928,7 @@ msgstr "降下視窗"
 #: useractions.cpp:850
 #, kde-format
 msgid "Toggle Window Raise/Lower"
-msgstr "視窗置前或置後"
+msgstr "切換視窗抬升/降下"
 
 #: useractions.cpp:852
 #, kde-format
@@ -3988,17 +3988,17 @@ msgstr "將視窗向下移動"
 #: useractions.cpp:878
 #, kde-format
 msgid "Expand Window Horizontally"
-msgstr "水平展開視窗"
+msgstr "展開視窗（水平）"
 
 #: useractions.cpp:880
 #, kde-format
 msgid "Shrink Window Horizontally"
-msgstr "水平收縮視窗"
+msgstr "收縮視窗（水平）"
 
 #: useractions.cpp:884
 #, kde-format
 msgid "Expand Window Vertically"
-msgstr "垂直展開視窗"
+msgstr "展開視窗（垂直）"
 
 #: useractions.cpp:886
 #, kde-format
@@ -4008,42 +4008,42 @@ msgstr "垂直收縮視窗"
 #: useractions.cpp:890
 #, kde-format
 msgid "Quick Tile Window to the Left"
-msgstr "往左方快速鋪排視窗"
+msgstr "快速鋪排視窗（往左）"
 
 #: useractions.cpp:892
 #, kde-format
 msgid "Quick Tile Window to the Right"
-msgstr "往右方快速鋪排視窗"
+msgstr "快速鋪排視窗（往右）"
 
 #: useractions.cpp:894
 #, kde-format
 msgid "Quick Tile Window to the Top"
-msgstr "往上方快速鋪排視窗"
+msgstr "快速鋪排視窗（往上）"
 
 #: useractions.cpp:896
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
-msgstr "往下方快速鋪排視窗"
+msgstr "快速鋪排視窗（往下）"
 
 #: useractions.cpp:898
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
-msgstr "往左上方快速鋪排視窗"
+msgstr "快速鋪排視窗（左上）"
 
 #: useractions.cpp:900
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
-msgstr "往左下方快速鋪排視窗"
+msgstr "快速鋪排視窗（左下）"
 
 #: useractions.cpp:902
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
-msgstr "往右上方快速鋪排視窗"
+msgstr "快速鋪排視窗（右上）"
 
 #: useractions.cpp:904
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
-msgstr "往右下方快速鋪排視窗"
+msgstr "快速鋪排視窗（右下）"
 
 #: useractions.cpp:906
 #, kde-format
@@ -4078,27 +4078,27 @@ msgstr "將作用中視窗的不透明度減少 5%"
 #: useractions.cpp:924
 #, kde-format
 msgid "Keep Window on All Desktops"
-msgstr "將視窗顯示在桌面"
+msgstr "讓視窗在所有桌面顯示"
 
 #: useractions.cpp:927
 #, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "往左方進行自訂快速視窗鋪排"
+msgstr "自訂快速視窗鋪排（往左）"
 
 #: useractions.cpp:929
 #, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "往右方進行自訂快速視窗鋪排"
+msgstr "自訂快速視窗鋪排（往右）"
 
 #: useractions.cpp:931
 #, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "往上方進行自訂快速視窗鋪排"
+msgstr "自訂快速視窗鋪排（往上）"
 
 #: useractions.cpp:933
 #, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "往下方進行自訂快速視窗鋪排"
+msgstr "自訂快速視窗鋪排（往下）"
 
 #: useractions.cpp:944
 #, kde-format
@@ -4213,7 +4213,7 @@ msgstr "看一下桌面"
 #: useractions.cpp:1015
 #, kde-format
 msgid "Kill Window"
-msgstr "砍掉程式"
+msgstr "強制停止視窗"
 
 #: useractions.cpp:1017
 #, kde-format

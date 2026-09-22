@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-14 00:45+0000\n"
-"PO-Revision-Date: 2026-03-01 16:33+0100\n"
+"PO-Revision-Date: 2026-09-19 18:43+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -20,35 +20,31 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.12.2\n"
+"X-Generator: Lokalize 26.08.1\n"
 
 #: ui/Focus.qml:22
-#, fuzzy, kde-format
-#| msgid "Window &activation policy:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Window focus policy:"
-msgstr "Regeln zur Fenster&aktivierung:"
+msgstr "Regeln zur Fensterfokussierung:"
 
 #: ui/Focus.qml:46
-#, fuzzy, kde-format
-#| msgctxt "sassa asas"
-#| msgid "Click to focus"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Click to focus"
-msgstr "Aktivierung nach Klick"
+msgstr "Fokus nach Klick"
 
 #: ui/Focus.qml:47
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window becomes focused when clicked."
-msgstr ""
+msgstr "Das Fenster wird beim Anklicken fokussiert."
 
 #: ui/Focus.qml:51
-#, fuzzy, kde-format
-#| msgid "Focus follows mouse"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus follows pointer"
-msgstr "Aktivierung bei Mauskontakt"
+msgstr "Fokus bei Mauszeigerkontakt"
 
 #: ui/Focus.qml:52
 #, kde-format
@@ -57,19 +53,22 @@ msgid ""
 "As the pointer moves, windows under it become focused after a configurable "
 "delay."
 msgstr ""
+"Wenn der Zeiger bewegt wird, werden die Fenster darunter nach einer "
+"wählbaren Verzögerung fokussiert."
 
 #: ui/Focus.qml:56
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus under pointer"
-msgstr "Aktivierung unter Mauszeiger"
+msgstr "Fokus unter Mauszeiger"
 
 #: ui/Focus.qml:57
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window under pointer receives focus, even if the pointer has not moved."
 msgstr ""
+"Das Fenster unter dem Mauszeiger wird fokussiert, auch wenn der Zeiger nicht "
+"bewegt wurde."
 
 #: ui/Focus.qml:75
 #, kde-kuit-format
@@ -84,7 +83,7 @@ msgstr ""
 #, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Last focused window"
-msgstr ""
+msgstr "Zuletzt fokussiertes Fenster"
 
 #: ui/Focus.qml:83
 #, kde-format
@@ -93,11 +92,10 @@ msgid "After closing a window, move focus to:"
 msgstr ""
 
 #: ui/Focus.qml:86
-#, fuzzy, kde-format
-#| msgid "&Window snap zone:"
+#, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Window under pointer"
-msgstr "&Fenster-Einrastzone:"
+msgstr "Fenster unter dem Mauszeiger"
 
 #: ui/Focus.qml:115
 #, kde-format
@@ -108,19 +106,18 @@ msgstr "Aktivierung &verzögern um:"
 #, kde-format
 msgctxt "short for millisecond(s)"
 msgid "%1 ms"
-msgstr ""
+msgstr "%1 ms"
 
 #: ui/Focus.qml:128 ui/Focus.qml:254
-#, fuzzy, kde-format
-#| msgid " ms"
+#, kde-format
 msgctxt "short for millisecond(s)"
 msgid "ms"
-msgstr " ms"
+msgstr "ms"
 
 #: ui/Focus.qml:146
 #, kde-format
 msgid "Focus &stealing prevention:"
-msgstr "Verhindern unerwün&schter Aktivierung"
+msgstr "Verhindern unerwün&schter Fokussierung:"
 
 #: ui/Focus.qml:150 ui/MovementAndPlacement.qml:30
 #: ui/MovementAndPlacement.qml:58 ui/MovementAndPlacement.qml:87
@@ -149,19 +146,17 @@ msgid "Extreme"
 msgstr "Extrem"
 
 #: ui/Focus.qml:171
-#, fuzzy, kde-format
-#| msgid "Switch to that Virtual Desktop"
+#, kde-format
 msgctxt "@option:radio When focusing a window on a different Virtual Desktop:"
 msgid "Switch to window’s Virtual Desktop"
-msgstr "Zu dieser virtuellen Arbeitsfläche wechseln"
+msgstr "Zur virtuellen Arbeitsfläche des Fensters wechseln"
 
 #: ui/Focus.qml:173
-#, fuzzy, kde-format
-#| msgid "When activating a window on a different Virtual Desktop:"
+#, kde-format
 msgctxt "@title:group"
 msgid "When focusing a window on a different Virtual Desktop:"
 msgstr ""
-"Wenn ein Fenster auf einer anderen virtuellen Arbeitsfläche aktiviert wird:"
+"Wenn ein Fenster auf einer anderen virtuellen Arbeitsfläche fokussiert wird:"
 
 #: ui/Focus.qml:176
 #, kde-format
@@ -173,7 +168,7 @@ msgstr "Fenster auf aktuelle virtuelle Arbeitsfläche holen"
 #: ui/WindowActions.qml:211
 #, kde-format
 msgid "Do nothing"
-msgstr "Keine Aktion"
+msgstr "Nichts tun"
 
 #: ui/Focus.qml:207
 #, kde-format
@@ -181,10 +176,9 @@ msgid "Raising windows:"
 msgstr "Fenster in den Vordergrund holen:"
 
 #: ui/Focus.qml:208
-#, fuzzy, kde-format
-#| msgid "&Click raises active window"
+#, kde-format
 msgid "&Click raises focused window"
-msgstr "&Aktives Fenster mit Klick nach vorn holen"
+msgstr "Ein &Klick holt das fokussierte Fenster nach vorn"
 
 #: ui/Focus.qml:228
 #, kde-format
@@ -199,12 +193,12 @@ msgstr "Verhalten bei mehreren Bildschirmen:"
 #: ui/Focus.qml:273
 #, kde-format
 msgid "&Separate screen focus"
-msgstr "&Aktivierungsaktionen nur für aktiven Bildschirm anwenden"
+msgstr "&Fokussieraktionen nur auf aktiven Bildschirm anwenden"
 
 #: ui/main.qml:31
 #, kde-format
 msgid "&Focus"
-msgstr "&Aktivierung"
+msgstr "&Fokus"
 
 #: ui/main.qml:37
 #, kde-format
@@ -217,17 +211,15 @@ msgid "W&indow Actions"
 msgstr "&Fensteraktionen"
 
 #: ui/main.qml:49
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgid "Mo&vement & Placement"
-msgstr "&Verschiebung"
+msgstr "&Verschiebung & Positionierung"
 
 #: ui/MovementAndPlacement.qml:17
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgctxt "@title:group"
 msgid "Movement"
-msgstr "&Verschiebung"
+msgstr "Verschiebung"
 
 #: ui/MovementAndPlacement.qml:22
 #, kde-format
@@ -239,15 +231,14 @@ msgstr "&Bildschirmrand-Einrastzone:"
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "%1 px"
-msgstr ""
+msgstr "%1 px"
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
 #: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
-#, fuzzy, kde-format
-#| msgid " px"
+#, kde-format
 msgctxt "short for pixel(s)"
 msgid "px"
-msgstr " px"
+msgstr "px"
 
 #: ui/MovementAndPlacement.qml:50
 #, kde-format
@@ -273,7 +264,7 @@ msgstr "Nur, wenn sie sich überlappen"
 #, kde-format
 msgctxt "@title:group"
 msgid "Placement"
-msgstr ""
+msgstr "Positionierung"
 
 #: ui/MovementAndPlacement.qml:125
 #, kde-format
@@ -311,11 +302,10 @@ msgid "Under mouse"
 msgstr "Unter Mauszeiger"
 
 #: ui/MovementAndPlacement.qml:149
-#, fuzzy, kde-format
-#| msgid "&Picture-in-picture"
+#, kde-format
 msgctxt "@title:group"
 msgid "Picture-in-picture Placement"
-msgstr "&Bild-in-Bild"
+msgstr "Bild-in-Bild-Positionierung"
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
@@ -382,22 +372,19 @@ msgid "Window menu"
 msgstr "Fenstermenü"
 
 #: ui/TitlebarActions.qml:30 ui/WindowActions.qml:23 ui/WindowActions.qml:54
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and raise"
-msgstr "Aktivierung unter Mauszeiger"
+msgstr "Fokussieren und nach vorn holen"
 
 #: ui/TitlebarActions.qml:31
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and lower"
-msgstr "Aktivierung unter Mauszeiger"
+msgstr "Fokussieren und absenken"
 
 #: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
-#, fuzzy, kde-format
-#| msgid "Focus"
+#, kde-format
 msgid "Focus"
-msgstr "Aktivierung"
+msgstr "Fokussieren"
 
 #: ui/TitlebarActions.qml:43 ui/TitlebarActions.qml:57
 #, kde-format
@@ -461,12 +448,11 @@ msgid "Titlebar and Frame Actions"
 msgstr "Aktionen für Titelleiste und Rahmen"
 
 #: ui/TitlebarActions.qml:111
-#, fuzzy, kde-format
-#| msgid "Focus"
+#, kde-format
 msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for focused windows"
 msgid "Focused"
-msgstr "Aktivierung"
+msgstr "Fokussiert"
 
 #: ui/TitlebarActions.qml:116
 #, kde-format
@@ -474,7 +460,7 @@ msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for unfocused "
 "windows"
 msgid "Unfocused"
-msgstr ""
+msgstr "Nicht fokussiert"
 
 #: ui/TitlebarActions.qml:122 ui/WindowActions.qml:46
 #, kde-format
@@ -568,16 +554,14 @@ msgid "Move"
 msgstr "Verschieben"
 
 #: ui/WindowActions.qml:28
-#, fuzzy, kde-format
-#| msgid "Activate, raise and move"
+#, kde-format
 msgid "Focus, raise, and move"
-msgstr "Aktivieren, nach vorn holen und verschieben"
+msgstr "Fokussieren, nach vorn holen und verschieben"
 
 #: ui/WindowActions.qml:29
-#, fuzzy, kde-format
-#| msgid "Activate, raise and move"
+#, kde-format
 msgid "Focus, raise, and resize"
-msgstr "Aktivieren, nach vorn holen und verschieben"
+msgstr "Fokussieren, nach vorn holen und Größe verändern"
 
 #: ui/WindowActions.qml:30
 #, kde-format
@@ -595,11 +579,10 @@ msgid "Increase opacity"
 msgstr "Deckkraft vergrößern"
 
 #: ui/WindowActions.qml:42
-#, fuzzy, kde-format
-#| msgid "Inactive Inner Window Actions"
+#, kde-format
 msgctxt "@title:group"
 msgid "Unfocused Inner Window Actions"
-msgstr "Aktionen für inaktives, inneres Fenster"
+msgstr "Aktionen für nicht fokussiertes, inneres Fenster"
 
 #: ui/WindowActions.qml:50
 #, fuzzy, kde-format
@@ -613,16 +596,14 @@ msgid "Scroll"
 msgstr "Rollen"
 
 #: ui/WindowActions.qml:104
-#, fuzzy, kde-format
-#| msgid "Activate and scroll"
+#, kde-format
 msgid "Focus and scroll"
-msgstr "Aktivieren und blättern"
+msgstr "Fokussieren und scrollen"
 
 #: ui/WindowActions.qml:105
-#, fuzzy, kde-format
-#| msgid "Activate, raise and scroll"
+#, kde-format
 msgid "Focus, raise, and scroll"
-msgstr "Aktivieren, nach vorn holen und blättern"
+msgstr "Fokussieren, nach vorn holen und scrollen"
 
 #: ui/WindowActions.qml:120
 #, fuzzy, kde-format
