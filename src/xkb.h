@@ -35,6 +35,16 @@ namespace KWin
 
 class SeatInterface;
 
+struct KeyMapDeleter
+{
+    void operator()(xkb_keymap *data) const
+    {
+        xkb_keymap_unref(data);
+    }
+};
+
+using XkbKeymapPtr = std::unique_ptr<xkb_keymap, KeyMapDeleter>;
+
 class KWIN_EXPORT Xkb : public QObject
 {
     Q_OBJECT
@@ -92,7 +102,7 @@ public:
 
     xkb_keymap *keymap() const
     {
-        return m_keymap;
+        return m_keymap.get();
     }
 
     xkb_state *state() const
@@ -177,16 +187,16 @@ Q_SIGNALS:
 
 private:
     void applyEnvironmentRules(xkb_rule_names &);
-    xkb_keymap *loadKeymapFromConfig();
-    xkb_keymap *loadDefaultKeymap();
-    xkb_keymap *loadKeymapFromLocale1();
-    xkb_keymap *createKeymapForKeysym(xkb_keycode_t newKeycode, xkb_keysym_t customSym);
-    void updateKeymap(xkb_keymap *keymap);
+    XkbKeymapPtr loadKeymapFromConfig();
+    XkbKeymapPtr loadDefaultKeymap();
+    XkbKeymapPtr loadKeymapFromLocale1();
+    XkbKeymapPtr createKeymapForKeysym(xkb_keycode_t newKeycode, xkb_keysym_t customSym);
+    void updateKeymap(XkbKeymapPtr &&keymap);
     void createKeymapFile();
     void updateModifiers();
     void updateConsumedModifiers(uint32_t key);
     xkb_context *m_context;
-    xkb_keymap *m_keymap;
+    XkbKeymapPtr m_keymap;
     QStringList m_layoutList;
     xkb_state *m_state;
     xkb_mod_index_t m_shiftModifier;
