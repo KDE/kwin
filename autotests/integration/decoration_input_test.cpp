@@ -734,10 +734,10 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
     // this test verifies that a tooltip on the decoration does not steal key events
     // BUG: 393253
 
-    // first create a keyboard
-    auto keyboard = Test::waylandSeat()->createKeyboard(Test::waylandSeat());
+    // first create a keyboard (server-side test wrapper)
+    auto keyboard = Test::kwinSeat()->getKeyboard();
     QVERIFY(keyboard);
-    QSignalSpy enteredSpy(keyboard, &KWayland::Client::Keyboard::entered);
+    QSignalSpy enteredSpy(keyboard.get(), &Test::WlKeyboard::enter);
 
     const auto [window, surface, shellSurface, decoration] = showWindow();
     QVERIFY(window);
@@ -745,7 +745,7 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
     QVERIFY(!window->noBorder());
     QVERIFY(enteredSpy.wait());
 
-    QSignalSpy keyEvent(keyboard, &KWayland::Client::Keyboard::keyChanged);
+    QSignalSpy keyEvent(keyboard.get(), &Test::WlKeyboard::key);
     QVERIFY(keyEvent.isValid());
 
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);

@@ -1589,7 +1589,7 @@ class SimpleKeyboard : public QObject
 
 public:
     explicit SimpleKeyboard();
-    KWayland::Client::Keyboard *keyboard();
+    WlKeyboard *keyboard();
     void clearReceivedText();
     QString receviedText();
 Q_SIGNALS:
@@ -1597,7 +1597,7 @@ Q_SIGNALS:
     void keySymRecevied(xkb_keysym_t keysym);
 
 private:
-    std::unique_ptr<KWayland::Client::Keyboard> m_keyboard;
+    std::unique_ptr<WlKeyboard> m_keyboard;
     QString m_receviedText;
     XkbContextPtr m_ctx = XkbContextPtr(xkb_context_new(XKB_CONTEXT_NO_FLAGS), &xkb_context_unref);
     XkbKeymapPtr m_keymap{nullptr, &xkb_keymap_unref};

@@ -236,7 +236,7 @@ void TestLibei::testSender()
     QVERIFY(Test::waitForWaylandKeyboard());
 
     auto pointer = std::unique_ptr<KWayland::Client::Pointer>(Test::waylandSeat()->createPointer());
-    auto keyboard = std::unique_ptr<KWayland::Client::Keyboard>(Test::waylandSeat()->createKeyboard());
+    auto keyboard = Test::kwinSeat()->getKeyboard();
     auto simpleKeyboard = std::make_unique<Test::SimpleKeyboard>();
     auto surface = Test::createSurface();
     auto shellSurface = Test::createXdgToplevelSurface(surface.get());
@@ -249,15 +249,15 @@ void TestLibei::testSender()
     Test::pointerMotion(QPoint(100, 100), ++timestamp);
     Test::waylandSync();
     QCOMPARE(pointer->enteredSurface(), surface.get());
-    QCOMPARE(keyboard->enteredSurface(), surface.get());
-    QCOMPARE(simpleKeyboard->keyboard()->enteredSurface(), surface.get());
+    QCOMPARE(keyboard->focusedSurface(), surface.get());
+    QCOMPARE(simpleKeyboard->keyboard()->focusedSurface(), surface.get());
 
     RemoteDesktopEiConnection sender(static_cast<uint>(PortalCapabilities::Keyboard) | static_cast<uint>(PortalCapabilities::Pointer));
     sender.waitForDevices();
 
     QSignalSpy motionSpy(pointer.get(), &KWayland::Client::Pointer::motion);
     QSignalSpy buttonSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
-    QSignalSpy keySpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    QSignalSpy keySpy(keyboard.get(), &Test::WlKeyboard::key);
 #if EIS_HAVE_16
     QSignalSpy keySymSpy(simpleKeyboard.get(), &Test::SimpleKeyboard::keySymRecevied);
     QSignalSpy receivedTextChangedSpy(simpleKeyboard.get(), &Test::SimpleKeyboard::receviedTextChanged);
@@ -291,14 +291,14 @@ void TestLibei::testSender()
     ei_device_keyboard_key(sender.keyboardDevice(), KEY_F1, true);
     ei_device_frame(sender.keyboardDevice(), ei_now(sender.sender()));
     QVERIFY(keySpy.wait());
-    QCOMPARE(keySpy.last().at(0).value<quint32>(), KEY_F1);
-    QCOMPARE(keySpy.last().at(1).value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Pressed);
+    QCOMPARE(keySpy.last().at(2).value<quint32>(), KEY_F1);
+    QCOMPARE(keySpy.last().at(3).value<uint32_t>(), uint32_t(QtWayland::wl_keyboard::key_state_pressed));
 
     ei_device_keyboard_key(sender.keyboardDevice(), KEY_F1, false);
     ei_device_frame(sender.keyboardDevice(), ei_now(sender.sender()));
     QVERIFY(keySpy.count() == 2 || keySpy.wait());
-    QCOMPARE(keySpy.last().at(0).value<quint32>(), KEY_F1);
-    QCOMPARE(keySpy.last().at(1).value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Released);
+    QCOMPARE(keySpy.last().at(2).value<quint32>(), KEY_F1);
+    QCOMPARE(keySpy.last().at(3).value<uint32_t>(), uint32_t(QtWayland::wl_keyboard::key_state_released));
 
 #if EIS_HAVE_16
     keySymSpy.clear();

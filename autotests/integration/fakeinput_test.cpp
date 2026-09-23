@@ -279,19 +279,19 @@ void FakeInputTest::testKeyboardKey()
     // without an authentication we shouldn't get the signals
     QSignalSpy keyboardKeySpy(m_inputDevice, &InputDevice::keyChanged);
     QFETCH(quint32, linuxKey);
-    fakeInput->keyboard_key(linuxKey, WL_KEYBOARD_KEY_STATE_PRESSED);
+    fakeInput->keyboard_key(linuxKey, QtWayland::wl_keyboard::key_state_pressed);
     QVERIFY(Test::waylandSync());
     QVERIFY(keyboardKeySpy.isEmpty());
 
     // now authenticate
     fakeInput->authenticate(QStringLiteral("org.kde.foobar"), QStringLiteral("foobar"));
-    fakeInput->keyboard_key(linuxKey, WL_KEYBOARD_KEY_STATE_PRESSED);
+    fakeInput->keyboard_key(linuxKey, QtWayland::wl_keyboard::key_state_pressed);
     QVERIFY(keyboardKeySpy.wait());
     QCOMPARE(keyboardKeySpy.last().at(0).value<quint32>(), linuxKey);
     QCOMPARE(keyboardKeySpy.last().at(1).value<KeyboardKeyState>(), KeyboardKeyState::Pressed);
 
     // and release
-    fakeInput->keyboard_key(linuxKey, WL_KEYBOARD_KEY_STATE_RELEASED);
+    fakeInput->keyboard_key(linuxKey, QtWayland::wl_keyboard::key_state_released);
     QVERIFY(keyboardKeySpy.wait());
     QCOMPARE(keyboardKeySpy.last().at(0).value<quint32>(), linuxKey);
     QCOMPARE(keyboardKeySpy.last().at(1).value<KeyboardKeyState>(), KeyboardKeyState::Released);
@@ -313,8 +313,8 @@ void FakeInputTest::testKeySym()
     auto keyboard = std::make_unique<Test::SimpleKeyboard>();
 
     auto sendKey = [fakeInput](uint32_t keySym) {
-        fakeInput->keyboard_keysym(keySym, WL_KEYBOARD_KEY_STATE_PRESSED);
-        fakeInput->keyboard_keysym(keySym, WL_KEYBOARD_KEY_STATE_RELEASED);
+        fakeInput->keyboard_keysym(keySym, QtWayland::wl_keyboard::key_state_pressed);
+        fakeInput->keyboard_keysym(keySym, QtWayland::wl_keyboard::key_state_released);
     };
 
     sendKey(XKB_KEY_a);
@@ -330,25 +330,25 @@ void FakeInputTest::testKeySym()
     QTRY_COMPARE(keyboard->receviedText(), QString("aB äÄ 안😊f"));
 
     QSignalSpy keySymReceivedSpy(keyboard.get(), &Test::SimpleKeyboard::keySymRecevied);
-    QSignalSpy modifiersChangedSpy(keyboard->keyboard(), &KWayland::Client::Keyboard::modifiersChanged);
+    QSignalSpy modifiersChangedSpy(keyboard->keyboard(), &Test::WlKeyboard::modifiers);
 
-    fakeInput->keyboard_keysym(XKB_KEY_Control_L, WL_KEYBOARD_KEY_STATE_PRESSED);
+    fakeInput->keyboard_keysym(XKB_KEY_Control_L, QtWayland::wl_keyboard::key_state_pressed);
     QVERIFY(keySymReceivedSpy.count() == 1 || keySymReceivedSpy.wait());
     QCOMPARE(keySymReceivedSpy.last().at(0).toUInt(), XKB_KEY_Control_L);
     QVERIFY(modifiersChangedSpy.count() == 1 || modifiersChangedSpy.wait());
     const auto modifiersAfterPress = modifiersChangedSpy.last();
-    QVERIFY(modifiersAfterPress.at(0).toUInt() != 0);
+    QVERIFY(modifiersAfterPress.at(1).toUInt() != 0);
 
     sendKey(XKB_KEY_a);
     QVERIFY(keySymReceivedSpy.count() == 2 || keySymReceivedSpy.wait());
     QCOMPARE(keySymReceivedSpy.last().at(0).toUInt(), XKB_KEY_a);
     QCOMPARE(modifiersChangedSpy.count(), 1);
-    QCOMPARE(modifiersChangedSpy.last().at(0).toUInt(), modifiersAfterPress.at(0).toUInt());
+    QCOMPARE(modifiersChangedSpy.last().at(1).toUInt(), modifiersAfterPress.at(1).toUInt());
 
-    fakeInput->keyboard_keysym(XKB_KEY_Control_L, WL_KEYBOARD_KEY_STATE_RELEASED);
+    fakeInput->keyboard_keysym(XKB_KEY_Control_L, QtWayland::wl_keyboard::key_state_released);
     QVERIFY(modifiersChangedSpy.count() == 2 || modifiersChangedSpy.wait());
     QCOMPARE(keySymReceivedSpy.count(), 2);
-    QCOMPARE(modifiersChangedSpy.last().at(0).toUInt(), 0U);
+    QCOMPARE(modifiersChangedSpy.last().at(1).toUInt(), 0U);
 }
 
 } // namespace KWin

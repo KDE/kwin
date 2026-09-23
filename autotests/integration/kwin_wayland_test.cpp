@@ -343,13 +343,13 @@ void Test::setOutputConfig(const QList<OutputInfo> &infos)
 
 Test::SimpleKeyboard::SimpleKeyboard()
     : QObject()
-    , m_keyboard(Test::waylandSeat()->createKeyboard())
+    , m_keyboard(Test::kwinSeat()->getKeyboard())
 {
     static const int EVDEV_OFFSET = 8;
 
-    connect(m_keyboard.get(), &KWayland::Client::Keyboard::keymapChanged, this, [this](int fd, uint32_t size) {
-        char *map_shm = static_cast<char *>(
-            mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, 0));
+    connect(m_keyboard.get(), &Test::WlKeyboard::keymap, this, [this](uint32_t format, int fd, uint32_t size) {
+        Q_UNUSED(format);
+        char *map_shm = static_cast<char *>(mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, 0));
         close(fd);
 
         Q_ASSERT(map_shm != MAP_FAILED);
@@ -369,7 +369,7 @@ Test::SimpleKeyboard::SimpleKeyboard()
         Q_ASSERT(m_state);
     });
 
-    connect(m_keyboard.get(), &KWayland::Client::Keyboard::modifiersChanged, this, [this](quint32 depressed, quint32 latched, quint32 locked, quint32 group) {
+    connect(m_keyboard.get(), &Test::WlKeyboard::modifiers, this, [this](uint32_t serial, uint32_t depressed, uint32_t latched, uint32_t locked, uint32_t group) {
         if (!m_state) {
             return;
         }
@@ -382,14 +382,14 @@ Test::SimpleKeyboard::SimpleKeyboard()
             group);
     });
 
-    connect(m_keyboard.get(), &KWayland::Client::Keyboard::keyChanged, this, [this](quint32 key, KWayland::Client::Keyboard::KeyState state, quint32 time) {
+    connect(m_keyboard.get(), &Test::WlKeyboard::key, this, [this](uint32_t serial, uint32_t time, uint32_t key, uint32_t state) {
         if (!m_state) {
             return;
         }
 
         xkb_keycode_t kc = key + EVDEV_OFFSET;
 
-        if (state == KWayland::Client::Keyboard::KeyState::Pressed) {
+        if (state == QtWayland::wl_keyboard::key_state_pressed) {
             const xkb_keysym_t *syms;
             int nsyms = xkb_state_key_get_syms(m_state.get(), kc, &syms);
             for (int i = 0; i < nsyms; i++) {
@@ -405,7 +405,7 @@ Test::SimpleKeyboard::SimpleKeyboard()
     });
 }
 
-KWayland::Client::Keyboard *Test::SimpleKeyboard::keyboard()
+Test::WlKeyboard *Test::SimpleKeyboard::keyboard()
 {
     return m_keyboard.get();
 }
