@@ -108,31 +108,6 @@ QList<TabletTool::Capability> TabletTool::capabilities() const
     return capabilities;
 }
 
-static bool checkAlphaNumericKeyboard(libinput_device *device)
-{
-    for (uint i = KEY_1; i <= KEY_0; i++) {
-        if (libinput_device_keyboard_has_key(device, i) == 0) {
-            return false;
-        }
-    }
-    for (uint i = KEY_Q; i <= KEY_P; i++) {
-        if (libinput_device_keyboard_has_key(device, i) == 0) {
-            return false;
-        }
-    }
-    for (uint i = KEY_A; i <= KEY_L; i++) {
-        if (libinput_device_keyboard_has_key(device, i) == 0) {
-            return false;
-        }
-    }
-    for (uint i = KEY_Z; i <= KEY_M; i++) {
-        if (libinput_device_keyboard_has_key(device, i) == 0) {
-            return false;
-        }
-    }
-    return true;
-}
-
 enum class ConfigKey {
     Enabled,
     DisableEventsOnExternalMouse,
@@ -337,6 +312,7 @@ Device::Device(libinput_device *device, QObject *parent)
     : InputDevice(parent)
     , m_device(device)
     , m_keyboard(libinput_device_has_capability(m_device, LIBINPUT_DEVICE_CAP_KEYBOARD))
+    , m_alphaNumericKeyboard(m_keyboard && udev_device_get_property_value(libinput_device_get_udev_device(m_device), "ID_INPUT_KEYBOARD"))
     , m_pointer(libinput_device_has_capability(m_device, LIBINPUT_DEVICE_CAP_POINTER))
     , m_touch(libinput_device_has_capability(m_device, LIBINPUT_DEVICE_CAP_TOUCH))
     , m_tabletTool(libinput_device_has_capability(m_device, LIBINPUT_DEVICE_CAP_TABLET_TOOL))
@@ -423,10 +399,6 @@ Device::Device(libinput_device *device, QObject *parent)
                 m_supportedButtons |= buttonToQtMouseButton(button);
             }
         }
-    }
-
-    if (m_keyboard) {
-        m_alphaNumericKeyboard = checkAlphaNumericKeyboard(m_device);
     }
 
     libinput_device_group *group = libinput_device_get_device_group(device);
