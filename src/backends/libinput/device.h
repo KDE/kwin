@@ -64,6 +64,7 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(bool alphaNumericKeyboard READ isAlphaNumericKeyboard CONSTANT)
     Q_PROPERTY(bool pointer READ isPointer CONSTANT)
     Q_PROPERTY(bool touchpad READ isTouchpad CONSTANT)
+    Q_PROPERTY(bool mouse READ isMouse CONSTANT)
     Q_PROPERTY(bool touch READ isTouch CONSTANT)
     Q_PROPERTY(bool tabletTool READ isTabletTool CONSTANT)
     Q_PROPERTY(bool tabletPad READ isTabletPad CONSTANT)
@@ -224,6 +225,10 @@ public:
             // ignore all combined devices. E.g. a touchpad on a keyboard we don't want to toggle
             // as that would result in the keyboard going off as well
             !(m_keyboard || m_touch || m_tabletPad || m_tabletTool);
+    }
+    bool isMouse() const
+    {
+        return m_mouse;
     }
     bool isTouch() const override
     {
@@ -863,6 +868,7 @@ private:
     bool m_lidSwitch = false;
     bool m_tabletSwitch = false;
     bool m_touchpad = false;
+    bool m_mouse = false;
     QString m_name;
     QString m_sysName;
     QString m_sysPath;
