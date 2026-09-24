@@ -108,11 +108,16 @@ public:
         return m_highPriority;
     }
 
+    void setRealTimePriority(bool realtime)
+    {
+        m_realtime = realtime;
+    }
+
     virtual std::vector<int> build() const = 0;
 
     QDebug operator<<(QDebug dbg) const;
 
-private:
+protected:
     bool m_versionRequested = false;
     int m_majorVersion = 0;
     int m_minorVersion = 0;
@@ -122,6 +127,7 @@ private:
     bool m_compatibilityProfile = false;
     bool m_resetOnVideoMemoryPurge = false;
     bool m_highPriority = false;
+    bool m_realtime = false;
 };
 
 inline QDebug operator<<(QDebug dbg, const AbstractOpenGLContextAttributeBuilder *attribs)

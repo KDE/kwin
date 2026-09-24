@@ -184,10 +184,19 @@ bool EglContext::isValid() const
     const bool haveRobustness = display->hasExtension(QByteArrayLiteral("EGL_EXT_create_context_robustness"));
     const bool haveCreateContext = display->hasExtension(QByteArrayLiteral("EGL_KHR_create_context"));
     const bool haveContextPriority = display->hasExtension(QByteArrayLiteral("EGL_IMG_context_priority"));
+    const bool haveRealtimePriority = display->hasExtension(QByteArrayLiteral("EGL_NV_context_priority_realtime"));
     const bool haveResetOnVideoMemoryPurge = display->hasExtension(QByteArrayLiteral("EGL_NV_robustness_video_memory_purge"));
 
     std::vector<std::unique_ptr<AbstractOpenGLContextAttributeBuilder>> candidates;
     if (haveCreateContext && haveRobustness && haveContextPriority && haveResetOnVideoMemoryPurge) {
+        if (haveRealtimePriority) {
+            auto glesRobustPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
+            glesRobustPriority->setResetOnVideoMemoryPurge(true);
+            glesRobustPriority->setVersion(2);
+            glesRobustPriority->setRobust(true);
+            glesRobustPriority->setRealTimePriority(true);
+            candidates.push_back(std::move(glesRobustPriority));
+        }
         auto glesRobustPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
         glesRobustPriority->setResetOnVideoMemoryPurge(true);
         glesRobustPriority->setVersion(2);
@@ -197,6 +206,13 @@ bool EglContext::isValid() const
     }
 
     if (haveCreateContext && haveRobustness && haveContextPriority) {
+        if (haveRealtimePriority) {
+            auto glesRobustPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
+            glesRobustPriority->setVersion(2);
+            glesRobustPriority->setRobust(true);
+            glesRobustPriority->setRealTimePriority(true);
+            candidates.push_back(std::move(glesRobustPriority));
+        }
         auto glesRobustPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
         glesRobustPriority->setVersion(2);
         glesRobustPriority->setRobust(true);
@@ -210,6 +226,12 @@ bool EglContext::isValid() const
         candidates.push_back(std::move(glesRobust));
     }
     if (haveContextPriority) {
+        if (haveRealtimePriority) {
+            auto glesPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
+            glesPriority->setVersion(2);
+            glesPriority->setRealTimePriority(true);
+            candidates.push_back(std::move(glesPriority));
+        }
         auto glesPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
         glesPriority->setVersion(2);
         glesPriority->setHighPriority(true);
