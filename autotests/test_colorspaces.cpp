@@ -503,6 +503,11 @@ void TestColorspaces::testIccShader()
                 pipelineResult.setPixel(x, y, qRgba(out[0], out[1], out[2], 255));
             }
         }
+
+        for (auto curve : toneCurves) {
+            cmsFreeToneCurve(curve);
+        }
+
         cmsDeleteTransform(transform);
         cmsCloseProfile(sRGBHandle);
         cmsCloseProfile(handle);
