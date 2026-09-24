@@ -2743,6 +2743,13 @@ void tabletToolTipEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal y
     Q_EMIT tablet->tabletToolTipEvent(pos, pressure, xTilt, yTilt, rotation, distance, tipDown, sliderPosition, tool, std::chrono::milliseconds(time), tablet);
 }
 
+XdgToplevelWindow::XdgToplevelWindow(CreationSetup configureMode)
+    : m_connection(s_waylandConnection.get())
+    , m_surface(createSurface(s_waylandConnection->compositor))
+    , m_toplevel(createXdgToplevelSurface(s_waylandConnection->xdgShell, m_surface.get(), configureMode))
+{
+}
+
 XdgToplevelWindow::XdgToplevelWindow(const std::function<void(KWayland::Client::Surface *surface, XdgToplevel *toplevel)> &setup)
     : XdgToplevelWindow(s_waylandConnection.get(), setup)
 {
@@ -2838,9 +2845,18 @@ std::optional<QSize> XdgToplevelWindow::handleConfigure(const QColor &color)
         return ret;
     }
     Test::render(m_connection->shm, m_surface.get(), toplevelConfigure.last().at(0).toSize(), color);
-    QSignalSpy frameGeometryChanged(m_window, &KWin::Window::frameGeometryChanged);
-    if (!frameGeometryChanged.wait()) {
-        return std::nullopt;
+    if (m_window) {
+        QSignalSpy frameGeometryChanged(m_window, &KWin::Window::frameGeometryChanged);
+        if (!frameGeometryChanged.wait()) {
+            return std::nullopt;
+        }
+    } else {
+        qWarning() << "waiting....";
+        m_window = waitForWaylandWindowShown();
+        if (!m_window) {
+            qWarning() << "nope";
+            return std::nullopt;
+        }
     }
     return ret;
 }

@@ -1601,6 +1601,7 @@ void setOutputConfig(const QList<OutputInfo> &infos);
 class XdgToplevelWindow
 {
 public:
+    explicit XdgToplevelWindow(CreationSetup configureMode);
     explicit XdgToplevelWindow(const std::function<void(KWayland::Client::Surface *surface, XdgToplevel *toplevel)> &setup);
     explicit XdgToplevelWindow(const std::function<void(XdgToplevel *toplevel)> &setup = {});
     explicit XdgToplevelWindow(Connection *connection, const std::function<void(KWayland::Client::Surface *surface, XdgToplevel *toplevel)> &setup);

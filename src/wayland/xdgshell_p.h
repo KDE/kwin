@@ -100,6 +100,7 @@ class XdgToplevelCommit : public SurfaceAttachedState<XdgToplevelCommit>, public
 public:
     std::optional<QSizeF> minimumSize;
     std::optional<QSizeF> maximumSize;
+    std::optional<QSizeF> requestedConfigure;
 };
 
 class XdgPopupCommit : public SurfaceAttachedState<XdgPopupCommit>, public XdgSurfaceCommit
@@ -164,6 +165,7 @@ public:
     QSizeF minimumSize = QSizeF(0, 0);
     QSizeF maximumSize = QSizeF(0, 0);
     QIcon customIcon; // managed externally by the xdg_toplevel_icon interface
+    std::optional<QSizeF> requestedConfigure;
 
 protected:
     void xdg_toplevel_destroy_resource(Resource *resource) override;
@@ -181,6 +183,7 @@ protected:
     void xdg_toplevel_set_fullscreen(Resource *resource, ::wl_resource *output) override;
     void xdg_toplevel_unset_fullscreen(Resource *resource) override;
     void xdg_toplevel_set_minimized(Resource *resource) override;
+    void xdg_toplevel_request_configure(Resource *resource, uint32_t width, uint32_t height) override;
 };
 
 class XdgPopupInterfacePrivate : public SurfaceExtension<XdgPopupInterfacePrivate, XdgPopupCommit>, public QtWaylandServer::xdg_popup

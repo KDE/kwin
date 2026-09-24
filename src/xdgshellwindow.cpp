@@ -667,6 +667,18 @@ void XdgToplevelWindow::handleRoleCommit()
         handleStatesAcknowledged(configureEvent->states);
         commitTile(configureEvent->tile);
     }
+
+    if (const auto requestedSize = m_shellSurface->takeRequestedConfigure()) {
+        const auto area = workspace()->clientArea(PlacementArea, this);
+        const QSizeF size{
+            requestedSize->width() ? std::min(requestedSize->width(), area.width()) : area.width() / 2,
+            requestedSize->height() ? std::min(requestedSize->height(), area.height()) : area.height() / 2,
+        };
+        moveResize(m_spontaneousGravity.apply(RectF(m_frameGeometry.topLeft(), size), m_frameGeometry));
+        // ensure that even if the resize is no-op,
+        // we still send a configure event
+        scheduleConfigure();
+    }
 }
 
 void XdgToplevelWindow::doMinimize()

@@ -337,6 +337,8 @@ public:
 
     wl_resource *resource() const;
 
+    std::optional<QSizeF> takeRequestedConfigure() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the xdg-toplevel is about to be destroyed.

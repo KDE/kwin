@@ -210,9 +210,11 @@ ClientConnection *WaylandServer::screenLockerClientConnection() const
 void WaylandServer::registerWindow(Window *window)
 {
     if (window->readyForPainting()) {
+        qWarning() << "eh";
         Q_EMIT windowAdded(window);
     } else {
         connect(window, &Window::readyForPaintingChanged, this, [this, window]() {
+            qWarning() << "eh2";
             Q_EMIT windowAdded(window);
         });
     }

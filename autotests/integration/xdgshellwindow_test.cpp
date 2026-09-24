@@ -127,6 +127,7 @@ private Q_SLOTS:
     void testRemoveActiveDesktopBeforeMap();
     void testRemoveActiveOutputBeforeInitialCommit();
     void testRemoveActiveOutputBeforeMap();
+    void testRequestConfigure();
 };
 
 void TestXdgShellWindow::testXdgPopupReactive_data()
@@ -2992,6 +2993,23 @@ void TestXdgShellWindow::testRemoveActiveOutputBeforeMap()
     // The window should have been evacuated from the second output to the first output.
     QCOMPARE(window->output(), outputs[0]);
     QCOMPARE(window->moveResizeOutput(), outputs[0]);
+}
+
+void TestXdgShellWindow::testRequestConfigure()
+{
+    Test::XdgToplevelWindow window{Test::CreationSetup::CreateOnly};
+    window.m_toplevel->request_configure(150, 150);
+    window.commit();
+    QCOMPARE(window.handleConfigure(), QSize(150, 150));
+    // QVERIFY(window.show(QSize(100, 100)));
+
+    QSignalSpy configure(window.m_toplevel.get(), &Test::XdgToplevel::configureRequested);
+    QVERIFY(configure.wait());
+
+    window.m_toplevel->request_configure(200, 200);
+    window.commit();
+    QVERIFY(configure.wait());
+    QCOMPARE(configure.last().at(0).value<QSize>(), QSize(200, 200));
 }
 
 WAYLANDTEST_MAIN(TestXdgShellWindow)

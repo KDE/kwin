@@ -18,7 +18,7 @@
 namespace KWin
 {
 
-static const int s_version = 6;
+static const int s_version = 8;
 
 XdgShellInterfacePrivate::XdgShellInterfacePrivate(XdgShellInterface *shell)
     : q(shell)
@@ -369,6 +369,8 @@ void XdgToplevelInterfacePrivate::apply(XdgToplevelCommit *commit)
         return;
     }
 
+    requestedConfigure = commit->requestedConfigure;
+
     if (commit->minimumSize && minimumSize != minSize) {
         minimumSize = minSize;
         Q_EMIT q->minimumSizeChanged(minimumSize);
@@ -395,6 +397,7 @@ void XdgToplevelInterfacePrivate::reset()
     description = QString();
     minimumSize = QSize(0, 0);
     maximumSize = QSize(0, 0);
+    requestedConfigure.reset();
     customIcon = QIcon();
 
     Q_EMIT q->resetOccurred();
@@ -568,6 +571,11 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_unset_fullscreen(Resource *resour
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_minimized(Resource *resource)
 {
     Q_EMIT q->minimizeRequested();
+}
+
+void XdgToplevelInterfacePrivate::xdg_toplevel_request_configure(Resource *resource, uint32_t width, uint32_t height)
+{
+    pending->requestedConfigure = QSizeF(width, height) / surface->clientToCompositorScale();
 }
 
 XdgToplevelInterfacePrivate *XdgToplevelInterfacePrivate::get(XdgToplevelInterface *toplevel)
@@ -774,6 +782,11 @@ XdgToplevelInterface *XdgToplevelInterface::get(::wl_resource *resource)
 wl_resource *XdgToplevelInterface::resource() const
 {
     return d->resource()->handle;
+}
+
+std::optional<QSizeF> XdgToplevelInterface::takeRequestedConfigure() const
+{
+    return std::move(d->requestedConfigure);
 }
 
 XdgPopupInterfacePrivate *XdgPopupInterfacePrivate::get(XdgPopupInterface *popup)
