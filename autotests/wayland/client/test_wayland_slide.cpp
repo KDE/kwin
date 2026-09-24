@@ -112,15 +112,16 @@ void TestSlide::cleanup()
     CLEANUP(m_compositor)
     CLEANUP(m_slideManager)
     CLEANUP(m_queue)
-    if (m_connection) {
-        m_connection->deleteLater();
-        m_connection = nullptr;
-    }
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
         delete m_thread;
         m_thread = nullptr;
+    }
+    if (m_connection) {
+        // m_connection->deleteLater();
+        delete m_connection;
+        m_connection = nullptr;
     }
     CLEANUP(m_display)
 #undef CLEANUP
