@@ -234,11 +234,12 @@ void TestInputCapture::testInputCapture()
         for (int i = 0; i < numDevices; ++i) {
             auto event = ei_get_event(ei);
             QCOMPARE(ei_event_get_type(event), EI_EVENT_DEVICE_START_EMULATING);
-            ei_event_unref(event);
             if (ei_device_has_capability(ei_event_get_device(event), EI_DEVICE_CAP_KEYBOARD)) {
+                ei_event_unref(event);
                 event = ei_get_event(ei);
                 QCOMPARE(ei_event_get_type(event), EI_EVENT_KEYBOARD_MODIFIERS);
             }
+            ei_event_unref(event);
         }
 
         auto event = ei_get_event(ei);
