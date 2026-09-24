@@ -13,7 +13,7 @@
 <author>
 <personname
 ><firstname
->Части данного руководства взяты со страницы <ulink url="https://userbase.kde.org/KWin Rules"
+>Части этого руководства взяты со страницы <ulink url="https://userbase.kde.org/KWin_Rules"
 >Правила KWin</ulink
 > пользовательской базы знаний KDE и обновлены командой по работе с документацией &kde; для обеспечения соответствия Plasma 5.8.</firstname
 > <surname
@@ -777,7 +777,7 @@
 >Комнате</emphasis
 > или на <emphasis
 >Экране</emphasis
->. Выбор варианта  <guilabel
+>. Выбор варианта <guilabel
 >Все рабочие столы</guilabel
 > позволяет расположить окно на всех <emphasis
 >Рабочих столах</emphasis
@@ -799,7 +799,7 @@
 ><tip
 ><para
 >Атрибут распахивания эмулируется при помощи использования сразу двух атрибутов: <guilabel
->Распахнуто по  горизонтали</guilabel
+>Распахнуто по горизонтали</guilabel
 > и атрибута <guilabel
 >Распахнуто по вертикали</guilabel
 >. Также для этого возможно включить атрибут<guilabel
@@ -846,12 +846,6 @@
 <listitem
 ><para
 ><guilabel
->Каскадом</guilabel
->: располагает окна в виде «лестницы из заголовков».</para
-></listitem>
-<listitem
-><para
-><guilabel
 >По центру</guilabel
 >: располагает окна в центре рабочего стола.</para
 ></listitem>
@@ -890,7 +884,7 @@
 ></term>
     <listitem>
     <para
->Параметр позволяет принимать или игнорировать запрошенную геометрию окна. При принятии запроса окна стратегия расположения по умолчанию игнорируется  для избежания возможных конфликтов.</para>
+>Параметр позволяет принимать или игнорировать запрошенную геометрию окна. При принятии запроса окна стратегия расположения по умолчанию игнорируется для избежания возможных конфликтов.</para>
      </listitem>
   </varlistentry>
   <varlistentry
@@ -1141,7 +1135,7 @@
 ></term>
     <listitem>
     <para
->Параметр позволяет использовать или игнорировать глобальные комбинации клавиш (определённые на вкладке  <menuchoice
+>Параметр позволяет использовать или игнорировать глобальные комбинации клавиш (определённые в <menuchoice
 ><guimenu
 >Параметры системы</guimenu
 ><guisubmenu
@@ -1150,9 +1144,9 @@
 >Глобальные комбинации клавиш</guimenuitem
 ></menuchoice
 > или путём ввода <varname
->kcmshell5 keys</varname
-> в эмуляторе терминала <guilabel
->Konsole</guilabel
+>kcmshell6 keys</varname
+> в терминале <guilabel
+>konsole</guilabel
 >), когда окно активно.</para>
      </listitem>
   </varlistentry>
@@ -2226,9 +2220,9 @@
 <title
 >Авторские права и лицензия</title>
       <para
->Авторские права на документацию смотрите в <ulink url="https://userbase.kde.org/index.php?title=KWin Rules&amp;action=history"
->истории страницы «Правила KWin»</ulink
-> пользовательской базы знаний.</para>
+>Авторские права на документацию: см. <ulink url="https://userbase.kde.org/index.php?title=KWin_Rules&amp;action=history"
+>историю страницы «Правила KWin»</ulink
+> на UserBase.</para>
       <para
 >Перевод на русский язык: Иван Кашуков<email
 >dolphin210@yandex.ru</email

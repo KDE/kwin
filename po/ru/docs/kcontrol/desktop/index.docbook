@@ -35,21 +35,21 @@
 >Олеся</firstname
 > <surname
 >Герасименко</surname
->  <affiliation
+> <affiliation
 ><address
 ><email
 >gammaray@basealt.ru</email
 ></address
 ></affiliation
->  <contrib
+> <contrib
 >Перевод на русский язык</contrib
 ></othercredit
 > <othercredit role="reviewer"
->   <firstname
+> <firstname
 >Александр</firstname
 ><surname
 >Яворский</surname
->   <contrib
+> <contrib
 >Рецензирование</contrib
 > </othercredit
 >  
