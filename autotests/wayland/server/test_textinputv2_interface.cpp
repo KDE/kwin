@@ -160,7 +160,7 @@ void TestTextInputV2Interface::cleanup()
         m_thread = nullptr;
     }
     if (m_connection) {
-        m_connection->deleteLater();
+        delete m_connection;
         m_connection = nullptr;
     }
 }
