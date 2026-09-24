@@ -180,7 +180,7 @@ TestTextInputV1Interface::~TestTextInputV1Interface()
         delete m_thread;
         m_thread = nullptr;
     }
-    m_connection->deleteLater();
+    delete m_connection;
     m_connection = nullptr;
 }
 

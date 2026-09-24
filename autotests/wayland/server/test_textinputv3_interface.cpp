@@ -816,7 +816,7 @@ struct TextInputV3TestClient
             delete thread;
             thread = nullptr;
         }
-        connection->deleteLater();
+        delete connection;
         connection = nullptr;
     }
 
