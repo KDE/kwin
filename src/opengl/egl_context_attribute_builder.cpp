@@ -27,7 +27,10 @@ std::vector<int> EglOpenGLESContextAttributeBuilder::build() const
             attribs.emplace_back(GL_TRUE);
         }
     }
-    if (isHighPriority()) {
+    if (m_realtime) {
+        attribs.emplace_back(EGL_CONTEXT_PRIORITY_LEVEL_IMG);
+        attribs.emplace_back(EGL_CONTEXT_PRIORITY_REALTIME_NV);
+    } else if (isHighPriority()) {
         attribs.emplace_back(EGL_CONTEXT_PRIORITY_LEVEL_IMG);
         attribs.emplace_back(EGL_CONTEXT_PRIORITY_HIGH_IMG);
     }
