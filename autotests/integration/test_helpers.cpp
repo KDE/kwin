@@ -764,10 +764,11 @@ Connection::~Connection()
     queue = nullptr;
 
     if (thread) {
-        connection->deleteLater();
+        // connection->deleteLater();
         thread->quit();
         thread->wait();
         delete thread;
+        delete connection;
         thread = nullptr;
         connection = nullptr;
     }
