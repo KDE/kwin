@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2026-05-15 13:52+0200\n"
+"PO-Revision-Date: 2026-09-23 11:02+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -263,7 +263,7 @@ msgstr "Unbekannt"
 #, kde-format
 msgctxt "A mouse pointer motion event"
 msgid "Pointer Motion"
-msgstr "Zeigerbewegung"
+msgstr "Mauszeigerbewegung"
 
 #: debug_console.cpp:204
 #, kde-format
@@ -287,7 +287,7 @@ msgstr "Globale Position"
 #, kde-format
 msgctxt "A mouse pointer button press event"
 msgid "Pointer Button Press"
-msgstr "Zeigertastendruck"
+msgstr "Maustaste gedrückt"
 
 #: debug_console.cpp:218 debug_console.cpp:226
 #, kde-format
@@ -312,13 +312,13 @@ msgstr "Gedrückte Knöpfe"
 #, kde-format
 msgctxt "A mouse pointer button release event"
 msgid "Pointer Button Release"
-msgstr "Zeigertaste losgelassen"
+msgstr "Maustaste losgelassen"
 
 #: debug_console.cpp:243
 #, kde-format
 msgctxt "A mouse pointer axis (wheel) event"
 msgid "Pointer Axis"
-msgstr "Zeigerachsen"
+msgstr "Mausachse"
 
 #: debug_console.cpp:247
 #, kde-format
@@ -2008,37 +2008,37 @@ msgstr "Regelart für Compositing blockieren"
 #: rulesettings.kcfg:332
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr "Verhindern unerwünschter Aktivierung"
+msgstr "Verhindern unerwünschter Fokussierung"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:338
 #, kde-format
 msgid "Focus stealing prevention rule type"
-msgstr "Regelart für Verhindern unerwünschter Aktivierung"
+msgstr "Regelart für Verhindern unerwünschter Fokussierung"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:343
 #, kde-format
 msgid "Focus protection"
-msgstr "Aktivierungsschutz"
+msgstr "Fokusschutz"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:349
 #, kde-format
 msgid "Focus protection rule type"
-msgstr "Regelart für Aktivierungsschutz"
+msgstr "Regelart für Fokusschutz"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:354
 #, kde-format
 msgid "Accept Focus"
-msgstr "Aktivierung zulassen"
+msgstr "Fokus zulassen"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:358
 #, kde-format
 msgid "Accept Focus rule type"
-msgstr "Regelart für Aktivierung zulassen"
+msgstr "Regelart für „Fokus zulassen“"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:363
@@ -2480,7 +2480,7 @@ msgstr "Fenster nach vorne"
 #: useractions.cpp:1003
 #, kde-format
 msgid "Lower Window"
-msgstr "Fenster nach hinten"
+msgstr "Fenster nach hinten schieben"
 
 #: useractions.cpp:1005
 #, kde-format

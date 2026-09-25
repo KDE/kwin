@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2026-05-16 19:09+0200\n"
+"PO-Revision-Date: 2026-09-22 18:53+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -691,7 +691,7 @@ msgstr "Deckkraft (inaktiv)"
 #: rulesmodel.cpp:592
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr "Verhindern unerwünschter Aktivierung"
+msgstr "Verhindern unerwünschter Fokussierung"
 
 #: rulesmodel.cpp:594
 #, kde-format
@@ -722,16 +722,16 @@ msgid ""
 "Otherwise it's interleaved with the stealing prevention\n"
 "assigned to the window that wants the focus."
 msgstr ""
-"Dies regelt die Übernahme der Aktivierung des zurzeit aktiven Fensters,\n"
-"Keine verhindert die Übernahme der Aktivierung nicht,\n"
-"Extrem verhindert die Übernahme der Aktivierung immer.\n"
-"Ansonsten wird die Regelung zur Vorbeugung gegen Übernahme der Aktivierung "
-"des anderen Fensters verwendet."
+"Hiermit wird der Fokusschutz des zurzeit aktiven Fensters gesteuert,\n"
+"„Deaktiviert“ –  Der Fokus wird immer weitergereicht,\n"
+"„Extrem“ – Das zurzeit fokussierte Fenster behält immer den Fokus.\n"
+"Ansonsten wird die Regelung zur Verhinderung unerwünschter Fokussierung des "
+"anderen Fensters (das den Fokus verlangt) angewendet."
 
 #: rulesmodel.cpp:614
 #, kde-format
 msgid "Accept focus"
-msgstr "Aktivierung zulassen"
+msgstr "Fokussierung zulassen"
 
 #: rulesmodel.cpp:616
 #, kde-format
@@ -740,10 +740,10 @@ msgid ""
 "On the other hand you might wish to prevent a window\n"
 "from getting focused on a mouse click."
 msgstr ""
-"Fenster können verhindern, dass sie beim Anklicken den Fokus erhalten "
-"(aktiviert werden).\n"
-"Andererseits möchten Sie vielleicht verhindern, dass Fenster beim Anklicken\n"
-"mit der Maus aktiviert werden."
+"Fenster können verhindern, dass sie beim Anklicken fokussiert (aktiviert) "
+"werden.\n"
+"Andererseits möchten Sie vielleicht verhindern, dass ein Fenster beim "
+"Anklicken mit der Maus fokussiert wird."
 
 #: rulesmodel.cpp:622
 #, kde-format

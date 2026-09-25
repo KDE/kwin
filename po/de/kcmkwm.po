@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2026-09-19 18:43+0200\n"
+"PO-Revision-Date: 2026-09-22 18:57+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -254,7 +254,7 @@ msgstr "Aktivieren, nach vorn holen und verschieben"
 #: mouse.ui:361 mouse.ui:423 mouse.ui:476 mouse.ui:538
 #, kde-format
 msgid "Toggle raise and lower"
-msgstr "„Nach vorn holen und nach hinten stellen“ umschalten"
+msgstr "„Nach vorn holen und nach hinten schieben“ umschalten"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -294,7 +294,7 @@ msgstr "Nach vorn holen"
 #: mouse.ui:303 mouse.ui:356 mouse.ui:418 mouse.ui:471 mouse.ui:533
 #, kde-format
 msgid "Lower"
-msgstr "Nach hinten"
+msgstr "Nach hinten schieben"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -406,7 +406,7 @@ msgstr ""
 #: actions.ui:475 mouse.ui:102
 #, kde-format
 msgid "Raise/lower"
-msgstr "Nach vorn holen/nach hinten stellen"
+msgstr "Nach vorn holen/nach hinten schieben"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
@@ -458,9 +458,9 @@ msgid ""
 "unshade automatically when the mouse pointer has been over the titlebar for "
 "some time.</p></body></html>"
 msgstr ""
-"Wenn diese Einstellung aktiviert ist, wird ein eingefahrenes Fenster "
-"automatisch ausgefahren, sobald der Mauszeiger eine Weile darüber verweilt "
-"hat."
+"Ist diese Einstellung aktiviert, wird ein eingefahrenes Fenster automatisch "
+"ausgefahren, sobald sich der Mauszeiger eine Weile über dessen Titelleiste "
+"befindet."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:35
@@ -475,8 +475,8 @@ msgid ""
 "Sets the time in milliseconds before the window unshades when the mouse "
 "pointer goes over the shaded window."
 msgstr ""
-"Bestimmt die Zeit (in Millisekunden), die der Mauszeiger über einem Fenster "
-"verweilen muss, bevor das Fenster wieder ausgefahren wird."
+"Bestimmt die Zeit (in Millisekunden), die sich der Mauszeiger über einem "
+"Fenster befinden muss, bevor das Fenster wieder ausgefahren wird."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
@@ -740,7 +740,7 @@ msgid ""
 "automatically receive focus."
 msgstr ""
 "Dies ist die Zeitspanne, nach der das Fenster, über dem sich der Mauszeiger "
-"befindet, automatisch aktiviert wird."
+"befindet, automatisch fokussiert wird."
 
 #. i18n: ectx: property (text), widget (QLabel, focusStealingLabel)
 #: focus.ui:101
@@ -785,26 +785,26 @@ msgid ""
 msgstr ""
 "<html><head/><body><p>Diese Einstellung legt fest, wie sehr KWin zu "
 "verhindern versucht, dass sich neu öffnende Fenster unerwünscht in den "
-"Vordergrund drängen bzw. aktiviert werden. (Beachten Sie: Die Funktion steht "
-"nicht zur Verfügung, sobald <span style=\" font-style:italic;\">„Aktivierung "
-"unter Mauszeiger“</span> bzw. <span style=\" font-style:italic;"
-"\">„Aktivierung genau unter Mauszeiger“</span> ausgewählt wurde.)</p><ul "
-"style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: "
-"0px; -qt-list-indent: 1;\"><li style=\" margin-top:12px; margin-bottom:0px; "
-"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
-"\"><span style=\" font-style:italic;\">Keine:</span> Es wird keine solche "
-"Vorbeugung versucht, alle neuen Fenster werden automatisch aktiviert.</"
+"Vordergrund drängen bzw. fokussiert werden. (Beachten Sie: Die Funktion "
+"steht nicht zur Verfügung, sobald <span style=\" font-style:italic;\">„Fokus "
+"unter Mauszeiger“</span> bzw. <span style=\" font-style:italic;\">„Fokus "
+"genau unter Mauszeiger“</span> ausgewählt wurde.)</p><ul style=\"margin-top: "
+"0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-"
+"indent: 1;\"><li style=\" margin-top:12px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Deaktiviert:</span> Es wird keine solche "
+"Verhinderung versucht, alle neuen Fenster werden automatisch aktiviert.</"
 "li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">Niedrig:</span> Die Vorbeugung wird aktiviert. Für den Fall, dass "
-"ein Fenster denMechanismus nicht kennt und KWin nicht entscheiden kann, ob "
-"eine Aktivierung gewünscht wird oder nicht, wird das Fenster automatisch "
-"aktiviert. Diese Einstellung führt teils zu besseren, teils aber auch "
-"schlechteren Ergebnissen als die folgende, je nach den verwendeten "
-"Programmen.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">Mittel:</span> Vorbeugungsmaßnahmen werden "
-"aktiviert.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"italic;\">Niedrig:</span> Die Verhinderung wird aktiviert. Für den Fall, "
+"dass ein Fenster den Mechanismus nicht unterstützt und KWin nicht "
+"entscheiden kann, ob eine Aktivierung gewünscht ist oder nicht, wird das "
+"Fenster automatisch aktiviert. Diese Einstellung führt teils zu besseren, "
+"teils aber auch zu schlechteren Ergebnissen als die folgende, je nach den "
+"verwendeten Programmen.</li><li style=\" margin-top:0px; margin-bottom:0px; "
+"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+"\"><span style=\" font-style:italic;\">Mittel:</span> Verhinderungsmaßnahmen "
+"werden aktiviert.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
 "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
 "style=\" font-style:italic;\">Hoch:</span> Neue Fenster werden nur "
 "aktiviert, wenn zurzeit kein anderes Fenster aktiv ist oder wenn sie zur "
@@ -942,14 +942,14 @@ msgid ""
 "When this option is enabled, focus operations are limited only to the active "
 "screen"
 msgstr ""
-"Ist diese Einstellung aktiviert, beziehen sich Fokussierungsaktionen nur auf "
-"den jeweils aktiven Bildschirm"
+"Ist diese Einstellung aktiviert, beziehen sich Fokussieraktionen nur auf den "
+"jeweils aktiven Bildschirm"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:216
 #, kde-format
 msgid "&Separate screen focus"
-msgstr "&Fokussieraktionen nur auf aktiven Bildschirm anwenden"
+msgstr "&Fokussieraktionen nur auf aktivem Bildschirm anwenden"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
 #: focus.ui:229
@@ -1215,7 +1215,7 @@ msgstr ""
 #: mouse.ui:288 mouse.ui:403 mouse.ui:518
 #, kde-format
 msgid "Activate and lower"
-msgstr "Aktivieren und nach hinten"
+msgstr "Aktivieren und nach hinten schieben"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: mouse.ui:589
