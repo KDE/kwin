@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-14 00:45+0000\n"
-"PO-Revision-Date: 2026-09-19 18:43+0200\n"
+"PO-Revision-Date: 2026-09-22 18:57+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -53,7 +53,7 @@ msgid ""
 "As the pointer moves, windows under it become focused after a configurable "
 "delay."
 msgstr ""
-"Wenn der Zeiger bewegt wird, werden die Fenster darunter nach einer "
+"Wenn der Mauszeiger bewegt wird, werden die Fenster darunter nach einer "
 "wählbaren Verzögerung fokussiert."
 
 #: ui/Focus.qml:56
@@ -67,7 +67,7 @@ msgstr "Fokus unter Mauszeiger"
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window under pointer receives focus, even if the pointer has not moved."
 msgstr ""
-"Das Fenster unter dem Mauszeiger wird fokussiert, auch wenn der Zeiger nicht "
+"Das Fenster unter dem Mauszeiger wird fokussiert, auch wenn dieser nicht "
 "bewegt wurde."
 
 #: ui/Focus.qml:75
@@ -193,7 +193,7 @@ msgstr "Verhalten bei mehreren Bildschirmen:"
 #: ui/Focus.qml:273
 #, kde-format
 msgid "&Separate screen focus"
-msgstr "&Fokussieraktionen nur auf aktiven Bildschirm anwenden"
+msgstr "&Fokussieraktionen nur auf aktivem Bildschirm anwenden"
 
 #: ui/main.qml:31
 #, kde-format
@@ -346,13 +346,13 @@ msgstr "Nach vorn holen"
 #: ui/TitlebarActions.qml:61 ui/WindowActions.qml:32
 #, kde-format
 msgid "Lower"
-msgstr "Nach hinten"
+msgstr "Nach hinten schieben"
 
 #: ui/TitlebarActions.qml:22 ui/TitlebarActions.qml:35
 #: ui/TitlebarActions.qml:82 ui/WindowActions.qml:33 ui/WindowActions.qml:206
 #, kde-format
 msgid "Raise/lower"
-msgstr "Nach vorn holen/nach hinten stellen"
+msgstr "Nach vorn holen/nach hinten schieben"
 
 #: ui/TitlebarActions.qml:23 ui/TitlebarActions.qml:36
 #: ui/TitlebarActions.qml:60 ui/WindowActions.qml:34
@@ -379,7 +379,7 @@ msgstr "Fokussieren und nach vorn holen"
 #: ui/TitlebarActions.qml:31
 #, kde-format
 msgid "Focus and lower"
-msgstr "Fokussieren und absenken"
+msgstr "Fokussieren und nach hinten schieben"
 
 #: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
 #, kde-format
