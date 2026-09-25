@@ -3692,6 +3692,8 @@ void X11WindowTest::testRandrEmulation()
         if (crtcInfo->x == 0 && crtcInfo->y == 0) {
             break;
         }
+        free(crtcInfo);
+        free(outputInfo);
     }
 
     auto outputModes = xcb_randr_get_output_info_modes(outputInfo);
@@ -3723,9 +3725,15 @@ void X11WindowTest::testRandrEmulation()
             auto reply = xcb_randr_set_crtc_config_reply(x11Display->connection(), cookie, &err);
             QVERIFY(reply);
             QCOMPARE(reply->status, XCB_RANDR_SET_CONFIG_SUCCESS);
+            free(reply);
             break;
         }
     }
+
+    free(crtcInfo);
+    free(outputInfo);
+    free(screenResources);
+
     QVERIFY(emulatedMode != 0);
 
     // Now make the window fullscreen
