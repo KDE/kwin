@@ -352,7 +352,7 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
     connect(this, &Window::frameGeometryChanged,
             this, &XdgToplevelWindow::updateCutouts);
     connect(this, &Window::decorationChanged,
-            this, &XdgToplevelWindow::updateCutouts);
+            this, &XdgToplevelWindow::handleDecorationChanged);
 }
 
 XdgToplevelWindow::~XdgToplevelWindow()
@@ -1417,8 +1417,8 @@ DecorationMode XdgToplevelWindow::preferredDecorationMode() const
     }
 
     DecorationMode serverStyle = DecorationMode::Server;
-    if (handlesCutouts() && Decoration::DecorationBridge::supportedStyles().contains(KDecoration3::Style::Overlayed)) {
-        serverStyle = DecorationMode::Overlayed;
+    if (handlesCutouts() && Decoration::DecorationBridge::supportedStyles().contains(KDecoration3::Style::Overlay)) {
+        serverStyle = DecorationMode::Overlay;
     }
 
     switch (m_decorationPolicy) {
@@ -1445,6 +1445,17 @@ DecorationMode XdgToplevelWindow::preferredDecorationMode() const
                 return serverStyle;
             case XdgToplevelDecorationV1Interface::Mode::ServerSideBorder:
                 return DecorationMode::Shadow;
+            case XdgToplevelDecorationV1Interface::Mode::Overlay:
+                if (!handlesCutouts()) {
+                    return DecorationMode::Server;
+                }
+                if (Decoration::DecorationBridge::supportedStyles().contains(KDecoration3::Style::SimplifiedOverlay)) {
+                    return DecorationMode::SimplifiedOverlay;
+                } else if (Decoration::DecorationBridge::supportedStyles().contains(KDecoration3::Style::Overlay)) {
+                    return DecorationMode::Overlay;
+                } else {
+                    return DecorationMode::Server;
+                }
             }
         }
 
@@ -1485,12 +1496,15 @@ void XdgToplevelWindow::configureDecoration()
         break;
     case DecorationMode::Server:
     case DecorationMode::Shadow:
-    case DecorationMode::Overlayed: {
+    case DecorationMode::Overlay:
+    case DecorationMode::SimplifiedOverlay: {
         KDecoration3::Style style = KDecoration3::Style::Titled;
         if (decorationMode == DecorationMode::Shadow) {
             style = KDecoration3::Style::Shadow;
-        } else if (decorationMode == DecorationMode::Overlayed) {
-            style = KDecoration3::Style::Overlayed;
+        } else if (decorationMode == DecorationMode::Overlay) {
+            style = KDecoration3::Style::Overlay;
+        } else if (decorationMode == DecorationMode::SimplifiedOverlay) {
+            style = KDecoration3::Style::SimplifiedOverlay;
         }
 
         if (!m_nextDecoration || m_nextDecoration->style() != style) {
@@ -1539,8 +1553,11 @@ void XdgToplevelWindow::configureXdgDecoration(DecorationMode decorationMode)
         m_xdgDecoration->sendConfigure(XdgToplevelDecorationV1Interface::Mode::Client);
         break;
     case DecorationMode::Server:
-    case DecorationMode::Overlayed:
+    case DecorationMode::Overlay:
         m_xdgDecoration->sendConfigure(XdgToplevelDecorationV1Interface::Mode::Server);
+        break;
+    case DecorationMode::SimplifiedOverlay:
+        m_xdgDecoration->sendConfigure(XdgToplevelDecorationV1Interface::Mode::Overlay);
         break;
     case DecorationMode::Shadow:
         m_xdgDecoration->sendConfigure(XdgToplevelDecorationV1Interface::Mode::ServerSideBorder);
@@ -1559,7 +1576,8 @@ void XdgToplevelWindow::configureServerDecoration(DecorationMode decorationMode)
         break;
     case DecorationMode::Server:
     case DecorationMode::Shadow:
-    case DecorationMode::Overlayed:
+    case DecorationMode::Overlay:
+    case DecorationMode::SimplifiedOverlay:
         m_serverDecoration->setMode(ServerSideDecorationManagerInterface::Mode::Server);
         break;
     }
@@ -1873,15 +1891,24 @@ void XdgToplevelWindow::handleCutoutsCreated()
     updateCutouts();
 }
 
+void XdgToplevelWindow::handleDecorationChanged()
+{
+    if (nextDecoration()) {
+        connect(nextDecoration(), &KDecoration3::Decoration::cutoutsChanged,
+                this, &XdgToplevelWindow::updateCutouts, Qt::UniqueConnection);
+    }
+    updateCutouts();
+}
+
 void XdgToplevelWindow::updateCutouts()
 {
     if (!m_surface->cutouts()) {
-        if (nextDecoration() && nextDecoration()->style() == KDecoration3::Style::Overlayed) {
+        if (nextDecoration() && nextDecoration()->isOverlay()) {
             configureDecoration();
         }
         return;
     }
-    if (nextDecoration() && nextDecoration()->style() == KDecoration3::Style::Overlayed) {
+    if (nextDecoration() && nextDecoration()->isOverlay()) {
         m_surface->cutouts()->setCutouts(nextDecoration()->cutouts() | std::ranges::to<QList<RectF>>(), m_borderRadius);
     } else {
         m_surface->cutouts()->setCutouts({}, m_borderRadius);

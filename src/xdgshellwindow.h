@@ -244,6 +244,7 @@ private:
     void updateIcon();
     void handleCutoutsCreated();
     void updateCutouts();
+    void handleDecorationChanged();
 
     QPointer<AppMenuInterface> m_appMenuInterface;
     QPointer<ServerSideDecorationPaletteInterface> m_paletteInterface;

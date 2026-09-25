@@ -127,6 +127,11 @@ DELEGATE2(QIcon, icon)
 #undef DELEGATE2
 #undef DELEGATE
 
+QString DecoratedWindowImpl::appName() const
+{
+    return m_window->appName();
+}
+
 bool DecoratedWindowImpl::isShaded() const
 {
     return false;

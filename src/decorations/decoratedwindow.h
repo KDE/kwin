@@ -31,6 +31,7 @@ public:
     explicit DecoratedWindowImpl(Window *window, KDecoration3::DecoratedWindow *decoratedClient, KDecoration3::Decoration *decoration);
     ~DecoratedWindowImpl() override;
     QString caption() const override;
+    QString appName() const override;
     qreal height() const override;
     QIcon icon() const override;
     bool isActive() const override;

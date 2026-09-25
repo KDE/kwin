@@ -95,7 +95,13 @@ enum class DecorationMode {
      * The window decoration is drawn by the compositor. The compositor is responsible for drawing
      * both the titlebar and the drop shadow, but the client may draw below the titlebar.
      */
-    Overlayed,
+    Overlay,
+    /**
+     * The window decoration is drawn by the compositor. The compositor is responsible for drawing
+     * both the titlebar and the drop shadow, but the client may draw below the titlebar.
+     * The titlebar is simplified to give the client more usable space for its UI.
+     */
+    SimplifiedOverlay,
 };
 
 /*!
@@ -1210,6 +1216,10 @@ public:
      * \sa captionNormal
      */
     virtual QString captionSuffix() const = 0;
+
+    QString appName() const;
+    void updateAppName();
+
     virtual bool isPlaceable() const;
     virtual bool isCloseable() const = 0;
     bool isShown() const;
@@ -1483,6 +1493,7 @@ public:
      * Returns an icon name that can be used with QIcon::fromTheme()
      */
     static QString iconFromDesktopFile(const QString &fileName);
+    static QString appNameFromDesktopFile(const QString &filename);
 
     static QString findDesktopFile(const QString &fileName);
 
@@ -1715,6 +1726,7 @@ Q_SIGNALS:
     void borderRadiusChanged();
     void excludeFromCaptureChanged();
     void decorationPolicyChanged();
+    void appNameChanged();
 
 protected:
     Window();
@@ -2119,6 +2131,7 @@ protected:
 
     QString m_tag;
     QString m_description;
+    QString m_appName;
 
     QString m_activationToken;
 };
