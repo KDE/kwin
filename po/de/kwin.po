@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-24 00:47+0000\n"
-"PO-Revision-Date: 2026-09-19 18:43+0200\n"
+"PO-Revision-Date: 2026-09-23 11:02+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -38,12 +38,12 @@ msgstr "kde-i18n-de@kde.org"
 #: backends/wayland/wayland_output.cpp:486
 #, kde-format
 msgid "Press right control to ungrab pointer"
-msgstr "Drücken sie die rechte Strg-Taste um den Zeiger freizugeben"
+msgstr "Drücken sie die rechte Strg-Taste, um den Mauszeiger freizugeben"
 
 #: backends/wayland/wayland_output.cpp:488
 #, kde-format
 msgid "Press right control key to grab pointer"
-msgstr "Drücken sie die rechte Strg-Taste um den Zeiger einzufangen"
+msgstr "Drücken sie die rechte Strg-Taste, um den Mauszeiger einzufangen"
 
 #: backends/wayland/wayland_output.cpp:492
 #, kde-format
@@ -363,7 +363,7 @@ msgstr "Unbekannt"
 #, kde-format
 msgctxt "A mouse pointer motion event"
 msgid "Pointer Motion"
-msgstr "Zeigerbewegung"
+msgstr "Mauszeigerbewegung"
 
 #: debug_console.cpp:200
 #, kde-format
@@ -387,7 +387,7 @@ msgstr "Globale Position"
 #, kde-format
 msgctxt "A mouse pointer button press event"
 msgid "Pointer Button Press"
-msgstr "Zeigertastendruck"
+msgstr "Maustaste gedrückt"
 
 #: debug_console.cpp:224 debug_console.cpp:231
 #, kde-format
@@ -412,13 +412,13 @@ msgstr "Gedrückte Knöpfe"
 #, kde-format
 msgctxt "A mouse pointer button release event"
 msgid "Pointer Button Release"
-msgstr "Zeigertaste losgelassen"
+msgstr "Maustaste losgelassen"
 
 #: debug_console.cpp:245
 #, kde-format
 msgctxt "A mouse pointer axis (wheel) event"
 msgid "Pointer Axis"
-msgstr "Zeigerachsen"
+msgstr "Mausachse"
 
 #: debug_console.cpp:248
 #, kde-format
@@ -1335,7 +1335,8 @@ msgstr ""
 "soll.\n"
 "Falls das Programm selbst über keine Möglichkeit verfügt, diesen Modus zu "
 "verlassen, können Sie das nicht mit Hilfe der Maus tun. Verwenden Sie "
-"stattdessen das Fenstermenü, das über den Tastenbefehl %1 aktiviert wird."
+"stattdessen das Fenstermenü, das über den Tastaturkurzbefehl %1 aktiviert "
+"wird."
 
 #: helpers/dialoghelper/dialoghelper.cpp:93
 #, kde-format
@@ -1376,8 +1377,8 @@ msgid ""
 msgstr ""
 "Sie haben festgelegt, dass ein Fenster ohne Rahmen angezeigt werden soll.\n"
 "Der vorherige Zustand lässt sich nicht mit Hilfe der Maus wiederherstellen. "
-"Verwenden Sie stattdessen das Fenstermenü, das über den Tastenbefehl %1 "
-"aktiviert wird."
+"Verwenden Sie stattdessen das Fenstermenü, das über den Tastaturkurzbefehl "
+"%1 aktiviert wird."
 
 #: helpers/dialoghelper/dialoghelper.cpp:112
 #, kde-format
@@ -2040,13 +2041,13 @@ msgstr[1] "%1 Sekunden"
 #: plugins/hidecursor/hidecursor_config.ui:17
 #, kde-format
 msgid "Hide pointer on inactivity:"
-msgstr "Zeiger bei Inaktivität ausblenden:"
+msgstr "Mauszeiger bei Inaktivität ausblenden:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
 #, kde-format
 msgid "Hide pointer on typing"
-msgstr "Zeiger beim Tippen ausblenden"
+msgstr "Mauszeiger beim Tippen ausblenden"
 
 #: plugins/invert/invert.cpp:44
 #, kde-format
@@ -3559,37 +3560,37 @@ msgstr "Regelart für Farbschema der Titelleiste"
 #: rulesettings.kcfg:347
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr "Verhindern unerwünschter Aktivierung"
+msgstr "Verhindern unerwünschter Fokussierung"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:353
 #, kde-format
 msgid "Focus stealing prevention rule type"
-msgstr "Regelart für Verhindern unerwünschter Aktivierung"
+msgstr "Regelart für Verhindern unerwünschter Fokussierung"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:358
 #, kde-format
 msgid "Focus protection"
-msgstr "Aktivierungsschutz"
+msgstr "Fokusschutz"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:364
 #, kde-format
 msgid "Focus protection rule type"
-msgstr "Regelart für Aktivierungsschutz"
+msgstr "Regelart für Fokusschutz"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:369
 #, kde-format
 msgid "Accept Focus"
-msgstr "Aktivierung zulassen"
+msgstr "Fokus zulassen"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:373
 #, kde-format
 msgid "Accept Focus rule type"
-msgstr "Regelart für Aktivierung zulassen"
+msgstr "Regelart für „Fokus zulassen“"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:378
@@ -3989,7 +3990,7 @@ msgstr "Fenster nach vorne"
 #: useractions.cpp:846
 #, kde-format
 msgid "Lower Window"
-msgstr "Fenster nach hinten"
+msgstr "Fenster nach hinten schieben"
 
 #: useractions.cpp:850
 #, kde-format
@@ -4285,13 +4286,13 @@ msgstr "Fenster beseitigen"
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Focused Window"
-msgstr "Zeiger im fokussierten Fenster zentrieren"
+msgstr "Mauszeiger im fokussierten Fenster zentrieren"
 
 #: useractions.cpp:1018
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Screen"
-msgstr "Zeiger im Bildschirm zentrieren"
+msgstr "Mauszeiger im Bildschirm zentrieren"
 
 #: useractions.cpp:1083
 #, kde-format
