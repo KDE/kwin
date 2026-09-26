@@ -1,10 +1,10 @@
 # translation of kcmkwm.po to Italian
-# SPDX-FileCopyrightText: 2015, 2018-2022, 2024-2026 Vincenzo Reale <smart2128vr@gmail.com>
 # Andrea Rizzi <rizzi@kde.org>, 2003, 2004, 2005.
 # Andrea RIZZI <arizzi@pi.infn.it>, 2004.
 # Pino Toscano <toscano.pino@tiscali.it>, 2006.
 # Luciano Montanaro <mikelima@cirulla.net>, 2007, 2008, 2009, 2010, 2011, 2012.
 # Luigi Toscano <luigi.toscano@tiscali.it>, 2013.
+# SPDX-FileCopyrightText: 2015, 2018-2022, 2024-2026 Vincenzo Reale <smart2128vr@gmail.com>
 # Paolo Zamponi <feus73@gmail.com>, 2020.
 msgid ""
 msgstr ""
