@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-09-23 06:56+0900\n"
+"PO-Revision-Date: 2026-09-24 19:35-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
-"Language-Team: Uyghur <kde-i18n-doc@kde.org>\n"
+"Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
 "Language: ug\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,7 +66,7 @@ msgstr "باشقا كۆزنەكنىڭ ئۈستىدە تۇتىدۇ"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "ئېكران كەسمىسى ۋە ئېكران سىن خاتىرىلەشتىن يوشۇر"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -97,6 +97,9 @@ msgid ""
 "full path will attempt to find a theme in that directory, and then apply "
 "that if one can be deduced."
 msgstr ""
+"تەڭشەيدىغان KWin كۆزنەك بېزەك ئۆرنىكىنىڭ ئىسمى. تولۇق يولى بېرىلسە شۇ "
+"يولدىكى مۇندەرىجىدىن ئۆرنەكنى ئىزدەيدۇ ۋە ئۆرنەك بەلگىلىگەن ئىسىم "
+"ئىشلىتىلىدۇ."
 
 #: kwin-applywindowdecoration.cpp:36
 #, kde-format
@@ -121,7 +124,7 @@ msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
 "theme, and we will have to abort, due to having no theme to set"
 msgstr ""
-"سىز ھۆججەت يولىنى يەتكۈزمەكچى بولدىڭىز ئەمما بۇ يولدىكى ئۆرنەكنى يېشەلمىدى  "
+"سىز ھۆججەت يولىنى يەتكۈزمەكچى بولدىڭىز ئەمما بۇ يولدىكى ئۆرنەكنى يېشەلمىدى "
 "ۋە تەڭشەيدىغان ئۆرنەك بولمىغانلىق سەۋەبىدىن نۆۋەتتىكى مەشغۇلاتتىن چېكىنىدۇ"
 
 #: kwin-applywindowdecoration.cpp:79
@@ -136,6 +139,8 @@ msgstr ""
 msgid ""
 "Successfully applied the pointer theme %1 to your current Plasma session"
 msgstr ""
+"نىشانلىغۇچ ئۆرنىكى %1 نى مۇۋەپپەقىيەتلىك ھالدا نۆۋەتتىكى Plasma جەريانچاققا "
+"قوللاندى"
 
 #: kwin-applywindowdecoration.cpp:105
 #, kde-format
@@ -143,6 +148,8 @@ msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
 "unrecoverable error. You may find that simply trying again will work."
 msgstr ""
+"ئۆرنەك تەڭشىكىنى ساقلىيالمىدى - سەۋەبى ئېنىق ئەمەس، ئەمما ئەسلىگە كەلتۈرگىلى "
+"بولمايدىغان خاتالىق. ئۇنى قايتا سىناپ باقسىڭىز مەسىلە ھەل بولۇشى مۇمكىن."
 
 #: kwin-applywindowdecoration.cpp:109
 #, kde-format
@@ -150,6 +157,7 @@ msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
 "options: %2"
 msgstr ""
+"«%1» ئۆرنەكنى تاپالمىدى. ئۆرنەك تۆۋەندىكى تاللانمىدىن بىرى بولۇشى كېرەك: %2"
 
 #: kwin-applywindowdecoration.cpp:114
 #, kde-format
@@ -199,6 +207,7 @@ msgstr "ماۋزۇ بالداق توپچە قورال ئەسكەرتىشىنى �
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
 msgstr ""
+"ھەمىشە «ئېكران كەسمىسى ۋە ئېكران سىن خاتىرىلەشتىن يوشۇر» توپچىنى كۆرسىتىدۇ"
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format
@@ -207,6 +216,8 @@ msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screenshots and screen recordings"
 msgstr ""
+"ئەگەر كۆزنەك ئېكران كەسمىسى ۋە ئېكراندىن سىن خاتىرىلەشتىن يوشۇرۇلغان بولسا، "
+"توپچە چېكىلمىگەندە ئاندىن كۆرۈنىدۇ"
 
 #: ui/ConfigureTitlebar.qml:86
 #, kde-format
@@ -215,6 +226,8 @@ msgid ""
 "To enable this option, add the \"Hide from Screenshots and Screen Recordings"
 "\" button to the titlebar first"
 msgstr ""
+"بۇ تاللانمىنى قوزغىتىشتا، ئالدى بىلەن ماۋزۇ بالداققا «ئېكران كەسمىسى ۋە "
+"ئېكران سىن خاتىرىلەشتىن يوشۇر» توپچە قوشۇلۇشى كېرەك"
 
 #: ui/main.qml:29
 #, kde-format

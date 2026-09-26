@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-18 00:46+0000\n"
-"PO-Revision-Date: 2026-09-23 06:56+0900\n"
+"PO-Revision-Date: 2026-09-24 19:37-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
-"Language-Team: Uyghur <kde-i18n-doc@kde.org>\n"
+"Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
 "Language: ug\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,6 +95,8 @@ msgid ""
 "You can trigger an action by pushing the mouse pointer against the "
 "corresponding screen edge or corner."
 msgstr ""
+"چاشقىنەك نىشانلىغۇچنى ئېكران گىرۋىكى ياكى بۇلۇڭىغا  ئىتتىرىپ بەلگىلەنگەن "
+"مەشغۇلاتنى قوزغىتالايسىز."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67
@@ -142,7 +144,7 @@ msgstr "چارەك يېيىشنى قوزغىتىدۇ(&Q):"
 #: main.ui:130
 #, no-c-format, kde-format
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #. i18n: ectx: property (prefix), widget (QSpinBox, electricBorderCornerRatioSpin)
 #: main.ui:133
@@ -163,6 +165,8 @@ msgid ""
 "Change desktop when the mouse pointer is pushed against the edge of the "
 "screen"
 msgstr ""
+"چاشقىنەك نىشانلىغۇچنى ئېكراننىڭ گىرۋىكىگە ئىتتەرگەندە مەۋھۇم ئۈستەلئۈستىنى "
+"ئالماشتۇرىدۇ"
 
 #. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
 #: main.ui:177
@@ -196,6 +200,8 @@ msgid ""
 "Amount of time required for the mouse pointer to be pushed against the edge "
 "of the screen before the action is triggered"
 msgstr ""
+"چاشقىنەك نىشانلىغۇچنى ئېكراننىڭ گىرۋىكىگە ئىتتەرگەندە مەشغۇلاتنى قوزغىتىشتىن "
+"ئىلگىرى كۈتىدىغان ۋاقىت"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
 #: main.ui:209
@@ -208,7 +214,7 @@ msgstr "ئاكتىپلاشنى كېچىكتۈرۈش(&D):"
 #: main.ui:219 main.ui:254
 #, kde-format
 msgid " ms"
-msgstr ""
+msgstr " ms"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, triggerCooldownLabel)
 #: main.ui:238
@@ -242,13 +248,18 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"بۇ جايدا  كۆپ ئېكران ئارىسىدا مەۋھۇم بۇلۇڭ قاشاسىنى قوزغىتىپ ياكى "
+"چەكلىيەلەيسىز. بۇلۇڭ قاشاسى نىشانلىغۇچ ئېكراننىڭ بۇلۇڭىغا تەگكەندە "
+"داۋاملىشىپ باشقا ئېكرانغا يۆتكىلىدۇ. كۆپ ئېكرانلىق مۇھىتتا، بۇ ئىقتىدار "
+"ئىشلەتكۈچىنىڭ مەلۇم كۆرۈنۈش ئېلېمېنتىنى قوزغىتىشىغا قولايلىق يارىتىدۇ، "
+"مەسىلەن، كۆزنەك ئەڭ چوڭ قىلىنغاندا كۆزنەكنى تاقاش توپچىسىنى چېكىشكە ئوخشاش."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents the pointer from crossing at screen corners."
-msgstr ""
+msgstr "نىشانلىغۇچنىڭ ئېكران بۇلۇڭىدىن ھالقىشىنىڭ ئالدىنى ئالىدۇ."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
@@ -266,6 +277,11 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"بۇ جايدا كۆپ ئېكران ئارىسىدىكى قاشا چېگراسىنىڭ چوڭلۇقىنى تەڭشىيەلەيسىز. قاشا "
+"نىشانلىغۇچتىن چوقۇم گىرۋەكتىن مەلۇم قوشۇمچە ئارىلىق يۆتكەلسە ئاندىن باشقا "
+"ئېكرانغا يۆتكىلەلەيدىغانلىقىنى تەلەپ قىلىدۇ. كۆپ ئېكرانلىق مۇھىتتا، بۇ "
+"ئىقتىدار ئىشلەتكۈچىنىڭ  Plasma كۆزنەكچىسىگە ئوخشاش ئېكران بىلەن گىرۋەك "
+"ئارىسىدىكى بەزى كۆزنەك ئېلېمېنتلارنى زىيارەت قىلىشىغا قولايلىق يارىتىدۇ."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
@@ -273,6 +289,7 @@ msgstr ""
 msgctxt "@info:tooltip"
 msgid "Additional distance the pointer needs to travel to cross screen edges."
 msgstr ""
+"نىشانلىغۇچ ئېكران گىرۋىكىدىن ئۆتۈشتىن ئىلگىرى يۆتكىلىدىغان قوشۇمچە مۇساپە."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
@@ -284,7 +301,7 @@ msgstr "يوق"
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17

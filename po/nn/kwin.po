@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-24 00:47+0000\n"
-"PO-Revision-Date: 2026-09-19 17:45+0200\n"
+"PO-Revision-Date: 2026-09-25 17:30+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
 "Language: nn\n"
@@ -3507,13 +3507,13 @@ msgstr "Regeltype for vindaugspynt-praksis"
 #: rulesettings.kcfg:339
 #, kde-format
 msgid "Titlebar color and scheme"
-msgstr "Fargeoppsett for tittellinje"
+msgstr "Fargetema for tittellinje"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:342
 #, kde-format
 msgid "Titlebar color rule type"
-msgstr "Regeltype for fargeoppsett på tittellinje"
+msgstr "Regeltype for fargetema på tittellinje"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:347

@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-14 00:45+0000\n"
-"PO-Revision-Date: 2026-09-23 06:56+0900\n"
+"PO-Revision-Date: 2026-09-24 19:36-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
-"Language-Team: Uyghur <kde-i18n-doc@kde.org>\n"
+"Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
 "Language: ug\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -263,18 +263,20 @@ msgid ""
 "The currently selected window will be highlighted by fading out all other "
 "windows. This option requires desktop effects to be active."
 msgstr ""
+"نۆۋەتتىكى كۆزنەكنى گەۋدىلەندۈرۈش ئۈچۈن باشقا كۆزنەكلەرنى سۇسلاشتۇرىدۇ. بۇ "
+"تاللانمىغا ئۈستەلئۈستى ئۈنۈمى قوزغىتىلغان بولۇشى زۆرۈر."
 
 #. i18n: ectx: property (text), widget (QLabel, label_HighlightWindows)
 #: main.ui:634
 #, kde-format
 msgid "Show selected window"
-msgstr "تاللانغان كۆزنەكنى كۆرسىتىدۇ"
+msgstr "تاللانغان كۆزنەكنى كۆرسەت"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_ShowTabBox)
 #: main.ui:644
 #, kde-format
 msgid "Enable the window list effect"
-msgstr ""
+msgstr "كۆزنەك تىزىم ئۈنۈمىنى قوزغات"
 
 #. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
 #: main.ui:678
@@ -289,6 +291,7 @@ msgstr ""
 #, kde-format
 msgid "The time in milliseconds to wait before showing the task switcher."
 msgstr ""
+"ۋەزىپە ئالماشتۇرغۇچنى كۆرسىتىشتىن ئىلگىرى كۈتۈش ۋاقتى بىرلىكى مىللىسېكۇنت."
 
 #. i18n: ectx: property (text), widget (QLabel, label_DelayTime)
 #: main.ui:704
@@ -300,37 +303,37 @@ msgstr "كېچىكىش:"
 #: main.ui:720
 #, kde-format
 msgid " ms"
-msgstr ""
+msgstr " ms"
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:735
 #, kde-format
 msgid "Delay before the window list appears"
-msgstr ""
+msgstr "كۆزنەك تىزىمى كۆرۈنۈشتىن ئىلگىرىكى كېچىكىشى"
 
 #. i18n: ectx: property (text), widget (QLabel, label_showScreen)
 #: main.ui:742
 #, kde-format
 msgid "Show on screen:"
-msgstr ""
+msgstr "ئېكراندا كۆرسەت:"
 
 #. i18n: ectx: property (toolTip), widget (QComboBox, showScreenCombo)
 #: main.ui:758
 #, kde-format
 msgid "Select which screen the task switcher should be displayed on."
-msgstr ""
+msgstr "ۋەزىپە ئالماشتۇرغۇچنىڭ قايسى ئېكراندا كۆرسىتىلىشى كېرەكلىكى تاللىنىدۇ."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, showScreenCombo)
 #: main.ui:762
 #, kde-format
 msgid "Active screen"
-msgstr ""
+msgstr "ئاكتىپ ئېكران"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, showScreenCombo)
 #: main.ui:767
 #, kde-format
 msgid "Primary screen"
-msgstr ""
+msgstr "ئاساسىي ئېكران"
 
 #: shortcutsettings.cpp:131
 #, kde-format

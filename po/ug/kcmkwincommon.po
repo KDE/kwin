@@ -1,22 +1,22 @@
 # Uyghur translation for kcmkwincommon.
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# Abduqadir Abliz <sahranbay@gmail.com>, 2026., YEAR.
+# Abduqadir Abliz <sahranbay@gmail.com>, 2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-18 00:46+0000\n"
-"PO-Revision-Date: 2026-09-23 06:56+0900\n"
+"PO-Revision-Date: 2026-09-24 19:37-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur <kde-i18n-doc@kde.org>\n"
 "Language: ug\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.9\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.9\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -50,7 +50,7 @@ msgstr "فوكۇس"
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Peek at Desktop Animation"
-msgstr ""
+msgstr "ئۈستەلئۈستى جانلاندۇرۇمىنى كۆرسەت"
 
 #: effectsmodel.cpp:53
 #, kde-format
@@ -62,7 +62,7 @@ msgstr "قورال"
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Virtual Desktop Switching Animation"
-msgstr ""
+msgstr "مەۋھۇم ئۈستەلئۈستى ئالماشتۇرۇش جانلاندۇرۇمى"
 
 #: effectsmodel.cpp:55
 #, kde-format
@@ -74,32 +74,32 @@ msgstr "كۆزنەك باشقۇرۇش"
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Window Open/Close Animation"
-msgstr ""
+msgstr "كۆزنەك ئاچ/ياپ جانلاندۇرۇمى"
 
 #: effectsmodel.cpp:233
 #, kde-format
 msgid "KWin development team"
-msgstr ""
+msgstr "KWin ئىجادىيەت قوشۇنى"
 
 #: genericscriptedconfig.cpp:71
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "بوغچا تەپسىلىي ئۇچۇرىنىڭ ئورنىنى تاپالمىدى"
 
 #: genericscriptedconfig.cpp:77
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "%1 ئىناۋەتلىك metadata.json ھۆججىتىنى ئۆز ئىچىگە ئالمايدۇ"
 
 #: genericscriptedconfig.cpp:83 genericscriptedconfig.cpp:89
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1 مەۋجۇت ئەمەس"
 
 #: genericscriptedconfig.cpp:106 genericscriptedconfig.cpp:116
 #, kde-format
 msgid "Error loading widget from %1: %2"
-msgstr ""
+msgstr "كۆزنەك ئەپچىنى %1 دىن يۈكلەۋاتقاندا خاتالىق كۆرۈلدى: %2"

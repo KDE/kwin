@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-14 00:45+0000\n"
-"PO-Revision-Date: 2026-09-23 06:56+0900\n"
+"PO-Revision-Date: 2026-09-24 19:37-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
-"Language-Team: Uyghur <kde-i18n-doc@kde.org>\n"
+"Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
 "Language: ug\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,25 +22,25 @@ msgstr ""
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window focus policy:"
-msgstr ""
+msgstr "كۆزنەك فوكۇس نۇقتا تەدبىرى:"
 
 #: ui/Focus.qml:46
 #, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Click to focus"
-msgstr "چەكسە فوكۇسلىنىدۇ"
+msgstr "چېكىلسە فوكۇسلىنىدۇ"
 
 #: ui/Focus.qml:47
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window becomes focused when clicked."
-msgstr ""
+msgstr "چېكىلگەندە كۆزنەك فوكۇسلىنىدۇ."
 
 #: ui/Focus.qml:51
 #, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus follows pointer"
-msgstr ""
+msgstr "فوكۇس چاشقىنەككە ئەگىشىدۇ"
 
 #: ui/Focus.qml:52
 #, kde-format
@@ -49,18 +49,22 @@ msgid ""
 "As the pointer moves, windows under it become focused after a configurable "
 "delay."
 msgstr ""
+"نىشانلىغۇچ يۆتكەلگەندە، ئۇنىڭ ئاستىدىكى كۆزنەك سەپلەنگەن كېچىكىش ۋاقتىدىن "
+"كېيىن فوكۇسلىنىدۇ."
 
 #: ui/Focus.qml:56
 #, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus under pointer"
-msgstr ""
+msgstr "نىشانلىغۇچ ئاستىدا فوكۇسلىنىدۇ"
 
 #: ui/Focus.qml:57
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window under pointer receives focus, even if the pointer has not moved."
 msgstr ""
+"ھەتتا نىشانلىغۇچ يۆتكەلمىگەن بولسىمۇ، كۆزنەك نىشانلىغۇچنىڭ ئاستىدا بولسا "
+"فوكۇسلىنىدۇ."
 
 #: ui/Focus.qml:75
 #, kde-kuit-format
@@ -70,24 +74,28 @@ msgid ""
 "some windows appearing on screen. This can lead to assigning focus to "
 "unwanted windows. Use with caution."
 msgstr ""
+"<interface>نىشانلىغۇچ ئاستىدا فوكۇسلىنىدۇ</interface> تاللانسا ئېكراندىكى "
+"بەزى كۆزنەكنىڭ فوكۇسلاشقا ئېرىشىشىنى توسىدۇ. بۇ فوكۇسنىڭ فوكۇس نۇقتىسىغا "
+"ئېھتىياجلىق بولمىغان كۆزنەككە تەقسىملىنىشىنى كەلتۈرۈپ چىقىرىشى مۇمكىن. "
+"ئېھتىيات بىلەن ئىشلىتىڭ."
 
 #: ui/Focus.qml:81
 #, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Last focused window"
-msgstr ""
+msgstr "ئاخىرقى فوكۇسلانغان كۆزنەك"
 
 #: ui/Focus.qml:83
 #, kde-format
 msgctxt "@title:group"
 msgid "After closing a window, move focus to:"
-msgstr ""
+msgstr "كۆزنەك يېپىلغاندىن كېيىن، فوكۇس نۇقتىسىنىڭ يۆتكىلىشى:"
 
 #: ui/Focus.qml:86
 #, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Window under pointer"
-msgstr ""
+msgstr "نىشانلىغۇچ ئاستىدىكى كۆزنەك"
 
 #: ui/Focus.qml:115
 #, kde-format
@@ -98,13 +106,13 @@ msgstr "فوكۇسنىڭ كېچىكىش ۋاقتى(&D):"
 #, kde-format
 msgctxt "short for millisecond(s)"
 msgid "%1 ms"
-msgstr ""
+msgstr "%1 ms"
 
 #: ui/Focus.qml:128 ui/Focus.qml:254
 #, kde-format
 msgctxt "short for millisecond(s)"
 msgid "ms"
-msgstr ""
+msgstr "ms"
 
 #: ui/Focus.qml:146
 #, kde-format
@@ -125,7 +133,7 @@ msgstr "تۆۋەن"
 #: ui/Focus.qml:152
 #, kde-format
 msgid "Medium"
-msgstr "ئوتتۇراھال"
+msgstr "ئوتتۇرا ھال"
 
 #: ui/Focus.qml:153
 #, kde-format
@@ -141,13 +149,13 @@ msgstr "پەۋقۇلئاددە يۇقىرى"
 #, kde-format
 msgctxt "@option:radio When focusing a window on a different Virtual Desktop:"
 msgid "Switch to window’s Virtual Desktop"
-msgstr ""
+msgstr "كۆزنەكنىڭ مەۋھۇم ئۈستەلئۈستىگە ئالمىشىدۇ"
 
 #: ui/Focus.qml:173
 #, kde-format
 msgctxt "@title:group"
 msgid "When focusing a window on a different Virtual Desktop:"
-msgstr ""
+msgstr "پەرقلىق مەۋھۇم ئۈستەلئۈستىدىكى كۆزنەككە فوكۇسلانغاندا:"
 
 #: ui/Focus.qml:176
 #, kde-format
@@ -169,7 +177,7 @@ msgstr "كۆزنەكنى ئۆرلەت:"
 #: ui/Focus.qml:208
 #, kde-format
 msgid "&Click raises focused window"
-msgstr ""
+msgstr "چېكىلسە فوكۇسلانغان كۆزنەك ئۆرلەيدۇ(&C)"
 
 #: ui/Focus.qml:228
 #, kde-format
@@ -204,13 +212,13 @@ msgstr "كۆزنەك مەشغۇلاتى(&I)"
 #: ui/main.qml:49
 #, kde-format
 msgid "Mo&vement & Placement"
-msgstr ""
+msgstr "يۆتكىلىش ۋە ئورۇنلاشتۇرۇش(&V)"
 
 #: ui/MovementAndPlacement.qml:17
 #, kde-format
 msgctxt "@title:group"
 msgid "Movement"
-msgstr ""
+msgstr "يۆتكىلىش"
 
 #: ui/MovementAndPlacement.qml:22
 #, kde-format
@@ -222,14 +230,14 @@ msgstr "ئېكران گىرۋىكى تارتىشىش رايونى(&E):"
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "%1 px"
-msgstr ""
+msgstr "%1 px"
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
 #: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "px"
-msgstr ""
+msgstr "px"
 
 #: ui/MovementAndPlacement.qml:50
 #, kde-format
@@ -255,12 +263,12 @@ msgstr "پەقەت ئۈستمۇ ئۈست چۈشكەندە تارتىشىپ چا�
 #, kde-format
 msgctxt "@title:group"
 msgid "Placement"
-msgstr ""
+msgstr "ئورۇنلاشتۇرۇش"
 
 #: ui/MovementAndPlacement.qml:125
 #, kde-format
 msgid "Window &placement:"
-msgstr "كۆزنەك ۋە ئورۇنلاشتۇرۇش(&P):"
+msgstr "كۆزنەك ئورنى(&P):"
 
 #: ui/MovementAndPlacement.qml:129
 #, kde-format
@@ -296,7 +304,7 @@ msgstr "چاشقىنەك ئاستىدا"
 #, kde-format
 msgctxt "@title:group"
 msgid "Picture-in-picture Placement"
-msgstr ""
+msgstr "سۈرەت ئىچىدە سۈرەت ئورۇنلاشتۇرۇش"
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
@@ -365,12 +373,12 @@ msgstr "كۆزنەك تىزىملىكى"
 #: ui/TitlebarActions.qml:30 ui/WindowActions.qml:23 ui/WindowActions.qml:54
 #, kde-format
 msgid "Focus and raise"
-msgstr ""
+msgstr "فوكۇس ۋە ئۆرلەش"
 
 #: ui/TitlebarActions.qml:31
 #, kde-format
 msgid "Focus and lower"
-msgstr ""
+msgstr "فوكۇس ۋە تۆۋەنلەش"
 
 #: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
 #, kde-format
@@ -442,7 +450,7 @@ msgstr "ماۋزۇ بالداق ۋە كاندۇك مەشغۇلاتى"
 msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for focused windows"
 msgid "Focused"
-msgstr ""
+msgstr "فوكۇسلاندى"
 
 #: ui/TitlebarActions.qml:116
 #, kde-format
@@ -450,7 +458,7 @@ msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for unfocused "
 "windows"
 msgid "Unfocused"
-msgstr ""
+msgstr "فوكۇسلانمىدى"
 
 #: ui/TitlebarActions.qml:122 ui/WindowActions.qml:46
 #, kde-format
@@ -461,13 +469,13 @@ msgstr "سول چېكىش(&L):"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on a focused titlebar or frame"
-msgstr ""
+msgstr "فوكۇسلانغان ماۋزۇ بالداق ياكى كاندۇكتا سول چېكىلگەندە"
 
 #: ui/TitlebarActions.qml:143
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "فوكۇسلانمىغان ماۋزۇ بالداق ياكى كاندۇكتا سول چېكىلگەندە"
 
 #: ui/TitlebarActions.qml:160 ui/WindowActions.qml:68
 #, kde-format
@@ -478,13 +486,13 @@ msgstr "ئوتتۇرا چېكىش(&M):"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on a focused titlebar or frame"
-msgstr ""
+msgstr "فوكۇسلانغان ماۋزۇ بالداق ياكى كاندۇكتا ئوتتۇرا چېكىلگەندە"
 
 #: ui/TitlebarActions.qml:179
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "فوكۇسلانمىغان ماۋزۇ بالداق ياكى كاندۇكتا ئوتتۇرا چېكىلگەندە"
 
 #: ui/TitlebarActions.qml:196 ui/WindowActions.qml:83
 #, kde-format
@@ -495,13 +503,13 @@ msgstr "ئوڭنى چېكىش(&R):"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on a focused titlebar or frame"
-msgstr ""
+msgstr "فوكۇسلانغان ماۋزۇ بالداق ياكى كاندۇكتا ئوڭ چېكىلگەندە"
 
 #: ui/TitlebarActions.qml:215
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "فوكۇسلانمىغان ماۋزۇ بالداق ياكى كاندۇكتا ئوڭ چېكىلگەندە"
 
 #: ui/TitlebarActions.qml:233
 #, kde-format
@@ -531,12 +539,12 @@ msgstr "ئوڭنى چېكىش(&K):"
 #: ui/WindowActions.qml:20 ui/WindowActions.qml:51
 #, kde-format
 msgid "Focus, raise, and click through"
-msgstr ""
+msgstr "فوكۇس، ئۆرلەش ۋە چېكىش"
 
 #: ui/WindowActions.qml:21 ui/WindowActions.qml:52
 #, kde-format
 msgid "Focus and click through"
-msgstr ""
+msgstr "فوكۇس ۋە چېكىش"
 
 #: ui/WindowActions.qml:27
 #, kde-format
@@ -546,12 +554,12 @@ msgstr "يۆتكە"
 #: ui/WindowActions.qml:28
 #, kde-format
 msgid "Focus, raise, and move"
-msgstr ""
+msgstr "فوكۇس، ئۆرلەش ۋە يۆتكەش"
 
 #: ui/WindowActions.qml:29
 #, kde-format
 msgid "Focus, raise, and resize"
-msgstr ""
+msgstr "فوكۇس، ئۆرلەش ۋە چوڭلۇقىنى ئۆزگەرتىش"
 
 #: ui/WindowActions.qml:30
 #, kde-format
@@ -572,12 +580,12 @@ msgstr "تۇتۇقلۇقىنى ئۆرلىتىدۇ"
 #, kde-format
 msgctxt "@title:group"
 msgid "Unfocused Inner Window Actions"
-msgstr ""
+msgstr "فوكۇسلانمىغان ئىچكى كۆزنەك مەشغۇلاتى"
 
 #: ui/WindowActions.qml:50
 #, kde-format
 msgid "Focus, click through, and raise on release"
-msgstr ""
+msgstr "فوكۇس، چېكىش ۋە قويۇۋەتكەندە ئۆرلەش"
 
 #: ui/WindowActions.qml:103
 #, kde-format
@@ -587,17 +595,17 @@ msgstr "سىيرى"
 #: ui/WindowActions.qml:104
 #, kde-format
 msgid "Focus and scroll"
-msgstr ""
+msgstr "فوكۇس ۋە سىيرىش"
 
 #: ui/WindowActions.qml:105
 #, kde-format
 msgid "Focus, raise, and scroll"
-msgstr ""
+msgstr "فوكۇس، ئۆرلەش ۋە سىيرىش"
 
 #: ui/WindowActions.qml:120
 #, kde-format
 msgid "Inner Window, Titlebar, and Frame Actions"
-msgstr ""
+msgstr "ئىچكى كۆزنەك، ماۋزۇ بالداق ۋە كاندۇك مەشغۇلاتى"
 
 #: ui/WindowActions.qml:123
 #, kde-format
@@ -607,12 +615,12 @@ msgstr "بىرىكمە كۇنۇپكا(&D):"
 #: ui/WindowActions.qml:131
 #, kde-format
 msgid "Meta"
-msgstr ""
+msgstr "Meta"
 
 #: ui/WindowActions.qml:132
 #, kde-format
 msgid "Alt"
-msgstr ""
+msgstr "Alt"
 
 #: ui/WindowActions.qml:170
 #, kde-format

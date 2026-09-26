@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-14 00:45+0000\n"
-"PO-Revision-Date: 2026-09-23 06:56+0900\n"
+"PO-Revision-Date: 2026-09-24 19:34-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
-"Language-Team: Uyghur <kde-i18n-doc@kde.org>\n"
+"Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
 "Language: ug\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,6 +92,8 @@ msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
 "now will overwrite the changes."
 msgstr ""
+"مەۋھۇم ئۈستەلئۈستى بۇ تەڭشەك پىروگراممىسىنىڭ سىرتىدا  ئۆزگەرتىلدى. ھازىر "
+"ساقلانسا ئۆزگىرىشنى قاپلىۋېتىدۇ."
 
 #: ui/main.qml:195
 #, kde-format
@@ -111,7 +113,7 @@ msgstr "دەۋرىي يول باشلايدۇ"
 #: ui/main.qml:225
 #, kde-format
 msgid "Switch desktops independently for each screen"
-msgstr ""
+msgstr "ئۈستەلئۈستىنى ھەر بىر ئېكرانغا مۇستەقىل ئالماشتۇرىدۇ"
 
 #: ui/main.qml:243
 #, kde-format
@@ -126,7 +128,7 @@ msgstr "ئالماشتۇرغاندا ئېكراندا كۆرسىتىدۇ:"
 #: ui/main.qml:313
 #, kde-format
 msgid "%1 ms"
-msgstr ""
+msgstr "%1 ms"
 
 #: ui/main.qml:337
 #, kde-format
