@@ -1,9 +1,9 @@
 # translation of kcmkwinrules.po to Italian
-# SPDX-FileCopyrightText: 2016-2026 Paolo Zamponi <feus73@gmail.com>
 # Andrea Rizzi <rizzi@kde.org>, 2004, 2005.
 # Andrea RIZZI <arizzi@pi.infn.it>, 2004.
 # Luciano Montanaro <mikelima@cirulla.net>, 2007, 2008, 2010, 2011.
 # Federico Zenith <federico.zenith@member.fsf.org>, 2010, 2012, 2013, 2014, 2015.
+# SPDX-FileCopyrightText: 2016-2026 Paolo Zamponi <feus73@gmail.com>
 # Vincenzo Reale <smart2128vr@gmail.com>, 2020, 2021.
 msgid ""
 msgstr ""
