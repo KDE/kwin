@@ -23,6 +23,7 @@
         "Description[sl]": "Samodejno izvede klik miške, ko uporabnik določen čas ne premika kazalca",
         "Description[sv]": "Utför automatiskt ett musklick när användaren håller markören stilla under en viss tid",
         "Description[tr]": "Kullanıcı imleci belirli bir süre hareketsiz tuttuğunda kendiliğinden bir fare tıklaması gerçekleştirir",
+        "Description[ug]": "ئىشلەتكۈچى نىشانلىغۇچنى تەڭشەلگەن ۋاقىتقىچە مىدىرلاتمىسا، چاشقىنەك چېكىلىشى ئۆزلۈكىدىن ئىجرا بولىدۇ",
         "Description[uk]": "Автоматично виконує клацання кнопкою миші, якщо користувач утримує вказівник нерухомим вказаний проміжок часу",
         "Description[zh_CN]": "用户光标保持静止一段时间后，自动点击鼠标",
         "Description[zh_TW]": "游標停留一段時間之後自動進行滑鼠點擊",
@@ -50,6 +51,7 @@
         "Name[sl]": "Kliker zadrževanja",
         "Name[sv]": "Hållklicka",
         "Name[tr]": "Bekleyince Tıklat",
+        "Name[ug]": "لەيلىتىپ چەككۈچ",
         "Name[uk]": "Клацання з затримкою",
         "Name[zh_CN]": "悬停点击",
         "Name[zh_TW]": "停留點擊器"

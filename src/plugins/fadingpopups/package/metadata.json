@@ -48,6 +48,7 @@
                 "Name[sv]": "Vlad Zahorodnii",
                 "Name[ta]": "விலாட் ஜாஹொரிடுனி",
                 "Name[tr]": "Vlad Zahorodnii",
+                "Name[ug]": "Vlad Zahorodnii",
                 "Name[uk]": "Влад Загородній",
                 "Name[vi]": "Vlad Zahorodnii",
                 "Name[zh_CN]": "Vlad Zahorodnii",
@@ -87,6 +88,7 @@
         "Description[sl]": "Zbledi in obarvaj pojavna okna",
         "Description[sv]": "Tona meddelanderutor",
         "Description[tr]": "Açılır pencereleri soldur ve belirginleştir",
+        "Description[ug]": "قاڭقىش كۆزنىكىنى سۇسلاشتۇرۇپ ئەكىرىدۇ ۋە چىقىرىدۇ",
         "Description[uk]": "Розчинення та поява контекстних вікон",
         "Description[zh_CN]": "气泡显隐渐变动效",
         "Description[zh_TW]": "讓彈出視窗淡入淡出",
@@ -126,6 +128,7 @@
         "Name[sl]": "Bledenje pojavnih oken",
         "Name[sv]": "Borttonande meddelanderutor",
         "Name[tr]": "Solan açılır pencereler",
+        "Name[ug]": "قاڭقىش كۆزنىكىنى سۇسلاشتۇرۇش",
         "Name[uk]": "Згасання контекстних панелей",
         "Name[zh_CN]": "气泡显隐渐变动效",
         "Name[zh_TW]": "淡化彈出視窗"

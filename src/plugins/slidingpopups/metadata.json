@@ -33,6 +33,7 @@
         "Description[sl]": "Drsaj pojavna okna Plasme",
         "Description[sv]": "Skjut Plasma meddelanderutor in och ut",
         "Description[tr]": "Plasma açılır pencerelerini içeri ve dışarı kaydır",
+        "Description[ug]": "Plasma قاڭقىش كۆزنىكىنى سىيرىلدۇرۇپ ئەكىرىدۇ ۋە چىقىرىدۇ",
         "Description[uk]": "Виковзування за заковзування контекстних вікон Плазми",
         "Description[zh_CN]": "滑动显示/隐藏 Plasma 弹窗",
         "Description[zh_TW]": "讓 Plasma 彈出視窗滑進滑出",
@@ -71,6 +72,7 @@
         "Name[sl]": "Drsna pojavna okna",
         "Name[sv]": "Skjutande meddelanderutor",
         "Name[tr]": "Kayan açılır pencereler",
+        "Name[ug]": "سېرىلما قاڭقىش كۆزنىكى",
         "Name[uk]": "Ковзні контекстні вікна",
         "Name[zh_CN]": "气泡滑动动效",
         "Name[zh_TW]": "滑動的彈出視窗"

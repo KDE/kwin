@@ -47,6 +47,7 @@
                 "Name[sv]": "David Redondo",
                 "Name[ta]": "டேவிட் ரிடொண்டோ",
                 "Name[tr]": "David Redondo",
+                "Name[ug]": "David Redondo",
                 "Name[uk]": "David Redondo",
                 "Name[vi]": "David Redondo",
                 "Name[zh_CN]": "David Redondo",
@@ -95,6 +96,7 @@
         "Description[sv]": "Visa skärmnamn",
         "Description[ta]": "திரைகளின் பெயர்களைக் காட்டும்",
         "Description[tr]": "Ekran adlarını göster",
+        "Description[ug]": "ئېكران ئاتىنى كۆرسىتىدۇ",
         "Description[uk]": "Показувати назви екранів",
         "Description[zh_CN]": "显示屏幕名称",
         "Description[zh_TW]": "顯示螢幕名稱",
@@ -140,6 +142,7 @@
         "Name[sv]": "Lokalisering",
         "Name[ta]": "திரை கண்டுபிடிப்பி",
         "Name[tr]": "Çıktı Bulucusu",
+        "Name[ug]": "چىقىرىش ئورۇن بەلگىلىگۈچ",
         "Name[uk]": "Локатор виведення",
         "Name[zh_CN]": "输出定位器",
         "Name[zh_TW]": "輸出位置檢測器"

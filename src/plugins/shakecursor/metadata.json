@@ -42,6 +42,7 @@
         "Description[sv]": "Gör markören större när pekaren snabbt flyttas fram och tillbaka",
         "Description[ta]": "சுட்டியை வேகமாக ஆட்டும்போது சுட்டிக்குறியைப் பெரிதாக்கும்",
         "Description[tr]": "İşaretçi tez ileri geri hareket ettirildiğinde imleci büyütür",
+        "Description[ug]": "نىشانلىغۇچ تېز سۈرئەتتە ئالدى كەينىگە يۆتكەلسە نىشانلىغۇچنى چوڭايتىدۇ",
         "Description[uk]": "Робити курсор більшим, коли вказівник швидко рухається туди-сюди",
         "Description[zh_CN]": "快速往返移动指针后加大显示光标",
         "Description[zh_TW]": "快速來回移動游標時讓游標變大",
@@ -88,6 +89,7 @@
         "Name[sv]": "Skaka markör",
         "Name[ta]": "சுட்டிக்குறியை ஆட்டு",
         "Name[tr]": "İmleci Salla",
+        "Name[ug]": "نۇر بەلگىسىنى تىترەت",
         "Name[uk]": "Бовтанка курсора",
         "Name[zh_CN]": "抖动后放大光标",
         "Name[zh_TW]": "甩動游標"

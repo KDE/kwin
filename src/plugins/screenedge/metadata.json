@@ -39,6 +39,7 @@
         "Description[sl]": "Osvetli robove in vogale zaslona, ​​ki ob dotiku sprožijo dejanja, ko se jim približa kazalka",
         "Description[sv]": "Markerar skärmkanter och hörn som utlöser åtgärder om de berörs när markören närmar sig",
         "Description[tr]": "İmleç onlara yaklaştıkça dokunulduğunda eylemleri tetikleyen ekran kenarlarını ve köşeleri vurgular",
+        "Description[ug]": "نۇر بەلگىسى مەشغۇلات قىلىۋاتقان ئېكران گىرۋىكى ۋە بۇلۇڭىغا يېقىنلىشىپ تەگكەندە يورۇتىدۇ",
         "Description[uk]": "Підсвічує краї та кути екрана, які запускають дії при торканні, якщо вказівник наближається до них",
         "Description[zh_CN]": "光标靠近触碰时会触发操作的屏幕边缘和四角时高亮显示它们",
         "Description[zh_TW]": "游標接近時突顯螢幕邊緣或有觸發動作的角落",
@@ -82,6 +83,7 @@
         "Name[sl]": "Poudari robove zaslona in vroče vogale",
         "Name[sv]": "Markerar skärmkanter och aktiva hörn",
         "Name[tr]": "Ekran Kenarlarını ve Sıcak Köşeleri Vurgula",
+        "Name[ug]": "ئېكران گىرۋىكى ۋە قىزىق بۇلۇڭنى يورۇت",
         "Name[uk]": "Підсвічування країв і активних кутів екрана",
         "Name[zh_CN]": "高亮显示屏幕边缘和四角",
         "Name[zh_TW]": "突顯螢幕邊緣和角落"

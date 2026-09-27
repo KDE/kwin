@@ -42,6 +42,7 @@
         "Description[sv]": "Förbättrar färguppfattningen för färgblindhet",
         "Description[ta]": "நிறக்குருடு உடையவர்களுக்கு உதவும் வகையில் நிறங்களை மாற்றும்",
         "Description[tr]": "Renk körlüğü aralığında renk algısını iyileştirir",
+        "Description[ug]": "رەڭ قارىغۇسىنىڭ رەڭ سەزگۈسىنى كۈچەيتىدۇ",
         "Description[uk]": "Удосконалює сприйняття кольорів для випадків дальтонізму",
         "Description[zh_CN]": "增强色盲视觉的颜色感知",
         "Description[zh_TW]": "為色盲現象改善顏色辨識",
@@ -88,6 +89,7 @@
         "Name[sv]": "Korrigering av färgblindhet",
         "Name[ta]": "நிறக்குருடு திருத்தம்",
         "Name[tr]": "Renk Körlüğü Düzeltmesi",
+        "Name[ug]": "رەڭ قارىغۇسىنى تۈزىتىش",
         "Name[uk]": "Виправлення для дальтонізму",
         "Name[zh_CN]": "色盲校正",
         "Name[zh_TW]": "色盲修正"

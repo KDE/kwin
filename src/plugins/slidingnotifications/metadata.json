@@ -27,6 +27,7 @@
         "Description[sl]": "Drsaj obvestila Plasme noter in ven",
         "Description[sv]": "Skjut Plasma-underrättelser in och ut",
         "Description[tr]": "Plasma bildirimlerini içeri ve dışarı kaydır",
+        "Description[ug]": "Plasma ئۇقتۇرۇشىنى سىيرىلدۇرۇپ ئەكىرىدۇ ۋە چىقىرىدۇ",
         "Description[uk]": "Виковзування за заковзування сповіщень Плазми",
         "Description[zh_CN]": "滑动显示/隐藏 Plasma 通知",
         "Description[zh_TW]": "讓 Plasma 通知滑進滑出",
@@ -58,6 +59,7 @@
         "Name[sl]": "Drseča obvestila",
         "Name[sv]": "Skjutande underrättelser",
         "Name[tr]": "Kayan Bildirimler",
+        "Name[ug]": "سىيرىلما ئۇقتۇرۇش",
         "Name[uk]": "Ковзні сповіщення",
         "Name[zh_CN]": "滑动通知",
         "Name[zh_TW]": "滑入通知"
