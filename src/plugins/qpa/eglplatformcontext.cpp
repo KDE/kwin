@@ -12,7 +12,6 @@
 #include "compositor.h"
 #include "core/outputbackend.h"
 #include "core/syncobjtimeline.h"
-#include "eglhelpers.h"
 #include "internalwindow.h"
 #include "logging.h"
 #include "offscreensurface.h"
@@ -42,10 +41,11 @@ EGLRenderTarget::~EGLRenderTarget()
     texture.reset();
 }
 
-EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, const std::shared_ptr<EglContext> &shareContext)
-    : m_eglDisplay(shareContext->displayObject())
+EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, const std::shared_ptr<EglContext> &kwinContext)
+    : m_eglDisplay(kwinContext->displayObject())
+    , m_eglContext(kwinContext)
 {
-    create(context->format(), shareContext);
+    updateFormatFromContext();
 }
 
 EGLPlatformContext::~EGLPlatformContext()
@@ -186,26 +186,14 @@ GLuint EGLPlatformContext::defaultFramebufferObject(QPlatformSurface *surface) c
     return 0;
 }
 
-void EGLPlatformContext::create(const QSurfaceFormat &format, const std::shared_ptr<EglContext> &shareContext)
-{
-    m_config = configFromFormat(m_eglDisplay, format);
-    if (m_config == EGL_NO_CONFIG_KHR) {
-        qCWarning(KWIN_QPA) << "Could not find suitable EGLConfig for" << format;
-        return;
-    }
-
-    m_format = formatFromConfig(m_eglDisplay, m_config);
-    m_eglContext = EglContext::create(m_eglDisplay, m_config, shareContext);
-    if (!m_eglContext) {
-        qCWarning(KWIN_QPA) << "Failed to create EGL context";
-        return;
-    }
-    updateFormatFromContext();
-    connect(Compositor::self(), &Compositor::aboutToStop, this, &EGLPlatformContext::invalidateContext);
-}
-
 void EGLPlatformContext::updateFormatFromContext()
 {
+    if (!m_eglContext->makeCurrent()) {
+        return;
+    }
+
+    m_format.setRenderableType(QSurfaceFormat::OpenGLES);
+
     const char *version = reinterpret_cast<const char *>(glGetString(GL_VERSION));
     int major, minor;
     if (parseOpenGLVersion(version, major, minor)) {

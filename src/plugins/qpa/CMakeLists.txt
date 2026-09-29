@@ -2,7 +2,6 @@ add_library(KWinQpaPlugin OBJECT)
 target_sources(KWinQpaPlugin PRIVATE
     backingstore.cpp
     clipboard.cpp
-    eglhelpers.cpp
     eglplatformcontext.cpp
     integration.cpp
     main.cpp
