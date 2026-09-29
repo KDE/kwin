@@ -19,6 +19,7 @@ namespace KWin
 {
 
 class LogicalOutput;
+class EglContext;
 
 namespace QPA
 {
@@ -59,6 +60,12 @@ private Q_SLOTS:
     void handleWorkspaceCreated();
 
 private:
+    /**
+     * NOTE while this modifies state of this object, it needs to be const
+     * because it needs to be called from createPlatformOpenGLContext
+     */
+    void updateEglContext() const;
+
     std::unique_ptr<QPlatformFontDatabase> m_fontDb;
     mutable std::unique_ptr<QPlatformAccessibility> m_accessibility;
     std::unique_ptr<QPlatformNativeInterface> m_nativeInterface;
@@ -66,6 +73,7 @@ private:
     QHash<LogicalOutput *, Screen *> m_screens;
     std::unique_ptr<QDesktopUnixServices> m_services;
     std::unique_ptr<Clipboard> m_clipboard;
+    mutable std::shared_ptr<EglContext> m_eglContext;
 };
 
 }
