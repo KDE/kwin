@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-24 00:47+0000\n"
-"PO-Revision-Date: 2026-05-26 22:25+0200\n"
+"PO-Revision-Date: 2026-09-28 22:47+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -76,13 +76,13 @@ msgstr "KDE Wayland 컴포지터"
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” (%2) was reset"
-msgstr ""
+msgstr "“%1”(%2) 그래픽 카드가 초기화됨"
 
 #: core/gpumanager.cpp:280
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” was reset"
-msgstr ""
+msgstr "“%1” 그래픽 카드가 초기화됨"
 
 #: core/iccprofile.cpp:402
 #, kde-format
@@ -1637,18 +1637,14 @@ msgid "Name of the xwayland display that has been pre-set up"
 msgstr "사전에 설정된 XWayland 디스플레이 이름"
 
 #: main_wayland.cpp:390
-#, fuzzy, kde-format
-#| msgid ""
-#| "XWayland socket to use for Xwayland's incoming connections. This can be "
-#| "set multiple times"
+#, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
-msgstr "들어오는 연결에 사용할 XWayland 소켓입니다. 여러 번 지정할 수 있습니다"
+msgstr "XWayland의 초기 연결에 사용할 XWayland 소켓"
 
 #: main_wayland.cpp:394
-#, fuzzy, kde-format
-#| msgid "Name of the xwayland display that has been pre-set up"
+#, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
-msgstr "사전에 설정된 XWayland 디스플레이 이름"
+msgstr "사전에 설정된 XWayland 초기 디스플레이 이름"
 
 #: main_wayland.cpp:398
 #, kde-format
@@ -1804,39 +1800,37 @@ msgstr "전체 화면 창"
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:9
 #, kde-format
 msgid "Delay Time"
-msgstr ""
+msgstr "지연 시간"
 
 #. i18n: ectx: label, entry (DwellTime), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:13
 #, kde-format
 msgid "Dwell Time"
-msgstr ""
+msgstr "머무르기 시간"
 
 #. i18n: ectx: label, entry (MotionThreshold), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:17
 #, kde-format
 msgid "Motion Threshold"
-msgstr ""
+msgstr "움직임 임곗값"
 
 #. i18n: ectx: label, entry (DefaultButton), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:21
-#, fuzzy, kde-format
-#| msgid "Default"
+#, kde-format
 msgid "Default Button"
-msgstr "기본값"
+msgstr "기본 단추"
 
 #. i18n: ectx: label, entry (ButtonLocked), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:33
-#, fuzzy, kde-format
-#| msgid "Button"
+#, kde-format
 msgid "Lock Button"
-msgstr "단추"
+msgstr "잠금 단추"
 
 #. i18n: ectx: label, entry (DwellColor), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:37
 #, kde-format
 msgid "Dwell Color"
-msgstr ""
+msgstr "머무르기 색상"
 
 #: plugins/eis/eisinputcapturemanager.cpp:140
 #, kde-format
@@ -2474,8 +2468,7 @@ msgid "Color Temperature Preview"
 msgstr "색 온도 미리 보기"
 
 #: plugins/outputlocator/outputlocator.cpp:26
-#, fuzzy, kde-format
-#| msgid "Built-in Screen"
+#, kde-format
 msgctxt "@label"
 msgid "Built-in Screen"
 msgstr "내장 화면"
@@ -3475,14 +3468,13 @@ msgstr "제목 표시줄 없음 규칙 종류"
 #: rulesettings.kcfg:322
 #, kde-format
 msgid "Decoration policy"
-msgstr ""
+msgstr "장식 정책"
 
 #. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
-#, fuzzy, kde-format
-#| msgid "Active opacity rule type"
+#, kde-format
 msgid "Decoration policy rule type"
-msgstr "활성 불투명도 규칙 종류"
+msgstr "장식 정책 규칙 종류"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:339
@@ -3631,7 +3623,7 @@ msgstr "스크린샷과 화면 녹화 규칙 형식에서 숨기기"
 #: scene/workspacescene.cpp:115
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
-msgstr ""
+msgstr "“컴포지팅 표시” 효과 전환"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -4011,12 +4003,12 @@ msgstr "창을 수직으로 축소"
 #: useractions.cpp:890
 #, kde-format
 msgid "Quick Tile Window to the Left"
-msgstr "창을 왼쪽 위로 보내기"
+msgstr "창을 왼쪽으로 보내기"
 
 #: useractions.cpp:892
 #, kde-format
 msgid "Quick Tile Window to the Right"
-msgstr "창을 오른쪽 위로 보내기"
+msgstr "창을 오른쪽으로 보내기"
 
 #: useractions.cpp:894
 #, kde-format
@@ -4222,13 +4214,13 @@ msgstr "창 강제 종료"
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Focused Window"
-msgstr ""
+msgstr "포커스가 맞춰진 창 가운데로 포인터 이동"
 
 #: useractions.cpp:1018
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Screen"
-msgstr ""
+msgstr "화면 가운데로 포인터 이동"
 
 #: useractions.cpp:1083
 #, kde-format
@@ -4286,6 +4278,8 @@ msgid ""
 "Setting custom modes with too old kde-output-management-v2 protocol versions "
 "is unsupported"
 msgstr ""
+"너무 오래된 kde-output-management-v2 프로토콜 버전에서 사용자 정의 모드 설정"
+"은 지원되지 않음"
 
 #: wayland/outputmanagement_v2.cpp:575
 #, kde-format
@@ -4340,13 +4334,12 @@ msgstr "세션이 활성화되어 있지 않음"
 #: wayland/outputmanagement_v2.cpp:747
 #, kde-format
 msgid "More displays are enabled than are supported by the graphics card."
-msgstr ""
+msgstr "그래픽 카드에서 지원하는 것보다 더 많은 디스플레이가 활성화되었습니다."
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration"
+#, kde-format
 msgid "The driver rejected the output configuration: %s"
-msgstr "드라이버에서 출력 설정을 거부함"
+msgstr "드라이버에서 출력 설정을 거부함: %s"
 
 #: window.cpp:3188
 #, kde-format
