@@ -87,6 +87,9 @@ public:
 
     void check()
     {
+        if (input()->hasTabletModeSwitch()) {
+            return;
+        }
         const auto devices = input()->devices();
         const bool hasTouch = std::any_of(devices.constBegin(), devices.constEnd(), [](InputDevice *device) {
             return device->isTouch() && blocksTabletMode(device);
