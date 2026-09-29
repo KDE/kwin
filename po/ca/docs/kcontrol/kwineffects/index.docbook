@@ -101,7 +101,7 @@
 >Maximitza</guilabel
 > o <guilabel
 >Làmpada màgica</guilabel
->. Tots dos activats alhora resulta en el trencament de les animacions. </para>
+>. Tots dos activats alhora provoca el trencament de les animacions. </para>
 
 <para
 >Per a efectes en un grup mútuament exclusius, la &IGU; utilitza botons d'opció i gestiona que només es pugui activar un d'aquests efectes. </para>

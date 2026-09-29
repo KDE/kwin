@@ -149,7 +149,7 @@
 ></term>
 <listitem>
 <para
->En moure el punter del ratolí sobre una finestra normal, aquesta serà activada. Les noves finestres com la mini línia d'ordres invocada amb <keycombo action="simul"
+>En moure el punter del ratolí sobre una finestra normal, aquesta serà activada. Les noves finestres com la minilínia d'ordres invocada amb <keycombo action="simul"
 >&Alt;<keycap
 >F2</keycap
 ></keycombo
@@ -326,7 +326,7 @@
 
 <tip>
 <para
->Una configuració de la demora massa curta provocarà un ràpid canvi de finestres, el qual pot resultar en una distracció. La major part de la gent els agrada un retard de 100 a 300 ms. Aquesta és la resposta, però us permetrà lliscar sobre les cantonades d'una finestra en el vostre camí cap a la destinació sense portar la finestra al capdavant. </para>
+>Una configuració de la demora massa curta provocarà un ràpid canvi de finestres, el qual pot provocar una distracció. La major part de la gent els agrada un retard de 100 a 300 ms. Aquesta és la resposta, però us permetrà lliscar sobre les cantonades d'una finestra en el vostre camí cap a la destinació sense portar la finestra al capdavant. </para>
 </tip>
 
 </sect3>
