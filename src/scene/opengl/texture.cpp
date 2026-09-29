@@ -235,6 +235,11 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const FileDe
                                             const std::shared_ptr<ColorDescription> &color)
 {
     auto attribs = buffer->dmabufAttributes();
+    if (attribs->faulty) {
+        m_texture.reset();
+        m_buffer = buffer;
+        return false;
+    }
     m_dmabufDevice = attribs->device;
     RenderDevice *compat = GpuManager::self()->compatibleRenderDevice(attribs->device);
     if (!compat) {
@@ -282,6 +287,7 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const FileDe
     m_size = buffer->size();
     const auto info = FormatInfo::get(buffer->dmabufAttributes()->format);
     m_isFloatingPoint = info && info->floatingPoint;
+    m_buffer = buffer;
 
     return true;
 }
@@ -295,6 +301,12 @@ void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const File
         || (m_mgpuSwapchain && !m_mgpuSwapchain->isSuitableFor(buffer))) {
         reset();
         loadDmabufTexture(buffer, sync, releasePoint, color);
+        return;
+    }
+
+    if (buffer->dmabufAttributes()->faulty) {
+        m_texture.reset();
+        m_buffer = buffer;
         return;
     }
     if (m_mgpuSwapchain) {
@@ -325,6 +337,7 @@ void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const File
 
     const auto info = FormatInfo::get(buffer->dmabufAttributes()->format);
     m_isFloatingPoint = info && info->floatingPoint;
+    m_buffer = buffer;
 }
 
 bool BufferTextureOpenGL::loadSinglePixelTexture(GraphicsBuffer *buffer)
@@ -415,6 +428,14 @@ void BufferTextureOpenGL::updateUDmabufTexture(GraphicsBuffer *buffer, EGLImageK
     const auto info = FormatInfo::get(buffer->shmAttributes()->format);
     m_isFloatingPoint = info && info->floatingPoint;
     m_releasePoint = std::make_shared<UDmabufReleasePoint>(buffer);
+}
+
+GLTexture *BufferTextureOpenGL::texture() const
+{
+    if (m_buffer && m_buffer->dmabufAttributes() && m_buffer->dmabufAttributes()->faulty) {
+        return nullptr;
+    }
+    return m_texture.get();
 }
 
 } // namespace KWin

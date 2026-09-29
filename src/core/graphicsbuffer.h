@@ -27,6 +27,7 @@ struct DmaBufAttributes
     uint32_t format = 0;
     uint64_t modifier = 0;
     dev_t device;
+    bool faulty = false;
 
     std::array<FileDescriptor, 4> fd;
     std::array<uint32_t, 4> offset{0, 0, 0, 0};
@@ -98,6 +99,7 @@ public:
     virtual QSize size() const = 0;
     virtual bool hasAlphaChannel() const = 0;
 
+    virtual void markFaulty();
     virtual const DmaBufAttributes *udmabufAttributes() const;
     virtual const DmaBufAttributes *dmabufAttributes() const;
     virtual const ShmAttributes *shmAttributes() const;

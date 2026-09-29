@@ -30,7 +30,7 @@ public:
     explicit TextureOpenGL(const std::shared_ptr<EglContext> &context);
     ~TextureOpenGL() override;
 
-    GLTexture *texture() const;
+    virtual GLTexture *texture() const;
 
 protected:
     std::unique_ptr<GLTexture> m_texture;
@@ -71,6 +71,8 @@ public:
 
     void upload(const QImage &image, const Rect &region) override;
 
+    GLTexture *texture() const override;
+
 private:
     void reset();
 
@@ -99,6 +101,7 @@ private:
     RenderDevice *m_renderDevice;
     std::unique_ptr<MultiGpuSwapchain> m_mgpuSwapchain;
     std::optional<dev_t> m_dmabufDevice;
+    QPointer<GraphicsBuffer> m_buffer;
 };
 
 } // namespace KWin

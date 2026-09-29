@@ -71,6 +71,9 @@ public:
 
     static std::unique_ptr<EglDisplay> create(::EGLDisplay display, DrmDevice *drmDevice);
 
+Q_SIGNALS:
+    void gpuReset();
+
 private:
     struct Formats
     {

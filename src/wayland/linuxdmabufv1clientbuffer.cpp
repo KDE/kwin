@@ -470,6 +470,11 @@ void LinuxDmaBufV1ClientBuffer::setDevice(dev_t deviceId)
     m_attrs.device = deviceId;
 }
 
+void LinuxDmaBufV1ClientBuffer::markFaulty()
+{
+    m_attrs.faulty = true;
+}
+
 QSize LinuxDmaBufV1ClientBuffer::size() const
 {
     return QSize(m_attrs.width, m_attrs.height);

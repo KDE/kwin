@@ -96,6 +96,7 @@ public:
     uint32_t pitch() const override;
 
     void setDevice(dev_t deviceId);
+    void markFaulty() override;
 
     static LinuxDmaBufV1ClientBuffer *get(wl_resource *resource);
 

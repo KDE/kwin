@@ -53,6 +53,7 @@ bool EglBackend::checkGraphicsReset()
         if (!success) {
             // not necessarily a graphics reset, but we can't really know
             // and need to re-create everything either way
+            Q_EMIT context->displayObject()->gpuReset();
             return true;
         }
     }
@@ -86,6 +87,7 @@ bool EglBackend::checkGraphicsReset()
         qCWarning(KWIN_OPENGL) << "Waiting for glGetGraphicsResetStatus to return GL_NO_ERROR timed out!";
     }
 
+    Q_EMIT context->displayObject()->gpuReset();
     return true;
 }
 

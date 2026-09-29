@@ -112,6 +112,10 @@ bool GraphicsBuffer::alphaChannelFromDrmFormat(uint32_t format)
     return info && info->alphaBits > 0;
 }
 
+void GraphicsBuffer::markFaulty()
+{
+}
+
 } // namespace KWin
 
 #include "moc_graphicsbuffer.cpp"
