@@ -12,8 +12,8 @@ kwin_add_builtin_effect(showfps ${showfps_SOURCES})
 ecm_add_qml_module(showfps
     URI "org.kde.kwin.showfps"
     QML_FILES
-        qml/Main.qml
-        qml/Fallback.qml
+        Main.qml
+        Fallback.qml
     QT_NO_PLUGIN
 )
 
