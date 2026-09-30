@@ -372,6 +372,11 @@ const FileDescriptor &GpuManager::udmabuf() const
     return m_udmabuf;
 }
 
+std::optional<dev_t> GpuManager::udmabufDevId() const
+{
+    return m_udmabufDevId;
+}
+
 void GpuManager::addDevice(std::unique_ptr<RenderDevice> &&device)
 {
     m_renderDevices.push_back(std::move(device));

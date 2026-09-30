@@ -558,7 +558,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCopy(Surface *surf
     const OutputTransform mapping = source->texture()->contentTransform().combine(OutputTransform::FlipY);
     const QSize orientedSize = mapping.map(source->texture()->size());
     const Region bufferDamage = mapping.map(damagedDeviceRegion, orientedSize);
-    auto imported = surface->importSwapchain->copyRgbBuffer(source->buffer(), bufferDamage, std::move(readFence), frame, source->releasePoint());
+    auto imported = surface->importSwapchain->copyBuffer(source->buffer(), bufferDamage, std::move(readFence), frame, source->releasePoint());
     if (!imported) {
         // this is probably caused by a GPU reset, let's not take any chances
         surface->needsRecreation = true;

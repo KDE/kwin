@@ -56,6 +56,18 @@ public:
     bool containsFormat(uint32_t format, uint64_t modifier) const;
 };
 
+struct KWIN_EXPORT PlaneLayout
+{
+    uint32_t bitsPerPixel;
+    uint32_t sizeDivisor;
+};
+
+struct KWIN_EXPORT DmabufLayout
+{
+    uint32_t count;
+    std::array<PlaneLayout, 4> planes;
+};
+
 struct KWIN_EXPORT FormatInfo
 {
     uint32_t drmFormat;
@@ -67,6 +79,7 @@ struct KWIN_EXPORT FormatInfo
     VkComponentMapping swizzles;
     bool floatingPoint;
     bool yuv;
+    std::optional<DmabufLayout> planeLayout;
 
     static const std::unordered_map<uint32_t, FormatInfo> s_knownFormats;
 

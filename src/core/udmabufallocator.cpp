@@ -137,42 +137,71 @@ GraphicsBuffer *UDmabufAllocator::allocate(uint32_t format, const QSize &size)
     if (!info) {
         return nullptr;
     }
-    const int stride = align(size.width() * info->bitsPerPixel / 8, 256);
-    const int bufferSize = align(size.height() * stride, getpagesize());
 
-    FileDescriptor fd = FileDescriptor(memfd_create("udmabuf", MFD_CLOEXEC | MFD_ALLOW_SEALING));
-    if (!fd.isValid()) {
-        qCWarning(KWIN_CORE, "Creating memfd for udmabuf failed!");
-        return nullptr;
-    }
+    const auto layout = info->planeLayout.value_or(DmabufLayout{
+        .count = 1,
+        .planes = {
+            PlaneLayout{
+                .bitsPerPixel = info->bitsPerPixel,
+                .sizeDivisor = 1,
+            },
+        },
+    });
 
-    if (ftruncate(fd.get(), bufferSize) < 0) {
-        qCWarning(KWIN_CORE, "Resizing memfd for udmabuf failed!");
-        return nullptr;
-    }
-    if (fcntl(fd.get(), F_ADD_SEALS, F_SEAL_SHRINK | F_SEAL_SEAL) != 0) {
-        qCWarning(KWIN_CORE, "Sealing memfd for udmabuf failed!");
-        return nullptr;
-    }
-
-    MemoryMap memoryMap(stride * size.height(), PROT_READ | PROT_WRITE, MAP_SHARED, fd.get(), 0);
-    if (!memoryMap.isValid()) {
-        qCWarning(KWIN_CORE, "Mapping memfd for udmabuf failed!");
-        return nullptr;
-    }
-
-    ShmAttributes attributes{
-        .fd = std::move(fd),
-        .stride = stride,
-        .offset = 0,
-        .size = size,
+    DmaBufAttributes attributes = {
+        .planeCount = int(layout.count),
+        .width = size.width(),
+        .height = size.height(),
         .format = format,
+        .modifier = DRM_FORMAT_MOD_LINEAR,
+        .device = *GpuManager::self()->udmabufDevId(),
     };
-    auto dmabufAttributes = GpuManager::self()->createUdmabuf(&attributes);
-    if (!dmabufAttributes) {
-        return nullptr;
+    MemoryMap memoryMap;
+    for (uint32_t plane = 0; plane < layout.count; plane++) {
+        const auto &planeLayout = layout.planes[plane];
+        const int stride = align(size.width() * info->bitsPerPixel / 8, 256) / planeLayout.sizeDivisor;
+        const int bufferSize = align(size.height() / planeLayout.sizeDivisor * stride, getpagesize());
+
+        FileDescriptor fd = FileDescriptor(memfd_create("udmabuf", MFD_CLOEXEC | MFD_ALLOW_SEALING));
+        if (!fd.isValid()) {
+            qCWarning(KWIN_CORE, "Creating memfd for udmabuf failed!");
+            return nullptr;
+        }
+
+        if (ftruncate(fd.get(), bufferSize) < 0) {
+            qCWarning(KWIN_CORE, "Resizing memfd for udmabuf failed!");
+            return nullptr;
+        }
+        if (fcntl(fd.get(), F_ADD_SEALS, F_SEAL_SHRINK | F_SEAL_SEAL) != 0) {
+            qCWarning(KWIN_CORE, "Sealing memfd for udmabuf failed!");
+            return nullptr;
+        }
+
+        if (layout.count == 1) {
+            memoryMap = MemoryMap(stride * size.height(), PROT_READ | PROT_WRITE, MAP_SHARED, fd.get(), 0);
+            if (!memoryMap.isValid()) {
+                qCWarning(KWIN_CORE, "Mapping memfd for udmabuf failed!");
+                return nullptr;
+            }
+        }
+
+        ShmAttributes shmAttributes{
+            .fd = std::move(fd),
+            .stride = stride,
+            .offset = 0,
+            .size = size / planeLayout.sizeDivisor,
+            .format = format,
+        };
+        auto dmabufAttributes = GpuManager::self()->createUdmabuf(&shmAttributes);
+        if (!dmabufAttributes) {
+            return nullptr;
+        }
+        attributes.fd[plane] = std::move(dmabufAttributes->fd[0]);
+        attributes.offset[plane] = dmabufAttributes->offset[0];
+        attributes.pitch[plane] = dmabufAttributes->pitch[0];
     }
-    return new UdmabufGraphicsBuffer(std::move(*dmabufAttributes), std::move(memoryMap));
+
+    return new UdmabufGraphicsBuffer(std::move(attributes), std::move(memoryMap));
 #else
     return nullptr;
 #endif

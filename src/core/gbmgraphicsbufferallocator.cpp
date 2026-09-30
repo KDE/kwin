@@ -215,7 +215,8 @@ static GraphicsBuffer *allocateDmaBuf(gbm_device *device, dev_t deviceId, const 
 
 GraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
 {
-    if (options.software) {
+    const auto info = FormatInfo::get(options.format);
+    if (options.software || (info && info->yuv)) {
         if (!options.scanout) {
             auto ret = UDmabufAllocator::allocate(options.format, options.size);
             if (ret) {

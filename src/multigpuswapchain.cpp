@@ -119,7 +119,8 @@ std::optional<DrmFormat> MultiGpuSwapchain::chooseFormat(uint32_t inputFormat, c
     for (auto it = srcFormats.begin(); it != srcFormats.end(); it++) {
         const auto otherInfo = FormatInfo::get(it.key());
         // TODO sort the formats and accept suboptimal ones when needed
-        if (!otherInfo.has_value() || otherInfo->bitsPerColor < info.bitsPerColor || otherInfo->alphaBits < info.alphaBits) {
+        if (!otherInfo.has_value() || otherInfo->bitsPerColor < info.bitsPerColor || otherInfo->alphaBits < info.alphaBits
+            || otherInfo->yuv != info.yuv) {
             continue;
         }
         if (!retBPP || otherInfo->bitsPerPixel < retBPP) {
@@ -391,8 +392,8 @@ MultiGpuSwapchain::~MultiGpuSwapchain()
 {
 }
 
-std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyRgbBuffer(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
-                                                                       const std::shared_ptr<SyncReleasePoint> &releasePoint)
+std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyBuffer(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
+                                                                    const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     if (!m_firstCopy) {
         return std::nullopt;

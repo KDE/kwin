@@ -49,8 +49,8 @@ public:
         FileDescriptor sync;
         std::shared_ptr<SyncReleasePoint> releasePoint;
     };
-    std::optional<Ret> copyRgbBuffer(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
-                                     const std::shared_ptr<SyncReleasePoint> &releasePoint);
+    std::optional<Ret> copyBuffer(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
+                                  const std::shared_ptr<SyncReleasePoint> &releasePoint);
 
     void resetDamageTracking();
 

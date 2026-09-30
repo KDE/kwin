@@ -59,6 +59,7 @@ public:
      */
     std::optional<DmaBufAttributes> createUdmabuf(const ShmAttributes *attributes) const;
     const FileDescriptor &udmabuf() const;
+    std::optional<dev_t> udmabufDevId() const;
 
     void addDevice(std::unique_ptr<RenderDevice> &&kmsSoftwareDevice);
     void removeDevice(RenderDevice *kmsSoftwareDevice);

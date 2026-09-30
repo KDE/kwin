@@ -258,7 +258,7 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const FileDe
             qCCritical(KWIN_OPENGL, "Couldn't create multi gpu swapchain for a buffer %s 0x%lx", qPrintable(FormatInfo::drmFormatName(attribs->format)), attribs->modifier);
             return false;
         }
-        auto imported = m_mgpuSwapchain->copyRgbBuffer(buffer, Region::infinite(), sync.duplicate(), nullptr, releasePoint);
+        auto imported = m_mgpuSwapchain->copyBuffer(buffer, Region::infinite(), sync.duplicate(), nullptr, releasePoint);
         if (!imported.has_value()) {
             return false;
         }
@@ -298,7 +298,7 @@ void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const File
         return;
     }
     if (m_mgpuSwapchain) {
-        auto imported = m_mgpuSwapchain->copyRgbBuffer(buffer, region, sync.duplicate(), nullptr, releasePoint);
+        auto imported = m_mgpuSwapchain->copyBuffer(buffer, region, sync.duplicate(), nullptr, releasePoint);
         if (!imported.has_value()) {
             return;
         }

@@ -8,6 +8,8 @@
 
 #include "core/gpumanager.h"
 #include "core/renderdevice.h"
+#include "multigpuswapchain.h"
+#include "swapchain.h"
 #include "vulkan/vulkan_descriptor.h"
 #include "vulkan/vulkan_device.h"
 #include "vulkan/vulkan_shader.h"
@@ -27,8 +29,10 @@ private Q_SLOTS:
     void testUpdateRegion();
     void testUpdateCorners();
     void testComputeShader();
+    void testYuvMultiGpuCopy();
 
 private:
+    RenderDevice *m_renderDevice = nullptr;
     VulkanDevice *m_device = nullptr;
 };
 
@@ -41,6 +45,7 @@ void VulkanTest::initTestCase()
     const auto &renderDevices = GpuManager::self()->renderDevices();
     for (const auto &dev : renderDevices) {
         if (dev->vulkanDevice()) {
+            m_renderDevice = dev.get();
             m_device = dev->vulkanDevice();
             break;
         }
@@ -204,6 +209,26 @@ void VulkanTest::testComputeShader()
     QVERIFY(m_device->computeQueue()->submitBlocking(std::move(cmd)));
 
     QCOMPARE(img, dst->download());
+}
+
+void VulkanTest::testYuvMultiGpuCopy()
+{
+    const auto source = Swapchain::create(m_renderDevice->allocator(), GraphicsBufferOptions{
+                                                                           .size = QSize(128, 128),
+                                                                           .format = DRM_FORMAT_NV12,
+                                                                           .modifiers = {DRM_FORMAT_MOD_LINEAR},
+                                                                           .software = false,
+                                                                           .scanout = false,
+                                                                           .render = false,
+                                                                       });
+    QVERIFY(source);
+    const auto mgpu = MultiGpuSwapchain::createForSampling(m_renderDevice, m_renderDevice, DRM_FORMAT_NV12, DRM_FORMAT_MOD_LINEAR, QSize(128, 128), m_renderDevice->allImportableFormats());
+    QVERIFY(mgpu);
+
+    const auto src = source->acquire();
+    QVERIFY(src);
+    const auto copied = mgpu->copyBuffer(src->buffer(), Rect(0, 0, 128, 128), {}, nullptr, nullptr);
+    QVERIFY(copied);
 }
 
 } // namespace KWin

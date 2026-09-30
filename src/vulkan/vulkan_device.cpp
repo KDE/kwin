@@ -19,6 +19,33 @@
 namespace KWin
 {
 
+/**
+ * A dmabuf can have multiple planes with fds pointing to the same image,
+ * so checking the number of planes isn't enough to know if it's disjoint
+ */
+static bool isDisjoint(const DmaBufAttributes &attributes)
+{
+    if (attributes.planeCount == 1) {
+        return false;
+    }
+    struct stat stat1;
+    if (fstat(attributes.fd[0].get(), &stat1) != 0) {
+        qCWarning(KWIN_VULKAN) << "failed to fstat dmabuf";
+        return true;
+    }
+    for (int i = 1; i < attributes.planeCount; i++) {
+        struct stat stati;
+        if (fstat(attributes.fd[i].get(), &stati) != 0) {
+            qCWarning(KWIN_VULKAN) << "failed to fstat dmabuf";
+            return false;
+        }
+        if (stat1.st_ino != stati.st_ino) {
+            return true;
+        }
+    }
+    return false;
+}
+
 VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::Device &&logicalDevice,
                            std::vector<VkQueueFamilyProperties> &&queueProperties, vk::PhysicalDeviceType type,
                            std::optional<VkDeviceSize> minImportedHostPointerAlignment)
@@ -98,6 +125,9 @@ std::shared_ptr<VulkanBuffer> VulkanDevice::importBufferAsBuffer(GraphicsBuffer 
     if (!buffer->dmabufAttributes() && !buffer->hostDataAttributes()) {
         return nullptr;
     }
+    if (buffer->dmabufAttributes() && isDisjoint(*buffer->dmabufAttributes())) {
+        return nullptr;
+    }
     auto it = m_importedBuffers.find(buffer);
     if (it != m_importedBuffers.end()) {
         return it.value();
@@ -113,33 +143,6 @@ std::shared_ptr<VulkanBuffer> VulkanDevice::importBufferAsBuffer(GraphicsBuffer 
         m_importedBuffers.remove(buffer);
     });
     return ret;
-}
-
-/**
- * A dmabuf can have multiple planes with fds pointing to the same image,
- * so checking the number of planes isn't enough to know if it's disjoint
- */
-static bool isDisjoint(const DmaBufAttributes &attributes)
-{
-    if (attributes.planeCount == 1) {
-        return false;
-    }
-    struct stat stat1;
-    if (fstat(attributes.fd[0].get(), &stat1) != 0) {
-        qCWarning(KWIN_VULKAN) << "failed to fstat dmabuf";
-        return true;
-    }
-    for (int i = 1; i < attributes.planeCount; i++) {
-        struct stat stati;
-        if (fstat(attributes.fd[i].get(), &stati) != 0) {
-            qCWarning(KWIN_VULKAN) << "failed to fstat dmabuf";
-            return false;
-        }
-        if (stat1.st_ino != stati.st_ino) {
-            return true;
-        }
-    }
-    return false;
 }
 
 std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes *attributes, vk::ImageUsageFlags usage)
@@ -243,7 +246,7 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
             return nullptr;
         }
 
-        vk::MemoryDedicatedAllocateInfo dedicatedInfo{image};
+        vk::MemoryDedicatedAllocateInfo dedicatedInfo{disjoint ? nullptr : *image};
         vk::ImportMemoryFdInfoKHR importInfo(vk::ExternalMemoryHandleTypeFlagBits::eDmaBufEXT, duplicatedFds[i].get(), &dedicatedInfo);
         vk::MemoryAllocateInfo memoryInfo(memRequirements.memoryRequirements.size, memoryIndex.value(), &importInfo);
         auto [allocateResult, memory] = m_logical.allocateMemory(memoryInfo);
