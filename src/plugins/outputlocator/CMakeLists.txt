@@ -8,7 +8,7 @@ kwin_add_builtin_effect(outputlocator main.cpp outputlocator.cpp)
 ecm_add_qml_module(outputlocator
     URI org.kde.kwin.outputlocator
     QML_FILES
-        qml/OutputLabel.qml
+        OutputLabel.qml
     QT_NO_PLUGIN
 )
 

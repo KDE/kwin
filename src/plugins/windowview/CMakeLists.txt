@@ -22,7 +22,7 @@ kwin_add_builtin_effect(windowview ${windowview_SOURCES})
 ecm_add_qml_module(windowview
     URI "org.kde.kwin.windowview"
     QML_FILES
-        qml/Main.qml
+        Main.qml
     QT_NO_PLUGIN
 )
 
