@@ -45,6 +45,10 @@ include(ECMQmlModule)
 include(ECMDeprecationSettings)
 include(ECMGenerateQDoc)
 
+if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.22)
+    cmake_policy(SET CMP0127 NEW)
+endif()
+
 option(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
 option(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 option(KWIN_BUILD_NOTIFICATIONS "Enable building of KWin with knotifications support" ON)
