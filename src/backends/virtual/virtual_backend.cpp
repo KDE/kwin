@@ -48,15 +48,12 @@ std::unique_ptr<EglBackend> VirtualBackend::createOpenGLBackend(RenderDevice *re
 
 BackendOutput *VirtualBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, qreal scale)
 {
-    BackendOutput *ret = addOutput(OutputInfo{
+    return addOutput(OutputInfo{
         .size = size,
         .scale = scale,
         .capabilities = BackendOutput::Capability::CustomModes,
         .connectorName = QStringLiteral("Virtual-") + name,
     });
-    // screencasts render on their own view, rendering the output as well would just waste resources
-    ret->renderLoop()->inhibit();
-    return ret;
 }
 
 void VirtualBackend::removeVirtualOutput(BackendOutput *output)
