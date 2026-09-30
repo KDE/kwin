@@ -21,15 +21,18 @@ KWin.TabBoxSwitcher {
 
     Instantiator {
         active: tabBox.visible
-        delegate: PlasmaCore.Dialog {
-            location: PlasmaCore.Types.Floating
+        delegate: PlasmaCore.Window {
             visible: true
             flags: Qt.Popup | Qt.X11BypassWindowManagerHint
             x: tabBox.screenGeometry.x + tabBox.screenGeometry.width * 0.5 - dialogMainItem.width * 0.5
             y: tabBox.screenGeometry.y + tabBox.screenGeometry.height * 0.5 - dialogMainItem.height * 0.5
 
-            mainItem: FocusScope {
+            width: dialogMainItem.width + leftPadding + rightPadding
+            height: dialogMainItem.height + topPadding + bottomPadding
+
+            Item {
                 id: dialogMainItem
+                anchors.centerIn: parent
 
                 focus: true
 
