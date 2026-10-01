@@ -2800,7 +2800,7 @@ void Window::processDecorationMove(const QPointF &localPos, const QPointF &globa
     }
 }
 
-bool Window::processDecorationButtonPress(const QPointF &localPos, const QPointF &globalPos, Qt::MouseButton button, bool ignoreMenu)
+void Window::processDecorationButtonPress(const QPointF &localPos, const QPointF &globalPos, Qt::MouseButton button, bool ignoreMenu)
 {
     Options::MouseCommand com = Options::MouseNothing;
     bool active = isActive();
@@ -2841,7 +2841,7 @@ bool Window::processDecorationButtonPress(const QPointF &localPos, const QPointF
                 }
                 workspace()->performWindowOperation(this, operation);
                 dontInteractiveMoveResize();
-                return false;
+                return;
             }
         } else {
             m_decoration.doubleClickTimer.start(); // new first click and pot. init, could be invalidated by release - see below
@@ -2873,8 +2873,6 @@ bool Window::processDecorationButtonPress(const QPointF &localPos, const QPointF
     if (!ignoreMenu || com != Options::MouseOperationsMenu) {
         performMousePressCommand(com, globalPos);
     }
-    return !( // Return events that should be passed to the decoration in the new API
-        com == Options::MouseRaise || com == Options::MouseOperationsMenu || com == Options::MouseActivateAndRaise || com == Options::MouseActivate || com == Options::MouseActivateRaiseAndPassClick || com == Options::MouseActivateAndPassClick || com == Options::MouseNothing);
 }
 
 void Window::processDecorationButtonRelease(Qt::MouseButton button)
