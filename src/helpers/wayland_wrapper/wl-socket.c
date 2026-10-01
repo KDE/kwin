@@ -123,7 +123,7 @@ int wl_socket_get_fd(struct wl_socket *s)
 struct wl_socket *wl_socket_create()
 {
     struct wl_socket *s;
-    int displayno = 0;
+    int displayno = 1;
     int name_size;
 
     /* A reasonable number of maximum default sockets. If
