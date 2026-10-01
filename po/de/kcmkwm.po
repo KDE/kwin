@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-14 00:45+0000\n"
-"PO-Revision-Date: 2026-09-22 18:57+0200\n"
+"PO-Revision-Date: 2026-09-28 17:58+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -78,6 +78,10 @@ msgid ""
 "some windows appearing on screen. This can lead to assigning focus to "
 "unwanted windows. Use with caution."
 msgstr ""
+"Wenn Sie <interface>Fokus unter Mauszeiger</interface> auswählen, wird "
+"verhindert, dass einige auf dem Bildschirm erscheinende Fenster fokussiert "
+"werden. Dies kann dazu führen, dass unerwünschte Fenster fokussiert werden. "
+"Verwenden Sie diese Option mit Vorsicht."
 
 #: ui/Focus.qml:81
 #, kde-format
@@ -89,7 +93,7 @@ msgstr "Zuletzt fokussiertes Fenster"
 #, kde-format
 msgctxt "@title:group"
 msgid "After closing a window, move focus to:"
-msgstr ""
+msgstr "Nach dem Schließen eines Fensters Fokus verschieben auf:"
 
 #: ui/Focus.qml:86
 #, kde-format
@@ -472,12 +476,15 @@ msgstr "&Linksklick:"
 msgctxt "@label:listbox accessible name"
 msgid "Left click on a focused titlebar or frame"
 msgstr ""
+"Linksklick auf eine fokussierte Titelleiste oder einen fokussierten Rahmen"
 
 #: ui/TitlebarActions.qml:143
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on an unfocused titlebar or frame"
 msgstr ""
+"Linksklick auf eine nicht fokussierte Titelleiste oder einen nicht "
+"fokussierten Rahmen"
 
 #: ui/TitlebarActions.qml:160 ui/WindowActions.qml:68
 #, kde-format
@@ -489,12 +496,15 @@ msgstr "&Mittelklick:"
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on a focused titlebar or frame"
 msgstr ""
+"Mittelklick auf eine fokussierte Titelleiste oder einen fokussierten Rahmen"
 
 #: ui/TitlebarActions.qml:179
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on an unfocused titlebar or frame"
 msgstr ""
+"Mittelklick auf eine nicht fokussierte Titelleiste oder einen nicht "
+"fokussierten Rahmen"
 
 #: ui/TitlebarActions.qml:196 ui/WindowActions.qml:83
 #, kde-format
@@ -506,12 +516,15 @@ msgstr "&Rechtsklick:"
 msgctxt "@label:listbox accessible name"
 msgid "Right click on a focused titlebar or frame"
 msgstr ""
+"Rechtsklick auf eine fokussierte Titelleiste oder einen fokussierten Rahmen"
 
 #: ui/TitlebarActions.qml:215
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on an unfocused titlebar or frame"
 msgstr ""
+"Rechtsklick auf eine nicht fokussierte Titelleiste oder einen nicht "
+"fokussierten Rahmen"
 
 #: ui/TitlebarActions.qml:233
 #, kde-format
@@ -541,12 +554,12 @@ msgstr "Rechtsklic&k:"
 #: ui/WindowActions.qml:20 ui/WindowActions.qml:51
 #, kde-format
 msgid "Focus, raise, and click through"
-msgstr ""
+msgstr "Fokussieren, nach vorn holen und mit Klick ansprechen"
 
 #: ui/WindowActions.qml:21 ui/WindowActions.qml:52
 #, kde-format
 msgid "Focus and click through"
-msgstr ""
+msgstr "Fokussieren und mit Klick ansprechen"
 
 #: ui/WindowActions.qml:27
 #, kde-format
@@ -585,10 +598,9 @@ msgid "Unfocused Inner Window Actions"
 msgstr "Aktionen für nicht fokussiertes, inneres Fenster"
 
 #: ui/WindowActions.qml:50
-#, fuzzy, kde-format
-#| msgid "Activate, pass click and raise on release"
+#, kde-format
 msgid "Focus, click through, and raise on release"
-msgstr "Aktivieren, mit Klick ansprechen und bei Loslassen nach vorn holen"
+msgstr "Fokussieren, mit Klick ansprechen und beim Loslassen nach vorn holen"
 
 #: ui/WindowActions.qml:103
 #, kde-format
@@ -606,8 +618,7 @@ msgid "Focus, raise, and scroll"
 msgstr "Fokussieren, nach vorn holen und scrollen"
 
 #: ui/WindowActions.qml:120
-#, fuzzy, kde-format
-#| msgid "Inner Window, Titlebar and Frame Actions"
+#, kde-format
 msgid "Inner Window, Titlebar, and Frame Actions"
 msgstr "Aktionen für inneres Fenster, Titelleiste und Rahmen"
 

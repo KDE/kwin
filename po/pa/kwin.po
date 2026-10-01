@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-24 00:47+0000\n"
+"POT-Creation-Date: 2026-10-01 17:43+0000\n"
 "PO-Revision-Date: 2024-01-03 14:00-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -2589,6 +2589,26 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr ""
 
+#: plugins/overview/DesktopBar.qml:162
+#, fuzzy, kde-format
+#| msgid "Move to &Desktop"
+msgid "Delete Virtual Desktop"
+msgstr "ਡੈਸਕਟਾਪ ਉੱਤੇ ਭੇਜੋ(&D)"
+
+#: plugins/overview/DesktopBar.qml:261
+#, fuzzy, kde-format
+#| msgctxt "Create a new desktop and add the window to that desktop"
+#| msgid "Add to &New Desktop"
+msgid "Add Virtual Desktop"
+msgstr "ਨਵੇਂ ਡੈਸਕਟਾਪ ਉੱਤੇ ਜੋੜੋ(&N)"
+
+#: plugins/overview/DesktopBar.qml:263
+#, fuzzy, kde-format
+#| msgctxt "Create a new desktop and add the window to that desktop"
+#| msgid "Add to &New Desktop"
+msgid "Virtual Desktop limit reached"
+msgstr "ਨਵੇਂ ਡੈਸਕਟਾਪ ਉੱਤੇ ਜੋੜੋ(&N)"
+
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
@@ -2635,6 +2655,35 @@ msgstr ""
 msgid "Search results include filtered windows:"
 msgstr ""
 
+#: plugins/overview/Main.qml:428
+#, fuzzy, kde-format
+#| msgid "Move to &Desktop"
+msgctxt "@info:placeholder"
+msgid "No other Virtual Desktops to show"
+msgstr "ਡੈਸਕਟਾਪ ਉੱਤੇ ਭੇਜੋ(&D)"
+
+#: plugins/overview/Main.qml:434
+#, fuzzy, kde-format
+#| msgctxt "Create a new desktop and add the window to that desktop"
+#| msgid "Add to &New Desktop"
+msgctxt "@action:button"
+msgid "Add Virtual Desktop"
+msgstr "ਨਵੇਂ ਡੈਸਕਟਾਪ ਉੱਤੇ ਜੋੜੋ(&N)"
+
+#: plugins/overview/Main.qml:441
+#, fuzzy, kde-format
+#| msgid "Configure virtual keyboards..."
+msgctxt "@action:button"
+msgid "Configure Virtual Desktops…"
+msgstr "...ਫ਼ਰਜ਼ੀ ਕੀਬੋਰਡਾਂ ਦੀ ਸੰਰਚਨਾ"
+
+#: plugins/overview/Main.qml:792
+#, fuzzy, kde-format
+#| msgid "Moving windows:"
+msgctxt "@info:placeholder"
+msgid "No matching windows"
+msgstr "ਹਿਲਦੀਆਂ ਵਿੰਡੋਜ਼:"
+
 #: plugins/overview/overvieweffect.cpp:139
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
@@ -2654,55 +2703,6 @@ msgstr "ਉਲਟ ਪਰਭਾਵ ਬਦਲੋ"
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "ਉਲਟ ਪਰਭਾਵ ਬਦਲੋ"
-
-#: plugins/overview/qml/DesktopBar.qml:162
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
-msgid "Delete Virtual Desktop"
-msgstr "ਡੈਸਕਟਾਪ ਉੱਤੇ ਭੇਜੋ(&D)"
-
-#: plugins/overview/qml/DesktopBar.qml:261
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and add the window to that desktop"
-#| msgid "Add to &New Desktop"
-msgid "Add Virtual Desktop"
-msgstr "ਨਵੇਂ ਡੈਸਕਟਾਪ ਉੱਤੇ ਜੋੜੋ(&N)"
-
-#: plugins/overview/qml/DesktopBar.qml:263
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and add the window to that desktop"
-#| msgid "Add to &New Desktop"
-msgid "Virtual Desktop limit reached"
-msgstr "ਨਵੇਂ ਡੈਸਕਟਾਪ ਉੱਤੇ ਜੋੜੋ(&N)"
-
-#: plugins/overview/qml/Main.qml:428
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
-msgctxt "@info:placeholder"
-msgid "No other Virtual Desktops to show"
-msgstr "ਡੈਸਕਟਾਪ ਉੱਤੇ ਭੇਜੋ(&D)"
-
-#: plugins/overview/qml/Main.qml:434
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and add the window to that desktop"
-#| msgid "Add to &New Desktop"
-msgctxt "@action:button"
-msgid "Add Virtual Desktop"
-msgstr "ਨਵੇਂ ਡੈਸਕਟਾਪ ਉੱਤੇ ਜੋੜੋ(&N)"
-
-#: plugins/overview/qml/Main.qml:441
-#, fuzzy, kde-format
-#| msgid "Configure virtual keyboards..."
-msgctxt "@action:button"
-msgid "Configure Virtual Desktops…"
-msgstr "...ਫ਼ਰਜ਼ੀ ਕੀਬੋਰਡਾਂ ਦੀ ਸੰਰਚਨਾ"
-
-#: plugins/overview/qml/Main.qml:792
-#, fuzzy, kde-format
-#| msgid "Moving windows:"
-msgctxt "@info:placeholder"
-msgid "No matching windows"
-msgstr "ਹਿਲਦੀਆਂ ਵਿੰਡੋਜ਼:"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
@@ -2790,13 +2790,13 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: plugins/showfps/qml/Fallback.qml:26
+#: plugins/showfps/Fallback.qml:26
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr ""
 
-#: plugins/showfps/qml/Main.qml:108
+#: plugins/showfps/Main.qml:108
 #, fuzzy, kde-format
 #| msgctxt "A mouse pointer motion event"
 #| msgid "Pointer Motion"
@@ -2804,14 +2804,14 @@ msgctxt "@label"
 msgid "Paint Duration"
 msgstr "ਪੁਆਇੰਟਰ ਚਾਲ"
 
-#: plugins/showfps/qml/Main.qml:121
+#: plugins/showfps/Main.qml:121
 #, fuzzy, kde-format
 #| msgid "Current Layout:"
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "ਮੌਜੂਦਾ ਲੇਆਉਟ:"
 
-#: plugins/showfps/qml/Main.qml:130
+#: plugins/showfps/Main.qml:130
 #, fuzzy, kde-format
 #| msgid "Maximum &width:"
 msgctxt "@label"
@@ -2923,41 +2923,41 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "ਵੀਡਿਓ ਰਿਕਾਰਡ ਬਦਲੋ"
 
-#: plugins/tileseditor/qml/Main.qml:153
+#: plugins/tileseditor/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr ""
 
-#: plugins/tileseditor/qml/Main.qml:163
+#: plugins/tileseditor/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr ""
 
-#: plugins/tileseditor/qml/Main.qml:270
+#: plugins/tileseditor/Main.qml:270
 #, fuzzy, kde-format
 #| msgid "&Close"
 msgid "Close"
 msgstr "ਬੰਦ ਕਰੋ(&C)"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:167
+#: plugins/tileseditor/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
 msgstr ""
 
-#: plugins/tileseditor/qml/TileDelegate.qml:174
+#: plugins/tileseditor/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
 msgstr ""
 
-#: plugins/tileseditor/qml/TileDelegate.qml:182
-#: plugins/tileseditor/qml/TileDelegate.qml:211
+#: plugins/tileseditor/TileDelegate.qml:182
+#: plugins/tileseditor/TileDelegate.qml:211
 #, fuzzy, kde-format
 #| msgctxt "Floating layout, windows aren't tiled at all"
 #| msgid "Floating"
 msgid "Add Floating Tile"
 msgstr "ਫਲੋਟਿੰਗ"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:191
+#: plugins/tileseditor/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
 msgstr ""
@@ -3154,18 +3154,18 @@ msgstr "ਮੌਜੂਦਾ ਵਿੰਡੋ ਬਦਲੋ (ਮੌਜੂਦਾ ਡ�
 msgid "Ignore &minimized windows"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਘੱਟੋ-ਘੱਟ ਬਣਾਓ"
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "ਵਿੰਡੋ"
 
-#: plugins/windowview/qml/Main.qml:122
+#: plugins/windowview/Main.qml:122
 #, fuzzy, kde-format
 #| msgid "Internal Windows"
 msgid "Filter windows…"

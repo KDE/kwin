@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-24 00:47+0000\n"
+"POT-Creation-Date: 2026-10-01 17:43+0000\n"
 "PO-Revision-Date: 2009-12-15 22:22+0100\n"
 "Last-Translator: Mark Kwidzińśczi <mark@linuxcsb.org>\n"
 "Language-Team: Kaszëbsczi <i18n-csb@linuxcsb.org>\n"
@@ -2577,6 +2577,24 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr ""
 
+#: plugins/overview/DesktopBar.qml:162
+#, fuzzy, kde-format
+#| msgid "To &Desktop"
+msgid "Delete Virtual Desktop"
+msgstr "Na &pùlt"
+
+#: plugins/overview/DesktopBar.qml:261
+#, fuzzy, kde-format
+#| msgid "Show Desktop"
+msgid "Add Virtual Desktop"
+msgstr "Wëskrzëni pùlt"
+
+#: plugins/overview/DesktopBar.qml:263
+#, fuzzy, kde-format
+#| msgid "Show Desktop"
+msgid "Virtual Desktop limit reached"
+msgstr "Wëskrzëni pùlt"
+
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
@@ -2623,6 +2641,34 @@ msgstr ""
 msgid "Search results include filtered windows:"
 msgstr ""
 
+#: plugins/overview/Main.qml:428
+#, fuzzy, kde-format
+#| msgid "To &Desktop"
+msgctxt "@info:placeholder"
+msgid "No other Virtual Desktops to show"
+msgstr "Na &pùlt"
+
+#: plugins/overview/Main.qml:434
+#, fuzzy, kde-format
+#| msgid "Show Desktop"
+msgctxt "@action:button"
+msgid "Add Virtual Desktop"
+msgstr "Wëskrzëni pùlt"
+
+#: plugins/overview/Main.qml:441
+#, fuzzy, kde-format
+#| msgid "Configur&e Window Behavior..."
+msgctxt "@action:button"
+msgid "Configure Virtual Desktops…"
+msgstr "&Kònfigùracëjô ùtrzëmaniô òkna..."
+
+#: plugins/overview/Main.qml:792
+#, fuzzy, kde-format
+#| msgid "Moving windows:"
+msgctxt "@info:placeholder"
+msgid "No matching windows"
+msgstr "Przenoszenié òknów::"
+
 #: plugins/overview/overvieweffect.cpp:139
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
@@ -2642,52 +2688,6 @@ msgstr "Przełączë efektë inwertowaniô"
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "Przełączë efektë inwertowaniô"
-
-#: plugins/overview/qml/DesktopBar.qml:162
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
-msgid "Delete Virtual Desktop"
-msgstr "Na &pùlt"
-
-#: plugins/overview/qml/DesktopBar.qml:261
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
-msgid "Add Virtual Desktop"
-msgstr "Wëskrzëni pùlt"
-
-#: plugins/overview/qml/DesktopBar.qml:263
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
-msgid "Virtual Desktop limit reached"
-msgstr "Wëskrzëni pùlt"
-
-#: plugins/overview/qml/Main.qml:428
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
-msgctxt "@info:placeholder"
-msgid "No other Virtual Desktops to show"
-msgstr "Na &pùlt"
-
-#: plugins/overview/qml/Main.qml:434
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
-msgctxt "@action:button"
-msgid "Add Virtual Desktop"
-msgstr "Wëskrzëni pùlt"
-
-#: plugins/overview/qml/Main.qml:441
-#, fuzzy, kde-format
-#| msgid "Configur&e Window Behavior..."
-msgctxt "@action:button"
-msgid "Configure Virtual Desktops…"
-msgstr "&Kònfigùracëjô ùtrzëmaniô òkna..."
-
-#: plugins/overview/qml/Main.qml:792
-#, fuzzy, kde-format
-#| msgid "Moving windows:"
-msgctxt "@info:placeholder"
-msgid "No matching windows"
-msgstr "Przenoszenié òknów::"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
@@ -2774,27 +2774,27 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: plugins/showfps/qml/Fallback.qml:26
+#: plugins/showfps/Fallback.qml:26
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr ""
 
-#: plugins/showfps/qml/Main.qml:108
+#: plugins/showfps/Main.qml:108
 #, fuzzy, kde-format
 #| msgid "Fading duration:"
 msgctxt "@label"
 msgid "Paint Duration"
 msgstr "Dérowanié przenikaniô:"
 
-#: plugins/showfps/qml/Main.qml:121
+#: plugins/showfps/Main.qml:121
 #, fuzzy, kde-format
 #| msgid "Configur&e Window Behavior..."
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "&Kònfigùracëjô ùtrzëmaniô òkna..."
 
-#: plugins/showfps/qml/Main.qml:130
+#: plugins/showfps/Main.qml:130
 #, fuzzy, kde-format
 #| msgid "Maximum &width:"
 msgctxt "@label"
@@ -2906,40 +2906,40 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Włączë nagriwanié wideò"
 
-#: plugins/tileseditor/qml/Main.qml:153
+#: plugins/tileseditor/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr ""
 
-#: plugins/tileseditor/qml/Main.qml:163
+#: plugins/tileseditor/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr ""
 
-#: plugins/tileseditor/qml/Main.qml:270
+#: plugins/tileseditor/Main.qml:270
 #, fuzzy, kde-format
 #| msgid "&Close"
 msgid "Close"
 msgstr "&Zamkni"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:167
+#: plugins/tileseditor/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
 msgstr ""
 
-#: plugins/tileseditor/qml/TileDelegate.qml:174
+#: plugins/tileseditor/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
 msgstr ""
 
-#: plugins/tileseditor/qml/TileDelegate.qml:182
-#: plugins/tileseditor/qml/TileDelegate.qml:211
+#: plugins/tileseditor/TileDelegate.qml:182
+#: plugins/tileseditor/TileDelegate.qml:211
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgid "Add Floating Tile"
 msgstr "Zamkni òkno"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:191
+#: plugins/tileseditor/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
 msgstr ""
@@ -3132,18 +3132,18 @@ msgstr "Przełączë òkna biéżnegò pùltu"
 msgid "Ignore &minimized windows"
 msgstr "Minimazëjë òkno"
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "Òkna"
 
-#: plugins/windowview/qml/Main.qml:122
+#: plugins/windowview/Main.qml:122
 #, fuzzy, kde-format
 #| msgid "Raise Window"
 msgid "Filter windows…"

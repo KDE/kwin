@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-24 00:47+0000\n"
+"POT-Creation-Date: 2026-10-01 17:43+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -2783,6 +2783,26 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr ""
 
+#: plugins/overview/DesktopBar.qml:162
+#, fuzzy, kde-format
+#| msgid "Move To &Desktop"
+msgid "Delete Virtual Desktop"
+msgstr "Premesti na &površ"
+
+#: plugins/overview/DesktopBar.qml:261
+#, fuzzy, kde-format
+#| msgctxt "Create a new desktop and move there the window"
+#| msgid "&New Desktop"
+msgid "Add Virtual Desktop"
+msgstr "&Nova površ"
+
+#: plugins/overview/DesktopBar.qml:263
+#, fuzzy, kde-format
+#| msgctxt "Create a new desktop and move there the window"
+#| msgid "&New Desktop"
+msgid "Virtual Desktop limit reached"
+msgstr "&Nova površ"
+
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
@@ -2829,6 +2849,36 @@ msgstr ""
 msgid "Search results include filtered windows:"
 msgstr ""
 
+#: plugins/overview/Main.qml:428
+#, fuzzy, kde-format
+#| msgid "Move To &Desktop"
+msgctxt "@info:placeholder"
+msgid "No other Virtual Desktops to show"
+msgstr "Premesti na &površ"
+
+#: plugins/overview/Main.qml:434
+#, fuzzy, kde-format
+#| msgctxt "Create a new desktop and move there the window"
+#| msgid "&New Desktop"
+msgctxt "@action:button"
+msgid "Add Virtual Desktop"
+msgstr "&Nova površ"
+
+#: plugins/overview/Main.qml:441
+#, fuzzy, kde-format
+#| msgid "Move To &Desktop"
+msgctxt "@action:button"
+msgid "Configure Virtual Desktops…"
+msgstr "Premesti na &površ"
+
+# >> @item
+#: plugins/overview/Main.qml:792
+#, fuzzy, kde-format
+#| msgid "X11 Unmanaged Windows"
+msgctxt "@info:placeholder"
+msgid "No matching windows"
+msgstr "neupravljani X11 prozori"
+
 #: plugins/overview/overvieweffect.cpp:139
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
@@ -2848,56 +2898,6 @@ msgstr "Efekat izvrtanja"
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "Efekat izvrtanja"
-
-#: plugins/overview/qml/DesktopBar.qml:162
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
-msgid "Delete Virtual Desktop"
-msgstr "Premesti na &površ"
-
-#: plugins/overview/qml/DesktopBar.qml:261
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
-msgid "Add Virtual Desktop"
-msgstr "&Nova površ"
-
-#: plugins/overview/qml/DesktopBar.qml:263
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
-msgid "Virtual Desktop limit reached"
-msgstr "&Nova površ"
-
-#: plugins/overview/qml/Main.qml:428
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
-msgctxt "@info:placeholder"
-msgid "No other Virtual Desktops to show"
-msgstr "Premesti na &površ"
-
-#: plugins/overview/qml/Main.qml:434
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
-msgctxt "@action:button"
-msgid "Add Virtual Desktop"
-msgstr "&Nova površ"
-
-#: plugins/overview/qml/Main.qml:441
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
-msgctxt "@action:button"
-msgid "Configure Virtual Desktops…"
-msgstr "Premesti na &površ"
-
-# >> @item
-#: plugins/overview/qml/Main.qml:792
-#, fuzzy, kde-format
-#| msgid "X11 Unmanaged Windows"
-msgctxt "@info:placeholder"
-msgid "No matching windows"
-msgstr "neupravljani X11 prozori"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
@@ -2994,7 +2994,7 @@ msgstr ""
 "Izaberite prozor za prinudno zatvaranje levim klikom ili Enterom.\n"
 "Escape ili desni klik da odustanete."
 
-#: plugins/showfps/qml/Fallback.qml:26
+#: plugins/showfps/Fallback.qml:26
 #, fuzzy, kde-format
 #| msgid "This effect is not a benchmark"
 msgctxt "@label"
@@ -3002,7 +3002,7 @@ msgid "This effect is not a benchmark"
 msgstr "Ovaj efekat nije odmeravanje"
 
 # >> @item
-#: plugins/showfps/qml/Main.qml:108
+#: plugins/showfps/Main.qml:108
 #, fuzzy, kde-format
 #| msgctxt "A mouse pointer motion event"
 #| msgid "Pointer Motion"
@@ -3010,14 +3010,14 @@ msgctxt "@label"
 msgid "Paint Duration"
 msgstr "pokret pokazivača"
 
-#: plugins/showfps/qml/Main.qml:121
+#: plugins/showfps/Main.qml:121
 #, fuzzy, kde-format
 #| msgid "Configure Layouts..."
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "Podesi rasporede..."
 
-#: plugins/showfps/qml/Main.qml:130
+#: plugins/showfps/Main.qml:130
 #, fuzzy, kde-format
 #| msgid "Maximum &width:"
 msgctxt "@label"
@@ -3130,40 +3130,40 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr ""
 
-#: plugins/tileseditor/qml/Main.qml:153
+#: plugins/tileseditor/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr ""
 
-#: plugins/tileseditor/qml/Main.qml:163
+#: plugins/tileseditor/Main.qml:163
 #, fuzzy, kde-format
 #| msgid "Configure Layouts..."
 msgid "Load Layout…"
 msgstr "Podesi rasporede..."
 
-#: plugins/tileseditor/qml/Main.qml:270
+#: plugins/tileseditor/Main.qml:270
 #, fuzzy, kde-format
 #| msgid "&Close"
 msgid "Close"
 msgstr "&Zatvori"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:167
+#: plugins/tileseditor/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
 msgstr ""
 
-#: plugins/tileseditor/qml/TileDelegate.qml:174
+#: plugins/tileseditor/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
 msgstr ""
 
-#: plugins/tileseditor/qml/TileDelegate.qml:182
-#: plugins/tileseditor/qml/TileDelegate.qml:211
+#: plugins/tileseditor/TileDelegate.qml:182
+#: plugins/tileseditor/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
 msgstr ""
 
-#: plugins/tileseditor/qml/TileDelegate.qml:191
+#: plugins/tileseditor/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
 msgstr ""
@@ -3365,19 +3365,19 @@ msgstr "Prisutni prozori (tekuća površ)"
 msgid "Ignore &minimized windows"
 msgstr "Minimizuj prozor"
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "No Windows"
 msgstr "Pomjeri prozor"
 
 # >> @item
-#: plugins/windowview/qml/Main.qml:122
+#: plugins/windowview/Main.qml:122
 #, fuzzy, kde-format
 #| msgid "Internal Windows"
 msgid "Filter windows…"
