@@ -45,7 +45,7 @@ void XwlDataSource::accept(const QString &mimeType)
 {
     const bool accepted = !mimeType.isEmpty();
     if (m_accepted != accepted) {
-        m_accepted = !mimeType.isEmpty();
+        m_accepted = accepted;
         Q_EMIT acceptedChanged();
     }
 }
