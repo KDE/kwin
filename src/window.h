@@ -1416,7 +1416,7 @@ public:
     void triggerDecorationRepaint();
     void layoutDecorationRects(RectF &left, RectF &top, RectF &right, RectF &bottom) const;
     void processDecorationMove(const QPointF &localPos, const QPointF &globalPos);
-    void processDecorationButtonPress(const QPointF &localPos, const QPointF &globalPos, Qt::MouseButton button, bool ignoreMenu = false);
+    void processDecorationButtonPress(const QPointF &localPos, const QPointF &globalPos, Qt::MouseButton button);
     void processDecorationButtonRelease(Qt::MouseButton button);
 
     virtual void invalidateDecoration();
