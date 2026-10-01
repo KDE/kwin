@@ -94,16 +94,25 @@ bool XToWlDrag::moveFilter(Window *target, const QPointF &position)
     const bool hasCurrent = m_visit;
     m_visit = nullptr;
 
-    if (!target || !target->surface() || target->surface()->client() == waylandServer()->xWaylandConnection()) {
-        // currently there is no target or target is an Xwayland window
-        // handled here and by X directly
+    if (!target || !target->surface()) {
         if (hasCurrent) {
-            // last received enter event is now void,
-            // wait for the next one
             seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4());
         }
         return true;
+    } else if (target->surface()->client() == waylandServer()->xWaylandConnection()) {
+        if (hasCurrent) {
+            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4());
+        }
+
+        // If the focus is in the source window, we don't know for sure whether the drag is accepted.
+        // However, we also don't want to show the forbidden cursor in that case all the time. So, just
+        // set some dummy accepted mime type to make kwin display the closed hand cursor shape.
+        m_source->accept(QStringLiteral("none"));
+        m_source->dndAction(DnDAction::None);
+
+        return true;
     }
+
     // new Wl native target
     auto *ac = static_cast<Window *>(target);
     m_visit = new WlVisit(ac, this, m_dnd);
