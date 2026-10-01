@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-18 02:41+0000\n"
+"POT-Creation-Date: 2026-10-01 20:15+0000\n"
 "PO-Revision-Date: 2026-09-03 06:36-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -2517,6 +2517,21 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr "Tela embutida"
 
+#: plugins/overview/DesktopBar.qml:162
+#, kde-format
+msgid "Delete Virtual Desktop"
+msgstr "Excluir Área de Trabalho Virtual"
+
+#: plugins/overview/DesktopBar.qml:261
+#, kde-format
+msgid "Add Virtual Desktop"
+msgstr "Adicionar área de trabalho virtual"
+
+#: plugins/overview/DesktopBar.qml:263
+#, kde-format
+msgid "Virtual Desktop limit reached"
+msgstr "Limite de áreas de trabalho virtuais atingido"
+
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
@@ -2560,6 +2575,30 @@ msgstr "Organizar janelas na Visualização em Grade:"
 msgid "Search results include filtered windows:"
 msgstr "Resultados de pesquisa incluem janelas filtradas:"
 
+#: plugins/overview/Main.qml:428
+#, kde-format
+msgctxt "@info:placeholder"
+msgid "No other Virtual Desktops to show"
+msgstr "Nenhuma outra área de trabalho virtual para mostrar"
+
+#: plugins/overview/Main.qml:434
+#, kde-format
+msgctxt "@action:button"
+msgid "Add Virtual Desktop"
+msgstr "Adicionar área de trabalho virtual"
+
+#: plugins/overview/Main.qml:441
+#, kde-format
+msgctxt "@action:button"
+msgid "Configure Virtual Desktops…"
+msgstr "Configurar áreas de trabalho virtuais…"
+
+#: plugins/overview/Main.qml:792
+#, kde-format
+msgctxt "@info:placeholder"
+msgid "No matching windows"
+msgstr "Nenhuma janela correspondente"
+
 #: plugins/overview/overvieweffect.cpp:139
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
@@ -2577,45 +2616,6 @@ msgstr "Alternar para visão geral"
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "Alternar para Visualização em Grade"
-
-#: plugins/overview/qml/DesktopBar.qml:162
-#, kde-format
-msgid "Delete Virtual Desktop"
-msgstr "Excluir Área de Trabalho Virtual"
-
-#: plugins/overview/qml/DesktopBar.qml:261
-#, kde-format
-msgid "Add Virtual Desktop"
-msgstr "Adicionar área de trabalho virtual"
-
-#: plugins/overview/qml/DesktopBar.qml:263
-#, kde-format
-msgid "Virtual Desktop limit reached"
-msgstr "Limite de áreas de trabalho virtuais atingido"
-
-#: plugins/overview/qml/Main.qml:428
-#, kde-format
-msgctxt "@info:placeholder"
-msgid "No other Virtual Desktops to show"
-msgstr "Nenhuma outra área de trabalho virtual para mostrar"
-
-#: plugins/overview/qml/Main.qml:434
-#, kde-format
-msgctxt "@action:button"
-msgid "Add Virtual Desktop"
-msgstr "Adicionar área de trabalho virtual"
-
-#: plugins/overview/qml/Main.qml:441
-#, kde-format
-msgctxt "@action:button"
-msgid "Configure Virtual Desktops…"
-msgstr "Configurar áreas de trabalho virtuais…"
-
-#: plugins/overview/qml/Main.qml:792
-#, kde-format
-msgctxt "@info:placeholder"
-msgid "No matching windows"
-msgstr "Nenhuma janela correspondente"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
@@ -2659,7 +2659,7 @@ msgstr "Falha ao conectar ao contexto do PipeWire"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:142
+#: plugins/screencast/screencastmanager.cpp:151
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Tipo de composição não suportada"
@@ -2669,12 +2669,12 @@ msgstr "Tipo de composição não suportada"
 msgid "Could not find window id %1"
 msgstr "Não foi possível encontrar a janela de id %1"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:118
 #, kde-format
 msgid "Could not find output"
 msgstr "Não foi possível encontrar saída"
 
-#: plugins/screencast/screencastmanager.cpp:147
+#: plugins/screencast/screencastmanager.cpp:156
 #, kde-format
 msgid "Invalid region"
 msgstr "Região inválida"
@@ -2702,25 +2702,25 @@ msgstr ""
 "Crie uma captura e tela com o clique esquerdo ou enter.\n"
 "Esc ou clique direito para cancelar."
 
-#: plugins/showfps/qml/Fallback.qml:26
+#: plugins/showfps/Fallback.qml:26
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Este efeito não é um teste de desempenho"
 
-#: plugins/showfps/qml/Main.qml:108
+#: plugins/showfps/Main.qml:108
 #, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
 msgstr "Duração de Rasterização"
 
-#: plugins/showfps/qml/Main.qml:121
+#: plugins/showfps/Main.qml:121
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "FPS atual"
 
-#: plugins/showfps/qml/Main.qml:130
+#: plugins/showfps/Main.qml:130
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
@@ -2834,38 +2834,38 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Alternar Editor de Blocos"
 
-#: plugins/tileseditor/qml/Main.qml:153
+#: plugins/tileseditor/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr "Preenchimento:"
 
-#: plugins/tileseditor/qml/Main.qml:163
+#: plugins/tileseditor/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr "Carregar layout…"
 
-#: plugins/tileseditor/qml/Main.qml:270
+#: plugins/tileseditor/Main.qml:270
 #, kde-format
 msgid "Close"
 msgstr "Fechar"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:167
+#: plugins/tileseditor/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
 msgstr "Dividir em esquerda/direita"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:174
+#: plugins/tileseditor/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
 msgstr "Dividir em superior/inferior"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:182
-#: plugins/tileseditor/qml/TileDelegate.qml:211
+#: plugins/tileseditor/TileDelegate.qml:182
+#: plugins/tileseditor/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
 msgstr "Adicionar um bloco flutuante"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:191
+#: plugins/tileseditor/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
 msgstr "Excluir"
@@ -3051,17 +3051,17 @@ msgstr ""
 msgid "Ignore &minimized windows"
 msgstr "Ignorar janelas &minimizadas"
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Nenhuma ocorrência"
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "Sem janelas"
 
-#: plugins/windowview/qml/Main.qml:122
+#: plugins/windowview/Main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "Filtrar janelas…"

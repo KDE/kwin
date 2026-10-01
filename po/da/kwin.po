@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-18 02:41+0000\n"
+"POT-Creation-Date: 2026-10-01 20:15+0000\n"
 "PO-Revision-Date: 2026-03-20 21:54+0100\n"
 "Last-Translator: Rasmus Rosendahl-Kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -2548,6 +2548,22 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr ""
 
+#: plugins/overview/DesktopBar.qml:162
+#, kde-format
+msgid "Delete Virtual Desktop"
+msgstr "Slet virtuelt skrivebord"
+
+#: plugins/overview/DesktopBar.qml:261
+#, kde-format
+msgid "Add Virtual Desktop"
+msgstr "Tilføj virtuelt skrivebord"
+
+#: plugins/overview/DesktopBar.qml:263
+#, fuzzy, kde-format
+#| msgid "Add Virtual Desktop"
+msgid "Virtual Desktop limit reached"
+msgstr "Tilføj virtuelt skrivebord"
+
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
@@ -2591,6 +2607,30 @@ msgstr "Organisér vinduer i gittervisningen:"
 msgid "Search results include filtered windows:"
 msgstr "Søgeresultater inkluderer filtrerede vinduer:"
 
+#: plugins/overview/Main.qml:428
+#, kde-format
+msgctxt "@info:placeholder"
+msgid "No other Virtual Desktops to show"
+msgstr "Ingen andre virtuelle skriveborde at vise"
+
+#: plugins/overview/Main.qml:434
+#, kde-format
+msgctxt "@action:button"
+msgid "Add Virtual Desktop"
+msgstr "Tilføj virtuelt skrivebord"
+
+#: plugins/overview/Main.qml:441
+#, kde-format
+msgctxt "@action:button"
+msgid "Configure Virtual Desktops…"
+msgstr "Konfigurér virtuelle skriveborde…"
+
+#: plugins/overview/Main.qml:792
+#, kde-format
+msgctxt "@info:placeholder"
+msgid "No matching windows"
+msgstr "Ingen matchende vinduer"
+
 #: plugins/overview/overvieweffect.cpp:139
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
@@ -2608,46 +2648,6 @@ msgstr "Slå overblik til/fra"
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "Slå gittervisning til/fra"
-
-#: plugins/overview/qml/DesktopBar.qml:162
-#, kde-format
-msgid "Delete Virtual Desktop"
-msgstr "Slet virtuelt skrivebord"
-
-#: plugins/overview/qml/DesktopBar.qml:261
-#, kde-format
-msgid "Add Virtual Desktop"
-msgstr "Tilføj virtuelt skrivebord"
-
-#: plugins/overview/qml/DesktopBar.qml:263
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
-msgid "Virtual Desktop limit reached"
-msgstr "Tilføj virtuelt skrivebord"
-
-#: plugins/overview/qml/Main.qml:428
-#, kde-format
-msgctxt "@info:placeholder"
-msgid "No other Virtual Desktops to show"
-msgstr "Ingen andre virtuelle skriveborde at vise"
-
-#: plugins/overview/qml/Main.qml:434
-#, kde-format
-msgctxt "@action:button"
-msgid "Add Virtual Desktop"
-msgstr "Tilføj virtuelt skrivebord"
-
-#: plugins/overview/qml/Main.qml:441
-#, kde-format
-msgctxt "@action:button"
-msgid "Configure Virtual Desktops…"
-msgstr "Konfigurér virtuelle skriveborde…"
-
-#: plugins/overview/qml/Main.qml:792
-#, kde-format
-msgctxt "@info:placeholder"
-msgid "No matching windows"
-msgstr "Ingen matchende vinduer"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
@@ -2691,7 +2691,7 @@ msgstr "Kunne ikke tilslutte PipeWire-kontekst"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:142
+#: plugins/screencast/screencastmanager.cpp:151
 #, fuzzy, kde-format
 #| msgid "Suspend Compositing"
 msgid "Unsupported compositing type"
@@ -2702,12 +2702,12 @@ msgstr "Suspendér compositing"
 msgid "Could not find window id %1"
 msgstr "Kunne ikke finde vindue-id %1"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:118
 #, kde-format
 msgid "Could not find output"
 msgstr "Kunne ikke finde udgang"
 
-#: plugins/screencast/screencastmanager.cpp:147
+#: plugins/screencast/screencastmanager.cpp:156
 #, kde-format
 msgid "Invalid region"
 msgstr "Ugyldig region"
@@ -2735,25 +2735,25 @@ msgstr ""
 "Lav skærmbillede med venstreklik eller Retur.\n"
 "Esc eller højreklik for at annullere."
 
-#: plugins/showfps/qml/Fallback.qml:26
+#: plugins/showfps/Fallback.qml:26
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Denne effekt er ikke et benchmark"
 
-#: plugins/showfps/qml/Main.qml:108
+#: plugins/showfps/Main.qml:108
 #, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
 msgstr "Malingsvarighed"
 
-#: plugins/showfps/qml/Main.qml:121
+#: plugins/showfps/Main.qml:121
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "Nuværende FPS"
 
-#: plugins/showfps/qml/Main.qml:130
+#: plugins/showfps/Main.qml:130
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
@@ -2859,38 +2859,38 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Slå tile-editor til/fra"
 
-#: plugins/tileseditor/qml/Main.qml:153
+#: plugins/tileseditor/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr "Polstring:"
 
-#: plugins/tileseditor/qml/Main.qml:163
+#: plugins/tileseditor/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr "Indlæs layout…"
 
-#: plugins/tileseditor/qml/Main.qml:270
+#: plugins/tileseditor/Main.qml:270
 #, kde-format
 msgid "Close"
 msgstr "Luk"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:167
+#: plugins/tileseditor/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
 msgstr "Split venstre/højre"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:174
+#: plugins/tileseditor/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
 msgstr "Split top/bund"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:182
-#: plugins/tileseditor/qml/TileDelegate.qml:211
+#: plugins/tileseditor/TileDelegate.qml:182
+#: plugins/tileseditor/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
 msgstr "Tilføj svævende tile"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:191
+#: plugins/tileseditor/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
 msgstr "Slet"
@@ -3076,17 +3076,17 @@ msgstr "Slå prænsentér vinduer til/fra (vinduesklasser på aktuelle skrivebor
 msgid "Ignore &minimized windows"
 msgstr "Ignorér &minimerede vinduer"
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Ingen matches"
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "Ingen vinduer"
 
-#: plugins/windowview/qml/Main.qml:122
+#: plugins/windowview/Main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "Filtrér vinduer…"

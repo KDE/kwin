@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-18 02:41+0000\n"
+"POT-Creation-Date: 2026-10-01 20:15+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -2464,6 +2464,21 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr "内置屏幕"
 
+#: plugins/overview/DesktopBar.qml:162
+#, kde-format
+msgid "Delete Virtual Desktop"
+msgstr "删除虚拟桌面"
+
+#: plugins/overview/DesktopBar.qml:261
+#, kde-format
+msgid "Add Virtual Desktop"
+msgstr "添加虚拟桌面"
+
+#: plugins/overview/DesktopBar.qml:263
+#, kde-format
+msgid "Virtual Desktop limit reached"
+msgstr "已达到虚拟桌面数量上限"
+
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
@@ -2507,6 +2522,30 @@ msgstr "使用网格视图组织窗口："
 msgid "Search results include filtered windows:"
 msgstr "搜索结果包括过滤后的窗口："
 
+#: plugins/overview/Main.qml:428
+#, kde-format
+msgctxt "@info:placeholder"
+msgid "No other Virtual Desktops to show"
+msgstr "没有其他可显示的虚拟桌面"
+
+#: plugins/overview/Main.qml:434
+#, kde-format
+msgctxt "@action:button"
+msgid "Add Virtual Desktop"
+msgstr "添加虚拟桌面"
+
+#: plugins/overview/Main.qml:441
+#, kde-format
+msgctxt "@action:button"
+msgid "Configure Virtual Desktops…"
+msgstr "配置虚拟桌面…"
+
+#: plugins/overview/Main.qml:792
+#, kde-format
+msgctxt "@info:placeholder"
+msgid "No matching windows"
+msgstr "没有匹配的窗口"
+
 #: plugins/overview/overvieweffect.cpp:139
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
@@ -2524,45 +2563,6 @@ msgstr "显示/隐藏桌面总览"
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "切换网格视图"
-
-#: plugins/overview/qml/DesktopBar.qml:162
-#, kde-format
-msgid "Delete Virtual Desktop"
-msgstr "删除虚拟桌面"
-
-#: plugins/overview/qml/DesktopBar.qml:261
-#, kde-format
-msgid "Add Virtual Desktop"
-msgstr "添加虚拟桌面"
-
-#: plugins/overview/qml/DesktopBar.qml:263
-#, kde-format
-msgid "Virtual Desktop limit reached"
-msgstr "已达到虚拟桌面数量上限"
-
-#: plugins/overview/qml/Main.qml:428
-#, kde-format
-msgctxt "@info:placeholder"
-msgid "No other Virtual Desktops to show"
-msgstr "没有其他可显示的虚拟桌面"
-
-#: plugins/overview/qml/Main.qml:434
-#, kde-format
-msgctxt "@action:button"
-msgid "Add Virtual Desktop"
-msgstr "添加虚拟桌面"
-
-#: plugins/overview/qml/Main.qml:441
-#, kde-format
-msgctxt "@action:button"
-msgid "Configure Virtual Desktops…"
-msgstr "配置虚拟桌面…"
-
-#: plugins/overview/qml/Main.qml:792
-#, kde-format
-msgctxt "@info:placeholder"
-msgid "No matching windows"
-msgstr "没有匹配的窗口"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
@@ -2606,7 +2606,7 @@ msgstr "连接 PipeWire 环境失败"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:142
+#: plugins/screencast/screencastmanager.cpp:151
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "不支持的合成类型"
@@ -2616,12 +2616,12 @@ msgstr "不支持的合成类型"
 msgid "Could not find window id %1"
 msgstr "无法找到窗口 ID %1"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:118
 #, kde-format
 msgid "Could not find output"
 msgstr "无法找到输出"
 
-#: plugins/screencast/screencastmanager.cpp:147
+#: plugins/screencast/screencastmanager.cpp:156
 #, kde-format
 msgid "Invalid region"
 msgstr "无效区域"
@@ -2649,25 +2649,25 @@ msgstr ""
 "点击左键或按回车键截图。\n"
 "点击右键或按 Esc 键取消。"
 
-#: plugins/showfps/qml/Fallback.qml:26
+#: plugins/showfps/Fallback.qml:26
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "此桌面特效并非基准测试"
 
-#: plugins/showfps/qml/Main.qml:108
+#: plugins/showfps/Main.qml:108
 #, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
 msgstr "绘制时长"
 
-#: plugins/showfps/qml/Main.qml:121
+#: plugins/showfps/Main.qml:121
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "当前帧速率"
 
-#: plugins/showfps/qml/Main.qml:130
+#: plugins/showfps/Main.qml:130
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
@@ -2771,38 +2771,38 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "磁贴编辑器开关"
 
-#: plugins/tileseditor/qml/Main.qml:153
+#: plugins/tileseditor/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr "边距："
 
-#: plugins/tileseditor/qml/Main.qml:163
+#: plugins/tileseditor/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr "加载布局…"
 
-#: plugins/tileseditor/qml/Main.qml:270
+#: plugins/tileseditor/Main.qml:270
 #, kde-format
 msgid "Close"
 msgstr "关闭"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:167
+#: plugins/tileseditor/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
 msgstr "水平拆分"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:174
+#: plugins/tileseditor/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
 msgstr "垂直拆分"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:182
-#: plugins/tileseditor/qml/TileDelegate.qml:211
+#: plugins/tileseditor/TileDelegate.qml:182
+#: plugins/tileseditor/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
 msgstr "添加浮动磁贴"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:191
+#: plugins/tileseditor/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
 msgstr "删除"
@@ -2987,17 +2987,17 @@ msgstr "显示/隐藏窗口平铺 (当前桌面的窗口类)"
 msgid "Ignore &minimized windows"
 msgstr "忽略最小化窗口(&M)"
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "没有匹配的内容"
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "无窗口"
 
-#: plugins/windowview/qml/Main.qml:122
+#: plugins/windowview/Main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "筛选窗口…"

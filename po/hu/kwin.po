@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-18 02:41+0000\n"
+"POT-Creation-Date: 2026-10-01 20:15+0000\n"
 "PO-Revision-Date: 2026-06-25 22:17+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -2508,6 +2508,21 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr "Beépített képernyő"
 
+#: plugins/overview/DesktopBar.qml:162
+#, kde-format
+msgid "Delete Virtual Desktop"
+msgstr "Virtuális asztal törlése"
+
+#: plugins/overview/DesktopBar.qml:261
+#, kde-format
+msgid "Add Virtual Desktop"
+msgstr "Virtuális asztal hozzáadása"
+
+#: plugins/overview/DesktopBar.qml:263
+#, kde-format
+msgid "Virtual Desktop limit reached"
+msgstr "Virtuális asztalok korlátja elérve"
+
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
@@ -2551,6 +2566,30 @@ msgstr "Ablakok rendezése a Rácsnézetben:"
 msgid "Search results include filtered windows:"
 msgstr "Keresési eredmények tartalmazzák a szűrt ablakokat is:"
 
+#: plugins/overview/Main.qml:428
+#, kde-format
+msgctxt "@info:placeholder"
+msgid "No other Virtual Desktops to show"
+msgstr "Nincs másik megjelenítendő virtuális asztal"
+
+#: plugins/overview/Main.qml:434
+#, kde-format
+msgctxt "@action:button"
+msgid "Add Virtual Desktop"
+msgstr "Virtuális asztal hozzáadása"
+
+#: plugins/overview/Main.qml:441
+#, kde-format
+msgctxt "@action:button"
+msgid "Configure Virtual Desktops…"
+msgstr "Virtuális asztalok beállítása…"
+
+#: plugins/overview/Main.qml:792
+#, kde-format
+msgctxt "@info:placeholder"
+msgid "No matching windows"
+msgstr "Nincs illeszkedő ablak"
+
 #: plugins/overview/overvieweffect.cpp:139
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
@@ -2568,45 +2607,6 @@ msgstr "Áttekintés ki-be"
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "Rácsnézet ki-be"
-
-#: plugins/overview/qml/DesktopBar.qml:162
-#, kde-format
-msgid "Delete Virtual Desktop"
-msgstr "Virtuális asztal törlése"
-
-#: plugins/overview/qml/DesktopBar.qml:261
-#, kde-format
-msgid "Add Virtual Desktop"
-msgstr "Virtuális asztal hozzáadása"
-
-#: plugins/overview/qml/DesktopBar.qml:263
-#, kde-format
-msgid "Virtual Desktop limit reached"
-msgstr "Virtuális asztalok korlátja elérve"
-
-#: plugins/overview/qml/Main.qml:428
-#, kde-format
-msgctxt "@info:placeholder"
-msgid "No other Virtual Desktops to show"
-msgstr "Nincs másik megjelenítendő virtuális asztal"
-
-#: plugins/overview/qml/Main.qml:434
-#, kde-format
-msgctxt "@action:button"
-msgid "Add Virtual Desktop"
-msgstr "Virtuális asztal hozzáadása"
-
-#: plugins/overview/qml/Main.qml:441
-#, kde-format
-msgctxt "@action:button"
-msgid "Configure Virtual Desktops…"
-msgstr "Virtuális asztalok beállítása…"
-
-#: plugins/overview/qml/Main.qml:792
-#, kde-format
-msgctxt "@info:placeholder"
-msgid "No matching windows"
-msgstr "Nincs illeszkedő ablak"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
@@ -2650,7 +2650,7 @@ msgstr "Nem sikerült kapcsolódni a PipeWire környezethez"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:142
+#: plugins/screencast/screencastmanager.cpp:151
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Nem támogatott kompozíciótípus"
@@ -2660,12 +2660,12 @@ msgstr "Nem támogatott kompozíciótípus"
 msgid "Could not find window id %1"
 msgstr "A(z) %1 ablakazonosító nem található"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:118
 #, kde-format
 msgid "Could not find output"
 msgstr "A kimenet nem található"
 
-#: plugins/screencast/screencastmanager.cpp:147
+#: plugins/screencast/screencastmanager.cpp:156
 #, kde-format
 msgid "Invalid region"
 msgstr "Érvénytelen terület"
@@ -2693,25 +2693,25 @@ msgstr ""
 "Készítsen képernyőképet bal egérgombbal vagy Enterrel.\n"
 "Megszakításhoz nyomja meg az Escape-et vagy a jobb egérgombot."
 
-#: plugins/showfps/qml/Fallback.qml:26
+#: plugins/showfps/Fallback.qml:26
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Ez az effektus nem teljesítményteszt"
 
-#: plugins/showfps/qml/Main.qml:108
+#: plugins/showfps/Main.qml:108
 #, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
 msgstr "Rajzolás időtartama"
 
-#: plugins/showfps/qml/Main.qml:121
+#: plugins/showfps/Main.qml:121
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "Jelenlegi FPS"
 
-#: plugins/showfps/qml/Main.qml:130
+#: plugins/showfps/Main.qml:130
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
@@ -2815,38 +2815,38 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Mozaikszerkesztő ki-be"
 
-#: plugins/tileseditor/qml/Main.qml:153
+#: plugins/tileseditor/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr "Kitöltés:"
 
-#: plugins/tileseditor/qml/Main.qml:163
+#: plugins/tileseditor/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr "Elrendezés betöltése…"
 
-#: plugins/tileseditor/qml/Main.qml:270
+#: plugins/tileseditor/Main.qml:270
 #, kde-format
 msgid "Close"
 msgstr "Bezárás"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:167
+#: plugins/tileseditor/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
 msgstr "Bal-jobb felosztás"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:174
+#: plugins/tileseditor/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
 msgstr "Fent-lent felosztás"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:182
-#: plugins/tileseditor/qml/TileDelegate.qml:211
+#: plugins/tileseditor/TileDelegate.qml:182
+#: plugins/tileseditor/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
 msgstr "Lebegő mozaik hozzáadása"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:191
+#: plugins/tileseditor/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
 msgstr "Törlés"
@@ -3031,17 +3031,17 @@ msgstr "A jelenlegi ablakok átváltása (ablakosztály ezen az asztalon)"
 msgid "Ignore &minimized windows"
 msgstr "&Minimalizált ablakok mellőzése"
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Nincs találat"
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "Nincsenek ablakok"
 
-#: plugins/windowview/qml/Main.qml:122
+#: plugins/windowview/Main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "Ablakok szűrése…"

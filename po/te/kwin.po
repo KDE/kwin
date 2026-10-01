@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-18 02:41+0000\n"
+"POT-Creation-Date: 2026-10-01 20:15+0000\n"
 "PO-Revision-Date: 2009-01-16 22:16+0530\n"
 "Last-Translator: Krishna Babu K <kkrothap@redhat.com>\n"
 "Language-Team: Telugu <en@li.org>\n"
@@ -2475,6 +2475,24 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr ""
 
+#: plugins/overview/DesktopBar.qml:162
+#, fuzzy, kde-format
+#| msgid "To &Desktop"
+msgid "Delete Virtual Desktop"
+msgstr "(&D) రంగస్థలానికి"
+
+#: plugins/overview/DesktopBar.qml:261
+#, fuzzy, kde-format
+#| msgid "To &Desktop"
+msgid "Add Virtual Desktop"
+msgstr "(&D) రంగస్థలానికి"
+
+#: plugins/overview/DesktopBar.qml:263
+#, fuzzy, kde-format
+#| msgid "To &Desktop"
+msgid "Virtual Desktop limit reached"
+msgstr "(&D) రంగస్థలానికి"
+
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
@@ -2520,6 +2538,34 @@ msgstr ""
 msgid "Search results include filtered windows:"
 msgstr ""
 
+#: plugins/overview/Main.qml:428
+#, fuzzy, kde-format
+#| msgid "To &Desktop"
+msgctxt "@info:placeholder"
+msgid "No other Virtual Desktops to show"
+msgstr "(&D) రంగస్థలానికి"
+
+#: plugins/overview/Main.qml:434
+#, fuzzy, kde-format
+#| msgid "To &Desktop"
+msgctxt "@action:button"
+msgid "Add Virtual Desktop"
+msgstr "(&D) రంగస్థలానికి"
+
+#: plugins/overview/Main.qml:441
+#, fuzzy, kde-format
+#| msgid "To &Desktop"
+msgctxt "@action:button"
+msgid "Configure Virtual Desktops…"
+msgstr "(&D) రంగస్థలానికి"
+
+#: plugins/overview/Main.qml:792
+#, fuzzy, kde-format
+#| msgid "&Move"
+msgctxt "@info:placeholder"
+msgid "No matching windows"
+msgstr "(&M)జరుపు"
+
 #: plugins/overview/overvieweffect.cpp:139
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
@@ -2539,52 +2585,6 @@ msgstr "విలోమ ప్రభావమును మార్చుము"
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "విలోమ ప్రభావమును మార్చుము"
-
-#: plugins/overview/qml/DesktopBar.qml:162
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
-msgid "Delete Virtual Desktop"
-msgstr "(&D) రంగస్థలానికి"
-
-#: plugins/overview/qml/DesktopBar.qml:261
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
-msgid "Add Virtual Desktop"
-msgstr "(&D) రంగస్థలానికి"
-
-#: plugins/overview/qml/DesktopBar.qml:263
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
-msgid "Virtual Desktop limit reached"
-msgstr "(&D) రంగస్థలానికి"
-
-#: plugins/overview/qml/Main.qml:428
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
-msgctxt "@info:placeholder"
-msgid "No other Virtual Desktops to show"
-msgstr "(&D) రంగస్థలానికి"
-
-#: plugins/overview/qml/Main.qml:434
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
-msgctxt "@action:button"
-msgid "Add Virtual Desktop"
-msgstr "(&D) రంగస్థలానికి"
-
-#: plugins/overview/qml/Main.qml:441
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
-msgctxt "@action:button"
-msgid "Configure Virtual Desktops…"
-msgstr "(&D) రంగస్థలానికి"
-
-#: plugins/overview/qml/Main.qml:792
-#, fuzzy, kde-format
-#| msgid "&Move"
-msgctxt "@info:placeholder"
-msgid "No matching windows"
-msgstr "(&M)జరుపు"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
@@ -2631,7 +2631,7 @@ msgstr ""
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:142
+#: plugins/screencast/screencastmanager.cpp:151
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr ""
@@ -2641,12 +2641,12 @@ msgstr ""
 msgid "Could not find window id %1"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:118
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:147
+#: plugins/screencast/screencastmanager.cpp:156
 #, kde-format
 msgid "Invalid region"
 msgstr ""
@@ -2670,25 +2670,25 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: plugins/showfps/qml/Fallback.qml:26
+#: plugins/showfps/Fallback.qml:26
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr ""
 
-#: plugins/showfps/qml/Main.qml:108
+#: plugins/showfps/Main.qml:108
 #, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
 msgstr ""
 
-#: plugins/showfps/qml/Main.qml:121
+#: plugins/showfps/Main.qml:121
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
 msgstr ""
 
-#: plugins/showfps/qml/Main.qml:130
+#: plugins/showfps/Main.qml:130
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
@@ -2792,40 +2792,40 @@ msgstr ""
 msgid "Toggle Tiles Editor"
 msgstr ""
 
-#: plugins/tileseditor/qml/Main.qml:153
+#: plugins/tileseditor/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr ""
 
-#: plugins/tileseditor/qml/Main.qml:163
+#: plugins/tileseditor/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr ""
 
-#: plugins/tileseditor/qml/Main.qml:270
+#: plugins/tileseditor/Main.qml:270
 #, fuzzy, kde-format
 #| msgid "&Close"
 msgid "Close"
 msgstr "(&C) మూసివేయి"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:167
+#: plugins/tileseditor/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
 msgstr ""
 
-#: plugins/tileseditor/qml/TileDelegate.qml:174
+#: plugins/tileseditor/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
 msgstr ""
 
-#: plugins/tileseditor/qml/TileDelegate.qml:182
-#: plugins/tileseditor/qml/TileDelegate.qml:211
+#: plugins/tileseditor/TileDelegate.qml:182
+#: plugins/tileseditor/TileDelegate.qml:211
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "Add Floating Tile"
 msgstr "విండోలు"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:191
+#: plugins/tileseditor/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
 msgstr ""
@@ -3014,18 +3014,18 @@ msgstr ""
 msgid "Ignore &minimized windows"
 msgstr ""
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "విండోలు"
 
-#: plugins/windowview/qml/Main.qml:122
+#: plugins/windowview/Main.qml:122
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "Filter windows…"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-18 02:41+0000\n"
+"POT-Creation-Date: 2026-10-01 20:15+0000\n"
 "PO-Revision-Date: 2026-09-03 06:22+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -2491,6 +2491,21 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr "ჩაშენებული ეკრანი"
 
+#: plugins/overview/DesktopBar.qml:162
+#, kde-format
+msgid "Delete Virtual Desktop"
+msgstr "ვირტუალური სამუშაო მაგიდის წაშლა"
+
+#: plugins/overview/DesktopBar.qml:261
+#, kde-format
+msgid "Add Virtual Desktop"
+msgstr "ვირტუალური სამუშაო მაგიდის დამატება"
+
+#: plugins/overview/DesktopBar.qml:263
+#, kde-format
+msgid "Virtual Desktop limit reached"
+msgstr "მიღწეულია ვირტუალური სამუშაო მაგიდის ლიმიტი"
+
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
@@ -2534,6 +2549,30 @@ msgstr "ფანჯრების დალაგება ბადის ხ
 msgid "Search results include filtered windows:"
 msgstr "ძებნის შედეგები გაფილტრულ ფანჯრებს შეიცავს:"
 
+#: plugins/overview/Main.qml:428
+#, kde-format
+msgctxt "@info:placeholder"
+msgid "No other Virtual Desktops to show"
+msgstr "სხვა ვირტუალური სამუშაო მაგიდების გარეშე"
+
+#: plugins/overview/Main.qml:434
+#, kde-format
+msgctxt "@action:button"
+msgid "Add Virtual Desktop"
+msgstr "ვირტუალური სამუშაო მაგიდის დამატება"
+
+#: plugins/overview/Main.qml:441
+#, kde-format
+msgctxt "@action:button"
+msgid "Configure Virtual Desktops…"
+msgstr "ვირტუალური სამუშაო მაგიდის მორგება…"
+
+#: plugins/overview/Main.qml:792
+#, kde-format
+msgctxt "@info:placeholder"
+msgid "No matching windows"
+msgstr "შესაბამისი ფანჯრების გარეშე"
+
 #: plugins/overview/overvieweffect.cpp:139
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
@@ -2551,45 +2590,6 @@ msgstr "გადახედვის გადართვა"
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "ბადის ხედის გადართვა"
-
-#: plugins/overview/qml/DesktopBar.qml:162
-#, kde-format
-msgid "Delete Virtual Desktop"
-msgstr "ვირტუალური სამუშაო მაგიდის წაშლა"
-
-#: plugins/overview/qml/DesktopBar.qml:261
-#, kde-format
-msgid "Add Virtual Desktop"
-msgstr "ვირტუალური სამუშაო მაგიდის დამატება"
-
-#: plugins/overview/qml/DesktopBar.qml:263
-#, kde-format
-msgid "Virtual Desktop limit reached"
-msgstr "მიღწეულია ვირტუალური სამუშაო მაგიდის ლიმიტი"
-
-#: plugins/overview/qml/Main.qml:428
-#, kde-format
-msgctxt "@info:placeholder"
-msgid "No other Virtual Desktops to show"
-msgstr "სხვა ვირტუალური სამუშაო მაგიდების გარეშე"
-
-#: plugins/overview/qml/Main.qml:434
-#, kde-format
-msgctxt "@action:button"
-msgid "Add Virtual Desktop"
-msgstr "ვირტუალური სამუშაო მაგიდის დამატება"
-
-#: plugins/overview/qml/Main.qml:441
-#, kde-format
-msgctxt "@action:button"
-msgid "Configure Virtual Desktops…"
-msgstr "ვირტუალური სამუშაო მაგიდის მორგება…"
-
-#: plugins/overview/qml/Main.qml:792
-#, kde-format
-msgctxt "@info:placeholder"
-msgid "No matching windows"
-msgstr "შესაბამისი ფანჯრების გარეშე"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
@@ -2633,7 +2633,7 @@ msgstr "PipeWire-ის კონტექსტთან მიერთებ�
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:142
+#: plugins/screencast/screencastmanager.cpp:151
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "მხარდაუჭერელი კომპოზიტირების ტიპი"
@@ -2643,12 +2643,12 @@ msgstr "მხარდაუჭერელი კომპოზიტირ�
 msgid "Could not find window id %1"
 msgstr "ფანჯარა ID-ით %1 ვერ ვიპოვე"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:118
 #, kde-format
 msgid "Could not find output"
 msgstr "შეყვანა ვერ ვიპოვე"
 
-#: plugins/screencast/screencastmanager.cpp:147
+#: plugins/screencast/screencastmanager.cpp:156
 #, kde-format
 msgid "Invalid region"
 msgstr "არასწორი რეგიონი"
@@ -2676,25 +2676,25 @@ msgstr ""
 "ეკრანის ანაბეჭდის მარცხენა წკაპით ან Enter-ით გადაღება.\n"
 "გასაუქმებლად Esc ან მარჯვენა წკაპი."
 
-#: plugins/showfps/qml/Fallback.qml:26
+#: plugins/showfps/Fallback.qml:26
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "ეს ეფექტი ტესტი არაა"
 
-#: plugins/showfps/qml/Main.qml:108
+#: plugins/showfps/Main.qml:108
 #, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
 msgstr "ხატვის ხანგრძლივობა"
 
-#: plugins/showfps/qml/Main.qml:121
+#: plugins/showfps/Main.qml:121
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "მიმდინარე კადრი/წმ"
 
-#: plugins/showfps/qml/Main.qml:130
+#: plugins/showfps/Main.qml:130
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
@@ -2808,38 +2808,38 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "ფილების რედაქტორის გადართვა"
 
-#: plugins/tileseditor/qml/Main.qml:153
+#: plugins/tileseditor/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr "შევსება:"
 
-#: plugins/tileseditor/qml/Main.qml:163
+#: plugins/tileseditor/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr "განლაგების ჩატვირთვა…"
 
-#: plugins/tileseditor/qml/Main.qml:270
+#: plugins/tileseditor/Main.qml:270
 #, kde-format
 msgid "Close"
 msgstr "დახურვა"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:167
+#: plugins/tileseditor/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
 msgstr "ხედის მარჯვენა/მარცხენაზე გაყოფა"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:174
+#: plugins/tileseditor/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
 msgstr "ხედის ზედა/ქვედაზე გაყოფა"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:182
-#: plugins/tileseditor/qml/TileDelegate.qml:211
+#: plugins/tileseditor/TileDelegate.qml:182
+#: plugins/tileseditor/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
 msgstr "მოლივლივე ფილის დამატება"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:191
+#: plugins/tileseditor/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
 msgstr "წაშლა"
@@ -3024,17 +3024,17 @@ msgstr "არსებული ფანჯრების გადართ�
 msgid "Ignore &minimized windows"
 msgstr "&ჩაკეცილი ფანჯრების იგნორი"
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "დამთხვევის გარეშე"
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "ფანჯრების გარეშე"
 
-#: plugins/windowview/qml/Main.qml:122
+#: plugins/windowview/Main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "ფანჯრების ფილტრი…"

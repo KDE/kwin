@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-18 02:41+0000\n"
+"POT-Creation-Date: 2026-10-01 20:15+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -2547,6 +2547,22 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr ""
 
+#: plugins/overview/DesktopBar.qml:162
+#, kde-format
+msgid "Delete Virtual Desktop"
+msgstr "वर्चुअल् डेस्कटॉपं विलोपयन्तु"
+
+#: plugins/overview/DesktopBar.qml:261
+#, kde-format
+msgid "Add Virtual Desktop"
+msgstr "वर्चुअल् डेस्कटॉप् योजयन्तु"
+
+#: plugins/overview/DesktopBar.qml:263
+#, fuzzy, kde-format
+#| msgid "Add Virtual Desktop"
+msgid "Virtual Desktop limit reached"
+msgstr "वर्चुअल् डेस्कटॉप् योजयन्तु"
+
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
@@ -2590,6 +2606,30 @@ msgstr "Grid View इत्यस्मिन् विण्डोस् व्
 msgid "Search results include filtered windows:"
 msgstr "अन्वेषणपरिणामेषु फ़िल्टर कृताः विण्डोः सन्ति:"
 
+#: plugins/overview/Main.qml:428
+#, kde-format
+msgctxt "@info:placeholder"
+msgid "No other Virtual Desktops to show"
+msgstr "अन्ये Virtual Desktops दर्शयितुं न सन्ति"
+
+#: plugins/overview/Main.qml:434
+#, kde-format
+msgctxt "@action:button"
+msgid "Add Virtual Desktop"
+msgstr "वर्चुअल् डेस्कटॉप् योजयन्तु"
+
+#: plugins/overview/Main.qml:441
+#, kde-format
+msgctxt "@action:button"
+msgid "Configure Virtual Desktops…"
+msgstr "वर्चुअल् डेस्कटॉप्स् विन्यस्तं कुर्वन्तु..."
+
+#: plugins/overview/Main.qml:792
+#, kde-format
+msgctxt "@info:placeholder"
+msgid "No matching windows"
+msgstr "न मेलयुक्ताः खिडकयः"
+
 #: plugins/overview/overvieweffect.cpp:139
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
@@ -2607,46 +2647,6 @@ msgstr "Toggle अवलोकनम्"
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "ग्रिड् दृश्यं टॉगल कुर्वन्तु"
-
-#: plugins/overview/qml/DesktopBar.qml:162
-#, kde-format
-msgid "Delete Virtual Desktop"
-msgstr "वर्चुअल् डेस्कटॉपं विलोपयन्तु"
-
-#: plugins/overview/qml/DesktopBar.qml:261
-#, kde-format
-msgid "Add Virtual Desktop"
-msgstr "वर्चुअल् डेस्कटॉप् योजयन्तु"
-
-#: plugins/overview/qml/DesktopBar.qml:263
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
-msgid "Virtual Desktop limit reached"
-msgstr "वर्चुअल् डेस्कटॉप् योजयन्तु"
-
-#: plugins/overview/qml/Main.qml:428
-#, kde-format
-msgctxt "@info:placeholder"
-msgid "No other Virtual Desktops to show"
-msgstr "अन्ये Virtual Desktops दर्शयितुं न सन्ति"
-
-#: plugins/overview/qml/Main.qml:434
-#, kde-format
-msgctxt "@action:button"
-msgid "Add Virtual Desktop"
-msgstr "वर्चुअल् डेस्कटॉप् योजयन्तु"
-
-#: plugins/overview/qml/Main.qml:441
-#, kde-format
-msgctxt "@action:button"
-msgid "Configure Virtual Desktops…"
-msgstr "वर्चुअल् डेस्कटॉप्स् विन्यस्तं कुर्वन्तु..."
-
-#: plugins/overview/qml/Main.qml:792
-#, kde-format
-msgctxt "@info:placeholder"
-msgid "No matching windows"
-msgstr "न मेलयुक्ताः खिडकयः"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
@@ -2690,7 +2690,7 @@ msgstr "PipeWire सन्दर्भं संयोजयितुं अस�
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:142
+#: plugins/screencast/screencastmanager.cpp:151
 #, fuzzy, kde-format
 #| msgid "Suspend Compositing"
 msgid "Unsupported compositing type"
@@ -2701,12 +2701,12 @@ msgstr "कम्पोजिटिंग निलम्बित करें"
 msgid "Could not find window id %1"
 msgstr "%1 विण्डो id न ज्ञातम्"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:118
 #, kde-format
 msgid "Could not find output"
 msgstr "उत्पादनं न प्राप्नोत्"
 
-#: plugins/screencast/screencastmanager.cpp:147
+#: plugins/screencast/screencastmanager.cpp:156
 #, kde-format
 msgid "Invalid region"
 msgstr "अमान्यः प्रदेशः"
@@ -2734,25 +2734,25 @@ msgstr ""
 "लेफ्ट क्लिक् अथवा एन्टेर् इत्यनेन स्क्रीन शॉट् रचयन्तु।\n"
 "पलायनं कुर्वन्तु अथवा रद्दं कर्तुं राइट् क्लिक् कुर्वन्तु।"
 
-#: plugins/showfps/qml/Fallback.qml:26
+#: plugins/showfps/Fallback.qml:26
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "एषः प्रभावः मापदण्डः नास्ति"
 
-#: plugins/showfps/qml/Main.qml:108
+#: plugins/showfps/Main.qml:108
 #, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
 msgstr "रङ्ग अवधि"
 
-#: plugins/showfps/qml/Main.qml:121
+#: plugins/showfps/Main.qml:121
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "वर्तमान FPS"
 
-#: plugins/showfps/qml/Main.qml:130
+#: plugins/showfps/Main.qml:130
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
@@ -2861,38 +2861,38 @@ msgstr " % ."
 msgid "Toggle Tiles Editor"
 msgstr "टाइल्स एडिटर टॉगल"
 
-#: plugins/tileseditor/qml/Main.qml:153
+#: plugins/tileseditor/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr "गद्दी : गद्दी :"
 
-#: plugins/tileseditor/qml/Main.qml:163
+#: plugins/tileseditor/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr "लोड लेआउट..."
 
-#: plugins/tileseditor/qml/Main.qml:270
+#: plugins/tileseditor/Main.qml:270
 #, kde-format
 msgid "Close"
 msgstr "पिधानं करोतु"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:167
+#: plugins/tileseditor/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
 msgstr "वाम/दक्षिण विभक्त"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:174
+#: plugins/tileseditor/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
 msgstr "विभक्तं उपरि/तलम्"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:182
-#: plugins/tileseditor/qml/TileDelegate.qml:211
+#: plugins/tileseditor/TileDelegate.qml:182
+#: plugins/tileseditor/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
 msgstr "Floating Tile योजयन्तु"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:191
+#: plugins/tileseditor/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
 msgstr "लुप्"
@@ -3078,17 +3078,17 @@ msgstr "Toggle Present Windows (वर्तमान डेस्कटॉप�
 msgid "Ignore &minimized windows"
 msgstr "&minimized windows इत्यस्य अवहेलना कुर्वन्तु"
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "न मेलः"
 
-#: plugins/windowview/qml/Main.qml:107
+#: plugins/windowview/Main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "न विण्डोज"
 
-#: plugins/windowview/qml/Main.qml:122
+#: plugins/windowview/Main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "विण्डोज फ़िल्टर..."
