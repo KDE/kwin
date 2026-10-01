@@ -43,8 +43,11 @@ void XwlDataSource::setMimeTypes(const QStringList &mimeTypes)
 
 void XwlDataSource::accept(const QString &mimeType)
 {
-    m_accepted = !mimeType.isEmpty();
-    Q_EMIT acceptedChanged();
+    const bool accepted = !mimeType.isEmpty();
+    if (m_accepted != accepted) {
+        m_accepted = !mimeType.isEmpty();
+        Q_EMIT acceptedChanged();
+    }
 }
 
 DnDActions XwlDataSource::supportedDragAndDropActions() const
@@ -54,8 +57,10 @@ DnDActions XwlDataSource::supportedDragAndDropActions() const
 
 void XwlDataSource::setSupportedDndActions(DnDActions dndActions)
 {
-    m_supportedDndActions = dndActions;
-    Q_EMIT supportedDragAndDropActionsChanged();
+    if (m_supportedDndActions != dndActions) {
+        m_supportedDndActions = dndActions;
+        Q_EMIT supportedDragAndDropActionsChanged();
+    }
 }
 
 DnDAction XwlDataSource::selectedDndAction() const
@@ -65,8 +70,10 @@ DnDAction XwlDataSource::selectedDndAction() const
 
 void XwlDataSource::dndAction(DnDAction action)
 {
-    m_dndAction = action;
-    Q_EMIT dndActionChanged();
+    if (m_dndAction != action) {
+        m_dndAction = action;
+        Q_EMIT dndActionChanged();
+    }
 }
 
 bool XwlDataSource::isAccepted() const
