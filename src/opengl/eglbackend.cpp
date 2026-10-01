@@ -103,13 +103,13 @@ static const auto s_dmabufV6Env = environmentVariableBoolValue("KWIN_ALLOW_DMABU
 
 void EglBackend::updateDmabufTranches()
 {
-    auto filterFormats = [this](RenderDevice *device, std::optional<uint32_t> bpc) {
+    auto filterFormats = [this](RenderDevice *device, VulkanDevice *vkDevice, std::optional<uint32_t> bpc) {
         FormatModifierMap set;
         auto allFormats = device->eglDisplay()->allSupportedDrmFormats();
         auto nonExternalOnly = device->eglDisplay()->nonExternalOnlySupportedDrmFormats();
-        if (device->vulkanDevice() && !device->vulkanDevice()->isSoftwareRenderer()) {
-            allFormats = allFormats.intersected(device->vulkanDevice()->transferFormats());
-            nonExternalOnly = nonExternalOnly.intersected(device->vulkanDevice()->transferFormats());
+        if (vkDevice && !vkDevice->isSoftwareRenderer()) {
+            allFormats = allFormats.intersected(vkDevice->transferFormats());
+            nonExternalOnly = nonExternalOnly.intersected(vkDevice->transferFormats());
         }
         for (auto it = allFormats.constBegin(); it != allFormats.constEnd(); it++) {
             const auto info = FormatInfo::get(it.key());
@@ -151,17 +151,17 @@ void EglBackend::updateDmabufTranches()
     m_tranches.append({
         .device = m_renderDevice->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-        .formatTable = filterFormats(m_renderDevice, 10),
+        .formatTable = filterFormats(m_renderDevice, nullptr, 10),
     });
     m_tranches.append({
         .device = m_renderDevice->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-        .formatTable = filterFormats(m_renderDevice, 8),
+        .formatTable = filterFormats(m_renderDevice, nullptr, 8),
     });
     m_tranches.append({
         .device = m_renderDevice->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-        .formatTable = filterFormats(m_renderDevice, std::nullopt),
+        .formatTable = filterFormats(m_renderDevice, nullptr, std::nullopt),
     });
 
     // Other GPUs come afterwards, in no particular order.
@@ -177,17 +177,17 @@ void EglBackend::updateDmabufTranches()
         m_tranches.append({
             .device = device->deviceId(),
             .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-            .formatTable = filterFormats(device.get(), 10),
+            .formatTable = filterFormats(device.get(), device->vulkanDevice(), 10),
         });
         m_tranches.append({
             .device = device->deviceId(),
             .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-            .formatTable = filterFormats(device.get(), 8),
+            .formatTable = filterFormats(device.get(), device->vulkanDevice(), 8),
         });
         m_tranches.push_back({
             .device = device->deviceId(),
             .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-            .formatTable = filterFormats(device.get(), std::nullopt),
+            .formatTable = filterFormats(device.get(), device->vulkanDevice(), std::nullopt),
         });
     }
 
