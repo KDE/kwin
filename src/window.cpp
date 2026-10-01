@@ -2800,7 +2800,7 @@ void Window::processDecorationMove(const QPointF &localPos, const QPointF &globa
     }
 }
 
-void Window::processDecorationButtonPress(const QPointF &localPos, const QPointF &globalPos, Qt::MouseButton button, bool ignoreMenu)
+void Window::processDecorationButtonPress(const QPointF &localPos, const QPointF &globalPos, Qt::MouseButton button)
 {
     Options::MouseCommand com = Options::MouseNothing;
     bool active = isActive();
@@ -2868,11 +2868,8 @@ void Window::processDecorationButtonPress(const QPointF &localPos, const QPointF
         startDelayedInteractiveMoveResize();
         updateInteractiveMoveResizeCursor();
     }
-    // In the new API the decoration may process the menu action to display an inactive tab's menu.
-    // If the event is unhandled then the core will create one for the active window in the group.
-    if (!ignoreMenu || com != Options::MouseOperationsMenu) {
-        performMousePressCommand(com, globalPos);
-    }
+
+    performMousePressCommand(com, globalPos);
 }
 
 void Window::processDecorationButtonRelease(Qt::MouseButton button)
