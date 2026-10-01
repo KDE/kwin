@@ -26,10 +26,19 @@ class FullScreenEffect {
     }
 
     manage(window) {
+        window.windowFrameGeometryAboutToChange.connect(
+            this.onWindowFrameGeometryAboutToChange.bind(this));
         window.windowFrameGeometryChanged.connect(
             this.onWindowFrameGeometryChanged.bind(this));
         window.windowFullScreenChanged.connect(
             this.onWindowFullScreenChanged.bind(this));
+    }
+
+    onWindowFrameGeometryAboutToChange(window) {
+        if (!window.visible) {
+            return;
+        }
+        window.oldGeometry = Object.assign({}, window.geometry);
     }
 
     onWindowFullScreenChanged(window) {
@@ -37,12 +46,8 @@ class FullScreenEffect {
             return;
         }
         window.setData(Effect.WindowForceBlurRole, true);
-        let oldGeometry = window.oldGeometry;
+        const oldGeometry = window.oldGeometry;
         const newGeometry = window.geometry;
-        if (oldGeometry.width == newGeometry.width && oldGeometry.height == newGeometry.height)
-            oldGeometry = window.olderGeometry;
-        window.olderGeometry = Object.assign({}, window.oldGeometry);
-        window.oldGeometry = Object.assign({}, newGeometry);
 
         let couldRetarget = false;
         if (window.fullScreenAnimation1) {
@@ -110,7 +115,7 @@ class FullScreenEffect {
         window.setData(Effect.WindowForceBlurRole, null);
     }
 
-    onWindowFrameGeometryChanged(window, oldGeometry) {
+    onWindowFrameGeometryChanged(window) {
         if (window.fullScreenAnimation1) {
             if (window.geometry.width != window.oldGeometry.width ||
                 window.geometry.height != window.oldGeometry.height) {
@@ -120,8 +125,6 @@ class FullScreenEffect {
                 }
             }
         }
-        window.oldGeometry = Object.assign({}, window.geometry);
-        window.olderGeometry = Object.assign({}, oldGeometry);
     }
 }
 
