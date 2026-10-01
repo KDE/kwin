@@ -725,8 +725,6 @@ void TestXdgShellWindow::testHidden()
 
 void TestXdgShellWindow::testDesktopFileName()
 {
-    // FIXME: this is temporary to get a build of kwin to build other things
-    return;
     QIcon::setThemeName(QStringLiteral("breeze"));
     // this test verifies that desktop file name is passed correctly to the window
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
