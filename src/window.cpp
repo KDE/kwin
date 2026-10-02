@@ -1786,6 +1786,7 @@ void Window::setupWindowManagementInterface()
     w->setPid(pid());
     w->setResizable(isResizable());
     w->setMovable(isMovable());
+    w->setMovableAcrossScreens(isMovableAcrossScreens());
     w->setVirtualDesktopChangeable(true); // FIXME Matches X11Window::actionSupported(), but both should be implemented.
     w->setNoBorder(noBorder());
     w->setCanSetNoBorder(userCanSetNoBorder());

@@ -726,6 +726,9 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_set_state(Resource *res
     if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MOVABLE) {
         Q_EMIT q->movableRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MOVABLE);
     }
+    if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MOVABLE_ACROSS_SCREENS) {
+        Q_EMIT q->movableAcrossScreensRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MOVABLE_ACROSS_SCREENS);
+    }
     if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_RESIZABLE) {
         Q_EMIT q->resizableRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_RESIZABLE);
     }
@@ -996,6 +999,11 @@ void PlasmaWindowInterface::setShaded(bool set)
 void PlasmaWindowInterface::setMovable(bool set)
 {
     d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MOVABLE, set);
+}
+
+void PlasmaWindowInterface::setMovableAcrossScreens(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MOVABLE_ACROSS_SCREENS, set);
 }
 
 void PlasmaWindowInterface::setResizable(bool set)

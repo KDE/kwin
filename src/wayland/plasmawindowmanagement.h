@@ -122,6 +122,7 @@ public:
     void setShadeable(bool set);
     void setShaded(bool set);
     void setMovable(bool set);
+    void setMovableAcrossScreens(bool set);
     void setResizable(bool set);
     void setResourceName(const QString &resourceName);
     /**
@@ -241,6 +242,7 @@ Q_SIGNALS:
     void shadeableRequested(bool set);
     void shadedRequested(bool set);
     void movableRequested(bool set);
+    void movableAcrossScreensRequested(bool set);
     void resizableRequested(bool set);
     /**
      * FIXME: still relevant with new virtual desktops?
