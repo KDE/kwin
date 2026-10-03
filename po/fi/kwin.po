@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-01 20:15+0000\n"
-"PO-Revision-Date: 2026-02-24 21:19+0200\n"
+"PO-Revision-Date: 2026-10-02 20:33+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -88,13 +88,13 @@ msgstr "KDE:n Wayland-koostin"
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” (%2) was reset"
-msgstr ""
+msgstr "Näytönohjain ”%1” (%2) nollattiin"
 
 #: core/gpumanager.cpp:280
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” was reset"
-msgstr ""
+msgstr "Näytönohjain ”%1” nollattiin"
 
 #: core/iccprofile.cpp:402
 #, kde-format
@@ -173,10 +173,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "Väriprofiililta puuttuu TRC-tunnisteita"
 
 #: core/iccprofile.cpp:552
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "ICC-profiilia ”%1” ei voida avata"
+msgstr "Ei voitu kääntää ICC-profiilin ”%1” sävykäyriä"
 
 #: debug_console.cpp:87
 #, kde-format
@@ -1120,11 +1119,10 @@ msgstr "Ikkunat"
 
 #. i18n: ectx: property (text), widget (QPushButton, pickWindowButton)
 #: debug_console.ui:43
-#, fuzzy, kde-format
-#| msgid "Pack Window Up"
+#, kde-format
 msgctxt "@action:button"
 msgid "Pick Window…"
-msgstr "Siirrä ikkuna yläreunaan"
+msgstr "Valitse ikkuna…"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:54
@@ -1427,11 +1425,9 @@ msgstr ""
 "menetetään.</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
-#, fuzzy, kde-format
-#| msgctxt "@action:button Terminate app"
-#| msgid "&Terminate %1"
+#, kde-format
 msgid "Terminating %1…"
-msgstr "&Lopeta %1"
+msgstr "Lopetetaan %1"
 
 #: helpers/killer/killdialog.cpp:69
 #, kde-format
@@ -1468,7 +1464,7 @@ msgstr "Ei vastaa"
 #: helpers/killer/killdialog.ui:53
 #, kde-format
 msgid "&Details"
-msgstr ""
+msgstr "&Yksityiskohdat"
 
 #: helpers/killer/killer.cpp:134
 #, kde-format
@@ -1669,19 +1665,14 @@ msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Esiasetetun XWayland-näytön nimi"
 
 #: main_wayland.cpp:390
-#, fuzzy, kde-format
-#| msgid ""
-#| "XWayland socket to use for Xwayland's incoming connections. This can be "
-#| "set multiple times"
+#, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
-msgstr ""
-"Saapuviin yhteyksiin käytettävä Wayland-pistoke. Tämän voi asettaa useammasti"
+msgstr "Alustusyhteyksiin käytettävä Wayland-pistoke"
 
 #: main_wayland.cpp:394
-#, fuzzy, kde-format
-#| msgid "Name of the xwayland display that has been pre-set up"
+#, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
-msgstr "Esiasetetun XWayland-näytön nimi"
+msgstr "Esiasetetun XWayland-alustusnäytön nimi"
 
 #: main_wayland.cpp:398
 #, kde-format
@@ -1880,24 +1871,16 @@ msgid "Disable Active Input Capture"
 msgstr "Poista aktiivisen sisäänmenon kaappaus käytöstä"
 
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "Ctrl"
+msgstr "Etähallinta"
 
 #: plugins/eis/eisprompter.cpp:52
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><application>%1</application> is not responding. Do you want to "
-#| "terminate this application?</para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "<application>%1</application> is asking to control input devices"
-msgstr ""
-"<para><application>%1</application> ei vastaa. Haluatko lopettaa tämän "
-"sovelluksen?</para>"
+msgstr "<application>%1</application> pyytää hallita syötelaitteita"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
@@ -1905,7 +1888,7 @@ msgctxt ""
 "@option:check, %1 is the application name. This option always allow apps "
 "claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "Salli aina sovellukset, jotka esittävät olevansa %1"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -1916,18 +1899,22 @@ msgid ""
 "revoke this permission later on <application>System Settings</application>’ "
 "“Legacy X11 App Support” page."
 msgstr ""
+"Vanhojen X11-sovellusten identiteettejä ei voi todentaa. Mikä tahansa "
+"sovellus, joka väittää olevansa <application>%1</application>, voi hallita "
+"syötelaitteita. Luvan voi perua myöhemmin <application>järjestelmäasetusten</"
+"application> ”Vanhojen X11-sovellusten tuki” -sivulta."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
 msgctxt "@action:button Allow control of input devices"
 msgid "Allow"
-msgstr ""
+msgstr "Salli"
 
 #: plugins/eis/eisprompter.cpp:70
 #, kde-format
 msgctxt "@action:button Deny control of input devices"
 msgid "Deny"
-msgstr ""
+msgstr "Kiellä"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -2036,17 +2023,15 @@ msgstr[1] "%1 sekuntia"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Hide cursor on inactivity:"
+#, kde-format
 msgid "Hide pointer on inactivity:"
-msgstr "Piilota osoitin, kun passiivisena:"
+msgstr "Piilota hiiriosoitin, kun passiivisena:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
-#, fuzzy, kde-format
-#| msgid "Hide cursor on typing"
+#, kde-format
 msgid "Hide pointer on typing"
-msgstr "Piilota osoitin näppäiltäessä"
+msgstr "Piilota hiiriosoitin näppäiltäessä"
 
 #: plugins/invert/invert.cpp:44
 #, kde-format
@@ -2520,7 +2505,7 @@ msgstr "Värilämpötilan esikatselu"
 #, kde-format
 msgctxt "@label"
 msgid "Built-in Screen"
-msgstr ""
+msgstr "Sisäänrakennettu näyttö"
 
 #: plugins/overview/DesktopBar.qml:162
 #, kde-format
@@ -2533,10 +2518,9 @@ msgid "Add Virtual Desktop"
 msgstr "Lisää virtuaalityöpöytä"
 
 #: plugins/overview/DesktopBar.qml:263
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgid "Virtual Desktop limit reached"
-msgstr "Lisää virtuaalityöpöytä"
+msgstr "Virtuaalityöpöytien määrän rajoitus saavutettu"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format
@@ -2948,10 +2932,9 @@ msgstr "Valikot:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ExcludeFullScreen)
 #: plugins/translucency/package/contents/ui/config.ui:201
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#, kde-format
 msgid "Exclude fullscreen windows"
-msgstr "Koko ruudun ikkunat"
+msgstr "Sulje pois koko ruudun ikkunat"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:217
@@ -3257,18 +3240,15 @@ msgstr "Ikkunaluokituksen vastaavuuden tyyppi"
 
 #. i18n: ectx: label, entry (hastransientparent), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
-#, fuzzy, kde-format
-#| msgctxt "@info:placeholder no entries in the task switcher"
-#| msgid "No open windows"
+#, kde-format
 msgid "Has parent window"
-msgstr "Ei avoimia ikkunoita"
+msgstr "On lapsi-ikkuna"
 
 #. i18n: ectx: label, entry (hastransientparentmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:82
-#, fuzzy, kde-format
-#| msgid "Set window type to"
+#, kde-format
 msgid "Has parent window match type"
-msgstr "Aseta ikkunatyypiksi"
+msgstr "Emoikkuna vastaa tyyppiä"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:89
@@ -3532,14 +3512,13 @@ msgstr "Ei otsikkopalkkia -säännön tyyppi"
 #: rulesettings.kcfg:322
 #, kde-format
 msgid "Decoration policy"
-msgstr ""
+msgstr "Koristelukäytäntö"
 
 #. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
-#, fuzzy, kde-format
-#| msgid "Active opacity rule type"
+#, kde-format
 msgid "Decoration policy rule type"
-msgstr "Aktiivisen peittävyyssäännön tyyppi"
+msgstr "Koristelukäytäntösäännön tyyppi"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:339
@@ -3675,22 +3654,20 @@ msgstr "Pirstoutumissäännön tyyppi"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:455
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr "P&iilota ruutulähetyksestä"
+msgstr "Piilota näytöntoistolta ja näyttönauhoitukselta"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
-msgstr "P&iilota ruutulähetyksestä"
+msgstr "Piilota näytöntoistolta ja näyttönauhoitukselta -sääntötyyppi"
 
 #: scene/workspacescene.cpp:115
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
-msgstr ""
+msgstr "Käytä tai poista käytöstä ”Näytä koostamistila” -tehoste"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3824,7 +3801,7 @@ msgstr "&Ei otsikkopalkkia eikä kehystä"
 #: useractions.cpp:248
 #, kde-format
 msgid "&Hide from Screenshots and Screen Recordings"
-msgstr ""
+msgstr "&Piilota näytöntoistolta ja näyttönauhoitukselta"
 
 #: useractions.cpp:256
 #, kde-format
@@ -4289,13 +4266,13 @@ msgstr "Tapa ikkuna"
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Focused Window"
-msgstr ""
+msgstr "Keskitä hiiriosoitin kohdistettuun ikkunaan"
 
 #: useractions.cpp:1018
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Screen"
-msgstr ""
+msgstr "Keskitä hiiriosoitin näytöllä"
 
 #: useractions.cpp:1083
 #, kde-format
@@ -4354,11 +4331,13 @@ msgid ""
 "Setting custom modes with too old kde-output-management-v2 protocol versions "
 "is unsupported"
 msgstr ""
+"Liian vanhoissa kde-output-management-v2-yhteyskäytäntöversioissa "
+"mukautettujen tilojen asettamista ei tueta"
 
 #: wayland/outputmanagement_v2.cpp:575
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
-msgstr ""
+msgstr "abm-taso on enimmäisarvoa (4) suurempi: %1"
 
 #: wayland/outputmanagement_v2.cpp:673
 #, kde-format
@@ -4373,7 +4352,7 @@ msgstr "Kaikkien ulostulojen poistamista käytöstä asetusmuutoksin ei sallita"
 #: wayland/outputmanagement_v2.cpp:701
 #, kde-format
 msgid "%1 cannot mirror itself"
-msgstr ""
+msgstr "%1 ei voi peilata itseään"
 
 #: wayland/outputmanagement_v2.cpp:708
 #, kde-format
@@ -4386,28 +4365,24 @@ msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "Mukautettua tilaa ei voi lisätä 0 Hz virkistystaajuudella"
 
 #: wayland/outputmanagement_v2.cpp:723
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
-msgstr "Ulostulon %s sijainti on aivan liian suuri (%d, %d)"
+msgstr "Ulostulon %1 sijainti on aivan liian negatiivinen (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:726
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
-msgstr "Ulostulon %s sijainti on aivan liian suuri (%d, %d)"
+msgstr "Käyttöön otetun ulostulon %1 sijainti on negatiivinen (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:730
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
-msgstr "Ulostulon %s sijainti on aivan liian suuri (%d, %d)"
+msgstr "Ulostulon %1 sijainti on aivan liian suuri (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:744
-#, fuzzy, kde-format
-#| msgid "The Alt key is now active."
+#, kde-format
 msgid "The session is not active"
-msgstr "Alt-näppäin on aktiivinen."
+msgstr "Istunto ei ole aktiivinen"
 
 #: wayland/outputmanagement_v2.cpp:747
 #, kde-format
@@ -4429,25 +4404,25 @@ msgstr "(Ei vastaa)"
 #: workspace.cpp:1324
 #, kde-format
 msgid "Built-in Screen"
-msgstr ""
+msgstr "Sisäänrakennettu näyttö"
 
 #: workspace.cpp:1337
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1347
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1350
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
-msgstr ""
+msgstr "%1 %2"
 
 #: workspace.cpp:1819
 #, kde-format

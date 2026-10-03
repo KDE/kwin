@@ -1,12 +1,13 @@
 # Translation of kcm-kwin-scripts.po into Serbian.
 # Chusslove Illich <caslav.ilic@gmx.net>, 2012, 2013, 2017.
+# Nemanja Hiršl <nemhirsl@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2017-10-14 23:06+0200\n"
-"Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
+"PO-Revision-Date: 2026-10-02 20:50+0200\n"
+"Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
 "Language: sr@ijekavianlatin\n"
 "MIME-Version: 1.0\n"
@@ -25,10 +26,9 @@ msgid "Import KWin Script"
 msgstr "Uvoz KWinove skripte"
 
 #: module.cpp:53
-#, fuzzy, kde-format
-#| msgid "*.kwinscript|KWin scripts (*.kwinscript)"
+#, kde-format
 msgid "KWin Script (*.kwinscript)"
-msgstr "*.kwinscript|KWinove skripte (*.kwinscript)"
+msgstr "KWinova skripta (*.kwinscript)"
 
 #: module.cpp:65
 #, kde-format
@@ -44,47 +44,26 @@ msgstr ""
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
-msgstr "Skripta „%1“ uspešno uvezena."
+msgstr "Skripta „%1“ uspješno uvezena."
 
 #: module.cpp:131
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
-msgstr ""
+msgstr "Greška pri deinstaliranju KWinove skripte: %1"
 
 #: ui/main.qml:23
 #, kde-format
 msgid "Install from File…"
-msgstr ""
+msgstr "Instaliraj iz fajla…"
 
 #: ui/main.qml:27
-#, fuzzy, kde-format
-#| msgid "Get New Scripts..."
+#, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
-msgstr "Dobavi nove skripte..."
+msgstr "Dobavi nove…"
 
 #: ui/main.qml:65
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"
-msgstr ""
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Časlav Ilić"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "caslav.ilic@gmx.net"
-
-#~ msgid "KWin Scripts"
-#~ msgstr "KWinove skripte"
-
-#~ msgid "Configure KWin scripts"
-#~ msgstr "Podesite KWinove skripte"
-
-#~ msgid "Tamás Krutki"
-#~ msgstr "Tamaš Krutki"
-
-#~ msgid "KWin script configuration"
-#~ msgstr "Podešavanje KWinovih skripti"
+msgstr "Obriši…"

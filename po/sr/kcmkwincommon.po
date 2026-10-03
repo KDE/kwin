@@ -1,121 +1,108 @@
-# Finnish messages for kcmkwincompositing.
-# Copyright © 2007, 2008, 2009, 2010, 2011 This_file_is_part_of_KDE
-# This file is distributed under the same license as the kde-workspace package.
-# Teemu Rytilahti <teemu.rytilahti@kde-fi.org>, 2007.
-# Mikko Piippo <piippo@cc.helsinki.fi>, 2008.
-# Teemu Rytilahti <teemu.rytilahti@kde-fi.org>, 2008.
-# Teemu Rytilahti <teemu.rytilahti@d5k.net>, 2008.
-# SPDX-FileCopyrightText: 2009, 2011, 2013, 2014, 2016, 2017, 2018, 2023, 2026 Tommi Nieminen <translator@legisign.org>
-# Jorma Karvonen <karvonen.jorma@gmail.com>, 2010.
-# Lasse Liehu <lasse.liehu@gmail.com>, 2010, 2011, 2012, 2013, 2014, 2015, 2016.
-#
-# KDE Finnish translation sprint participants:
-# Author: Artnay
-# Author: Lliehu
-# Author: Niklas Laxström
+# Translation of kcmkwincompositing.po into Serbian.
+# Chusslove Illich <caslav.ilic@gmx.net>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2016, 2017.
+# Dalibor Djuric <daliborddjuric@gmail.com>, 2009, 2010, 2011.
+# Nemanja Hiršl <nemhirsl@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-18 00:46+0000\n"
-"PO-Revision-Date: 2026-08-25 15:07+0300\n"
-"Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
-"Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
-"Language: fi\n"
+"PO-Revision-Date: 2026-10-02 20:50+0200\n"
+"Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
+"Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
+"Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.04.0\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
+"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Associated-UI-Catalogs: kcmkwm\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+"X-Environment: kde\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Teemu Rytilahti, Mikko Piippo, Tommi Nieminen, Jorma Karvonen"
+msgstr "Часлав Илић,Немања Хиршл"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
-"tpr@d5k.net, mikko.piippo@helsinki.fi, translator@legisign.org, karvonen."
-"jorma@gmail.com"
+msgstr "caslav.ilic@gmx.net,nemhirsl@gmail.com"
 
 #: effectsmodel.cpp:49
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Accessibility"
-msgstr "Käytettävyys"
+msgstr "Приступачност"
 
 #: effectsmodel.cpp:50
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Appearance"
-msgstr "Ulkoasu"
+msgstr "Изглед"
 
 #: effectsmodel.cpp:51
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Focus"
-msgstr "Kohdistus"
+msgstr "Фокус"
 
 #: effectsmodel.cpp:52
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Peek at Desktop Animation"
-msgstr "Kurkista työpöydälle -animointi"
+msgstr "Анимација завиривања у површ"
 
 #: effectsmodel.cpp:53
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Tools"
-msgstr "Työkalut"
+msgstr "Алатке"
 
 #: effectsmodel.cpp:54
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Virtual Desktop Switching Animation"
-msgstr "Virtuaalityöpöydän vaihtamisen animaatio"
+msgstr "Анимација смене виртуелних површи"
 
 #: effectsmodel.cpp:55
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Window Management"
-msgstr "Ikkunanhallinta"
+msgstr "Управљање прозорима"
 
 #: effectsmodel.cpp:56
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Window Open/Close Animation"
-msgstr "Ikkunan avaus- ja sulkemisanimointi"
+msgstr "Анимација отварања и затварања прозора"
 
 #: effectsmodel.cpp:233
 #, kde-format
 msgid "KWin development team"
-msgstr "KWin-kehitysryhmä"
+msgstr "Развојни тим К‑вина"
 
 #: genericscriptedconfig.cpp:71
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr "Paketin metatietoa ei voitu paikantaa"
+msgstr "Не могу да нађем метаподатке пакета"
 
 #: genericscriptedconfig.cpp:77
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr "%1 ei sisällä kelvollista metadata.json-tiedostoa"
+msgstr "%1 не садржи исправан фајл metadata.json"
 
 #: genericscriptedconfig.cpp:83 genericscriptedconfig.cpp:89
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr "Tiedostoa %1 ei ole olemassa"
+msgstr "%1 не постоји"
 
 #: genericscriptedconfig.cpp:106 genericscriptedconfig.cpp:116
 #, kde-format
 msgid "Error loading widget from %1: %2"
-msgstr "Virhe ladattaessa alkiota kohteesta %1: %2"
-
-#~ msgctxt "Category of Desktop Effects, used as section header"
-#~ msgid "Candy"
-#~ msgstr "Karkit"
+msgstr "Грешка при учитавању виџета из %1: %2"

@@ -4,13 +4,14 @@
 # Toplica Tanaskovic <toptan@kde.org.yu>, 2003.
 # Chusslove Illich <caslav.ilic@gmx.net>, 2004, 2005, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017.
 # Dalibor Djuric <daliborddjuric@gmail.com>, 2009, 2010.
+# Nemanja Hiršl <nemhirsl@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-01 20:15+0000\n"
-"PO-Revision-Date: 2017-12-03 22:53+0100\n"
-"Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
+"PO-Revision-Date: 2026-10-02 20:50+0200\n"
+"Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
 "Language: sr@latin\n"
 "MIME-Version: 1.0\n"
@@ -25,144 +26,148 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Toplica Tanasković,Časlav Ilić"
+msgstr "Toplica Tanasković,Časlav Ilić,Nemanja Hiršl"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "toptan@kde.org.yu,caslav.ilic@gmx.net"
+msgstr "toptan@kde.org.yu,caslav.ilic@gmx.net,nemhirsl@gmail.com"
 
 #: backends/wayland/wayland_output.cpp:486
 #, kde-format
 msgid "Press right control to ungrab pointer"
-msgstr ""
+msgstr "Pritisnite desni Control da otpustite pokazivač"
 
 #: backends/wayland/wayland_output.cpp:488
 #, kde-format
 msgid "Press right control key to grab pointer"
-msgstr ""
+msgstr "Pritisnite desni Control da uhvatite pokazivač"
 
 #: backends/wayland/wayland_output.cpp:492
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr ""
+msgstr "KDE‑ov Wayland slagač %1"
 
 #: backends/wayland/wayland_output.cpp:495
 #, kde-format
 msgid "- Output disabled"
-msgstr ""
+msgstr "- izlaz isključen"
 
 #: backends/wayland/wayland_output.cpp:497
 #, kde-format
 msgid "- Output dimmed"
-msgstr ""
+msgstr "- izlaz prigušen"
 
 #: backends/x11/x11_windowed_backend.cpp:500
 #, kde-format
 msgid "Press right control to ungrab input"
-msgstr ""
+msgstr "Pritisnite desni Control da otpustite unos"
 
 #: backends/x11/x11_windowed_backend.cpp:500
 #, kde-format
 msgid "Press right control key to grab input"
-msgstr ""
+msgstr "Pritisnite desni Control da uhvatite unos"
 
 #: backends/x11/x11_windowed_backend.cpp:501
 #, kde-format
 msgid "KDE Wayland Compositor"
-msgstr ""
+msgstr "KDE‑ov Wayland slagač"
 
 #: core/gpumanager.cpp:278
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” (%2) was reset"
-msgstr ""
+msgstr "Grafička karta „%1“ (%2) je resetovana"
 
 #: core/gpumanager.cpp:280
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” was reset"
-msgstr ""
+msgstr "Grafička karta „%1“ je resetovana"
 
 #: core/iccprofile.cpp:402
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "Ne mogu da otvorim profil ICC „%1“"
 
 #: core/iccprofile.cpp:404
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr ""
+msgstr "Profil ICC „%1“ ne postoji"
 
 #: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "Profil ICC „%1“ nije upotrebljiv za ekrane"
 
 #: core/iccprofile.cpp:411
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
-msgstr ""
+msgstr "Profil ICC „%1“ ima nepodržan prostor veze, podržan je samo XYZ"
 
 #: core/iccprofile.cpp:414
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
-msgstr ""
+msgstr "Profil ICC „%1“ je pokvaren, ulazni/izlazni prostor boja nije RGB"
 
 #: core/iccprofile.cpp:427
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "Profil ICC „%1“ je pokvaren, nema belu tačku"
 
 #: core/iccprofile.cpp:430
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "Profil ICC „%1“ je pokvaren, bela tačka mu nije ispravna"
 
 #: core/iccprofile.cpp:441
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
+"Profil ICC „%1“ je pokvaren, raščlanjivanje matrice hromatske adaptacije "
+"nije uspelo"
 
 #: core/iccprofile.cpp:446
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
+"Profil ICC „%1“ je pokvaren, invertovanje matrice hromatske adaptacije nije "
+"uspelo"
 
 #: core/iccprofile.cpp:455 core/iccprofile.cpp:470 core/iccprofile.cpp:488
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr ""
+msgstr "Profil ICC „%1“ je pokvaren, osnovne boje mu nisu ispravne"
 
 #: core/iccprofile.cpp:463
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "Profil ICC „%1“ je pokvaren, nema osnovne boje"
 
 #: core/iccprofile.cpp:482
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr ""
+msgstr "Profil ICC „%1“ je pokvaren, ne mogu da izračunam njegove osnovne boje"
 
 #: core/iccprofile.cpp:507
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr ""
+msgstr "Profil ICC „%1“ samo sa oznakama BToD nije podržan"
 
 #: core/iccprofile.cpp:545
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "Profilu boja nedostaju oznake TRC"
 
 #: core/iccprofile.cpp:552
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr ""
+msgstr "Ne mogu da invertujem tonske krive profila ICC „%1“"
 
 # >> @item
 #: debug_console.cpp:87
@@ -470,23 +475,19 @@ msgstr "uspravno"
 
 # >> @item
 #: debug_console.cpp:251
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgctxt "The angle delta of a pointer axis event"
 msgid "Delta"
 msgstr "promena"
 
 # >> @item
 #: debug_console.cpp:252
-#, fuzzy, kde-format
-#| msgctxt "Current delta in pinch gesture"
-#| msgid "Delta x"
+#, kde-format
 msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr "promena po x"
+msgstr "promena (V120)"
 
 # >> @item
 #: debug_console.cpp:267
@@ -555,13 +556,13 @@ msgstr "ponavljanje"
 #, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr ""
+msgstr "kôd tastera"
 
 #: debug_console.cpp:310
 #, kde-format
 msgctxt "Key according to Qt"
 msgid "Qt::Key code"
-msgstr ""
+msgstr "kôd Qt::Key"
 
 # >> @item
 #: debug_console.cpp:311
@@ -735,13 +736,11 @@ msgstr "zamah otkazan"
 #, kde-format
 msgctxt "A hold gesture is started"
 msgid "Hold start"
-msgstr ""
+msgstr "držanje započeto"
 
 # >> @item
 #: debug_console.cpp:474
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgctxt "Number of fingers in this hold gesture"
 msgid "Finger count"
 msgstr "broj prstiju"
@@ -750,225 +749,207 @@ msgstr "broj prstiju"
 #, kde-format
 msgctxt "A hold gesture ended"
 msgid "Hold end"
-msgstr ""
+msgstr "držanje završeno"
 
 # >> @item
 #: debug_console.cpp:497
-#, fuzzy, kde-format
-#| msgctxt "A pinch gesture got cancelled"
-#| msgid "Pinch cancelled"
+#, kde-format
 msgctxt "A hold gesture got cancelled"
 msgid "Hold cancelled"
-msgstr "uštip otkazan"
+msgstr "držanje otkazano"
 
 #: debug_console.cpp:509
-#, fuzzy, kde-format
-#| msgid "Switch to Tab"
+#, kde-format
 msgctxt "A hardware switch (e.g. notebook lid) got toggled"
 msgid "Switch toggled"
-msgstr "Na jezičak"
+msgstr "prekidač prebačen"
 
 #: debug_console.cpp:515
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Notebook lid"
-msgstr ""
+msgstr "poklopac laptopa"
 
 #: debug_console.cpp:517
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Tablet mode"
-msgstr ""
+msgstr "režim tableta"
 
 #: debug_console.cpp:519
-#, fuzzy, kde-format
-#| msgid "Switch to Tab"
+#, kde-format
 msgctxt "A hardware switch"
 msgid "Switch"
-msgstr "Na jezičak"
+msgstr "prekidač"
 
 #: debug_console.cpp:523
 #, kde-format
 msgctxt "The hardware switch got turned off"
 msgid "Off"
-msgstr ""
+msgstr "isključen"
 
 #: debug_console.cpp:526
 #, kde-format
 msgctxt "The hardware switch got turned on"
 msgid "On"
-msgstr ""
+msgstr "uključen"
 
 #: debug_console.cpp:531
 #, kde-format
 msgctxt "State of a hardware switch (on/off)"
 msgid "State"
-msgstr ""
+msgstr "stanje"
 
 #: debug_console.cpp:540
 #, kde-format
 msgid "Tablet Tool Proximity"
-msgstr ""
+msgstr "blizina alatke tablice"
 
 #: debug_console.cpp:544
 #, kde-format
 msgid "Proximity"
-msgstr ""
+msgstr "blizina"
 
 #: debug_console.cpp:544
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "u dometu"
 
 #: debug_console.cpp:544
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "van dometa"
 
 # >> @item
 #: debug_console.cpp:545 debug_console.cpp:563 debug_console.cpp:583
 #: debug_console.cpp:633 debug_console.cpp:650
-#, fuzzy, kde-format
-#| msgctxt "The global mouse pointer position"
-#| msgid "Global Position"
+#, kde-format
 msgid "Position"
-msgstr "globalni položaj"
+msgstr "položaj"
 
 #: debug_console.cpp:547 debug_console.cpp:565 debug_console.cpp:585
 #, kde-format
 msgid "Tilt"
-msgstr ""
+msgstr "nagib"
 
 # rewrite-msgid: /caption/title/
 #: debug_console.cpp:549 debug_console.cpp:567 debug_console.cpp:587
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Rotation"
-msgstr "naslov"
+msgstr "rotacija"
 
 #: debug_console.cpp:550 debug_console.cpp:569
 #, kde-format
 msgid "Distance"
-msgstr ""
+msgstr "rastojanje"
 
 #: debug_console.cpp:559
 #, kde-format
 msgid "Tablet Tool Axis"
-msgstr ""
+msgstr "osa alatke tablice"
 
 #: debug_console.cpp:568 debug_console.cpp:588
 #, kde-format
 msgid "Pressure"
-msgstr ""
+msgstr "pritisak"
 
 #: debug_console.cpp:578
 #, kde-format
 msgid "Tablet Tool Tip"
-msgstr ""
+msgstr "vrh alatke tablice"
 
-# >> @item:inlistbox Desktop name alignment
 #: debug_console.cpp:582
-#, fuzzy, kde-format
-#| msgid "Top"
+#, kde-format
 msgid "Tip"
-msgstr "gore"
+msgstr "vrh"
 
 #: debug_console.cpp:582
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Down"
-msgstr "Pomeri prozor"
+msgstr "spušten"
 
 #: debug_console.cpp:582
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "podignut"
 
 # >> @item
 #: debug_console.cpp:589
-#, fuzzy, kde-format
-#| msgctxt "The global mouse pointer position"
-#| msgid "Global Position"
+#, kde-format
 msgid "Slider Position"
-msgstr "globalni položaj"
+msgstr "položaj klizača"
 
 #: debug_console.cpp:598
 #, kde-format
 msgid "Tablet Tool Button"
-msgstr ""
+msgstr "dugme alatke tablice"
 
 # >> @item
 #: debug_console.cpp:600 debug_console.cpp:615
-#, fuzzy, kde-format
-#| msgctxt "A button in a mouse press/release event"
-#| msgid "Button"
+#, kde-format
 msgid "Button"
 msgstr "dugme"
 
 # >> @item
 #: debug_console.cpp:601 debug_console.cpp:616
-#, fuzzy, kde-format
-#| msgctxt "All currently pressed buttons in a mouse press/release event"
-#| msgid "Pressed Buttons"
+#, kde-format
 msgid "Pressed"
-msgstr "pritisnuta dugmad"
+msgstr "pritisnuto"
 
 #: debug_console.cpp:602 debug_console.cpp:620 debug_console.cpp:637
 #: debug_console.cpp:654 debug_console.cpp:668
 #, kde-format
 msgid "Tablet"
-msgstr ""
+msgstr "tablica"
 
 #: debug_console.cpp:613
 #, kde-format
 msgid "Tablet Pad Button"
-msgstr ""
+msgstr "dugme podloge tablice"
 
 #: debug_console.cpp:617 debug_console.cpp:635 debug_console.cpp:652
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "grupa"
 
 #: debug_console.cpp:618 debug_console.cpp:636 debug_console.cpp:653
 #, kde-format
 msgid "Mode"
-msgstr ""
+msgstr "režim"
 
 #: debug_console.cpp:619
 #, kde-format
 msgid "Is Mode Switch"
-msgstr ""
+msgstr "menja režim"
 
 #: debug_console.cpp:630
 #, kde-format
 msgid "Tablet Pad Strip"
-msgstr ""
+msgstr "traka podloge tablice"
 
 #: debug_console.cpp:632 debug_console.cpp:649 debug_console.cpp:666
 #, kde-format
 msgid "Number"
-msgstr ""
+msgstr "broj"
 
 #: debug_console.cpp:634 debug_console.cpp:651
 #, kde-format
 msgid "isFinger"
-msgstr ""
+msgstr "prstom"
 
 #: debug_console.cpp:647
 #, kde-format
 msgid "Tablet Pad Ring"
-msgstr ""
+msgstr "prsten podloge tablice"
 
 #: debug_console.cpp:664
 #, kde-format
 msgid "Tablet Pad Dial"
-msgstr ""
+msgstr "točkić podloge tablice"
 
 # >> @item
 #: debug_console.cpp:667
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
 msgstr "promena"
 
@@ -976,7 +957,7 @@ msgstr "promena"
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "Efekti"
 
 # >> @item
 #: debug_console.cpp:977
@@ -1165,10 +1146,9 @@ msgid "task"
 msgstr "zadatak"
 
 #: debug_console.cpp:1457
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "X11 Windows"
-msgstr "Pomeri prozor"
+msgstr "X11 prozori"
 
 # >> @item
 #: debug_console.cpp:1459
@@ -1192,194 +1172,179 @@ msgstr "unutrašnji prozori"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "Rastovari"
 
 #: debug_console.cpp:1824
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "Učitaj"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
 #, kde-format
 msgid "Debug Console"
-msgstr ""
+msgstr "Ispravljačka konzola"
 
 #. i18n: ectx: attribute (title), widget (QWidget, windows)
 #: debug_console.ui:30
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Windows"
-msgstr "Pomeri prozor"
+msgstr "Prozori"
 
 #. i18n: ectx: property (text), widget (QPushButton, pickWindowButton)
 #: debug_console.ui:43
-#, fuzzy, kde-format
-#| msgid "Pack Window Up"
+#, kde-format
 msgctxt "@action:button"
 msgid "Pick Window…"
-msgstr "Spakuj prozor nagore"
+msgstr "Izaberi prozor…"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:54
-#, fuzzy, kde-format
-#| msgid "Input Device"
+#, kde-format
 msgid "Input Events"
-msgstr "Ulazni uređaj"
+msgstr "Ulazni događaji"
 
 #. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
 #: debug_console.ui:71
-#, fuzzy, kde-format
-#| msgid "Input Device"
+#, kde-format
 msgid "Input Devices"
-msgstr "Ulazni uređaj"
+msgstr "Ulazni uređaji"
 
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 #: debug_console.ui:81
 #, kde-format
 msgid "OpenGL"
-msgstr ""
+msgstr "OpenGL"
 
 #. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
 #: debug_console.ui:87
 #, kde-format
 msgid "No OpenGL compositor running"
-msgstr ""
+msgstr "Ne radi nijedan OpenGL slagač"
 
 #. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
 #: debug_console.ui:115
 #, kde-format
 msgid "OpenGL (ES) driver information"
-msgstr ""
+msgstr "Podaci o OpenGL (ES) drajveru"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: debug_console.ui:121
 #, kde-format
 msgid "Vendor:"
-msgstr ""
+msgstr "Proizvođač:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: debug_console.ui:128
 #, kde-format
 msgid "Renderer:"
-msgstr ""
+msgstr "Renderer:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: debug_console.ui:135
 #, kde-format
 msgid "Version:"
-msgstr ""
+msgstr "Izdanje:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: debug_console.ui:142
 #, kde-format
 msgid "Shading Language Version:"
-msgstr ""
+msgstr "Izdanje jezika senčenja:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: debug_console.ui:149
 #, kde-format
 msgid "Driver:"
-msgstr ""
+msgstr "Drajver:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: debug_console.ui:156
 #, kde-format
 msgid "GPU class:"
-msgstr ""
+msgstr "Klasa GPU‑a:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: debug_console.ui:163
 #, kde-format
 msgid "OpenGL Version:"
-msgstr ""
+msgstr "Izdanje OpenGL‑a:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: debug_console.ui:170
 #, kde-format
 msgid "GLSL Version:"
-msgstr ""
+msgstr "Izdanje GLSL‑a:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
 #: debug_console.ui:236
-#, fuzzy, kde-format
-#| msgid "&Extensions"
+#, kde-format
 msgid "Platform Extensions"
-msgstr "&Proširenja"
+msgstr "Proširenja platforme"
 
 #. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
 #: debug_console.ui:252
-#, fuzzy, kde-format
-#| msgid "&Extensions"
+#, kde-format
 msgid "OpenGL (ES) Extensions"
-msgstr "&Proširenja"
+msgstr "Proširenja OpenGL‑a (ES)"
 
 #. i18n: ectx: attribute (title), widget (QWidget, keyboard)
 #: debug_console.ui:273
-#, fuzzy, kde-format
-#| msgctxt "tooltip title"
-#| msgid "Keyboard Layout"
+#, kde-format
 msgid "Keyboard"
-msgstr "Raspored tastature"
+msgstr "Tastatura"
 
 #. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
 #: debug_console.ui:300
-#, fuzzy, kde-format
-#| msgctxt "tooltip title"
-#| msgid "Keyboard Layout"
+#, kde-format
 msgid "Keymap Layouts"
-msgstr "Raspored tastature"
+msgstr "Rasporedi tastature"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #: debug_console.ui:322
-#, fuzzy, kde-format
-#| msgid "Configure Layouts..."
+#, kde-format
 msgid "Current Layout:"
-msgstr "Podesi rasporede..."
+msgstr "Tekući raspored:"
 
 # >> @item
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
 #: debug_console.ui:341
-#, fuzzy, kde-format
-#| msgctxt "The currently active modifiers"
-#| msgid "Modifiers"
+#, kde-format
 msgid "Modifiers"
-msgstr "modifikatori"
+msgstr "Modifikatori"
 
 # >> @item
 #. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
 #: debug_console.ui:357
-#, fuzzy, kde-format
-#| msgctxt "The currently active modifiers"
-#| msgid "Modifiers"
+#, kde-format
 msgid "Active Modifiers"
-msgstr "modifikatori"
+msgstr "Aktivni modifikatori"
 
 #. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
 #: debug_console.ui:373
 #, kde-format
 msgid "LEDs"
-msgstr ""
+msgstr "Lampice"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
 #: debug_console.ui:389
 #, kde-format
 msgid "Active LEDs"
-msgstr ""
+msgstr "Aktivne lampice"
 
 #. i18n: ectx: attribute (title), widget (QWidget, clipboard)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 #: debug_console.ui:410 debug_console.ui:430
 #, kde-format
 msgid "Clipboard"
-msgstr ""
+msgstr "Klipbord"
 
 #. i18n: ectx: property (text), widget (QLabel, label_11)
 #: debug_console.ui:476
 #, kde-format
 msgid "Primary Selection"
-msgstr ""
+msgstr "Primarni izbor"
 
 #: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:129
 #, kde-format
@@ -1409,7 +1374,7 @@ msgstr "vreme"
 #: helpers/dialoghelper/dialoghelper.cpp:46
 #, kde-format
 msgid "The message to show (fullscreen, noborder)"
-msgstr ""
+msgstr "Poruka za prikaz (fullscreen, noborder)"
 
 #: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:146
 #, kde-format
@@ -1423,75 +1388,49 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "Ova pomoćna alatka nije namenjena direktnom pozivanju."
 
 #: helpers/dialoghelper/dialoghelper.cpp:79
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
 "%1 keyboard shortcut instead."
 msgstr ""
-"Izabrali da prozor bude preko celog ekrana.\n"
+"Izabrali ste da prozor bude preko celog ekrana.\n"
 "Ako sâm program nema opciju da se režim preko celog ekrana isključi, nećete "
-"moći da ga isključite mišem. Umesto toga upotrebite meni radnji sa prozorom, "
-"koji se aktivira prečicom %1."
+"moći da ga isključite mišem. Umesto toga upotrebite prečicu %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:85
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
 "window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
-"Izabrali da prozor bude preko celog ekrana.\n"
+"Izabrali ste da prozor bude preko celog ekrana.\n"
 "Ako sâm program nema opciju da se režim preko celog ekrana isključi, nećete "
-"moći da ga isključite mišem. Umesto toga upotrebite meni radnji sa prozorom, "
-"koji se aktivira prečicom %1."
+"moći da ga isključite mišem. Umesto toga upotrebite meni prozora, koji se "
+"aktivira prečicom %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:93
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse."
 msgstr ""
-"Izabrali da prozor bude preko celog ekrana.\n"
+"Izabrali ste da prozor bude preko celog ekrana.\n"
 "Ako sâm program nema opciju da se režim preko celog ekrana isključi, nećete "
-"moći da ga isključite mišem. Umesto toga upotrebite meni radnji sa prozorom, "
-"koji se aktivira prečicom %1."
+"moći da ga isključite mišem."
 
 #: helpers/dialoghelper/dialoghelper.cpp:98
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
-msgstr "Preko &celog ekrana"
+msgstr "Opozovi prikaz preko celog ekrana"
 
 #: helpers/dialoghelper/dialoghelper.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -1499,15 +1438,10 @@ msgid ""
 msgstr ""
 "Izabrali ste da prozor nema ivice.\n"
 "Bez ivice, nećete moći ponovo da uključite ivicu mišem. Umesto toga "
-"upotrebite meni radnji sa prozorom, koji se aktivira prečicom %1."
+"upotrebite prečicu %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:106
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -1516,43 +1450,31 @@ msgid ""
 msgstr ""
 "Izabrali ste da prozor nema ivice.\n"
 "Bez ivice, nećete moći ponovo da uključite ivicu mišem. Umesto toga "
-"upotrebite meni radnji sa prozorom, koji se aktivira prečicom %1."
+"upotrebite meni prozora, koji se aktivira prečicom %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:112
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse."
 msgstr ""
 "Izabrali ste da prozor nema ivice.\n"
-"Bez ivice, nećete moći ponovo da uključite ivicu mišem. Umesto toga "
-"upotrebite meni radnji sa prozorom, koji se aktivira prečicom %1."
+"Bez ivice, nećete moći ponovo da uključite ivicu mišem."
 
 #: helpers/dialoghelper/dialoghelper.cpp:116
-#, fuzzy, kde-format
-#| msgid "&No Border"
+#, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
-msgstr "&Bez ivice"
+msgstr "Vrati ivicu"
 
 #: helpers/dialoghelper/dialoghelper.cpp:133
 #, kde-format
 msgid "Do not show again"
-msgstr ""
+msgstr "Ne prikazuj više"
 
 #: helpers/killer/killdialog.cpp:37
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<p>Do you want to terminate this application?</p><p><warning>Terminating "
-#| "the application will close all of its child windows. Any unsaved data "
-#| "will be lost.</warning></p>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
@@ -1560,17 +1482,13 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para>Želite li da obustavite ovaj program?</"
-"para><para><warning>Obustavljanjem programa zatvaraju se svi njegovi dečiji "
-"prozori i gube se svi nesačuvani podaci.</warning></para>"
+"<para><application>%1</application> se ne odaziva. Želite li da obustavite "
+"ovaj program?</para><para><emphasis strong='true'>Obustavljanjem ovog "
+"programa zatvaraju se svi njegovi prozori i gube se svi nesačuvani podaci.</"
+"emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:41
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<p>Do you want to terminate this application?</p><p><warning>Terminating "
-#| "the application will close all of its child windows. Any unsaved data "
-#| "will be lost.</warning></p>"
+#, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
@@ -1578,57 +1496,52 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>Želite li da obustavite ovaj program?</"
-"para><para><warning>Obustavljanjem programa zatvaraju se svi njegovi dečiji "
-"prozori i gube se svi nesačuvani podaci.</warning></para>"
+"<para>Prozor „%1“ programa <application>%2</application> se ne odaziva. "
+"Želite li da obustavite ovaj program?</para><para><emphasis "
+"strong='true'>Obustavljanjem ovog programa zatvaraju se svi njegovi prozori "
+"i gube se svi nesačuvani podaci.</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "&Terminate Application %1"
+#, kde-format
 msgid "Terminating %1…"
-msgstr "&Obustavi program %1"
+msgstr "Obustavljam %1…"
 
 #: helpers/killer/killdialog.cpp:69
-#, fuzzy, kde-format
-#| msgid "&Terminate Application %1"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "&Obustavi program %1"
+msgstr "&Obustavi %1"
 
 #: helpers/killer/killdialog.cpp:72
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "Sačekaj još malo"
+msgstr "&Sačekaj još malo"
 
 #: helpers/killer/killdialog.cpp:84
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "ID procesa: %1"
 
 #: helpers/killer/killdialog.cpp:91
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "ime domaćina"
+msgstr "Ime domaćina: %1"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, KillDialog)
 #: helpers/killer/killdialog.ui:14
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(ne odaziva se)"
+msgstr "Ne odaziva se"
 
 #. i18n: ectx: property (title), widget (KCollapsibleGroupBox, kcollapsiblegroupbox)
 #: helpers/killer/killdialog.ui:53
 #, kde-format
 msgid "&Details"
-msgstr ""
+msgstr "&Detalji"
 
 #: helpers/killer/killer.cpp:134
 #, kde-format
@@ -1673,11 +1586,9 @@ msgid "name"
 msgstr "ime"
 
 #: keyboard_layout.cpp:46 keyboard_layout.cpp:54 keyboard_layout.cpp:136
-#, fuzzy, kde-format
-#| msgctxt "tooltip title"
-#| msgid "Keyboard Layout"
+#, kde-format
 msgid "Keyboard Layout Switcher"
-msgstr "Raspored tastature"
+msgstr "Menjač rasporeda tastature"
 
 #: killwindow.cpp:31
 #, kde-format
@@ -1705,10 +1616,9 @@ msgid "KDE window manager"
 msgstr "KDE‑ov menadžer prozora"
 
 #: main.cpp:144
-#, fuzzy, kde-format
-#| msgid "(c) 1999-2013, The KDE Developers"
+#, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
-msgstr "© 1999-2013, programeri KDE‑a"
+msgstr "© 1999–2019, programeri KDE‑a"
 
 #: main.cpp:146
 #, kde-format
@@ -1733,29 +1643,27 @@ msgstr "Luboš Lunjak"
 #: main.cpp:150
 #, kde-format
 msgid "Martin Flöser"
-msgstr ""
+msgstr "Martin Flöser"
 
 #: main.cpp:151
 #, kde-format
 msgid "David Edmundson"
-msgstr ""
+msgstr "Dejvid Edmundson"
 
 #: main.cpp:152
 #, kde-format
 msgid "Roman Gilg"
-msgstr ""
+msgstr "Roman Gilg"
 
 #: main.cpp:153
 #, kde-format
 msgid "Vlad Zahorodnii"
-msgstr ""
+msgstr "Vlad Zahorodnii"
 
 #: main.cpp:154
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Xaver Hugl"
-msgstr "vrlo ogromna"
+msgstr "Xaver Hugl"
 
 #: main_wayland.cpp:340
 #, kde-format
@@ -1798,7 +1706,7 @@ msgstr "Visina prozorskog režima. Podrazumevana je 768."
 #: main_wayland.cpp:364
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "Da li da prozorski režim bude preko celog ekrana"
 
 #: main_wayland.cpp:368
 #, kde-format
@@ -1819,38 +1727,40 @@ msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
+"Wayland soket za dolazne veze. Može se kombinovati sa --socket da bi se "
+"soket imenovao"
 
 #: main_wayland.cpp:382
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
-msgstr ""
+msgstr "XWayland soket za dolazne veze XWaylanda. Može se zadati više puta"
 
 #: main_wayland.cpp:386
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
-msgstr ""
+msgstr "Ime unapred postavljenog XWayland prikaza"
 
 #: main_wayland.cpp:390
 #, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
-msgstr ""
+msgstr "XWayland soket za početne veze XWaylanda"
 
 #: main_wayland.cpp:394
 #, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
-msgstr ""
+msgstr "Ime unapred postavljenog početnog XWayland prikaza"
 
 #: main_wayland.cpp:398
 #, kde-format
 msgid "Name of the xauthority file "
-msgstr ""
+msgstr "Ime fajla xauthority "
 
 #: main_wayland.cpp:402
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
-msgstr ""
+msgstr "Napušta ovaj primerak da bi ga kwin_wayland_wrapper ponovo pokrenuo."
 
 #: main_wayland.cpp:404
 #, kde-format
@@ -1861,7 +1771,7 @@ msgstr "Renderuj kroz DRM čvor."
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
-msgstr ""
+msgstr "Podaci o lokalitetu uzimaju se iz locale1 umesto iz korisničke postave"
 
 #: main_wayland.cpp:434
 #, kde-format
@@ -1874,16 +1784,14 @@ msgid "Starts the session in locked mode."
 msgstr "Pokreće sesiju u zaključanom režimu."
 
 #: main_wayland.cpp:444
-#, fuzzy, kde-format
-#| msgid "Starts the session in locked mode."
+#, kde-format
 msgid "Starts the session without lock screen support."
-msgstr "Pokreće sesiju u zaključanom režimu."
+msgstr "Pokreće sesiju bez podrške za zaključavanje ekrana."
 
 #: main_wayland.cpp:449
-#, fuzzy, kde-format
-#| msgid "Starts the session in locked mode."
+#, kde-format
 msgid "Starts the session without global shortcuts support."
-msgstr "Pokreće sesiju u zaključanom režimu."
+msgstr "Pokreće sesiju bez podrške za globalne prečice."
 
 # rewrite-msgid: /KActivities/activities/
 #: main_wayland.cpp:454
@@ -1904,22 +1812,18 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: plugins/blur/blur_config.ui:17
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Blur strength:"
-msgstr "&Jačina:"
+msgstr "Jačina zamućenja:"
 
 # >> @item
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
 #: plugins/blur/blur_config.ui:53 plugins/blur/blur_config.ui:107
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Light"
-msgstr "desno"
+msgstr "slab"
 
-# >> @item:inrange Strength of the effect:
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationNone)
@@ -1931,20 +1835,17 @@ msgstr "jak"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
 #: plugins/blur/blur_config.ui:74
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Noise strength:"
-msgstr "&Jačina:"
+msgstr "Jačina šuma:"
 
 # rewrite-msgid: /caption/title/
 #. i18n: ectx: property (text), widget (QLabel, labelSaturation)
 #: plugins/blur/blur_config.ui:128
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Saturation:"
-msgstr "naslov"
+msgstr "Zasićenje:"
 
-# >> @item:intext Ignore
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
 #: plugins/blur/blur_config.ui:161
@@ -1954,128 +1855,112 @@ msgid "None"
 msgstr "ništa"
 
 #: plugins/colorpicker/colorpicker.cpp:151
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Izaberite prozor za prinudno zatvaranje levim klikom ili Enterom.\n"
-"Escape ili desni klik da odustanete."
+"Izaberite položaj za hvatanje boje levim klikom ili Enterom.\n"
+"Escape ili desni klik za odustajanje."
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: plugins/diminactive/diminactive_config.ui:17
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Strength:"
-msgstr "&Jačina:"
+msgstr "Jačina:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
 #: plugins/diminactive/diminactive_config.ui:43
 #, kde-format
 msgid "Dim:"
-msgstr ""
+msgstr "Priguši:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
 #: plugins/diminactive/diminactive_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Do not animate panels"
+#, kde-format
 msgid "Docks and panels"
-msgstr "Ne animiraj panele"
+msgstr "Sidrišta i panele"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: plugins/diminactive/diminactive_config.ui:57
-#, fuzzy, kde-format
-#| msgid "&All Desktops"
+#, kde-format
 msgid "Desktop"
-msgstr "&Sve površi"
+msgstr "Površ"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
 #: plugins/diminactive/diminactive_config.ui:64
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Keep above windows"
-msgstr "Drži iz&nad ostalih"
+msgstr "Prozore držane iznad"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
 #: plugins/diminactive/diminactive_config.ui:71
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "By window group"
-msgstr "Pomeri prozor"
+msgstr "Po grupi prozora"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
 #: plugins/diminactive/diminactive_config.ui:78
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen windows"
-msgstr "Preko &celog ekrana"
+msgstr "Prozore preko celog ekrana"
 
 #. i18n: ectx: label, entry (DelayTime), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:9
 #, kde-format
 msgid "Delay Time"
-msgstr ""
+msgstr "Vreme zastoja"
 
 #. i18n: ectx: label, entry (DwellTime), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:13
 #, kde-format
 msgid "Dwell Time"
-msgstr ""
+msgstr "Vreme prebivanja"
 
 #. i18n: ectx: label, entry (MotionThreshold), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:17
 #, kde-format
 msgid "Motion Threshold"
-msgstr ""
+msgstr "Prag pokreta"
 
 #. i18n: ectx: label, entry (DefaultButton), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:21
-#, fuzzy, kde-format
-#| msgctxt "Duration of rotation"
-#| msgid "Default"
+#, kde-format
 msgid "Default Button"
-msgstr "podrazumevano"
+msgstr "Podrazumevano dugme"
 
 # >> @item
 #. i18n: ectx: label, entry (ButtonLocked), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:33
-#, fuzzy, kde-format
-#| msgctxt "A button in a mouse press/release event"
-#| msgid "Button"
+#, kde-format
 msgid "Lock Button"
-msgstr "dugme"
+msgstr "Zaključavanje dugmeta"
 
 #. i18n: ectx: label, entry (DwellColor), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:37
 #, kde-format
 msgid "Dwell Color"
-msgstr ""
+msgstr "Boja prebivanja"
 
 # rewrite-msgid: /KActivities/activities/
 #: plugins/eis/eisinputcapturemanager.cpp:140
-#, fuzzy, kde-format
-#| msgid "Disable KActivities integration."
+#, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
-msgstr "Isključi uklapanje sa aktivnostima."
+msgstr "Isključi aktivno hvatanje unosa"
 
 # >> @item
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "Control"
+msgstr "Daljinsko upravljanje"
 
 #: plugins/eis/eisprompter.cpp:52
 #, kde-kuit-format
 msgctxt "@info"
 msgid "<application>%1</application> is asking to control input devices"
-msgstr ""
+msgstr "<application>%1</application> traži da upravlja ulaznim uređajima"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
@@ -2083,7 +1968,7 @@ msgctxt ""
 "@option:check, %1 is the application name. This option always allow apps "
 "claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "Uvek dozvoli programima koji tvrde da su %1"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -2094,18 +1979,22 @@ msgid ""
 "revoke this permission later on <application>System Settings</application>’ "
 "“Legacy X11 App Support” page."
 msgstr ""
+"Identiteti starih X11 programa ne mogu se proveriti. Svaki program koji "
+"tvrdi da je <application>%1</application> moći će da upravlja ulaznim "
+"uređajima. Ovu dozvolu možete kasnije opozvati na stranici „Podrška za stare "
+"X11 programe“ u <application>Sistemskim postavkama</application>."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
 msgctxt "@action:button Allow control of input devices"
 msgid "Allow"
-msgstr ""
+msgstr "Dozvoli"
 
 #: plugins/eis/eisprompter.cpp:70
 #, kde-format
 msgctxt "@action:button Deny control of input devices"
 msgid "Deny"
-msgstr ""
+msgstr "Odbij"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -2119,17 +2008,14 @@ msgstr "Trajanje animacije:"
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
 #: plugins/scale/package/contents/ui/config.ui:17
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Duration:"
-msgstr "naslov"
+msgstr "Trajanje:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: plugins/glide/glide_config.ui:32
 #: plugins/scale/package/contents/ui/config.ui:30
-#, fuzzy, kde-format
-#| msgctxt "Duration of rotation"
-#| msgid "Default"
+#, kde-format
 msgid "Default"
 msgstr "podrazumevano"
 
@@ -2144,22 +2030,18 @@ msgstr " milisekundi"
 # >> @item
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: plugins/glide/glide_config.ui:50
-#, fuzzy, kde-format
-#| msgctxt "The global position of the touch point"
-#| msgid "Global position"
+#, kde-format
 msgid "Window Open Animation"
-msgstr "globalni položaj"
+msgstr "Animacija otvaranja prozora"
 
 # rewrite-msgid: /caption/title/
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
 #: plugins/glide/glide_config.ui:56 plugins/glide/glide_config.ui:154
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Rotation edge:"
-msgstr "naslov"
+msgstr "Ivica rotacije:"
 
-# >> @item:inlistbox Desktop name alignment
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/glide/glide_config.ui:70 plugins/glide/glide_config.ui:168
@@ -2171,13 +2053,10 @@ msgstr "gore"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Right"
 msgstr "desno"
 
-# >> @item:inlistbox Desktop name alignment
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/glide/glide_config.ui:80 plugins/glide/glide_config.ui:178
@@ -2189,9 +2068,7 @@ msgstr "dole"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgid "Left"
 msgstr "levo"
 
@@ -2199,68 +2076,62 @@ msgstr "levo"
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
 #: plugins/glide/glide_config.ui:93 plugins/glide/glide_config.ui:191
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Rotation angle:"
-msgstr "naslov"
+msgstr "Ugao rotacije:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
 #: plugins/glide/glide_config.ui:119 plugins/glide/glide_config.ui:198
 #, kde-format
 msgid "Distance:"
-msgstr ""
+msgstr "Rastojanje:"
 
 # >> @item
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
 #: plugins/glide/glide_config.ui:148
-#, fuzzy, kde-format
-#| msgctxt "The global position of the touch point"
-#| msgid "Global position"
+#, kde-format
 msgid "Window Close Animation"
-msgstr "globalni položaj"
+msgstr "Animacija zatvaranja prozora"
 
 #: plugins/hidecursor/hidecursor_config.cpp:56
 #, kde-format
 msgctxt "@item:inmenu never hide cursor on inactivity"
 msgid "Never"
-msgstr ""
+msgstr "nikad"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid "%1 second"
 msgid_plural "%1 seconds"
-msgstr[0] " milisekundi"
-msgstr[1] " milisekundi"
-msgstr[2] " milisekundi"
-msgstr[3] " milisekundi"
+msgstr[0] "%1 sekunda"
+msgstr[1] "%1 sekunde"
+msgstr[2] "%1 sekundi"
+msgstr[3] "%1 sekunda"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
 #, kde-format
 msgid "Hide pointer on inactivity:"
-msgstr ""
+msgstr "Skrivanje pokazivača pri neaktivnosti:"
 
 # >> @item
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
-#, fuzzy, kde-format
-#| msgctxt "A mouse pointer motion event"
-#| msgid "Pointer Motion"
+#, kde-format
 msgid "Hide pointer on typing"
-msgstr "pokret pokazivača"
+msgstr "Sakrij pokazivač pri kucanju"
 
 #: plugins/invert/invert.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect"
-msgstr "Efekat izvrtanja"
+msgstr "Uključi/isključi efekat izvrtanja"
 
 #: plugins/invert/invert.cpp:51
 #, kde-format
 msgid "Toggle Invert Effect on Window"
-msgstr "Efekat izvrtanja na prozoru"
+msgstr "Uključi/isključi efekat izvrtanja na prozoru"
 
 #: plugins/invert/invert.cpp:57
 #, kde-format
@@ -2270,217 +2141,204 @@ msgstr "Izvrni boje ekrana"
 #: plugins/keynotification/keynotification.cpp:45
 #, kde-format
 msgid "The Caps Lock key has been activated"
-msgstr ""
+msgstr "Taster CapsLock je aktiviran"
 
 #: plugins/keynotification/keynotification.cpp:49
 #, kde-format
 msgid "The Caps Lock key is now inactive"
-msgstr ""
+msgstr "Taster CapsLock sada nije aktivan"
 
 #: plugins/keynotification/keynotification.cpp:53
 #, kde-format
 msgid "The Num Lock key has been activated"
-msgstr ""
+msgstr "Taster NumLock je aktiviran"
 
 #: plugins/keynotification/keynotification.cpp:57
 #, kde-format
 msgid "The Num Lock key is now inactive"
-msgstr ""
+msgstr "Taster NumLock sada nije aktivan"
 
 #: plugins/keynotification/keynotification.cpp:61
 #, kde-format
 msgid "The Scroll Lock key has been activated"
-msgstr ""
+msgstr "Taster ScrollLock je aktiviran"
 
 #: plugins/keynotification/keynotification.cpp:65
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
-msgstr ""
+msgstr "Taster ScrollLock sada nije aktivan"
 
 #: plugins/keynotification/keynotification.cpp:78
 #, kde-format
 msgid "The Shift key is now active."
-msgstr ""
+msgstr "Taster Shift je sada aktivan."
 
 #: plugins/keynotification/keynotification.cpp:82
 #, kde-format
 msgid "The Shift key is now inactive."
-msgstr ""
+msgstr "Taster Shift sada nije aktivan."
 
 #: plugins/keynotification/keynotification.cpp:86
 #, kde-format
 msgid "The Control key is now active."
-msgstr ""
+msgstr "Taster Control je sada aktivan."
 
 #: plugins/keynotification/keynotification.cpp:90
 #, kde-format
 msgid "The Control key is now inactive."
-msgstr ""
+msgstr "Taster Control sada nije aktivan."
 
 #: plugins/keynotification/keynotification.cpp:94
 #, kde-format
 msgid "The Alt key is now active."
-msgstr ""
+msgstr "Taster Alt je sada aktivan."
 
 #: plugins/keynotification/keynotification.cpp:98
 #, kde-format
 msgid "The Alt key is now inactive."
-msgstr ""
+msgstr "Taster Alt sada nije aktivan."
 
 #: plugins/keynotification/keynotification.cpp:102
 #, kde-format
 msgid "The Meta key is now active."
-msgstr ""
+msgstr "Taster Meta je sada aktivan."
 
 #: plugins/keynotification/keynotification.cpp:106
 #, kde-format
 msgid "The Meta key is now inactive."
-msgstr ""
+msgstr "Taster Meta sada nije aktivan."
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:41
-#, fuzzy, kde-format
-#| msgid "Ac&tivities"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "activate"
-msgstr "&Aktivnosti"
+msgstr "aktiviraj"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:44
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "close"
-msgstr "&Zatvori"
+msgstr "zatvori"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:47
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "min"
-msgstr ""
+msgstr "min"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:50
-#, fuzzy, kde-format
-#| msgid "Mi&nimize"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "minimize"
-msgstr "M&inimizuj"
+msgstr "minimizuj"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:53
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "max"
-msgstr ""
+msgstr "maks"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:56
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:58
-#, fuzzy, kde-format
-#| msgid "Ma&ximize"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "maximize"
-msgstr "M&aksimizuj"
+msgstr "maksimizuj"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:59
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "fullscreen"
-msgstr "Preko &celog ekrana"
+msgstr "ceo ekran"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:62
-#, fuzzy, kde-format
-#| msgid "&Shade"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "shade"
-msgstr "&Namotaj"
+msgstr "namotaj"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:65
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep above"
-msgstr "Drži iz&nad ostalih"
+msgstr "drži iznad"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:68
-#, fuzzy, kde-format
-#| msgid "Keep &Below Others"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep below"
-msgstr "Drži is&pod ostalih"
+msgstr "drži ispod"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:75
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "window"
-msgstr "Pomeri prozor"
+msgstr "prozor"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:85
-#, fuzzy, kde-format
-#| msgid "name"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "name"
 msgstr "ime"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:87
-#, fuzzy, kde-format
-#| msgid "name"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "appname"
-msgstr "ime"
+msgstr "program"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:89
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:145
-#, fuzzy, kde-format
-#| msgid "&All Desktops"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
-msgstr "&Sve površi"
+msgstr "površ"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:259
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop %1"
+#, kde-format
 msgid "Switch to desktop %1"
-msgstr "Na površ %1"
+msgstr "Pređi na površ %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:298
 #, kde-format
 msgid "Close running window on %1"
-msgstr ""
+msgstr "Zatvori pokrenuti prozor na površi %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:301
 #, kde-format
 msgid "(Un)minimize running window on %1"
-msgstr ""
+msgstr "Minimizuj/vrati pokrenuti prozor na površi %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:304
 #, kde-format
 msgid "Maximize/restore running window on %1"
-msgstr ""
+msgstr "Maksimizuj/vrati pokrenuti prozor na površi %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:307
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr ""
+"Uključi/isključi prikaz preko celog ekrana za pokrenuti prozor na površi %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:310
 #, kde-format
 msgid "(Un)shade running window on %1"
-msgstr ""
+msgstr "Namotaj/odmotaj pokrenuti prozor na površi %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:313
 #, kde-format
 msgid "Toggle keep above for running window on %1"
-msgstr ""
+msgstr "Uključi/isključi držanje iznad za pokrenuti prozor na površi %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:316
 #, kde-format
 msgid "Toggle keep below running window on %1"
-msgstr ""
+msgstr "Uključi/isključi držanje ispod za pokrenuti prozor na površi %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:320
-#, fuzzy, kde-format
-#| msgid "Activate Window (%1)"
+#, kde-format
 msgid "Activate running window on %1"
-msgstr "Aktiviraj prozor (%1)"
+msgstr "Aktiviraj pokrenuti prozor na površi %1"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: plugins/login/package/contents/ui/config.ui:17
@@ -2497,34 +2355,27 @@ msgstr "podrazumevano"
 
 #: plugins/mouseclick/mouseclick.cpp:40
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Mouse Click Effect"
+#, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "Prebaci efekta klika mišem"
+msgstr "Uključi/isključi animaciju na klik mišem"
 
 # >> @item
 #: plugins/mouseclick/mouseclick.cpp:46
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "levo"
 
 # >> @item
 #: plugins/mouseclick/mouseclick.cpp:47
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Middle"
+#, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "srednje"
 
 # >> @item
 #: plugins/mouseclick/mouseclick.cpp:48
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
 msgstr "desno"
@@ -2538,26 +2389,23 @@ msgstr "Osnovne postavke"
 # >> @item
 #. i18n: ectx: property (text), widget (QLabel, button1_label)
 #: plugins/mouseclick/mouseclick_config.ui:37
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Left Mouse Button Color:"
-msgstr "nema dugmadi miša"
+msgstr "Boja za levo dugme:"
 
 # >> @item
 #. i18n: ectx: property (text), widget (QLabel, button2_label)
 #: plugins/mouseclick/mouseclick_config.ui:50
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Middle Mouse Button Color:"
-msgstr "nema dugmadi miša"
+msgstr "Boja za srednje dugme:"
 
 # >> @item
 #. i18n: ectx: property (text), widget (QLabel, button3_label)
 #: plugins/mouseclick/mouseclick_config.ui:70
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Right Mouse Button Color:"
-msgstr "nema dugmadi miša"
+msgstr "Boja za desno dugme:"
 
 #. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
 #: plugins/mouseclick/mouseclick_config.ui:91
@@ -2565,14 +2413,12 @@ msgstr "nema dugmadi miša"
 msgid "Advanced Settings"
 msgstr "Napredne postavke"
 
-# >> @title:group
 #. i18n: ectx: property (title), widget (QGroupBox, rings)
 #: plugins/mouseclick/mouseclick_config.ui:97
 #, kde-format
 msgid "Rings"
 msgstr "Prstenovi"
 
-# skip-rule: t-line
 #. i18n: ectx: property (text), widget (QLabel, ring_line_width_label)
 #: plugins/mouseclick/mouseclick_config.ui:103
 #, kde-format
@@ -2583,11 +2429,9 @@ msgstr "Debljina linije:"
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
 #: plugins/mouseclick/mouseclick_config.ui:119
 #: plugins/mouseclick/mouseclick_config.ui:171
-#, fuzzy, kde-format
-#| msgid " pixel"
-#| msgid_plural " pixels"
+#, kde-format
 msgid " pixel"
-msgstr " piksel"
+msgstr " piksela"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingLife)
 #: plugins/mouseclick/mouseclick_config.ui:132
@@ -2610,13 +2454,10 @@ msgstr "Poluprečnik prstena:"
 # >> @item
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: plugins/mouseclick/mouseclick_config.ui:184
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgid "Ring Count:"
-msgstr "broj prstiju"
+msgstr "Broj prstenova:"
 
-# >> @title:group
 #. i18n: ectx: property (title), widget (QGroupBox, font)
 #: plugins/mouseclick/mouseclick_config.ui:210
 #, kde-format
@@ -2631,10 +2472,9 @@ msgstr "Font:"
 
 #. i18n: ectx: property (text), widget (QLabel, showtext_label)
 #: plugins/mouseclick/mouseclick_config.ui:233
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
+#, kde-format
 msgid "Show Text:"
-msgstr "Prikaži površ"
+msgstr "Prikaži tekst:"
 
 #: plugins/mousemark/mousemark.cpp:36
 #, kde-format
@@ -2656,10 +2496,10 @@ msgstr "Očisti tragove miša"
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] " piksel"
+msgstr[1] " piksela"
+msgstr[2] " piksela"
+msgstr[3] " piksel"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: plugins/mousemark/mousemark_config.ui:17
@@ -2682,19 +2522,15 @@ msgstr "&Boja:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, fuzzy, kde-format
-#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
-msgstr "Crtajte mišem tako što držite tastere Shift+Meta i pomerate ga."
+msgstr "Crtanje mišem držanjem modifikatorskih tastera i pomeranjem miša"
 
-# >> @item
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
-#| msgctxt "The currently active modifiers"
-#| msgid "Modifiers"
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "modifikatori"
+msgstr "Modifikatorski tasteri za slobodno crtanje:"
 
 # >> @item
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
@@ -2703,9 +2539,7 @@ msgstr "modifikatori"
 #: plugins/mousemark/mousemark_config.ui:125
 #: plugins/mousemark/mousemark_config.ui:179
 #: plugins/trackmouse/trackmouse_config.ui:65
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "Alt"
 msgstr "Alt"
 
@@ -2726,9 +2560,7 @@ msgstr "Ctrl"
 #: plugins/mousemark/mousemark_config.ui:139
 #: plugins/mousemark/mousemark_config.ui:193
 #: plugins/trackmouse/trackmouse_config.ui:79
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Shift"
+#, kde-format
 msgid "Shift"
 msgstr "Shift"
 
@@ -2739,358 +2571,326 @@ msgstr "Shift"
 #: plugins/mousemark/mousemark_config.ui:146
 #: plugins/mousemark/mousemark_config.ui:200
 #: plugins/trackmouse/trackmouse_config.ui:86
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Meta"
+#, kde-format
 msgid "Meta"
 msgstr "Meta"
 
-# >> @item
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
-#| msgctxt "The currently active modifiers"
-#| msgid "Modifiers"
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "modifikatori"
+msgstr "Modifikatorski tasteri za crtanje strelica:"
 
 #: plugins/nightlight/nightlightmanager.cpp:55
 #, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr ""
+msgstr "Noćno svetlo suspendovano"
 
 #: plugins/nightlight/nightlightmanager.cpp:56
 #, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr ""
+msgstr "Noćno svetlo nastavljeno"
 
 #: plugins/nightlight/nightlightmanager.cpp:77
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "Suspenduj/nastavi noćno svetlo"
 
 #: plugins/nightlight/nightlightmanager.cpp:393
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr ""
+msgstr "Pregled temperature boje"
 
 #: plugins/outputlocator/outputlocator.cpp:26
 #, kde-format
 msgctxt "@label"
 msgid "Built-in Screen"
-msgstr ""
+msgstr "Ugrađeni ekran"
 
 #: plugins/overview/DesktopBar.qml:162
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgid "Delete Virtual Desktop"
-msgstr "Premesti na &površ"
+msgstr "Obriši virtuelnu površ"
 
 #: plugins/overview/DesktopBar.qml:261
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "&Nova površ"
+msgstr "Dodaj virtuelnu površ"
 
 #: plugins/overview/DesktopBar.qml:263
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgid "Virtual Desktop limit reached"
-msgstr "&Nova površ"
+msgstr "Dostignuta je granica broja virtuelnih površi"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Smenjuj pregled i mrežni prikaz"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:45
 #: plugins/overview/overvieweffect.cpp:145
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "Smenjuj mrežni prikaz i pregled"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:50
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
-msgstr "Efekat izvrtanja"
+msgstr "Uključi/isključi pregled"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "Efekat izvrtanja"
+msgstr "Uključi/isključi mrežni prikaz"
 
 #. i18n: ectx: property (text), widget (QLabel, label_IgnoreMinimized)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore minimized windows:"
-msgstr "Minimizuj prozor"
+msgstr "Ignoriši minimizovane prozore:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_OrganizedGrid)
 #: plugins/overview/kcm/overvieweffectkcm.ui:36
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "Organizuj prozore u mrežnom prikazu:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
 #: plugins/overview/kcm/overvieweffectkcm.ui:50
 #, kde-format
 msgid "Search results include filtered windows:"
-msgstr ""
+msgstr "Rezultati pretrage obuhvataju filtrirane prozore:"
 
 #: plugins/overview/Main.qml:428
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "Premesti na &površ"
+msgstr "Nema drugih virtuelnih površi za prikaz"
 
 #: plugins/overview/Main.qml:434
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
-msgstr "&Nova površ"
+msgstr "Dodaj virtuelnu površ"
 
 #: plugins/overview/Main.qml:441
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Premesti na &površ"
+msgstr "Podesi virtuelne površi…"
 
 # >> @item
 #: plugins/overview/Main.qml:792
-#, fuzzy, kde-format
-#| msgid "X11 Unmanaged Windows"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
-msgstr "neupravljani X11 prozori"
+msgstr "Nema poklapajućih prozora"
 
 #: plugins/overview/overvieweffect.cpp:139
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Smenjuj pregled i mrežni prikaz"
 
 #: plugins/overview/overvieweffect.cpp:152
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
-msgstr "Efekat izvrtanja"
+msgstr "Uključi/isključi pregled"
 
 #: plugins/overview/overvieweffect.cpp:158
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "Efekat izvrtanja"
+msgstr "Uključi/isključi mrežni prikaz"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
 msgid "Drag Down To Close"
-msgstr ""
+msgstr "Prevucite nadole da zatvorite"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:373
-#, fuzzy, kde-format
-#| msgid "Close Window"
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "Zatvori prozor"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InScale)
 #: plugins/scale/package/contents/ui/config.ui:46
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Window open scale:"
-msgstr "Pomeri prozor"
+msgstr "Razmera pri otvaranju prozora:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_OutScale)
 #: plugins/scale/package/contents/ui/config.ui:53
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Window close scale:"
-msgstr "Pomeri prozor"
+msgstr "Razmera pri zatvaranju prozora:"
 
 #: plugins/screencast/pipewirecore.cpp:63
 #: plugins/screencast/pipewirecore.cpp:92
 #, kde-format
 msgid "Failed to start main PipeWire loop"
-msgstr ""
+msgstr "Ne mogu da pokrenem glavnu PipeWire petlju"
 
 #: plugins/screencast/pipewirecore.cpp:79
 #, kde-format
 msgid "Failed to create PipeWire context"
-msgstr ""
+msgstr "Ne mogu da napravim PipeWire kontekst"
 
 #: plugins/screencast/pipewirecore.cpp:86
 #, kde-format
 msgid "Failed to connect PipeWire context"
-msgstr ""
+msgstr "Ne mogu da povežem PipeWire kontekst"
 
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
 #: plugins/screencast/screencastmanager.cpp:151
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Unsupported compositing type"
-msgstr "Suspenduj slaganje"
+msgstr "Nepodržan tip slaganja"
 
 #: plugins/screencast/screencastmanager.cpp:62
 #, kde-format
 msgid "Could not find window id %1"
-msgstr ""
+msgstr "Ne mogu da nađem ID prozora %1"
 
 #: plugins/screencast/screencastmanager.cpp:118
 #, kde-format
 msgid "Could not find output"
-msgstr ""
+msgstr "Ne mogu da nađem izlaz"
 
 #: plugins/screencast/screencastmanager.cpp:156
 #, kde-format
 msgid "Invalid region"
-msgstr ""
+msgstr "Loš region"
 
 #: plugins/screencast/screencaststream.cpp:404
 #, kde-format
 msgid "Failed to create PipeWire stream"
-msgstr ""
+msgstr "Ne mogu da napravim PipeWire tok"
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:388
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Izaberite prozor za prinudno zatvaranje levim klikom ili Enterom.\n"
-"Escape ili desni klik da odustanete."
+"Izaberite prozor za snimak ekrana levim klikom ili Enterom.\n"
+"Escape ili desni klik za odustajanje."
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:406
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Izaberite prozor za prinudno zatvaranje levim klikom ili Enterom.\n"
-"Escape ili desni klik da odustanete."
+"Napravite snimak ekrana levim klikom ili Enterom.\n"
+"Escape ili desni klik za odustajanje."
 
 #: plugins/showfps/Fallback.qml:26
-#, fuzzy, kde-format
-#| msgid "This effect is not a benchmark"
+#, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Ovaj efekat nije odmeravanje"
 
 # >> @item
 #: plugins/showfps/Main.qml:108
-#, fuzzy, kde-format
-#| msgctxt "A mouse pointer motion event"
-#| msgid "Pointer Motion"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr "pokret pokazivača"
+msgstr "Trajanje iscrtavanja"
 
 #: plugins/showfps/Main.qml:121
-#, fuzzy, kde-format
-#| msgid "Configure Layouts..."
+#, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr "Podesi rasporede..."
+msgstr "Tekući FPS"
 
 #: plugins/showfps/Main.qml:130
-#, fuzzy, kde-format
-#| msgid "Maximum &width:"
+#, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "Najveća &širina:"
+msgstr "Najveći FPS"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
 #: plugins/slide/slide_config.ui:17
-#, fuzzy, kde-format
-#| msgctxt "Comment describing the KWin Effect"
-#| msgid "Magnify the entire desktop"
+#, kde-format
 msgid "Gap between desktops"
-msgstr "Uveličajte celu površ"
+msgstr "Zazor između površi"
 
 # >> @item
 #. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
 #: plugins/slide/slide_config.ui:23
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Horizontal"
+#, kde-format
 msgid "Horizontal:"
-msgstr "vodoravno"
+msgstr "Vodoravno:"
 
 # >> @item
 #. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
 #: plugins/slide/slide_config.ui:46
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Vertical"
+#, kde-format
 msgid "Vertical:"
-msgstr "uspravno"
+msgstr "Uspravno:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
 #: plugins/slide/slide_config.ui:72
 #, kde-format
 msgid "Slide desktop background"
-msgstr ""
+msgstr "Klizanje pozadine površi"
 
 #: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Taster Shift je zaključan i sada je aktivan za sve naredne pritiske na "
+"tastere."
 
 #: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Taster Control je zaključan i sada je aktivan za sve naredne pritiske na "
+"tastere."
 
 #: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Taster Alt je zaključan i sada je aktivan za sve naredne pritiske na tastere."
 
 #: plugins/stickykeys/stickykeys.cpp:29
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Taster Meta je zaključan i sada je aktivan za sve naredne pritiske na "
+"tastere."
 
 #: plugins/stickykeys/stickykeys.cpp:30
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Taster AltGr je zaključan i sada je aktivan za sve naredne pritiske na "
+"tastere."
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:51
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
-msgstr "Sličica za tekući prozor"
+msgstr "Uključi/isključi sličicu za tekući prozor"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:23
@@ -3128,45 +2928,43 @@ msgstr " %"
 #: plugins/tileseditor/tileseditoreffect.cpp:31
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr ""
+msgstr "Uključi/isključi uređivač pločica"
 
 #: plugins/tileseditor/Main.qml:153
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "Odstup:"
 
 #: plugins/tileseditor/Main.qml:163
-#, fuzzy, kde-format
-#| msgid "Configure Layouts..."
+#, kde-format
 msgid "Load Layout…"
-msgstr "Podesi rasporede..."
+msgstr "Učitaj raspored…"
 
 #: plugins/tileseditor/Main.qml:270
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Close"
-msgstr "&Zatvori"
+msgstr "Zatvori"
 
 #: plugins/tileseditor/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr ""
+msgstr "Podeli levo/desno"
 
 #: plugins/tileseditor/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr ""
+msgstr "Podeli gore/dole"
 
 #: plugins/tileseditor/TileDelegate.qml:182
 #: plugins/tileseditor/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
-msgstr ""
+msgstr "Dodaj plutajuću pločicu"
 
 #: plugins/tileseditor/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "Obriši"
 
 #: plugins/trackmouse/trackmouse.cpp:70
 #: plugins/trackmouse/trackmouse_config.cpp:49
@@ -3178,30 +2976,26 @@ msgstr "Prati miš"
 #: plugins/trackmouse/trackmouse_config.ui:26
 #, kde-format
 msgid "Trigger effect with:"
-msgstr ""
+msgstr "Okidanje efekta:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
 #: plugins/trackmouse/trackmouse_config.ui:33
-#, fuzzy, kde-format
-#| msgctxt "tooltip title"
-#| msgid "Keyboard Layout"
+#, kde-format
 msgid "Keyboard shortcut:"
-msgstr "Raspored tastature"
+msgstr "Prečica sa tastature:"
 
 # >> @item
 #. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
 #: plugins/trackmouse/trackmouse_config.ui:43
-#, fuzzy, kde-format
-#| msgctxt "The currently active modifiers"
-#| msgid "Modifiers"
+#, kde-format
 msgid "Modifier keys:"
-msgstr "modifikatori"
+msgstr "Modifikatorski tasteri:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
 #: plugins/translucency/package/contents/ui/config.ui:14
 #, kde-format
 msgid "Translucency"
-msgstr "Providnost"
+msgstr "Prozirnost"
 
 #. i18n: ectx: property (title), widget (QGroupBox, m_opacityGroupBox)
 #: plugins/translucency/package/contents/ui/config.ui:20
@@ -3215,7 +3009,6 @@ msgstr "Opšte postavke prozirnosti"
 msgid "Combobox popups:"
 msgstr "Iskačući spiskovi:"
 
-# >> @item:inrange
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: plugins/translucency/package/contents/ui/config.ui:121
@@ -3230,7 +3023,6 @@ msgstr "neprozirno"
 msgid "Dialogs:"
 msgstr "Dijalozi:"
 
-# >> @item:inrange
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: plugins/translucency/package/contents/ui/config.ui:156
@@ -3247,31 +3039,28 @@ msgstr "Meniji:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ExcludeFullScreen)
 #: plugins/translucency/package/contents/ui/config.ui:201
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Exclude fullscreen windows"
-msgstr "Preko &celog ekrana"
+msgstr "Izuzmi prozore preko celog ekrana"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:217
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Moving windows:"
-msgstr "Pomeri prozor"
+msgstr "Premeštani prozori:"
 
 # >> @item
 #. i18n: ectx: property (text), widget (QLabel, inactive_label)
 #: plugins/translucency/package/contents/ui/config.ui:236
-#, fuzzy, kde-format
-#| msgid "Internal Windows"
+#, kde-format
 msgid "Inactive windows:"
-msgstr "unutrašnji prozori"
+msgstr "Neaktivni prozori:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
 #: plugins/translucency/package/contents/ui/config.ui:277
 #, kde-format
 msgid "Set menu translucency independently"
-msgstr "Zasebna neprozirnost za menije"
+msgstr "Zasebna prozirnost za menije"
 
 #. i18n: ectx: property (text), widget (QLabel, dropdownmenus_label)
 #: plugins/translucency/package/contents/ui/config.ui:295
@@ -3320,11 +3109,9 @@ msgstr "Zapetama razdvojen spisak klasa prozora"
 # >> @item
 #. i18n: ectx: property (text), widget (QLabel, applyLabel)
 #: plugins/videowall/package/contents/ui/config.ui:45
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "All"
-msgstr "Alt"
+msgstr "sve"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
 #: plugins/videowall/package/contents/ui/config.ui:54
@@ -3336,52 +3123,47 @@ msgstr "Ignoriši"
 #: plugins/windowview/windowvieweffect.cpp:48
 #, kde-format
 msgid "Toggle Present Windows (Current desktop)"
-msgstr "Prisutni prozori (tekuća površ)"
+msgstr "Uključi/isključi prisutne prozore (tekuća površ)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:46
 #: plugins/windowview/windowvieweffect.cpp:57
-#, fuzzy, kde-format
-#| msgid "Keep Window on All Desktops"
+#, kde-format
 msgid "Toggle Present Windows (All desktops)"
-msgstr "Drži prozor na svim površima"
+msgstr "Uključi/isključi prisutne prozore (sve površi)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:51
 #: plugins/windowview/windowvieweffect.cpp:66
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
-msgstr "Prisutni prozori (klasa prozora)"
+msgstr "Uključi/isključi prisutne prozore (klasa prozora)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
 #: plugins/windowview/windowvieweffect.cpp:75
-#, fuzzy, kde-format
-#| msgid "Toggle Present Windows (Current desktop)"
+#, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr "Prisutni prozori (tekuća površ)"
+msgstr "Uključi/isključi prisutne prozore (klasa prozora na tekućoj površi)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:22
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore &minimized windows"
-msgstr "Minimizuj prozor"
+msgstr "Ignoriši &minimizovane prozore"
 
 #: plugins/windowview/Main.qml:107
 #, kde-format
 msgid "No Matches"
-msgstr ""
+msgstr "Nema poklapanja"
 
 #: plugins/windowview/Main.qml:107
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "No Windows"
-msgstr "Pomeri prozor"
+msgstr "Nema prozora"
 
 # >> @item
 #: plugins/windowview/Main.qml:122
-#, fuzzy, kde-format
-#| msgid "Internal Windows"
+#, kde-format
 msgid "Filter windows…"
-msgstr "unutrašnji prozori"
+msgstr "Filtriraj prozore…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:20
@@ -3395,7 +3177,6 @@ msgstr "Napredno"
 msgid "&Stiffness:"
 msgstr "&Krutost:"
 
-# >> As in "resistance to movement"
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: plugins/wobblywindows/wobblywindows_config.ui:68
 #, kde-format
@@ -3404,10 +3185,9 @@ msgstr "&Otpor:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: plugins/wobblywindows/wobblywindows_config.ui:81
-#, fuzzy, kde-format
-#| msgid "Move To &Screen"
+#, kde-format
 msgid "&Move factor:"
-msgstr "Premesti na &ekran"
+msgstr "&Faktor pokreta:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
 #: plugins/wobblywindows/wobblywindows_config.ui:155
@@ -3433,14 +3213,12 @@ msgstr "&Napredni režim"
 msgid "&Wobbliness"
 msgstr "&Lelujavost"
 
-# @item:inrange Wobblyness
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/wobblywindows/wobblywindows_config.ui:201
 #, kde-format
 msgid "Less"
 msgstr "manja"
 
-# @item:inrange Wobblyness
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/wobblywindows/wobblywindows_config.ui:224
 #, kde-format
@@ -3448,16 +3226,14 @@ msgid "More"
 msgstr "veća"
 
 #: plugins/zoom/zoom.cpp:89
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Move Zoomed Area to Left"
-msgstr "Prozor jednu površ ulevo"
+msgstr "Pomeri zonu uveličanja ulevo"
 
 #: plugins/zoom/zoom.cpp:96
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Move Zoomed Area to Right"
-msgstr "Prozor jednu površ udesno"
+msgstr "Pomeri zonu uveličanja udesno"
 
 #: plugins/zoom/zoom.cpp:105
 #, kde-format
@@ -3473,594 +3249,561 @@ msgstr "Pomeri zonu uveličanja nadole"
 #: rulebooksettingsbase.kcfg:13
 #, kde-format
 msgid "Total rules count (legacy)"
-msgstr ""
+msgstr "Ukupan broj pravila (zastarelo)"
 
 #. i18n: ectx: label, entry (ruleGroupList), group (General)
 #. i18n: ectx: label, entry (order), group (General)
 #: rulebooksettingsbase.kcfg:22 rulebooksettingsbase.kcfg:27
 #, kde-format
 msgid "Ordered list of rules groups"
-msgstr ""
+msgstr "Uređen spisak grupa pravila"
 
 #. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:10
 #, kde-format
 msgid "Rule description"
-msgstr ""
+msgstr "Opis pravila"
 
 #. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:13
 #, kde-format
 msgid "Rule description (legacy)"
-msgstr ""
+msgstr "Opis pravila (zastarelo)"
 
 #. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:16
 #, kde-format
 msgid "Delete this rule (for use in imports)"
-msgstr ""
+msgstr "Obriši ovo pravilo (za upotrebu pri uvozu)"
 
 #. i18n: ectx: label, entry (enabled), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "This rule is enabled"
-msgstr ""
+msgstr "Ovo pravilo je uključeno"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:24
 #, kde-format
 msgid "Window class (application)"
-msgstr ""
+msgstr "Klasa prozora (program)"
 
 #. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:27
 #, kde-format
 msgid "Window class string match type"
-msgstr ""
+msgstr "Tip poklapanja niske klase prozora"
 
 #. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:33
 #, kde-format
 msgid "Match whole window class"
-msgstr ""
+msgstr "Poklopi celu klasu prozora"
 
 #. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:38
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Window role"
-msgstr "Pomeri prozor"
+msgstr "Uloga prozora"
 
 #. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:41
 #, kde-format
 msgid "Window role string match type"
-msgstr ""
+msgstr "Tip poklapanja niske uloge prozora"
 
 #. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:48
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Window title"
-msgstr "Pomeri prozor"
+msgstr "Naslov prozora"
 
 #. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:51
 #, kde-format
 msgid "Window title string match type"
-msgstr ""
+msgstr "Tip poklapanja niske naslova prozora"
 
 #. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:58
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgid "Machine (hostname)"
-msgstr "ime domaćina"
+msgstr "Mašina (ime domaćina)"
 
 #. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:61
 #, kde-format
 msgid "Machine string match type"
-msgstr ""
+msgstr "Tip poklapanja niske mašine"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "Menadžer prozora"
+msgstr "Oznaka prozora"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
 #, kde-format
 msgid "Window tag string match type"
-msgstr ""
+msgstr "Tip poklapanja niske oznake prozora"
 
 #. i18n: ectx: label, entry (hastransientparent), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Has parent window"
-msgstr "Pomeri prozor"
+msgstr "Ima roditeljski prozor"
 
 #. i18n: ectx: label, entry (hastransientparentmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:82
-#, fuzzy, kde-format
-#| msgid "Setup Window Shortcut"
+#, kde-format
 msgid "Has parent window match type"
-msgstr "Postavi prečicu prozora"
+msgstr "Tip poklapanja roditeljskog prozora"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:89
 #, kde-format
 msgid "Window types that match"
-msgstr ""
+msgstr "Tipovi prozora koji se poklapaju"
 
 #. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:94
 #, kde-format
 msgid "Initial placement"
-msgstr ""
+msgstr "Postavljanje na početku"
 
 #. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:99
 #, kde-format
 msgid "Initial placement rule type"
-msgstr ""
+msgstr "Tip pravila postavljanja na početku"
 
 # >> @item
 #. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:104
-#, fuzzy, kde-format
-#| msgctxt "The global position of the touch point"
-#| msgid "Global position"
+#, kde-format
 msgid "Window position"
-msgstr "globalni položaj"
+msgstr "Položaj prozora"
 
 #. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:108
 #, kde-format
 msgid "Window position rule type"
-msgstr ""
+msgstr "Tip pravila položaja prozora"
 
 #. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:115
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Window size"
-msgstr "Pomeri prozor"
+msgstr "Veličina prozora"
 
 #. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:118
 #, kde-format
 msgid "Window size rule type"
-msgstr ""
+msgstr "Tip pravila veličine prozora"
 
 #. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:125
 #, kde-format
 msgid "Window minimum size"
-msgstr ""
+msgstr "Najmanja veličina prozora"
 
 #. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:129
 #, kde-format
 msgid "Window minimum size rule type"
-msgstr ""
+msgstr "Tip pravila najmanje veličine prozora"
 
 #. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:134
 #, kde-format
 msgid "Window maximum size"
-msgstr ""
+msgstr "Najveća veličina prozora"
 
 #. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:138
 #, kde-format
 msgid "Window maximum size rule type"
-msgstr ""
+msgstr "Tip pravila najveće veličine prozora"
 
 # >> @item
 #. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:143
-#, fuzzy, kde-format
-#| msgctxt "The currently active modifiers"
-#| msgid "Modifiers"
+#, kde-format
 msgid "Active opacity"
-msgstr "modifikatori"
+msgstr "Neprozirnost aktivnog"
 
 #. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:149
 #, kde-format
 msgid "Active opacity rule type"
-msgstr ""
+msgstr "Tip pravila neprozirnosti aktivnog prozora"
 
 #. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:154
 #, kde-format
 msgid "Inactive opacity"
-msgstr ""
+msgstr "Neprozirnost neaktivnog"
 
 #. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:160
 #, kde-format
 msgid "Inactive opacity rule type"
-msgstr ""
+msgstr "Tip pravila neprozirnosti neaktivnog prozora"
 
 #. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:165
 #, kde-format
 msgid "Ignore requested geometry"
-msgstr ""
+msgstr "Ignoriši traženu geometriju"
 
 #. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:169
 #, kde-format
 msgid "Ignore requested geometry rule type"
-msgstr ""
+msgstr "Tip pravila ignorisanja tražene geometrije"
 
 #. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:176
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop %1"
+#, kde-format
 msgid "List of Desktop Ids"
-msgstr "Na površ %1"
+msgstr "Spisak ID‑ova površi"
 
 #. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:180
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Desktop Ids rule type"
-msgstr "Drži iz&nad ostalih"
+msgstr "Tip pravila ID‑ova površi"
 
 #. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:187
 #, kde-format
 msgid "Screen number"
-msgstr ""
+msgstr "Broj ekrana"
 
 #. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:191
 #, kde-format
 msgid "Screen number rule type"
-msgstr ""
+msgstr "Tip pravila broja ekrana"
 
 #. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:198
-#, fuzzy, kde-format
-#| msgid "Ac&tivities"
+#, kde-format
 msgid "Activity"
-msgstr "&Aktivnosti"
+msgstr "Aktivnost"
 
 #. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:201
 #, kde-format
 msgid "Activity rule type"
-msgstr ""
+msgstr "Tip pravila aktivnosti"
 
 #. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:208
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Maximized vertically"
-msgstr "Uspravno maksimizuj prozor"
+msgstr "Uspravno maksimizovan"
 
 #. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:212
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Maximized vertically rule type"
-msgstr "Uspravno maksimizuj prozor"
+msgstr "Tip pravila uspravnog maksimizovanja"
 
 #. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:219
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Maximized horizontally"
-msgstr "Vodoravno maksimizuj prozor"
+msgstr "Vodoravno maksimizovan"
 
 #. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:223
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Maximized horizontally rule type"
-msgstr "Vodoravno maksimizuj prozor"
+msgstr "Tip pravila vodoravnog maksimizovanja"
 
 #. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:230
-#, fuzzy, kde-format
-#| msgid "Mi&nimize"
+#, kde-format
 msgid "Minimized"
-msgstr "M&inimizuj"
+msgstr "Minimizovan"
 
 #. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:234
 #, kde-format
 msgid "Minimized rule type"
-msgstr ""
+msgstr "Tip pravila minimizovanja"
 
 #. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:241
 #, kde-format
 msgid "Skip taskbar"
-msgstr ""
+msgstr "Preskoči traku zadataka"
 
 #. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:245
 #, kde-format
 msgid "Skip taskbar rule type"
-msgstr ""
+msgstr "Tip pravila preskakanja trake zadataka"
 
 #. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:252
 #, kde-format
 msgid "Skip pager"
-msgstr ""
+msgstr "Preskoči listač"
 
 #. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:256
 #, kde-format
 msgid "Skip pager rule type"
-msgstr ""
+msgstr "Tip pravila preskakanja listača"
 
 #. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:263
-#, fuzzy, kde-format
-#| msgid "Switch to Tab"
+#, kde-format
 msgid "Skip switcher"
-msgstr "Na jezičak"
+msgstr "Preskoči menjač"
 
 #. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:267
 #, kde-format
 msgid "Skip switcher rule type"
-msgstr ""
+msgstr "Tip pravila preskakanja menjača"
 
 #. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:274
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Keep above"
-msgstr "Drži iz&nad ostalih"
+msgstr "Drži iznad"
 
 #. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:278
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Keep above rule type"
-msgstr "Drži iz&nad ostalih"
+msgstr "Tip pravila držanja iznad"
 
 #. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:285
-#, fuzzy, kde-format
-#| msgid "Keep &Below Others"
+#, kde-format
 msgid "Keep below"
-msgstr "Drži is&pod ostalih"
+msgstr "Drži ispod"
 
 #. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:289
-#, fuzzy, kde-format
-#| msgid "Keep &Below Others"
+#, kde-format
 msgid "Keep below rule type"
-msgstr "Drži is&pod ostalih"
+msgstr "Tip pravila držanja ispod"
 
 #. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:296
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen"
-msgstr "Preko &celog ekrana"
+msgstr "Preko celog ekrana"
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:300
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen rule type"
-msgstr "Preko &celog ekrana"
+msgstr "Tip pravila prikaza preko celog ekrana"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:311
 #, kde-format
 msgid "No titlebar and frame"
-msgstr ""
+msgstr "Bez naslovne trake i okvira"
 
 #. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:315
 #, kde-format
 msgid "No titlebar rule type"
-msgstr ""
+msgstr "Tip pravila bez naslovne trake"
 
 #. i18n: ectx: label, entry (decorationpolicy), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:322
 #, kde-format
 msgid "Decoration policy"
-msgstr ""
+msgstr "Smernica dekoracije"
 
 #. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Decoration policy rule type"
-msgstr "Drži iz&nad ostalih"
+msgstr "Tip pravila smernice dekoracije"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:339
 #, kde-format
 msgid "Titlebar color and scheme"
-msgstr ""
+msgstr "Boja i šema naslovne trake"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:342
 #, kde-format
 msgid "Titlebar color rule type"
-msgstr ""
+msgstr "Tip pravila boje naslovne trake"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:347
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr ""
+msgstr "Sprečavanje krađe fokusa"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:353
 #, kde-format
 msgid "Focus stealing prevention rule type"
-msgstr ""
+msgstr "Tip pravila sprečavanja krađe fokusa"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:358
 #, kde-format
 msgid "Focus protection"
-msgstr ""
+msgstr "Zaštita fokusa"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:364
 #, kde-format
 msgid "Focus protection rule type"
-msgstr ""
+msgstr "Tip pravila zaštite fokusa"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:369
 #, kde-format
 msgid "Accept Focus"
-msgstr ""
+msgstr "Prihvati fokus"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:373
 #, kde-format
 msgid "Accept Focus rule type"
-msgstr ""
+msgstr "Tip pravila prihvatanja fokusa"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:378
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Closeable"
-msgstr "&Zatvori"
+msgstr "Zatvorljiv"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:382
 #, kde-format
 msgid "Closeable rule type"
-msgstr ""
+msgstr "Tip pravila zatvorljivosti"
 
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:387
 #, kde-format
 msgid "Shortcut"
-msgstr ""
+msgstr "Prečica"
 
 #. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:390
 #, kde-format
 msgid "Shortcut rule type"
-msgstr ""
+msgstr "Tip pravila prečice"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:397
 #, kde-format
 msgid "Ignore global shortcuts"
-msgstr ""
+msgstr "Ignoriši globalne prečice"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:401
 #, kde-format
 msgid "Ignore global shortcuts rule type"
-msgstr ""
+msgstr "Tip pravila ignorisanja globalnih prečica"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:406
 #, kde-format
 msgid "Desktop file name"
-msgstr ""
+msgstr "Ime .desktop fajla"
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:409
 #, kde-format
 msgid "Desktop file name rule type"
-msgstr ""
+msgstr "Tip pravila imena .desktop fajla"
 
 #. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:416
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Sloj"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:432
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Layer rule type"
-msgstr "Drži iz&nad ostalih"
+msgstr "Tip pravila sloja"
 
 #. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:437
 #, kde-format
 msgid "AdaptiveSync"
-msgstr ""
+msgstr "Prilagodljiva sinhronizacija"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:441
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "AdaptiveSync rule type"
-msgstr "Drži iz&nad ostalih"
+msgstr "Tip pravila prilagodljive sinhronizacije"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:446
 #, kde-format
 msgid "Allow Tearing"
-msgstr ""
+msgstr "Dozvoli cepanje slike"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:450
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Tearing rule type"
-msgstr "Drži iz&nad ostalih"
+msgstr "Tip pravila cepanja slike"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:455
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr "Preko &celog ekrana"
+msgstr "Sakrij od snimaka i video snimaka ekrana"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
-msgstr "Preko &celog ekrana"
+msgstr "Tip pravila skrivanja od snimaka i video snimaka ekrana"
 
 #: scene/workspacescene.cpp:115
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
-msgstr ""
+msgstr "Uključi/isključi efekat „Prikaži slaganje“"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
 #, kde-format
 msgid "Dialog"
-msgstr ""
+msgstr "Dijalog"
 
 #. i18n: ectx: property (text), widget (QToolButton, clearButton)
 #: shortcutdialog.ui:25
 #, kde-format
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: sm.cpp:421
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Otkaži odjavljivanje"
 
 #: sm.cpp:422
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Ipak se odjavi"
 
 #: sm.cpp:468
 #, kde-format
@@ -4069,20 +3812,21 @@ msgid ""
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
+"Sledeći programi se nisu zatvorili:\n"
+"%1\n"
+"Odjavljivanje ipak sledi za 2 minuta."
 
 #: tabbox/clientmodel.cpp:58
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
-msgstr "Premesti na &površ"
+msgstr "Zaviri u površ"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
-msgstr "Pomeri prozor"
+msgstr "Nema otvorenih prozora"
 
 #: tabbox/tabbox.cpp:319
 msgid "Walk Through Windows"
@@ -4122,23 +3866,23 @@ msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
 "Contact your distribution about this."
 msgstr ""
-"Instalacija menjača površi nije ispravna, nedostaju neki resursi.\n"
+"Instalacija menjača prozora nije ispravna, nedostaju neki resursi.\n"
 "Obratite se svojoj distribuciji."
 
 #: tablet_input.cpp:119
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "Premesti tablicu na naredni izlaz"
 
 #: tablet_input.cpp:199
 #, kde-format
 msgid "Tablet moved to %1"
-msgstr ""
+msgstr "Tablica premeštena na %1"
 
 #: tablet_input.cpp:199
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "Tablice su zamenile izlaze"
 
 #: useractions.cpp:220
 #, kde-format
@@ -4163,30 +3907,27 @@ msgstr "Preko &celog ekrana"
 #: useractions.cpp:242
 #, kde-format
 msgid "&No Titlebar and Frame"
-msgstr ""
+msgstr "Bez &naslovne trake i okvira"
 
 #: useractions.cpp:248
 #, kde-format
 msgid "&Hide from Screenshots and Screen Recordings"
-msgstr ""
+msgstr "&Sakrij od snimaka i video snimaka ekrana"
 
 #: useractions.cpp:256
-#, fuzzy, kde-format
-#| msgid "Window Short&cut..."
+#, kde-format
 msgid "Set Window Short&cut…"
-msgstr "Prečica &prozora..."
+msgstr "Postavi pre&čicu prozora…"
 
 #: useractions.cpp:262
-#, fuzzy, kde-format
-#| msgid "Special &Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "&Posebne postavke prozora..."
+msgstr "Podesi posebne postavke p&rozora…"
 
 #: useractions.cpp:267
-#, fuzzy, kde-format
-#| msgid "S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "Pose&bne postavke programa..."
+msgstr "Podesi pose&bne postavke programa…"
 
 #: useractions.cpp:273
 #, kde-format
@@ -4219,22 +3960,19 @@ msgid "&Extensions"
 msgstr "&Proširenja"
 
 #: useractions.cpp:412
-#, fuzzy, kde-format
-#| msgid "&All Desktops"
+#, kde-format
 msgid "&Desktops"
-msgstr "&Sve površi"
+msgstr "Pov&rši"
 
 #: useractions.cpp:428
-#, fuzzy, kde-format
-#| msgid "Move To &Screen"
+#, kde-format
 msgid "Move to &Screen"
 msgstr "Premesti na &ekran"
 
 #: useractions.cpp:444
-#, fuzzy, kde-format
-#| msgid "Ac&tivities"
+#, kde-format
 msgid "Show in &Activities"
-msgstr "&Aktivnosti"
+msgstr "Prikaži u a&ktivnostima"
 
 #: useractions.cpp:460
 #, kde-format
@@ -4242,25 +3980,21 @@ msgid "&All Desktops"
 msgstr "&Sve površi"
 
 #: useractions.cpp:495 useractions.cpp:627
-#, fuzzy, kde-format
-#| msgid "Move To &Screen"
+#, kde-format
 msgid "Move to %1"
-msgstr "Premesti na &ekran"
+msgstr "Premesti u %1"
 
 #: useractions.cpp:509
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
-msgstr "&Nova površ"
+msgstr "Dodaj na &novu površ"
 
 #: useractions.cpp:521
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
-msgstr "Premesti na &površ"
+msgstr "Premesti na novu površ"
 
 #: useractions.cpp:552
 #, kde-format
@@ -4290,10 +4024,9 @@ msgstr ""
 "$[lok %3]"
 
 #: useractions.cpp:826
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Window Menu"
-msgstr "Pomeri prozor"
+msgstr "Meni prozora"
 
 #: useractions.cpp:828
 #, kde-format
@@ -4316,10 +4049,9 @@ msgid "Maximize Window Horizontally"
 msgstr "Vodoravno maksimizuj prozor"
 
 #: useractions.cpp:836
-#, fuzzy, kde-format
-#| msgid "Resize Window"
+#, kde-format
 msgid "Restore Window"
-msgstr "Promeni veličinu prozora"
+msgstr "Vrati prozor"
 
 #: useractions.cpp:838
 #, kde-format
@@ -4359,7 +4091,7 @@ msgstr "Prozor preko celog ekrana"
 #: useractions.cpp:854
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr ""
+msgstr "Uključi/isključi naslovnu traku i okvir prozora"
 
 #: useractions.cpp:856
 #, kde-format
@@ -4382,58 +4114,49 @@ msgid "Setup Window Shortcut"
 msgstr "Postavi prečicu prozora"
 
 #: useractions.cpp:864
-#, fuzzy, kde-format
-#| msgid "Pack Window to the Left"
+#, kde-format
 msgid "Move Window to the Center"
-msgstr "Spakuj prozor ulevo"
+msgstr "Pomeri prozor u sredinu"
 
 #: useractions.cpp:866
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Right"
-msgstr "Pomeri prozor"
+msgstr "Pomeri prozor udesno"
 
 #: useractions.cpp:868
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Left"
-msgstr "Pomeri prozor"
+msgstr "Pomeri prozor ulevo"
 
 #: useractions.cpp:872
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Up"
-msgstr "Pomeri prozor"
+msgstr "Pomeri prozor nagore"
 
 #: useractions.cpp:874
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Down"
-msgstr "Pomeri prozor"
+msgstr "Pomeri prozor nadole"
 
 #: useractions.cpp:878
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Expand Window Horizontally"
-msgstr "Vodoravno maksimizuj prozor"
+msgstr "Raširi prozor vodoravno"
 
 #: useractions.cpp:880
-#, fuzzy, kde-format
-#| msgid "Pack Shrink Window Horizontally"
+#, kde-format
 msgid "Shrink Window Horizontally"
-msgstr "Spakuj i skupi prozor vodoravno"
+msgstr "Skupi prozor vodoravno"
 
 #: useractions.cpp:884
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Expand Window Vertically"
-msgstr "Uspravno maksimizuj prozor"
+msgstr "Raširi prozor uspravno"
 
 #: useractions.cpp:886
-#, fuzzy, kde-format
-#| msgid "Pack Shrink Window Vertically"
+#, kde-format
 msgid "Shrink Window Vertically"
-msgstr "Spakuj i skupi prozor uspravno"
+msgstr "Skupi prozor uspravno"
 
 #: useractions.cpp:890
 #, kde-format
@@ -4496,14 +4219,12 @@ msgid "Switch to Window to the Left"
 msgstr "Na prozor levo"
 
 #: useractions.cpp:918
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Uvećaj neprozirnost aktivnog prozora 5%"
 
 #: useractions.cpp:920
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Smanji neprozirnost aktivnog prozora 5%"
 
@@ -4513,28 +4234,24 @@ msgid "Keep Window on All Desktops"
 msgstr "Drži prozor na svim površima"
 
 #: useractions.cpp:927
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "Brzo popločaj prozor levo"
+msgstr "Brzo popločaj prozor levo po posebnom rasporedu"
 
 #: useractions.cpp:929
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "Brzo popločaj prozor desno"
+msgstr "Brzo popločaj prozor desno po posebnom rasporedu"
 
 #: useractions.cpp:931
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "Brzo popločaj prozor gore"
+msgstr "Brzo popločaj prozor gore po posebnom rasporedu"
 
 #: useractions.cpp:933
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "Brzo popločaj prozor dole"
+msgstr "Brzo popločaj prozor dole po posebnom rasporedu"
 
 #: useractions.cpp:944
 #, kde-format
@@ -4572,46 +4289,39 @@ msgid "Window One Desktop Down"
 msgstr "Prozor jednu površ nadole"
 
 #: useractions.cpp:963
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window to Screen %1"
-msgstr "Prozor na ekran %1"
+msgstr "Premesti prozor na ekran %1"
 
 #: useractions.cpp:970
-#, fuzzy, kde-format
-#| msgid "Window to Next Screen"
+#, kde-format
 msgid "Move Window to Next Screen"
-msgstr "Prozor na naredni ekran"
+msgstr "Premesti prozor na naredni ekran"
 
 #: useractions.cpp:972
-#, fuzzy, kde-format
-#| msgid "Window to Previous Screen"
+#, kde-format
 msgid "Move Window to Previous Screen"
-msgstr "Prozor na prethodni ekran"
+msgstr "Premesti prozor na prethodni ekran"
 
 #: useractions.cpp:976
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Move Window One Screen to the Right"
-msgstr "Prozor jednu površ udesno"
+msgstr "Premesti prozor jedan ekran udesno"
 
 #: useractions.cpp:978
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Move Window One Screen to the Left"
-msgstr "Prozor jednu površ ulevo"
+msgstr "Premesti prozor jedan ekran ulevo"
 
 #: useractions.cpp:982
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window One Screen Up"
-msgstr "Prozor na ekran %1"
+msgstr "Premesti prozor jedan ekran nagore"
 
 #: useractions.cpp:984
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Move Window One Screen Down"
-msgstr "Prozor jednu površ nadole"
+msgstr "Premesti prozor jedan ekran nadole"
 
 #: useractions.cpp:989
 #, kde-format
@@ -4629,34 +4339,29 @@ msgid "Switch to Previous Screen"
 msgstr "Na prethodni ekran"
 
 #: useractions.cpp:1000
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Na prozor prozor desno"
+msgstr "Na ekran desno"
 
 #: useractions.cpp:1002
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Na prozor levo"
+msgstr "Na ekran levo"
 
 #: useractions.cpp:1006
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Na ekran %1"
+msgstr "Na ekran iznad"
 
 #: useractions.cpp:1008
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Na ekran %1"
+msgstr "Na ekran ispod"
 
 #: useractions.cpp:1012
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "Premesti na &površ"
+msgstr "Zaviri u površ"
 
 #: useractions.cpp:1015
 #, kde-format
@@ -4667,13 +4372,13 @@ msgstr "Ubij prozor"
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Focused Window"
-msgstr ""
+msgstr "Centriraj pokazivač u fokusiranom prozoru"
 
 #: useractions.cpp:1018
 #, kde-format
 msgctxt "@action"
 msgid "Center Pointer in Screen"
-msgstr ""
+msgstr "Centriraj pokazivač na ekranu"
 
 #: useractions.cpp:1083
 #, kde-format
@@ -4682,9 +4387,7 @@ msgstr "Aktiviraj prozor (%1)"
 
 # >> @item
 #: utils/edid.cpp:375
-#, fuzzy, kde-format
-#| msgctxt "The input device of the event is not known"
-#| msgid "Unknown"
+#, kde-format
 msgid "unknown"
 msgstr "nepoznat"
 
@@ -4734,66 +4437,68 @@ msgid ""
 "Setting custom modes with too old kde-output-management-v2 protocol versions "
 "is unsupported"
 msgstr ""
+"Postavljanje posebnih režima sa previše starim izdanjima protokola kde-"
+"output-management-v2 nije podržano"
 
 #: wayland/outputmanagement_v2.cpp:575
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
-msgstr ""
+msgstr "Nivo abm veći je od najvećeg (4): %1"
 
 #: wayland/outputmanagement_v2.cpp:673
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "Jedan od relevantnih izlaza više nije dostupan"
 
 #: wayland/outputmanagement_v2.cpp:691
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
-msgstr ""
+msgstr "Isključivanje svih izlaza izmenama postave nije dozvoljeno"
 
 #: wayland/outputmanagement_v2.cpp:701
 #, kde-format
 msgid "%1 cannot mirror itself"
-msgstr ""
+msgstr "%1 ne može da preslikava sam sebe"
 
 #: wayland/outputmanagement_v2.cpp:708
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
-msgstr ""
+msgstr "Ne mogu da dodam poseban režim prazne veličine"
 
 #: wayland/outputmanagement_v2.cpp:712
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
-msgstr ""
+msgstr "Ne mogu da dodam poseban režim sa učestanošću osvežavanja od nula Hz"
 
 #: wayland/outputmanagement_v2.cpp:723
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
-msgstr ""
+msgstr "Položaj izlaza %1 je previše negativan (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:726
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
-msgstr ""
+msgstr "Položaj uključenog izlaza %1 je negativan (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:730
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
-msgstr ""
+msgstr "Položaj izlaza %1 je previše velik (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:744
 #, kde-format
 msgid "The session is not active"
-msgstr ""
+msgstr "Sesija nije aktivna"
 
 #: wayland/outputmanagement_v2.cpp:747
 #, kde-format
 msgid "More displays are enabled than are supported by the graphics card."
-msgstr ""
+msgstr "Uključeno je više ekrana nego što grafička karta podržava."
 
 #: wayland/outputmanagement_v2.cpp:750
 #, kde-format
 msgid "The driver rejected the output configuration: %s"
-msgstr ""
+msgstr "Drajver je odbio postavu izlaza: %s"
 
 #: window.cpp:3178
 #, kde-format
@@ -4804,39 +4509,28 @@ msgstr "(ne odaziva se)"
 #: workspace.cpp:1324
 #, kde-format
 msgid "Built-in Screen"
-msgstr ""
+msgstr "Ugrađeni ekran"
 
 #: workspace.cpp:1337
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1347
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1350
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
-msgstr ""
+msgstr "%1 %2"
 
 #: workspace.cpp:1819
-#, fuzzy, kde-format
-#| msgctxt "Introductory text shown in the support information."
-#| msgid ""
-#| "KWin Support Information:\n"
-#| "The following information should be used when requesting support on e.g. "
-#| "http://forum.kde.org.\n"
-#| "It provides information about the currently running instance, which "
-#| "options are used,\n"
-#| "what OpenGL driver and which effects are running.\n"
-#| "Please post the information provided underneath this introductory text to "
-#| "a paste bin service\n"
-#| "like http://paste.kde.org instead of pasting into support threads.\n"
+#, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
 "KWin Support Information:\n"
@@ -4850,600 +4544,14 @@ msgid ""
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
 "KWinovi podaci za podršku:\n"
-"Priložite naredne podatke kada tražite podršku, npr. na http://forum.kde."
+"Priložite naredne podatke kada tražite podršku, npr. na https://discuss.kde."
 "org.\n"
 "U njih spadaju podaci o trenutnom primerku u pogonu, korišćene opcije,\n"
 "koji OpenGL drajver i koji efekti su aktivni.\n"
 "Tekst ispod ovog uvodnog teksta pošaljite na servis nalepaka, poput\n"
-"http://paste.kde.org, umesto da ga nalepljujete direktno u forumsku nit.\n"
+"https://paste.kde.org, umesto da ga nalepljujete direktno u forumsku nit.\n"
 
 #: xwayland/xwaylandlauncher.cpp:323
 #, kde-format
 msgid "Xwayland has crashed"
-msgstr ""
-
-#, fuzzy
-#~| msgid "Ring Count:"
-#~ msgctxt "@label"
-#~ msgid "Paint Amount"
-#~ msgstr "Broj prstenova:"
-
-#~ msgid "Disable configuration options"
-#~ msgstr "Isključi opcije postave"
-
-#, fuzzy
-#~| msgid "Suspend Compositing"
-#~ msgid "Block Compositing"
-#~ msgstr "Suspenduj slaganje"
-
-# >> @item
-#, fuzzy
-#~| msgid "No Mouse Buttons"
-#~ msgid "Move Mouse to Focus"
-#~ msgstr "nema dugmadi miša"
-
-#, fuzzy
-#~| msgid "Pack Window to the Left"
-#~ msgid "Move Mouse to Center"
-#~ msgstr "Spakuj prozor ulevo"
-
-#~ msgid "Indicate that KWin has recently crashed n times"
-#~ msgstr "Upozori da se KWin nedavno srušio n puta"
-
-#, fuzzy
-#~| msgid "Suspend Compositing"
-#~ msgctxt "@label"
-#~ msgid "Compositing"
-#~ msgstr "Suspenduj slaganje"
-
-# >> @item
-#, fuzzy
-#~| msgctxt "The input device of the event is not known"
-#~| msgid "Unknown"
-#~ msgctxt "@label"
-#~ msgid "Unknown"
-#~ msgstr "nepoznat"
-
-# >> @item
-#, fuzzy
-#~| msgctxt "A button in a mouse press/release event"
-#~| msgid "Button"
-#~ msgid "Buttons"
-#~ msgstr "dugme"
-
-#, fuzzy
-#~| msgid "&Strength:"
-#~ msgid "Saturation strength:"
-#~ msgstr "&Jačina:"
-
-#~ msgctxt "Special entry in alt+tab list for minimizing all windows"
-#~ msgid "Show Desktop"
-#~ msgstr "Prikaži površ"
-
-#, fuzzy
-#~| msgid "&Shade"
-#~ msgid "Shaded"
-#~ msgstr "&Namotaj"
-
-#~ msgid "Shade Window"
-#~ msgstr "Namotaj prozor"
-
-#, fuzzy
-#~| msgid "Move To &Desktop"
-#~ msgid "Move &To Current Desktop"
-#~ msgstr "Premesti na &površ"
-
-#, fuzzy
-#~| msgctxt "Create a new desktop and move there the window"
-#~| msgid "&New Desktop"
-#~ msgctxt "Create a new desktop and move the window there"
-#~ msgid "&New Desktop"
-#~ msgstr "&Nova površ"
-
-#~ msgid "Size"
-#~ msgstr "Veličina"
-
-#~ msgid "&Width:"
-#~ msgstr "&Širina:"
-
-#~ msgid " px"
-#~ msgstr " px"
-
-# >> @item
-#, fuzzy
-#~| msgctxt "A mouse button"
-#~| msgid "Right"
-#~ msgid "&Height:"
-#~ msgstr "desno"
-
-#, fuzzy
-#~| msgid "Move Window"
-#~ msgid "Move Left"
-#~ msgstr "Pomeri prozor"
-
-#, fuzzy
-#~| msgid "Move Window"
-#~ msgid "Move Right"
-#~ msgstr "Pomeri prozor"
-
-#, fuzzy
-#~| msgid "Move Window"
-#~ msgid "Move Up"
-#~ msgstr "Pomeri prozor"
-
-#, fuzzy
-#~| msgid "Move Window"
-#~ msgid "Move Down"
-#~ msgstr "Pomeri prozor"
-
-# >> @item
-#, fuzzy
-#~| msgctxt "The currently active modifiers"
-#~| msgid "Modifiers"
-#~ msgid "Scroll gesture modifier keys:"
-#~ msgstr "modifikatori"
-
-#~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-#~ msgstr "Za uveličanje i umanjenje koristi se ovde zadat faktor."
-
-#, fuzzy
-#~| msgid "Zoom Factor:"
-#~ msgid "Zoom factor:"
-#~ msgstr "Faktor uveličanja:"
-
-#, fuzzy
-#~| msgid "Mouse Pointer:"
-#~ msgid "Mouse pointer:"
-#~ msgstr "Pokazivač miša:"
-
-#~ msgid "Visibility of the mouse-pointer."
-#~ msgstr "Vidljivost pokazivača miša."
-
-# >> @item
-#, fuzzy
-#~| msgctxt "Current scale in pinch gesture"
-#~| msgid "Scale"
-#~ msgid "Scale"
-#~ msgstr "razmera"
-
-#~ msgid "Keep"
-#~ msgstr "zadrži"
-
-#~ msgid "Hide"
-#~ msgstr "sakrij"
-
-#, fuzzy
-#~| msgid "Mouse Tracking:"
-#~ msgid "Mouse tracking:"
-#~ msgstr "Praćenje miša:"
-
-#~ msgid "Track moving of the mouse."
-#~ msgstr "Prati se pomeranje miša."
-
-# >> @item
-#, fuzzy
-#~| msgctxt "The global mouse pointer position"
-#~| msgid "Global Position"
-#~ msgid "Proportional"
-#~ msgstr "globalni položaj"
-
-#~ msgid "Centered"
-#~ msgstr "centrirano"
-
-#~ msgid "Push"
-#~ msgstr "gurano"
-
-#~ msgid "Disabled"
-#~ msgstr "isključeno"
-
-#, fuzzy
-#~| msgid ""
-#~| "Enable tracking of the focused location. This needs QAccessible to be "
-#~| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
-#~ msgid ""
-#~ "Enable tracking of the focused location. This needs QAccessible to be "
-#~ "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-#~ msgstr ""
-#~ "Aktivira praćenje lokacije u fokusu. Zahteva da „QAccessible“ bude "
-#~ "uključeno po programu („export QT_ACCESSIBILITY=1“)."
-
-#, fuzzy
-#~| msgid "Enable Focus Tracking"
-#~ msgid "Enable focus tracking"
-#~ msgstr "Praćenje fokusa aktivno"
-
-#, fuzzy
-#~| msgid ""
-#~| "Enable tracking of the focused location. This needs QAccessible to be "
-#~| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
-#~ msgid ""
-#~ "Enable tracking of the text cursor. This needs QAccessible to be enabled "
-#~ "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-#~ msgstr ""
-#~ "Aktivira praćenje lokacije u fokusu. Zahteva da „QAccessible“ bude "
-#~ "uključeno po programu („export QT_ACCESSIBILITY=1“)."
-
-#, fuzzy
-#~| msgid "Enable Focus Tracking"
-#~ msgid "Enable text cursor tracking"
-#~ msgstr "Praćenje fokusa aktivno"
-
-#~ msgid "Window Operations Menu"
-#~ msgstr "Meni sa operacijama nad prozorima"
-
-#, fuzzy
-#~| msgctxt "Name of a KWin Effect"
-#~| msgid "Show Paint"
-#~ msgid "Toggle Show Paint"
-#~ msgstr "Prikaz iscrtavanja"
-
-#~ msgid "&Shade"
-#~ msgstr "&Namotaj"
-
-# >> @item
-#, fuzzy
-#~| msgctxt "A touch up event"
-#~| msgid "Touch Up"
-#~ msgid "Touchpad"
-#~ msgstr "dodir uklonjen"
-
-#~ msgid ""
-#~ "KWin is unstable.\n"
-#~ "It seems to have crashed several times in a row.\n"
-#~ "You can select another window manager to run:"
-#~ msgstr ""
-#~ "KWin se ponaša nestabilno.\n"
-#~ "Izgleda da je došlo do rušenja nekoliko puta za redom.\n"
-#~ "Možete izabrati neki drugi menadžer prozora:"
-
-#~ msgid ""
-#~ "kwin: unable to claim manager selection, another wm running? (try using --"
-#~ "replace)\n"
-#~ msgstr ""
-#~ "kwin: na mogu da potvrdim izbor menadžera, da nije već pokrenut neki "
-#~ "drugi? (pokušajte sa --replace)\n"
-
-#~ msgid "kwin: another window manager is running (try using --replace)\n"
-#~ msgstr "kwin: u pogonu je drugi menadžer prozora (pokušajte sa --replace)\n"
-
-#~ msgid "Replace already-running ICCCM2.0-compliant window manager"
-#~ msgstr "Zameni već pokrenuti ICCCM‑u 2.0 saglasni menadžer prozora"
-
-#, fuzzy
-#~| msgid "Move To &Desktop"
-#~ msgid "Move to &Desktop"
-#~ msgstr "Premesti na &površ"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Tiny"
-#~ msgstr "sićušna"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Normal"
-#~ msgstr "normalna"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Large"
-#~ msgstr "velika"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Large"
-#~ msgstr "vrlo velika"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Huge"
-#~ msgstr "ogromna"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Huge"
-#~ msgstr "vrlo ogromna"
-
-#, fuzzy
-#~| msgid "&Resize"
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Oversized"
-#~ msgstr "&Promeni veličinu"
-
-# >> @item
-#, fuzzy
-#~| msgctxt "A button in a mouse press/release event"
-#~| msgid "Button"
-#~ msgid "Button size:"
-#~ msgstr "dugme"
-
-# >> @title:window
-#~ msgid "Config Dialog"
-#~ msgstr "Dijalog za podešavanje"
-
-# >> @title:group
-#~ msgid "Title &Alignment"
-#~ msgstr "&Poravnanje naslova"
-
-# >> @option:radio
-#~ msgid "Center"
-#~ msgstr "sredina"
-
-#~ msgid ""
-#~ "Check this option if the window border should be painted in the titlebar "
-#~ "color. Otherwise it will be painted in the background color."
-#~ msgstr ""
-#~ "Uključite za ivicu prozora u boji naslovne trake. Inače će biti u boji "
-#~ "pozadine."
-
-#, fuzzy
-#~| msgid "Hide Window Border"
-#~ msgid "Colored window border"
-#~ msgstr "Sakrij ivicu prozora"
-
-# rewrite-msgid: /fade in/cross-fade/
-# rewrite-msgid: /and fade out.*//
-#~ msgid ""
-#~ "Check this option if you want the buttons to fade in when the mouse "
-#~ "pointer hovers over them and fade out again when it moves away."
-#~ msgstr ""
-#~ "Uključite da bi se dugmad pretapala kako pokazivač miša prolazi preko "
-#~ "njih."
-
-# >> @option:check
-#~ msgid "Animate buttons"
-#~ msgstr "Animirana dugmad"
-
-# >> @item
-# rewrite-msgid: /Scan/Hardware/
-#~ msgctxt "The code as read from the input device"
-#~ msgid "Scan code"
-#~ msgstr "hardverski kôd"
-
-# >> @item
-#, fuzzy
-#~| msgctxt "An orientation of a pointer axis event"
-#~| msgid "Horizontal"
-#~ msgid "Split Horizontally"
-#~ msgstr "vodoravno"
-
-# >> @item
-#, fuzzy
-#~| msgctxt "An orientation of a pointer axis event"
-#~| msgid "Vertical"
-#~ msgid "Split Vertically"
-#~ msgstr "uspravno"
-
-#, fuzzy
-#~| msgctxt "Name of a KWin Effect"
-#~| msgid "Show Paint"
-#~ msgid "Toggle Night Light"
-#~ msgstr "Prikaz iscrtavanja"
-
-#~ msgid ""
-#~ "The window manager is configured to consider the screen with the mouse on "
-#~ "it as active one.\n"
-#~ "Therefore it is not possible to switch to a screen explicitly."
-#~ msgstr ""
-#~ "Menadžer prozora je podešen da uzima ekran sa mišem na sebi za aktivan.\n"
-#~ "Zato nije moguće neposredno prebacivanje između ekrana."
-
-#~ msgid "Layout mode:"
-#~ msgstr "Raspored:"
-
-#, fuzzy
-#~| msgid "&Close"
-#~ msgid "Closest"
-#~ msgstr "&Zatvori"
-
-#~ msgid "Natural"
-#~ msgstr "prirodan"
-
-#~ msgid "milliseconds"
-#~ msgstr "milisekundi"
-
-#~ msgctxt "@info"
-#~ msgid "<b>Application \"%1\" is not responding</b>"
-#~ msgstr "<b>Program „%1“ se ne odaziva.</b>"
-
-#, fuzzy
-#~| msgctxt "@info"
-#~| msgid ""
-#~| "<p>You tried to close window \"%1\" from application \"%2\" (Process ID: "
-#~| "%3) but the application is not responding.</p>"
-#~ msgctxt "@info"
-#~ msgid ""
-#~ "<para>You tried to close window \"%1\" from application \"%2\" (Process "
-#~ "ID: %3) but the application is not responding.</para>"
-#~ msgstr ""
-#~ "<para>Pokušali ste da zatvorite prozor „%1“ iz programa „%2“ (ID procesa "
-#~ "%3), ali se program ne odaziva.</para>"
-
-#, fuzzy
-#~| msgctxt "@info"
-#~| msgid ""
-#~| "<p>You tried to close window \"%1\" from application \"%2\" (Process ID: "
-#~| "%3), running on host \"%4\", but the application is not responding.</p>"
-#~ msgctxt "@info"
-#~ msgid ""
-#~ "<para>You tried to close window \"%1\" from application \"%2\" (Process "
-#~ "ID: %3), running on host \"%4\", but the application is not responding.</"
-#~ "para>"
-#~ msgstr ""
-#~ "<para>Pokušali ste da zatvorite prozor „%1“ iz programa „%2“ (ID procesa "
-#~ "%3), koji radi na domaćinu „%4“, ali se program ne odaziva.</para>"
-
-#, fuzzy
-#~| msgid "Show Desktop"
-#~ msgid "Show Desktop Grid"
-#~ msgstr "Prikaži površ"
-
-# >> @item:inlistbox +
-#~ msgctxt "Desktop name alignment:"
-#~ msgid "Disabled"
-#~ msgstr "isključeno"
-
-# >> @item
-#, fuzzy
-#~| msgctxt "A mouse button"
-#~| msgid "Right"
-#~ msgid "Top-Right"
-#~ msgstr "desno"
-
-# >> @item:inlistbox Desktop name alignment
-#~ msgid "Bottom-Right"
-#~ msgstr "dole desno"
-
-# >> @item:inlistbox Desktop name alignment
-#~ msgid "Bottom-Left"
-#~ msgstr "dole levo"
-
-# >> @item
-#, fuzzy
-#~| msgctxt "A mouse button"
-#~| msgid "Left"
-#~ msgid "Top-Left"
-#~ msgstr "levo"
-
-#~ msgid "Pager"
-#~ msgstr "listač"
-
-#~ msgid "Automatic"
-#~ msgstr "automatski"
-
-#~ msgid "Custom"
-#~ msgstr "posebno"
-
-#~ msgid "N&umber of rows:"
-#~ msgstr "Broj &vrsta:"
-
-#~ msgid "Desktop &name alignment:"
-#~ msgstr "Poravnanje &imena površi:"
-
-#~ msgid "Show buttons to alter count of virtual desktops"
-#~ msgstr "Dugmad za menjanje broja virtuelnih površi"
-
-#, fuzzy
-#~| msgid "&Layout mode:"
-#~ msgid "&Grid layout mode:"
-#~ msgstr "&Raspored:"
-
-#, fuzzy
-#~| msgid "Move Window"
-#~ msgid "Windows layout:"
-#~ msgstr "Pomeri prozor"
-
-# rewrite-msgid: /caption/title/
-#, fuzzy
-#~| msgid "caption"
-#~ msgid "Activation"
-#~ msgstr "naslov"
-
-#~ msgid ""
-#~ "Desktop effects have been suspended by another application.<br/>You can "
-#~ "resume using the '%1' shortcut."
-#~ msgstr ""
-#~ "<html>Drugi program je suspendovao efekte površi.<br/>Možete ga nastaviti "
-#~ "prečicom %1.</html>"
-
-#, fuzzy
-#~| msgid "Window Manager"
-#~ msgctxt ""
-#~ "Entry in context menu of window decoration to open the configuration "
-#~ "module of KWin"
-#~ msgid "Configure W&indow Manager..."
-#~ msgstr "Menadžer prozora"
-
-#~ msgid "Walk Through Desktops"
-#~ msgstr "Menjaj površi"
-
-#~ msgid "Walk Through Desktops (Reverse)"
-#~ msgstr "Menjaj površi (obratno)"
-
-#~ msgid "Walk Through Desktop List"
-#~ msgstr "Menjaj površi po spisku"
-
-#~ msgid "Walk Through Desktop List (Reverse)"
-#~ msgstr "Menjaj površi po spisku (obratno)"
-
-# >> @item
-#~ msgid "X11 Client Windows"
-#~ msgstr "klijentski X11 prozori"
-
-#~ msgid "Pack Window to the Right"
-#~ msgstr "Spakuj prozor udesno"
-
-#~ msgid "Pack Window Down"
-#~ msgstr "Spakuj prozor nadole"
-
-#~ msgid "Pack Grow Window Horizontally"
-#~ msgstr "Spakuj i povećaj prozor vodoravno"
-
-#~ msgid "Pack Grow Window Vertically"
-#~ msgstr "Spakuj i povećaj prozor uspravno"
-
-#~ msgid "Render to framebuffer."
-#~ msgstr "Renderuj u kadrobafer."
-
-#~ msgid "The framebuffer device to render to."
-#~ msgstr "Kadrobaferski uređaj u koji se renderuje."
-
-#~ msgid "Use libhybris hwcomposer"
-#~ msgstr "Koristi HWcomposer preko libhybris‑a"
-
-#~ msgid ""
-#~ "Enable libinput support for input events processing. Note: never use in a "
-#~ "nested session."
-#~ msgstr ""
-#~ "Podrška za obradu ulaznih događaja preko libinputa. Napomena: nikad ne "
-#~ "koristiti u ugnežđenoj sesiji."
-
-# rewrite-msgid: /quit/exit/
-#~ msgid "List all available backends and quit."
-#~ msgstr "Nabroji sve dostupne pozadine i izađi."
-
-#, fuzzy
-#~| msgid "Desktop %1"
-#~ msgid "Desktop number"
-#~ msgstr "Površ %1"
-
-#~ msgctxt "Error message"
-#~ msgid "Plugin does not provide configuration file in expected location"
-#~ msgstr "Priključak ne daje postavni fajl na očekivanoj lokaciji."
-
-#~ msgctxt "Assertion failed in KWin script with given value"
-#~ msgid "Assertion failed: %1 is not null"
-#~ msgstr "Tvrdnja propala: %1 nije nulto."
-
-#~ msgctxt "Assertion failed in KWin script"
-#~ msgid "Assertion failed: argument is null"
-#~ msgstr "Tvrdnja propala: argument je nulti."
-
-#~ msgctxt "Error in KWin Script"
-#~ msgid ""
-#~ "Invalid number of arguments. At least service, path, interface and method "
-#~ "need to be provided"
-#~ msgstr ""
-#~ "Loš broj argumenata. Treba zadati bar servis, putanju, sučelje i metod."
-
-#~ msgctxt "Error in KWin Script"
-#~ msgid ""
-#~ "Invalid type. Service, path, interface and method need to be string values"
-#~ msgstr "Loš tip. Servis, putanja, sučelje i metod moraju biti niske."
-
-#~ msgctxt "syntax error in KWin script"
-#~ msgid "Invalid number of arguments"
-#~ msgstr "Loš broj argumenata."
-
-#~ msgctxt ""
-#~ "KWin Scripting function received incorrect value for an expected type"
-#~ msgid "%1 is not a variant type"
-#~ msgstr "%1 nije varijantni tip."
-
-# >> @title
-#~ msgid "Virtual Keyboard"
-#~ msgstr "Virtuelna tastatura"
-
-#, fuzzy
-#~| msgid "Virtual Keyboard is enabled."
-#~ msgid "Virtual Keyboard: enabled"
-#~ msgstr "Virtuelna tastatura je uključena."
-
-#, fuzzy
-#~| msgid "Virtual Keyboard is disabled."
-#~ msgid "Virtual Keyboard: disabled"
-#~ msgstr "Virtuelna tastatura je isključena."
+msgstr "XWayland se srušio"

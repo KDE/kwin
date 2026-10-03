@@ -1,13 +1,14 @@
 # Translation of kcmkwinscreenedges.po into Serbian.
 # Chusslove Illich <caslav.ilic@gmx.net>, 2009, 2010, 2012, 2013, 2014, 2016, 2017, 2018.
 # Dalibor Djuric <daliborddjuric@gmail.com>, 2010, 2011.
+# Nemanja Hiršl <nemhirsl@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-18 00:46+0000\n"
-"PO-Revision-Date: 2018-01-06 09:21+0100\n"
-"Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
+"PO-Revision-Date: 2026-10-02 20:50+0200\n"
+"Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
 "Language: sr\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +29,7 @@ msgstr "без радње"
 #: main.cpp:152 touch.cpp:120
 #, kde-format
 msgid "Peek at Desktop"
-msgstr ""
+msgstr "завири у површ"
 
 # >> @option:check Screen edge action
 #: main.cpp:153 touch.cpp:121
@@ -39,7 +40,7 @@ msgstr "закључај екран"
 #: main.cpp:154 touch.cpp:122
 #, kde-format
 msgid "Show KRunner"
-msgstr ""
+msgstr "прикажи К‑извођач"
 
 # >> @option:check Screen edge action
 #: main.cpp:155 touch.cpp:123
@@ -56,7 +57,7 @@ msgstr "покретач програма"
 #: main.cpp:160 touch.cpp:128
 #, kde-format
 msgid "Present Windows"
-msgstr ""
+msgstr "присутни прозори"
 
 # >> @option:check Screen edge action
 #: main.cpp:161 touch.cpp:129
@@ -79,12 +80,12 @@ msgstr "%1 — текући програм"
 #: main.cpp:165 touch.cpp:133
 #, kde-format
 msgid "Overview"
-msgstr ""
+msgstr "преглед"
 
 #: main.cpp:166 touch.cpp:134
 #, kde-format
 msgid "Grid"
-msgstr ""
+msgstr "мрежа"
 
 # >> @option:check Screen edge action
 #: main.cpp:168 touch.cpp:136
@@ -100,59 +101,55 @@ msgstr "обрни алтернативно мењање прозора"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23
-#, fuzzy, kde-format
-#| msgid ""
-#| "Trigger an action by pushing the mouse cursor against the corresponding "
-#| "screen edge or corner"
+#, kde-format
 msgid ""
 "You can trigger an action by pushing the mouse pointer against the "
 "corresponding screen edge or corner."
 msgstr ""
-"Окините радњу гурнувши показивач миша уз одговарајућу ивицу или угао екрана."
+"Радњу можете окинути гурањем показивача миша уз одговарајућу ивицу или угао "
+"екрана."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67
 #, kde-format
 msgid "&Maximize:"
-msgstr ""
+msgstr "&Максимизовање:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderMaximize)
 #: main.ui:77
 #, kde-format
 msgid "Windows dragged to top edge"
-msgstr ""
+msgstr "Прозори превучени уз горњу ивицу"
 
 #. i18n: ectx: property (text), widget (QLabel, quickTileLabel)
 #: main.ui:84
 #, kde-format
 msgid "&Tile:"
-msgstr ""
+msgstr "Поп&лочавање:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderTiling)
 #: main.ui:94
-#, fuzzy, kde-format
-#| msgid ""
-#| "Tile windows by dragging them to the left or right edges of the screen"
+#, kde-format
 msgid "Windows dragged to left or right edge"
-msgstr "Поплочај прозоре превучене уз леву или десну ивицу екрана"
+msgstr "Прозори превучени уз леву или десну ивицу"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: main.ui:101
 #, kde-format
 msgid "Behavior:"
-msgstr ""
+msgstr "Понашање:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, remainActiveOnFullscreen)
 #: main.ui:108
 #, kde-format
 msgid "Remain active when windows are fullscreen"
-msgstr ""
+msgstr "Ивице остају активне када су прозори преко целог екрана"
 
 #. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
 #: main.ui:115
 #, kde-format
 msgid "Trigger &quarter tiling in:"
-msgstr ""
+msgstr "Окини &четвртно поплочавање у:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, electricBorderCornerRatioSpin)
 #: main.ui:130
@@ -164,7 +161,7 @@ msgstr "%"
 #: main.ui:133
 #, kde-format
 msgid "Outer "
-msgstr ""
+msgstr "спољашњих "
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: main.ui:149
@@ -174,10 +171,7 @@ msgstr "екрана"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
 #: main.ui:174
-#, fuzzy, kde-format
-#| msgid ""
-#| "Change desktop when the mouse cursor is pushed against the edge of the "
-#| "screen"
+#, kde-format
 msgid ""
 "Change desktop when the mouse pointer is pushed against the edge of the "
 "screen"
@@ -198,30 +192,25 @@ msgstr "искључено"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
-#, fuzzy, kde-format
-#| msgid "Only When Moving Windows"
+#, kde-format
 msgid "Only when moving windows"
 msgstr "само при померању прозора"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:198
-#, fuzzy, kde-format
-#| msgid "Always Enabled"
+#, kde-format
 msgid "Always enabled"
 msgstr "увек укључено"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
 #: main.ui:206
-#, fuzzy, kde-format
-#| msgid ""
-#| "Amount of time required for the mouse cursor to be pushed against the "
-#| "edge of the screen before the action is triggered"
+#, kde-format
 msgid ""
 "Amount of time required for the mouse pointer to be pushed against the edge "
 "of the screen before the action is triggered"
 msgstr ""
 "Колико дуго показивач миша мора да се гура уз ивицу екрана пре него што се "
-"окине радња."
+"окине радња"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
 #: main.ui:209
@@ -254,7 +243,7 @@ msgstr "Застој &поновног активирања:"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "Баријера у &угловима:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -266,19 +255,24 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Овде можете укључити или искључити виртуелну баријеру у угловима између "
+"екрана. Баријера спречава да показивач пређе на други екран када већ "
+"додирује угао екрана. Тако је лакше окинути елементе корисничког сучеља, као "
+"што су дугмад за затварање максимизованих прозора, када користите више "
+"екрана."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents the pointer from crossing at screen corners."
-msgstr ""
+msgstr "Спречава прелазак показивача у угловима екрана."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "Баријера на &ивицама:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -290,6 +284,10 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Овде можете задати величину баријере на ивицама између различитих екрана. "
+"Баријера додаје растојање које показивач мора да пређе пре него што пређе "
+"ивицу на други екран. Тако је лакше приступити елементима корисничког "
+"сучеља, као што су плазма панели, који се налазе на ивици између екрана."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
@@ -297,50 +295,24 @@ msgstr ""
 msgctxt "@info:tooltip"
 msgid "Additional distance the pointer needs to travel to cross screen edges."
 msgstr ""
+"Додатно растојање које показивач мора да пређе да би прешао ивице екрана."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "никаква"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " пикс."
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17
-#, fuzzy, kde-format
-#| msgid ""
-#| "Trigger an action by swiping from the screen edge towards the center of "
-#| "the screen"
+#, kde-format
 msgid ""
 "You can trigger an action by swiping from the screen edge towards the center "
 "of the screen."
-msgstr "Окините радњу замахнувши са центра ка ивици екрана"
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Часлав Илић"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "caslav.ilic@gmx.net"
-
-# >> @option:check Screen edge action
-#~ msgid "Show Desktop"
-#~ msgstr "прикажи површ"
-
-# >> @option:check Screen edge action
-#~ msgid "%1 - Cube"
-#~ msgstr "%1 — коцка"
-
-# >> @option:check Screen edge action
-#~ msgid "%1 - Cylinder"
-#~ msgstr "%1 — ваљак"
-
-# >> @option:check Screen edge action
-#~ msgid "%1 - Sphere"
-#~ msgstr "%1 — сфера"
+msgstr "Радњу можете окинути замахом од ивице екрана ка средишту екрана."

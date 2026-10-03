@@ -1,13 +1,11 @@
-# Translation of kcm_kwindesktop.po into Serbian.
-# Chusslove Illich <caslav.ilic@gmx.net>, 2007, 2008, 2009, 2010, 2013, 2014.
-# Dalibor Djuric <daliborddjuric@gmail.com>, 2009, 2010.
+# Nemanja Hiršl <nemhirsl@gmail.com>, 2026.
 msgid ""
 msgstr ""
-"Project-Id-Version: kcm_kwindesktop\n"
+"Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-15 02:47+0000\n"
-"PO-Revision-Date: 2014-05-03 22:24+0200\n"
-"Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
+"PO-Revision-Date: 2026-10-02 20:50+0200\n"
+"Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
 "Language: sr@ijekavian\n"
 "MIME-Version: 1.0\n"
@@ -22,81 +20,79 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Часлав Илић"
+msgstr "Немања Хиршл"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "caslav.ilic@gmx.net"
+msgstr "nemhirsl@gmail.com"
 
 #: desktopsmodel.cpp:188
-#, fuzzy, kde-format
-#| msgid "Desktops"
+#, kde-format
 msgctxt "A numbered name for virtual desktops"
 msgid "Desktop %1"
 msgid_plural "Desktop %1"
-msgstr[0] "Површи"
-msgstr[1] "Површи"
-msgstr[2] "Површи"
-msgstr[3] "Површи"
+msgstr[0] "Површ %1"
+msgstr[1] "Површ %1"
+msgstr[2] "Површ %1"
+msgstr[3] "Површ %1"
 
 #: desktopsmodel.cpp:476
 #, kde-format
 msgid "There was an error connecting to the compositor."
-msgstr ""
+msgstr "Грешка при повезивању са слагачем."
 
 #: desktopsmodel.cpp:672
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
-msgstr ""
+msgstr "Грешка при уписивању поставки у слагач."
 
 #: desktopsmodel.cpp:675
 #, kde-format
 msgid "There was an error requesting information from the compositor."
-msgstr ""
+msgstr "Грешка при тражењу података од слагача."
 
 #: ui/main.qml:26
 #, kde-format
 msgctxt "@text:label Number of rows, label associated to a number input field"
 msgid "Rows:"
-msgstr ""
+msgstr "Врсте:"
 
 #: ui/main.qml:54
-#, fuzzy, kde-format
-#| msgid "Desktops"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Desktop"
-msgstr "Површи"
+msgstr "Додај површ"
 
 #: ui/main.qml:82
 #, kde-kuit-format
 msgctxt "@label/rich"
 msgid "%1"
-msgstr ""
+msgstr "%1"
 
 #: ui/main.qml:90
 #, kde-format
 msgctxt "@action:button"
 msgid "Rename"
-msgstr ""
+msgstr "Преименуј"
 
 #: ui/main.qml:100
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
-msgstr ""
+msgstr "Уклони"
 
 #: ui/main.qml:119
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
-msgstr ""
+msgstr "Примијени ново име"
 
 #: ui/main.qml:132
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
-msgstr ""
+msgstr "Откажи преименовање"
 
 #: ui/main.qml:179
 #, kde-format
@@ -104,49 +100,45 @@ msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
 "now will overwrite the changes."
 msgstr ""
+"Виртуелне површи су измијењене изван овог програма за поставке. Ако сада "
+"сачувате, измјене ће бити пребрисане."
 
 #: ui/main.qml:195
 #, kde-format
 msgid "Row %1"
-msgstr ""
+msgstr "Врста %1"
 
 #: ui/main.qml:209
 #, kde-format
 msgid "Options:"
-msgstr ""
+msgstr "Опције:"
 
 #: ui/main.qml:211
-#, fuzzy, kde-format
-#| msgid "Desktop navigation wraps around"
+#, kde-format
 msgid "Navigation wraps around"
-msgstr "Кретање кроз површи омотава"
+msgstr "Крећи се укруг"
 
 #: ui/main.qml:225
 #, kde-format
 msgid "Switch desktops independently for each screen"
-msgstr ""
+msgstr "Пребацуј површи засебно за сваки екран"
 
 #: ui/main.qml:243
 #, kde-format
 msgid "Show animation when switching:"
-msgstr ""
+msgstr "Прикажи анимацију при пребацивању:"
 
 #: ui/main.qml:294
 #, kde-format
 msgid "Show on-screen display when switching:"
-msgstr ""
+msgstr "Прикажи екрански приказ при пребацивању:"
 
 #: ui/main.qml:313
 #, kde-format
 msgid "%1 ms"
-msgstr ""
+msgstr "%1 ms"
 
 #: ui/main.qml:337
 #, kde-format
 msgid "Show desktop layout indicators"
-msgstr "Показатељи распореда површи"
-
-#, fuzzy
-#~| msgid "Desktops"
-#~ msgid "Virtual Desktops"
-#~ msgstr "Површи"
+msgstr "Прикажи показатеље распореда површи"

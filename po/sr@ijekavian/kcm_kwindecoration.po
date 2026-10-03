@@ -2,13 +2,14 @@
 # Toplica Tanaskovic <toptan@kde.org.yu>, 2003, 2004.
 # Chusslove Illich <caslav.ilic@gmx.net>, 2005, 2007, 2008, 2009, 2010, 2012, 2013, 2014, 2015.
 # Dalibor Djuric <daliborddjuric@gmail.com>, 2009, 2010.
+# Nemanja Hiršl <nemhirsl@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2015-10-14 18:13+0200\n"
-"Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
+"PO-Revision-Date: 2026-10-02 20:50+0200\n"
+"Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
 "Language: sr@ijekavian\n"
 "MIME-Version: 1.0\n"
@@ -22,10 +23,9 @@ msgstr ""
 "X-Environment: kde\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
-#, fuzzy, kde-format
-#| msgid "Get New Decorations..."
+#, kde-format
 msgid "Window menu"
-msgstr "Добави нове декорације..."
+msgstr "Мени прозора"
 
 #: declarative-plugin/buttonsmodel.cpp:58
 #, kde-format
@@ -60,28 +60,28 @@ msgstr "Контекстна помоћ"
 #: declarative-plugin/buttonsmodel.cpp:70
 #, kde-format
 msgid "Keep below other windows"
-msgstr ""
+msgstr "Држи испод осталих прозора"
 
 #: declarative-plugin/buttonsmodel.cpp:72
 #, kde-format
 msgid "Keep above other windows"
-msgstr ""
+msgstr "Држи изнад осталих прозора"
 
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "Сакриј од снимака и видео снимака екрана"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
 msgid "Spacer"
-msgstr ""
+msgstr "Размакница"
 
 #: kcm.cpp:188
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
-msgstr ""
+msgstr "подразумијевано по теми (%1)"
 
 #: kwin-applywindowdecoration.cpp:34
 #, kde-format
@@ -90,6 +90,9 @@ msgid ""
 "active session, without accidentally setting it to one that is either not "
 "available, or which is already set."
 msgstr ""
+"Ова алатка вам омогућава да поставите тему декорације прозора за тренутно "
+"активну сесију, без случајног постављања теме која није доступна или која је "
+"већ постављена."
 
 #: kwin-applywindowdecoration.cpp:35
 #, kde-format
@@ -98,12 +101,15 @@ msgid ""
 "full path will attempt to find a theme in that directory, and then apply "
 "that if one can be deduced."
 msgstr ""
+"Име теме декорације прозора коју желите да поставите за К‑вин. Ако задате "
+"пуну путању, покушаћу да нађем тему у тој фасцикли и да је примијеним ако "
+"може да се одреди."
 
 #: kwin-applywindowdecoration.cpp:36
 #, kde-format
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
-msgstr ""
+msgstr "Прикажи све теме доступне на систему (и која је текућа тема)"
 
 #: kwin-applywindowdecoration.cpp:67
 #, kde-format
@@ -111,6 +117,8 @@ msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
 "as your current theme."
 msgstr ""
+"Путања %1 разријешена је у тему „%2“ за Ауроре (К‑вин), покушаћу да је "
+"поставим као текућу тему."
 
 #: kwin-applywindowdecoration.cpp:73
 #, kde-format
@@ -118,18 +126,20 @@ msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
 "theme, and we will have to abort, due to having no theme to set"
 msgstr ""
+"Покушали сте да задате путању фајла, али она не може да се разријеши у тему, "
+"па морам да прекинем јер нема теме за постављање"
 
 #: kwin-applywindowdecoration.cpp:79
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
-msgstr ""
+msgstr "Тражена тема „%1“ је већ постављена као тема декорације прозора."
 
 #: kwin-applywindowdecoration.cpp:101
 #, kde-format
 msgid ""
 "Successfully applied the pointer theme %1 to your current Plasma session"
-msgstr ""
+msgstr "Тема показивача %1 успјешно је примијењена на текућу сесију Плазме"
 
 #: kwin-applywindowdecoration.cpp:105
 #, kde-format
@@ -137,18 +147,20 @@ msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
 "unrecoverable error. You may find that simply trying again will work."
 msgstr ""
+"Не могу да сачувам поставке теме — разлог није познат, али ово је "
+"непоправљива грешка. Можда ће успјети ако једноставно покушате поново."
 
 #: kwin-applywindowdecoration.cpp:109
 #, kde-format
 msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
 "options: %2"
-msgstr ""
+msgstr "Не могу да нађем тему „%1“. Тема треба да буде једна од сљедећих: %2"
 
 #: kwin-applywindowdecoration.cpp:114
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
-msgstr ""
+msgstr "На систему имате сљедеће теме декорације прозора за К‑вин:"
 
 #: ui/Buttons.qml:85
 #, kde-format
@@ -156,46 +168,43 @@ msgid "Titlebar"
 msgstr "Насловна трака"
 
 #: ui/Buttons.qml:245
-#, fuzzy, kde-format
-#| msgid "Drop here to remove button"
+#, kde-format
 msgid "Drop button here to remove it"
-msgstr "Уклоните дугме испуштањем овде."
+msgstr "Испустите дугме овдје да бисте га уклонили"
 
 #: ui/Buttons.qml:261
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
-msgstr "Превлачите дугмад између овог места и насловне траке."
+msgstr "Превлачите дугмад између овог мјеста и насловне траке."
 
 #: ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgid "Titlebar"
+#, kde-format
 msgid "Titlebar Buttons"
-msgstr "Насловна трака"
+msgstr "Дугмад насловне траке"
 
 #: ui/ConfigureTitlebar.qml:35
-#, fuzzy, kde-format
-#| msgid "Close windows by double clicking &the menu button"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
-msgstr "Затвори прозор двокликом на &дугме менија"
+msgstr "Затвори прозоре двокликом на дугме менија прозора"
 
 #: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
-msgstr ""
+msgstr "Кликните и држите дугме менија прозора да бисте приказали мени."
 
 #: ui/ConfigureTitlebar.qml:59
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
-msgstr ""
+msgstr "Прикажи облачиће дугмади насловне траке"
 
 #: ui/ConfigureTitlebar.qml:73
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
-msgstr ""
+msgstr "Увијек прикажи дугме „Сакриј од снимака и видео снимака екрана“"
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format
@@ -204,6 +213,8 @@ msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screenshots and screen recordings"
 msgstr ""
+"Кад није попуњено, дугме се појављује само ако је прозор скривен од снимака "
+"и видео снимака екрана"
 
 #: ui/ConfigureTitlebar.qml:86
 #, kde-format
@@ -212,179 +223,73 @@ msgid ""
 "To enable this option, add the \"Hide from Screenshots and Screen Recordings"
 "\" button to the titlebar first"
 msgstr ""
+"Да бисте укључили ову опцију, прво додајте дугме „Сакриј од снимака и видео "
+"снимака екрана“ на насловну траку"
 
 #: ui/main.qml:29
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
-msgstr ""
+msgstr "Величина ивица прозора:"
 
 #: ui/main.qml:48
-#, fuzzy, kde-format
-#| msgid "Titlebar"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "Насловна трака"
+msgstr "Подеси дугмад насловне траке…"
 
 #: ui/main.qml:54
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
-msgstr ""
+msgstr "Добави нове…"
 
 #: ui/Themes.qml:93
 #, kde-format
 msgid "Edit %1 Theme…"
-msgstr ""
+msgstr "Уреди тему %1…"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No window borders"
-msgstr "без бочних ивица"
+msgstr "без ивица прозора"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No side window borders"
-msgstr "без бочних ивица"
+msgstr "без бочних ивица прозора"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Tiny window borders"
-msgstr "без бочних ивица"
+msgstr "сићушне ивице прозора"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Normal window borders"
-msgstr "без бочних ивица"
+msgstr "нормалне ивице прозора"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Large window borders"
-msgstr "без бочних ивица"
+msgstr "велике ивице прозора"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Very large window borders"
-msgstr "без бочних ивица"
+msgstr "врло велике ивице прозора"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Huge window borders"
-msgstr "без бочних ивица"
+msgstr "огромне ивице прозора"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Very huge window borders"
-msgstr "без бочних ивица"
+msgstr "врло огромне ивице прозора"
 
 #: utils.cpp:34
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Oversized window borders"
-msgstr "без бочних ивица"
-
-#~ msgid "Shade"
-#~ msgstr "Намотај"
-
-#, fuzzy
-#~| msgid "Get New Decorations..."
-#~ msgctxt "button text"
-#~ msgid "Get New Window Decorations…"
-#~ msgstr "Добави нове декорације..."
-
-#, fuzzy
-#~| msgctxt "@item:inlistbox Border size:"
-#~| msgid "No Borders"
-#~ msgid "No Borders"
-#~ msgstr "без ивица"
-
-#, fuzzy
-#~| msgctxt "@item:inlistbox Border size:"
-#~| msgid "Tiny"
-#~ msgid "Tiny"
-#~ msgstr "сићушне"
-
-#, fuzzy
-#~| msgctxt "@item:inlistbox Border size:"
-#~| msgid "Normal"
-#~ msgid "Normal"
-#~ msgstr "нормалне"
-
-#, fuzzy
-#~| msgctxt "@item:inlistbox Border size:"
-#~| msgid "Large"
-#~ msgid "Large"
-#~ msgstr "велике"
-
-#, fuzzy
-#~| msgctxt "@item:inlistbox Border size:"
-#~| msgid "Very Large"
-#~ msgid "Very Large"
-#~ msgstr "врло велике"
-
-#, fuzzy
-#~| msgctxt "@item:inlistbox Border size:"
-#~| msgid "Huge"
-#~ msgid "Huge"
-#~ msgstr "огромне"
-
-#, fuzzy
-#~| msgctxt "@item:inlistbox Border size:"
-#~| msgid "Very Huge"
-#~ msgid "Very Huge"
-#~ msgstr "врло огромне"
-
-#, fuzzy
-#~| msgctxt "@item:inlistbox Border size:"
-#~| msgid "Oversized"
-#~ msgid "Oversized"
-#~ msgstr "неизмјерне"
-
-#~ msgid "Menu"
-#~ msgstr "Мени"
-
-#~ msgid "Keep below"
-#~ msgstr "Држи испод"
-
-#~ msgid "Keep above"
-#~ msgstr "Држи изнад"
-
-#, fuzzy
-#~| msgid "Get New Decorations..."
-#~ msgid "Download New Window Decorations"
-#~ msgstr "Добави нове декорације..."
-
-#, fuzzy
-#~| msgid "Theme"
-#~ msgctxt "tab label"
-#~ msgid "Theme"
-#~ msgstr "Тема"
-
-#, fuzzy
-#~| msgid ""
-#~| "Close by double clicking:\n"
-#~| " To open the menu, keep the button pressed until it appears."
-#~ msgctxt "popup tip"
-#~ msgid ""
-#~ "Close by double clicking: Keep the window's Menu button pressed until it "
-#~ "appears."
-#~ msgstr ""
-#~ "Затворите двокликом.\n"
-#~ "Да отворите мени, држите дугме притиснуто док се не појави."
+msgstr "неизмјерне ивице прозора"
