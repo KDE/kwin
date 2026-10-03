@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2025-06-06 08:43+0300\n"
+"PO-Revision-Date: 2026-08-25 15:02+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -73,7 +73,7 @@ msgstr "Pidä muiden ikkunoiden yllä"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "Piilota näytöntoistolta ja näyttönauhoitukselta"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -140,12 +140,10 @@ msgid ""
 msgstr "Pyydetty teema ”%1” on jo asetettu ikkunakoristeteemaksi."
 
 #: kwin-applywindowdecoration.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Successfully applied the cursor theme %1 to your current Plasma session"
+#, kde-format
 msgid ""
 "Successfully applied the pointer theme %1 to your current Plasma session"
-msgstr "Kohdistinteeman %1 käyttöönotto nykyiseen Plasma-istuntoon onnistui"
+msgstr "Osoitinteeman %1 käyttöönotto nykyiseen Plasma-istuntoon onnistui"
 
 #: kwin-applywindowdecoration.cpp:105
 #, kde-format
@@ -211,7 +209,7 @@ msgstr "Näytä otsikkopalkkipainikkeiden työkaluvihjeet"
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
-msgstr ""
+msgstr "Näytä aina ”Piilota näytöntoistolta ja näyttönauhoitukselta” -painike"
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format
@@ -220,6 +218,8 @@ msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screenshots and screen recordings"
 msgstr ""
+"Ellei valittu, painike näytetään vain, kun ikkuna piilotetaan "
+"näytöntoistolta ja näyttönauhoituksilta"
 
 #: ui/ConfigureTitlebar.qml:86
 #, kde-format
@@ -228,6 +228,8 @@ msgid ""
 "To enable this option, add the \"Hide from Screenshots and Screen Recordings"
 "\" button to the titlebar first"
 msgstr ""
+"Ottaaksesi valinnan käyttöön lisää ensin otsikkopalkkiin ”Piilota "
+"näytöntoistolta ja näyttönauhoitukselta” -painike"
 
 #: ui/main.qml:29
 #, kde-format

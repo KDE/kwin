@@ -1,12 +1,13 @@
 # Translation of kcm_kwintabbox.po into Serbian.
 # Chusslove Illich <caslav.ilic@gmx.net>, 2009, 2010, 2011, 2012, 2016, 2017.
+# Nemanja Hiršl <nemhirsl@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-14 00:45+0000\n"
-"PO-Revision-Date: 2016-03-20 15:24+0100\n"
-"Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
+"PO-Revision-Date: 2026-10-02 20:50+0200\n"
+"Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
 "Language: sr@latin\n"
 "MIME-Version: 1.0\n"
@@ -22,48 +23,47 @@ msgstr ""
 #: layoutpreview.cpp:28
 #, kde-format
 msgid "Launch an interactive preview for a tabbox switcher"
-msgstr ""
+msgstr "Pokreće interaktivni pregled menjača prozora"
 
 #: layoutpreview.cpp:29
 #, kde-format
 msgid "Path to the Window Switcher QML main file"
-msgstr ""
+msgstr "Putanja do glavnog QML fajla menjača prozora"
 
 #: layoutpreview.cpp:30
 #, kde-format
 msgid "Show also a thumbnail for the desktop"
-msgstr ""
+msgstr "Prikaži i sličicu površi"
 
 #: layoutpreview.cpp:159
 #, kde-format
 msgctxt "The name of KDE's file manager in this language, if translated"
 msgid "Dolphin"
-msgstr ""
+msgstr "Dolphin"
 
 #: layoutpreview.cpp:163
 #, kde-format
 msgctxt "The name of KDE's web browser in this language, if translated"
 msgid "Konqueror"
-msgstr ""
+msgstr "K‑osvajač"
 
 #: layoutpreview.cpp:167
 #, kde-format
 msgctxt "The name of KDE's email client in this language, if translated"
 msgid "KMail"
-msgstr ""
+msgstr "K‑pošta"
 
 #: layoutpreview.cpp:171
 #, kde-format
 msgctxt "The name of KDE's System Settings app in this language, if translated"
 msgid "System Settings"
-msgstr ""
+msgstr "Sistemske postavke"
 
-# >> @option:radio Filter windows by virtual desktops
+# >> @item:inlistbox List windows:
 #: layoutpreview.cpp:177
-#, fuzzy, kde-format
-#| msgid "Current desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "tekuća površ"
+msgstr "Zaviri u površ"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -84,10 +84,9 @@ msgid "Alternative"
 msgstr "Alternativno"
 
 #: main.cpp:77
-#, fuzzy, kde-format
-#| msgid "Get New Window Switcher Layout"
+#, kde-format
 msgid "Get New Task Switcher Styles…"
-msgstr "Dobavi novi raspored menjača prozora"
+msgstr "Dobavi nove stilove menjača zadataka…"
 
 #: main.cpp:95
 #, kde-format
@@ -105,10 +104,9 @@ msgstr "Sadržaj"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" icon"
+#, kde-format
 msgid "Include \"Peek at Desktop\" entry"
-msgstr "Uključi ikonicu „Prikaži površ“"
+msgstr "Uključi stavku „Zaviri u površ“"
 
 # >> @item:inlistbox Sort order:
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -134,7 +132,7 @@ msgstr "Samo jedan prozor po programu"
 #: main.ui:78
 #, kde-format
 msgid "Order minimized windows after unminimized windows"
-msgstr ""
+msgstr "Poređaj minimizovane prozore posle neminimizovanih"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: main.ui:88
@@ -265,7 +263,7 @@ msgstr "Nazad"
 #: main.ui:474 main.ui:506 main.ui:554 main.ui:586
 #, kde-format
 msgid "or"
-msgstr ""
+msgstr "ili"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: main.ui:538
@@ -299,7 +297,7 @@ msgstr "Prikaži izabrani prozor"
 #: main.ui:644
 #, kde-format
 msgid "Enable the window list effect"
-msgstr ""
+msgstr "Uključi efekat spiska prozora"
 
 #. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
 #: main.ui:678
@@ -311,96 +309,88 @@ msgstr "Efekat koji menja prozor spiska kada su aktivni efekti površi."
 #: main.ui:701
 #, kde-format
 msgid "The time in milliseconds to wait before showing the task switcher."
-msgstr ""
+msgstr "Vreme u milisekundama koje se čeka pre prikazivanja menjača zadataka."
 
 #. i18n: ectx: property (text), widget (QLabel, label_DelayTime)
 #: main.ui:704
 #, kde-format
 msgid "Delay:"
-msgstr ""
+msgstr "Zastoj:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:720
 #, kde-format
 msgid " ms"
-msgstr ""
+msgstr " ms"
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:735
 #, kde-format
 msgid "Delay before the window list appears"
-msgstr ""
+msgstr "Zastoj pre pojavljivanja spiska prozora"
 
 #. i18n: ectx: property (text), widget (QLabel, label_showScreen)
 #: main.ui:742
 #, kde-format
 msgid "Show on screen:"
-msgstr ""
+msgstr "Prikaži na ekranu:"
 
 #. i18n: ectx: property (toolTip), widget (QComboBox, showScreenCombo)
 #: main.ui:758
 #, kde-format
 msgid "Select which screen the task switcher should be displayed on."
-msgstr ""
+msgstr "Izaberite na kom ekranu treba prikazivati menjač zadataka."
 
 # >> @option:radio Filter windows by screens
 #. i18n: ectx: property (text), item, widget (QComboBox, showScreenCombo)
 #: main.ui:762
-#, fuzzy, kde-format
-#| msgid "All other screens"
+#, kde-format
 msgid "Active screen"
-msgstr "svi drugi ekrani"
+msgstr "aktivnom"
 
 # >> @option:radio Filter windows by screens
 #. i18n: ectx: property (text), item, widget (QComboBox, showScreenCombo)
 #: main.ui:767
-#, fuzzy, kde-format
-#| msgid "Current screen"
+#, kde-format
 msgid "Primary screen"
-msgstr "tekući ekran"
+msgstr "primarnom"
 
 #: shortcutsettings.cpp:131
 #, kde-format
 msgid "Walk Through Windows"
-msgstr ""
+msgstr "Menjaj prozore"
 
 #: shortcutsettings.cpp:132
 #, kde-format
 msgid "Walk Through Windows (Reverse)"
-msgstr ""
+msgstr "Menjaj prozore (obratno)"
 
 #: shortcutsettings.cpp:133
 #, kde-format
 msgid "Walk Through Windows of Current Application"
-msgstr ""
+msgstr "Menjaj prozore tekućeg programa"
 
 #: shortcutsettings.cpp:134
 #, kde-format
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr ""
+msgstr "Menjaj prozore tekućeg programa (obratno)"
 
 #: shortcutsettings.cpp:136
 #, kde-format
 msgid "Walk Through Windows Alternative"
-msgstr ""
+msgstr "Menjaj prozore alternativno"
 
 #: shortcutsettings.cpp:137
 #, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr ""
+msgstr "Menjaj prozore alternativno (obratno)"
 
 #: shortcutsettings.cpp:138
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr ""
+msgstr "Menjaj prozore tekućeg programa alternativno"
 
 #: shortcutsettings.cpp:139
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr ""
-
-#, fuzzy
-#~| msgctxt "An example Desktop Name"
-#~| msgid "Desktop 1"
-#~ msgid "Show Desktop"
-#~ msgstr "površ 1"
+msgstr "Menjaj prozore tekućeg programa alternativno (obratno)"

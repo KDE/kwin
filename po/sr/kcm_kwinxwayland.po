@@ -1,0 +1,205 @@
+# Nemanja Hiršl <nemhirsl@gmail.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2026-08-04 00:46+0000\n"
+"PO-Revision-Date: 2026-10-02 20:50+0200\n"
+"Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
+"Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
+"Language: sr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
+"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+"X-Environment: kde\n"
+
+#: ui/main.qml:28
+#, kde-kuit-format
+msgctxt "@info:usagetip"
+msgid ""
+"Legacy X11 apps with global shortcuts and other features accessed while "
+"running in the background need to be able to listen for keystrokes all the "
+"time.<nl/><nl/>If you use any of these apps, you can choose your preferred "
+"balance of security and compatibility here."
+msgstr ""
+"Стари икс11 програми са глобалним пречицама и другим могућностима којима се "
+"приступа док раде у позадини морају стално да слушају притиске тастера.<nl/"
+"><nl/>Ако користите неки од ових програма, овде можете изабрати жељени однос "
+"између безбедности и сагласности."
+
+#: ui/main.qml:49
+#, kde-format
+msgctxt "@title:group"
+msgid "Listening for keystrokes:"
+msgstr "Слушање притисака тастера:"
+
+#: ui/main.qml:52
+#, kde-format
+msgctxt "@option:radio Listening for keystrokes is prohibited"
+msgid "Prohibited"
+msgstr "Забрањено"
+
+#: ui/main.qml:61
+#, kde-format
+msgctxt "@info:usagetip"
+msgid "Most secure; global shortcuts will not work in X11 apps"
+msgstr "Најбезбедније; глобалне пречице неће радити у икс11 програмима"
+
+#: ui/main.qml:67
+#, kde-format
+msgctxt "@option:radio Listening for keystrokes is allowed for…"
+msgid "Only the Meta, Control, Alt, and Shift keys"
+msgstr "Дозвољено само за тастере Meta, Control, Alt и Shift"
+
+#: ui/main.qml:76
+#, kde-format
+msgctxt "@info:usagetip"
+msgid ""
+"High security; push-to-talk and other modifier-only global shortcuts will "
+"work in X11 apps"
+msgstr ""
+"Висока безбедност; „притисни за говор“ и друге глобалне пречице само од "
+"модификатора радиће у икс11 програмима"
+
+#: ui/main.qml:81
+#, kde-format
+msgctxt "@option:radio Listening for keystrokes is allowed for…"
+msgid ""
+"As above, plus any key pressed while the Control, Alt, or Meta key is also "
+"pressed"
+msgstr ""
+"Као изнад, плус за сваки тастер притиснут док је притиснут и Control, Alt "
+"или Meta"
+
+#: ui/main.qml:90
+#, kde-format
+msgctxt "@info:usagetip"
+msgid "Moderate security; all global shortcuts will work in X11 apps"
+msgstr "Умерена безбедност; све глобалне пречице радиће у икс11 програмима"
+
+#: ui/main.qml:96
+#, kde-format
+msgctxt "@option:radio Listening for keystrokes is always allowed"
+msgid "Always allowed"
+msgstr "Увек дозвољено"
+
+#: ui/main.qml:105
+#, kde-format
+msgctxt "@info:usagetip"
+msgid ""
+"Least secure; all X11 apps will be able to see any text you type into any "
+"application"
+msgstr ""
+"Најмање безбедно; сви икс11 програми моћи ће да виде сваки текст који "
+"укуцате у било који програм"
+
+#: ui/main.qml:111
+#, kde-format
+msgctxt "@info:usagetip"
+msgid ""
+"Note that using this setting will reduce system security and permit "
+"malicious software to steal passwords and spy on the text that you type. "
+"Make sure you understand and accept this risk."
+msgstr ""
+"Имајте на уму да коришћење ове поставке смањује безбедност система и "
+"дозвољава злонамерном софтверу да краде лозинке и уходи текст који куцате. "
+"Уверите се да разумете и прихватате овај ризик."
+
+#: ui/main.qml:118
+#, kde-format
+msgctxt "@title:group"
+msgid "Listening for mouse buttons:"
+msgstr "Слушање дугмади миша:"
+
+#: ui/main.qml:121
+#, kde-format
+msgctxt "@option:radio Listening for mouse buttons is allowed"
+msgid "Allowed"
+msgstr "Дозвољено"
+
+#: ui/main.qml:130
+#, kde-format
+msgctxt "@info:usagetip"
+msgid ""
+"Moderate security; global shortcuts involving mouse buttons will work in X11 "
+"apps"
+msgstr ""
+"Умерена безбедност; глобалне пречице које укључују дугмад миша радиће у "
+"икс11 програмима"
+
+#: ui/main.qml:141
+#, kde-format
+msgctxt "@title:group"
+msgid "Control of pointer and keyboard:"
+msgstr "Управљање показивачем и тастатуром:"
+
+#: ui/main.qml:146
+#, kde-format
+msgctxt ""
+"@option:check Allowed control of pointer and keyboard without asking for "
+"permissions for allowed apps"
+msgid "Allowed apps"
+msgstr "Дозвољени програми"
+
+#: ui/main.qml:156
+#, kde-format
+msgctxt "@action:button"
+msgid "See Allowed Applications…"
+msgstr "Погледај дозвољене програме…"
+
+#: ui/main.qml:167
+#, kde-format
+msgctxt "@info:usagetip"
+msgid ""
+"Moderate security; XWayland-using apps claiming to be something on this list "
+"will be able to take control of the computer, because XWayland-using apps’ "
+"identities can’t be verified"
+msgstr ""
+"Умерена безбедност; програми који користе Икс‑вејланд и представљају се као "
+"нешто са овог списка моћи ће да преузму управљање рачунаром, јер идентитет "
+"програма који користе Икс‑вејланд не може да се провери"
+
+#: ui/main.qml:173
+#, kde-format
+msgctxt ""
+"@option:radio Allow control of pointer and keyboard without asking for "
+"permission"
+msgid "Allow without asking for permission"
+msgstr "Дозвољено без тражења одобрења"
+
+#: ui/main.qml:182
+#, kde-format
+msgctxt "@info:usagetip"
+msgid "Least secure; all X11 apps will be able to take control of the computer"
+msgstr ""
+"Најмање безбедно; сви икс11 програми моћи ће да преузму управљање рачунаром"
+
+#: ui/main.qml:189
+#, kde-format
+msgctxt "@info:usagetip"
+msgid ""
+"Note that using this setting will drastically reduce system security and "
+"permit malicious software to take complete control of your pointer and "
+"keyboard. Make sure you understand and accept this risk."
+msgstr ""
+"Имајте на уму да коришћење ове поставке драстично смањује безбедност система "
+"и дозвољава злонамерном софтверу да преузме потпуно управљање вашим "
+"показивачем и тастатуром. Уверите се да разумете и прихватате овај ризик."
+
+#: ui/main.qml:197
+#, kde-format
+msgctxt ""
+"@title:window title of the page opened by the 'See allowed applications' "
+"button"
+msgid "Applications allowed to control the pointer and keyboard"
+msgstr "Програми којима је дозвољено да управљају показивачем и тастатуром"
+
+#: ui/main.qml:217
+#, kde-format
+msgctxt "@info:tooltip %1 is the name of the app/binary"
+msgid "Do not allow %1 to control the pointer and keyboard without asking"
+msgstr "Не дозволи да %1 управља показивачем и тастатуром без питања"
