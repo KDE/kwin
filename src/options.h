@@ -209,9 +209,8 @@ public:
     /**
      * This enum type is used to specify the focus policy.
      *
-     * Note that FocusUnderMouse and FocusStrictlyUnderMouse are not
-     * particularly useful. They are only provided for old-fashined
-     * die-hard UNIX people ;-)
+     * Note that FocusUnderMouse is not particularly useful.
+     * It is only provided for old-fashioned die-hard UNIX people ;-)
      */
     enum FocusPolicy {
         /**
@@ -233,13 +232,6 @@ public:
          * on it.
          */
         FocusUnderMouse,
-        /**
-         * This is even worse than FocusUnderMouse. Only the window under the mouse
-         * pointer is active. If the mouse points nowhere, nothing has the focus. If
-         * the mouse points onto the desktop, the desktop has focus. The same holds
-         * for windows on the dock.
-         */
-        FocusStrictlyUnderMouse,
     };
     Q_ENUM(FocusPolicy)
 

@@ -115,7 +115,7 @@ KWinTabBoxConfig::KWinTabBoxConfig(QObject *parent, const KPluginMetaData &data)
     // check focus policy - we don't offer configs for unreasonable focus policies
     KConfigGroup config(m_config, QStringLiteral("Windows"));
     QString policy = config.readEntry("FocusPolicy", "ClickToFocus");
-    if ((policy == "FocusUnderMouse") || (policy == "FocusStrictlyUnderMouse")) {
+    if (policy == "FocusUnderMouse") {
         tabWidget->setEnabled(false);
         infoLabel->show();
     } else {

@@ -2944,7 +2944,6 @@ void Window::pointerLeaveEvent()
     cancelAutoRaise();
     workspace()->cancelDelayFocus();
     // TODO: send hover leave to deco
-    // TODO: handle Options::FocusStrictlyUnderMouse
 }
 
 RectF Window::iconGeometry() const

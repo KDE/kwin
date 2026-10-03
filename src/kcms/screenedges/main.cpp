@@ -339,7 +339,7 @@ void KWinScreenEdgesConfig::monitorShowEvent()
     // tabbox, depends on reasonable focus policy.
     KConfigGroup config2(m_config, QStringLiteral("Windows"));
     QString focusPolicy = config2.readEntry("FocusPolicy", QString());
-    bool reasonable = focusPolicy != "FocusStrictlyUnderMouse" && focusPolicy != "FocusUnderMouse";
+    bool reasonable = focusPolicy != "FocusUnderMouse";
     m_form->monitorItemSetEnabled(TabBox, reasonable);
     m_form->monitorItemSetEnabled(TabBoxAlternative, reasonable);
 

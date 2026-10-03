@@ -93,7 +93,6 @@
                 <choice name="ClickToFocus"/>
                 <choice name="FocusFollowsMouse"/>
                 <choice name="FocusUnderMouse"/>
-                <choice name="FocusStrictlyUnderMouse"/>
             </choices>
             <default>Options::ClickToFocus</default>
         </entry>
