@@ -119,7 +119,7 @@ Item {
                         ShaderEffectSource {
                             id: thumbnailTexture
                             sourceItem: thumbnail
-                            textureSize: Qt.size(bar.desktopWidth, bar.desktopHeight)
+                            textureSize: Qt.size(bar.desktopWidth * targetScreen.devicePixelRatio, bar.desktopHeight * targetScreen.devicePixelRatio)
                             hideSource: true
                             visible: false
                         }
