@@ -8,7 +8,6 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import Qt5Compat.GraphicalEffects
 import org.kde.kirigami as Kirigami
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
@@ -115,23 +114,19 @@ Item {
                             desktop: delegate.desktop
                             scale: bar.desktopHeight / targetScreen.geometry.height
                             transformOrigin: Item.TopLeft
-
-
-                            layer.textureSize: Qt.size(bar.desktopWidth, bar.desktopHeight)
-                            layer.enabled: true
-                            layer.effect: OpacityMask {
-                                maskSource: Rectangle {
-                                    anchors.centerIn: parent
-                                    width: thumbnail.width
-                                    height: thumbnail.height
-                                    // Using 5% of width since that's constant even under scaling:
-                                    radius: width / 20
-                                }
-                            }
                         }
 
-                        Rectangle {
+                        ShaderEffectSource {
+                            id: thumbnailTexture
+                            sourceItem: thumbnail
+                            textureSize: Qt.size(bar.desktopWidth, bar.desktopHeight)
+                            hideSource: true
+                            visible: false
+                        }
+
+                        Kirigami.ShadowedTexture {
                             anchors.fill: parent
+                            source: thumbnailTexture
                             radius: Kirigami.Units.cornerRadius
                             color: "transparent"
                             border.width: 1
@@ -301,7 +296,7 @@ Item {
                 visible: active || hovered
                 anchors.fill: parent
                 anchors.margins: -bar.highlightThickness
-                radius: Kirigami.Units.cornerRadius
+                radius: Kirigami.Units.cornerRadius + bar.highlightThickness
                 color: Kirigami.Theme.highlightColor
                 opacity: !active && hovered ? 0.5 : 1.0
                 z: -10
