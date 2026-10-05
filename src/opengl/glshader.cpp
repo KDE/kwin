@@ -510,7 +510,8 @@ static bool s_disableTonemapping = qEnvironmentVariableIntValue("KWIN_DISABLE_TO
 
 void GLShader::setColorspaceUniforms(const std::shared_ptr<ColorDescription> &src, const std::shared_ptr<ColorDescription> &dst, RenderingIntent intent)
 {
-    setUniform(Mat4Uniform::ColorimetryTransformation, src->toOther(*dst, intent));
+    const auto toOther = src->toOther(*dst, intent);
+    setUniform(Mat4Uniform::ColorimetryTransformation, toOther);
     setUniform(IntUniform::SourceNamedTransferFunction, src->transferFunction().type);
     if (src->transferFunction().type == TransferFunction::BT1886) {
         setUniform(Vec2Uniform::SourceTransferFunctionParams, QVector2D(src->transferFunction().bt1886B(), src->transferFunction().bt1886A()));
@@ -530,15 +531,22 @@ void GLShader::setColorspaceUniforms(const std::shared_ptr<ColorDescription> &sr
     }
     setUniform(FloatUniform::DestinationReferenceLuminance, dst->referenceLuminance());
 
-    const double maxSrcLuminance = src->maxHdrLuminance().value_or(src->referenceLuminance()) * dst->referenceLuminance() / src->referenceLuminance();
-    if (!s_disableTonemapping && intent == RenderingIntent::Perceptual) {
+    const double maxLuminance = src->maxHdrLuminance().value_or(src->referenceLuminance());
+    const auto &fromXYZ = src->containerColorimetry().fromXYZ();
+    const QVector3D masteringWhite = fromXYZ * (src->masteringColorimetry().white() * maxLuminance).asVector();
+    const QVector3D white = toOther.map(masteringWhite);
+    const double maxWhiteLuminance = std::max({white.x(), white.y(), white.z()});
+    const double maxOutputLuminance = dst->maxHdrLuminance().value_or(dst->referenceLuminance());
+
+    constexpr double eta = 1.001;
+    if (!s_disableTonemapping && maxWhiteLuminance > maxOutputLuminance * eta && intent == RenderingIntent::Perceptual) {
         // do tonemapping
-        setUniform(FloatUniform::MaxTonemappingLuminance, maxSrcLuminance);
-        setUniform(FloatUniform::MaxDestinationLuminance, dst->maxHdrLuminance().value_or(10'000));
+        setUniform(FloatUniform::MaxTonemappingLuminance, maxWhiteLuminance);
+        setUniform(FloatUniform::MaxDestinationLuminance, maxOutputLuminance);
     } else {
         // clip to src luminance
-        setUniform(FloatUniform::MaxTonemappingLuminance, maxSrcLuminance);
-        setUniform(FloatUniform::MaxDestinationLuminance, maxSrcLuminance);
+        setUniform(FloatUniform::MaxTonemappingLuminance, maxWhiteLuminance);
+        setUniform(FloatUniform::MaxDestinationLuminance, maxWhiteLuminance);
     }
     setUniform(Mat4Uniform::DestinationToLMS, dst->containerColorimetry().toLMS());
     setUniform(Mat4Uniform::LMSToDestination, dst->containerColorimetry().fromLMS());
