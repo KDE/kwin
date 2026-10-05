@@ -163,7 +163,7 @@ void TestColorspaces::testIdentityTransformation()
         RenderingIntent::RelativeColorimetricWithBPC,
     };
     for (const RenderingIntent intent : renderingIntents) {
-        const auto pipeline = ColorPipeline::create(src, dst, intent);
+        const auto pipeline = ColorPipeline::create(src, dst, intent, ColorPipeline::InputType::FixedPoint);
         if (!pipeline.isIdentity()) {
             qWarning() << pipeline;
         }
@@ -275,12 +275,12 @@ void TestColorspaces::testColorPipeline()
     QFETCH(QVector3D, dstWhite);
     QFETCH(RenderingIntent, intent);
 
-    const auto pipeline = ColorPipeline::create(srcColor, dstColor, intent);
+    const auto pipeline = ColorPipeline::create(srcColor, dstColor, intent, ColorPipeline::InputType::FixedPoint);
     QVERIFY(compareVectors(pipeline.evaluate(QVector3D(0, 0, 0)), dstBlack, s_resolution10bit));
     QVERIFY(compareVectors(pipeline.evaluate(QVector3D(0.5, 0.5, 0.5)), dstGray, s_resolution10bit));
     QVERIFY(compareVectors(pipeline.evaluate(QVector3D(1, 1, 1)), dstWhite, s_resolution10bit));
 
-    const auto inversePipeline = ColorPipeline::create(dstColor, srcColor, intent);
+    const auto inversePipeline = ColorPipeline::create(dstColor, srcColor, intent, ColorPipeline::InputType::FixedPoint);
     QVERIFY(compareVectors(inversePipeline.evaluate(dstBlack), QVector3D(0, 0, 0), s_resolution10bit));
     QVERIFY(compareVectors(inversePipeline.evaluate(dstGray), QVector3D(0.5, 0.5, 0.5), s_resolution10bit));
     QVERIFY(compareVectors(inversePipeline.evaluate(dstWhite), QVector3D(1, 1, 1), s_resolution10bit));
@@ -372,7 +372,7 @@ void TestColorspaces::testOpenglShader()
     }
     QImage pipelineResult(input.width(), input.height(), QImage::Format_RGBA8888_Premultiplied);
     {
-        const auto pipeline = ColorPipeline::create(src, dst, intent);
+        const auto pipeline = ColorPipeline::create(src, dst, intent, ColorPipeline::InputType::FixedPoint);
         for (int x = 0; x < input.width(); x++) {
             for (int y = 0; y < input.height(); y++) {
                 const auto pixel = input.pixel(x, y);
@@ -572,7 +572,7 @@ void TestColorspaces::dontCrashWithWeirdHdrMetadata()
         40,
         40,
     });
-    const auto pipeline = ColorPipeline::create(in, out, RenderingIntent::Perceptual);
+    const auto pipeline = ColorPipeline::create(in, out, RenderingIntent::Perceptual, ColorPipeline::InputType::FixedPoint);
     QVERIFY(compareVectors(pipeline.evaluate(QVector3D()), QVector3D(), 0.000001));
 }
 
@@ -650,11 +650,11 @@ void TestColorspaces::testBlackPointCompensation()
         200,
     });
 
-    QVERIFY(ColorPipeline::create(src, dst, RenderingIntent::Perceptual).isIdentity());
-    QVERIFY(ColorPipeline::create(dst, src, RenderingIntent::Perceptual).isIdentity());
+    QVERIFY(ColorPipeline::create(src, dst, RenderingIntent::Perceptual, ColorPipeline::InputType::FixedPoint).isIdentity());
+    QVERIFY(ColorPipeline::create(dst, src, RenderingIntent::Perceptual, ColorPipeline::InputType::FixedPoint).isIdentity());
 
-    QVERIFY(ColorPipeline::create(src, dst, RenderingIntent::RelativeColorimetricWithBPC).isIdentity());
-    QVERIFY(ColorPipeline::create(dst, src, RenderingIntent::RelativeColorimetricWithBPC).isIdentity());
+    QVERIFY(ColorPipeline::create(src, dst, RenderingIntent::RelativeColorimetricWithBPC, ColorPipeline::InputType::FixedPoint).isIdentity());
+    QVERIFY(ColorPipeline::create(dst, src, RenderingIntent::RelativeColorimetricWithBPC, ColorPipeline::InputType::FixedPoint).isIdentity());
 }
 
 static QVector3D clamp(const QVector3D &value, float min, float max)
@@ -682,7 +682,7 @@ void TestColorspaces::testSCRGB()
         500,
         1000,
     });
-    const ColorPipeline toOutput = ColorPipeline::create(scRGB, hdrOutput, RenderingIntent::RelativeColorimetricWithBPC);
+    const ColorPipeline toOutput = ColorPipeline::create(scRGB, hdrOutput, RenderingIntent::RelativeColorimetricWithBPC, ColorPipeline::InputType::FixedPoint);
     QCOMPARE(toOutput.ops.size(), 2);
     // this is roughly the range of values required to represent BT2020 primaries at 1000cd/m² in scRGB
     QCOMPARE_LE(toOutput.inputRange.min, -7);
@@ -713,7 +713,7 @@ void TestColorspaces::testNightLightNoTonemapping()
     const auto dst = src->withWhitepoint(newWhite)->dimmed(newWhite.Y);
 
     // the color pipeline should not have any tonemapping steps in it
-    const auto pipeline = ColorPipeline::create(src, dst, RenderingIntent::Perceptual);
+    const auto pipeline = ColorPipeline::create(src, dst, RenderingIntent::Perceptual, ColorPipeline::InputType::FixedPoint);
     QCOMPARE(pipeline.ops.size(), 4);
     QVERIFY(std::holds_alternative<ColorTransferFunction>(pipeline.ops[0].operation));
     QVERIFY(std::holds_alternative<ColorMatrix>(pipeline.ops[1].operation));
