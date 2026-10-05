@@ -477,12 +477,15 @@ static bool prepareDirectScanout(RenderView *view, LogicalOutput *logicalOutput,
     if (!attrs) {
         return false;
     }
+    const auto info = FormatInfo::get(attrs->format);
+    const auto bufferType = info && info->floatingPoint ? ColorPipeline::InputType::FloatingPoint : ColorPipeline::InputType::FixedPoint;
+
     layer->setTargetRect(mapItemToOutputDeviceCoordinates(candidate, view, logicalOutput, backendOutput));
     layer->setEnabled(true);
     layer->setSourceRect(candidate->bufferSourceBox());
     layer->setBufferTransform(candidate->bufferTransform());
     layer->setOffloadTransform(candidate->bufferTransform().combine(backendOutput->transform().inverted()));
-    layer->setColor(candidate->colorDescription(), candidate->renderingIntent(), ColorPipeline::create(candidate->colorDescription(), backendOutput->layerBlendingColor(), candidate->renderingIntent()));
+    layer->setColor(candidate->colorDescription(), candidate->renderingIntent(), ColorPipeline::create(candidate->colorDescription(), backendOutput->layerBlendingColor(), candidate->renderingIntent(), bufferType));
     if (!layer->earlyScanoutChecks()) {
         return false;
     }
