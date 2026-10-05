@@ -295,9 +295,9 @@ EffectPluginFactory *PluginEffectLoader::factory(const KPluginMetaData &info) co
         error = result.errorText;
     } else {
         QPluginLoader loader(info.fileName());
-        if (loader.metaData().value("IID").toString() != QLatin1StringView(EffectPluginFactory_iid)) {
-            qCDebug(KWIN_CORE) << info.pluginId() << " has not matching plugin version, expected " << EffectPluginFactory_iid << "got "
-                               << loader.metaData().value("IID");
+        if (const QString iid = loader.metaData().value("IID").toString(); iid != QLatin1StringView(EffectPluginFactory_iid)) {
+            qCWarning(KWIN_CORE) << "Effect" << info.pluginId() << "was built for a different version of KWin and needs to be rebuilt, expected"
+                                 << QLatin1StringView(EffectPluginFactory_iid) << "got" << iid;
             return nullptr;
         }
         factory = qobject_cast<KPluginFactory *>(loader.instance());
