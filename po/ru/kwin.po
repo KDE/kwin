@@ -53,12 +53,12 @@ msgstr ""
 #: backends/wayland/wayland_output.cpp:486
 #, kde-format
 msgid "Press right control to ungrab pointer"
-msgstr "Чтобы освободить указатель нажмите правую клавишу Ctrl"
+msgstr "Чтобы освободить указатель, нажмите правую клавишу Ctrl"
 
 #: backends/wayland/wayland_output.cpp:488
 #, kde-format
 msgid "Press right control key to grab pointer"
-msgstr "Чтобы захватить указатель нажмите правую клавишу Ctrl"
+msgstr "Чтобы захватить указатель, нажмите правую клавишу Ctrl"
 
 #: backends/wayland/wayland_output.cpp:492
 #, kde-format
@@ -80,12 +80,12 @@ msgstr "- логический выход затемнён"
 #: backends/x11/x11_windowed_backend.cpp:500
 #, kde-format
 msgid "Press right control to ungrab input"
-msgstr "Чтобы освободить ввод нажмите правую клавишу Ctrl"
+msgstr "Чтобы освободить ввод, нажмите правую клавишу Ctrl"
 
 #: backends/x11/x11_windowed_backend.cpp:500
 #, kde-format
 msgid "Press right control key to grab input"
-msgstr "Чтобы захватить ввод нажмите правую клавишу Ctrl"
+msgstr "Чтобы захватить ввод, нажмите правую клавишу Ctrl"
 
 #: backends/x11/x11_windowed_backend.cpp:501
 #, kde-format
@@ -102,7 +102,7 @@ msgstr "Выполнен сброс видеокарты «%1» (%2)"
 #, kde-format
 msgctxt "@info: status"
 msgid "Graphics card “%1” was reset"
-msgstr "Графическая карта «%1» сброшена"
+msgstr "Выполнен сброс видеокарты «%1»"
 
 #: core/iccprofile.cpp:402
 #, kde-format
@@ -583,7 +583,7 @@ msgstr "Движение точки касания"
 #, kde-format
 msgctxt "A touch up event"
 msgid "Touch Up"
-msgstr "Отпускание панели"
+msgstr "Окончание касания"
 
 #: debug_console.cpp:368
 #, kde-format
@@ -613,7 +613,7 @@ msgstr "Масштаб"
 #, kde-format
 msgctxt "Current angle in pinch gesture"
 msgid "Angle delta"
-msgstr "Угол кручения"
+msgstr "Изменение угла"
 
 # Использую термин "перемещение" из кинематики (англ.: displacement) --aspotashev
 #: debug_console.cpp:385
@@ -645,7 +645,7 @@ msgstr "Отмена сжатия"
 #, kde-format
 msgctxt "A swipe gesture is started"
 msgid "Swipe start"
-msgstr "Начало прокрутки"
+msgstr "Начало проведения"
 
 #: debug_console.cpp:423
 #, kde-format
@@ -657,7 +657,7 @@ msgstr "Количество пальцев"
 #, kde-format
 msgctxt "A swipe gesture is updated"
 msgid "Swipe update"
-msgstr "Обновление прокрутки"
+msgstr "Обновление проведения"
 
 # Использую термин "перемещение" из кинематики (англ.: displacement) --aspotashev
 #: debug_console.cpp:436
@@ -677,13 +677,13 @@ msgstr "Перемещение по y"
 #, kde-format
 msgctxt "A swipe gesture ended"
 msgid "Swipe end"
-msgstr "Завершение прокрутки"
+msgstr "Завершение проведения"
 
 #: debug_console.cpp:460
 #, kde-format
 msgctxt "A swipe gesture got cancelled"
 msgid "Swipe cancelled"
-msgstr "Отмена прокрутки"
+msgstr "Отмена проведения"
 
 #: debug_console.cpp:472
 #, kde-format
@@ -707,7 +707,7 @@ msgstr "Завершение удержания"
 #, kde-format
 msgctxt "A hold gesture got cancelled"
 msgid "Hold cancelled"
-msgstr "Удержание отменено"
+msgstr "Отмена удержания"
 
 #: debug_console.cpp:509
 #, kde-format
@@ -790,7 +790,7 @@ msgstr "Поворот"
 #: debug_console.cpp:550 debug_console.cpp:569
 #, kde-format
 msgid "Distance"
-msgstr "Перемещение"
+msgstr "Расстояние"
 
 #: debug_console.cpp:559
 #, kde-format
@@ -866,7 +866,7 @@ msgstr "Режим"
 #: debug_console.cpp:619
 #, kde-format
 msgid "Is Mode Switch"
-msgstr "Состояние режима"
+msgstr "Переключатель режима"
 
 #: debug_console.cpp:630
 #, kde-format
@@ -1284,7 +1284,7 @@ msgstr "Буфер обмена"
 #: debug_console.ui:476
 #, kde-format
 msgid "Primary Selection"
-msgstr "Первоначальный выбор"
+msgstr "Первичное выделение"
 
 #: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:129
 #, kde-format
@@ -1314,7 +1314,7 @@ msgstr "время"
 #: helpers/dialoghelper/dialoghelper.cpp:46
 #, kde-format
 msgid "The message to show (fullscreen, noborder)"
-msgstr "Отображаемое сообщение (полноэкранный режим, рамка отсутствует)"
+msgstr "Показываемое сообщение (полноэкранный режим, рамка отсутствует)"
 
 #: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:146
 #, kde-format
@@ -1326,7 +1326,7 @@ msgstr "Вспомогательная утилита KWin"
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr ""
-"Эта вспомогательная утилита на предназначена для непосредственного запуска."
+"Эта вспомогательная утилита не предназначена для непосредственного запуска."
 
 #: helpers/dialoghelper/dialoghelper.cpp:79
 #, kde-format
@@ -1336,10 +1336,10 @@ msgid ""
 "mode off you will not be able to disable it again using the mouse: use the "
 "%1 keyboard shortcut instead."
 msgstr ""
-"Выбрано отображение окна в полноэкранном режиме.\n"
-"Если приложение не имеет собственной возможности отключить полноэкранный "
-"режим, отключить его повторно с помощью мыши будет невозможно: используйте "
-"вместо этого клавиатурное сочетание %1."
+"Для окна выбран полноэкранный режим.\n"
+"Если в самом приложении нет возможности выйти из полноэкранного режима, "
+"отключить его с помощью мыши будет невозможно: используйте вместо этого "
+"комбинацию клавиш %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:85
 #, kde-format
@@ -1349,11 +1349,10 @@ msgid ""
 "mode off you will not be able to disable it again using the mouse: use the "
 "window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
-"Выбрано отображение окна в полноэкранном режиме.\n"
-"Если само приложение не имеет функции отключения полноэкранного режима, "
-"будет невозможно отключить полноэкранный режим с помощью мыши. Используйте "
-"вместо этого меню действий с окном, которое можно открыть комбинацией клавиш "
-"%1."
+"Для окна выбран полноэкранный режим.\n"
+"Если в самом приложении нет возможности выйти из полноэкранного режима, "
+"отключить его с помощью мыши будет невозможно: используйте вместо этого меню "
+"окна, которое открывается комбинацией клавиш %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:93
 #, kde-format
@@ -1362,9 +1361,9 @@ msgid ""
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse."
 msgstr ""
-"Вы выбрали отображение окна в полноэкранном режиме.\n"
-"Если само приложение не имеет возможности выключить полноэкранный режим, вы "
-"не сможете отключить его с помощью мыши."
+"Для окна выбран полноэкранный режим.\n"
+"Если в самом приложении нет возможности выйти из полноэкранного режима, "
+"отключить его с помощью мыши будет невозможно."
 
 #: helpers/dialoghelper/dialoghelper.cpp:98
 #, kde-format
@@ -1379,9 +1378,9 @@ msgid ""
 "Without the border, you will not be able to enable the border again using "
 "the mouse: use the %1 keyboard shortcut instead."
 msgstr ""
-"Выбрано отображение окна без рамки.\n"
-"Без рамки вы не сможете включить её снова с помощью мыши: используйте вместо "
-"этого сочетание клавиш %1."
+"Для окна выбран режим без рамки.\n"
+"Без рамки вернуть её с помощью мыши будет невозможно: используйте вместо "
+"этого комбинацию клавиш %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:106
 #, kde-format
@@ -1391,10 +1390,9 @@ msgid ""
 "the mouse: use the window menu instead, activated using the %1 keyboard "
 "shortcut."
 msgstr ""
-"Выбрано отображение окна без рамки.\n"
-"При отсутствии рамки будет невозможно включить её снова с помощью мыши. "
-"Используйте вместо этого меню действий с окном, которое можно открыть "
-"комбинацией клавиш %1."
+"Для окна выбран режим без рамки.\n"
+"Без рамки вернуть её с помощью мыши будет невозможно: используйте вместо "
+"этого меню окна, которое открывается комбинацией клавиш %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:112
 #, kde-format
@@ -1403,14 +1401,14 @@ msgid ""
 "Without the border, you will not be able to enable the border again using "
 "the mouse."
 msgstr ""
-"Выбрано отображение окна без рамки\n"
-"Без рамки вы не сможете включить её снова с помощью мыши."
+"Для окна выбран режим без рамки.\n"
+"Без рамки вернуть её с помощью мыши будет невозможно."
 
 #: helpers/dialoghelper/dialoghelper.cpp:116
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
-msgstr "Вернуть рамки"
+msgstr "Вернуть рамку"
 
 #: helpers/dialoghelper/dialoghelper.cpp:133
 #, kde-format
@@ -1441,9 +1439,9 @@ msgid ""
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
 "<para>Окно «%1» приложения <application>%2</application> не отвечает. "
-"Завершить его работу?</para><para><emphasis strong='true'>При завершении "
-"работы этого приложения будут закрыты все его окна. Несохранённые данные "
-"будут потеряны.</emphasis></para>"
+"Завершить работу приложения?</para><para><emphasis strong='true'>При "
+"завершении работы этого приложения будут закрыты все его окна. Несохранённые "
+"данные будут потеряны.</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
 #, kde-format
@@ -1611,7 +1609,7 @@ msgstr "Xaver Hugl"
 #: main_wayland.cpp:340
 #, kde-format
 msgid "Start a rootless Xwayland server."
-msgstr "Запустить вложенный сервер Xwayland."
+msgstr "Запустить сервер Xwayland без корневого окна (rootless)."
 
 #: main_wayland.cpp:343
 #, kde-format
@@ -1649,7 +1647,7 @@ msgstr "Высота окна в случае оконного режима. З�
 #: main_wayland.cpp:364
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr "Следует ли распахивать окна на весь экран при работе в оконном режиме"
+msgstr "Использовать ли полноэкранный вариант оконного режима"
 
 #: main_wayland.cpp:368
 #, kde-format
@@ -1679,8 +1677,8 @@ msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
-"Сокет Wayland, используемый для входящих подключений. Этот параметр может "
-"быть использован несколько раз"
+"Сокет XWayland, используемый для входящих подключений Xwayland. Этот "
+"параметр можно указывать несколько раз"
 
 #: main_wayland.cpp:386
 #, kde-format
@@ -1695,7 +1693,7 @@ msgstr "Сокет XWayland, используемый для инициализ�
 #: main_wayland.cpp:394
 #, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
-msgstr "Имя предварительно настроенного экрана xwayland"
+msgstr "Имя предварительно настроенного экрана инициализации xwayland"
 
 #: main_wayland.cpp:398
 #, kde-format
@@ -1706,8 +1704,8 @@ msgstr "Имя файла xauthority "
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
-"Выход из этого экземпляра приложения, чтобы было возможно перезапустить с "
-"помощью «kwin_wayland_wrapper»."
+"Выйти из этого экземпляра, чтобы его можно было перезапустить с помощью "
+"«kwin_wayland_wrapper»."
 
 #: main_wayland.cpp:404
 #, kde-format
@@ -1719,8 +1717,8 @@ msgstr "Отрисовка через DRM."
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
-"Сведения о региональных стандартах locale1 отличаются от заданных в "
-"параметрах пользователя"
+"Получать сведения о региональных стандартах из locale1, а не из параметров "
+"пользователя"
 
 #: main_wayland.cpp:434
 #, kde-format
@@ -1849,7 +1847,7 @@ msgstr "По группе окон"
 #: plugins/diminactive/diminactive_config.ui:78
 #, kde-format
 msgid "Fullscreen windows"
-msgstr "Распахнутые на весь экран окна"
+msgstr "Полноэкранные окна"
 
 #. i18n: ectx: label, entry (DelayTime), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:9
@@ -1990,28 +1988,28 @@ msgstr "Край вращения:"
 #: plugins/glide/glide_config.ui:70 plugins/glide/glide_config.ui:168
 #, kde-format
 msgid "Top"
-msgstr "Сверху"
+msgstr "Верхний"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
 #, kde-format
 msgid "Right"
-msgstr "Правая"
+msgstr "Правый"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/glide/glide_config.ui:80 plugins/glide/glide_config.ui:178
 #, kde-format
 msgid "Bottom"
-msgstr "Внизу"
+msgstr "Нижний"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
 #, kde-format
 msgid "Left"
-msgstr "Левая"
+msgstr "Левый"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
@@ -2025,7 +2023,7 @@ msgstr "Угол поворота:"
 #: plugins/glide/glide_config.ui:119 plugins/glide/glide_config.ui:198
 #, kde-format
 msgid "Distance:"
-msgstr "Перемещение:"
+msgstr "Расстояние:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
 #: plugins/glide/glide_config.ui:148
@@ -2064,7 +2062,7 @@ msgstr "Скрывать указатель при наборе"
 #: plugins/invert/invert.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect"
-msgstr "Инвертировать"
+msgstr "Включить или выключить инверсию цвета"
 
 #: plugins/invert/invert.cpp:51
 #, kde-format
@@ -2193,7 +2191,7 @@ msgstr "во весь экран"
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "shade"
-msgstr "развернуть из заголовка"
+msgstr "свернуть в заголовок"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:65
 #, kde-format
@@ -2458,7 +2456,7 @@ msgstr "&Цвет:"
 #, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
 msgstr ""
-"Рисовать при помощи мыши, удерживая клавиши модификатора и перемещая мышь."
+"Рисовать при помощи мыши, удерживая клавиши-модификаторы и перемещая мышь."
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
@@ -2591,13 +2589,13 @@ msgstr "Игнорировать свёрнутые окна:"
 #: plugins/overview/kcm/overvieweffectkcm.ui:36
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr "Упорядочивать окна в режиме просмотра сеткой"
+msgstr "Упорядочивать окна в режиме просмотра сеткой:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
 #: plugins/overview/kcm/overvieweffectkcm.ui:50
 #, kde-format
 msgid "Search results include filtered windows:"
-msgstr "Включать подходящие окна в результаты поиска:"
+msgstr "Включать отфильтрованные окна в результаты поиска:"
 
 #: plugins/overview/Main.qml:428
 #, kde-format
@@ -2644,7 +2642,7 @@ msgstr "Включить или отключить режим просмотра
 #: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
 msgid "Drag Down To Close"
-msgstr "Перетаскивание вниз для закрытия"
+msgstr "Перетащите вниз, чтобы закрыть"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:373
 #, kde-format
@@ -2696,7 +2694,7 @@ msgstr "Не удалось найти окно с идентификаторо�
 #: plugins/screencast/screencastmanager.cpp:118
 #, kde-format
 msgid "Could not find output"
-msgstr "Не удалось найти поток вывода"
+msgstr "Не удалось найти экран"
 
 #: plugins/screencast/screencastmanager.cpp:156
 #, kde-format
@@ -2853,7 +2851,7 @@ msgstr " %"
 #: plugins/tileseditor/tileseditoreffect.cpp:31
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr "Изменить раскладку мозаики окон"
+msgstr "Включить или выключить редактор мозаики"
 
 #: plugins/tileseditor/Main.qml:153
 #, kde-format
@@ -2966,7 +2964,7 @@ msgstr "Меню:"
 #: plugins/translucency/package/contents/ui/config.ui:201
 #, kde-format
 msgid "Exclude fullscreen windows"
-msgstr "Исключить окна, распахнутые во весь экран"
+msgstr "Исключать полноэкранные окна"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:217
@@ -2984,7 +2982,7 @@ msgstr "Неактивные окна:"
 #: plugins/translucency/package/contents/ui/config.ui:277
 #, kde-format
 msgid "Set menu translucency independently"
-msgstr "Установить другую полупрозрачность для меню"
+msgstr "Задавать полупрозрачность меню отдельно"
 
 #. i18n: ectx: property (text), widget (QLabel, dropdownmenus_label)
 #: plugins/translucency/package/contents/ui/config.ui:295
@@ -3052,7 +3050,7 @@ msgstr "Показать все окна с текущего рабочего с
 #: plugins/windowview/windowvieweffect.cpp:57
 #, kde-format
 msgid "Toggle Present Windows (All desktops)"
-msgstr "Показать все окна со всех рабочих столов "
+msgstr "Показать все окна со всех рабочих столов"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:51
 #: plugins/windowview/windowvieweffect.cpp:66
@@ -3097,19 +3095,19 @@ msgstr "Дополнительно"
 #: plugins/wobblywindows/wobblywindows_config.ui:26
 #, kde-format
 msgid "&Stiffness:"
-msgstr "&Противодействие:"
+msgstr "&Жёсткость:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: plugins/wobblywindows/wobblywindows_config.ui:68
 #, kde-format
 msgid "Dra&g:"
-msgstr "П&еретаскивание:"
+msgstr "&Сопротивление:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: plugins/wobblywindows/wobblywindows_config.ui:81
 #, kde-format
 msgid "&Move factor:"
-msgstr "П&еремещение:"
+msgstr "Коэффициент &перемещения:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
 #: plugins/wobblywindows/wobblywindows_config.ui:155
@@ -3127,7 +3125,7 @@ msgstr "Ко&лыхаться при изменении размера"
 #: plugins/wobblywindows/wobblywindows_config.ui:182
 #, kde-format
 msgid "Enable &advanced mode"
-msgstr "&Расширенный режим"
+msgstr "Включить &расширенный режим"
 
 #. i18n: ectx: property (title), widget (QGroupBox, basicGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:192
@@ -3171,7 +3169,7 @@ msgstr "Переместить увеличенную область вниз"
 #: rulebooksettingsbase.kcfg:13
 #, kde-format
 msgid "Total rules count (legacy)"
-msgstr "Обще количество правил (устаревшее)"
+msgstr "Общее количество правил (устаревшее)"
 
 #. i18n: ectx: label, entry (ruleGroupList), group (General)
 #. i18n: ectx: label, entry (order), group (General)
@@ -3250,13 +3248,13 @@ msgstr "Тип соответствия строки заголовка окна
 #: rulesettings.kcfg:58
 #, kde-format
 msgid "Machine (hostname)"
-msgstr "Система (имя хоста)"
+msgstr "Компьютер (имя хоста)"
 
 #. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:61
 #, kde-format
 msgid "Machine string match type"
-msgstr "Тип соответствия строки имени системы"
+msgstr "Тип соответствия строки имени компьютера"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
@@ -3334,43 +3332,43 @@ msgstr "Минимальный размер окна"
 #: rulesettings.kcfg:129
 #, kde-format
 msgid "Window minimum size rule type"
-msgstr "Типа правила минимального размера окна"
+msgstr "Тип правила минимального размера окна"
 
 #. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:134
 #, kde-format
 msgid "Window maximum size"
-msgstr "Максимальный размер"
+msgstr "Максимальный размер окна"
 
 #. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:138
 #, kde-format
 msgid "Window maximum size rule type"
-msgstr "Типа правила максимального размера окна"
+msgstr "Тип правила максимального размера окна"
 
 #. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:143
 #, kde-format
 msgid "Active opacity"
-msgstr "Прозрачность активного"
+msgstr "Непрозрачность активного окна"
 
 #. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:149
 #, kde-format
 msgid "Active opacity rule type"
-msgstr "Тип правила прозрачности активного"
+msgstr "Тип правила непрозрачности активного окна"
 
 #. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:154
 #, kde-format
 msgid "Inactive opacity"
-msgstr "Прозрачность неактивного"
+msgstr "Непрозрачность неактивного окна"
 
 #. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:160
 #, kde-format
 msgid "Inactive opacity rule type"
-msgstr "Типа правила прозрачности неактивного"
+msgstr "Тип правила непрозрачности неактивного окна"
 
 #. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:165
@@ -3406,7 +3404,7 @@ msgstr "Номер экрана"
 #: rulesettings.kcfg:191
 #, kde-format
 msgid "Screen number rule type"
-msgstr "Типа правила номера экрана"
+msgstr "Тип правила номера экрана"
 
 #. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:198
@@ -3424,19 +3422,19 @@ msgstr "Тип правила комнаты"
 #: rulesettings.kcfg:208
 #, kde-format
 msgid "Maximized vertically"
-msgstr "Распахнуть по вертикали"
+msgstr "Распахнуто по вертикали"
 
 #. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:212
 #, kde-format
 msgid "Maximized vertically rule type"
-msgstr "Типа правила распахивания по вертикали"
+msgstr "Тип правила распахивания по вертикали"
 
 #. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:219
 #, kde-format
 msgid "Maximized horizontally"
-msgstr "Распахнуть по горизонтали"
+msgstr "Распахнуто по горизонтали"
 
 #. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:223
@@ -3448,7 +3446,7 @@ msgstr "Тип правила распахивания по горизонтал
 #: rulesettings.kcfg:230
 #, kde-format
 msgid "Minimized"
-msgstr "Свернуть"
+msgstr "Свёрнуто"
 
 #. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:234
@@ -3478,7 +3476,7 @@ msgstr "Не показывать в переключателе рабочих �
 #: rulesettings.kcfg:256
 #, kde-format
 msgid "Skip pager rule type"
-msgstr "Типа правила сокрытия в переключателе рабочих столов"
+msgstr "Тип правила сокрытия в переключателе рабочих столов"
 
 #. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:263
@@ -3562,7 +3560,7 @@ msgstr "Цветовая схема заголовка"
 #: rulesettings.kcfg:342
 #, kde-format
 msgid "Titlebar color rule type"
-msgstr "Типа правила цветовой схемы заголовка"
+msgstr "Тип правила цветовой схемы заголовка"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:347
@@ -3586,13 +3584,13 @@ msgstr "Защита фокуса"
 #: rulesettings.kcfg:364
 #, kde-format
 msgid "Focus protection rule type"
-msgstr "Типа правила защиты фокуса"
+msgstr "Тип правила защиты фокуса"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:369
 #, kde-format
 msgid "Accept Focus"
-msgstr "Может принимать &фокус"
+msgstr "Может принимать фокус"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:373
@@ -3682,19 +3680,19 @@ msgstr "Разрешить разрывы"
 #: rulesettings.kcfg:450
 #, kde-format
 msgid "Tearing rule type"
-msgstr "Тип правила назначения разрыва"
+msgstr "Тип правила разрешения разрывов"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:455
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr "Скрыть на снимках экрана и в записях экрана"
+msgstr "Скрывать на снимках и в записях экрана"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
 #, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
-msgstr "Тип правила «Скрыть из снимков экрана и записей экрана»"
+msgstr "Тип правила «Скрывать на снимках и в записях экрана»"
 
 #: scene/workspacescene.cpp:115
 #, kde-format
@@ -3741,7 +3739,7 @@ msgstr ""
 #, kde-format
 msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
-msgstr "Быстрый просмотр рабочего стола"
+msgstr "Взглянуть на рабочий стол"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
 #, kde-format
@@ -3794,17 +3792,17 @@ msgstr ""
 #: tablet_input.cpp:119
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr "Переключить планшет к следующему выходу"
+msgstr "Переключить планшет на следующий выход"
 
 #: tablet_input.cpp:199
 #, kde-format
 msgid "Tablet moved to %1"
-msgstr "Планшет переключен на %1"
+msgstr "Планшет переключён на %1"
 
 #: tablet_input.cpp:199
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr "Переключённые выводы планшета"
+msgstr "Планшеты переключены на другие выходы"
 
 #: useractions.cpp:220
 #, kde-format
@@ -3834,7 +3832,7 @@ msgstr "С&крыть заголовок и границы окна"
 #: useractions.cpp:248
 #, kde-format
 msgid "&Hide from Screenshots and Screen Recordings"
-msgstr "&Скрыть из снимков экрана и записей экрана"
+msgstr "Скр&ывать на снимках и в записях экрана"
 
 #: useractions.cpp:256
 #, kde-format
@@ -3946,7 +3944,7 @@ msgstr "<b>%1</b> уже используется для действия «%2»
 #: useractions.cpp:826
 #, kde-format
 msgid "Window Menu"
-msgstr "Меню «Окно»"
+msgstr "Меню окна"
 
 #: useractions.cpp:828
 #, kde-format
@@ -4006,7 +4004,7 @@ msgstr "Переключить передний/задний план"
 #: useractions.cpp:852
 #, kde-format
 msgid "Make Window Fullscreen"
-msgstr "Распахнуть окно на весь экран"
+msgstr "Развернуть окно на весь экран"
 
 #: useractions.cpp:854
 #, kde-format
@@ -4378,7 +4376,7 @@ msgstr ""
 #: wayland/outputmanagement_v2.cpp:701
 #, kde-format
 msgid "%1 cannot mirror itself"
-msgstr "%1 не может отражаться само на себя"
+msgstr "%1 не может дублировать сам себя"
 
 #: wayland/outputmanagement_v2.cpp:708
 #, kde-format
@@ -4394,7 +4392,8 @@ msgstr ""
 #: wayland/outputmanagement_v2.cpp:723
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
-msgstr "Указано слишком отрицательное значение расположение вывода %1: (%2,%3)"
+msgstr ""
+"Слишком большое отрицательное значение расположения вывода %1: (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:726
 #, kde-format
@@ -4449,7 +4448,7 @@ msgstr "%1 %2 %3"
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
-msgstr "%1, %2"
+msgstr "%1 %2"
 
 # BUGME: please proofread this translation, it's full of worms --aspotashev
 #: workspace.cpp:1819
@@ -4466,13 +4465,13 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
-"Информационная поддержка KWin:\n"
-"Следующая информация должна быть предоставлена при запросе поддержки,"
+"Сведения для поддержки KWin:\n"
+"Следующая информация должна быть предоставлена при запросе поддержки, "
 "например, на https://discuss.kde.org.\n"
 "Она предоставляет сведения о текущем запущенном экземпляре программы, о том, "
 "какие параметры используются,\n"
 "какой OpenGL драйвер и эффекты запущены.\n"
-"Пожалуйста, размещайте информацию, приведённую ниже, в сервис Pastebin,\n"
+"Размещайте информацию, приведённую ниже, в сервис Pastebin,\n"
 "например, на https://paste.kde.org вместо вставки напрямую в темы форума.\n"
 
 #: xwayland/xwaylandlauncher.cpp:323

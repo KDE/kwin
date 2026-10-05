@@ -1,7 +1,7 @@
 # Translation for kcm_kwin_virtualdesktops.po to Euskara/Basque (eu).
 # Copyright (C) 2007-2026 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# SPDX-FileCopyrightText: 2024-2026 KDE euskaratzeko proiektuaren arduraduna <xalba@ni.eus>
+# SPDX-FileCopyrightText: 2024-2026 KDE euskaratzeko proiektuko arduraduna <xalba@ni.eus>
 #
 # Translators:
 # marcos <marcos@euskalgnu.org>, 2007, 2008.
@@ -12,27 +12,27 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-14 00:45+0000\n"
-"PO-Revision-Date: 2026-07-21 16:00+0200\n"
+"PO-Revision-Date: 2026-10-04 11:39+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 26.04.3\n"
+"X-Generator: Lokalize 26.08.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
-"Marcos Goyeneche,Iñigo Salvador Azurmendi,Hizkuntza Politikarako "
+"Iñigo Salvador Azurmendi,Marcos Goyeneche,Hizkuntza Politikarako "
 "Sailburuordetza"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "marcos@euskalgnu.org,xalba@ni.eus,hizpol@ej-gv.es"
+msgstr "xalba@ni.eus,marcos@euskalgnu.org,hizpol@ej-gv.es"
 
 #: desktopsmodel.cpp:188
 #, kde-format
@@ -67,7 +67,7 @@ msgstr "Errenkadak:"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Desktop"
-msgstr "Gehitu mahaigaina"
+msgstr "Mahaigaina gehitu"
 
 #: ui/main.qml:90
 #, kde-format
@@ -85,13 +85,13 @@ msgstr "Kendu"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
-msgstr "Aplikatu izen berria"
+msgstr "Izen berria aplikatu"
 
 #: ui/main.qml:132
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
-msgstr "Ezeztatu berrizendatzea"
+msgstr "Berrizendatzea ezeztatu"
 
 #: ui/main.qml:179
 #, kde-format
@@ -99,7 +99,7 @@ msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
 "now will overwrite the changes."
 msgstr ""
-"Alegiazko mahaigainak aldatu egin dira ezarpen aplikazio honetatik kanpo. "
+"Alegiazko mahaigainak aplikazio honetatik kanpo aldatu egin dira ezarpen. "
 "Orain gordetzeak aldaketak gainidatziko ditu."
 
 #: ui/main.qml:195
@@ -125,7 +125,7 @@ msgstr "Pantaila bakoitzean mahaigaina era bereizian aldatu"
 #: ui/main.qml:243
 #, kde-format
 msgid "Show animation when switching:"
-msgstr "Mahaigain-aldatzean animazioa erakutsi:"
+msgstr "Mahaigain-aldaketan animazioa erakutsi:"
 
 #: ui/main.qml:294
 #, kde-format
@@ -140,7 +140,7 @@ msgstr "%1 ms"
 #: ui/main.qml:337
 #, kde-format
 msgid "Show desktop layout indicators"
-msgstr "Erakutsi mahaigain-diseinuaren adierazleak"
+msgstr "Mahaigain-antolaeraren adierazleak erakutsi"
 
 #~ msgid "1 Row"
 #~ msgid_plural "%1 Rows"
