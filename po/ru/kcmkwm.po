@@ -130,7 +130,7 @@ msgstr "мс"
 #: ui/Focus.qml:146
 #, kde-format
 msgid "Focus &stealing prevention:"
-msgstr "Уровень предотвращения &смены фокуса:"
+msgstr "Уровень предотвращения &похищения фокуса:"
 
 #: ui/Focus.qml:150 ui/MovementAndPlacement.qml:30
 #: ui/MovementAndPlacement.qml:58 ui/MovementAndPlacement.qml:87
@@ -226,7 +226,7 @@ msgstr "Действия &окна"
 #: ui/main.qml:49
 #, kde-format
 msgid "Mo&vement & Placement"
-msgstr "Пе&ремещение &Размещение"
+msgstr "Пе&ремещение и размещение"
 
 #: ui/MovementAndPlacement.qml:17
 #, kde-format
@@ -266,7 +266,7 @@ msgstr "Зона привязки &центра:"
 #: ui/MovementAndPlacement.qml:106
 #, kde-format
 msgid "&Snap windows:"
-msgstr "Привязывать окна:"
+msgstr "&Привязывать окна:"
 
 #: ui/MovementAndPlacement.qml:107
 #, kde-format
@@ -318,7 +318,7 @@ msgstr "Под мышью"
 #, kde-format
 msgctxt "@title:group"
 msgid "Picture-in-picture Placement"
-msgstr "Размещение &картинки-в-картинке"
+msgstr "Размещение «картинки в картинке»"
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
@@ -437,7 +437,7 @@ msgstr "К&олесо мыши:"
 #: ui/TitlebarActions.qml:83 ui/WindowActions.qml:207
 #, kde-format
 msgid "Maximize/restore"
-msgstr "Развернуть/восстановить"
+msgstr "Распахнуть/восстановить"
 
 #: ui/TitlebarActions.qml:84 ui/WindowActions.qml:208
 #, kde-format
@@ -533,7 +533,7 @@ msgstr "Распахнуть окно при двойном щелчке по е
 #: ui/TitlebarActions.qml:248
 #, kde-format
 msgid "Maximize Button Actions"
-msgstr "Действия кнопки разворачивания"
+msgstr "Действия кнопки распахивания"
 
 #: ui/TitlebarActions.qml:251 ui/WindowActions.qml:154
 #, kde-format
@@ -543,7 +543,7 @@ msgstr "Щелчок &левой кнопкой:"
 #: ui/TitlebarActions.qml:268
 #, kde-format
 msgid "Middle c&lick:"
-msgstr "Щелчок средней кнопкой:"
+msgstr "Щелчок с&редней кнопкой:"
 
 #: ui/TitlebarActions.qml:285 ui/WindowActions.qml:186
 #, kde-format
@@ -563,7 +563,7 @@ msgstr "Передать фокус и пропустить щелчок"
 #: ui/WindowActions.qml:27
 #, kde-format
 msgid "Move"
-msgstr "Перемещение"
+msgstr "Переместить"
 
 #: ui/WindowActions.qml:28
 #, kde-format
@@ -600,7 +600,7 @@ msgstr "Внутри неактивного окна"
 #, kde-format
 msgid "Focus, click through, and raise on release"
 msgstr ""
-"Передать фокус, пропустить  щелчок и выдвинуть при отпускании кнопки мыши"
+"Передать фокус, пропустить щелчок и выдвинуть при отпускании кнопки мыши"
 
 #: ui/WindowActions.qml:103
 #, kde-format
@@ -625,7 +625,7 @@ msgstr "Внутри окна, на заголовке и рамке"
 #: ui/WindowActions.qml:123
 #, kde-format
 msgid "Mo&difier key:"
-msgstr "Доп. &клавиша:"
+msgstr "&Клавиша-модификатор:"
 
 #: ui/WindowActions.qml:131
 #, kde-format

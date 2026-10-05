@@ -125,7 +125,7 @@ msgstr "При перемещении к верхнему краю экрана"
 #: main.ui:84
 #, kde-format
 msgid "&Tile:"
-msgstr "Растягивать окна:"
+msgstr "Растя&гивать окна:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderTiling)
 #: main.ui:94
@@ -143,13 +143,13 @@ msgstr "Поведение:"
 #: main.ui:108
 #, kde-format
 msgid "Remain active when windows are fullscreen"
-msgstr "Оставить активным, если окна развёрнуты во весь экран"
+msgstr "Оставлять активными при полноэкранных окнах"
 
 #. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
 #: main.ui:115
 #, kde-format
 msgid "Trigger &quarter tiling in:"
-msgstr "Высота зоны растягивания окон в четверть экрана:"
+msgstr "Высота зоны растягивания окон в &четверть экрана:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, electricBorderCornerRatioSpin)
 #: main.ui:130
@@ -261,7 +261,7 @@ msgstr ""
 "Барьер не позволяет указателю мыши переместиться на другой экран, если он "
 "уже касается угла экрана. Благодаря этому при использовании нескольких "
 "экранов упрощается активация таких элементов интерфейса, как кнопки закрытия "
-"развёрнутых окон."
+"распахнутых окон."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283

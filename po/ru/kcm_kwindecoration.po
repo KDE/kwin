@@ -102,8 +102,8 @@ msgid ""
 "active session, without accidentally setting it to one that is either not "
 "available, or which is already set."
 msgstr ""
-"Это приложение позволяет задать используемое оформление окон, не позволяя "
-"выбрать отсутствующий или уже используемое оформление."
+"Эта программа позволяет задать оформление окон для текущего сеанса, не "
+"допуская выбора отсутствующего или уже используемого оформления."
 
 #: kwin-applywindowdecoration.cpp:35
 #, kde-format
@@ -128,8 +128,8 @@ msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
 "as your current theme."
 msgstr ""
-"Формат файла «%1» определён как оформление KWin Aurorae «%2» и будет "
-"использован в "
+"Файл «%1» определён как оформление KWin Aurorae «%2», будет выполнена "
+"попытка установить его в качестве текущего."
 
 #: kwin-applywindowdecoration.cpp:73
 #, kde-format
@@ -158,7 +158,7 @@ msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
 "unrecoverable error. You may find that simply trying again will work."
 msgstr ""
-"Не удалось сохранить настройки оформления по неизвестной причине. Данная "
+"Не удалось сохранить параметры оформления по неизвестной причине. Данная "
 "ошибка не может быть исправлена, но может не возникнуть при следующей "
 "попытке."
 
@@ -218,7 +218,7 @@ msgstr "Показывать подсказки кнопок окон"
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
-msgstr "Всегда показывать кнопку «Скрыть от снимков и записи экрана»"
+msgstr "Всегда показывать кнопку «Скрывать на снимках и в записях экрана»"
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format
@@ -227,8 +227,8 @@ msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screenshots and screen recordings"
 msgstr ""
-"При снятом флажке кнопка отображается, только если окно скрыто от снимков "
-"экрана и записи экрана."
+"При снятом флажке кнопка показывается, только если окно скрыто на снимках и "
+"в записях экрана."
 
 #: ui/ConfigureTitlebar.qml:86
 #, kde-format
@@ -237,8 +237,8 @@ msgid ""
 "To enable this option, add the \"Hide from Screenshots and Screen Recordings"
 "\" button to the titlebar first"
 msgstr ""
-"Для включения этого параметра сначала добавьте кнопку «Скрыть от снимков "
-"экрана и записи экрана» в заголовок окна."
+"Для включения этого параметра сначала добавьте кнопку «Скрывать на снимках и "
+"в записях экрана» в заголовок окна."
 
 #: ui/main.qml:29
 #, kde-format
