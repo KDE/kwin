@@ -771,7 +771,7 @@ void DrmOutput::tryKmsColorOffloading(State &next)
     const auto encoding = next.originalColorDescription->withReference(next.colorDescription->referenceLuminance());
 
     // absolute colorimetric to preserve the whitepoint adjustments made during compositing
-    ColorPipeline colorPipeline = ColorPipeline::create(next.blendingColor, encoding, RenderingIntent::AbsoluteColorimetricNoAdaptation);
+    ColorPipeline colorPipeline = ColorPipeline::create(next.blendingColor, encoding, RenderingIntent::AbsoluteColorimetricNoAdaptation, ColorPipeline::InputType::FixedPoint);
 
     const bool hdr = next.highDynamicRange && (capabilities() & Capability::HighDynamicRange);
     const auto &iccProfile = hdr ? next.hdrIccProfile : next.iccProfile;

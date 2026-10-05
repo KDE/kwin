@@ -752,11 +752,11 @@ std::pair<QList<Compositor::LayerData>, std::expected<void, OutputError>> Compos
         SurfaceItem *const candidate = view->layer()->scanoutDevice() ? view->scanoutCandidate() : nullptr;
         // note that layerBlendingColor may already be an intermediate from the last frame's offload
         const auto baseBlend = backendOutput->blendingColor();
-        if (candidate && !ColorPipeline::create(candidate->colorDescription(), baseBlend, candidate->renderingIntent()).isIdentity()) {
+        if (candidate && !ColorPipeline::create(candidate->colorDescription(), baseBlend, candidate->renderingIntent(), ColorPipeline::InputType::FixedPoint).isIdentity()) {
             const auto linearBlend = baseBlend->withTransferFunction(TransferFunction(TransferFunction::linear, 0, baseBlend->transferFunction().maxLuminance));
             // the output merges this before its own post blending color management, so that the
             // shared blend space encode cancels and the panel OETF ends up after blending
-            const auto postBlend = ColorPipeline::create(linearBlend, baseBlend, RenderingIntent::AbsoluteColorimetricNoAdaptation);
+            const auto postBlend = ColorPipeline::create(linearBlend, baseBlend, RenderingIntent::AbsoluteColorimetricNoAdaptation, ColorPipeline::InputType::FixedPoint);
             postBlendOffloaded = backendOutput->setPostBlendPipeline(postBlend, linearBlend);
         }
     }
