@@ -28,7 +28,6 @@
 #include <QObject>
 
 #include <memory>
-#include <xcb/xcb.h>
 
 class QAction;
 
