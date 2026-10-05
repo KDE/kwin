@@ -434,6 +434,11 @@ SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource 
     d->fallbackTimer.setSingleShot(true);
     d->fallbackTimer.setTimerType(Qt::PreciseTimer);
     connect(&d->fallbackTimer, &QTimer::timeout, this, &SurfaceInterface::handleCommitFallback);
+    connect(this, &SurfaceInterface::waitingOnCommitTiming, this, [this]() {
+        if (!d->fallbackTimer.isActive()) {
+            updateCommitFallback();
+        }
+    });
 }
 
 SurfaceInterface::~SurfaceInterface()
@@ -1266,7 +1271,11 @@ Transaction *SurfaceInterface::firstTransaction() const
 void SurfaceInterface::setFirstTransaction(Transaction *transaction)
 {
     d->firstTransaction = transaction;
+    updateCommitFallback();
+}
 
+void SurfaceInterface::updateCommitFallback()
+{
     const auto timing = requestedTimingOfNextCommit();
     if (!timing && !hasFifoBarrier()) {
         d->fallbackTimer.stop();
