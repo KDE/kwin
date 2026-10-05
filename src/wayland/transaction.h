@@ -145,6 +145,10 @@ public:
 
     TransactionEntry *entry(SurfaceInterface *surface);
 
+    /**
+     * Returns the latest requested presentation time, or std::nullopt if no time is requested
+     * or another constraint prevents the transaction from being applied.
+     */
     std::optional<std::chrono::steady_clock::time_point> targetTimestamp() const;
 
 private:

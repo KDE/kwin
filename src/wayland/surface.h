@@ -398,6 +398,10 @@ public:
     void setPointerConfined(bool confined);
     void setPointerLocked(bool locked);
 
+    /**
+     * Returns the requested presentation time of the next transaction if it has no other
+     * pending constraints, or std::nullopt if there is no such time.
+     */
     std::optional<std::chrono::steady_clock::time_point> requestedTimingOfNextCommit() const;
 
 Q_SIGNALS:
@@ -487,6 +491,7 @@ Q_SIGNALS:
     void committed();
 
 private:
+    void updateCommitFallback();
     void handleCommitFallback();
 
     std::unique_ptr<SurfaceInterfacePrivate> d;

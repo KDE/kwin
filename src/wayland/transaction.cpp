@@ -301,6 +301,9 @@ std::optional<std::chrono::steady_clock::time_point> Transaction::targetTimestam
 {
     std::optional<std::chrono::steady_clock::time_point> ret;
     for (const TransactionEntry &entry : m_entries) {
+        if (!entry.isReady()) {
+            return std::nullopt;
+        }
         if (entry.isDiscarded()) {
             continue;
         }
