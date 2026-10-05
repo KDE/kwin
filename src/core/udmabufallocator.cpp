@@ -137,8 +137,12 @@ GraphicsBuffer *UDmabufAllocator::allocate(uint32_t format, const QSize &size)
     if (!info) {
         return nullptr;
     }
-    const int stride = align(size.width() * info->bitsPerPixel / 8, 256);
-    const int bufferSize = align(size.height() * stride, getpagesize());
+    // padding to 64 pixels is required to work around a crash in llvmpipe:
+    // https://gitlab.freedesktop.org/mesa/mesa/-/work_items/16447
+    const int paddedWidth = align(size.width(), 64);
+    const int paddedHeight = align(size.height(), 64);
+    const int stride = align(paddedWidth * info->bitsPerPixel / 8, 256);
+    const int bufferSize = align(paddedHeight * stride, getpagesize());
 
     FileDescriptor fd = FileDescriptor(memfd_create("udmabuf", MFD_CLOEXEC | MFD_ALLOW_SEALING));
     if (!fd.isValid()) {
@@ -165,13 +169,14 @@ GraphicsBuffer *UDmabufAllocator::allocate(uint32_t format, const QSize &size)
         .fd = std::move(fd),
         .stride = stride,
         .offset = 0,
-        .size = size,
+        .size = QSize(size.width(), paddedHeight),
         .format = format,
     };
     auto dmabufAttributes = GpuManager::self()->createUdmabuf(&attributes);
     if (!dmabufAttributes) {
         return nullptr;
     }
+    dmabufAttributes->height = size.height();
     return new UdmabufGraphicsBuffer(std::move(*dmabufAttributes), std::move(memoryMap));
 #else
     return nullptr;
