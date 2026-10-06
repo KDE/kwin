@@ -17,10 +17,10 @@
 #include <QCommandLineParser>
 #include <QKeySequence>
 
-#include <qpa/qplatformwindow_p.h>
-
+#if KWIN_BUILD_X11
 #include <private/qtx11extras_p.h>
 #include <xcb/xcb.h>
+#endif
 
 static QString shortcut(const QString &name)
 {
@@ -55,16 +55,20 @@ int main(int argc, char *argv[])
 
     parser.process(app);
 
-    const bool isX11 = app.platformName() == QLatin1StringView("xcb");
-
     QString windowHandle = parser.value(widOption);
 
+#if KWIN_BUILD_X11
     // on Wayland XDG_ACTIVATION_TOKEN is set in the environment.
+    const bool isX11 = app.platformName() == QLatin1StringView("xcb");
     bool time_ok = false;
     xcb_timestamp_t timestamp = parser.value(timestampOption).toULong(&time_ok);
+#endif
 
     if (windowHandle.isEmpty()
-        || (isX11 && (!time_ok || timestamp == XCB_CURRENT_TIME))) {
+#if KWIN_BUILD_X11
+        || (isX11 && (!time_ok || timestamp == XCB_CURRENT_TIME))
+#endif
+    ) {
         fprintf(stdout, "%s\n", qPrintable(i18n("This helper utility is not supposed to be called directly.")));
         parser.showHelp(1);
     }
@@ -119,9 +123,11 @@ int main(int argc, char *argv[])
         parser.showHelp(1);
     }
 
+#if KWIN_BUILD_X11
     if (isX11) {
         QX11Info::setAppUserTime(timestamp);
     }
+#endif
 
     // KMessageDialog::Information doesn't let us add additional buttons...
     auto *dialog = new KMessageDialog(KMessageDialog::QuestionTwoActions, prompt);
