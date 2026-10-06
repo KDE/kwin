@@ -31,10 +31,10 @@
 
 #include <QtConcurrentRun>
 
-#include <qpa/qplatformwindow_p.h>
-
+#if KWIN_BUILD_X11
 #include <private/qtx11extras_p.h>
 #include <xcb/xcb.h>
+#endif
 
 #include <cerrno>
 #include <csignal>
@@ -156,8 +156,6 @@ int main(int argc, char *argv[])
 
     parser.process(app);
 
-    const bool isX11 = app.platformName() == QLatin1StringView("xcb");
-
     QString hostname = parser.value(hostNameOption);
     bool pid_ok = false;
     pid_t pid = parser.value(pidOption).toULong(&pid_ok);
@@ -165,11 +163,16 @@ int main(int argc, char *argv[])
     QString appname = parser.value(applicationNameOption);
     QString windowHandle = parser.value(widOption);
 
+#if KWIN_BUILD_X11
+    const bool isX11 = app.platformName() == QLatin1StringView("xcb");
     bool time_ok = false;
     xcb_timestamp_t timestamp = parser.value(timestampOption).toULong(&time_ok);
+#endif
 
     if (!pid_ok || pid == 0 || windowHandle.isEmpty()
+#if KWIN_BUILD_X11
         || (isX11 && (!time_ok || timestamp == XCB_CURRENT_TIME))
+#endif
         || hostname.isEmpty() || windowName.isEmpty() || appname.isEmpty()) {
         fprintf(stdout, "%s\n", qPrintable(i18n("This helper utility is not supposed to be called directly.")));
         parser.showHelp(1);
@@ -189,9 +192,11 @@ int main(int argc, char *argv[])
     dialog.setPid(pid);
     dialog.setHostName(hostname);
 
+#if KWIN_BUILD_X11
     if (isX11) {
         QX11Info::setAppUserTime(timestamp);
     }
+#endif
 
     QObject::connect(&dialog, &KillDialog::terminateRequested, &dialog, [&dialog, pid, &hostname, &isLocal] {
         if (!isLocal) {

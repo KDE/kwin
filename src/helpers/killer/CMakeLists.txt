@@ -13,10 +13,13 @@ target_link_libraries(kwin_killer_helper
     KF6::Service
     KF6::WidgetsAddons
     KF6::WindowSystem
-    Qt::GuiPrivate
     Qt::Widgets
     Qt::Concurrent
 )
+
+if (KWIN_BUILD_X11)
+    target_link_libraries(kwin_killer_helper Qt::GuiPrivate)
+endif()
 
 ecm_qt_declare_logging_category(kwin_killer_helper
     HEADER debug.h
