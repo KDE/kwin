@@ -40,6 +40,8 @@
 #include <KDecoration3/DecoratedWindow>
 #include <KDecoration3/Decoration>
 
+#include <QDir>
+
 namespace KWin
 {
 
@@ -1520,6 +1522,18 @@ void XdgToplevelWindow::updateIcon()
         return;
     }
     qDebug() << "set icon:" << iconName;
+
+    const auto dataDirs = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
+    for (const QString &dataDir : dataDirs) {
+        qDebug() << "Entering" << dataDir;
+        QDir dir(dataDir);
+        if (!dir.cd("icons")) {
+            qDebug() << "... no icons/";
+            continue;
+        }
+        qDebug() << "Entries:" << dir.entryList();
+    }
+
     setIcon(QIcon::fromTheme(iconName));
 }
 
