@@ -10,9 +10,12 @@ target_link_libraries(kwin_dialog_helper
     KF6::I18n
     KF6::WidgetsAddons
     KF6::WindowSystem
-    Qt::GuiPrivate
     Qt::Widgets
 )
+
+if (KWIN_BUILD_X11)
+    target_link_libraries(kwin_dialog_helper Qt::GuiPrivate)
+endif()
 
 install(TARGETS kwin_dialog_helper DESTINATION ${KDE_INSTALL_LIBEXECDIR})
 
