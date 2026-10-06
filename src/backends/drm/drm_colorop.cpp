@@ -1138,9 +1138,8 @@ DrmColorOp::DrmColorOp(DrmGpu *gpu, uint32_t objectId)
                                                                           QByteArrayLiteral("YCbCr 601 Limited to RGB"),
                                                                           QByteArrayLiteral("YCbCr 709 Full to RGB"),
                                                                           QByteArrayLiteral("YCbCr 709 Limited to RGB"),
-                                                                          QByteArrayLiteral("YCbCr 2020 Full to RGB NC"),
-                                                                          QByteArrayLiteral("YCbCr 2020 Limited to RGB NC"),
-
+                                                                          QByteArrayLiteral("YCbCr 2020 NC Full to RGB"),
+                                                                          QByteArrayLiteral("YCbCr 2020 NC Limited to RGB"),
                                                                       })
 {
 }
