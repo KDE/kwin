@@ -3010,11 +3010,13 @@ void Window::setDesktopFileName(const QString &name)
 QString Window::iconFromDesktopFile(const QString &desktopFileName)
 {
     const QString absolutePath = findDesktopFile(desktopFileName);
+    qDebug() << "desktop file:" << desktopFileName << absolutePath;
     if (absolutePath.isEmpty()) {
         return {};
     }
 
     KDesktopFile df(absolutePath);
+    qDebug() << "desktop icon:" << df.readIcon();
     return df.readIcon();
 }
 

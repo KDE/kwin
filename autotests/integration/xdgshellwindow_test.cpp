@@ -725,6 +725,7 @@ void TestXdgShellWindow::testHidden()
 
 void TestXdgShellWindow::testDesktopFileName()
 {
+    qDebug() << "<<<<<<<";
     QIcon::setThemeName(QStringLiteral("breeze"));
     // this test verifies that desktop file name is passed correctly to the window
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -738,6 +739,7 @@ void TestXdgShellWindow::testDesktopFileName()
     QVERIFY(window->resourceClass().startsWith("testXdgShellWindow"));
     QVERIFY(window->resourceName().startsWith("testXdgShellWindow"));
     QCOMPARE(window->icon().name(), QStringLiteral("wayland"));
+    qDebug() << ">>>>>";
 
     QSignalSpy desktopFileNameChangedSpy(window, &Window::desktopFileNameChanged);
 

@@ -1506,7 +1506,9 @@ void XdgToplevelWindow::updateCapabilities()
 
 void XdgToplevelWindow::updateIcon()
 {
+    qDebug() << "update icon";
     if (!m_shellSurface->customIcon().isNull()) {
+        qDebug() << "custom icon";
         setIcon(m_shellSurface->customIcon());
         return;
     }
@@ -1514,8 +1516,10 @@ void XdgToplevelWindow::updateIcon()
     const QString dfIconName = iconFromDesktopFile();
     const QString iconName = dfIconName.isEmpty() ? waylandIconName : dfIconName;
     if (iconName == icon().name()) {
+        qDebug() << "***" << iconName;
         return;
     }
+    qDebug() << "set icon:" << iconName;
     setIcon(QIcon::fromTheme(iconName));
 }
 
