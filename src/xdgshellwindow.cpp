@@ -1540,6 +1540,8 @@ void XdgToplevelWindow::updateIcon()
         }
     }
 
+    qDebug() << "Icon theme name:" << QIcon::themeName();
+    qDebug() << QIcon::fromTheme(iconName);
     setIcon(QIcon::fromTheme(iconName));
 }
 
