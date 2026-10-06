@@ -16,8 +16,6 @@
 #include <QImage>
 #include <QObject>
 
-#include <xcb/xcb.h>
-
 namespace KDecoration3
 {
 
@@ -130,7 +128,6 @@ private:
     static std::unique_ptr<Shadow> createShadowFromDecoration(Window *window);
     static std::unique_ptr<Shadow> createShadowFromWayland(Window *window);
     static std::unique_ptr<Shadow> createShadowFromInternalWindow(Window *window);
-    static QList<uint32_t> readX11ShadowProperty(xcb_window_t id);
     bool init(const QList<uint32_t> &data);
     bool init(KDecoration3::Decoration *decoration);
     bool init(const QPointer<ShadowInterface> &shadow);
