@@ -544,6 +544,7 @@ static QMatrix4x4 calculateYuvToRgbMatrix(double kr, double kg, double kb, Encod
     }
 }
 
+static const QMatrix4x4 s_fullRangeRGB = QMatrix4x4{};
 static const QMatrix4x4 s_limitedRangeBT601 = calculateYuvToRgbMatrix(0.299, 0.587, 0.114, EncodingRange::Limited);
 static const QMatrix4x4 s_fullRangeBT601 = calculateYuvToRgbMatrix(0.299, 0.587, 0.114, EncodingRange::Full);
 static const QMatrix4x4 s_limitedRangeBT709 = calculateYuvToRgbMatrix(0.2126, 0.7152, 0.0722, EncodingRange::Limited);
@@ -551,12 +552,12 @@ static const QMatrix4x4 s_fullRangeBT709 = calculateYuvToRgbMatrix(0.2126, 0.715
 static const QMatrix4x4 s_limitedRangeBT2020 = calculateYuvToRgbMatrix(0.2627, 0.6780, 0.0593, EncodingRange::Limited);
 static const QMatrix4x4 s_fullRangeBT2020 = calculateYuvToRgbMatrix(0.2627, 0.6780, 0.0593, EncodingRange::Full);
 
-QMatrix4x4 ColorDescription::yuvMatrix() const
+const QMatrix4x4 &ColorDescription::yuvMatrix(YUVMatrixCoefficients m_yuvCoefficients, EncodingRange m_range)
 {
     switch (m_yuvCoefficients) {
     case YUVMatrixCoefficients::Identity:
         Q_ASSERT(m_range == EncodingRange::Full);
-        return QMatrix4x4();
+        return s_fullRangeRGB;
     case YUVMatrixCoefficients::BT601:
         if (m_range == EncodingRange::Limited) {
             return s_limitedRangeBT601;
@@ -577,6 +578,11 @@ QMatrix4x4 ColorDescription::yuvMatrix() const
         }
     }
     Q_UNREACHABLE();
+}
+
+const QMatrix4x4 &ColorDescription::yuvMatrix() const
+{
+    return yuvMatrix(m_yuvCoefficients, m_range);
 }
 
 QMatrix4x4 ColorDescription::toOther(const ColorDescription &other, RenderingIntent intent) const
