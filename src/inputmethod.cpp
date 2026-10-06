@@ -281,6 +281,7 @@ void InputMethod::setActive(bool active)
     const bool wasActive = waylandServer()->inputMethod()->context();
     if (wasActive && !active) {
         waylandServer()->inputMethod()->sendDeactivate();
+        hide();
     }
 
     if (active) {
