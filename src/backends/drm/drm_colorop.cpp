@@ -666,7 +666,7 @@ std::optional<DrmAbstractColorOp::Priority> Matrix3x4ColorOp::colorOpPreference(
         } else {
             return Priority::Normal;
         }
-    } else if (std::holds_alternative<ColorMultiplier>(op) || std::holds_alternative<ColorYuvConversion>(op)) {
+    } else if (std::holds_alternative<ColorMultiplier>(op)) {
         return Priority::Low;
     }
     return std::nullopt;
