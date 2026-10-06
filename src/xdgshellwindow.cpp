@@ -1541,6 +1541,7 @@ void XdgToplevelWindow::updateIcon()
     }
 
     qDebug() << "Icon theme name:" << QIcon::themeName();
+    qDebug() << "Icon theme search paths:" << QIcon::themeSearchPaths();
     qDebug() << QIcon::fromTheme(iconName);
     setIcon(QIcon::fromTheme(iconName));
 }
