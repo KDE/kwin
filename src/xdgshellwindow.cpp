@@ -41,6 +41,7 @@
 #include <KDecoration3/Decoration>
 
 #include <QDir>
+#include <QDirIterator>
 
 namespace KWin
 {
@@ -1532,6 +1533,11 @@ void XdgToplevelWindow::updateIcon()
             continue;
         }
         qDebug() << "Entries:" << dir.entryList();
+
+        QDirIterator it(dataDir, QStringList() << QStringLiteral("wayland.png") << QStringLiteral("wayland.svg"), QDir::NoFilter, QDirIterator::Subdirectories);
+        while (it.hasNext()) {
+            qDebug() << it.next();
+        }
     }
 
     setIcon(QIcon::fromTheme(iconName));
