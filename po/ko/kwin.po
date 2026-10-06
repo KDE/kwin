@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-01 20:15+0000\n"
-"PO-Revision-Date: 2026-09-28 22:47+0200\n"
+"PO-Revision-Date: 2026-10-05 21:52+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -2492,14 +2492,14 @@ msgstr "가상 바탕 화면 한계에 도달함"
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr "한눈에 보기와 모눈 보기 순환"
+msgstr "한눈에 보기와 격자 보기 순환"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:45
 #: plugins/overview/overvieweffect.cpp:145
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr "모눈 보기와 한눈에 보기 순환"
+msgstr "격자 보기와 한눈에 보기 순환"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:50
 #, kde-format
@@ -2511,7 +2511,7 @@ msgstr "한눈에 보기 전환"
 #, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "모눈 보기 전환"
+msgstr "격자 보기 전환"
 
 #. i18n: ectx: property (text), widget (QLabel, label_IgnoreMinimized)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
@@ -2523,7 +2523,7 @@ msgstr "최소화된 창 무시:"
 #: plugins/overview/kcm/overvieweffectkcm.ui:36
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr "모눈 보기에서 창 정렬:"
+msgstr "격자 보기에서 창 정렬:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
 #: plugins/overview/kcm/overvieweffectkcm.ui:50
@@ -2559,7 +2559,7 @@ msgstr "일치하는 창 없음"
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr "한눈에 보기와 모눈 보기 순환"
+msgstr "한눈에 보기와 격자 보기 순환"
 
 #: plugins/overview/overvieweffect.cpp:152
 #, kde-format
@@ -2571,7 +2571,7 @@ msgstr "한눈에 보기 전환"
 #, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "모눈 보기 전환"
+msgstr "격자 보기 전환"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
