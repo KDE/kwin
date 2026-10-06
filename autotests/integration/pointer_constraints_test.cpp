@@ -48,6 +48,7 @@ private Q_SLOTS:
     void testConfinedPointer();
     void testLockedPointer();
     void testCloseWindowWithLockedPointer();
+    void testUnlockAndWarp();
 };
 
 void TestPointerConstraints::initTestCase()
@@ -77,7 +78,9 @@ void TestPointerConstraints::initTestCase()
 
 void TestPointerConstraints::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::PointerConstraints));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat
+                                         | Test::AdditionalWaylandInterface::PointerConstraints
+                                         | Test::AdditionalWaylandInterface::PointerWarp));
     QVERIFY(Test::waitForWaylandPointer());
 
     workspace()->setActiveOutput(QPoint(640, 512));
@@ -361,6 +364,33 @@ void TestPointerConstraints::testCloseWindowWithLockedPointer()
     // this should result in unlocked
     QVERIFY(unlockedSpy.wait());
     QCOMPARE(input()->pointer()->isConstrained(), false);
+}
+
+void TestPointerConstraints::testUnlockAndWarp()
+{
+    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
+    QSignalSpy enter(pointer.get(), &KWayland::Client::Pointer::entered);
+    QSignalSpy motion(pointer.get(), &KWayland::Client::Pointer::motion);
+
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show());
+    window.m_window->move(QPointF(0, 0));
+
+    input()->pointer()->warp(window.m_window->frameGeometry().center());
+    QVERIFY(enter.wait());
+
+    std::unique_ptr<KWayland::Client::LockedPointer> lockedPointer(Test::waylandPointerConstraints()->lockPointer(window.m_surface.get(), pointer.get(), nullptr, KWayland::Client::PointerConstraints::LifeTime::OneShot));
+    QSignalSpy lockedSpy(lockedPointer.get(), &KWayland::Client::LockedPointer::locked);
+
+    window.commit();
+    QVERIFY(lockedSpy.wait());
+
+    Test::pointerWarp()->warp_pointer(*window.m_surface, *pointer, wl_fixed_from_int(10), wl_fixed_from_int(10), enter.last()[0].value<uint32_t>());
+    lockedPointer.reset();
+    window.commit();
+
+    QVERIFY(motion.wait());
+    QCOMPARE(motion.last()[0].value<QPointF>(), QPointF(10, 10));
 }
 
 WAYLANDTEST_MAIN(TestPointerConstraints)

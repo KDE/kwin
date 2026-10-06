@@ -26,6 +26,7 @@ qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
         ${WaylandProtocols_DATADIR}/staging/cursor-shape/cursor-shape-v1.xml
         ${WaylandProtocols_DATADIR}/staging/fifo/fifo-v1.xml
         ${WaylandProtocols_DATADIR}/staging/fractional-scale/fractional-scale-v1.xml
+        ${WaylandProtocols_DATADIR}/staging/pointer-warp/pointer-warp-v1.xml
         ${WaylandProtocols_DATADIR}/staging/security-context/security-context-v1.xml
         ${WaylandProtocols_DATADIR}/staging/tearing-control/tearing-control-v1.xml
         ${WaylandProtocols_DATADIR}/staging/xdg-activation/xdg-activation-v1.xml

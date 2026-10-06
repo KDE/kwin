@@ -608,6 +608,9 @@ std::unique_ptr<Connection> Connection::setup(int socket, AdditionalWaylandInter
         if ((flags & AdditionalWaylandInterface::CommitTiming) && interface == wp_commit_timing_manager_v1_interface.name) {
             c->commitTiming = std::make_unique<CommitTimingManager>(*c->registry, name, version);
         }
+        if ((flags & AdditionalWaylandInterface::PointerWarp) && interface == wp_pointer_warp_v1_interface.name) {
+            c->pointerWarp = std::make_unique<PointerWarpV1>(*c->registry, name, version);
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -759,6 +762,7 @@ Connection::~Connection()
     tearingControl.reset();
     kwinSeat.reset();
     commitTiming.reset();
+    pointerWarp.reset();
 
     delete queue; // Must be destroyed last
     queue = nullptr;
@@ -986,6 +990,11 @@ WaylandClient::Viewporter *viewporter()
 TearingControlManagerV1 *tearingControl()
 {
     return s_waylandConnection->tearingControl.get();
+}
+
+PointerWarpV1 *pointerWarp()
+{
+    return s_waylandConnection->pointerWarp.get();
 }
 
 Connection *connection()
@@ -2651,6 +2660,16 @@ CommitTimingManager::CommitTimingManager(::wl_registry *registry, uint32_t id, i
 }
 
 CommitTimingManager::~CommitTimingManager()
+{
+    destroy();
+}
+
+PointerWarpV1::PointerWarpV1(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::wp_pointer_warp_v1(registry, id, version)
+{
+}
+
+PointerWarpV1::~PointerWarpV1()
 {
     destroy();
 }

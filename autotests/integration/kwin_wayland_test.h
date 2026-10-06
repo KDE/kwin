@@ -40,6 +40,7 @@
 #include "qwayland-kde-output-management-v2.h"
 #include "qwayland-kde-screen-edge-v1.h"
 #include "qwayland-keystate.h"
+#include "qwayland-pointer-warp-v1.h"
 #include "qwayland-presentation-time.h"
 #include "qwayland-primary-selection-unstable-v1.h"
 #include "qwayland-security-context-v1.h"
@@ -834,6 +835,7 @@ enum class AdditionalWaylandInterface : uint64_t {
     AlphaModifierV1 = 1ull << 34,
     TearingControlV1 = 1ull << 35,
     CommitTiming = 1ull << 36,
+    PointerWarp = 1ull << 37,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -1202,6 +1204,13 @@ public:
     ~CommitTimingManager() override;
 };
 
+class PointerWarpV1 : public QtWayland::wp_pointer_warp_v1
+{
+public:
+    explicit PointerWarpV1(::wl_registry *registry, uint32_t id, int version);
+    ~PointerWarpV1() override;
+};
+
 struct Connection
 {
     static std::unique_ptr<Connection> setup(AdditionalWaylandInterfaces interfaces = AdditionalWaylandInterfaces());
@@ -1260,6 +1269,7 @@ struct Connection
     // TODO port everything away from KWayland::Client::Seat
     std::unique_ptr<WlSeat> kwinSeat;
     std::unique_ptr<CommitTimingManager> commitTiming;
+    std::unique_ptr<PointerWarpV1> pointerWarp;
 };
 
 void keyboardKeyPressed(quint32 key, quint32 time);
@@ -1341,6 +1351,7 @@ ColorRepresentationV1 *colorRepresentation();
 WaylandClient::Viewporter *viewporter();
 AlphaModifierV1 *alphaModifier();
 TearingControlManagerV1 *tearingControl();
+PointerWarpV1 *pointerWarp();
 Connection *connection();
 
 bool waitForWaylandSurface(Window *window);
