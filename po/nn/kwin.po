@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-01 17:43+0000\n"
+"POT-Creation-Date: 2026-10-07 00:50+0000\n"
 "PO-Revision-Date: 2026-09-25 17:30+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
@@ -1292,13 +1292,13 @@ msgstr "Melding som skal visast (fullskjerm, utan kantlinje)"
 msgid "KWin helper utility"
 msgstr "KWin-hjelpeverktøy"
 
-#: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
+#: helpers/dialoghelper/dialoghelper.cpp:72
+#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Det er ikkje meininga at du skal starta dette hjelpeverktøyet direkte."
 
-#: helpers/dialoghelper/dialoghelper.cpp:79
+#: helpers/dialoghelper/dialoghelper.cpp:83
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1311,7 +1311,7 @@ msgstr ""
 "vil du ikkje kunna gå tilbake ved å bruka musa. Du må i staden bruka "
 "snøggtasten «%1»."
 
-#: helpers/dialoghelper/dialoghelper.cpp:85
+#: helpers/dialoghelper/dialoghelper.cpp:89
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1324,7 +1324,7 @@ msgstr ""
 "vil du ikkje kunna gå tilbake ved å bruka musa. Du må i staden bruka vindaugs­"
 "menyen, ved hjelp av snøggtasten «%1»."
 
-#: helpers/dialoghelper/dialoghelper.cpp:93
+#: helpers/dialoghelper/dialoghelper.cpp:97
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1335,13 +1335,13 @@ msgstr ""
 "Dersom programmet sjølv ikkje har nokon måte å slå av fullskjerms­modusen, "
 "vil du ikkje kunna gå tilbake ved å bruka musa."
 
-#: helpers/dialoghelper/dialoghelper.cpp:98
+#: helpers/dialoghelper/dialoghelper.cpp:102
 #, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "Angra fullskjerm"
 
-#: helpers/dialoghelper/dialoghelper.cpp:101
+#: helpers/dialoghelper/dialoghelper.cpp:105
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1352,7 +1352,7 @@ msgstr ""
 "Når kantlinja er gøymd, vil du ikkje kunna visa ho att ved å bruka musa. Du "
 "må i staden bruka snøggtasten «%1»."
 
-#: helpers/dialoghelper/dialoghelper.cpp:106
+#: helpers/dialoghelper/dialoghelper.cpp:110
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1364,7 +1364,7 @@ msgstr ""
 "Når kantlinja er gøymd, vil du ikkje kunna visa ho att ved å bruka musa. Du "
 "må i staden bruka vindaugs­menyen, ved hjelp av snøggtasten «%1»."
 
-#: helpers/dialoghelper/dialoghelper.cpp:112
+#: helpers/dialoghelper/dialoghelper.cpp:116
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1374,13 +1374,13 @@ msgstr ""
 "Du har valt å visa vindauget utan kantlinje.\n"
 "Når kantlinja er gøymd, vil du ikkje kunna visa ho att ved å bruka musa."
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:120
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "Gjenopprett kantlinje"
 
-#: helpers/dialoghelper/dialoghelper.cpp:133
+#: helpers/dialoghelper/dialoghelper.cpp:139
 #, kde-format
 msgid "Do not show again"
 msgstr "Ikkje vis igjen"
@@ -2495,17 +2495,17 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr "Innebygd skjerm"
 
-#: plugins/overview/DesktopBar.qml:162
+#: plugins/overview/DesktopBar.qml:157
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Slett virtuelt skrivebord"
 
-#: plugins/overview/DesktopBar.qml:261
+#: plugins/overview/DesktopBar.qml:256
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Legg til virtuelt skrivebord"
 
-#: plugins/overview/DesktopBar.qml:263
+#: plugins/overview/DesktopBar.qml:258
 #, kde-format
 msgid "Virtual Desktop limit reached"
 msgstr "Nådde grense på virtuelle skrivebord"
@@ -2637,7 +2637,7 @@ msgstr "Klarte ikkje kopla til PipeWire-kontekst"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:151
+#: plugins/screencast/screencastmanager.cpp:152
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Ikkje-støtta samansetjingstype"
@@ -2647,12 +2647,12 @@ msgstr "Ikkje-støtta samansetjingstype"
 msgid "Could not find window id %1"
 msgstr "Fann ikkje vindaugs-ID %1"
 
-#: plugins/screencast/screencastmanager.cpp:118
+#: plugins/screencast/screencastmanager.cpp:119
 #, kde-format
 msgid "Could not find output"
 msgstr "Fann ikkje uteining"
 
-#: plugins/screencast/screencastmanager.cpp:156
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Invalid region"
 msgstr "Ugyldig område"
@@ -4368,7 +4368,7 @@ msgstr "Fleire skjermar enn det som er støtta av skjermkortet, er påslegne."
 msgid "The driver rejected the output configuration: %s"
 msgstr "Drivaren avviste uteiningsoppsettet: %s"
 
-#: window.cpp:3188
+#: window.cpp:3183
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

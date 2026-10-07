@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-01 17:43+0000\n"
+"POT-Creation-Date: 2026-10-07 00:50+0000\n"
 "PO-Revision-Date: 2026-09-03 19:35+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -1296,13 +1296,13 @@ msgstr "Показане повідомлення (на весь екран, б�
 msgid "KWin helper utility"
 msgstr "Допоміжна утиліта KWin"
 
-#: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
+#: helpers/dialoghelper/dialoghelper.cpp:72
+#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Цю допоміжну утиліту не можна викликати напряму."
 
-#: helpers/dialoghelper/dialoghelper.cpp:79
+#: helpers/dialoghelper/dialoghelper.cpp:83
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1315,7 +1315,7 @@ msgstr ""
 "перейти в звичайний режим за допомогою мишки. Натомість скористайтеся "
 "комбінацією клавіш %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:85
+#: helpers/dialoghelper/dialoghelper.cpp:89
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1328,7 +1328,7 @@ msgstr ""
 "перейти в звичайний режим за допомогою мишки. Натомість використовуйте меню "
 "вікна, яке активується скороченням клавіатури %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:93
+#: helpers/dialoghelper/dialoghelper.cpp:97
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1339,13 +1339,13 @@ msgstr ""
 "Якщо програма не має можливості вимкнути повноекранний режим, буде неможливо "
 "перейти в звичайний режим за допомогою мишки."
 
-#: helpers/dialoghelper/dialoghelper.cpp:98
+#: helpers/dialoghelper/dialoghelper.cpp:102
 #, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "Скасувати повноекранний режим"
 
-#: helpers/dialoghelper/dialoghelper.cpp:101
+#: helpers/dialoghelper/dialoghelper.cpp:105
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1356,7 +1356,7 @@ msgstr ""
 "Коли рамка не відображається, неможливо ввімкнути її за допомогою мишки. "
 "Натомість, скористайтеся комбінацією клавіш %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:106
+#: helpers/dialoghelper/dialoghelper.cpp:110
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1369,7 +1369,7 @@ msgstr ""
 "Натомість використовуйте меню вікна, яке активується скороченням клавіатури "
 "%1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:112
+#: helpers/dialoghelper/dialoghelper.cpp:116
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1379,13 +1379,13 @@ msgstr ""
 "Ви вибрали відображення вікна без рамки.\n"
 "Коли рамка не відображається, неможливо ввімкнути її за допомогою мишки."
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:120
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "Відновити рамку"
 
-#: helpers/dialoghelper/dialoghelper.cpp:133
+#: helpers/dialoghelper/dialoghelper.cpp:139
 #, kde-format
 msgid "Do not show again"
 msgstr "Більше не показувати"
@@ -2512,17 +2512,17 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr "Вбудований екран"
 
-#: plugins/overview/DesktopBar.qml:162
+#: plugins/overview/DesktopBar.qml:157
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Вилучити віртуальну стільницю"
 
-#: plugins/overview/DesktopBar.qml:261
+#: plugins/overview/DesktopBar.qml:256
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Додати віртуальну стільницю"
 
-#: plugins/overview/DesktopBar.qml:263
+#: plugins/overview/DesktopBar.qml:258
 #, kde-format
 msgid "Virtual Desktop limit reached"
 msgstr "Перевищено обмеження на віртуальні стільниці"
@@ -2654,7 +2654,7 @@ msgstr "Не вдалося встановити з'єднання із конт
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:151
+#: plugins/screencast/screencastmanager.cpp:152
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Непідтримуваний тип композиції"
@@ -2664,12 +2664,12 @@ msgstr "Непідтримуваний тип композиції"
 msgid "Could not find window id %1"
 msgstr "Не вдалося знайти ідентифікатор вікна %1"
 
-#: plugins/screencast/screencastmanager.cpp:118
+#: plugins/screencast/screencastmanager.cpp:119
 #, kde-format
 msgid "Could not find output"
 msgstr "Не вдалося виявити виведення"
 
-#: plugins/screencast/screencastmanager.cpp:156
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Invalid region"
 msgstr "Некоректна область"
@@ -4392,7 +4392,7 @@ msgstr "Увімкнено більше дисплеїв, ніж може обр
 msgid "The driver rejected the output configuration: %s"
 msgstr "Драйвером відмовлено у налаштовування виведення: %s"
 
-#: window.cpp:3188
+#: window.cpp:3183
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-01 17:43+0000\n"
+"POT-Creation-Date: 2026-10-07 00:50+0000\n"
 "PO-Revision-Date: 2026-09-21 22:06+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -1293,13 +1293,13 @@ msgstr "要顯示的訊息（全螢幕、無邊框）"
 msgid "KWin helper utility"
 msgstr "KWin 協助工具程式"
 
-#: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
+#: helpers/dialoghelper/dialoghelper.cpp:72
+#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "此協助公用程式不支援直接呼叫。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:79
+#: helpers/dialoghelper/dialoghelper.cpp:83
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1311,7 +1311,7 @@ msgstr ""
 "如果該應用程式本身沒有離開全螢幕模式的選項，您將無法使用滑鼠離開全螢幕：請改"
 "用 %1 鍵盤快捷鍵來離開全螢幕。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:85
+#: helpers/dialoghelper/dialoghelper.cpp:89
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1323,7 +1323,7 @@ msgstr ""
 "如果該應用程式本身沒有關閉全螢幕模式的選項，您將無法使用滑鼠將其關閉：要使用"
 "視窗選單來代替，使用 %1 鍵盤捷徑來作用它。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:93
+#: helpers/dialoghelper/dialoghelper.cpp:97
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1333,13 +1333,13 @@ msgstr ""
 "您已選擇以全螢幕模式顯示視窗。\n"
 "如果該應用程式本身沒有離開全螢幕模式的選項，您將無法使用滑鼠離開全螢幕。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:98
+#: helpers/dialoghelper/dialoghelper.cpp:102
 #, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "復原全螢幕"
 
-#: helpers/dialoghelper/dialoghelper.cpp:101
+#: helpers/dialoghelper/dialoghelper.cpp:105
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1349,7 +1349,7 @@ msgstr ""
 "您已選擇以無邊框模式顯示視窗。\n"
 "沒有邊框時您將無法使用重新啟用邊框：請改用 %1 鍵盤快捷鍵來啟用它。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:106
+#: helpers/dialoghelper/dialoghelper.cpp:110
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1361,7 +1361,7 @@ msgstr ""
 "沒有邊框，您將無法使用滑鼠讓邊框再次出現：要使用視窗選單來代替，使用 %1 鍵盤"
 "捷徑來作用它。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:112
+#: helpers/dialoghelper/dialoghelper.cpp:116
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1371,13 +1371,13 @@ msgstr ""
 "您已選擇以無邊框模式顯示視窗。\n"
 "沒有邊框時您將無法使用重新啟用邊框。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:120
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "復原邊框"
 
-#: helpers/dialoghelper/dialoghelper.cpp:133
+#: helpers/dialoghelper/dialoghelper.cpp:139
 #, kde-format
 msgid "Do not show again"
 msgstr "不要再顯示"
@@ -2478,17 +2478,17 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr "內建螢幕"
 
-#: plugins/overview/DesktopBar.qml:162
+#: plugins/overview/DesktopBar.qml:157
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "刪除虛擬桌面"
 
-#: plugins/overview/DesktopBar.qml:261
+#: plugins/overview/DesktopBar.qml:256
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "新增虛擬桌面"
 
-#: plugins/overview/DesktopBar.qml:263
+#: plugins/overview/DesktopBar.qml:258
 #, kde-format
 msgid "Virtual Desktop limit reached"
 msgstr "已達虛擬桌面限制"
@@ -2620,7 +2620,7 @@ msgstr "無法連線 PipeWire 內文"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:151
+#: plugins/screencast/screencastmanager.cpp:152
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "不支援的合成類型"
@@ -2630,12 +2630,12 @@ msgstr "不支援的合成類型"
 msgid "Could not find window id %1"
 msgstr "找不到視窗 ID %1"
 
-#: plugins/screencast/screencastmanager.cpp:118
+#: plugins/screencast/screencastmanager.cpp:119
 #, kde-format
 msgid "Could not find output"
 msgstr "找不到輸出"
 
-#: plugins/screencast/screencastmanager.cpp:156
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Invalid region"
 msgstr "無效的區域"
@@ -4344,7 +4344,7 @@ msgstr "啟用的顯示器數量比顯示卡所支援的還要多。"
 msgid "The driver rejected the output configuration: %s"
 msgstr "驅動程式回絕了提供的輸出配置：%s"
 
-#: window.cpp:3188
+#: window.cpp:3183
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

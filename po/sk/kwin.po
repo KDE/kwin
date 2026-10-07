@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-01 17:43+0000\n"
+"POT-Creation-Date: 2026-10-07 00:50+0000\n"
 "PO-Revision-Date: 2026-09-14 20:10+0200\n"
 "Last-Translator: Roman Paholík <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -1297,13 +1297,13 @@ msgstr "The message to show (fullscreen, noborder)"
 msgid "KWin helper utility"
 msgstr "Pomocný nástroj KWin"
 
-#: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
+#: helpers/dialoghelper/dialoghelper.cpp:72
+#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Tento pomocný nástroj nie je určený na priame spustenie."
 
-#: helpers/dialoghelper/dialoghelper.cpp:79
+#: helpers/dialoghelper/dialoghelper.cpp:83
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1316,7 +1316,7 @@ msgstr ""
 "prepnúť späť pomocou myši. Musíte použiť ponuku operácií okna, ktoré "
 "aktivujete klávesovou skratkou %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:85
+#: helpers/dialoghelper/dialoghelper.cpp:89
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1329,7 +1329,7 @@ msgstr ""
 "prepnúť späť pomocou myši. Musíte použiť ponuku operácií okna, ktoré "
 "aktivujete klávesovou skratkou %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:93
+#: helpers/dialoghelper/dialoghelper.cpp:97
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1340,13 +1340,13 @@ msgstr ""
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse."
 
-#: helpers/dialoghelper/dialoghelper.cpp:98
+#: helpers/dialoghelper/dialoghelper.cpp:102
 #, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "Na celú obrazovku"
 
-#: helpers/dialoghelper/dialoghelper.cpp:101
+#: helpers/dialoghelper/dialoghelper.cpp:105
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1357,7 +1357,7 @@ msgstr ""
 "Bez nich nebude možné okraje zase zapnúť pomocou myši. Musíte použiť ponuku "
 "operácií okna, ktoré aktivujete klávesovou skratkou %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:106
+#: helpers/dialoghelper/dialoghelper.cpp:110
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1369,7 +1369,7 @@ msgstr ""
 "Bez nich nebude možné okraje zase zapnúť pomocou myši. Musíte použiť ponuku "
 "operácií okna, ktoré aktivujete klávesovou skratkou %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:112
+#: helpers/dialoghelper/dialoghelper.cpp:116
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1380,13 +1380,13 @@ msgstr ""
 "Without the border, you will not be able to enable the border again using "
 "the mouse."
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:120
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "&Bez okraja"
 
-#: helpers/dialoghelper/dialoghelper.cpp:133
+#: helpers/dialoghelper/dialoghelper.cpp:139
 #, kde-format
 msgid "Do not show again"
 msgstr "Znovu nezobrazovať"
@@ -2503,17 +2503,17 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr "Vstavaná obrazovka"
 
-#: plugins/overview/DesktopBar.qml:162
+#: plugins/overview/DesktopBar.qml:157
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Vymazať virtuálnu plochu"
 
-#: plugins/overview/DesktopBar.qml:261
+#: plugins/overview/DesktopBar.qml:256
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Pridať virtuálnu plochu"
 
-#: plugins/overview/DesktopBar.qml:263
+#: plugins/overview/DesktopBar.qml:258
 #, kde-format
 msgid "Virtual Desktop limit reached"
 msgstr "Pridať virtuálnu plochu"
@@ -2645,7 +2645,7 @@ msgstr "Zlyhalo pripojenie kontextu PipeWire"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:151
+#: plugins/screencast/screencastmanager.cpp:152
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Pozastaviť kompozíciu"
@@ -2655,12 +2655,12 @@ msgstr "Pozastaviť kompozíciu"
 msgid "Could not find window id %1"
 msgstr "Nepodarilo sa nájsť id okna %1"
 
-#: plugins/screencast/screencastmanager.cpp:118
+#: plugins/screencast/screencastmanager.cpp:119
 #, kde-format
 msgid "Could not find output"
 msgstr "Nepodarilo sa nájsť výstup"
 
-#: plugins/screencast/screencastmanager.cpp:156
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Invalid region"
 msgstr "Neplatná oblasť"
@@ -4384,7 +4384,7 @@ msgstr "Je zapnutých viac displejov, než grafická karta podporuje."
 msgid "The driver rejected the output configuration: %s"
 msgstr "Ovládač odmietol konfiguráciu výstupov: %s"
 
-#: window.cpp:3188
+#: window.cpp:3183
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

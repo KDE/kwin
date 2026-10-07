@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-01 17:43+0000\n"
+"POT-Creation-Date: 2026-10-07 00:50+0000\n"
 "PO-Revision-Date: 2026-07-23 17:22+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -1296,13 +1296,13 @@ msgstr ""
 msgid "KWin helper utility"
 msgstr "KWin ヘルパーユーティリティ"
 
-#: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
+#: helpers/dialoghelper/dialoghelper.cpp:72
+#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "このヘルパーユーティリティは、直接実行されるものではありません。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:79
+#: helpers/dialoghelper/dialoghelper.cpp:83
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1315,7 +1315,7 @@ msgstr ""
 "てフルスクリーンモードを解除することができなくなります。その場合、キーボード"
 "ショートカットの %1 で解除してください。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:85
+#: helpers/dialoghelper/dialoghelper.cpp:89
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1328,7 +1328,7 @@ msgstr ""
 "てフルスクリーンモードを解除することができなくなります。その場合、キーボード"
 "ショートカットの %1 でウィンドウメニューを表示し、そこから解除してください。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:93
+#: helpers/dialoghelper/dialoghelper.cpp:97
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1339,13 +1339,13 @@ msgstr ""
 "アプリケーションにフルスクリーンモードを解除する機能がない場合、マウスを使っ"
 "てフルスクリーンモードを解除することができなくなります。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:98
+#: helpers/dialoghelper/dialoghelper.cpp:102
 #, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "フルスクリーンをやめる"
 
-#: helpers/dialoghelper/dialoghelper.cpp:101
+#: helpers/dialoghelper/dialoghelper.cpp:105
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1356,7 +1356,7 @@ msgstr ""
 "枠を消すと、マウスを使って枠を再び表示させることができなくなります。キーボー"
 "ドショートカットの %1 を使用してください。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:106
+#: helpers/dialoghelper/dialoghelper.cpp:110
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1369,7 +1369,7 @@ msgstr ""
 "ドショートカットの %1 でウィンドウメニューを表示し、そこから設定してくださ"
 "い。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:112
+#: helpers/dialoghelper/dialoghelper.cpp:116
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1379,13 +1379,13 @@ msgstr ""
 "ウィンドウの枠を消しました。\n"
 "枠を消すと、マウスを使って枠を再び表示させることができなくなります。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:120
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "枠をもどす"
 
-#: helpers/dialoghelper/dialoghelper.cpp:133
+#: helpers/dialoghelper/dialoghelper.cpp:139
 #, kde-format
 msgid "Do not show again"
 msgstr "再度表示しない"
@@ -2509,17 +2509,17 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr ""
 
-#: plugins/overview/DesktopBar.qml:162
+#: plugins/overview/DesktopBar.qml:157
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "仮想デスクトップを削除"
 
-#: plugins/overview/DesktopBar.qml:261
+#: plugins/overview/DesktopBar.qml:256
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "仮想デスクトップを追加"
 
-#: plugins/overview/DesktopBar.qml:263
+#: plugins/overview/DesktopBar.qml:258
 #, kde-format
 msgid "Virtual Desktop limit reached"
 msgstr "仮想デスクトップ数の上限に達しました"
@@ -2651,7 +2651,7 @@ msgstr ""
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:151
+#: plugins/screencast/screencastmanager.cpp:152
 #, fuzzy, kde-format
 #| msgid "Suspend Compositing"
 msgid "Unsupported compositing type"
@@ -2662,12 +2662,12 @@ msgstr "コンポジティングを一時停止"
 msgid "Could not find window id %1"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:118
+#: plugins/screencast/screencastmanager.cpp:119
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:156
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Invalid region"
 msgstr ""
@@ -4378,7 +4378,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %s"
 msgstr "ドライバーが出力設定を拒否しました"
 
-#: window.cpp:3188
+#: window.cpp:3183
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

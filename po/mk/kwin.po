@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-01 17:43+0000\n"
+"POT-Creation-Date: 2026-10-07 00:50+0000\n"
 "PO-Revision-Date: 2010-01-30 17:37+0100\n"
 "Last-Translator: Bozidar Proevski <bobibobi@freemail.com.mk>\n"
 "Language-Team: Macedonian <mkde-l10n@lists.sourceforge.net>\n"
@@ -1301,13 +1301,13 @@ msgstr ""
 msgid "KWin helper utility"
 msgstr "Помошна алатка на KWin"
 
-#: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
+#: helpers/dialoghelper/dialoghelper.cpp:72
+#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Оваа помошна алатка не би требало да се повикува директно."
 
-#: helpers/dialoghelper/dialoghelper.cpp:79
+#: helpers/dialoghelper/dialoghelper.cpp:83
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1327,7 +1327,7 @@ msgstr ""
 "искористете го менито со операции за прозорците, кое се активира со "
 "кратенката на тастатурата %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:85
+#: helpers/dialoghelper/dialoghelper.cpp:89
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1347,7 +1347,7 @@ msgstr ""
 "искористете го менито со операции за прозорците, кое се активира со "
 "кратенката на тастатурата %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:93
+#: helpers/dialoghelper/dialoghelper.cpp:97
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1366,14 +1366,14 @@ msgstr ""
 "искористете го менито со операции за прозорците, кое се активира со "
 "кратенката на тастатурата %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:98
+#: helpers/dialoghelper/dialoghelper.cpp:102
 #, fuzzy, kde-format
 #| msgid "&Fullscreen"
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "Преку цел &екран"
 
-#: helpers/dialoghelper/dialoghelper.cpp:101
+#: helpers/dialoghelper/dialoghelper.cpp:105
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1390,7 +1390,7 @@ msgstr ""
 "гоглушецот: наместо тоа искористете го менито со операции за прозорците, кое "
 "се активира со кратенката на тастатурата %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:106
+#: helpers/dialoghelper/dialoghelper.cpp:110
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1408,7 +1408,7 @@ msgstr ""
 "гоглушецот: наместо тоа искористете го менито со операции за прозорците, кое "
 "се активира со кратенката на тастатурата %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:112
+#: helpers/dialoghelper/dialoghelper.cpp:116
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1425,14 +1425,14 @@ msgstr ""
 "гоглушецот: наместо тоа искористете го менито со операции за прозорците, кое "
 "се активира со кратенката на тастатурата %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:120
 #, fuzzy, kde-format
 #| msgid "&No Border"
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "&Без раб"
 
-#: helpers/dialoghelper/dialoghelper.cpp:133
+#: helpers/dialoghelper/dialoghelper.cpp:139
 #, kde-format
 msgid "Do not show again"
 msgstr ""
@@ -2575,19 +2575,19 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr ""
 
-#: plugins/overview/DesktopBar.qml:162
+#: plugins/overview/DesktopBar.qml:157
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "К&он површина"
 
-#: plugins/overview/DesktopBar.qml:261
+#: plugins/overview/DesktopBar.qml:256
 #, fuzzy, kde-format
 #| msgid "Show Desktop"
 msgid "Add Virtual Desktop"
 msgstr "Прикажи раб. површина"
 
-#: plugins/overview/DesktopBar.qml:263
+#: plugins/overview/DesktopBar.qml:258
 #, fuzzy, kde-format
 #| msgid "Show Desktop"
 msgid "Virtual Desktop limit reached"
@@ -2730,7 +2730,7 @@ msgstr ""
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:151
+#: plugins/screencast/screencastmanager.cpp:152
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr ""
@@ -2740,12 +2740,12 @@ msgstr ""
 msgid "Could not find window id %1"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:118
+#: plugins/screencast/screencastmanager.cpp:119
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:156
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Invalid region"
 msgstr ""
@@ -4560,7 +4560,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %s"
 msgstr ""
 
-#: window.cpp:3188
+#: window.cpp:3183
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

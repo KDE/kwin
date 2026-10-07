@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-01 17:43+0000\n"
+"POT-Creation-Date: 2026-10-07 00:50+0000\n"
 "PO-Revision-Date: 2026-10-04 12:17+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -1299,13 +1299,13 @@ msgstr "Erakutsi beharreko mezua (pantaila osoan, ertzik gabe)"
 msgid "KWin helper utility"
 msgstr "KWin-en laguntza-morroia"
 
-#: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
+#: helpers/dialoghelper/dialoghelper.cpp:72
+#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Laguntza-morroi honi ez zaio zuzenean deitu behar."
 
-#: helpers/dialoghelper/dialoghelper.cpp:79
+#: helpers/dialoghelper/dialoghelper.cpp:83
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1318,7 +1318,7 @@ msgstr ""
 "sagua erabiliz berriz desgaitu: horren ordez erabili teklatuko %1 "
 "lasterbidea."
 
-#: helpers/dialoghelper/dialoghelper.cpp:85
+#: helpers/dialoghelper/dialoghelper.cpp:89
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1331,7 +1331,7 @@ msgstr ""
 "sagua erabiliz berriz ezgaitu: horren ordez, erabil ezazu leihoaren menua, "
 "%1 laster-teklaren bidez aktibatzen dena."
 
-#: helpers/dialoghelper/dialoghelper.cpp:93
+#: helpers/dialoghelper/dialoghelper.cpp:97
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1342,13 +1342,13 @@ msgstr ""
 "Aplikazioak berak pantaila osoko modua ixteko aukerarik ez badu, ezingo duzu "
 "sagua erabiliz berriz desgaitu."
 
-#: helpers/dialoghelper/dialoghelper.cpp:98
+#: helpers/dialoghelper/dialoghelper.cpp:102
 #, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "Pantaila osoa desegin"
 
-#: helpers/dialoghelper/dialoghelper.cpp:101
+#: helpers/dialoghelper/dialoghelper.cpp:105
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1359,7 +1359,7 @@ msgstr ""
 "Ertzik gabe, ezingo duzu ertza berriz gaitu sagua erabiliz: horren ordez "
 "erabili teklatuko %1 lasterbidea."
 
-#: helpers/dialoghelper/dialoghelper.cpp:106
+#: helpers/dialoghelper/dialoghelper.cpp:110
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1371,7 +1371,7 @@ msgstr ""
 "Ertzik gabe, ezingo duzu sagua erabiliz ertza berriz gaitu: horren ordez, "
 "erabil ezazu leihoaren menua, %1 laster-teklaren bidez aktibatzen dena."
 
-#: helpers/dialoghelper/dialoghelper.cpp:112
+#: helpers/dialoghelper/dialoghelper.cpp:116
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1381,13 +1381,13 @@ msgstr ""
 "Leiho bat haren ertzik gabe erakustea hautatu duzu.\n"
 "Ertzik gabe, ezingo duzu ertza berriz gaitu sagua erabiliz."
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:120
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "Ertzik lehengoratu"
 
-#: helpers/dialoghelper/dialoghelper.cpp:133
+#: helpers/dialoghelper/dialoghelper.cpp:139
 #, kde-format
 msgid "Do not show again"
 msgstr "Ez erakutsi berriz"
@@ -2508,17 +2508,17 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr "Pantaila barneratua"
 
-#: plugins/overview/DesktopBar.qml:162
+#: plugins/overview/DesktopBar.qml:157
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Ezabatu alegiazko mahaigaina"
 
-#: plugins/overview/DesktopBar.qml:261
+#: plugins/overview/DesktopBar.qml:256
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Gehitu alegiazko mahaigaina"
 
-#: plugins/overview/DesktopBar.qml:263
+#: plugins/overview/DesktopBar.qml:258
 #, kde-format
 msgid "Virtual Desktop limit reached"
 msgstr "Alegiazko mahaigain mugara iritsi da"
@@ -2650,7 +2650,7 @@ msgstr "«PipeWire» testuingurua konektatzea huts egin du"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:151
+#: plugins/screencast/screencastmanager.cpp:152
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Eukarririk ez duen konposizio modua"
@@ -2660,12 +2660,12 @@ msgstr "Eukarririk ez duen konposizio modua"
 msgid "Could not find window id %1"
 msgstr "Ezin izan du leiho IDa aurkitu: %1"
 
-#: plugins/screencast/screencastmanager.cpp:118
+#: plugins/screencast/screencastmanager.cpp:119
 #, kde-format
 msgid "Could not find output"
 msgstr "Ezin izan du irteera aurkitu"
 
-#: plugins/screencast/screencastmanager.cpp:156
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Invalid region"
 msgstr "Eskualde baliogabea"
@@ -4391,7 +4391,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %s"
 msgstr "Gidariak irteera-konfigurazioa errefusatu du: %s"
 
-#: window.cpp:3188
+#: window.cpp:3183
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

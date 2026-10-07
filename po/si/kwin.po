@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-01 17:43+0000\n"
+"POT-Creation-Date: 2026-10-07 00:50+0000\n"
 "PO-Revision-Date: 2009-12-23 10:11+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <danishka@gmail.com>\n"
@@ -1296,13 +1296,13 @@ msgstr ""
 msgid "KWin helper utility"
 msgstr "KWin සහායක උපයෝගිතාව"
 
-#: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
+#: helpers/dialoghelper/dialoghelper.cpp:72
+#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "උදව් උපාංගය ඍජුව කැඳවීමට සකසා නොමැත"
 
-#: helpers/dialoghelper/dialoghelper.cpp:79
+#: helpers/dialoghelper/dialoghelper.cpp:83
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1321,7 +1321,7 @@ msgstr ""
 "වසාදැමිය නොහැකි වේ. ඒ වෙනුවට %1 යතුරු පුවරු කෙටිමගෙන් ආරම්භ වන කවුළු මෙහෙයුම් මෙනුව භාවිත "
 "කරන්න."
 
-#: helpers/dialoghelper/dialoghelper.cpp:85
+#: helpers/dialoghelper/dialoghelper.cpp:89
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1340,7 +1340,7 @@ msgstr ""
 "වසාදැමිය නොහැකි වේ. ඒ වෙනුවට %1 යතුරු පුවරු කෙටිමගෙන් ආරම්භ වන කවුළු මෙහෙයුම් මෙනුව භාවිත "
 "කරන්න."
 
-#: helpers/dialoghelper/dialoghelper.cpp:93
+#: helpers/dialoghelper/dialoghelper.cpp:97
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1358,14 +1358,14 @@ msgstr ""
 "වසාදැමිය නොහැකි වේ. ඒ වෙනුවට %1 යතුරු පුවරු කෙටිමගෙන් ආරම්භ වන කවුළු මෙහෙයුම් මෙනුව භාවිත "
 "කරන්න."
 
-#: helpers/dialoghelper/dialoghelper.cpp:98
+#: helpers/dialoghelper/dialoghelper.cpp:102
 #, fuzzy, kde-format
 #| msgid "&Fullscreen"
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "පූර්‍ණ තිරය (&F)"
 
-#: helpers/dialoghelper/dialoghelper.cpp:101
+#: helpers/dialoghelper/dialoghelper.cpp:105
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1381,7 +1381,7 @@ msgstr ""
 "දාරය නොමැතිව. එය පසුව මවුසය මගින් සක්‍රීය කිරීමට නොහැකි වනු ඇත. ඒ වෙනුවට %1 යතුරු පුවරු "
 "කෙටිමගින් ආරම්භ වන කවුළු මෙහෙයුම් මෙනුව භාවිත කල හැක."
 
-#: helpers/dialoghelper/dialoghelper.cpp:106
+#: helpers/dialoghelper/dialoghelper.cpp:110
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1398,7 +1398,7 @@ msgstr ""
 "දාරය නොමැතිව. එය පසුව මවුසය මගින් සක්‍රීය කිරීමට නොහැකි වනු ඇත. ඒ වෙනුවට %1 යතුරු පුවරු "
 "කෙටිමගින් ආරම්භ වන කවුළු මෙහෙයුම් මෙනුව භාවිත කල හැක."
 
-#: helpers/dialoghelper/dialoghelper.cpp:112
+#: helpers/dialoghelper/dialoghelper.cpp:116
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1414,14 +1414,14 @@ msgstr ""
 "දාරය නොමැතිව. එය පසුව මවුසය මගින් සක්‍රීය කිරීමට නොහැකි වනු ඇත. ඒ වෙනුවට %1 යතුරු පුවරු "
 "කෙටිමගින් ආරම්භ වන කවුළු මෙහෙයුම් මෙනුව භාවිත කල හැක."
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:120
 #, fuzzy, kde-format
 #| msgid "&No Border"
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "දාරය නොමැත (&N)"
 
-#: helpers/dialoghelper/dialoghelper.cpp:133
+#: helpers/dialoghelper/dialoghelper.cpp:139
 #, kde-format
 msgid "Do not show again"
 msgstr ""
@@ -2568,19 +2568,19 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr ""
 
-#: plugins/overview/DesktopBar.qml:162
+#: plugins/overview/DesktopBar.qml:157
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "වැඩතලයට (&D)"
 
-#: plugins/overview/DesktopBar.qml:261
+#: plugins/overview/DesktopBar.qml:256
 #, fuzzy, kde-format
 #| msgid "Show Desktop"
 msgid "Add Virtual Desktop"
 msgstr "වැඩතලය පෙන්වන්න"
 
-#: plugins/overview/DesktopBar.qml:263
+#: plugins/overview/DesktopBar.qml:258
 #, fuzzy, kde-format
 #| msgid "Show Desktop"
 msgid "Virtual Desktop limit reached"
@@ -2725,7 +2725,7 @@ msgstr ""
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:151
+#: plugins/screencast/screencastmanager.cpp:152
 #, fuzzy, kde-format
 #| msgid "Suspend Compositing"
 msgid "Unsupported compositing type"
@@ -2736,12 +2736,12 @@ msgstr "බැඳීම නවතන්න"
 msgid "Could not find window id %1"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:118
+#: plugins/screencast/screencastmanager.cpp:119
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:156
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Invalid region"
 msgstr ""
@@ -4557,7 +4557,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %s"
 msgstr ""
 
-#: window.cpp:3188
+#: window.cpp:3183
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

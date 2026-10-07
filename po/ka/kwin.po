@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-01 17:43+0000\n"
+"POT-Creation-Date: 2026-10-07 00:50+0000\n"
 "PO-Revision-Date: 2026-09-03 06:22+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -1288,13 +1288,13 @@ msgstr "საჩვენებელი შეტყობინება (ს
 msgid "KWin helper utility"
 msgstr "KWin -ის დამხმარე პროგრამა"
 
-#: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
+#: helpers/dialoghelper/dialoghelper.cpp:72
+#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "დამხმარე პროგრამა ცალკე არ უნდა გამოიძახოთ."
 
-#: helpers/dialoghelper/dialoghelper.cpp:79
+#: helpers/dialoghelper/dialoghelper.cpp:83
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1307,7 +1307,7 @@ msgstr ""
 "თქვენ მას თაგუნას გამოყენებით ვერ გამორთავთ. გამოიყენეთ კლავიატურის "
 "მალსახმობი %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:85
+#: helpers/dialoghelper/dialoghelper.cpp:89
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1320,7 +1320,7 @@ msgstr ""
 "თქვენ მას თაგუნას გამოყენებით ვერ გამორთავთ. სჯობს გამოიყენოთ ფანჯრის "
 "ოპერაციების მენიუ, რომელიც კლავიატურის მალსახმობით %1 შეგიძლიათ გამოიძახოთ."
 
-#: helpers/dialoghelper/dialoghelper.cpp:93
+#: helpers/dialoghelper/dialoghelper.cpp:97
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1331,13 +1331,13 @@ msgstr ""
 "თუ აპლიკაციას თვითონ არ გააჩნია შესაძლებლობა, სრულეკრანიანი რეჟიმი გამორთოს, "
 "თქვენ მას თაგუნას გამოყენებით, კიდევ ერთხელ, ვერ გამორთავთ."
 
-#: helpers/dialoghelper/dialoghelper.cpp:98
+#: helpers/dialoghelper/dialoghelper.cpp:102
 #, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "სრულ ეკრანზე გასვლის გაუქმება"
 
-#: helpers/dialoghelper/dialoghelper.cpp:101
+#: helpers/dialoghelper/dialoghelper.cpp:105
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1348,7 +1348,7 @@ msgstr ""
 "საზღვრის გარეშე საზღვარს თაგუნას გამოყენებით ვეღარ ჩართავთ. ამის მაგიერ "
 "გამოიყენეთ კლავიატურის მალსახმობი %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:106
+#: helpers/dialoghelper/dialoghelper.cpp:110
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1361,7 +1361,7 @@ msgstr ""
 "გამოიყენეთ ფანჯრის ოპერაციების მენიუ, რომელიც კლავიატურის მალსახმობით (%1) "
 "აქტიურდება."
 
-#: helpers/dialoghelper/dialoghelper.cpp:112
+#: helpers/dialoghelper/dialoghelper.cpp:116
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1371,13 +1371,13 @@ msgstr ""
 "აირჩიეთ, რომ ფანჯრები მისი საზღვრის გარეშე იყოს ნაჩვენები.\n"
 "საზღვრის გარეშე საზღვარს თაგუნას გამოყენებით ვეღარ ჩართავთ."
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:120
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "საზღვრის აღდგენა"
 
-#: helpers/dialoghelper/dialoghelper.cpp:133
+#: helpers/dialoghelper/dialoghelper.cpp:139
 #, kde-format
 msgid "Do not show again"
 msgstr "აღარ მაჩვენო"
@@ -2491,17 +2491,17 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr "ჩაშენებული ეკრანი"
 
-#: plugins/overview/DesktopBar.qml:162
+#: plugins/overview/DesktopBar.qml:157
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "ვირტუალური სამუშაო მაგიდის წაშლა"
 
-#: plugins/overview/DesktopBar.qml:261
+#: plugins/overview/DesktopBar.qml:256
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "ვირტუალური სამუშაო მაგიდის დამატება"
 
-#: plugins/overview/DesktopBar.qml:263
+#: plugins/overview/DesktopBar.qml:258
 #, kde-format
 msgid "Virtual Desktop limit reached"
 msgstr "მიღწეულია ვირტუალური სამუშაო მაგიდის ლიმიტი"
@@ -2633,7 +2633,7 @@ msgstr "PipeWire-ის კონტექსტთან მიერთებ�
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:151
+#: plugins/screencast/screencastmanager.cpp:152
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "მხარდაუჭერელი კომპოზიტირების ტიპი"
@@ -2643,12 +2643,12 @@ msgstr "მხარდაუჭერელი კომპოზიტირ�
 msgid "Could not find window id %1"
 msgstr "ფანჯარა ID-ით %1 ვერ ვიპოვე"
 
-#: plugins/screencast/screencastmanager.cpp:118
+#: plugins/screencast/screencastmanager.cpp:119
 #, kde-format
 msgid "Could not find output"
 msgstr "შეყვანა ვერ ვიპოვე"
 
-#: plugins/screencast/screencastmanager.cpp:156
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Invalid region"
 msgstr "არასწორი რეგიონი"
@@ -4370,7 +4370,7 @@ msgstr "ჩართულია გრაფიკული ბარათი�
 msgid "The driver rejected the output configuration: %s"
 msgstr "დრაივერმა უარყო გამოტანის კონფიგურაცია: %s"
 
-#: window.cpp:3188
+#: window.cpp:3183
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-01 17:43+0000\n"
+"POT-Creation-Date: 2026-10-07 00:50+0000\n"
 "PO-Revision-Date: 2025-06-19 10:31+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -1316,14 +1316,14 @@ msgstr ""
 msgid "KWin helper utility"
 msgstr "Utilidade auxiliar de KWin"
 
-#: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
+#: helpers/dialoghelper/dialoghelper.cpp:72
+#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr ""
 "Esta utilidade auxiliar non está concibida para ser chamada directamente."
 
-#: helpers/dialoghelper/dialoghelper.cpp:79
+#: helpers/dialoghelper/dialoghelper.cpp:83
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1341,7 +1341,7 @@ msgstr ""
 "será quen de desactivalo mediante o rato. Use o menú de xanela, mediante o "
 "atallo de teclado %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:85
+#: helpers/dialoghelper/dialoghelper.cpp:89
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1354,7 +1354,7 @@ msgstr ""
 "será quen de desactivalo mediante o rato. Use o menú de xanela, mediante o "
 "atallo de teclado %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:93
+#: helpers/dialoghelper/dialoghelper.cpp:97
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1371,14 +1371,14 @@ msgstr ""
 "será quen de desactivalo mediante o rato. Use o menú de xanela, mediante o "
 "atallo de teclado %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:98
+#: helpers/dialoghelper/dialoghelper.cpp:102
 #, fuzzy, kde-format
 #| msgid "Fullscreen"
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "Pantalla completa"
 
-#: helpers/dialoghelper/dialoghelper.cpp:101
+#: helpers/dialoghelper/dialoghelper.cpp:105
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1394,7 +1394,7 @@ msgstr ""
 "Sen esta, non será quen de activala de novo mediante o rato. Use o menú de "
 "xanela no seu lugar, activándoo mediante o atallo de teclado %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:106
+#: helpers/dialoghelper/dialoghelper.cpp:110
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1406,7 +1406,7 @@ msgstr ""
 "Sen esta, non será quen de activala de novo mediante o rato. Use o menú de "
 "xanela no seu lugar, activándoo mediante o atallo de teclado %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:112
+#: helpers/dialoghelper/dialoghelper.cpp:116
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1422,14 +1422,14 @@ msgstr ""
 "Sen esta, non será quen de activala de novo mediante o rato. Use o menú de "
 "xanela no seu lugar, activándoo mediante o atallo de teclado %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:120
 #, fuzzy, kde-format
 #| msgid "&No Border"
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "Sen &moldura"
 
-#: helpers/dialoghelper/dialoghelper.cpp:133
+#: helpers/dialoghelper/dialoghelper.cpp:139
 #, kde-format
 msgid "Do not show again"
 msgstr ""
@@ -2563,17 +2563,17 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr ""
 
-#: plugins/overview/DesktopBar.qml:162
+#: plugins/overview/DesktopBar.qml:157
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Eliminar o escritorio virtual"
 
-#: plugins/overview/DesktopBar.qml:261
+#: plugins/overview/DesktopBar.qml:256
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Engadir un escritorio virtual"
 
-#: plugins/overview/DesktopBar.qml:263
+#: plugins/overview/DesktopBar.qml:258
 #, fuzzy, kde-format
 #| msgid "Add Virtual Desktop"
 msgid "Virtual Desktop limit reached"
@@ -2706,7 +2706,7 @@ msgstr "Non foi posíbel conectar o contexto de PipeWire"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:151
+#: plugins/screencast/screencastmanager.cpp:152
 #, fuzzy, kde-format
 #| msgid "Suspend Compositing"
 msgid "Unsupported compositing type"
@@ -2717,12 +2717,12 @@ msgstr "Suspender a composición"
 msgid "Could not find window id %1"
 msgstr "Non foi posíbel atopar o identificador de xanela %1"
 
-#: plugins/screencast/screencastmanager.cpp:118
+#: plugins/screencast/screencastmanager.cpp:119
 #, kde-format
 msgid "Could not find output"
 msgstr "Non foi posíbel atopar a saída"
 
-#: plugins/screencast/screencastmanager.cpp:156
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Invalid region"
 msgstr "Rexión non válida"
@@ -4449,7 +4449,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %s"
 msgstr "O controlador rexeitou a configuración de saída."
 
-#: window.cpp:3188
+#: window.cpp:3183
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

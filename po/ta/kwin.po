@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-01 17:43+0000\n"
+"POT-Creation-Date: 2026-10-07 00:50+0000\n"
 "PO-Revision-Date: 2026-05-10 16:23+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -1308,13 +1308,13 @@ msgstr ""
 msgid "KWin helper utility"
 msgstr "கேவின் உதவி செயலி"
 
-#: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
+#: helpers/dialoghelper/dialoghelper.cpp:72
+#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "இச்செயலி, நேரடியாக இயக்கப்படக்கூடாத‍து."
 
-#: helpers/dialoghelper/dialoghelper.cpp:79
+#: helpers/dialoghelper/dialoghelper.cpp:83
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1327,7 +1327,7 @@ msgstr ""
 "கொண்டு முழுத்திரை பயன்முறையை முடக்க முடியாது. பதிலாக, %1 என்ற சுருக்குவழியைப் "
 "பயன்படுத்தவும்."
 
-#: helpers/dialoghelper/dialoghelper.cpp:85
+#: helpers/dialoghelper/dialoghelper.cpp:89
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1340,7 +1340,7 @@ msgstr ""
 "கொண்டு முழுத்திரை பயன்முறையை முடக்க முடியாது. பதிலாக, %1 என்ற சுருக்குவழியை "
 "அழுத்தும்போது காட்டப்படும் பட்டியை பயன்படுத்தவும்."
 
-#: helpers/dialoghelper/dialoghelper.cpp:93
+#: helpers/dialoghelper/dialoghelper.cpp:97
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1351,13 +1351,13 @@ msgstr ""
 "முழுத்திரை முறையை முடக்கும் வசதி அச்செயலியிலேயே இல்லாத பட்சத்தில், சுட்டியை மட்டும் "
 "கொண்டு முழுத்திரை பயன்முறையை முடக்க முடியாது."
 
-#: helpers/dialoghelper/dialoghelper.cpp:98
+#: helpers/dialoghelper/dialoghelper.cpp:102
 #, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "முழுத்திரை முறையை செயல்நீக்கு"
 
-#: helpers/dialoghelper/dialoghelper.cpp:101
+#: helpers/dialoghelper/dialoghelper.cpp:105
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1368,7 +1368,7 @@ msgstr ""
 "விளிம்பு இல்லாதபோது, சுட்டியை மட்டும் கொண்டு அதனை மறுபடியும் காட்ட முடியாது. பதிலாக, "
 "%1 என்ற சுருக்குவழியைப் பயன்படுத்தவும்."
 
-#: helpers/dialoghelper/dialoghelper.cpp:106
+#: helpers/dialoghelper/dialoghelper.cpp:110
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1380,7 +1380,7 @@ msgstr ""
 "விளிம்பு இல்லாதபோது, சுட்டியை மட்டும் கொண்டு அதனை மறுபடியும் காட்ட முடியாது. பதிலாக, "
 "%1 என்ற சுருக்குவழியை அழுத்தும்போது காட்டப்படும் பட்டியை பயன்படுத்தவும்."
 
-#: helpers/dialoghelper/dialoghelper.cpp:112
+#: helpers/dialoghelper/dialoghelper.cpp:116
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1390,13 +1390,13 @@ msgstr ""
 "ஒரு சாளரத்தை விளிம்பு இல்லாமல் காட்டுமாறு கோரியுள்ளீர்.\n"
 "விளிம்பு இல்லாதபோது, சுட்டியை மட்டும் கொண்டு அதனை மறுபடியும் காட்ட முடியாது."
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:120
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "விளிம்பை திரும்பப்பெறு"
 
-#: helpers/dialoghelper/dialoghelper.cpp:133
+#: helpers/dialoghelper/dialoghelper.cpp:139
 #, kde-format
 msgid "Do not show again"
 msgstr "மீண்டும் காட்டாதே"
@@ -2515,17 +2515,17 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr ""
 
-#: plugins/overview/DesktopBar.qml:162
+#: plugins/overview/DesktopBar.qml:157
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "மெய்நிகர் பணிமேடையை நீக்கு"
 
-#: plugins/overview/DesktopBar.qml:261
+#: plugins/overview/DesktopBar.qml:256
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "மெய்நிகர் பணிமேடையைச் சேர்"
 
-#: plugins/overview/DesktopBar.qml:263
+#: plugins/overview/DesktopBar.qml:258
 #, kde-format
 msgid "Virtual Desktop limit reached"
 msgstr "மெய்நிகர் பணிமேடை வரம்பு அடையப்பட்டுள்ளது"
@@ -2657,7 +2657,7 @@ msgstr ""
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:151
+#: plugins/screencast/screencastmanager.cpp:152
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "ஆதரிக்கப்படாத சாளரவரைவு முறை"
@@ -2667,12 +2667,12 @@ msgstr "ஆதரிக்கப்படாத சாளரவரைவு ம�
 msgid "Could not find window id %1"
 msgstr "%1 எனும் அடையாளமுள்ள சாளரத்தை கண்டுபிடிக்க முடியவில்லை"
 
-#: plugins/screencast/screencastmanager.cpp:118
+#: plugins/screencast/screencastmanager.cpp:119
 #, kde-format
 msgid "Could not find output"
 msgstr "திரையை கண்டுபிடிக்க முடியவில்லை"
 
-#: plugins/screencast/screencastmanager.cpp:156
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Invalid region"
 msgstr "செல்லுபடியாகாத பரப்பளவு"
@@ -4392,7 +4392,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %s"
 msgstr "சாதனநிரல் அமைப்புகளை நிராகரித்தது"
 
-#: window.cpp:3188
+#: window.cpp:3183
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

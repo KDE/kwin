@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-01 17:43+0000\n"
+"POT-Creation-Date: 2026-10-07 00:50+0000\n"
 "PO-Revision-Date: 2024-01-03 14:00-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -1296,13 +1296,13 @@ msgstr ""
 msgid "KWin helper utility"
 msgstr "KWin ਸਹਾਇਕ ਸਹੂਲਤ"
 
-#: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
+#: helpers/dialoghelper/dialoghelper.cpp:72
+#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "ਇਹ ਸਹਾਇਕ ਸਹੂਲਤ ਸਿੱਧੀ ਕਾਲ ਨਹੀਂ ਕੀਤੀ ਜਾ ਸਕਦੀ।"
 
-#: helpers/dialoghelper/dialoghelper.cpp:79
+#: helpers/dialoghelper/dialoghelper.cpp:83
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1320,7 +1320,7 @@ msgstr ""
 "ਜੇਕਰ ਕਾਰਜ ਵਿੱਚ ਪੂਰੀ ਸਕਰੀਨ ਤੋਂ ਵਾਪਿਸ ਆਉਣ ਲਈ ਕੋਈ ਸਹੂਲਤ ਨਾ ਹੋਈ ਤਾਂ ਤੁਸੀਂ ਮਾਊਸ ਦੀ ਵਰਤੋਂ ਕਰਕੇ "
 "ਵਾਪਿਸ ਨਹੀਂ ਆ ਸਕਦੇ ਹੋ। ਇਸ ਕਰਕੇ ਵਿੰਡੋ ਕਾਰਵਾਈ ਮੇਨੂ, ਕੀ-ਬੋਰਡ %1 ਸ਼ਾਰਟਕੱਟ ਵਰਤੋਂ।"
 
-#: helpers/dialoghelper/dialoghelper.cpp:85
+#: helpers/dialoghelper/dialoghelper.cpp:89
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1338,7 +1338,7 @@ msgstr ""
 "ਜੇਕਰ ਕਾਰਜ ਵਿੱਚ ਪੂਰੀ ਸਕਰੀਨ ਤੋਂ ਵਾਪਿਸ ਆਉਣ ਲਈ ਕੋਈ ਸਹੂਲਤ ਨਾ ਹੋਈ ਤਾਂ ਤੁਸੀਂ ਮਾਊਸ ਦੀ ਵਰਤੋਂ ਕਰਕੇ "
 "ਵਾਪਿਸ ਨਹੀਂ ਆ ਸਕਦੇ ਹੋ। ਇਸ ਕਰਕੇ ਵਿੰਡੋ ਕਾਰਵਾਈ ਮੇਨੂ, ਕੀ-ਬੋਰਡ %1 ਸ਼ਾਰਟਕੱਟ ਵਰਤੋਂ।"
 
-#: helpers/dialoghelper/dialoghelper.cpp:93
+#: helpers/dialoghelper/dialoghelper.cpp:97
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1355,14 +1355,14 @@ msgstr ""
 "ਜੇਕਰ ਕਾਰਜ ਵਿੱਚ ਪੂਰੀ ਸਕਰੀਨ ਤੋਂ ਵਾਪਿਸ ਆਉਣ ਲਈ ਕੋਈ ਸਹੂਲਤ ਨਾ ਹੋਈ ਤਾਂ ਤੁਸੀਂ ਮਾਊਸ ਦੀ ਵਰਤੋਂ ਕਰਕੇ "
 "ਵਾਪਿਸ ਨਹੀਂ ਆ ਸਕਦੇ ਹੋ। ਇਸ ਕਰਕੇ ਵਿੰਡੋ ਕਾਰਵਾਈ ਮੇਨੂ, ਕੀ-ਬੋਰਡ %1 ਸ਼ਾਰਟਕੱਟ ਵਰਤੋਂ।"
 
-#: helpers/dialoghelper/dialoghelper.cpp:98
+#: helpers/dialoghelper/dialoghelper.cpp:102
 #, fuzzy, kde-format
 #| msgid "Fullscreen"
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "ਪੂਰੀ ਸਕਰੀਨ"
 
-#: helpers/dialoghelper/dialoghelper.cpp:101
+#: helpers/dialoghelper/dialoghelper.cpp:105
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1378,7 +1378,7 @@ msgstr ""
 "ਹਾਸ਼ੀਏ ਤੋਂ ਬਿਨਾਂ ਤੁਸੀਂ ਮਾਊਸ ਨਾਲ ਮੁੜ ਹਾਸ਼ੀਆ ਨਹੀਂ ਲਿਆ ਸਕਦੇ ਹੋ, ਇਸ ਦੀ ਬਜਾਏ ਕੀ-ਬੋਰਡ %1 "
 "ਸ਼ਾਰਟਕੱਟ ਵਰਤ ਕੇ ਵਿੰਡੋ ਕਾਰਵਾਈ ਮੇਨੂ ਵਰਤੋਂ।"
 
-#: helpers/dialoghelper/dialoghelper.cpp:106
+#: helpers/dialoghelper/dialoghelper.cpp:110
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1395,7 +1395,7 @@ msgstr ""
 "ਹਾਸ਼ੀਏ ਤੋਂ ਬਿਨਾਂ ਤੁਸੀਂ ਮਾਊਸ ਨਾਲ ਮੁੜ ਹਾਸ਼ੀਆ ਨਹੀਂ ਲਿਆ ਸਕਦੇ ਹੋ, ਇਸ ਦੀ ਬਜਾਏ ਕੀ-ਬੋਰਡ %1 "
 "ਸ਼ਾਰਟਕੱਟ ਵਰਤ ਕੇ ਵਿੰਡੋ ਕਾਰਵਾਈ ਮੇਨੂ ਵਰਤੋਂ।"
 
-#: helpers/dialoghelper/dialoghelper.cpp:112
+#: helpers/dialoghelper/dialoghelper.cpp:116
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1411,14 +1411,14 @@ msgstr ""
 "ਹਾਸ਼ੀਏ ਤੋਂ ਬਿਨਾਂ ਤੁਸੀਂ ਮਾਊਸ ਨਾਲ ਮੁੜ ਹਾਸ਼ੀਆ ਨਹੀਂ ਲਿਆ ਸਕਦੇ ਹੋ, ਇਸ ਦੀ ਬਜਾਏ ਕੀ-ਬੋਰਡ %1 "
 "ਸ਼ਾਰਟਕੱਟ ਵਰਤ ਕੇ ਵਿੰਡੋ ਕਾਰਵਾਈ ਮੇਨੂ ਵਰਤੋਂ।"
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:120
 #, fuzzy, kde-format
 #| msgid "&No Border"
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "ਕੋਈ ਹਾਸ਼ੀਆ ਨਹੀਂ(&N)"
 
-#: helpers/dialoghelper/dialoghelper.cpp:133
+#: helpers/dialoghelper/dialoghelper.cpp:139
 #, kde-format
 msgid "Do not show again"
 msgstr ""
@@ -2589,20 +2589,20 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr ""
 
-#: plugins/overview/DesktopBar.qml:162
+#: plugins/overview/DesktopBar.qml:157
 #, fuzzy, kde-format
 #| msgid "Move to &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "ਡੈਸਕਟਾਪ ਉੱਤੇ ਭੇਜੋ(&D)"
 
-#: plugins/overview/DesktopBar.qml:261
+#: plugins/overview/DesktopBar.qml:256
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and add the window to that desktop"
 #| msgid "Add to &New Desktop"
 msgid "Add Virtual Desktop"
 msgstr "ਨਵੇਂ ਡੈਸਕਟਾਪ ਉੱਤੇ ਜੋੜੋ(&N)"
 
-#: plugins/overview/DesktopBar.qml:263
+#: plugins/overview/DesktopBar.qml:258
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and add the window to that desktop"
 #| msgid "Add to &New Desktop"
@@ -2749,7 +2749,7 @@ msgstr ""
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:151
+#: plugins/screencast/screencastmanager.cpp:152
 #, fuzzy, kde-format
 #| msgid "Suspend Compositing"
 msgid "Unsupported compositing type"
@@ -2761,12 +2761,12 @@ msgstr "ਸਸਪੈਂਡ ਕੰਪੋਜ਼ਿਸ਼ਨ"
 msgid "Could not find window id %1"
 msgstr "%1 ਉੱਤੇ ਚੱਲਦੀ ਵਿੰਡੋ ਨੂੰ ਬੰਦ ਕਰੋ"
 
-#: plugins/screencast/screencastmanager.cpp:118
+#: plugins/screencast/screencastmanager.cpp:119
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:156
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Invalid region"
 msgstr ""
@@ -4551,7 +4551,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %s"
 msgstr ""
 
-#: window.cpp:3188
+#: window.cpp:3183
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

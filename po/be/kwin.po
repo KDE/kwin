@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-01 17:43+0000\n"
+"POT-Creation-Date: 2026-10-07 00:50+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -1310,13 +1310,13 @@ msgstr ""
 msgid "KWin helper utility"
 msgstr "Дапаможная утыліта KWin"
 
-#: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
+#: helpers/dialoghelper/dialoghelper.cpp:72
+#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Гэтую утыліту не трэба выклікаць уласнаручна."
 
-#: helpers/dialoghelper/dialoghelper.cpp:79
+#: helpers/dialoghelper/dialoghelper.cpp:83
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1335,7 +1335,7 @@ msgstr ""
 "зможаце зноў адключыць яго з дапамогай мышы. Вы можаце зрабіць гэта праз "
 "меню аперацый з вокнамі, якое можна актываваць спалучэннем клавіш %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:85
+#: helpers/dialoghelper/dialoghelper.cpp:89
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1354,7 +1354,7 @@ msgstr ""
 "зможаце зноў адключыць яго з дапамогай мышы. Вы можаце зрабіць гэта праз "
 "меню аперацый з вокнамі, якое можна актываваць спалучэннем клавіш %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:93
+#: helpers/dialoghelper/dialoghelper.cpp:97
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1372,14 +1372,14 @@ msgstr ""
 "зможаце зноў адключыць яго з дапамогай мышы. Вы можаце зрабіць гэта праз "
 "меню аперацый з вокнамі, якое можна актываваць спалучэннем клавіш %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:98
+#: helpers/dialoghelper/dialoghelper.cpp:102
 #, fuzzy, kde-format
 #| msgid "Fullscreen"
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "На ўвесь экран"
 
-#: helpers/dialoghelper/dialoghelper.cpp:101
+#: helpers/dialoghelper/dialoghelper.cpp:105
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1396,7 +1396,7 @@ msgstr ""
 "зрабіць гэта праз меню аперацый з вокнамі, якое можна актываваць спалучэннем "
 "клавіш %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:106
+#: helpers/dialoghelper/dialoghelper.cpp:110
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1414,7 +1414,7 @@ msgstr ""
 "зрабіць гэта праз меню аперацый з вокнамі, якое можна актываваць спалучэннем "
 "клавіш %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:112
+#: helpers/dialoghelper/dialoghelper.cpp:116
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1431,14 +1431,14 @@ msgstr ""
 "зрабіць гэта праз меню аперацый з вокнамі, якое можна актываваць спалучэннем "
 "клавіш %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:120
 #, fuzzy, kde-format
 #| msgid "&No Border"
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "&Без рамкі"
 
-#: helpers/dialoghelper/dialoghelper.cpp:133
+#: helpers/dialoghelper/dialoghelper.cpp:139
 #, kde-format
 msgid "Do not show again"
 msgstr ""
@@ -2584,17 +2584,17 @@ msgctxt "@label"
 msgid "Built-in Screen"
 msgstr ""
 
-#: plugins/overview/DesktopBar.qml:162
+#: plugins/overview/DesktopBar.qml:157
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Выдаліць віртуальны працоўны стол"
 
-#: plugins/overview/DesktopBar.qml:261
+#: plugins/overview/DesktopBar.qml:256
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Дадаць віртуальны працоўны стол"
 
-#: plugins/overview/DesktopBar.qml:263
+#: plugins/overview/DesktopBar.qml:258
 #, fuzzy, kde-format
 #| msgid "Add Virtual Desktop"
 msgid "Virtual Desktop limit reached"
@@ -2727,7 +2727,7 @@ msgstr "Не ўдалося падлучыць кантэкст PipeWire"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:151
+#: plugins/screencast/screencastmanager.cpp:152
 #, fuzzy, kde-format
 #| msgid "Suspend Compositing"
 msgid "Unsupported compositing type"
@@ -2738,12 +2738,12 @@ msgstr "Прыпыніць кампазітынг"
 msgid "Could not find window id %1"
 msgstr "Не ўдалося знайсці ідэнтыфікатар акна %1"
 
-#: plugins/screencast/screencastmanager.cpp:118
+#: plugins/screencast/screencastmanager.cpp:119
 #, kde-format
 msgid "Could not find output"
 msgstr "Не ўдалося знайсці вывад"
 
-#: plugins/screencast/screencastmanager.cpp:156
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Invalid region"
 msgstr "Хібная вобласць"
@@ -4483,7 +4483,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %s"
 msgstr ""
 
-#: window.cpp:3188
+#: window.cpp:3183
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
