@@ -4,6 +4,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "screenshotlayer.h"
+#include "opengl/eglcontext.h"
+#include "opengl/glframebuffer.h"
 
 namespace KWin
 {
@@ -21,6 +23,10 @@ FormatModifierMap ScreenshotLayer::supportedDrmFormats() const
 
 std::optional<OutputLayerBeginFrameInfo> ScreenshotLayer::beginFrame(OutputFrame *frame)
 {
+    if (!m_buffer->context()->makeCurrent()) {
+        return std::nullopt;
+    }
+
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer),
         .repaint = Region::infinite(),
