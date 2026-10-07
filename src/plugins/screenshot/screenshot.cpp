@@ -133,9 +133,16 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
     const Rect fullDamage = Rect(QPoint(), target->size());
     sceneView.setViewport(screen->geometryF());
     sceneView.setScale(scale);
+
     sceneView.prePaint();
+    const auto _ = qScopeGuard([&sceneView]() {
+        sceneView.postPaint();
+    });
+
+    if (!context->makeCurrent()) {
+        return std::nullopt;
+    }
     sceneView.paint(beginInfo->renderTarget, QPoint(), fullDamage);
-    sceneView.postPaint();
     if (!layer.endFrame(fullDamage, fullDamage, nullptr)) {
         return std::nullopt;
     }
@@ -203,12 +210,16 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
     const Rect fullDamage = Rect(QPoint(), target->size());
     sceneView.setViewport(area);
     sceneView.setScale(scale);
+
     sceneView.prePaint();
+    const auto _ = qScopeGuard([&sceneView]() {
+        sceneView.postPaint();
+    });
+
     if (!context->makeCurrent()) {
         return std::nullopt;
     }
     sceneView.paint(beginInfo->renderTarget, QPoint(), fullDamage);
-    sceneView.postPaint();
     if (!layer.endFrame(fullDamage, fullDamage, nullptr)) {
         return std::nullopt;
     }
