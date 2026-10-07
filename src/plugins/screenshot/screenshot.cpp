@@ -204,6 +204,9 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
     sceneView.setViewport(area);
     sceneView.setScale(scale);
     sceneView.prePaint();
+    if (!context->makeCurrent()) {
+        return std::nullopt;
+    }
     sceneView.paint(beginInfo->renderTarget, QPoint(), fullDamage);
     sceneView.postPaint();
     if (!layer.endFrame(fullDamage, fullDamage, nullptr)) {
