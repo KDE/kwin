@@ -132,11 +132,13 @@ QList<CursorSprite> SvgCursorReader::load(const QString &containerPath, int desi
         const QRect bounds(QPoint(0, 0), renderer.defaultSize() * scale);
         QImage image(bounds.size() * devicePixelRatio, QImage::Format_ARGB32_Premultiplied);
         image.fill(Qt::transparent);
-        image.setDevicePixelRatio(devicePixelRatio);
 
+        // Set the device pixel ratio only after rendering, QtSvg renders filtered content
+        // at logical resolution otherwise, see QTBUG-151165.
         QPainter painter(&image);
-        renderer.render(&painter, bounds);
+        renderer.render(&painter, image.rect());
         painter.end();
+        image.setDevicePixelRatio(devicePixelRatio);
 
         sprites.append(CursorSprite(image, entry.hotspot * scale, entry.delay));
     }
