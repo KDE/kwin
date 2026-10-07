@@ -1642,6 +1642,7 @@ void setOutputConfig(const QList<OutputInfo> &infos);
 class XdgToplevelWindow
 {
 public:
+    explicit XdgToplevelWindow(QtWayland::zxdg_toplevel_decoration_v1::mode decorationMode);
     explicit XdgToplevelWindow(const std::function<void(KWayland::Client::Surface *surface, XdgToplevel *toplevel)> &setup);
     explicit XdgToplevelWindow(const std::function<void(XdgToplevel *toplevel)> &setup = {});
     explicit XdgToplevelWindow(Connection *connection, const std::function<void(KWayland::Client::Surface *surface, XdgToplevel *toplevel)> &setup);
@@ -1667,6 +1668,7 @@ public:
     std::unique_ptr<KWayland::Client::Surface> m_surface;
     std::unique_ptr<XdgToplevel> m_toplevel;
     Window *m_window = nullptr;
+    std::unique_ptr<Test::XdgToplevelDecorationV1> m_decoration;
 };
 
 }

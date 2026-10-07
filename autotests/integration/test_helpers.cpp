@@ -2838,6 +2838,16 @@ void tabletToolTipEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal y
     Q_EMIT tablet->tabletToolTipEvent(pos, pressure, xTilt, yTilt, rotation, distance, tipDown, sliderPosition, tool, std::chrono::milliseconds(time), tablet);
 }
 
+XdgToplevelWindow::XdgToplevelWindow(QtWayland::zxdg_toplevel_decoration_v1::mode decorationMode)
+    : m_connection(s_waylandConnection.get())
+    , m_surface(createSurface(m_connection->compositor))
+    , m_toplevel(std::make_unique<XdgToplevel>(new XdgSurface(m_connection->xdgShell, m_surface.get())))
+    , m_decoration(createXdgToplevelDecorationV1(m_toplevel.get()))
+{
+    m_decoration->set_mode(decorationMode);
+    waitForConfigured(m_toplevel->xdgSurface());
+}
+
 XdgToplevelWindow::XdgToplevelWindow(const std::function<void(KWayland::Client::Surface *surface, XdgToplevel *toplevel)> &setup)
     : XdgToplevelWindow(s_waylandConnection.get(), setup)
 {
