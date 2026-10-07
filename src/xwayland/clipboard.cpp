@@ -63,17 +63,15 @@ bool Clipboard::x11ClientsCanAccessSelection() const
 
 void Clipboard::onSelectionChanged()
 {
-    if (!x11ClientsCanAccessSelection()) {
-        return;
-    }
-
     auto currentSelection = waylandServer()->seat()->selection();
     if (!currentSelection || ownsDataSource(currentSelection)) {
         setWlSource(nullptr);
         return;
     }
 
-    setWlSource(currentSelection);
+    if (x11ClientsCanAccessSelection()) {
+        setWlSource(currentSelection);
+    }
 }
 
 void Clipboard::onActiveWindowChanged()
