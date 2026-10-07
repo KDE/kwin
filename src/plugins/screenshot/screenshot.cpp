@@ -115,10 +115,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
     if (!layer.preparePresentationTest()) {
         return std::nullopt;
     }
-    const auto beginInfo = layer.beginFrame();
-    if (!beginInfo) {
-        return std::nullopt;
-    }
+
     SceneView sceneView(Compositor::self()->scene(), screen, nullptr, &layer);
     std::unique_ptr<ItemTreeView> cursorView;
     if (!(flags & ScreenShotIncludeCursor)) {
@@ -139,7 +136,8 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
         sceneView.postPaint();
     });
 
-    if (!context->makeCurrent()) {
+    const auto beginInfo = layer.beginFrame();
+    if (!beginInfo) {
         return std::nullopt;
     }
     sceneView.paint(beginInfo->renderTarget, QPoint(), fullDamage);
@@ -192,10 +190,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
     if (!layer.preparePresentationTest()) {
         return std::nullopt;
     }
-    const auto beginInfo = layer.beginFrame();
-    if (!beginInfo) {
-        return std::nullopt;
-    }
+
     SceneView sceneView(Compositor::self()->scene(), workspace()->outputs().front(), nullptr, &layer);
     std::unique_ptr<ItemTreeView> cursorView;
     if (!(flags & ScreenShotIncludeCursor)) {
@@ -216,7 +211,8 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
         sceneView.postPaint();
     });
 
-    if (!context->makeCurrent()) {
+    const auto beginInfo = layer.beginFrame();
+    if (!beginInfo) {
         return std::nullopt;
     }
     sceneView.paint(beginInfo->renderTarget, QPoint(), fullDamage);

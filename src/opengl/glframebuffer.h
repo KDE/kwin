@@ -19,6 +19,7 @@
 namespace KWin
 {
 
+class EglContext;
 class GLTexture;
 class RenderTarget;
 class RenderViewport;
@@ -62,6 +63,11 @@ public:
      */
     GLFramebuffer(GLuint handle, const QSize &size);
     ~GLFramebuffer();
+
+    EglContext *context() const
+    {
+        return m_context;
+    }
 
     /**
      * Returns the framebuffer object handle to this framebuffer object.
@@ -128,6 +134,7 @@ protected:
     bool m_valid = false;
     bool m_foreign = false;
     GLTexture *const m_colorAttachment;
+    EglContext *m_context = nullptr;
 };
 
 }
