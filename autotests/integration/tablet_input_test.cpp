@@ -8,6 +8,7 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "tablet_input.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -23,6 +24,7 @@ private Q_SLOTS:
     void cleanup();
 
     void testBasics();
+    void testDecoration();
 
 private:
     KWayland::Client::Compositor *m_compositor = nullptr;
@@ -54,7 +56,9 @@ void TabletInputTest::initTestCase()
 
 void TabletInputTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::WpTabletV2));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat
+                                         | Test::AdditionalWaylandInterface::WpTabletV2
+                                         | Test::AdditionalWaylandInterface::XdgDecorationV1));
     QVERIFY(Test::waitForWaylandPointer());
     m_compositor = Test::waylandCompositor();
     m_seat = Test::waylandSeat();
@@ -169,6 +173,35 @@ void TabletInputTest::testBasics()
     QCOMPARE(proximityIn.count(), 1);
     QCOMPARE(proximityOut.count(), 1);
     QCOMPARE(up.count(), 1);
+}
+
+void TabletInputTest::testDecoration()
+{
+    Test::XdgToplevelWindow window{Test::XdgToplevelDecorationV1::mode_server_side};
+    QVERIFY(window.show(QSize(300, 100)));
+    window.m_window->move(QPointF(0, 0));
+
+    std::unique_ptr<Test::WpTabletSeatV2> tabletSeat = Test::tabletManager()->createSeat(Test::kwinSeat());
+
+    QSignalSpy toolAddedSpy(tabletSeat.get(), &Test::WpTabletSeatV2::toolAdded);
+    QVERIFY(toolAddedSpy.wait());
+    Test::WpTabletToolV2 *tabletTool = toolAddedSpy.last().at(0).value<Test::WpTabletToolV2 *>();
+    QVERIFY(Test::waitForWaylandTabletTool(tabletTool));
+
+    uint32_t time = 0;
+    Test::tabletToolProximityEvent(QPointF(100, 20), 0, 0, 0, 0, true, 0, time++);
+    Test::tabletToolTipEvent(QPointF(150, 20), 1, 0, 0, 0, 0, true, 0, time++);
+    Test::tabletToolAxisEvent(QPointF(250, 20), 1, 0, 0, 0, 0, true, 0, time++);
+
+    QVERIFY(input()->tablet()->decoration());
+    QCOMPARE(workspace()->moveResizeWindow(), window.m_window);
+
+    Test::tabletToolTipEvent(QPointF(250, 20), 0, 0, 0, 0, 0, false, 0, time++);
+    Test::tabletToolProximityEvent(QPointF(250, 20), 0, 0, 0, 0, false, 0, time++);
+
+    QCOMPARE(window.m_window->pos(), QPointF(100, 0));
+    QVERIFY(input()->tablet()->decoration());
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
 }
 
 }
