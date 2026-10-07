@@ -192,17 +192,18 @@ bool InternalWindow::isMovable() const
     if (!options->interactiveWindowMoveEnabled()) {
         return false;
     }
-    return !m_internalWindowFlags.testFlag(Qt::BypassWindowManagerHint) && !m_internalWindowFlags.testFlag(Qt::Popup);
+    // Popups and Bypass windows are immovable, unless marked as Dialog/Tool/SplashScreen.
+    return (!m_internalWindowFlags.testFlag(Qt::BypassWindowManagerHint) && !m_internalWindowFlags.testFlag(Qt::Popup)) || m_internalWindowFlags.testFlag(Qt::Dialog);
 }
 
 bool InternalWindow::isMovableAcrossScreens() const
 {
-    return !m_internalWindowFlags.testFlag(Qt::BypassWindowManagerHint) && !m_internalWindowFlags.testFlag(Qt::Popup);
+    return (!m_internalWindowFlags.testFlag(Qt::BypassWindowManagerHint) && !m_internalWindowFlags.testFlag(Qt::Popup)) || m_internalWindowFlags.testFlag(Qt::Dialog);
 }
 
 bool InternalWindow::isResizable() const
 {
-    return true;
+    return !m_internalWindowFlags.testFlag(Qt::BypassWindowManagerHint) && !m_internalWindowFlags.testFlag(Qt::Sheet);
 }
 
 bool InternalWindow::isPlaceable() const
