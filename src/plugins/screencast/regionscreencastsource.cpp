@@ -79,6 +79,11 @@ void RegionScreenCastSource::setNextPresentationTimestamp(std::chrono::nanosecon
 
 Region RegionScreenCastSource::render(GLFramebuffer *target, const Region &bufferRepair)
 {
+    m_sceneView->prePaint();
+    const auto _ = qScopeGuard([this]() {
+        m_sceneView->postPaint();
+    });
+
     m_layer->setFramebuffer(target, bufferRepair & Rect(QPoint(), target->size()));
     if (!m_layer->preparePresentationTest()) {
         return Region{};
@@ -87,15 +92,14 @@ Region RegionScreenCastSource::render(GLFramebuffer *target, const Region &buffe
     if (!beginInfo) {
         return Region{};
     }
-    m_sceneView->prePaint();
     const auto bufferDamage = (m_layer->deviceRepaints() | m_sceneView->collectDamage()) & Rect(QPoint(), target->size());
     const auto repaints = beginInfo->repaint | bufferDamage;
     m_layer->resetRepaints();
     m_sceneView->paint(beginInfo->renderTarget, QPoint(), repaints);
-    m_sceneView->postPaint();
     if (!m_layer->endFrame(repaints, bufferDamage, nullptr)) {
         return Region{};
     }
+
     return bufferDamage;
 }
 

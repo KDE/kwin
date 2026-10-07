@@ -4,6 +4,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "screencastlayer.h"
+#include "opengl/eglcontext.h"
+#include "opengl/glframebuffer.h"
 
 namespace KWin
 {
@@ -30,6 +32,12 @@ FormatModifierMap ScreencastLayer::supportedDrmFormats() const
 
 std::optional<OutputLayerBeginFrameInfo> ScreencastLayer::beginFrame(OutputFrame *frame)
 {
+    Q_ASSERT(m_buffer);
+
+    if (!m_buffer->context()->makeCurrent()) {
+        return std::nullopt;
+    }
+
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer),
         .repaint = m_bufferDamage,
