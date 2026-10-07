@@ -64,6 +64,11 @@ public:
     GLFramebuffer(GLuint handle, const QSize &size);
     ~GLFramebuffer();
 
+    EglContext *context() const
+    {
+        return m_context;
+    }
+
     /**
      * Returns the framebuffer object handle to this framebuffer object.
      */
