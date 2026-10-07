@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-01 20:15+0000\n"
+"POT-Creation-Date: 2026-10-07 02:54+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -1288,13 +1288,13 @@ msgstr ""
 msgid "KWin helper utility"
 msgstr "ឧបករណ៍​ជំនួយ KWin"
 
-#: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
+#: helpers/dialoghelper/dialoghelper.cpp:72
+#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "ឧបករណ៍​ជំនួយ​នេះ​ទំនង​ជា​មិន​បាន​ហៅ​ដោយ​ផ្ទាល់ទេ ។"
 
-#: helpers/dialoghelper/dialoghelper.cpp:79
+#: helpers/dialoghelper/dialoghelper.cpp:83
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1313,7 +1313,7 @@ msgstr ""
 "ដោយ​ប្រើ​កណ្ដុរ ៖ ចូរ​ប្រើ​ម៉ឺនុយ​ប្រតិបត្តិការ​បង្អួច​ជំនួស​វិញ ដែល​អាច​ធ្វើ​ឲ្យ​សកម្ម​ដោយ​ប្រើ​ផ្លូវកាត់​ក្ដារចុច "
 "%1 ។"
 
-#: helpers/dialoghelper/dialoghelper.cpp:85
+#: helpers/dialoghelper/dialoghelper.cpp:89
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1332,7 +1332,7 @@ msgstr ""
 "ដោយ​ប្រើ​កណ្ដុរ ៖ ចូរ​ប្រើ​ម៉ឺនុយ​ប្រតិបត្តិការ​បង្អួច​ជំនួស​វិញ ដែល​អាច​ធ្វើ​ឲ្យ​សកម្ម​ដោយ​ប្រើ​ផ្លូវកាត់​ក្ដារចុច "
 "%1 ។"
 
-#: helpers/dialoghelper/dialoghelper.cpp:93
+#: helpers/dialoghelper/dialoghelper.cpp:97
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1350,14 +1350,14 @@ msgstr ""
 "ដោយ​ប្រើ​កណ្ដុរ ៖ ចូរ​ប្រើ​ម៉ឺនុយ​ប្រតិបត្តិការ​បង្អួច​ជំនួស​វិញ ដែល​អាច​ធ្វើ​ឲ្យ​សកម្ម​ដោយ​ប្រើ​ផ្លូវកាត់​ក្ដារចុច "
 "%1 ។"
 
-#: helpers/dialoghelper/dialoghelper.cpp:98
+#: helpers/dialoghelper/dialoghelper.cpp:102
 #, fuzzy, kde-format
 #| msgid "&Fullscreen"
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "ពេញ​អេក្រង់"
 
-#: helpers/dialoghelper/dialoghelper.cpp:101
+#: helpers/dialoghelper/dialoghelper.cpp:105
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1373,7 +1373,7 @@ msgstr ""
 "គ្មាន​ស៊ុម អ្នក​នឹង​មិន​អាច​អនុញ្ញាត​ស៊ុម​ម្ដង​ទៀត ដោយ​ប្រើ​កណ្ដុរ ៖ ប្រើ​ម៉ឺនុយ​ប្រតិបត្តិ​បង្អួច​ជំនួស​វិញ ធ្វើ​ឲ្យ​សកម្ម​"
 "ដោយ​ប្រើ %1 គ្រាប់​ចុច​ផ្លូវ​កាត់ ។"
 
-#: helpers/dialoghelper/dialoghelper.cpp:106
+#: helpers/dialoghelper/dialoghelper.cpp:110
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1390,7 +1390,7 @@ msgstr ""
 "គ្មាន​ស៊ុម អ្នក​នឹង​មិន​អាច​អនុញ្ញាត​ស៊ុម​ម្ដង​ទៀត ដោយ​ប្រើ​កណ្ដុរ ៖ ប្រើ​ម៉ឺនុយ​ប្រតិបត្តិ​បង្អួច​ជំនួស​វិញ ធ្វើ​ឲ្យ​សកម្ម​"
 "ដោយ​ប្រើ %1 គ្រាប់​ចុច​ផ្លូវ​កាត់ ។"
 
-#: helpers/dialoghelper/dialoghelper.cpp:112
+#: helpers/dialoghelper/dialoghelper.cpp:116
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1406,14 +1406,14 @@ msgstr ""
 "គ្មាន​ស៊ុម អ្នក​នឹង​មិន​អាច​អនុញ្ញាត​ស៊ុម​ម្ដង​ទៀត ដោយ​ប្រើ​កណ្ដុរ ៖ ប្រើ​ម៉ឺនុយ​ប្រតិបត្តិ​បង្អួច​ជំនួស​វិញ ធ្វើ​ឲ្យ​សកម្ម​"
 "ដោយ​ប្រើ %1 គ្រាប់​ចុច​ផ្លូវ​កាត់ ។"
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:120
 #, fuzzy, kde-format
 #| msgid "&No Border"
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "គ្មាន​ស៊ុម"
 
-#: helpers/dialoghelper/dialoghelper.cpp:133
+#: helpers/dialoghelper/dialoghelper.cpp:139
 #, kde-format
 msgid "Do not show again"
 msgstr ""
@@ -2717,7 +2717,7 @@ msgstr ""
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:151
+#: plugins/screencast/screencastmanager.cpp:152
 #, fuzzy, kde-format
 #| msgid "Suspend Compositing"
 msgid "Unsupported compositing type"
@@ -2728,12 +2728,12 @@ msgstr "ផ្អាក​ការ​តែង"
 msgid "Could not find window id %1"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:118
+#: plugins/screencast/screencastmanager.cpp:119
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:156
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Invalid region"
 msgstr ""

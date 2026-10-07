@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-01 20:15+0000\n"
+"POT-Creation-Date: 2026-10-07 02:54+0000\n"
 "PO-Revision-Date: 2026-10-02 20:50+0200\n"
 "Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -1381,13 +1381,13 @@ msgstr "Порука за приказ (fullscreen, noborder)"
 msgid "KWin helper utility"
 msgstr "К‑винова помоћна алатка"
 
-#: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
+#: helpers/dialoghelper/dialoghelper.cpp:72
+#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Ова помоћна алатка није намијењена директном позивању."
 
-#: helpers/dialoghelper/dialoghelper.cpp:79
+#: helpers/dialoghelper/dialoghelper.cpp:83
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1399,7 +1399,7 @@ msgstr ""
 "Ако сâм програм нема опцију да се режим преко цијелог екрана искључи, нећете "
 "моћи да га искључите мишем. Умјесто тога употријебите пречицу %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:85
+#: helpers/dialoghelper/dialoghelper.cpp:89
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1412,7 +1412,7 @@ msgstr ""
 "моћи да га искључите мишем. Умјесто тога употријебите мени прозора, који се "
 "активира пречицом %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:93
+#: helpers/dialoghelper/dialoghelper.cpp:97
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1423,13 +1423,13 @@ msgstr ""
 "Ако сâм програм нема опцију да се режим преко цијелог екрана искључи, нећете "
 "моћи да га искључите мишем."
 
-#: helpers/dialoghelper/dialoghelper.cpp:98
+#: helpers/dialoghelper/dialoghelper.cpp:102
 #, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "Опозови приказ преко цијелог екрана"
 
-#: helpers/dialoghelper/dialoghelper.cpp:101
+#: helpers/dialoghelper/dialoghelper.cpp:105
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1440,7 +1440,7 @@ msgstr ""
 "Без ивице, нећете моћи поново да укључите ивицу мишем. Умјесто тога "
 "употријебите пречицу %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:106
+#: helpers/dialoghelper/dialoghelper.cpp:110
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1452,7 +1452,7 @@ msgstr ""
 "Без ивице, нећете моћи поново да укључите ивицу мишем. Умјесто тога "
 "употријебите мени прозора, који се активира пречицом %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:112
+#: helpers/dialoghelper/dialoghelper.cpp:116
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1462,13 +1462,13 @@ msgstr ""
 "Изабрали сте да прозор нема ивице.\n"
 "Без ивице, нећете моћи поново да укључите ивицу мишем."
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:120
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "Врати ивицу"
 
-#: helpers/dialoghelper/dialoghelper.cpp:133
+#: helpers/dialoghelper/dialoghelper.cpp:139
 #, kde-format
 msgid "Do not show again"
 msgstr "Не приказуј више"
@@ -2755,7 +2755,7 @@ msgstr "Не могу да повежем PipeWire контекст"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:151
+#: plugins/screencast/screencastmanager.cpp:152
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Неподржан тип слагања"
@@ -2765,12 +2765,12 @@ msgstr "Неподржан тип слагања"
 msgid "Could not find window id %1"
 msgstr "Не могу да нађем ИД прозора %1"
 
-#: plugins/screencast/screencastmanager.cpp:118
+#: plugins/screencast/screencastmanager.cpp:119
 #, kde-format
 msgid "Could not find output"
 msgstr "Не могу да нађем излаз"
 
-#: plugins/screencast/screencastmanager.cpp:156
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Invalid region"
 msgstr "Лош регион"

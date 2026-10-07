@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-01 20:15+0000\n"
+"POT-Creation-Date: 2026-10-07 02:54+0000\n"
 "PO-Revision-Date: 2026-09-03 20:01+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -1289,13 +1289,13 @@ msgstr "Meddelande att visa (fullskärm, ingen kant)"
 msgid "KWin helper utility"
 msgstr "Kwin-hjälpverktyg"
 
-#: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
+#: helpers/dialoghelper/dialoghelper.cpp:72
+#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Det är inte meningen att det här hjälpverktyget ska anropas direkt."
 
-#: helpers/dialoghelper/dialoghelper.cpp:79
+#: helpers/dialoghelper/dialoghelper.cpp:83
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1308,7 +1308,7 @@ msgstr ""
 "fullskärmsläge, kommer du inte kunna stänga av det med musen. Använd "
 "istället snabbtangenten %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:85
+#: helpers/dialoghelper/dialoghelper.cpp:89
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1321,7 +1321,7 @@ msgstr ""
 "fullskärmsläge, kommer du inte kunna stänga av det med musen. Använd "
 "fönstermenyn istället, som aktiveras med snabbtangenten %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:93
+#: helpers/dialoghelper/dialoghelper.cpp:97
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1332,13 +1332,13 @@ msgstr ""
 "Om programmet själv inte har ett alternativ för att stänga av "
 "fullskärmsläge, kommer du inte kunna stänga av det med musen."
 
-#: helpers/dialoghelper/dialoghelper.cpp:98
+#: helpers/dialoghelper/dialoghelper.cpp:102
 #, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "Ångra fullskärm"
 
-#: helpers/dialoghelper/dialoghelper.cpp:101
+#: helpers/dialoghelper/dialoghelper.cpp:105
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1349,7 +1349,7 @@ msgstr ""
 "Utan ramen kan du inte aktivera den igen med musen. Använd istället "
 "snabbtangenten %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:106
+#: helpers/dialoghelper/dialoghelper.cpp:110
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1361,7 +1361,7 @@ msgstr ""
 "Utan ramen kan du inte aktivera den igen med musen. Använd fönstermenyn "
 "istället, som aktiveras med snabbtangenten %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:112
+#: helpers/dialoghelper/dialoghelper.cpp:116
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1371,13 +1371,13 @@ msgstr ""
 "Du har valt att visa ett fönster utan ram.\n"
 "Utan ramen kan du inte aktivera den igen med musen."
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:120
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "Återställ kant"
 
-#: helpers/dialoghelper/dialoghelper.cpp:133
+#: helpers/dialoghelper/dialoghelper.cpp:139
 #, kde-format
 msgid "Do not show again"
 msgstr "Visa inte igen"
@@ -2631,7 +2631,7 @@ msgstr "Misslyckades ansluta PipeWire-sammanhang"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:151
+#: plugins/screencast/screencastmanager.cpp:152
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Sammansättningstyp som inte stöds"
@@ -2641,12 +2641,12 @@ msgstr "Sammansättningstyp som inte stöds"
 msgid "Could not find window id %1"
 msgstr "Kunde inte hitta fönster-id %1"
 
-#: plugins/screencast/screencastmanager.cpp:118
+#: plugins/screencast/screencastmanager.cpp:119
 #, kde-format
 msgid "Could not find output"
 msgstr "Kunde inte hitta utmatning"
 
-#: plugins/screencast/screencastmanager.cpp:156
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Invalid region"
 msgstr "Ogiltigt område"

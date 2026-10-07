@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-01 20:15+0000\n"
+"POT-Creation-Date: 2026-10-07 02:54+0000\n"
 "PO-Revision-Date: 2026-09-09 18:10+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -1278,13 +1278,13 @@ msgstr "الرسالة المراد عرضها (شاشة كاملة، بدون �
 msgid "KWin helper utility"
 msgstr "أداة نوافذك للمساعدة"
 
-#: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
+#: helpers/dialoghelper/dialoghelper.cpp:72
+#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "لا يفترض طلب الأداة المساعدة هذه مباشرةً."
 
-#: helpers/dialoghelper/dialoghelper.cpp:79
+#: helpers/dialoghelper/dialoghelper.cpp:83
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1297,7 +1297,7 @@ msgstr ""
 "تتمكن من تعطيله مرة أخرى باستخدام الفأرة: استخدم اختصار لوحة المفاتيح %1 "
 "بدلًا من ذلك."
 
-#: helpers/dialoghelper/dialoghelper.cpp:85
+#: helpers/dialoghelper/dialoghelper.cpp:89
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1310,7 +1310,7 @@ msgstr ""
 "باستخدام الفأرة: استخدم قائمة النّافذة بدل ذلك، لتنشيطها استخدم اختصار لوحة "
 "المفاتيح %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:93
+#: helpers/dialoghelper/dialoghelper.cpp:97
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1321,13 +1321,13 @@ msgstr ""
 "إن لم يحوِ التّطبيق نفسه خيارًا لتعطيل ملء الشّاشة لن تستطيع تعطيله مجدّدًا "
 "باستخدام الفأرة."
 
-#: helpers/dialoghelper/dialoghelper.cpp:98
+#: helpers/dialoghelper/dialoghelper.cpp:102
 #, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "تراجع عن ملء الشّاشة"
 
-#: helpers/dialoghelper/dialoghelper.cpp:101
+#: helpers/dialoghelper/dialoghelper.cpp:105
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1338,7 +1338,7 @@ msgstr ""
 "في حالة عدم وجود الحدود لن تستطيع تمكين الحدّ مجدّدًا باستخدام الفأرة: استخدم "
 "اختصار لوحة المفاتيح %1 عوضًا عن ذلك."
 
-#: helpers/dialoghelper/dialoghelper.cpp:106
+#: helpers/dialoghelper/dialoghelper.cpp:110
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1350,7 +1350,7 @@ msgstr ""
 "في حالة عدم وجود الحدود لن تستطيع تمكين الحدّ مجدّدًا باستخدام الفأرة: استخدم "
 "قائمة النّافذة بدل ذلك، لتنشيطها استخدم اختصار لوحة المفاتيح %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:112
+#: helpers/dialoghelper/dialoghelper.cpp:116
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1360,13 +1360,13 @@ msgstr ""
 "لقد اخترت إظهار نافذة بلا حدّ.\n"
 "في حالة عدم وجود الحدود لن تستطيع تمكين الحدّ مجدّدًا باستخدام الفأرة."
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:120
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "استعد الحدود"
 
-#: helpers/dialoghelper/dialoghelper.cpp:133
+#: helpers/dialoghelper/dialoghelper.cpp:139
 #, kde-format
 msgid "Do not show again"
 msgstr "لا تعرض مجدّدًا"
@@ -2621,7 +2621,7 @@ msgstr "فشل الاتصال بسياق PipeWire"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:151
+#: plugins/screencast/screencastmanager.cpp:152
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "نوع تركيب غير متاح"
@@ -2631,12 +2631,12 @@ msgstr "نوع تركيب غير متاح"
 msgid "Could not find window id %1"
 msgstr "لا يمكن العثور النافذة ذات المعرف %1"
 
-#: plugins/screencast/screencastmanager.cpp:118
+#: plugins/screencast/screencastmanager.cpp:119
 #, kde-format
 msgid "Could not find output"
 msgstr "تعذر العثور على الخرج"
 
-#: plugins/screencast/screencastmanager.cpp:156
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Invalid region"
 msgstr "منطقة غير صالحة"

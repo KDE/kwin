@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-01 20:15+0000\n"
+"POT-Creation-Date: 2026-10-07 02:54+0000\n"
 "PO-Revision-Date: 2026-09-06 17:25+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1296,13 +1296,13 @@ msgstr "El missatge a mostrar (pantalla completa, sense vores)"
 msgid "KWin helper utility"
 msgstr "Utilitat d'ajuda de KWin"
 
-#: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
+#: helpers/dialoghelper/dialoghelper.cpp:72
+#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Esta utilitat d'ajuda no està pensada per a cridar-se directament."
 
-#: helpers/dialoghelper/dialoghelper.cpp:79
+#: helpers/dialoghelper/dialoghelper.cpp:83
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1315,7 +1315,7 @@ msgstr ""
 "completa, no podreu tornar-lo a desactivar utilitzant el ratolí: utilitzeu "
 "la drecera de teclat «%1»."
 
-#: helpers/dialoghelper/dialoghelper.cpp:85
+#: helpers/dialoghelper/dialoghelper.cpp:89
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1329,7 +1329,7 @@ msgstr ""
 "ho utilitzeu el menú de la finestra, activat utilitzant la drecera de teclat "
 "«%1»."
 
-#: helpers/dialoghelper/dialoghelper.cpp:93
+#: helpers/dialoghelper/dialoghelper.cpp:97
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1340,13 +1340,13 @@ msgstr ""
 "Si la mateixa aplicació no té una opció per a apagar el mode pantalla "
 "completa, no podreu tornar-lo a desactivar utilitzant el ratolí."
 
-#: helpers/dialoghelper/dialoghelper.cpp:98
+#: helpers/dialoghelper/dialoghelper.cpp:102
 #, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "Desfés la pantalla completa"
 
-#: helpers/dialoghelper/dialoghelper.cpp:101
+#: helpers/dialoghelper/dialoghelper.cpp:105
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1357,7 +1357,7 @@ msgstr ""
 "Sense la vora no podreu tornar-la a activar utilitzant el ratolí: utilitzeu "
 "la drecera de teclat «%1»."
 
-#: helpers/dialoghelper/dialoghelper.cpp:106
+#: helpers/dialoghelper/dialoghelper.cpp:110
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1370,7 +1370,7 @@ msgstr ""
 "ho utilitzeu el menú de la finestra, activat utilitzant la drecera de teclat "
 "«%1»."
 
-#: helpers/dialoghelper/dialoghelper.cpp:112
+#: helpers/dialoghelper/dialoghelper.cpp:116
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1380,13 +1380,13 @@ msgstr ""
 "Heu triat mostrar una finestra sense la vora.\n"
 "Sense la vora no podreu tornar-la a activar utilitzant el ratolí."
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:120
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "Restaura la vora"
 
-#: helpers/dialoghelper/dialoghelper.cpp:133
+#: helpers/dialoghelper/dialoghelper.cpp:139
 #, kde-format
 msgid "Do not show again"
 msgstr "No ho tornes a mostrar"
@@ -2656,7 +2656,7 @@ msgstr "Ha fallat mentre es connectava amb el context de PipeWire"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:151
+#: plugins/screencast/screencastmanager.cpp:152
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Tipus de composició no acceptada"
@@ -2666,12 +2666,12 @@ msgstr "Tipus de composició no acceptada"
 msgid "Could not find window id %1"
 msgstr "No s'ha pogut trobar la finestra amb ID %1"
 
-#: plugins/screencast/screencastmanager.cpp:118
+#: plugins/screencast/screencastmanager.cpp:119
 #, kde-format
 msgid "Could not find output"
 msgstr "No s'ha pogut trobar l'eixida"
 
-#: plugins/screencast/screencastmanager.cpp:156
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Invalid region"
 msgstr "Regió no vàlida"
