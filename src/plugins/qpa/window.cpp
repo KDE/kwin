@@ -16,6 +16,7 @@
 #include "core/renderbackend.h"
 #include "core/renderdevice.h"
 #include "core/shmgraphicsbufferallocator.h"
+#include "input.h"
 #include "internalwindow.h"
 #include "swapchain.h"
 #include "window.h"
@@ -138,6 +139,16 @@ qreal Window::devicePixelRatio() const
 bool Window::isExposed() const
 {
     return m_exposed;
+}
+
+bool Window::startSystemMove()
+{
+    if (internalWindow()->isMovable()) {
+        return internalWindow()->performMousePressCommand(Options::MouseMove, input()->globalPointer());
+    } else {
+        qCDebug(KWIN_QPA) << this << "is immovable, ignoring the move request";
+    }
+    return false;
 }
 
 InternalWindow *Window::internalWindow() const

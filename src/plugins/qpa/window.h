@@ -39,6 +39,7 @@ public:
     void raise() override;
     void lower() override;
     bool isExposed() const override;
+    bool startSystemMove() override;
 
     InternalWindow *internalWindow() const;
     Swapchain *swapchain(const std::shared_ptr<EglContext> &context, const FormatModifierMap &formats);
