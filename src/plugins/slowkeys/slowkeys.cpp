@@ -5,12 +5,8 @@
 */
 
 #include "slowkeys.h"
-#include "core/inputdevice.h"
 #include "effect/effecthandler.h"
 #include "input_event.h"
-#include "keyboard_input.h"
-#include <chrono>
-#include <wayland-client-protocol.h>
 
 namespace KWin
 {
