@@ -91,7 +91,7 @@ bool SlowKeysFilter::keyboardKey(KeyboardKeyEvent *event)
         return m_firstEvent.remove(event->key);
     }
 
-    Q_UNREACHABLE();
+    Q_UNREACHABLE_RETURN(false);
 }
 
 }
