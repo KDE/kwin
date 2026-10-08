@@ -204,7 +204,7 @@ void DrmGpu::initDrmResources()
         // set, and DrmCrtc::updateProperties() reads colorPipelineSupported() while building its
         // (cached) post-blend pipeline. Setting it after initDrmResources() would leave it false
         // during that setup, so the legacy CRTC CTM would wrongly stay active on capable hardware.
-        m_colorPipelineSupported = s_colorPipelineEnv.value_or(true) && drmSetClientCap(m_fd, DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE, 1) == 0;
+        m_colorPipelineSupported = s_colorPipelineEnv.value_or(false) && drmSetClientCap(m_fd, DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE, 1) == 0;
 
         DrmUniquePtr<drmModePlaneRes> planeResources(drmModeGetPlaneResources(m_fd));
         if (planeResources && !noAMS) {
