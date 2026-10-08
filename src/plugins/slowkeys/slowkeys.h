@@ -25,6 +25,12 @@ public:
     bool keyboardKey(KeyboardKeyEvent *event) override;
 
 private:
+    struct SlowKey
+    {
+        std::chrono::steady_clock::time_point pressTimestamp;
+        uint32_t sentCount = 0;
+    };
+
     void loadConfig(const KConfigGroup &group);
 
     KConfigWatcher::Ptr m_configWatcher;
@@ -32,7 +38,7 @@ private:
     bool m_keysPressBeep = false;
     bool m_keysAcceptBeep = false;
     bool m_keysRejectBeep = false;
-    QHash<int, std::chrono::milliseconds> m_firstEvent;
+    QHash<int, SlowKey> m_keys;
 };
 
 }
