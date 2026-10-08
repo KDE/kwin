@@ -133,13 +133,14 @@ void ButtonsModel::up(int index)
 
 void ButtonsModel::add(DecorationButtonType type)
 {
-    beginInsertRows(QModelIndex(), m_buttons.count(), m_buttons.count());
-    m_buttons.append(type);
-    endInsertRows();
+    add(-1, int(type));
 }
 
 void ButtonsModel::add(int index, int type)
 {
+    if (index == -1) {
+        index = m_buttons.size();
+    }
     beginInsertRows(QModelIndex(), index, index);
     m_buttons.insert(index, KDecoration3::DecorationButtonType(type));
     endInsertRows();
@@ -147,6 +148,10 @@ void ButtonsModel::add(int index, int type)
 
 void ButtonsModel::move(int sourceIndex, int targetIndex)
 {
+    if (targetIndex == -1) {
+        targetIndex = m_buttons.size() - 1;
+    }
+
     if (sourceIndex == std::max(0, targetIndex)) {
         return;
     }

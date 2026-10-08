@@ -12,14 +12,15 @@ ListView {
     id: view
     property string key
     property bool dragActive: false
+    property var dropIndex: undefined
     property int iconSize: Kirigami.Units.iconSizes.small
     orientation: ListView.Horizontal
     interactive: false
-    spacing: Kirigami.Units.smallSpacing
+    spacing: 0
     implicitHeight: iconSize
     implicitWidth: count * (iconSize + Kirigami.Units.smallSpacing) - Math.min(1, count) * Kirigami.Units.smallSpacing
     delegate: Item {
-        width: view.iconSize
+        width: view.iconSize + Kirigami.Units.smallSpacing
         height: view.iconSize
         KDecoration.Button {
             id: button
@@ -31,6 +32,7 @@ ListView {
             width: view.iconSize
             height: view.iconSize
             anchors.fill: Drag.active ? undefined : parent
+            anchors.rightMargin: Kirigami.Units.smallSpacing
             Drag.keys: [ "decoButtonRemove", view.key ]
             Drag.active: dragArea.drag.active
             Drag.onActiveChanged: view.dragActive = Drag.active
@@ -39,9 +41,10 @@ ListView {
         }
         MouseArea {
             id: dragArea
-            cursorShape: drag.target.Drag.active ? Qt.ClosedHandCursor : Qt.OpenHandCursor
+            cursorShape: pressed || drag.target.Drag.active ? Qt.ClosedHandCursor : Qt.OpenHandCursor
             anchors.fill: parent
             drag.target: button
+            drag.threshold: 0
             onReleased: {
                 if (drag.target.Drag.target) {
                     drag.target.Drag.drop();
@@ -61,5 +64,15 @@ ListView {
     }
     displaced: Transition {
         NumberAnimation { properties: "x,y"; duration: Kirigami.Units.longDuration; easing.type: Easing.OutBounce }
+    }
+
+    // Drop indicator.
+    Rectangle {
+        x: (view.itemAtIndex(view.dropIndex)?.x ?? view.width) - width / 2
+        z: -1
+        width: 2
+        height: parent.height
+        color: Kirigami.Theme.highlightColor
+        visible: view.dropIndex !== undefined
     }
 }
