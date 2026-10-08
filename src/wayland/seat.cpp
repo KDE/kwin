@@ -461,6 +461,7 @@ void SeatInterfacePrivate::updatePointerFocus()
 
     const auto [effectiveFocusedSurface, localPosition] = focusedSurface->mapToInputSurface(q->focusedPointerSurfaceTransformation().map(globalPointer.pos));
     if (pointer->focusedSurface() != effectiveFocusedSurface) {
+        globalPointer.focus.effectiveSurface = effectiveFocusedSurface;
         pointer->sendEnter(effectiveFocusedSurface, localPosition, q->display()->nextSerial());
         if (keyboard) {
             keyboard->setModifierFocusSurface(effectiveFocusedSurface);
