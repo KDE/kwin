@@ -14,5 +14,4 @@ target_sources(SlowKeysPlugin PRIVATE
     main.cpp
     slowkeys.cpp
 )
-target_link_libraries(SlowKeysPlugin PRIVATE kwin KF6::WindowSystem)
-
+target_link_libraries(SlowKeysPlugin PRIVATE kwin)
