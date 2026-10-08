@@ -60,6 +60,7 @@ Rectangle {
                     iconSize: baseLayout.buttonIconSize
                     model: kcm.leftButtonsModel
                     key: "decoButtonLeft"
+                    dropIndex: titleBarDropArea.dropView === this ? titleBarDropArea.dropIndex : undefined
 
                     Rectangle {
                         visible: stateBindingButtonLeft.nonDefaultHighlightVisible
@@ -89,6 +90,7 @@ Rectangle {
                     iconSize: baseLayout.buttonIconSize
                     model: kcm.rightButtonsModel
                     key: "decoButtonRight"
+                    dropIndex: titleBarDropArea.dropView === this ? titleBarDropArea.dropIndex : undefined
 
                     Rectangle {
                         visible: stateBindingButtonRight.nonDefaultHighlightVisible
@@ -109,18 +111,23 @@ Rectangle {
             }
             DropArea {
                 id: titleBarDropArea
+
+                property ListView dropView: null
+                property var dropIndex: undefined
+
                 anchors {
                     fill: parent
                     margins: -baseLayout.titleBarSpacing
                 }
                 keys: [ "decoButtonAdd", "decoButtonRight", "decoButtonLeft" ]
-                onEntered: {
+                onEntered: (drag) => {
                     drag.accept();
                 }
-                onDropped: {
-                    var view = undefined;
-                    var left = drag.x - (leftButtonsView.x + leftButtonsView.width);
-                    var right = drag.x - rightButtonsView.x;
+
+                onPositionChanged: (drag) => {
+                    let view = null;
+                    const left = drag.x - (leftButtonsView.x + leftButtonsView.width);
+                    const right = drag.x - rightButtonsView.x;
                     if (Math.abs(left) <= Math.abs(right)) {
                         if (leftButtonsView.enabled) {
                             view = leftButtonsView;
@@ -131,42 +138,52 @@ Rectangle {
                         }
                     }
                     if (!view) {
+                        titleBarDropArea.dropIndex = undefined;
                         return;
                     }
-                    var point = mapToItem(view, drag.x, drag.y);
-                    var index = 0
-                    for(var childIndex = 0 ; childIndex < (view.count - 1) ; childIndex++) {
-                        var child = view.contentItem.children[childIndex]
-                        if (child.x > point.x) {
-                            break
-                        }
-                        index = childIndex + 1
+
+                    let point = mapToItem(view, drag.x, drag.y);
+                    // User wants to drop "inbetween", hence plus half the width.
+                    point.x += view.iconSize / 2;
+                    let index = view.indexAt(point.x, view.height / 2);
+                    if (index === -1 && point.x < 0) {
+                        index = 0;
                     }
+
+                    titleBarDropArea.dropView = view;
+                    titleBarDropArea.dropIndex = index;
+                }
+
+                onExited: titleBarDropArea.dropView = null
+
+                onDropped: (drop) => {
                     if (drop.keys.indexOf("decoButtonAdd") !== -1) {
-                        view.model.add(index, drag.source.type);
+                        dropView.model.add(dropIndex, drag.source.type);
                     } else if (drop.keys.indexOf("decoButtonLeft") !== -1) {
-                        if (view === leftButtonsView) {
+                        if (dropView === leftButtonsView) {
                             // move in same view
-                            if (index !== drag.source.itemIndex) {
-                                drag.source.buttonsModel.move(drag.source.itemIndex, index);
+                            if (dropIndex !== drag.source.itemIndex) {
+                                drag.source.buttonsModel.move(drag.source.itemIndex, dropIndex);
                             }
                         } else  {
                             // move to right view
-                            view.model.add(index, drag.source.type);
+                            dropView.model.add(dropIndex, drag.source.type);
                             drag.source.buttonsModel.remove(drag.source.itemIndex);
                         }
                     } else if (drop.keys.indexOf("decoButtonRight") !== -1) {
-                        if (view === rightButtonsView) {
+                        if (dropView === rightButtonsView) {
                             // move in same view
-                            if (index !== drag.source.itemIndex) {
-                                drag.source.buttonsModel.move(drag.source.itemIndex, index);
+                            if (dropIndex !== drag.source.itemIndex) {
+                                drag.source.buttonsModel.move(drag.source.itemIndex, dropIndex);
                             }
                         } else {
                             // move to left view
-                            view.model.add(index, drag.source.type);
+                            dropView.model.add(dropIndex, drag.source.type);
                             drag.source.buttonsModel.remove(drag.source.itemIndex);
                         }
                     }
+
+                    titleBarDropArea.dropView = null;
                 }
             }
         }
@@ -186,6 +203,7 @@ Rectangle {
                 width: availableButtonsGrid.cellWidth - Kirigami.Units.largeSpacing
                 height: availableButtonsGrid.cellHeight - Kirigami.Units.largeSpacing
                 opacity: baseLayout.draggingTitlebarButtons ? 0.15 : 1.0
+                z: availableButton.Drag.active ? 1 : 0
 
                 Rectangle {
                     Layout.alignment: Qt.AlignHCenter
@@ -211,7 +229,8 @@ Rectangle {
                         id: dragArea
                         anchors.fill: availableButton
                         drag.target: availableButton
-                        cursorShape: availableButton.Drag.active ? Qt.ClosedHandCursor : Qt.OpenHandCursor
+                        drag.threshold: 0
+                        cursorShape: dragArea.pressed || availableButton.Drag.active ? Qt.ClosedHandCursor : Qt.OpenHandCursor
                         onReleased: {
                             if (availableButton.Drag.target) {
                                 availableButton.Drag.drop();
