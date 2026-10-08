@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-14 00:45+0000\n"
-"PO-Revision-Date: 2026-10-02 20:50+0200\n"
+"PO-Revision-Date: 2026-10-07 11:45+0200\n"
 "Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
 "Language: sr@ijekavianlatin\n"
@@ -20,7 +20,7 @@ msgstr ""
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Associated-UI-Catalogs: kio5\n"
+"X-Associated-UI-Catalogs: kio6\n"
 "X-Environment: kde\n"
 
 #: ui/Focus.qml:22
@@ -126,27 +126,27 @@ msgstr "Sprječavanje &krađe fokusa:"
 #: ui/MovementAndPlacement.qml:58 ui/MovementAndPlacement.qml:87
 #, kde-format
 msgid "None"
-msgstr "nikakav"
+msgstr "nikakvo"
 
 #: ui/Focus.qml:151
 #, kde-format
 msgid "Low"
-msgstr "nizak"
+msgstr "nisko"
 
 #: ui/Focus.qml:152
 #, kde-format
 msgid "Medium"
-msgstr "srednji"
+msgstr "srednje"
 
 #: ui/Focus.qml:153
 #, kde-format
 msgid "High"
-msgstr "visok"
+msgstr "visoko"
 
 #: ui/Focus.qml:154
 #, kde-format
 msgid "Extreme"
-msgstr "ekstreman"
+msgstr "ekstremno"
 
 #: ui/Focus.qml:171
 #, kde-format
@@ -245,7 +245,7 @@ msgstr "piks."
 #: ui/MovementAndPlacement.qml:50
 #, kde-format
 msgid "&Window snap zone:"
-msgstr "Uklapanje uz &prozore:"
+msgstr "Uklapanje uz pr&ozore:"
 
 #: ui/MovementAndPlacement.qml:79
 #, kde-format
