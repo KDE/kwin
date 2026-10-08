@@ -6,11 +6,8 @@
 
 #pragma once
 
-#include "plugin.h"
-
 #include "input.h"
-#include "input_event.h"
-#include <chrono>
+#include "plugin.h"
 
 namespace KWin
 {
