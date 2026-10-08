@@ -287,6 +287,15 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
     if (colorRepresentation && colorRepresentation->maybeEmitProtocolErrors()) {
         return;
     }
+    if (pending->buffer) {
+        const bool sizeIllegal = (pending->buffer->size().width() % pending->bufferScale)
+            || (pending->buffer->size().height() % pending->bufferScale);
+        if (sizeIllegal) {
+            wl_resource_post_error(resource->handle, error_invalid_size,
+                                   "buffer size is not divisible by its scale");
+            return;
+        }
+    }
 
     if ((pending->committed & SurfaceState::Field::Buffer) && !pending->buffer) {
         pending->damage = RegionF();
