@@ -460,6 +460,12 @@ Q_SIGNALS:
     void lockedPointerRegionChanged();
 
     /**
+     * Emitted whenever pointer confinement changed without a commit,
+     * like when a pointer lock or confinement is destroyed
+     */
+    void pointerConfinementChangedWithoutCommit();
+
+    /**
      * Emitted whenever the SurfaceInterface starts/ends to inhibit idle.
      * @see inhibitsIdle
      */

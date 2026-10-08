@@ -684,6 +684,8 @@ void PointerInputRedirection::disconnectConfinedPointerRegionConnection()
 {
     disconnect(m_surfaceCommittedConnection);
     m_surfaceCommittedConnection = QMetaObject::Connection();
+    disconnect(m_surfaceConfinementConnection);
+    m_surfaceConfinementConnection = QMetaObject::Connection();
 }
 
 void PointerInputRedirection::disconnectPointerConstraintsConnection()
@@ -730,6 +732,8 @@ void PointerInputRedirection::updatePointerConstraints()
     if (!m_surfaceCommittedConnection) {
         m_surfaceCommittedConnection = connect(s, &SurfaceInterface::committed,
                                                this, &PointerInputRedirection::updatePointerConstraints);
+        m_surfaceConfinementConnection = connect(s, &SurfaceInterface::pointerConfinementChangedWithoutCommit,
+                                                 this, &PointerInputRedirection::updatePointerConstraints);
     }
 
     // NOTE the lifetime of the confined pointer interfaces

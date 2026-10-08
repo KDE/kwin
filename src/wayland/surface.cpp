@@ -696,22 +696,10 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
 
     const bool inputRegionChanged = oldInputRegion != inputRegion;
     if (inputRegionChanged || pointerLockRegionChanged) {
-        effectivePointerLock = current->pointerLockRegion.transform([this](const RegionF &region) {
-            if (region.isEmpty()) {
-                return inputRegion;
-            } else {
-                return region & inputRegion;
-            }
-        });
+        effectivePointerLock = mapConfinementRegion(current->pointerLockRegion);
     }
     if (inputRegionChanged || pointerConfinementRegionChanged) {
-        effectivePointerConfinement = current->pointerConfinementRegion.transform([this](const RegionF &region) {
-            if (region.isEmpty()) {
-                return inputRegion;
-            } else {
-                return region & inputRegion;
-            }
-        });
+        effectivePointerConfinement = mapConfinementRegion(current->pointerConfinementRegion);
     }
 
     if (opaqueRegionChanged) {
@@ -847,6 +835,17 @@ Region SurfaceInterfacePrivate::mapToBuffer(const RegionF &region) const
         result += current->bufferTransform.map(rect.scaled(xScale, yScale), sourceBox.size()).translated(bufferSourceBox.topLeft()).roundedOut();
     }
     return result;
+}
+
+std::optional<RegionF> SurfaceInterfacePrivate::mapConfinementRegion(const std::optional<RegionF> &region) const
+{
+    return region.transform([this](const RegionF &region) {
+        if (region.isEmpty()) {
+            return inputRegion;
+        } else {
+            return region & inputRegion;
+        }
+    });
 }
 
 Region SurfaceInterface::bufferDamage() const

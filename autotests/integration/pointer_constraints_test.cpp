@@ -385,8 +385,8 @@ void TestPointerConstraints::testUnlockAndWarp()
     window.commit();
     QVERIFY(lockedSpy.wait());
 
-    Test::pointerWarp()->warp_pointer(*window.m_surface, *pointer, wl_fixed_from_int(10), wl_fixed_from_int(10), enter.last()[0].value<uint32_t>());
     lockedPointer.reset();
+    Test::pointerWarp()->warp_pointer(*window.m_surface, *pointer, wl_fixed_from_int(10), wl_fixed_from_int(10), enter.last()[0].value<uint32_t>());
     window.commit();
 
     QVERIFY(motion.wait());

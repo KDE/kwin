@@ -11,6 +11,7 @@
 #include "pointerconstraints_v1_p.h"
 #include "region_p.h"
 #include "surface_p.h"
+#include "transaction.h"
 
 namespace KWin
 {
@@ -136,24 +137,10 @@ LockedPointerV1InterfacePrivate::LockedPointerV1InterfacePrivate(LockedPointerV1
     , lifeTime(lifeTime)
     , m_surface(surface)
 {
-    auto priv = SurfaceInterfacePrivate::get(surface);
-    priv->pending->pointerLockHint.reset();
-    priv->pending->pointerLockRegion = region;
-    priv->pending->confinementLifetime = lifeTime;
-    priv->pending->committed |= SurfaceState::Field::PointerLockHint | SurfaceState::Field::PointerLockRegion;
-    priv->lockedPointer = q;
 }
 
 LockedPointerV1InterfacePrivate::~LockedPointerV1InterfacePrivate()
 {
-    if (m_surface) {
-        // NOTE the position hint is intentionally not reset,
-        // since it will be used when the next commit is applied.
-        auto priv = SurfaceInterfacePrivate::get(m_surface);
-        priv->pending->pointerLockRegion.reset();
-        priv->pending->committed |= SurfaceState::Field::PointerLockRegion;
-        priv->lockedPointer = nullptr;
-    }
 }
 
 void LockedPointerV1InterfacePrivate::zwp_locked_pointer_v1_destroy_resource(Resource *resource)
@@ -192,10 +179,48 @@ LockedPointerV1Interface::LockedPointerV1Interface(SurfaceInterface *surface,
                                                    ::wl_resource *resource)
     : d(new LockedPointerV1InterfacePrivate(this, surface, lifeTime, region, resource))
 {
+    auto priv = SurfaceInterfacePrivate::get(surface);
+    priv->lockedPointer = this;
+
+    const auto lock = [&](SurfaceState *state) {
+        state->pointerLockHint.reset();
+        state->pointerLockRegion = region;
+        state->confinementLifetime = lifeTime;
+        state->committed |= SurfaceState::Field::PointerLockHint | SurfaceState::Field::PointerLockRegion;
+    };
+    if (priv->lastTransaction) {
+        priv->lastTransaction->amend(surface, lock);
+    } else {
+        lock(priv->current.get());
+        priv->effectivePointerLock = priv->mapConfinementRegion(region);
+        Q_EMIT surface->pointerConfinementChangedWithoutCommit();
+        Q_EMIT surface->lockedPointerRegionChanged();
+    }
 }
 
 LockedPointerV1Interface::~LockedPointerV1Interface()
 {
+    if (d->m_surface) {
+        // NOTE the position hint is intentionally not reset,
+        // since it will be used when the next commit is applied.
+        auto priv = SurfaceInterfacePrivate::get(d->m_surface);
+        priv->lockedPointer = nullptr;
+
+        // if there's pending commits, we need to apply the unlock
+        // with those changes
+        const auto unlock = [](SurfaceState *state) {
+            state->pointerLockRegion.reset();
+            state->committed |= SurfaceState::Field::PointerLockRegion;
+        };
+        if (priv->lastTransaction) {
+            priv->lastTransaction->amend(d->m_surface, unlock);
+        } else {
+            unlock(priv->current.get());
+            priv->effectivePointerLock.reset();
+            Q_EMIT d->m_surface->pointerConfinementChangedWithoutCommit();
+            Q_EMIT d->m_surface->lockedPointerRegionChanged();
+        }
+    }
 }
 
 PointerConstraintLifetime LockedPointerV1Interface::lifeTime() const
@@ -243,21 +268,10 @@ ConfinedPointerV1InterfacePrivate::ConfinedPointerV1InterfacePrivate(ConfinedPoi
     , lifeTime(lifeTime)
     , m_surface(surface)
 {
-    auto priv = SurfaceInterfacePrivate::get(surface);
-    priv->pending->pointerConfinementRegion = region;
-    priv->pending->confinementLifetime = lifeTime;
-    priv->pending->committed |= SurfaceState::Field::PointerConfinementRegion;
-    priv->confinedPointer = q;
 }
 
 ConfinedPointerV1InterfacePrivate::~ConfinedPointerV1InterfacePrivate()
 {
-    if (m_surface) {
-        auto priv = SurfaceInterfacePrivate::get(m_surface);
-        priv->pending->pointerConfinementRegion.reset();
-        priv->pending->committed |= SurfaceState::Field::PointerConfinementRegion;
-        priv->confinedPointer = nullptr;
-    }
 }
 
 void ConfinedPointerV1InterfacePrivate::zwp_confined_pointer_v1_destroy_resource(Resource *resource)
@@ -286,10 +300,45 @@ ConfinedPointerV1Interface::ConfinedPointerV1Interface(SurfaceInterface *surface
                                                        ::wl_resource *resource)
     : d(new ConfinedPointerV1InterfacePrivate(this, surface, lifeTime, region, resource))
 {
+    auto priv = SurfaceInterfacePrivate::get(surface);
+    priv->confinedPointer = this;
+
+    const auto lock = [&](SurfaceState *state) {
+        state->pointerConfinementRegion = region;
+        state->confinementLifetime = lifeTime;
+        state->committed |= SurfaceState::Field::PointerConfinementRegion;
+    };
+    if (priv->lastTransaction) {
+        priv->lastTransaction->amend(surface, lock);
+    } else {
+        lock(priv->current.get());
+        priv->effectivePointerConfinement = priv->mapConfinementRegion(region);
+        Q_EMIT surface->pointerConfinementChangedWithoutCommit();
+        Q_EMIT surface->confinedPointerRegionChanged();
+    }
 }
 
 ConfinedPointerV1Interface::~ConfinedPointerV1Interface()
 {
+    if (d->m_surface) {
+        auto priv = SurfaceInterfacePrivate::get(d->m_surface);
+        priv->confinedPointer = nullptr;
+
+        // if there's pending commits, we need to apply the unlock
+        // with those changes
+        const auto amend = [](SurfaceState *state) {
+            state->pointerConfinementRegion.reset();
+            state->committed |= SurfaceState::Field::PointerConfinementRegion;
+        };
+        if (priv->lastTransaction) {
+            priv->lastTransaction->amend(d->m_surface, amend);
+        } else {
+            amend(priv->current.get());
+            priv->effectivePointerConfinement.reset();
+            Q_EMIT d->m_surface->pointerConfinementChangedWithoutCommit();
+            Q_EMIT d->m_surface->confinedPointerRegionChanged();
+        }
+    }
 }
 
 PointerConstraintLifetime ConfinedPointerV1Interface::lifeTime() const
