@@ -9,6 +9,7 @@
 #include <QDBusMessage>
 #include <QDir>
 #include <QWindow>
+#include <qqml.h>
 
 #include <KActionCollection>
 #include <KGlobalAccel>
