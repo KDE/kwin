@@ -63,17 +63,15 @@ bool Primary::x11ClientsCanAccessSelection() const
 
 void Primary::onSelectionChanged()
 {
-    if (!x11ClientsCanAccessSelection()) {
-        return;
-    }
-
     auto currentSelection = waylandServer()->seat()->primarySelection();
     if (!currentSelection || ownsDataSource(currentSelection)) {
         setWlSource(nullptr);
         return;
     }
 
-    setWlSource(currentSelection);
+    if (x11ClientsCanAccessSelection()) {
+        setWlSource(currentSelection);
+    }
 }
 
 void Primary::onActiveWindowChanged()
