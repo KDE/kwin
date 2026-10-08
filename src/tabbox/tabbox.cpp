@@ -723,7 +723,7 @@ static bool areModKeysDepressed(const QList<QKeySequence> &shortcuts)
 
 void TabBox::navigatingThroughWindows(bool forward, const QList<QKeySequence> &shortcut, TabBoxMode mode)
 {
-    if (!m_ready || isGrabbed()) {
+    if (!m_ready || isGrabbed() || effects->hasActiveFullScreenEffect()) {
         return;
     }
     if (!options->focusPolicyIsReasonable()) {
