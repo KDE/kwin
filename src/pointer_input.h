@@ -192,6 +192,7 @@ private:
     QMetaObject::Connection m_focusGeometryConnection;
     QMetaObject::Connection m_constraintsActivatedConnection;
     QMetaObject::Connection m_surfaceCommittedConnection;
+    QMetaObject::Connection m_surfaceConfinementConnection;
     QMetaObject::Connection m_decorationGeometryConnection;
     QMetaObject::Connection m_decorationDestroyedConnection;
     QMetaObject::Connection m_decorationClosedConnection;

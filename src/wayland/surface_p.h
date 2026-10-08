@@ -165,6 +165,7 @@ public:
     bool contains(const QPointF &position) const;
     bool inputContains(const QPointF &position) const;
     Region mapToBuffer(const RegionF &region) const;
+    std::optional<RegionF> mapConfinementRegion(const std::optional<RegionF> &region) const;
 
     CompositorInterface *compositor;
     SurfaceInterface *q;
