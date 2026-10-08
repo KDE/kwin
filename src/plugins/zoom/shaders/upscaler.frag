@@ -107,6 +107,13 @@ void main()
     vec3 D2 = sampleLinear(pixelCoord + pixelSize * vec2(0, 1));
     vec3 D3 = sampleLinear(pixelCoord + pixelSize * vec2(1, 1));
 
+    if (isColorSimilar(C2, B2) && isColorSimilar(C2, D2) &&
+        isColorSimilar(C2, C1) && isColorSimilar(C2, C3) &&
+        isColorSimilar(B1, D3) && isColorSimilar(B3, D1)) {
+        fragColor = nitsToDestinationEncoding(vec4(C2, 1.0));
+        return;
+    }
+
     // Blend instructions for each corner of the scaled pixel
     //   TT
     //  +--+
