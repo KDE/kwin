@@ -40,20 +40,24 @@ void SlowKeysFilter::loadConfig(const KConfigGroup &group)
         m_keysAcceptBeep = group.readEntry<bool>("SlowKeysAcceptBeep", false);
         m_keysRejectBeep = group.readEntry<bool>("SlowKeysRejectBeep", false);
     } else {
-        m_firstEvent.clear();
+        m_keys.clear();
     }
 }
 
 bool SlowKeysFilter::keyboardKey(KeyboardKeyEvent *event)
 {
-    std::chrono::milliseconds now = duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+    const auto now = std::chrono::steady_clock::now();
 
     switch (event->state) {
     case KeyboardKeyState::Pressed:
     case KeyboardKeyState::Repeated:
-        if (auto it = m_firstEvent.find(event->key); it == m_firstEvent.end()) {
+        if (const auto it = m_keys.find(event->key); it == m_keys.end()) {
             // First time we're seeing this key, record the time when the key was pressed
-            m_firstEvent[event->key] = now;
+            m_keys[event->key] = SlowKey{
+                .pressTimestamp = now,
+                .sentCount = 0,
+            };
+
             if (m_keysPressBeep) {
                 if (auto effect = effects->provides(Effect::SystemBell)) {
                     effect->perform(Effect::SystemBell, {});
@@ -62,9 +66,7 @@ bool SlowKeysFilter::keyboardKey(KeyboardKeyEvent *event)
 
             return true;
         } else {
-            auto first = *it;
-
-            if (now - first < m_delay) {
+            if (now - it->pressTimestamp < m_delay) {
                 // The event occurred sooner than the user-set delay, we will reject the event
                 if (m_keysRejectBeep) {
                     if (auto effect = effects->provides(Effect::SystemBell)) {
@@ -79,16 +81,26 @@ bool SlowKeysFilter::keyboardKey(KeyboardKeyEvent *event)
                         effect->perform(Effect::SystemBell, {});
                     }
                 }
-                m_firstEvent.remove(event->key);
+
                 // Since we've rejected the event so far, we also need to update the "pressed" state.
-                event->state = KeyboardKeyState::Pressed;
+                event->state = it->sentCount == 0 ? KeyboardKeyState::Pressed : KeyboardKeyState::Repeated;
+
+                it->pressTimestamp = now;
+                it->sentCount++;
+
                 return false;
             }
         }
         Q_UNREACHABLE();
+
     case KeyboardKeyState::Released:
-        // This will make sure that we do not send a release event for a key press that was filtered out (i.e. not marked as pressed)
-        return m_firstEvent.remove(event->key);
+        if (const auto it = m_keys.find(event->key); it != m_keys.end()) {
+            const bool seenAtLeastOnce = it->sentCount != 0;
+            m_keys.erase(it);
+            return !seenAtLeastOnce;
+        }
+
+        return false;
     }
 
     Q_UNREACHABLE_RETURN(false);
