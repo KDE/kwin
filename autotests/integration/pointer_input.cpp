@@ -109,6 +109,7 @@ private Q_SLOTS:
     void testTabletCursorSyncRelative();
     void testImplicitGrab();
     void testImplicitGrabOnSubsurface();
+    void testSubsurfaceInput();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -2136,6 +2137,48 @@ void PointerInputTest::testImplicitGrabOnSubsurface()
     QVERIFY(leaveSpy.wait());
     QCOMPARE(enterSpy.count(), 3);
     QCOMPARE(pointer->enteredSurface(), window.m_surface->operator wl_surface *());
+}
+
+void PointerInputTest::testSubsurfaceInput()
+{
+    auto pointer = Test::kwinSeat()->getPointer();
+    QSignalSpy enterSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy motionSpy(pointer.get(), &Test::WlPointer::motion);
+    QSignalSpy leaveSpy(pointer.get(), &Test::WlPointer::left);
+
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show(QSize(100, 100)));
+    window.m_window->move(QPointF(0, 0));
+
+    uint32_t time = 0;
+    Test::pointerMotion(QPointF(25, 25), time++);
+    QVERIFY(enterSpy.count() || enterSpy.wait());
+
+    auto surface = Test::createSurface();
+    auto subsurface = Test::createSubSurface(surface.get(), window.m_surface.get());
+    subsurface->setPosition(QPoint(50, 50));
+    Test::render(surface.get(), QSize(50, 50), Qt::blue);
+    QVERIFY(window.presentWait());
+
+    Test::pointerMotion(QPointF(75, 75), time++);
+    QVERIFY(leaveSpy.wait());
+    QCOMPARE(enterSpy.count(), 2);
+    QCOMPARE(pointer->enteredSurface(), surface->operator wl_surface *());
+    QCOMPARE(enterSpy.last().back().value<QPointF>(), QPointF(25, 25));
+
+    Test::pointerMotion(QPointF(90, 80), time++);
+    QVERIFY(motionSpy.wait());
+    QCOMPARE(motionSpy.last()[0].value<QPointF>(), QPointF(40, 30));
+
+    Test::pointerMotion(QPointF(30, 40), time++);
+    QVERIFY(leaveSpy.wait());
+    QCOMPARE(enterSpy.count(), 3);
+    QCOMPARE(pointer->enteredSurface(), *window.m_surface);
+    QCOMPARE(enterSpy.last().back().value<QPointF>(), QPointF(30, 40));
+
+    Test::pointerMotion(QPointF(30, 30), time++);
+    QVERIFY(motionSpy.wait());
+    QCOMPARE(motionSpy.last()[0].value<QPointF>(), QPointF(30, 30));
 }
 
 }
