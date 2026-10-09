@@ -93,12 +93,17 @@ EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext conte
     , m_haveSyncFences(hasVersion(Version(3, 0)))
     , m_supportsIndexedQuads(checkIndexedQuads(this))
     , m_supportsPackInvert(hasOpenglExtension(QByteArrayLiteral("GL_MESA_pack_invert")))
+    , m_supportsWindowRectangles(hasOpenglExtension(QByteArrayLiteral("GL_EXT_window_rectangles")))
     , m_glPlatform(std::make_unique<GLPlatform>(m_versionString, m_glslVersionString, m_renderer, m_vendor))
     , m_display(display)
     , m_handle(context)
     , m_config(config)
 {
     glResolveFunctions(&getProcAddress);
+    if (m_supportsWindowRectangles) {
+        glGetIntegerv(GL_MAX_WINDOW_RECTANGLES_EXT, &m_maxWindowRectangleCount);
+        m_windowRectangles.resizeForOverwrite(4 * m_maxWindowRectangleCount);
+    }
     initDebugOutput();
     // we can only create OpenGL resources after the context is set as the current one
     s_currentContext = this;
@@ -385,6 +390,16 @@ bool EglContext::supportsPackInvert() const
     return m_supportsPackInvert;
 }
 
+bool EglContext::supportsWindowRectangles() const
+{
+    return m_supportsWindowRectangles;
+}
+
+int EglContext::maxWindowRectangleCount() const
+{
+    return m_maxWindowRectangleCount;
+}
+
 ShaderManager *EglContext::shaderManager() const
 {
     return m_shaderManager.get();
@@ -626,6 +641,43 @@ bool EglContext::isCompatibleWith(EglContext *other) const
         || other->m_shareContext.get() == this
         || other == m_shareContext.get()
         || (m_shareContext && other->m_shareContext == this->m_shareContext);
+}
+
+void EglContext::renderRegion(const Region &framebufferRegion, const std::function<void()> &drawCall)
+{
+    const Rect fullSize = Rect(QPoint(), currentFramebuffer()->size());
+    const Region clipped = framebufferRegion & fullSize;
+    if (clipped.isEmpty()) {
+        return;
+    } else if (clipped == fullSize) {
+        drawCall();
+    } else if (m_supportsWindowRectangles) {
+        // Clip using window rectangles
+        const auto rects = clipped.rects();
+
+        int rect = 0;
+        while (rect < rects.size()) {
+            int chunkIndex = 0;
+            for (; chunkIndex < m_maxWindowRectangleCount && rect < rects.size(); chunkIndex++, rect++) {
+                m_windowRectangles[chunkIndex * 4 + 0] = rects[rect].left();
+                m_windowRectangles[chunkIndex * 4 + 1] = fullSize.height() - rects[rect].bottom();
+                m_windowRectangles[chunkIndex * 4 + 2] = rects[rect].width();
+                m_windowRectangles[chunkIndex * 4 + 3] = rects[rect].height();
+            }
+            glWindowRectanglesEXT(GL_INCLUSIVE_EXT, chunkIndex, m_windowRectangles.data());
+            drawCall();
+        }
+
+        glWindowRectanglesEXT(GL_EXCLUSIVE_EXT, 0, m_windowRectangles.data());
+    } else {
+        // Clip using scissoring
+        glEnable(GL_SCISSOR_TEST);
+        for (const Rect &r : clipped.rects()) {
+            glScissor(r.left(), fullSize.height() - r.bottom(), r.width(), r.height());
+            drawCall();
+        }
+        glDisable(GL_SCISSOR_TEST);
+    }
 }
 
 }
