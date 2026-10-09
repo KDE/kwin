@@ -126,58 +126,16 @@ static RenderGeometry clipQuads(ItemRenderer *renderer, const Item *item, const 
     return geometry;
 }
 
-bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
+bool ItemRendererOpenGL::maybeCreateSingleRenderNode(Item *item, RenderContext *context, bool hole)
 {
-    bool hole = false;
-    if (filter && filter(item)) {
-        if (!holeFilter || !holeFilter(item)) {
-            return true;
-        }
-        hole = true;
+    const Rect deviceBounds = RectF(context->transformStack.top().mapRect(item->rect().scaled(context->renderTargetScale)))
+                                  .translated(-context->viewportOrigin)
+                                  .rounded();
+    if (deviceBounds.isEmpty()) {
+        return true;
     }
-    const QList<Item *> sortedChildItems = item->sortedChildItems();
-
-    const auto logicalPosition = QVector2D(item->position().x(), item->position().y());
-    const auto scale = context->renderTargetScale;
-
-    QMatrix4x4 matrix;
-    matrix.translate(roundVector(logicalPosition * scale).toVector3D());
-    if (context->transformStack.size() == 1) {
-        matrix *= context->rootTransform;
-    }
-    if (!item->transform().isIdentity()) {
-        matrix.scale(scale, scale);
-        matrix *= item->transform();
-        matrix.scale(1 / scale, 1 / scale);
-    }
-    context->transformStack.push(context->transformStack.top() * matrix);
-
-    context->opacityStack.push(context->opacityStack.top() * item->opacity());
-
-    for (Item *childItem : sortedChildItems) {
-        if (childItem->z() >= 0) {
-            break;
-        }
-        if (childItem->explicitVisible()) {
-            if (!createRenderNode(childItem, context, filter, holeFilter)) {
-                return false;
-            }
-        }
-    }
-
-    if (const BorderRadius radius = item->borderRadius(); !radius.isNull()) {
-        const RectF nativeRect = item->rect().scaled(context->renderTargetScale).rounded();
-        const BorderRadius nativeRadius = radius.scaled(context->renderTargetScale).rounded();
-        context->cornerStack.push({
-            .box = nativeRect,
-            .radius = nativeRadius,
-        });
-    } else if (!context->cornerStack.isEmpty()) {
-        const auto &top = std::as_const(context->cornerStack).top();
-        context->cornerStack.push({
-            .box = matrix.inverted().mapRect(top.box),
-            .radius = top.radius,
-        });
+    if (!context->deviceClip.intersects(deviceBounds)) {
+        return true;
     }
 
     // For multi-gpu copies, preprocess may change the active EGL context,
@@ -309,6 +267,66 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                 .paintHole = hole,
             });
         }
+    }
+    return true;
+}
+
+bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
+{
+    bool hole = false;
+    if (filter && filter(item)) {
+        if (!holeFilter || !holeFilter(item)) {
+            return true;
+        }
+        hole = true;
+    }
+    const QList<Item *> sortedChildItems = item->sortedChildItems();
+
+    const auto logicalPosition = QVector2D(item->position().x(), item->position().y());
+    const auto scale = context->renderTargetScale;
+
+    QMatrix4x4 matrix;
+    matrix.translate(roundVector(logicalPosition * scale).toVector3D());
+    if (context->transformStack.size() == 1) {
+        matrix *= context->rootTransform;
+    }
+    if (!item->transform().isIdentity()) {
+        matrix.scale(scale, scale);
+        matrix *= item->transform();
+        matrix.scale(1 / scale, 1 / scale);
+    }
+    context->transformStack.push(context->transformStack.top() * matrix);
+
+    context->opacityStack.push(context->opacityStack.top() * item->opacity());
+
+    for (Item *childItem : sortedChildItems) {
+        if (childItem->z() >= 0) {
+            break;
+        }
+        if (childItem->explicitVisible()) {
+            if (!createRenderNode(childItem, context, filter, holeFilter)) {
+                return false;
+            }
+        }
+    }
+
+    if (const BorderRadius radius = item->borderRadius(); !radius.isNull()) {
+        const RectF nativeRect = item->rect().scaled(context->renderTargetScale).rounded();
+        const BorderRadius nativeRadius = radius.scaled(context->renderTargetScale).rounded();
+        context->cornerStack.push({
+            .box = nativeRect,
+            .radius = nativeRadius,
+        });
+    } else if (!context->cornerStack.isEmpty()) {
+        const auto &top = std::as_const(context->cornerStack).top();
+        context->cornerStack.push({
+            .box = matrix.inverted().mapRect(top.box),
+            .radius = top.radius,
+        });
+    }
+
+    if (!maybeCreateSingleRenderNode(item, context, hole)) {
+        return false;
     }
 
     for (Item *childItem : sortedChildItems) {
