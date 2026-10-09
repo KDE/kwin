@@ -353,5 +353,6 @@
             <default>false</default>
         </entry>
         <entry name="XwaylandEisNoPromptApps" type="StringList" />
+        <entry name="XwaylandEisDenyApps" type="StringList" />
     </group>
 </kcfg>

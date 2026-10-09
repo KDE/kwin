@@ -61,9 +61,9 @@ int main(int argc, char **argv)
     icon->setPixmap(QIcon::fromTheme(QStringLiteral("krfb")).pixmap(QApplication::style()->pixelMetric(QStyle::PM_MessageBoxIconSize)));
     mainLayout.addWidget(icon);
     mainLayout.addWidget(new QLabel(text));
-    auto rememberCheckBox = new QCheckBox(i18nc("@option:check, %1 is the application name. This option always allow apps claiming to be a given application name to control input devices", "Always allow apps claiming to be %1", clientName));
+    auto rememberCheckBox = new QCheckBox(i18nc("@option:check, %1 is the application name. This option remembers the selection for apps claiming to be a given application name", "Remember for apps claiming to be %1", clientName));
     rememberLayout.addWidget(rememberCheckBox);
-    auto helpButton = new KContextualHelpButton(xi18nc("@info:tooltip", "Identities of legacy X11 apps cannot be verified. Any app claiming to be <application>%1</application> will be able to control input devices. You can revoke this permission later on <application>System Settings</application>’ “Legacy X11 App Support” page.", clientName), nullptr, nullptr);
+    auto helpButton = new KContextualHelpButton(xi18nc("@info:tooltip", "Identities of legacy X11 apps cannot be verified. If permitted any app claiming to be <application>%1</application> will be able to control input devices. You can change this setting later on <application>System Settings</application>’ “Legacy X11 App Support” page.", clientName), nullptr, nullptr);
     rememberLayout.addWidget(helpButton);
     auto buttons = new QDialogButtonBox(QDialogButtonBox::StandardButton::Ok | QDialogButtonBox::StandardButton::Cancel);
     buttons->button(QDialogButtonBox::StandardButton::Ok)->setText(i18nc("@action:button Allow control of input devices", "Allow"));
@@ -80,6 +80,11 @@ int main(int argc, char **argv)
             }
             QCoreApplication::quit();
         } else {
+            if (rememberCheckBox->isChecked()) {
+                XwaylandSettings settings;
+                settings.setXwaylandEisDenyApps(settings.xwaylandEisDenyApps() += clientName);
+                settings.save();
+            }
             QCoreApplication::exit(1);
         }
     });

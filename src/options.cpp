@@ -58,6 +58,7 @@ Options::Options(QObject *parent)
     , m_xwaylandEavesdropsMouse(Options::defaultXwaylandEavesdropsMouse())
     , m_xwaylandEisNoPrompt(Options::defaultXwaylandEisNoPrompt())
     , m_xwaylandEisNoPromptApps(Options::defaultXwaylandEisNotPromptApps())
+    , m_xwaylandEisDenyApps(Options::defaultXwaylandEisDenyApps())
     , m_compositingMode(Options::defaultCompositingMode())
     , OpTitlebarDblClick(Options::defaultOperationTitlebarDblClick())
     , CmdActiveTitlebar1(Options::defaultCommandActiveTitlebar1())
@@ -182,6 +183,15 @@ void Options::setXWaylandEisNoPromptApps(const QStringList &apps)
     }
     m_xwaylandEisNoPromptApps = apps;
     Q_EMIT xwaylandEisNoPromptAppsChanged();
+}
+
+void Options::setXWaylandEisDenyApps(const QStringList &apps)
+{
+    if (m_xwaylandEisDenyApps == apps) {
+        return;
+    }
+    m_xwaylandEisDenyApps = apps;
+    Q_EMIT xwaylandEisNoPromptDenyChanged();
 }
 
 void Options::setClickRaise(bool clickRaise)
@@ -742,6 +752,7 @@ void Options::syncFromKcfgc()
     setXwaylandEavesdropsMouse(m_settings->xwaylandEavesdropsMouse());
     setXWaylandEisNoPrompt(m_settings->xwaylandEisNoPrompt());
     setXWaylandEisNoPromptApps(m_settings->xwaylandEisNoPromptApps());
+    setXWaylandEisDenyApps(m_settings->xwaylandEisDenyApps());
     setPlacement(m_settings->placement());
     setAutoRaise(m_settings->autoRaise());
     setAutoRaiseInterval(m_settings->autoRaiseInterval());

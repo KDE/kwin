@@ -47,6 +47,10 @@ void XWaylandEisContext::connectionRequested(eis_client *client)
         connectClient(client);
         return;
     }
+    if (options->xwaylandEisDenyApps().contains(clientName)) {
+        eis_client_disconnect(client);
+        return;
+    }
 
     QProcessEnvironment env = kwinApp()->processStartupEnvironment();
     env.remove(QStringLiteral("QT_WAYLAND_RECONNECT"));

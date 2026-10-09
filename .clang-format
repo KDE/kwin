@@ -86,7 +86,7 @@ AllowAllArgumentsOnNextLine: false
 LambdaBodyIndentation: OuterScope
 
 # Append trailing commas to enums
-EnumTrailingComma: Insert
+# EnumTrailingComma: Insert
 
 # We always add braces to if, while, and for statements
 InsertBraces: true
@@ -101,7 +101,7 @@ RemoveSemicolon: true
 WhitespaceSensitiveMacros: [SIGNAL, SLOT]
 
 # Add empty lines at the beginning and the end of namespace body
-WrapNamespaceBodyWithEmptyLines: Always
+# WrapNamespaceBodyWithEmptyLines: Always
 
 # Avoid stray empty lines
 KeepEmptyLines:
