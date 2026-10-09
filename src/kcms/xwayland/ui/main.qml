@@ -156,6 +156,17 @@ KCM.SimpleKCM {
                             text: i18nc("@action:button", "See Allowed Applications…")
                             enabled: allowedApps.checked
                             onClicked: {
+                                appsPage.setting = "xwaylandEisNoPromptApps"
+                                appsPage.title = Qt.binding(() => i18nc("@title:window title of the page opened by the 'See allowed applications' button", "Applications allowed to control the pointer and keyboard") )
+                                kcm.push(appsPage)
+                            }
+                        }
+                        QQC2.Button {
+                            text: i18nc("@action:button", "See Denied Applications…")
+                            enabled: allowedApps.checked
+                            onClicked: {
+                                appsPage.setting = "xwaylandEisDenyApps"
+                                appsPage.title = Qt.binding(() => i18nc("@title:window title of the page opened by the 'See denied applications' button", "Applications never allowed to control the pointer and keyboard"))
                                 kcm.push(appsPage)
                             }
                         }
@@ -194,9 +205,10 @@ KCM.SimpleKCM {
         KCM.ScrollViewKCM {
             id: appsPage
             visible: false
-            title: i18nc("@title:window title of the page opened by the 'See allowed applications' button", "Applications allowed to control the pointer and keyboard")
+            property string setting
             view: ListView {
-                model: kcm.settings.xwaylandEisNoPromptApps
+                id: view
+                model: kcm.settings[appsPage.setting]
                 delegate: QQC2.ItemDelegate {
                     id: delegate
                     width: ListView.view.width
@@ -218,7 +230,7 @@ KCM.SimpleKCM {
                             QQC2.ToolTip.text: text
                             QQC2.ToolTip.visible: hovered
                             QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
-                            onClicked: kcm.settings.xwaylandEisNoPromptApps = kcm.settings.xwaylandEisNoPromptApps.filter(app => app != modelData)
+                            onClicked: kcm.settings[appsPage.setting] = kcm.settings[appsPage.setting].filter(app => app != modelData)
                         }
                     }
                 }
