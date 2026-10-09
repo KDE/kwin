@@ -206,7 +206,7 @@ public:
     /**
      * Draws count vertices beginning with first.
      */
-    void draw(const Region &region, GLenum primitiveMode, int first, int count, bool hardwareClipping = false);
+    void draw(const Region &region, GLenum primitiveMode, int first, int count);
 
     /**
      * Renders the vertex data in given @a primitiveMode.
@@ -215,11 +215,7 @@ public:
      * compatible.
      */
     void render(GLenum primitiveMode);
-    /**
-     * Same as above restricting painting to @a region if @a hardwareClipping is true.
-     * It's within the caller's responsibility to enable GL_SCISSOR_TEST.
-     */
-    void render(const Region &region, GLenum primitiveMode, bool hardwareClipping = false);
+    void render(const Region &region, GLenum primitiveMode);
 
     /**
      * Resets the instance to default values.
