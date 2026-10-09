@@ -18,6 +18,10 @@ QQC2.ItemDelegate {
 
     hoverEnabled: true
 
+    // use alternating background colors to visually connect list items'
+    // left and right side content elements
+    Kirigami.Theme.useAlternateBackgroundColor: true
+
     onClicked: {
         if (ListView.isCurrentItem) {
             // Collapse list item
@@ -102,7 +106,7 @@ QQC2.ItemDelegate {
             }
         }
 
-        QQC2.ToolButton  {
+        QQC2.Button  {
             id: configureButton
             visible: model.ConfigurableRole
             enabled: model.StatusRole != Qt.Unchecked

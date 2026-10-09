@@ -147,6 +147,10 @@ KCM.ScrollViewKCM {
             width: ruleBookView.width
             down: false  // Disable press effect
 
+            // use alternating background colors to visually connect list items'
+            // left and right side content elements
+            Kirigami.Theme.useAlternateBackgroundColor: true
+
             contentItem: RowLayout {
                 Kirigami.ListItemDragHandle {
                     visible: !exportInfo.visible
@@ -212,7 +216,7 @@ KCM.ScrollViewKCM {
 
                 DelegateButton {
                     text: i18n("Delete")
-                    icon.name: "entry-delete"
+                    icon.name: "edit-delete-remove"
                     onClicked: kcm.removeRule(index);
                 }
 
@@ -234,7 +238,7 @@ KCM.ScrollViewKCM {
         }
     }
 
-    component DelegateButton: QQC2.ToolButton {
+    component DelegateButton: QQC2.Button {
         visible: !exportInfo.visible
         display: QQC2.AbstractButton.IconOnly
         QQC2.ToolTip.text: text
