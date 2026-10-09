@@ -72,6 +72,8 @@ public:
     bool haveBufferStorage() const;
     bool haveSyncFences() const;
     bool supportsPackInvert() const;
+    bool supportsWindowRectangles() const;
+    int maxWindowRectangleCount() const;
     ShaderManager *shaderManager() const;
     GLVertexBuffer *streamingVbo() const;
     IndexBuffer *indexBuffer() const;
@@ -110,6 +112,12 @@ public:
      */
     bool isCompatibleWith(EglContext *other) const;
 
+    /**
+     * Renders whatever the drawCall does, while clipping to framebufferRegion with whatever
+     * functionality is supported by the driver. drawCall may be called multiple times
+     */
+    void renderRegion(const Region &framebufferRegion, const std::function<void()> &drawCall);
+
     static EglContext *currentContext();
     static std::shared_ptr<EglContext> create(EglDisplay *display, EGLConfig config, const std::shared_ptr<EglContext> &shareContext);
 
@@ -147,6 +155,8 @@ private:
     const bool m_haveSyncFences;
     const bool m_supportsIndexedQuads;
     const bool m_supportsPackInvert;
+    const bool m_supportsWindowRectangles;
+    int m_maxWindowRectangleCount = 0;
     const std::unique_ptr<GLPlatform> m_glPlatform;
     glGetGraphicsResetStatus_func m_glGetGraphicsResetStatus = nullptr;
     glReadnPixels_func m_glReadnPixels = nullptr;

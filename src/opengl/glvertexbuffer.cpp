@@ -517,28 +517,24 @@ void GLVertexBuffer::draw(const Region &region, GLenum primitiveMode, int first,
 
         count = count * 6 / 4;
 
-        if (!hardwareClipping) {
+        const auto draw = [&]() {
             glDrawElementsBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr, first);
+        };
+        if (hardwareClipping) {
+            EglContext::currentContext()->renderRegion(region, draw);
         } else {
-            // Clip using scissoring
-            const GLFramebuffer *current = GLFramebuffer::currentFramebuffer();
-            for (const Rect &r : region.rects()) {
-                glScissor(r.x(), current->size().height() - (r.y() + r.height()), r.width(), r.height());
-                glDrawElementsBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr, first);
-            }
+            draw();
         }
         return;
     }
 
-    if (!hardwareClipping) {
+    const auto draw = [&]() {
         glDrawArrays(primitiveMode, first, count);
+    };
+    if (hardwareClipping) {
+        EglContext::currentContext()->renderRegion(region, draw);
     } else {
-        // Clip using scissoring
-        const GLFramebuffer *current = GLFramebuffer::currentFramebuffer();
-        for (const Rect &r : region.rects()) {
-            glScissor(r.x(), current->size().height() - (r.y() + r.height()), r.width(), r.height());
-            glDrawArrays(primitiveMode, first, count);
-        }
+        draw();
     }
 }
 

@@ -351,22 +351,15 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
 void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion)
 {
     const auto clipped = deviceRegion & renderTarget.transformedRect();
-    if (clipped == renderTarget.transformedRect()) {
-        glClearColor(0, 0, 0, 0);
-        glClear(GL_COLOR_BUFFER_BIT);
-    } else if (!clipped.isEmpty()) {
-        glClearColor(0, 0, 0, 0);
-        glEnable(GL_SCISSOR_TEST);
-
-        const auto targetSize = renderTarget.size();
-        for (const Rect &deviceRect : clipped.rects()) {
-            const auto bufferRect = viewport.transform().map(deviceRect, renderTarget.transformedSize());
-            glScissor(bufferRect.x(), targetSize.height() - (bufferRect.y() + bufferRect.height()), bufferRect.width(), bufferRect.height());
-            glClear(GL_COLOR_BUFFER_BIT);
-        }
-
-        glDisable(GL_SCISSOR_TEST);
+    if (clipped.isEmpty()) {
+        return;
     }
+    const auto bufferRect = viewport.transform().map(clipped, renderTarget.transformedSize());
+
+    glClearColor(0, 0, 0, 0);
+    EglContext::currentContext()->renderRegion(bufferRect, [&]() {
+        glClear(GL_COLOR_BUFFER_BIT);
+    });
 }
 
 bool ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
@@ -419,8 +412,6 @@ bool ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
     vbo->unmap();
     vbo->bindArrays();
-
-    glEnable(GL_SCISSOR_TEST);
 
     // Make sure the blend function is set up correctly in case we will be doing blending
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
@@ -562,7 +553,6 @@ bool ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
     setBlendEnabled(false);
 
-    glDisable(GL_SCISSOR_TEST);
     return true;
 }
 
