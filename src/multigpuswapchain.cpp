@@ -823,9 +823,7 @@ std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::copy(GraphicsBuffer *buff
     proj.ortho(QRectF(QPointF(), buffer->size()));
     binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, proj);
 
-    glEnable(GL_SCISSOR_TEST);
-    sourceTex->render(toRender, buffer->size(), true);
-    glDisable(GL_SCISSOR_TEST);
+    sourceTex->render(toRender, buffer->size());
 
     context->popFramebuffer();
     EGLNativeFence fence(context->displayObject());

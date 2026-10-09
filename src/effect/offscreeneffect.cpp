@@ -269,21 +269,14 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     const bool clipping = deviceRegion != Region::infinite();
     const Region clipRegion = clipping ? viewport.transform().map(deviceRegion, renderTarget.transformedSize()) : Region::infinite();
 
-    if (clipping) {
-        glEnable(GL_SCISSOR_TEST);
-    }
-
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
     m_slot->texture()->bind();
-    vbo->draw(clipRegion, GL_TRIANGLES, 0, geometry.count(), clipping);
+    vbo->draw(clipRegion, GL_TRIANGLES, 0, geometry.count());
     m_slot->texture()->unbind();
 
     glDisable(GL_BLEND);
-    if (clipping) {
-        glDisable(GL_SCISSOR_TEST);
-    }
     vbo->unbindArrays();
 
     EGLNativeFence fence(m_swapchain->context()->displayObject());

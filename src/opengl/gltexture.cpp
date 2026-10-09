@@ -279,16 +279,16 @@ void GLTexture::unbind()
 
 void GLTexture::render(const QSizeF &size)
 {
-    render(Region::infinite(), size, false);
+    render(Region::infinite(), size);
 }
 
-void GLTexture::render(const Region &region, const QSizeF &targetSize, bool hardwareClipping)
+void GLTexture::render(const Region &region, const QSizeF &targetSize)
 {
     const auto rotatedSize = d->m_textureToBufferTransform.map(size());
-    render(RectF(QPoint(), rotatedSize), region, targetSize, hardwareClipping);
+    render(RectF(QPoint(), rotatedSize), region, targetSize);
 }
 
-void GLTexture::render(const RectF &source, const Region &region, const QSizeF &targetSize, bool hardwareClipping)
+void GLTexture::render(const RectF &source, const Region &region, const QSizeF &targetSize)
 {
     if (targetSize.isEmpty()) {
         return; // nothing to paint and m_vbo is likely nullptr and d->m_cachedSize empty as well, #337090
@@ -342,7 +342,7 @@ void GLTexture::render(const RectF &source, const Region &region, const QSizeF &
         d->m_vbo->setVertices(data);
     }
     bind();
-    d->m_vbo->render(region, GL_TRIANGLE_STRIP, hardwareClipping);
+    d->m_vbo->render(region, GL_TRIANGLE_STRIP);
     unbind();
 }
 
