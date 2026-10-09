@@ -429,7 +429,8 @@ SurfaceItem *ItemView::scanoutCandidate() const
 
 Region ItemView::collectDamage()
 {
-    return m_item->takeDeviceRepaints(this);
+    return m_item->takeDeviceRepaints(this)
+        | m_layer->deviceRepaints();
 }
 
 void ItemView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &region)
@@ -558,6 +559,7 @@ Region ItemTreeView::collectDamage()
 {
     Region ret;
     accumulateRepaints(m_item, this, &ret);
+    ret |= m_layer->deviceRepaints();
     // FIXME damage tracking for this layer still has some bugs, this effectively disables it
     ret = Region::infinite();
     return ret;

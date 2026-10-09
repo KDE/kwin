@@ -92,7 +92,7 @@ Region RegionScreenCastSource::render(GLFramebuffer *target, const Region &buffe
     if (!beginInfo) {
         return Region{};
     }
-    const auto bufferDamage = (m_layer->deviceRepaints() | m_sceneView->collectDamage()) & Rect(QPoint(), target->size());
+    const auto bufferDamage = m_sceneView->collectDamage() & Rect(QPoint(), target->size());
     const auto repaints = beginInfo->repaint | bufferDamage;
     m_layer->resetRepaints();
     m_sceneView->paint(beginInfo->renderTarget, QPoint(), repaints);
