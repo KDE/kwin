@@ -15,18 +15,9 @@ import org.kde.kirigami as Kirigami
 KCM.AbstractKCM {
     title: i18n("Titlebar Buttons")
 
-    framedView: false
-
-    Rectangle {
+    Buttons {
         anchors.fill: parent
-        Kirigami.Theme.inherit: false
-        Kirigami.Theme.colorSet: Kirigami.Theme.View
-        color: Kirigami.Theme.backgroundColor
-
-        Buttons {
-            anchors.fill: parent
-            anchors.margins: Kirigami.Units.largeSpacing
-        }
+        anchors.margins: Kirigami.Units.largeSpacing
     }
 
     footer: ColumnLayout {

@@ -23,6 +23,10 @@ Rectangle {
 
     color: palette.base
     radius: Kirigami.Units.cornerRadius
+    border {
+        width: 1
+        color: palette.mid
+    }
 
     KDecoration.Bridge {
         id: bridgeItem
@@ -35,6 +39,7 @@ Rectangle {
 
     ColumnLayout {
         anchors.fill: parent
+        anchors.margins: baseLayout.border.width
 
         // Fake titlebar
         Rectangle {
