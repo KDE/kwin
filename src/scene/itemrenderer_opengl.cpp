@@ -506,8 +506,7 @@ bool ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             renderNode.texture->bind();
         }
 
-        vbo->draw(scissorRegion, GL_TRIANGLES, renderNode.firstVertex,
-                  renderNode.vertexCount, true);
+        vbo->draw(scissorRegion, GL_TRIANGLES, renderNode.firstVertex, renderNode.vertexCount);
 
         if (renderNode.texture && !renderNode.paintHole) {
             glActiveTexture(GL_TEXTURE0);
@@ -540,8 +539,7 @@ bool ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             } else {
                 shader->setUniform(GLShader::ColorUniform::Color, QColor(255, 0, 0, 50));
             }
-            vbo->draw(scissorRegion, GL_TRIANGLES, renderNode.firstVertex,
-                      renderNode.vertexCount, true);
+            vbo->draw(scissorRegion, GL_TRIANGLES, renderNode.firstVertex, renderNode.vertexCount);
         }
     }
     if (shader) {
@@ -595,8 +593,7 @@ void ItemRendererOpenGL::visualizeFractional(const RenderViewport &viewport, con
         m_debug.fractionalShader->setUniform("geometrySize", size);
         m_debug.fractionalShader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);
 
-        vbo->draw(logicalRegion, GL_TRIANGLES, renderNode.firstVertex,
-                  renderNode.vertexCount, true);
+        vbo->draw(logicalRegion, GL_TRIANGLES, renderNode.firstVertex, renderNode.vertexCount);
     }
 }
 
