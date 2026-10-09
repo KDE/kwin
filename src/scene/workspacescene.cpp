@@ -579,6 +579,11 @@ static void accumulateRepaints(Item *item, SceneView *view, Region *windowRepain
     for (; childIt != childItems.end() && (*childIt)->z() < 0; childIt++) {
         accumulateRepaints(*childIt, view, windowRepaints, accumulatedRepaints, forceTranslucent);
     }
+    if (view->shouldRenderItem(item)) {
+        const Region repaints = item->takeDeviceRepaints(view);
+        *windowRepaints |= repaints;
+        *accumulatedRepaints |= repaints;
+    }
     if (auto background = qobject_cast<BackgroundEffectItem *>(item)) {
         const Rect viewRect = view->mapToDeviceCoordinates(item->mapToView(item->rect(), view)).rounded();
         if (accumulatedRepaints->intersects(viewRect)) {
@@ -588,10 +593,6 @@ static void accumulateRepaints(Item *item, SceneView *view, Region *windowRepain
                 *forceTranslucent |= accumulatedRepaints->grownBy(QMargins(pixels, pixels, pixels, pixels)) & viewRect;
             }
         }
-    } else if (view->shouldRenderItem(item)) {
-        const Region repaints = item->takeDeviceRepaints(view);
-        *windowRepaints |= repaints;
-        *accumulatedRepaints |= repaints;
     }
 
     for (; childIt != childItems.end(); childIt++) {
