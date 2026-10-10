@@ -707,8 +707,13 @@ std::pair<QList<Compositor::LayerData>, std::expected<void, OutputError>> Compos
                     }
                     outputLayer->setTargetRect(mapGlobalLogicalToOutputDeviceCoordinates(cursorView->viewport(), logicalOutput, backendOutput));
                     outputLayer->setEnabled(true);
-                    if (cursorView->needsRepaint() && prepareRendering(cursorView, logicalOutput, backendOutput, 8)) {
-                        renderLayer(cursorView, logicalOutput, backendOutput, nullptr, cursorView->collectDamage());
+                    if (cursorView->needsRepaint()) {
+                        if (!prepareRendering(cursorView, logicalOutput, backendOutput, 8)) {
+                            return;
+                        }
+                        if (!renderLayer(cursorView, logicalOutput, backendOutput, nullptr, cursorView->collectDamage())) {
+                            return;
+                        }
                     }
                     if (backendOutput->presentAsync(outputLayer, maxVrrCursorDelay)) {
                         // prevent composite() from also pushing an update with the cursor layer
