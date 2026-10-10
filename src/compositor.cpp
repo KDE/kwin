@@ -720,7 +720,7 @@ std::pair<QList<Compositor::LayerData>, std::expected<void, OutputError>> Compos
                         // to avoid adding cursor updates that are synchronized with primary layer updates
                         outputLayer->resetRepaints();
                     }
-                });
+                }, Qt::QueuedConnection);
             } else {
                 view = std::make_unique<ItemView>(sceneView, item, logicalOutput, backendOutput, layer);
             }
