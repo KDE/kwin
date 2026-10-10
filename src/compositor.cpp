@@ -645,6 +645,8 @@ std::pair<QList<Compositor::LayerData>, std::expected<void, OutputError>> Compos
 {
     QList<OutputLayer *> unusedOutputLayers = outputLayers;
     QList<LayerData> layers;
+    auto &overlayViews = m_overlayViews[backendOutput->renderLoop()];
+    auto &timers = m_overlayTimers[backendOutput->renderLoop()];
 
     auto sortedLayers = assignments | std::views::keys | std::ranges::to<QList>();
     std::ranges::sort(sortedLayers, [](OutputLayer *left, OutputLayer *right) {
@@ -677,16 +679,22 @@ std::pair<QList<Compositor::LayerData>, std::expected<void, OutputError>> Compos
                 // TODO also make sure we still use more than 8 color bits when possible?
                 layers.back().requiredAlphaBits = 8;
             }
-            m_overlayViews[backendOutput->renderLoop()].erase(layer);
+            overlayViews.erase(layer);
+            timers.erase(layer);
             unusedOutputLayers.removeOne(layer);
             continue;
         }
-        auto &view = m_overlayViews[backendOutput->renderLoop()][layer];
+        auto &view = overlayViews[layer];
         if (!view || view->item() != item) {
             if (isCursor) {
                 // special handling for the cursor
                 view = std::make_unique<ItemTreeView>(sceneView, item, logicalOutput, backendOutput, layer);
-                connect(layer, &OutputLayer::repaintScheduled, view.get(), [logicalOutput, backendOutput, cursorView = view.get()]() {
+                const auto &timer = timers[layer] = std::make_unique<QTimer>();
+                timer->setSingleShot(true);
+                timer->setInterval(0);
+
+                connect(layer, &OutputLayer::repaintScheduled, timer.get(), qOverload<>(&QTimer::start));
+                connect(timer.get(), &QTimer::timeout, view.get(), [logicalOutput, backendOutput, cursorView = view.get()]() {
                     // this just deals with moving the plane asynchronously, for improved latency.
                     // enabling and disabling the cursor image still happen in composite()
                     const auto outputLayer = cursorView->layer();
@@ -723,6 +731,12 @@ std::pair<QList<Compositor::LayerData>, std::expected<void, OutputError>> Compos
                 });
             } else {
                 view = std::make_unique<ItemView>(sceneView, item, logicalOutput, backendOutput, layer);
+                timers.erase(layer);
+            }
+        } else {
+            const auto it = timers.find(layer);
+            if (it != timers.end()) {
+                it->second->stop();
             }
         }
         layers.push_back(LayerData{
@@ -739,7 +753,8 @@ std::pair<QList<Compositor::LayerData>, std::expected<void, OutputError>> Compos
 
     // disable entirely unused output layers
     for (OutputLayer *layer : unusedOutputLayers) {
-        m_overlayViews[backendOutput->renderLoop()].erase(layer);
+        overlayViews.erase(layer);
+        timers.erase(layer);
         layer->setEnabled(false);
         // TODO only add the layer to `toUpdate` when necessary
         toUpdate.insert(layer);
@@ -1044,6 +1059,7 @@ void Compositor::handleOutputsChanged()
     for (auto &[loop, layer] : m_primaryViews) {
         disconnect(loop, &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
     }
+    m_overlayTimers.clear();
     m_overlayViews.clear();
     m_primaryViews.clear();
     const auto outputs = kwinApp()->outputBackend()->outputs();
@@ -1069,6 +1085,7 @@ void Compositor::removeOutput(BackendOutput *output)
         return;
     }
     disconnect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    m_overlayTimers.erase(output->renderLoop());
     m_overlayViews.erase(output->renderLoop());
     m_primaryViews.erase(output->renderLoop());
     m_brokenCursors.erase(output->renderLoop());
@@ -1102,6 +1119,7 @@ void Compositor::assignOutputLayers(LogicalOutput *logicalOutput, BackendOutput 
     }
     // will be re-assigned in the next composite() pass
     m_overlayViews.erase(backendOutput->renderLoop());
+    m_overlayTimers.erase(backendOutput->renderLoop());
 }
 
 } // namespace KWin
