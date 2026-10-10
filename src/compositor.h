@@ -126,6 +126,7 @@ protected:
     std::unique_ptr<RenderBackend> m_backend;
     std::unordered_map<RenderLoop *, std::unique_ptr<SceneView>> m_primaryViews;
     std::unordered_map<RenderLoop *, std::unordered_map<OutputLayer *, std::unique_ptr<ItemView>>> m_overlayViews;
+    std::unordered_map<RenderLoop *, std::unordered_map<OutputLayer *, std::unique_ptr<QTimer>>> m_overlayTimers;
     std::unordered_set<RenderLoop *> m_brokenCursors;
     std::optional<bool> m_allowOverlaysEnv;
     RenderLoopDrivenQAnimationDriver *m_renderLoopDrivenAnimationDriver;
