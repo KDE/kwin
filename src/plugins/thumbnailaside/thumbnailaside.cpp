@@ -11,6 +11,7 @@
 #include "thumbnailaside.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
+#include "window.h"
 // KConfigSkeleton
 #include "thumbnailasideconfig.h"
 
@@ -42,6 +43,13 @@ ThumbnailAsideEffect::ThumbnailAsideEffect()
     }
 
     reconfigure(ReconfigureAll);
+}
+
+ThumbnailAsideEffect::~ThumbnailAsideEffect()
+{
+    for (const Data &d : std::as_const(windows)) {
+        d.window->window()->unrefOffscreenRendering();
+    }
 }
 
 void ThumbnailAsideEffect::reconfigure(ReconfigureFlags)
@@ -132,6 +140,9 @@ void ThumbnailAsideEffect::toggleCurrentThumbnail()
 void ThumbnailAsideEffect::addThumbnail(EffectWindow *w)
 {
     repaintAll(); // repaint old areas
+
+    w->window()->refOffscreenRendering();
+
     Data d;
     d.window = w;
     d.index = windows.count();
