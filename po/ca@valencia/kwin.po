@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-07 02:54+0000\n"
-"PO-Revision-Date: 2026-09-06 17:25+0200\n"
+"PO-Revision-Date: 2026-10-11 15:20+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -1841,7 +1841,7 @@ msgstr "Temps de retard"
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:13
 #, kde-format
 msgid "Dwell Time"
-msgstr "Temps d'estancament"
+msgstr "Temps de permanència"
 
 #. i18n: ectx: label, entry (MotionThreshold), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:17
@@ -1865,7 +1865,7 @@ msgstr "Botó de bloqueig"
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:37
 #, kde-format
 msgid "Dwell Color"
-msgstr "Color d'estancament"
+msgstr "Color de permanència"
 
 #: plugins/eis/eisinputcapturemanager.cpp:140
 #, kde-format
@@ -2506,7 +2506,7 @@ msgstr "Suspén/reprén la llum de nit"
 #: plugins/nightlight/nightlightmanager.cpp:393
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr "Vista prèvia de la temperatura de color"
+msgstr "Vista prèvia de la temperatura del color"
 
 #: plugins/outputlocator/outputlocator.cpp:26
 #, kde-format
@@ -4120,12 +4120,12 @@ msgstr "Canvia a la finestra de l'esquerra"
 #: useractions.cpp:918
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr "Augmenta l'opacitat de la finestra activa en un 5%"
+msgstr "Augmenta l'opacitat de la finestra activa en un 5 %"
 
 #: useractions.cpp:920
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr "Disminuïx l'opacitat de la finestra activa en un 5%"
+msgstr "Disminuïx l'opacitat de la finestra activa en un 5 %"
 
 #: useractions.cpp:924
 #, kde-format
@@ -4459,11 +4459,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
-
-#~ msgid "OpenGL compositing is required for screencasting"
-#~ msgstr ""
-#~ "Es requerix la composició OpenGL per als vídeos de captura de pantalla"
-
-#~ msgctxt "@label"
-#~ msgid "Paint Amount"
-#~ msgstr "Quantitat del pintat"
