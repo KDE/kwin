@@ -79,6 +79,11 @@ void DrmVirtualOutput::recreateLayer()
     m_layer = m_backend->renderBackend()->createLayer(this);
 }
 
+void DrmVirtualOutput::releaseLayer()
+{
+    m_layer.reset();
+}
+
 void DrmVirtualOutput::applyChanges(const OutputConfiguration &config)
 {
     auto props = config.constChangeSet(this);
