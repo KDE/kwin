@@ -449,8 +449,8 @@ void DrmBackend::releaseBuffers()
     for (const auto &gpu : m_gpus) {
         gpu->releaseBuffers();
     }
-    for (const DrmVirtualOutput *virt : std::as_const(m_virtualOutputs)) {
-        virt->primaryLayer()->releaseBuffers();
+    for (DrmVirtualOutput *output : std::as_const(m_virtualOutputs)) {
+        output->releaseLayer();
     }
 }
 

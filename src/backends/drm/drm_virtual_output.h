@@ -34,6 +34,7 @@ public:
 
     DrmOutputLayer *primaryLayer() const;
     void recreateLayer();
+    void releaseLayer();
 
 private:
     void vblank(std::chrono::nanoseconds timestamp);
