@@ -46,7 +46,7 @@ void KeyboardRepeat::keyboardKey(uint32_t key, KeyboardKeyState state, std::chro
     }
     if (state == KeyboardKeyState::Pressed) {
         // TODO: don't get these values from WaylandServer
-        if (m_xkb->shouldKeyRepeat(key) && waylandServer()->seat()->keyboard()->keyRepeatDelay() != 0) {
+        if (m_xkb->shouldKeyRepeat(key) && waylandServer()->seat()->keyboard()->keyRepeatRate() != 0) {
             m_timer->setInterval(waylandServer()->seat()->keyboard()->keyRepeatDelay());
             m_key = key;
             m_time = time;
