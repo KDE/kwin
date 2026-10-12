@@ -57,6 +57,7 @@ public:
     virtual double desiredHdrHeadroom() const = 0;
     virtual std::chrono::nanoseconds nextPresentationTimestamp() const = 0;
     virtual uint refreshRate() const = 0;
+    virtual Item *repaintDriver() const;
 
     /**
      * add a repaint in layer-local device coordinates
@@ -115,7 +116,8 @@ public:
 
     void setViewport(const RectF &viewport);
     void setScale(qreal scale);
-    void setNextPresentationTimestamp(std::chrono::nanoseconds timestamp, uint32_t refreshRate);
+    void setNextPresentationTimestamp(std::chrono::nanoseconds timestamp, uint32_t refreshRate, Item *repaintDriver);
+    Item *repaintDriver() const override;
 
     SurfaceItem *scanoutCandidate() const override;
     virtual void prePaint(OutputFrame *frame = nullptr);
@@ -154,6 +156,7 @@ protected:
     QList<std::function<bool(Window *)>> m_windowFilters;
     std::chrono::nanoseconds m_nextPresentationTimestamp;
     uint32_t m_refreshRate = 60'000;
+    QPointer<Item> m_repaintDriver;
 };
 
 class KWIN_EXPORT ItemView : public RenderView

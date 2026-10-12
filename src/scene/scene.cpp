@@ -188,6 +188,11 @@ void RenderView::setRenderOffset(const QPoint &offset)
     addDeviceRepaint(deviceRect());
 }
 
+Item *RenderView::repaintDriver() const
+{
+    return nullptr;
+}
+
 SceneView::SceneView(Scene *scene, LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer, RenderDevice *renderDevice)
     : RenderView(logicalOutput, backendOutput, layer, renderDevice)
     , m_scene(scene)
@@ -251,10 +256,16 @@ void SceneView::setScale(qreal scale)
     addDeviceRepaint(deviceRect());
 }
 
-void SceneView::setNextPresentationTimestamp(std::chrono::nanoseconds timestamp, uint32_t refreshRate)
+void SceneView::setNextPresentationTimestamp(std::chrono::nanoseconds timestamp, uint32_t refreshRate, Item *repaintDriver)
 {
     m_nextPresentationTimestamp = timestamp;
     m_refreshRate = refreshRate;
+    m_repaintDriver = repaintDriver;
+}
+
+Item *SceneView::repaintDriver() const
+{
+    return m_repaintDriver;
 }
 
 RectF SceneView::viewport() const
