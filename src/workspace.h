@@ -95,6 +95,7 @@ class OrientationSensor;
 class BrightnessDevice;
 class BackendOutput;
 class LightSensor;
+class Scripting;
 
 class KWIN_EXPORT Workspace : public QObject
 {
@@ -427,6 +428,7 @@ public:
     Activities *activities() const;
 #endif
     OutputConfigurationStore *outputConfigureStore() const;
+    Scripting *scripting() const;
 
     /**
      * Apply the requested output configuration. Note that you must use this function
@@ -747,6 +749,7 @@ private:
     std::unique_ptr<QTimer> m_delayedLightTimer;
     std::optional<double> m_luxAtLastBrightnessAdjust;
     std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
+    std::unique_ptr<Scripting> m_scripting;
     KConfigWatcher::Ptr m_kdeglobalsWatcher;
 
     QString m_activationToken;

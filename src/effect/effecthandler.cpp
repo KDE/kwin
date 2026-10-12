@@ -1561,7 +1561,7 @@ bool EffectsHandler::isInputPanelOverlay() const
 
 QQmlEngine *EffectsHandler::qmlEngine() const
 {
-    return Scripting::self()->qmlEngine();
+    return workspace()->scripting()->qmlEngine();
 }
 
 void EffectsHandler::configChanged(const KConfigGroup &group, const QByteArrayList &names)

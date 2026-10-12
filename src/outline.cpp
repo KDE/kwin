@@ -13,6 +13,7 @@
 #include "main.h"
 #include "scripting/scripting.h"
 #include "utils/common.h"
+#include "workspace.h"
 // Frameworks
 #include <KConfigGroup>
 // Qt
@@ -142,11 +143,11 @@ void OutlineVisual::hide()
 void OutlineVisual::show()
 {
     if (!m_qmlContext) {
-        m_qmlContext = std::make_unique<QQmlContext>(Scripting::self()->qmlEngine());
+        m_qmlContext = std::make_unique<QQmlContext>(workspace()->scripting()->qmlEngine());
         m_qmlContext->setContextProperty(QStringLiteral("outline"), m_outline);
     }
     if (!m_qmlComponent) {
-        m_qmlComponent = std::make_unique<QQmlComponent>(Scripting::self()->qmlEngine());
+        m_qmlComponent = std::make_unique<QQmlComponent>(workspace()->scripting()->qmlEngine());
         const QString fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                                         kwinApp()->config()->group(QStringLiteral("Outline")).readEntry("QmlPath", QStringLiteral("kwin-wayland/outline/plasma/outline.qml")));
         if (fileName.isEmpty()) {

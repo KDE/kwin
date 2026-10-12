@@ -16,6 +16,7 @@
 #include "switcheritem.h"
 #include "tabbox_logging.h"
 #include "window.h"
+#include "workspace.h"
 // Qt
 #include <QKeyEvent>
 #include <QQmlComponent>
@@ -207,10 +208,10 @@ void TabBoxHandlerPrivate::show()
 #ifndef KWIN_UNIT_TEST
     if (!m_qmlContext) {
         qmlRegisterType<SwitcherItem>("org.kde.kwin", 3, 0, "TabBoxSwitcher");
-        m_qmlContext = std::make_unique<QQmlContext>(Scripting::self()->qmlEngine());
+        m_qmlContext = std::make_unique<QQmlContext>(workspace()->scripting()->qmlEngine());
     }
     if (!m_qmlComponent) {
-        m_qmlComponent = std::make_unique<QQmlComponent>(Scripting::self()->qmlEngine());
+        m_qmlComponent = std::make_unique<QQmlComponent>(workspace()->scripting()->qmlEngine());
     }
     auto findMainItem = [this](const QMap<QString, QObject *> &tabBoxes) -> QObject * {
         auto it = tabBoxes.constFind(config.layoutName());

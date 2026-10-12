@@ -227,8 +227,8 @@ void KWin::Script::slotScriptLoadedFromFile()
     m_engine->globalObject().setProperty(QStringLiteral("options"), optionsObject);
 
     // Make the workspace visible to QJSEngine.
-    QJSValue workspaceObject = m_engine->newQObject(Scripting::self()->workspaceWrapper());
-    QJSEngine::setObjectOwnership(Scripting::self()->workspaceWrapper(), QJSEngine::CppOwnership);
+    QJSValue workspaceObject = m_engine->newQObject(workspace()->scripting()->workspaceWrapper());
+    QJSEngine::setObjectOwnership(workspace()->scripting()->workspaceWrapper(), QJSEngine::CppOwnership);
     m_engine->globalObject().setProperty(QStringLiteral("workspace"), workspaceObject);
 
     QJSValue self = m_engine->newQObject(this);
@@ -564,8 +564,8 @@ QAction *KWin::Script::createMenu(const QString &title, const QJSValue &items, Q
 
 KWin::DeclarativeScript::DeclarativeScript(int id, QString scriptName, QString pluginName, QObject *parent)
     : AbstractScript(id, scriptName, pluginName, parent)
-    , m_context(new QQmlContext(Scripting::self()->declarativeScriptSharedContext(), this))
-    , m_component(new QQmlComponent(Scripting::self()->qmlEngine(), this))
+    , m_context(new QQmlContext(workspace()->scripting()->declarativeScriptSharedContext(), this))
+    , m_component(new QQmlComponent(workspace()->scripting()->qmlEngine(), this))
 {
     m_context->setContextProperty(QStringLiteral("KWin"), new JSEngineGlobalMethodsWrapper(this));
 }
@@ -615,21 +615,11 @@ QVariant KWin::JSEngineGlobalMethodsWrapper::readConfig(const QString &key, QVar
     return m_script->config().readEntry(key, defaultValue);
 }
 
-KWin::Scripting *KWin::Scripting::s_self = nullptr;
-
-KWin::Scripting *KWin::Scripting::create(QObject *parent)
-{
-    Q_ASSERT(!s_self);
-    s_self = new Scripting(parent);
-    return s_self;
-}
-
-KWin::Scripting::Scripting(QObject *parent)
-    : QObject(parent)
-    , m_scriptsLock(new QRecursiveMutex)
-    , m_qmlEngine(new QQmlEngine(this))
+KWin::Scripting::Scripting()
+    : m_qmlEngine(new QQmlEngine(this))
     , m_declarativeScriptSharedContext(new QQmlContext(m_qmlEngine, this))
     , m_workspaceWrapper(new QtScriptWorkspaceWrapper(this))
+    , m_scriptsLock(new QRecursiveMutex)
 {
     // For plain JavaScript extensions. There's no Rect factory function, we accept any object
     // with x, y, width, and height properties as rects.
@@ -887,7 +877,6 @@ int KWin::Scripting::loadDeclarativeScript(const QString &filePath, const QStrin
 KWin::Scripting::~Scripting()
 {
     QDBusConnection::sessionBus().unregisterObject(QStringLiteral("/Scripting"));
-    s_self = nullptr;
 }
 
 QList<QAction *> KWin::Scripting::actionsForUserActionMenu(KWin::Window *c, QMenu *parent)

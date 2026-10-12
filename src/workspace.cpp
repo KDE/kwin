@@ -333,7 +333,7 @@ void Workspace::init()
     initializeX11();
 #endif
 
-    Scripting::create(this);
+    m_scripting = std::make_unique<Scripting>();
 
     connect(waylandServer(), &WaylandServer::windowAdded, this, &Workspace::addWaylandWindow);
     connect(waylandServer(), &WaylandServer::windowRemoved, this, &Workspace::removeWaylandWindow);
@@ -472,6 +472,8 @@ void Workspace::cleanupX11()
 
 Workspace::~Workspace()
 {
+    m_scripting.reset();
+
     blockStackingUpdates(true);
 
 #if KWIN_BUILD_X11
@@ -3179,6 +3181,11 @@ Activities *Workspace::activities() const
 OutputConfigurationStore *Workspace::outputConfigureStore() const
 {
     return m_outputConfigStore.get();
+}
+
+Scripting *Workspace::scripting() const
+{
+    return m_scripting.get();
 }
 
 } // namespace
