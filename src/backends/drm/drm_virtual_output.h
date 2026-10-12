@@ -43,7 +43,7 @@ private:
     void vblank(std::chrono::nanoseconds timestamp);
 
     DrmBackend *const m_backend;
-    std::shared_ptr<DrmOutputLayer> m_layer;
+    std::unique_ptr<DrmOutputLayer> m_layer;
     std::shared_ptr<OutputFrame> m_frame;
     std::unique_ptr<SoftwareVsyncMonitor> m_vsyncMonitor;
 };
