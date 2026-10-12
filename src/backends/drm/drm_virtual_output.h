@@ -33,7 +33,7 @@ public:
     void applyChanges(const OutputConfiguration &config) override;
 
     DrmOutputLayer *primaryLayer() const;
-    void recreateSurface();
+    void recreateLayer();
 
 private:
     void vblank(std::chrono::nanoseconds timestamp);
