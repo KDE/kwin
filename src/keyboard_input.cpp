@@ -205,7 +205,7 @@ void KeyboardInputRedirection::reconfigure()
         const QString repeatMode = config.readEntry("KeyRepeat", "repeat");
         const bool enabled = repeatMode == QLatin1StringView("repeat");
 
-        waylandServer()->seat()->keyboard()->setRepeatInfo(enabled ? rate : 0, delay);
+        waylandServer()->seat()->keyboard()->setRepeatInfo(enabled ? rate : 0, enabled ? delay : 0);
     }
 }
 
