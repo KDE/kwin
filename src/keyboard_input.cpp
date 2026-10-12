@@ -204,7 +204,7 @@ void KeyboardInputRedirection::reconfigure()
         // to tell the clients that we are indeed repeating keys.
         const bool enabled = repeatMode == QLatin1String("accent") || repeatMode == QLatin1String("repeat");
 
-        waylandServer()->seat()->keyboard()->setRepeatInfo(enabled ? rate : 0, delay);
+        waylandServer()->seat()->keyboard()->setRepeatInfo(enabled ? rate : 0, enabled ? delay : 0);
     }
 }
 
