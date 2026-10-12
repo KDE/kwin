@@ -350,7 +350,7 @@ void UserActionsMenu::menuAboutToShow()
     delete m_scriptsMenu;
     m_scriptsMenu = nullptr;
     // ask scripts whether they want to add entries for the given window
-    QList<QAction *> scriptActions = Scripting::self()->actionsForUserActionMenu(m_window.data(), m_scriptsMenu);
+    QList<QAction *> scriptActions = workspace()->scripting()->actionsForUserActionMenu(m_window.data(), m_scriptsMenu);
     if (!scriptActions.isEmpty()) {
         m_scriptsMenu = new QMenu(m_menu);
         m_scriptsMenu->setPalette(m_window->palette());

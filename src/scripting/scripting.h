@@ -316,20 +316,10 @@ class KWIN_EXPORT Scripting : public QObject
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")
 
-private:
-    explicit Scripting(QObject *parent);
-    QStringList scriptList;
-    QList<KWin::AbstractScript *> scripts;
-    /**
-     * Lock to protect the scripts member variable.
-     */
-    std::unique_ptr<QRecursiveMutex> m_scriptsLock;
-
-    // Preferably call ONLY at load time
-    void runScripts();
-
 public:
+    explicit Scripting();
     ~Scripting() override;
+
     Q_SCRIPTABLE Q_INVOKABLE int loadScript(const QString &filePath, const QString &pluginName = QString());
     Q_SCRIPTABLE Q_INVOKABLE int loadDeclarativeScript(const QString &filePath, const QString &pluginName = QString());
     Q_SCRIPTABLE Q_INVOKABLE bool isScriptLoaded(const QString &pluginName) const;
@@ -352,9 +342,6 @@ public:
 
     AbstractScript *findScript(const QString &pluginName) const;
 
-    static Scripting *self();
-    static Scripting *create(QObject *parent);
-
 public Q_SLOTS:
     void scriptDestroyed(QObject *object);
     Q_SCRIPTABLE void start();
@@ -364,10 +351,19 @@ private Q_SLOTS:
 
 private:
     LoadScriptList queryScriptsToLoad();
-    static Scripting *s_self;
+
+    // Preferably call ONLY at load time
+    void runScripts();
+
     QQmlEngine *m_qmlEngine;
     QQmlContext *m_declarativeScriptSharedContext;
     QtScriptWorkspaceWrapper *m_workspaceWrapper;
+    QStringList scriptList;
+    QList<KWin::AbstractScript *> scripts;
+    /**
+     * Lock to protect the scripts member variable.
+     */
+    std::unique_ptr<QRecursiveMutex> m_scriptsLock;
 };
 
 inline QQmlEngine *Scripting::qmlEngine() const
@@ -393,11 +389,6 @@ inline QQmlContext *Scripting::declarativeScriptSharedContext()
 inline QtScriptWorkspaceWrapper *Scripting::workspaceWrapper() const
 {
     return m_workspaceWrapper;
-}
-
-inline Scripting *Scripting::self()
-{
-    return s_self;
 }
 
 }
