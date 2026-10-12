@@ -452,9 +452,12 @@ void ItemView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffse
     renderer->beginFrame(renderTarget, renderViewport);
     renderer->renderBackground(renderTarget, renderViewport, globalRegion);
     WindowPaintData data;
-    renderer->renderItem(renderTarget, renderViewport, m_item, 0, globalRegion, data, [this](Item *toRender) {
+    const bool success = renderer->renderItem(renderTarget, renderViewport, m_item, 0, globalRegion, data, [this](Item *toRender) {
         return toRender != m_item;
     }, {});
+    if (!success) {
+        return;
+    }
     renderer->endFrame();
 }
 
@@ -583,7 +586,9 @@ void ItemTreeView::paint(const RenderTarget &renderTarget, const QPoint &deviceO
     renderer->beginFrame(renderTarget, renderViewport);
     renderer->renderBackground(renderTarget, renderViewport, deviceRegion);
     WindowPaintData data;
-    renderer->renderItem(renderTarget, renderViewport, m_item, 0, deviceRegion, data, {}, {});
+    if (!renderer->renderItem(renderTarget, renderViewport, m_item, 0, deviceRegion, data, {}, {})) {
+        return;
+    }
     renderer->endFrame();
 }
 
