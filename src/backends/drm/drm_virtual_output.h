@@ -35,6 +35,7 @@ public:
 
     DrmOutputLayer *primaryLayer() const;
     void recreateLayer();
+    void releaseLayer();
 
     bool canResize() const override;
     void resize(const QSize &size) override;
