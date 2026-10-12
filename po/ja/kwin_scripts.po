@@ -1,10 +1,11 @@
+# SPDX-FileCopyrightText: 2026 Mint <5602mint@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin_scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2015-10-04 10:19-0700\n"
-"Last-Translator: Japanese KDE translation team <kde-jp@kde.org>\n"
+"PO-Revision-Date: 2026-09-25 18:53+0900\n"
+"Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -13,46 +14,47 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
+"X-Generator: Lokalize 26.08.1\n"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::VideoWallConfigForm)
 #: videowall/contents/ui/config.ui:14
 #, kde-format
 msgid "Video Wall"
-msgstr ""
+msgstr "ビデオウォール"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ApplyTo)
 #: videowall/contents/ui/config.ui:20
 #, kde-format
 msgid "Apply to"
-msgstr ""
+msgstr "適用先:"
 
 #. i18n: ectx: property (text), widget (QLineEdit, kcfg_Whitelist)
 #: videowall/contents/ui/config.ui:32
 #, kde-format
 msgid "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
-msgstr ""
+msgstr "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
 
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Whitelist)
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Blacklist)
 #: videowall/contents/ui/config.ui:35 videowall/contents/ui/config.ui:66
 #, kde-format
 msgid "Comma separated list of window classes"
-msgstr ""
+msgstr "コンマ区切りでウィンドウクラスを指定"
 
 #. i18n: ectx: property (text), widget (QLabel, applyLabel)
 #: videowall/contents/ui/config.ui:45
 #, kde-format
 msgid "All"
-msgstr ""
+msgstr "すべて"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
 #: videowall/contents/ui/config.ui:54
 #, kde-format
 msgid "Ignore"
-msgstr ""
+msgstr "無視"
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #: videowall/contents/ui/config.ui:73
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "しない"
