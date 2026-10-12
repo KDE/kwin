@@ -34,7 +34,7 @@ public:
     void applyChanges(const OutputConfiguration &config) override;
 
     DrmOutputLayer *primaryLayer() const;
-    void recreateSurface();
+    void recreateLayer();
 
     bool canResize() const override;
     void resize(const QSize &size) override;

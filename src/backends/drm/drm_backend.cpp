@@ -433,7 +433,7 @@ void DrmBackend::createLayers()
         gpu->createLayers();
     }
     for (DrmVirtualOutput *virt : std::as_const(m_virtualOutputs)) {
-        virt->recreateSurface();
+        virt->recreateLayer();
     }
 }
 
