@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-07 00:50+0000\n"
+"POT-Creation-Date: 2026-10-12 00:54+0000\n"
 "PO-Revision-Date: 2026-09-21 22:06+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -2741,7 +2741,7 @@ msgid ""
 "keypresses."
 msgstr "AltGr 鍵已鎖定並會對所有接著按下的按鍵產生作用。"
 
-#: plugins/thumbnailaside/thumbnailaside.cpp:31
+#: plugins/thumbnailaside/thumbnailaside.cpp:32
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:51
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"

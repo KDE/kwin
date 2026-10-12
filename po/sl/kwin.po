@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1749475 2026-10-07 01:33:37Z scripty $
+# $Id: kwin.po 1750062 2026-10-12 02:07:23Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-07 00:50+0000\n"
+"POT-Creation-Date: 2026-10-12 00:54+0000\n"
 "PO-Revision-Date: 2026-09-03 07:30+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -2781,7 +2781,7 @@ msgstr ""
 "Tipka AltGr je bila zaklenjena in je zdaj aktivna za vse naslednje pritiske "
 "tipk."
 
-#: plugins/thumbnailaside/thumbnailaside.cpp:31
+#: plugins/thumbnailaside/thumbnailaside.cpp:32
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:51
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"

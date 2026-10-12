@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-07 00:50+0000\n"
+"POT-Creation-Date: 2026-10-12 00:54+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -2861,7 +2861,7 @@ msgstr ""
 "Клавіша AltGr была заблакаваная і цяпер актыўная для ўсіх наступных "
 "націсканняў."
 
-#: plugins/thumbnailaside/thumbnailaside.cpp:31
+#: plugins/thumbnailaside/thumbnailaside.cpp:32
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:51
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"

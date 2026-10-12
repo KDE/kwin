@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-07 00:50+0000\n"
+"POT-Creation-Date: 2026-10-12 00:54+0000\n"
 "PO-Revision-Date: 2026-09-14 17:24+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -2776,7 +2776,7 @@ msgstr ""
 "Le clave de AltGr ha essite blocate e es ora active pro tote le sequente "
 "claves de pressar (keypresses)."
 
-#: plugins/thumbnailaside/thumbnailaside.cpp:31
+#: plugins/thumbnailaside/thumbnailaside.cpp:32
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:51
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"

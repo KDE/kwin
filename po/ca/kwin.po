@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-07 00:50+0000\n"
-"PO-Revision-Date: 2026-09-06 17:25+0200\n"
+"POT-Creation-Date: 2026-10-12 00:54+0000\n"
+"PO-Revision-Date: 2026-10-11 15:17+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -1836,7 +1836,7 @@ msgstr "Temps de retard"
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:13
 #, kde-format
 msgid "Dwell Time"
-msgstr "Temps d'estancament"
+msgstr "Temps de permanència"
 
 #. i18n: ectx: label, entry (MotionThreshold), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:17
@@ -1860,7 +1860,7 @@ msgstr "Botó de bloqueig"
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:37
 #, kde-format
 msgid "Dwell Color"
-msgstr "Color d'estancament"
+msgstr "Color de permanència"
 
 #: plugins/eis/eisinputcapturemanager.cpp:140
 #, kde-format
@@ -2784,7 +2784,7 @@ msgstr ""
 "La tecla AltGr s'ha bloquejat i ara està activa per a totes les tecles que "
 "es premin a continuació."
 
-#: plugins/thumbnailaside/thumbnailaside.cpp:31
+#: plugins/thumbnailaside/thumbnailaside.cpp:32
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:51
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
