@@ -143,7 +143,6 @@ enum class ConfigKey {
     TapToClick,
     LmrTapButtonMap,
     TapAndDrag,
-    TapDragLock,
     MiddleButtonEmulation,
     NaturalScroll,
     ScrollMethod,
@@ -203,6 +202,37 @@ struct ConfigData : public ConfigDataBase
     DefaultValueFunction defaultValueFunction;
 };
 
+struct ImmutableConfigDataBase
+{
+    virtual ~ImmutableConfigDataBase() = default;
+    virtual void read(Device *) const = 0;
+};
+
+template<typename T>
+struct ImmutableConfigData : public ImmutableConfigDataBase
+{
+    using SetterFunction = std::function<void(Device *, const T &)>;
+    using ImmutableValueFunction = std::function<T(Device *)>;
+
+    explicit ImmutableConfigData(const SetterFunction &_setter, const ImmutableValueFunction &_immutableValue)
+        : setterFunction(_setter)
+        , immutableValueFunction(_immutableValue)
+    {
+    }
+
+    void read(Device *device) const override
+    {
+        if (!immutableValueFunction) {
+            return;
+        }
+
+        setterFunction(device, immutableValueFunction(device));
+    }
+
+    SetterFunction setterFunction;
+    ImmutableValueFunction immutableValueFunction;
+};
+
 // Template specializations for some specific config types that can't be handled
 // through plain readEntry.
 //
@@ -251,7 +281,6 @@ static const QMap<ConfigKey, std::shared_ptr<ConfigDataBase>> s_configData{
     {ConfigKey::PointerAccelerationProfile, std::make_shared<ConfigData<quint32>>(QByteArrayLiteral("PointerAccelerationProfile"), &Device::setPointerAccelerationProfileFromInt, &Device::defaultPointerAccelerationProfileToInt)},
     {ConfigKey::TapToClick, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("TapToClick"), &Device::setTapToClick, &Device::tapToClickEnabledByDefault)},
     {ConfigKey::TapAndDrag, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("TapAndDrag"), &Device::setTapAndDrag, &Device::tapAndDragEnabledByDefault)},
-    {ConfigKey::TapDragLock, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("TapDragLock"), &Device::setTapDragLock, &Device::tapDragLockEnabledByDefault)},
     {ConfigKey::MiddleButtonEmulation, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("MiddleButtonEmulation"), &Device::setMiddleEmulation, &Device::middleEmulationEnabledByDefault)},
     {ConfigKey::LmrTapButtonMap, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("LmrTapButtonMap"), &Device::setLmrTapButtonMap, &Device::lmrTapButtonMapEnabledByDefault)},
     {ConfigKey::NaturalScroll, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("NaturalScroll"), &Device::setNaturalScroll, &Device::naturalScrollEnabledByDefault)},
@@ -272,6 +301,11 @@ static const QMap<ConfigKey, std::shared_ptr<ConfigDataBase>> s_configData{
     {ConfigKey::InputArea, std::make_shared<ConfigData<QRectF>>(QByteArrayLiteral("InputArea"), &Device::setInputArea, &Device::defaultInputArea)},
     {ConfigKey::TabletToolRelativeMode, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("TabletToolRelativeMode"), &Device::setTabletToolRelative, &Device::defaultTabletToolIsRelative)},
     {ConfigKey::Rotation, std::make_shared<ConfigData<uint32_t>>(QByteArrayLiteral("Rotation"), &Device::setRotation, &Device::defaultRotation)},
+};
+
+// config data hardcoded by KWin, libinput may have different defaults so we still call a setter on load
+static const QList<std::shared_ptr<ImmutableConfigDataBase>> s_immutableConfigData{
+    {std::make_shared<ImmutableConfigData<bool>>(&Device::setTapDragLock, &Device::tapDragLockEnabledByDefault)},
 };
 
 namespace
@@ -361,7 +395,7 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_tapToClick(libinput_device_config_tap_get_enabled(m_device))
     , m_tapAndDragEnabledByDefault(true)
     , m_tapAndDrag(libinput_device_config_tap_get_drag_enabled(m_device))
-    , m_tapDragLockEnabledByDefault(libinput_device_config_tap_get_default_drag_lock_enabled(m_device))
+    , m_tapDragLockEnabledByDefault(true) // ignore libinput_device_config_tap_get_default_drag_lock_enabled(m_device)
     , m_tapDragLock(libinput_device_config_tap_get_drag_lock_enabled(m_device))
     , m_supportsDisableWhileTyping(libinput_device_config_dwt_is_available(m_device))
     , m_supportsPointerAcceleration(libinput_device_config_accel_is_available(m_device))
@@ -491,6 +525,10 @@ void Device::writeEntry(const ConfigKey &key, const T &value)
 
 void Device::loadConfiguration()
 {
+    for (auto it = s_immutableConfigData.begin(), end = s_immutableConfigData.end(); it != end; ++it) {
+        (*it)->read(this);
+    };
+
     if (!m_config.isValid() && !m_defaultConfig.isValid()) {
         return;
     }
@@ -756,7 +794,6 @@ CONFIG(setNaturalScroll, !m_supportsNaturalScroll, scroll_set_natural_scroll_ena
 CONFIG(setDisableWhileTyping, !m_supportsDisableWhileTyping, dwt_set_enabled, DWT, disableWhileTyping, DisableWhileTyping)
 CONFIG(setTapToClick, m_tapFingerCount == 0, tap_set_enabled, TAP, tapToClick, TapToClick)
 CONFIG(setTapAndDrag, false, tap_set_drag_enabled, DRAG, tapAndDrag, TapAndDrag)
-CONFIG(setTapDragLock, false, tap_set_drag_lock_enabled, DRAG_LOCK, tapDragLock, TapDragLock)
 CONFIG(setMiddleEmulation, m_supportsMiddleEmulation == false, middle_emulation_set_enabled, MIDDLE_EMULATION, middleEmulation, MiddleButtonEmulation)
 
 #undef CONFIG
@@ -800,6 +837,17 @@ void Device::setScrollFactor(qreal factor)
         m_scrollFactor = factor;
         writeEntry(ConfigKey::ScrollFactor, m_scrollFactor);
         Q_EMIT scrollFactorChanged();
+    }
+}
+
+void Device::setTapDragLock(bool set)
+{
+    if (libinput_device_config_tap_set_drag_lock_enabled(m_device, set ? LIBINPUT_CONFIG_DRAG_LOCK_ENABLED : LIBINPUT_CONFIG_DRAG_LOCK_DISABLED) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
+        if (m_tapDragLock != set) {
+            m_tapDragLock = set;
+            // immutable: not calling writeEntry()
+            Q_EMIT tapDragLockChanged();
+        }
     }
 }
 

@@ -124,7 +124,7 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(bool tapAndDragEnabledByDefault READ tapAndDragEnabledByDefault CONSTANT)
     Q_PROPERTY(bool tapAndDrag READ isTapAndDrag WRITE setTapAndDrag NOTIFY tapAndDragChanged)
     Q_PROPERTY(bool tapDragLockEnabledByDefault READ tapDragLockEnabledByDefault CONSTANT)
-    Q_PROPERTY(bool tapDragLock READ isTapDragLock WRITE setTapDragLock NOTIFY tapDragLockChanged)
+    Q_PROPERTY(bool tapDragLock READ isTapDragLock /*WRITE setTapDragLock*/ NOTIFY tapDragLockChanged) // readonly
 
     Q_PROPERTY(bool supportsMiddleEmulation READ supportsMiddleEmulation CONSTANT)
     Q_PROPERTY(bool middleEmulationEnabledByDefault READ middleEmulationEnabledByDefault CONSTANT)
