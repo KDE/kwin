@@ -261,6 +261,7 @@ void InputMethod::setActive(bool active)
     if (wasActive && !active) {
         m_forceShowRequested = false;
         waylandServer()->inputMethod()->sendDeactivate();
+        hide();
     }
 
     if (active) {
