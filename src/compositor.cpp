@@ -697,7 +697,7 @@ std::pair<QList<Compositor::LayerData>, std::expected<void, OutputError>> Compos
                         return;
                     }
                     std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
-                    if (backendOutput->renderLoop()->activeWindowControlsVrrRefreshRate()) {
+                    if (backendOutput->renderLoop()->repaintDriver()) {
                         const auto effectiveMinRate = backendOutput->minVrrRefreshRateHz().transform([](uint32_t value) {
                             // this is intentionally using a tiny bit higher refresh rate than the minimum
                             // so that slight differences in timing don't drop us below the minimum
