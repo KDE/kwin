@@ -23,6 +23,7 @@
 #include "tiles/tilemanager.h"
 #include "virtualdesktops.h"
 #include "wayland/appmenu.h"
+#include "wayland/clientconnection.h"
 #include "wayland/output.h"
 #include "wayland/plasmashell.h"
 #include "wayland/seat.h"
@@ -845,7 +846,14 @@ void XdgToplevelWindow::handleWindowTitleChanged()
 
 void XdgToplevelWindow::handleAppIdChanged()
 {
-    const QString applicationId = m_shellSurface->appId();
+    QString applicationId = m_shellSurface->appId();
+    const auto sandboxAppId = m_surface->client()->securityContextAppId();
+    if (!sandboxAppId.isEmpty() && !applicationId.startsWith(sandboxAppId)) {
+        // If the app ID isn't the same as, or not an extension of the actual
+        // app id, then the application is almost certainly buggy.
+        // Override it to make at least activation work properly.
+        applicationId = sandboxAppId;
+    }
     setResourceClass(resourceName(), applicationId);
     if (shellSurface()->isConfigured()) {
         evaluateWindowRules();
