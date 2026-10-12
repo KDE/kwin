@@ -18,6 +18,7 @@
 #include "scripting/scriptedquicksceneeffect.h"
 #include "scripting/scripting.h"
 #include "utils/common.h"
+#include "workspace.h"
 // KDE
 #include <KConfigGroup>
 #include <KPackage/Package>
@@ -173,7 +174,7 @@ bool ScriptedEffectLoader::loadDeclarativeEffect(const KPluginMetaData &metadata
         return false;
     }
 
-    QQmlEngine *engine = Scripting::self()->qmlEngine();
+    QQmlEngine *engine = workspace()->scripting()->qmlEngine();
     QQmlComponent component(engine);
     component.loadUrl(QUrl::fromLocalFile(scriptFile));
     if (component.isError()) {
