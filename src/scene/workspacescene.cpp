@@ -57,6 +57,7 @@
 #include "core/backendoutput.h"
 #include "core/graphicsbufferview.h"
 #include "core/output.h"
+#include "core/outputlayer.h"
 #include "core/pixelgrid.h"
 #include "core/renderdevice.h"
 #include "core/renderloop.h"
@@ -662,14 +663,18 @@ Region WorkspaceScene::collectDamage()
         m_paintContext.deviceDamage = painted_delegate->deviceRect();
         return m_paintContext.deviceDamage;
     } else {
+        const Region layerDamage = painted_delegate->layer()->deviceRepaints();
+
         // collect all damage, from bottom to top
-        Region accumulatedRepaints;
-        Region forceTranslucent;
+        Region accumulatedRepaints = layerDamage;
+        Region forceTranslucent = layerDamage;
         for (auto &data : m_paintContext.phase2Data) {
             data.deviceOpaque -= forceTranslucent;
             accumulateRepaints(data.item, painted_delegate, &data.deviceRegion, &accumulatedRepaints, &forceTranslucent);
         }
         accumulateRepaints(m_overlayItem.get(), painted_delegate, &m_paintContext.deviceDamage, &accumulatedRepaints, &forceTranslucent);
+
+        m_paintContext.deviceDamage |= layerDamage;
 
         // Perform an occlusion cull pass, to remove surface damage occluded by opaque windows.
         Region opaque;
