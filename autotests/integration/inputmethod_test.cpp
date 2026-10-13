@@ -63,6 +63,7 @@ private Q_SLOTS:
     void testOpenClose();
     void testEnableDisableV3();
     void testEnableActive();
+    void testShowPanelWithoutInputContext();
     void testHidePanel();
     void testUnmapPanel();
     void testReactivateFocus();
@@ -273,6 +274,45 @@ void InputMethodTest::testEnableActive()
     QVERIFY(kwinApp()->inputMethod()->isActive());
 
     // Destroy the test window.
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
+}
+
+/*!
+ * Verifies that we don't show the OSK if there is no context.
+ */
+void InputMethodTest::testShowPanelWithoutInputContext()
+{
+    auto *inputMethod = kwinApp()->inputMethod();
+    inputMethod->hide();
+    QVERIFY(!inputMethod->isActive());
+    QSignalSpy activateSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(1280, 1024), Qt::red);
+    QVERIFY(window);
+    QVERIFY(window->isActive());
+
+    auto panelSurface = Test::createSurface();
+    auto panelRole = Test::createInputPanelSurfaceV1(panelSurface.get(), Test::waylandOutputs().first(), Test::MockInputMethod::Mode::TopLevel);
+    QVERIFY(panelRole);
+    Test::render(panelSurface.get(), QSize(1280, 400), Qt::blue);
+    QTRY_VERIFY(inputMethod->panel());
+    QTRY_VERIFY(inputMethod->panel()->surface()->isMapped());
+    QVERIFY(!inputMethod->isVisible());
+    QVERIFY(!inputMethod->isActive());
+
+    std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
+    QVERIFY(textInput);
+    touchNow();
+    // Ask to show the panel when there is no context created
+    textInput->showInputPanel();
+    QVERIFY(Test::waylandSync());
+    QCOMPARE(activateSpy.count(), 0);
+    QVERIFY(!inputMethod->isActive());
+    QVERIFY(!inputMethod->isVisible());
+
     shellSurface.reset();
     QVERIFY(Test::waitForWindowClosed(window));
 }
