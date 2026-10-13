@@ -34,7 +34,6 @@ class ThumbnailAsideEffect
 
 public:
     ThumbnailAsideEffect();
-    ~ThumbnailAsideEffect() override;
     void reconfigure(ReconfigureFlags) override;
     bool paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
     bool paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data) override;
