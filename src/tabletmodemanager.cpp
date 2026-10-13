@@ -80,6 +80,9 @@ public:
 
     void refresh(InputDevice *inputDevice)
     {
+        if (input()->hasTabletModeSwitch()) {
+            return;
+        }
         if (inputDevice->isTouch() || inputDevice->isPointer()) {
             check();
         }
