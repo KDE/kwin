@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-07 02:54+0000\n"
+"POT-Creation-Date: 2026-10-13 03:21+0000\n"
 "PO-Revision-Date: 2026-10-01 14:26+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -3668,7 +3668,7 @@ msgid "Hide from screenshots and screen recordings rule type"
 msgstr ""
 "„Slėpti, kai daromos ekrano kopijos ir filmuojamas ekranas“ taisyklės tipas"
 
-#: scene/workspacescene.cpp:115
+#: scene/workspacescene.cpp:116
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
 msgstr "Perjungti „Rodyti komponavimą“ efektą"

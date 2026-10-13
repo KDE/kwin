@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-07 02:54+0000\n"
+"POT-Creation-Date: 2026-10-13 03:21+0000\n"
 "PO-Revision-Date: 2026-10-02 20:33+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -3664,7 +3664,7 @@ msgstr "Piilota näytöntoistolta ja näyttönauhoitukselta"
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr "Piilota näytöntoistolta ja näyttönauhoitukselta -sääntötyyppi"
 
-#: scene/workspacescene.cpp:115
+#: scene/workspacescene.cpp:116
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
 msgstr "Käytä tai poista käytöstä ”Näytä koostamistila” -tehoste"

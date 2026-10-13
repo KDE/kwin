@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-07 02:54+0000\n"
+"POT-Creation-Date: 2026-10-13 03:21+0000\n"
 "PO-Revision-Date: 2008-12-22 16:10+0530\n"
 "Last-Translator: Runa Bhattacharjee <runab@redhat.com>\n"
 "Language-Team: Bengali INDIA <fedora-trans-bn_IN@redhat.com>\n"
@@ -3709,7 +3709,7 @@ msgstr "সম্পূর্ণ পর্দায় প্রদর্শন (&F
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr "সম্পূর্ণ পর্দায় প্রদর্শন (&F)"
 
-#: scene/workspacescene.cpp:115
+#: scene/workspacescene.cpp:116
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
 msgstr ""

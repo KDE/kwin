@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-07 02:54+0000\n"
+"POT-Creation-Date: 2026-10-13 03:21+0000\n"
 "PO-Revision-Date: 2026-09-04 08:45+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -3638,7 +3638,7 @@ msgstr "הסתרה מצילומי והסרטות מסך"
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr "סוג כלל הסתרה מצילומי והסרטות מסך"
 
-#: scene/workspacescene.cpp:115
+#: scene/workspacescene.cpp:116
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
 msgstr "החלפת מצב אפקט „הצגת ניהול חלונאי”"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-07 02:54+0000\n"
+"POT-Creation-Date: 2026-10-13 03:21+0000\n"
 "PO-Revision-Date: 2026-10-07 11:45+0200\n"
 "Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -3777,7 +3777,7 @@ msgstr "Sakrij od snimaka i video snimaka ekrana"
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr "Tip pravila skrivanja od snimaka i video snimaka ekrana"
 
-#: scene/workspacescene.cpp:115
+#: scene/workspacescene.cpp:116
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
 msgstr "Uključi/isključi efekat „Prikaži slaganje“"

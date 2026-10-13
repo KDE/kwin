@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-07 02:54+0000\n"
+"POT-Creation-Date: 2026-10-13 03:21+0000\n"
 "PO-Revision-Date: 2008-07-08 18:58+0530\n"
 "Last-Translator: \n"
 "Language-Team: SMC <smc.org.in>\n"
@@ -3638,7 +3638,7 @@ msgstr "&സ്ക്രീന്‍ പൂര്‍ണ്ണവലിപ്പ�
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr "&സ്ക്രീന്‍ പൂര്‍ണ്ണവലിപ്പത്തിലാക്കുക"
 
-#: scene/workspacescene.cpp:115
+#: scene/workspacescene.cpp:116
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
 msgstr ""

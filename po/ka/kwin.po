@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-07 02:54+0000\n"
+"POT-Creation-Date: 2026-10-13 03:21+0000\n"
 "PO-Revision-Date: 2026-09-03 06:22+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -3648,7 +3648,7 @@ msgstr "დამალვა ეკრანის ანაბეჭდებ�
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr "ეკრანის ანაბეჭდებიდან და ეკრანის ჩანაწერებიდან დამალვის წესის ტიპი"
 
-#: scene/workspacescene.cpp:115
+#: scene/workspacescene.cpp:116
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
 msgstr "\"კომპოზიციის ჩვენების\" ეფექტის გადართვა"
