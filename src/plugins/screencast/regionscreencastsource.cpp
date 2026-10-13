@@ -74,7 +74,7 @@ void RegionScreenCastSource::setRenderCursor(bool enable)
 
 void RegionScreenCastSource::setNextPresentationTimestamp(std::chrono::nanoseconds timestamp, uint32_t refreshRate)
 {
-    m_sceneView->setNextPresentationTimestamp(timestamp, refreshRate);
+    m_sceneView->setNextPresentationTimestamp(timestamp, refreshRate, nullptr);
 }
 
 Region RegionScreenCastSource::render(GLFramebuffer *target, const Region &bufferRepair)
