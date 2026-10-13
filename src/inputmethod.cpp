@@ -140,6 +140,14 @@ void InputMethod::show()
 {
     m_showRequested = true;
 
+    if (!isActive()) {
+        refreshActive();
+        if (!isActive()) {
+            qCWarning(KWIN_VIRTUALKEYBOARD) << "Input method is trying to show itself but without a context. Aborting.";
+            return;
+        }
+    }
+
     // If the panel has something to display, show it (e.g. if we hid it from kwin rather than the IM hiding itself)
     // Otherwise, ensure the input context is current and the IM will see to having itself shown if there's something to show.
     // If there's no context available, then nothing will be shown
@@ -149,14 +157,7 @@ void InputMethod::show()
     } else {
         // making the input context current will trigger the IM
         // to show the panel (if there is something to show)
-        if (!isActive()) {
-            refreshActive();
-        }
-
-        // refreshActive affects the result of isActive
-        if (isActive()) {
-            adoptInputMethodContext();
-        }
+        adoptInputMethodContext();
     }
 }
 
