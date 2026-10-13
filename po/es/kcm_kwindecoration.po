@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-13 00:47+0000\n"
 "PO-Revision-Date: 2026-05-15 00:15+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -176,17 +176,17 @@ msgid "You have the following KWin window decoration themes on your system:"
 msgstr ""
 "Su sistema tiene los siguientes temas de decoración de ventanas para KWin:"
 
-#: ui/Buttons.qml:85
+#: ui/Buttons.qml:91
 #, kde-format
 msgid "Titlebar"
 msgstr "Barra de título"
 
-#: ui/Buttons.qml:245
+#: ui/Buttons.qml:269
 #, kde-format
 msgid "Drop button here to remove it"
 msgstr "Suelte el botón aquí para eliminarlo"
 
-#: ui/Buttons.qml:261
+#: ui/Buttons.qml:285
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
 msgstr "Arrastre los botones de aquí a la barra de título y viceversa"
@@ -196,25 +196,25 @@ msgstr "Arrastre los botones de aquí a la barra de título y viceversa"
 msgid "Titlebar Buttons"
 msgstr "Botones de la barra de título"
 
-#: ui/ConfigureTitlebar.qml:35
+#: ui/ConfigureTitlebar.qml:26
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
 msgstr "Cerrar ventanas al hacer doble clic en el botón de menú de la ventana"
 
-#: ui/ConfigureTitlebar.qml:52
+#: ui/ConfigureTitlebar.qml:43
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
 msgstr "Mantenga pulsado el botón del menú de la ventana para mostrar el menú."
 
-#: ui/ConfigureTitlebar.qml:59
+#: ui/ConfigureTitlebar.qml:50
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Mostrar ayudas emergentes de los botones de la barra de título"
 
-#: ui/ConfigureTitlebar.qml:73
+#: ui/ConfigureTitlebar.qml:64
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
@@ -222,7 +222,7 @@ msgstr ""
 "Mostrar siempre el botón «Ocultar de las capturas y grabaciones de la "
 "pantalla»"
 
-#: ui/ConfigureTitlebar.qml:85
+#: ui/ConfigureTitlebar.qml:76
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -232,7 +232,7 @@ msgstr ""
 "Si no está marcada, el botón aparece solo cuando la ventana se oculta de las "
 "capturas y de las grabaciones de la pantalla."
 
-#: ui/ConfigureTitlebar.qml:86
+#: ui/ConfigureTitlebar.qml:77
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""

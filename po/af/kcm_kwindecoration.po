@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration stable\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-13 00:47+0000\n"
 "PO-Revision-Date: 2005-06-18 11:28+0200\n"
 "Last-Translator: JUANITA FRANZ <JUANITA.FRANZ@VR-WEB.DE>\n"
 "Language-Team: AFRIKAANS <translate-discuss-af@lists.sourceforge.net>\n"
@@ -145,17 +145,17 @@ msgstr ""
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr ""
 
-#: ui/Buttons.qml:85
+#: ui/Buttons.qml:91
 #, kde-format
 msgid "Titlebar"
 msgstr ""
 
-#: ui/Buttons.qml:245
+#: ui/Buttons.qml:269
 #, kde-format
 msgid "Drop button here to remove it"
 msgstr ""
 
-#: ui/Buttons.qml:261
+#: ui/Buttons.qml:285
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
 msgstr ""
@@ -166,32 +166,32 @@ msgstr ""
 msgid "Titlebar Buttons"
 msgstr "Knoppies"
 
-#: ui/ConfigureTitlebar.qml:35
+#: ui/ConfigureTitlebar.qml:26
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
 msgstr ""
 
-#: ui/ConfigureTitlebar.qml:52
+#: ui/ConfigureTitlebar.qml:43
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
 msgstr ""
 
-#: ui/ConfigureTitlebar.qml:59
+#: ui/ConfigureTitlebar.qml:50
 #, fuzzy, kde-format
 #| msgid "&Show window button tooltips"
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Vertoon venster knoppie sleutel-leidraad"
 
-#: ui/ConfigureTitlebar.qml:73
+#: ui/ConfigureTitlebar.qml:64
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
 msgstr ""
 
-#: ui/ConfigureTitlebar.qml:85
+#: ui/ConfigureTitlebar.qml:76
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -199,7 +199,7 @@ msgid ""
 "screenshots and screen recordings"
 msgstr ""
 
-#: ui/ConfigureTitlebar.qml:86
+#: ui/ConfigureTitlebar.qml:77
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""

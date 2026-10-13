@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-12 00:54+0000\n"
+"POT-Creation-Date: 2026-10-13 00:47+0000\n"
 "PO-Revision-Date: 2026-10-11 15:17+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -2651,7 +2651,7 @@ msgstr "Ha fallat en connectar amb el context del PipeWire"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:152
+#: plugins/screencast/screencastmanager.cpp:153
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Tipus de composició no acceptada"
@@ -2661,12 +2661,12 @@ msgstr "Tipus de composició no acceptada"
 msgid "Could not find window id %1"
 msgstr "No s'ha pogut trobar la finestra amb ID %1"
 
-#: plugins/screencast/screencastmanager.cpp:119
+#: plugins/screencast/screencastmanager.cpp:120
 #, kde-format
 msgid "Could not find output"
 msgstr "No s'ha pogut trobar la sortida"
 
-#: plugins/screencast/screencastmanager.cpp:157
+#: plugins/screencast/screencastmanager.cpp:158
 #, kde-format
 msgid "Invalid region"
 msgstr "Regió no vàlida"
@@ -3671,7 +3671,7 @@ msgstr ""
 "Oculta del tipus de regla de captures de pantalla i enregistraments de "
 "pantalla"
 
-#: scene/workspacescene.cpp:115
+#: scene/workspacescene.cpp:116
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
 msgstr "Commuta l'efecte «Mostra la composició»"

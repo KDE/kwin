@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-13 00:47+0000\n"
 "PO-Revision-Date: 2026-05-14 04:36+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -158,17 +158,17 @@ msgstr "თემა \"%1\" ვერ ვიპოვე. თემა ერთ
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr "სისტემაში გაქვთ შემდეგი KWin -ის ფანჯრის დეკორაციის თემები:"
 
-#: ui/Buttons.qml:85
+#: ui/Buttons.qml:91
 #, kde-format
 msgid "Titlebar"
 msgstr "სათაურის ქუდის"
 
-#: ui/Buttons.qml:245
+#: ui/Buttons.qml:269
 #, kde-format
 msgid "Drop button here to remove it"
 msgstr "წასაშლელად ღილაკი აქ გადმოათრიეთ"
 
-#: ui/Buttons.qml:261
+#: ui/Buttons.qml:285
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
 msgstr "გადაათრიეთ ღილაკები ამ წერტილსა და სათაურის ქუტს შორის"
@@ -178,25 +178,25 @@ msgstr "გადაათრიეთ ღილაკები ამ წერ
 msgid "Titlebar Buttons"
 msgstr "სათაურის ქუდის ღილაკები"
 
-#: ui/ConfigureTitlebar.qml:35
+#: ui/ConfigureTitlebar.qml:26
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
 msgstr "ფანჰრების დახურვა ფანჯრის მენიუს ღილაკზე ორჯერ დაწკაპუნებით"
 
-#: ui/ConfigureTitlebar.qml:52
+#: ui/ConfigureTitlebar.qml:43
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
 msgstr "მენიუს საჩვენებლად დააწექით და გეჭიროთ ფანჯრის მენიუს ღილაკზე."
 
-#: ui/ConfigureTitlebar.qml:59
+#: ui/ConfigureTitlebar.qml:50
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "სათაურის ქუდის ღილაკების მინიშნებების ჩვენება"
 
-#: ui/ConfigureTitlebar.qml:73
+#: ui/ConfigureTitlebar.qml:64
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
@@ -204,7 +204,7 @@ msgstr ""
 "ღილაკის 'დამალვა ეკრანის ანაბეჭდებიდან და ეკრანის ჩანაწერებიდან' ყოველთვის "
 "ჩვენება"
 
-#: ui/ConfigureTitlebar.qml:85
+#: ui/ConfigureTitlebar.qml:76
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -214,7 +214,7 @@ msgstr ""
 "როცა გამორთულია, ღილაკი, მხოლოდ, მაშინ ჩანს, თუ ფანჯარა დამალულია ეკრანის "
 "ანაბეჭდებიდან და ეკრანის ჩანაწერებიდან"
 
-#: ui/ConfigureTitlebar.qml:86
+#: ui/ConfigureTitlebar.qml:77
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""

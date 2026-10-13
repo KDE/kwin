@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-12 00:54+0000\n"
+"POT-Creation-Date: 2026-10-13 00:47+0000\n"
 "PO-Revision-Date: 2026-09-03 06:36-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -2659,7 +2659,7 @@ msgstr "Falha ao conectar ao contexto do PipeWire"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:152
+#: plugins/screencast/screencastmanager.cpp:153
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Tipo de composição não suportada"
@@ -2669,12 +2669,12 @@ msgstr "Tipo de composição não suportada"
 msgid "Could not find window id %1"
 msgstr "Não foi possível encontrar a janela de id %1"
 
-#: plugins/screencast/screencastmanager.cpp:119
+#: plugins/screencast/screencastmanager.cpp:120
 #, kde-format
 msgid "Could not find output"
 msgstr "Não foi possível encontrar saída"
 
-#: plugins/screencast/screencastmanager.cpp:157
+#: plugins/screencast/screencastmanager.cpp:158
 #, kde-format
 msgid "Invalid region"
 msgstr "Região inválida"
@@ -3675,7 +3675,7 @@ msgstr "Ocultar de capturas e gravações de tela"
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr "Tipo de regra para ocultar de capturas e gravações de tela"
 
-#: scene/workspacescene.cpp:115
+#: scene/workspacescene.cpp:116
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
 msgstr "Alternar o efeito “Exibir composição”"

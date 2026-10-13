@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-13 00:47+0000\n"
 "PO-Revision-Date: 2026-07-21 17:21+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -169,17 +169,17 @@ msgstr ""
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr "Zure sisteman ondoko KWin leiho-apainketa gaiak dituzu:"
 
-#: ui/Buttons.qml:85
+#: ui/Buttons.qml:91
 #, kde-format
 msgid "Titlebar"
 msgstr "Titulu-barra"
 
-#: ui/Buttons.qml:245
+#: ui/Buttons.qml:269
 #, kde-format
 msgid "Drop button here to remove it"
 msgstr "Jaregin botoia hemen hura kentzeko"
 
-#: ui/Buttons.qml:261
+#: ui/Buttons.qml:285
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
 msgstr "Arrastatu botoiak hemen eta titulu-barraren artean"
@@ -189,32 +189,32 @@ msgstr "Arrastatu botoiak hemen eta titulu-barraren artean"
 msgid "Titlebar Buttons"
 msgstr "Titulu-barrako botoiak"
 
-#: ui/ConfigureTitlebar.qml:35
+#: ui/ConfigureTitlebar.qml:26
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
 msgstr "Itxi leihoak menuaren botoian klik bikoitza eginez"
 
-#: ui/ConfigureTitlebar.qml:52
+#: ui/ConfigureTitlebar.qml:43
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
 msgstr "Egin klik eta eutsi menuaren botoiaren gainean menua erakusteko."
 
-#: ui/ConfigureTitlebar.qml:59
+#: ui/ConfigureTitlebar.qml:50
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Erakutsi titulu-barrako botoien argibideak"
 
-#: ui/ConfigureTitlebar.qml:73
+#: ui/ConfigureTitlebar.qml:64
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
 msgstr ""
 "Erakutsi beti \"Ezkutatu pantaila-argazkietan eta grabazioetan\" botoia"
 
-#: ui/ConfigureTitlebar.qml:85
+#: ui/ConfigureTitlebar.qml:76
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -224,7 +224,7 @@ msgstr ""
 "Marka kenduta dagoenean, botoia, leihoa pantaila-argazkitan eta -grabaziotan "
 "ezkutatuta dagoena bakarrik agertzen da"
 
-#: ui/ConfigureTitlebar.qml:86
+#: ui/ConfigureTitlebar.qml:77
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""

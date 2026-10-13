@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1750062 2026-10-12 02:07:23Z scripty $
+# $Id: kwin.po 1750185 2026-10-13 01:51:06Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-12 00:54+0000\n"
+"POT-Creation-Date: 2026-10-13 00:47+0000\n"
 "PO-Revision-Date: 2026-09-03 07:30+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -2650,7 +2650,7 @@ msgstr "Priklop na kontekst PipeWire ni uspel"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:152
+#: plugins/screencast/screencastmanager.cpp:153
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Nepodprta vrsta sestave"
@@ -2660,12 +2660,12 @@ msgstr "Nepodprta vrsta sestave"
 msgid "Could not find window id %1"
 msgstr "Ni bilo mogoče najti okna id %1"
 
-#: plugins/screencast/screencastmanager.cpp:119
+#: plugins/screencast/screencastmanager.cpp:120
 #, kde-format
 msgid "Could not find output"
 msgstr "Ni bilo mogoče najti outputa"
 
-#: plugins/screencast/screencastmanager.cpp:157
+#: plugins/screencast/screencastmanager.cpp:158
 #, kde-format
 msgid "Invalid region"
 msgstr "Neveljavna regija"
@@ -3665,7 +3665,7 @@ msgstr "Skrij iz posnetkov in video snemanj zaslona"
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr "Zvrst pravila skrivanja iz posnetkov in video snemanj zaslona"
 
-#: scene/workspacescene.cpp:115
+#: scene/workspacescene.cpp:116
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
 msgstr "Preklopi učinek \"Prikaži sestavljanje\""

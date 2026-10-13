@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-13 00:47+0000\n"
 "PO-Revision-Date: 2022-09-27 18:04+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -170,17 +170,17 @@ msgstr ""
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr "Kamu memiliki tema dekorasi jendela KWin berikut ini di sistemmu:"
 
-#: ui/Buttons.qml:85
+#: ui/Buttons.qml:91
 #, kde-format
 msgid "Titlebar"
 msgstr "Bilah Judul"
 
-#: ui/Buttons.qml:245
+#: ui/Buttons.qml:269
 #, kde-format
 msgid "Drop button here to remove it"
 msgstr "Taruh tombol di sini untuk menghapusnya"
 
-#: ui/Buttons.qml:261
+#: ui/Buttons.qml:285
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
 msgstr "Seret tombol antara di sini dan di bilah judul"
@@ -192,7 +192,7 @@ msgstr "Seret tombol antara di sini dan di bilah judul"
 msgid "Titlebar Buttons"
 msgstr "Tombol Bilah Judul"
 
-#: ui/ConfigureTitlebar.qml:35
+#: ui/ConfigureTitlebar.qml:26
 #, fuzzy, kde-format
 #| msgctxt "checkbox label"
 #| msgid "Close windows by double clicking the menu button"
@@ -200,7 +200,7 @@ msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
 msgstr "Tutup jendela dengan klik ganda tombol menu"
 
-#: ui/ConfigureTitlebar.qml:52
+#: ui/ConfigureTitlebar.qml:43
 #, fuzzy, kde-format
 #| msgctxt "popup tip"
 #| msgid "Click and hold on the menu button to show the menu."
@@ -208,19 +208,19 @@ msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
 msgstr "Klik dan tahan di tombol menu untuk menampilkan menu."
 
-#: ui/ConfigureTitlebar.qml:59
+#: ui/ConfigureTitlebar.qml:50
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Tampilkan tips-alat tombol bilah judul"
 
-#: ui/ConfigureTitlebar.qml:73
+#: ui/ConfigureTitlebar.qml:64
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
 msgstr ""
 
-#: ui/ConfigureTitlebar.qml:85
+#: ui/ConfigureTitlebar.qml:76
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -228,7 +228,7 @@ msgid ""
 "screenshots and screen recordings"
 msgstr ""
 
-#: ui/ConfigureTitlebar.qml:86
+#: ui/ConfigureTitlebar.qml:77
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""

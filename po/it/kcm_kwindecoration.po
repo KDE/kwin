@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-13 00:47+0000\n"
 "PO-Revision-Date: 2026-05-14 15:48+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -170,17 +170,17 @@ msgid "You have the following KWin window decoration themes on your system:"
 msgstr ""
 "Hai i seguenti temi della decorazione delle finestre di KWin sul tuo sistema:"
 
-#: ui/Buttons.qml:85
+#: ui/Buttons.qml:91
 #, kde-format
 msgid "Titlebar"
 msgstr "Barra del titolo"
 
-#: ui/Buttons.qml:245
+#: ui/Buttons.qml:269
 #, kde-format
 msgid "Drop button here to remove it"
 msgstr "Rilascia qui il pulsante per rimuoverlo"
 
-#: ui/Buttons.qml:261
+#: ui/Buttons.qml:285
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
 msgstr "Trascina i pulsanti da qui alla barra del titolo"
@@ -190,14 +190,14 @@ msgstr "Trascina i pulsanti da qui alla barra del titolo"
 msgid "Titlebar Buttons"
 msgstr "Pulsanti della barra del titolo"
 
-#: ui/ConfigureTitlebar.qml:35
+#: ui/ConfigureTitlebar.qml:26
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
 msgstr ""
 "Chiudi le finestre con un doppio clic sul pulsante del menu della finestra"
 
-#: ui/ConfigureTitlebar.qml:52
+#: ui/ConfigureTitlebar.qml:43
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
@@ -205,13 +205,13 @@ msgstr ""
 "Fai clic e tieni premuto il pulsante del menu della finestra per "
 "visualizzarlo."
 
-#: ui/ConfigureTitlebar.qml:59
+#: ui/ConfigureTitlebar.qml:50
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Mostra i suggerimenti per i pulsanti della barra del titolo"
 
-#: ui/ConfigureTitlebar.qml:73
+#: ui/ConfigureTitlebar.qml:64
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
@@ -219,7 +219,7 @@ msgstr ""
 "Mostra sempre il pulsante «Nascondi da schermate e registrazioni dello "
 "schermo»"
 
-#: ui/ConfigureTitlebar.qml:85
+#: ui/ConfigureTitlebar.qml:76
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -229,7 +229,7 @@ msgstr ""
 "Se non selezionata, il pulsante viene visualizzato solo se la finestra è "
 "nascosta dalle schermate e dalle registrazioni dello schermo."
 
-#: ui/ConfigureTitlebar.qml:86
+#: ui/ConfigureTitlebar.qml:77
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""

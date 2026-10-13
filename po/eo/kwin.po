@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-12 00:54+0000\n"
+"POT-Creation-Date: 2026-10-13 00:47+0000\n"
 "PO-Revision-Date: 2025-03-15 10:38+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -2706,7 +2706,7 @@ msgstr "Malsukcesis konekti PipeWire-kuntekston"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:152
+#: plugins/screencast/screencastmanager.cpp:153
 #, fuzzy, kde-format
 #| msgid "Block Compositing rule type"
 msgid "Unsupported compositing type"
@@ -2717,12 +2717,12 @@ msgstr "Bloko Compositing regulo tipo"
 msgid "Could not find window id %1"
 msgstr "Ne eblis trovi fenestroid %1"
 
-#: plugins/screencast/screencastmanager.cpp:119
+#: plugins/screencast/screencastmanager.cpp:120
 #, kde-format
 msgid "Could not find output"
 msgstr "Ne eblis trovi eligon"
 
-#: plugins/screencast/screencastmanager.cpp:157
+#: plugins/screencast/screencastmanager.cpp:158
 #, kde-format
 msgid "Invalid region"
 msgstr "Nevalida regiono"
@@ -3731,7 +3731,7 @@ msgstr "Plenekrana regulospeco"
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr "Plenekrana regulospeco"
 
-#: scene/workspacescene.cpp:115
+#: scene/workspacescene.cpp:116
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
 msgstr ""

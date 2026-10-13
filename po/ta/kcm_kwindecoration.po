@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-13 00:47+0000\n"
 "PO-Revision-Date: 2026-05-10 17:26+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -153,17 +153,17 @@ msgstr ""
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr "உங்கள் கணினியில் கீழ்காணும் விளிம்புத்திட்டங்கள் உள்ளன:"
 
-#: ui/Buttons.qml:85
+#: ui/Buttons.qml:91
 #, kde-format
 msgid "Titlebar"
 msgstr "தலைப்புப்பட்டை"
 
-#: ui/Buttons.qml:245
+#: ui/Buttons.qml:269
 #, kde-format
 msgid "Drop button here to remove it"
 msgstr "பட்டனை நீக்க அதனை இங்கு இழுத்து போடவும்"
 
-#: ui/Buttons.qml:261
+#: ui/Buttons.qml:285
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
 msgstr "பட்டன்களை இங்கிருந்து தலைப்புப்பட்டைக்கு இழுங்கள்"
@@ -173,25 +173,25 @@ msgstr "பட்டன்களை இங்கிருந்து தலை�
 msgid "Titlebar Buttons"
 msgstr "தலைப்புப்பட்டையிலுள்ள பட்டன்கள்"
 
-#: ui/ConfigureTitlebar.qml:35
+#: ui/ConfigureTitlebar.qml:26
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
 msgstr "சாளரப்பட்டி பட்டனில் இரட்டை க்ளிக் செய்வது சாளரத்தை மூடும்"
 
-#: ui/ConfigureTitlebar.qml:52
+#: ui/ConfigureTitlebar.qml:43
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
 msgstr "பட்டியை காட்ட சாளரப்பட்டி பட்டனில் கிளிக் செய்தபடியே பிடித்திருக்கவும்."
 
-#: ui/ConfigureTitlebar.qml:59
+#: ui/ConfigureTitlebar.qml:50
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "தலைப்புப்பட்டையிலுள்ள பட்டன்களுக்கு கருவித்துப்புகளை காட்டு"
 
-#: ui/ConfigureTitlebar.qml:73
+#: ui/ConfigureTitlebar.qml:64
 #, fuzzy, kde-format
 #| msgctxt "@option:check"
 #| msgid "Always show \"Hide from Screencast\" button"
@@ -199,7 +199,7 @@ msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
 msgstr "'திரைப்பகிர்விலிருந்து மறை' பட்டனை எப்போதும் காட்டு"
 
-#: ui/ConfigureTitlebar.qml:85
+#: ui/ConfigureTitlebar.qml:76
 #, fuzzy, kde-format
 #| msgctxt "@info:tooltip"
 #| msgid ""
@@ -213,7 +213,7 @@ msgstr ""
 "இத்தேர்வு குறிக்கப்படவில்லையெனில், சாளரம் திரைப்பகிர்விலிருந்து மறைக்கப்பட்டுள்ளபோது மட்டும் "
 "திரைப்பகிர்விலிருந்து மறைப்பதற்கான பட்டம் காட்டப்படும்"
 
-#: ui/ConfigureTitlebar.qml:86
+#: ui/ConfigureTitlebar.qml:77
 #, fuzzy, kde-format
 #| msgctxt "@info:tooltip"
 #| msgid ""

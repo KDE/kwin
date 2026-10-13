@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-12 00:54+0000\n"
+"POT-Creation-Date: 2026-10-13 00:47+0000\n"
 "PO-Revision-Date: 2026-09-03 19:35+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -2654,7 +2654,7 @@ msgstr "Не вдалося встановити з'єднання із конт
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:152
+#: plugins/screencast/screencastmanager.cpp:153
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Непідтримуваний тип композиції"
@@ -2664,12 +2664,12 @@ msgstr "Непідтримуваний тип композиції"
 msgid "Could not find window id %1"
 msgstr "Не вдалося знайти ідентифікатор вікна %1"
 
-#: plugins/screencast/screencastmanager.cpp:119
+#: plugins/screencast/screencastmanager.cpp:120
 #, kde-format
 msgid "Could not find output"
 msgstr "Не вдалося виявити виведення"
 
-#: plugins/screencast/screencastmanager.cpp:157
+#: plugins/screencast/screencastmanager.cpp:158
 #, kde-format
 msgid "Invalid region"
 msgstr "Некоректна область"
@@ -3670,7 +3670,7 @@ msgstr "Приховати на знімках екрана та записах 
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr "Тип правила приховування на знімках з екрана та записах з екрана"
 
-#: scene/workspacescene.cpp:115
+#: scene/workspacescene.cpp:116
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
 msgstr "Увімкнути або вимкнути ефекти «Показувати композицію»"

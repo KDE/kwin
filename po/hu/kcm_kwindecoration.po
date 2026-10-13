@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-13 00:47+0000\n"
 "PO-Revision-Date: 2026-06-19 22:16+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -165,17 +165,17 @@ msgstr ""
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr "A következő KWin ablakdekorációs témák találhatók meg a rendszeren:"
 
-#: ui/Buttons.qml:85
+#: ui/Buttons.qml:91
 #, kde-format
 msgid "Titlebar"
 msgstr "Címsor"
 
-#: ui/Buttons.qml:245
+#: ui/Buttons.qml:269
 #, kde-format
 msgid "Drop button here to remove it"
 msgstr "Ejtse ide a gombot az eltávolításához"
 
-#: ui/Buttons.qml:261
+#: ui/Buttons.qml:285
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
 msgstr "Húzza a gombokat innen a címsorba"
@@ -185,27 +185,27 @@ msgstr "Húzza a gombokat innen a címsorba"
 msgid "Titlebar Buttons"
 msgstr "Címsorgombok"
 
-#: ui/ConfigureTitlebar.qml:35
+#: ui/ConfigureTitlebar.qml:26
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
 msgstr ""
 "Az ablakok bezárhatók legyenek az ablakmenü gombra történő dupla kattintással"
 
-#: ui/ConfigureTitlebar.qml:52
+#: ui/ConfigureTitlebar.qml:43
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
 msgstr ""
 "Kattintson és tartsa lenyomva az ablakmenü gombot a menü megjelenítéséhez."
 
-#: ui/ConfigureTitlebar.qml:59
+#: ui/ConfigureTitlebar.qml:50
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Tippek megjelenítése a címsor gombjainál"
 
-#: ui/ConfigureTitlebar.qml:73
+#: ui/ConfigureTitlebar.qml:64
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
@@ -213,7 +213,7 @@ msgstr ""
 "Mindig mutassa az „Elrejtés a képernyőképekből és a képernyőfelvételekből” "
 "gombot"
 
-#: ui/ConfigureTitlebar.qml:85
+#: ui/ConfigureTitlebar.qml:76
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -223,7 +223,7 @@ msgstr ""
 "Ha nincs bejelölve, a gomb csak akkor jelenik meg, ha az ablakot elrejtik a "
 "képernyőképekből és a képernyőfelvételekből"
 
-#: ui/ConfigureTitlebar.qml:86
+#: ui/ConfigureTitlebar.qml:77
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""

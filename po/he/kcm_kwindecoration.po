@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-13 00:47+0000\n"
 "PO-Revision-Date: 2026-05-14 08:58+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -170,17 +170,17 @@ msgstr ""
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr "במערכת שלך יש את ערכות עיצוב עיטורי החלונות הבאים:"
 
-#: ui/Buttons.qml:85
+#: ui/Buttons.qml:91
 #, kde-format
 msgid "Titlebar"
 msgstr "שורת הכותרת"
 
-#: ui/Buttons.qml:245
+#: ui/Buttons.qml:269
 #, kde-format
 msgid "Drop button here to remove it"
 msgstr "יש לשחרר כפתור כאן כדי להסיר אותו"
 
-#: ui/Buttons.qml:261
+#: ui/Buttons.qml:285
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
 msgstr "כפתורי גרירה בין כאן לבין שורת הכותרת"
@@ -190,31 +190,31 @@ msgstr "כפתורי גרירה בין כאן לבין שורת הכותרת"
 msgid "Titlebar Buttons"
 msgstr "כפתורי שורת הכותרת"
 
-#: ui/ConfigureTitlebar.qml:35
+#: ui/ConfigureTitlebar.qml:26
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
 msgstr "אפשר לסגור חלונות בלחיצה כפולה על כפתור תפריט החלון"
 
-#: ui/ConfigureTitlebar.qml:52
+#: ui/ConfigureTitlebar.qml:43
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
 msgstr "יש ללחוץ ולהחזיק את כפתור תפריט החלון כדי להציג את התפריט."
 
-#: ui/ConfigureTitlebar.qml:59
+#: ui/ConfigureTitlebar.qml:50
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "הצגת חלוניות מידע על כפתורי שורת הכותרת"
 
-#: ui/ConfigureTitlebar.qml:73
+#: ui/ConfigureTitlebar.qml:64
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
 msgstr "תמיד להציג את הכפתור „הסתרה מצילומי והסרטות מסך”"
 
-#: ui/ConfigureTitlebar.qml:85
+#: ui/ConfigureTitlebar.qml:76
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -222,7 +222,7 @@ msgid ""
 "screenshots and screen recordings"
 msgstr "כשהאפשרות לא מסומנת הכפתור מופיע רק אם החלון מוסתר מצילום והסרטת מסך"
 
-#: ui/ConfigureTitlebar.qml:86
+#: ui/ConfigureTitlebar.qml:77
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""

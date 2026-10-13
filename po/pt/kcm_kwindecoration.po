@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-13 00:47+0000\n"
 "PO-Revision-Date: 2026-01-31 11:41+0000\n"
 "Last-Translator: César A. P. Cláudio <cesarapclaudio@gmail.com>\n"
 "Language-Team: pt\n"
@@ -164,17 +164,17 @@ msgid "You have the following KWin window decoration themes on your system:"
 msgstr ""
 "Dispõe dos seguintes temas de decoração de janelas do KWin no seu sistema:"
 
-#: ui/Buttons.qml:85
+#: ui/Buttons.qml:91
 #, kde-format
 msgid "Titlebar"
 msgstr "Barra de título"
 
-#: ui/Buttons.qml:245
+#: ui/Buttons.qml:269
 #, kde-format
 msgid "Drop button here to remove it"
 msgstr "Largue o botão aqui para o remover"
 
-#: ui/Buttons.qml:261
+#: ui/Buttons.qml:285
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
 msgstr "Arraste os botões entre a barra de título e aqui"
@@ -184,26 +184,26 @@ msgstr "Arraste os botões entre a barra de título e aqui"
 msgid "Titlebar Buttons"
 msgstr "Botões da barra de título"
 
-#: ui/ConfigureTitlebar.qml:35
+#: ui/ConfigureTitlebar.qml:26
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
 msgstr "Fechar janelas ao clicar duas vezes no botão do menu da janela"
 
-#: ui/ConfigureTitlebar.qml:52
+#: ui/ConfigureTitlebar.qml:43
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
 msgstr ""
 "Clique e mantenha premido no botão do menu da janela para mostrar o menu."
 
-#: ui/ConfigureTitlebar.qml:59
+#: ui/ConfigureTitlebar.qml:50
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Mostrar dicas dos botões da barra de título"
 
-#: ui/ConfigureTitlebar.qml:73
+#: ui/ConfigureTitlebar.qml:64
 #, fuzzy, kde-format
 #| msgctxt "@option:check"
 #| msgid "Always show \"Hide from Screencast\" button"
@@ -211,7 +211,7 @@ msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
 msgstr "Mostrar sempre o botão \"Ocultar da gravação de ecrã\""
 
-#: ui/ConfigureTitlebar.qml:85
+#: ui/ConfigureTitlebar.qml:76
 #, fuzzy, kde-format
 #| msgctxt "@info:tooltip"
 #| msgid ""
@@ -225,7 +225,7 @@ msgstr ""
 "Quando desmarcada, o botão só aparece se a janela estiver oculta da gravação "
 "de ecrã"
 
-#: ui/ConfigureTitlebar.qml:86
+#: ui/ConfigureTitlebar.qml:77
 #, fuzzy, kde-format
 #| msgctxt "@info:tooltip"
 #| msgid ""

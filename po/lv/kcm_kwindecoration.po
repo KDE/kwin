@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-13 00:47+0000\n"
 "PO-Revision-Date: 2026-02-06 14:33+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -166,17 +166,17 @@ msgstr "Neizdevās atrast motīvu „%1“. Motīvam ir jābūt kādam no šiem:
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr "Jūsu sistēmā ir šādi „KWin“ logu noformējuma motīvi:"
 
-#: ui/Buttons.qml:85
+#: ui/Buttons.qml:91
 #, kde-format
 msgid "Titlebar"
 msgstr "Virsrakstjosla"
 
-#: ui/Buttons.qml:245
+#: ui/Buttons.qml:269
 #, kde-format
 msgid "Drop button here to remove it"
 msgstr "Pogu nometiet šeit, lai to noņemtu"
 
-#: ui/Buttons.qml:261
+#: ui/Buttons.qml:285
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
 msgstr "Velciet pogas starp šo vietu un virsrakstjoslu"
@@ -186,25 +186,25 @@ msgstr "Velciet pogas starp šo vietu un virsrakstjoslu"
 msgid "Titlebar Buttons"
 msgstr "Virsrakstjoslas pogas"
 
-#: ui/ConfigureTitlebar.qml:35
+#: ui/ConfigureTitlebar.qml:26
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
 msgstr "Aizvērt logus ar dubultklikšķi uz loga izvēlnes pogas"
 
-#: ui/ConfigureTitlebar.qml:52
+#: ui/ConfigureTitlebar.qml:43
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
 msgstr "Lai parādītu izvēlni, klikšķināt un paturēt uz loga izvēlnes pogas."
 
-#: ui/ConfigureTitlebar.qml:59
+#: ui/ConfigureTitlebar.qml:50
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Rādīt virsrakstjoslas pogu paskaidres"
 
-#: ui/ConfigureTitlebar.qml:73
+#: ui/ConfigureTitlebar.qml:64
 #, fuzzy, kde-format
 #| msgctxt "@option:check"
 #| msgid "Always show \"Hide from Screencast\" button"
@@ -212,7 +212,7 @@ msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
 msgstr "Vienmēr rādīt „Slēpt no ekrāna ierakstīšanas“ pogu"
 
-#: ui/ConfigureTitlebar.qml:85
+#: ui/ConfigureTitlebar.qml:76
 #, fuzzy, kde-format
 #| msgctxt "@info:tooltip"
 #| msgid ""
@@ -226,7 +226,7 @@ msgstr ""
 "Ja nav atzīmēts, šī poga būs redzama tikai tad, kad logs ir paslēpts no "
 "ierakstīšanas"
 
-#: ui/ConfigureTitlebar.qml:86
+#: ui/ConfigureTitlebar.qml:77
 #, fuzzy, kde-format
 #| msgctxt "@info:tooltip"
 #| msgid ""

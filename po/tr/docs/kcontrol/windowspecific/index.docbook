@@ -1267,7 +1267,7 @@
 ><title
 >Bir Pencereyi Masaüstüne Sabitleyin ve Diğer Öznitelikleri Ayarlayın</title>
 <para
->&akregator;’ü <emphasis
+>&akregator;’ı <emphasis
 >Sanal Masaüstü 2</emphasis
 >’ye sabitleyin. Ek olarak, uygulamayı yeğlenen bir boyutla ve konumda başlatın. Her bir öznitelik için <guilabel
 >Başlangıçta Uygula</guilabel
@@ -1279,7 +1279,7 @@
 <orderedlist>
 <listitem
 ><para
->&akregator;’ü <emphasis
+>&akregator;’ı <emphasis
 >ikinci masaüstünde</emphasis
 > başlatın ve istediğiniz gibi konumlandırıp boyutlandırın: <screenshot>
 <screeninfo

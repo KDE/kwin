@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-12 00:54+0000\n"
+"POT-Creation-Date: 2026-10-13 00:47+0000\n"
 "PO-Revision-Date: 2026-10-03 19:49-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -2637,7 +2637,7 @@ msgstr "PipeWire مەزمۇنىغا باغلىنالمىدى"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:152
+#: plugins/screencast/screencastmanager.cpp:153
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "قوللىمايدىغان كىرىشتۈرۈش تۈرى"
@@ -2647,12 +2647,12 @@ msgstr "قوللىمايدىغان كىرىشتۈرۈش تۈرى"
 msgid "Could not find window id %1"
 msgstr "كۆزنەك كىملىكى %1 نى تاپالمىدى"
 
-#: plugins/screencast/screencastmanager.cpp:119
+#: plugins/screencast/screencastmanager.cpp:120
 #, kde-format
 msgid "Could not find output"
 msgstr "چىقىرىشنى تاپالمىدى"
 
-#: plugins/screencast/screencastmanager.cpp:157
+#: plugins/screencast/screencastmanager.cpp:158
 #, kde-format
 msgid "Invalid region"
 msgstr "ئىناۋەتسىز رايون"
@@ -3653,7 +3653,7 @@ msgstr "ئېكران كەسمىسى ۋە ئېكران سىن خاتىرىلەش�
 msgid "Hide from screenshots and screen recordings rule type"
 msgstr "ئېكران كەسمىسى ۋە ئېكران سىن خاتىرىلەش قائىدە تۈرىدىن يوشۇرىدۇ"
 
-#: scene/workspacescene.cpp:115
+#: scene/workspacescene.cpp:116
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
 msgstr "«بىرىكتۈرۈشنى كۆرسەت» ئۈنۈمىنى ئالماشتۇر"
