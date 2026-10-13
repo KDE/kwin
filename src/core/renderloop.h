@@ -100,9 +100,12 @@ public:
      */
     std::chrono::nanoseconds predictedRenderTime() const;
 
-    // TODO integrate cursor updates into the render loop / frame scheduling somehow?
-    // and then remove this again
-    bool activeWindowControlsVrrRefreshRate() const;
+    /**
+     * Returns the item that repaint scheduling is focused on.
+     * If this is non-null, repaints from sources other than the item
+     * and its child items are delayed for improved frame pacing.
+     */
+    Item *repaintDriver() const;
 
     void timerEvent(QTimerEvent *event) override;
 

@@ -9,6 +9,7 @@
 #include "options.h"
 #include "renderloop_p.h"
 #include "scene/surfaceitem.h"
+#include "scene/windowitem.h"
 #include "window.h"
 #include "workspace.h"
 
@@ -283,17 +284,16 @@ void RenderLoop::scheduleRepaint(Item *item, OutputLayer *outputLayer, std::opti
     if (d->preparingNewFrame) {
         return;
     }
-    const bool vrr = d->presentationMode == PresentationMode::AdaptiveSync || d->presentationMode == PresentationMode::AdaptiveAsync;
-    const bool tearing = d->presentationMode == PresentationMode::Async || d->presentationMode == PresentationMode::AdaptiveAsync;
-    if ((vrr || tearing) && (item || outputLayer) && activeWindowControlsVrrRefreshRate() && d->output) {
-        SurfaceItem *const surfaceItem = workspace()->activeWindow()->surfaceItem();
-        if (item != surfaceItem && !surfaceItem->isAncestorOf(item)) {
-            constexpr std::chrono::milliseconds s_delayVrrTimer = 1'000ms / 30;
-            d->delayedVrrTimer.start(s_delayVrrTimer, Qt::PreciseTimer, this);
-            return;
-        }
+    const auto surfaceItem = repaintDriver();
+    if ((item || outputLayer) && d->output && surfaceItem && item != surfaceItem && (!item || !surfaceItem->isAncestorOf(item))) {
+        constexpr std::chrono::milliseconds s_delayVrrTimer = 1'000ms / 30;
+        d->delayedVrrTimer.start(s_delayVrrTimer, Qt::PreciseTimer, this);
+        return;
     }
     d->delayedVrrTimer.stop();
+
+    const bool vrr = d->presentationMode == PresentationMode::AdaptiveSync || d->presentationMode == PresentationMode::AdaptiveAsync;
+    const bool tearing = d->presentationMode == PresentationMode::Async || d->presentationMode == PresentationMode::AdaptiveAsync;
     const int effectiveMaxPendingFrameCount = (vrr || tearing) ? 1 : d->maxPendingFrameCount;
     if (d->pendingFrameCount < effectiveMaxPendingFrameCount && !d->inhibitCount) {
         d->scheduleNextRepaint(presentNotBefore);
@@ -304,23 +304,35 @@ void RenderLoop::scheduleRepaint(Item *item, OutputLayer *outputLayer, std::opti
     }
 }
 
-bool RenderLoop::activeWindowControlsVrrRefreshRate() const
+Item *RenderLoop::repaintDriver() const
 {
     if (Q_UNLIKELY(!workspace())) {
-        return false;
+        return nullptr;
+    }
+
+    const bool vrr = d->presentationMode == PresentationMode::AdaptiveSync || d->presentationMode == PresentationMode::AdaptiveAsync;
+    const bool tearing = d->presentationMode == PresentationMode::Async || d->presentationMode == PresentationMode::AdaptiveAsync;
+    if (!vrr && !tearing) {
+        return nullptr;
     }
 
     Window *const activeWindow = workspace()->activeWindow();
     LogicalOutput *logical = workspace()->findOutput(d->output);
     if (!logical) {
-        return false;
+        return nullptr;
     }
-    return activeWindow
+
+    const bool control = activeWindow
         && activeWindow->frameGeometry().intersects(logical->geometryF())
         && activeWindow->surfaceItem()
         && activeWindow->surfaceItem()->recursiveFrameTimeEstimation().transform([](const auto t) {
         return t <= std::chrono::nanoseconds(1'000'000'000) / 30;
     }).value_or(false);
+    if (control) {
+        return activeWindow->windowItem();
+    } else {
+        return nullptr;
+    }
 }
 
 std::chrono::nanoseconds RenderLoop::lastPresentationTimestamp() const
