@@ -180,6 +180,27 @@ enum libinput_config_dwt_state libinput_device_config_dwt_get_default_enabled(st
     return device->disableWhileTypingEnabledByDefault;
 }
 
+enum libinput_config_status libinput_device_config_dwt_set_timeout(struct libinput_device *device, uint32_t timeout)
+{
+    if (device->setDisableWhileTypingTimeoutReturnValue == 0) {
+        if (!device->supportsDisableWhileTyping) {
+            return LIBINPUT_CONFIG_STATUS_INVALID;
+        }
+        device->disableWhileTypingTimeout = timeout;
+        return LIBINPUT_CONFIG_STATUS_SUCCESS;
+    }
+    return LIBINPUT_CONFIG_STATUS_INVALID;
+}
+
+uint32_t libinput_device_config_dwt_get_timeout(struct libinput_device *device)
+{
+    return device->disableWhileTypingTimeout;
+}
+
+uint32_t libinput_device_config_dwt_get_default_timeout(struct libinput_device *device)
+{
+    return device->disableWhileTypingTimeoutDefault;
+}
 int libinput_device_config_accel_is_available(struct libinput_device *device)
 {
     return device->supportsPointerAcceleration;

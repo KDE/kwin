@@ -303,7 +303,7 @@ if (KWIN_BUILD_X11)
     set(XWAYLAND_SESSION_SCRIPTS "/etc/xdg/Xwayland-session.d")
 endif()
 
-find_package(Libinput 1.28)
+find_package(Libinput 1.31)
 set_package_properties(Libinput PROPERTIES TYPE REQUIRED PURPOSE "Required for input handling on Wayland.")
 if (Libinput_VERSION VERSION_GREATER_EQUAL 1.30)
     set(HAVE_LIBINPUT_PLUGINS 1)

@@ -98,6 +98,8 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(bool supportsDisableWhileTyping READ supportsDisableWhileTyping CONSTANT)
     Q_PROPERTY(bool disableWhileTypingEnabledByDefault READ disableWhileTypingEnabledByDefault CONSTANT)
     Q_PROPERTY(bool disableWhileTyping READ isDisableWhileTyping WRITE setDisableWhileTyping NOTIFY disableWhileTypingChanged)
+    Q_PROPERTY(quint32 disableWhileTypingTimeoutDefault READ disableWhileTypingTimeoutDefault CONSTANT)
+    Q_PROPERTY(quint32 disableWhileTypingTimeout READ disableWhileTypingTimeout WRITE setDisableWhileTypingTimeout NOTIFY disableWhileTypingTimeoutChanged)
     //
     // acceleration speed and profile
     Q_PROPERTY(bool supportsPointerAcceleration READ supportsPointerAcceleration CONSTANT)
@@ -495,6 +497,15 @@ public:
     {
         return m_disableWhileTyping;
     }
+    quint32 disableWhileTypingTimeoutDefault() const
+    {
+        return m_disableWhileTypingTimeoutDefault;
+    }
+    quint32 disableWhileTypingTimeout() const
+    {
+        return m_disableWhileTypingTimeout;
+    }
+    void setDisableWhileTypingTimeout(quint32 milliseconds);
     bool isLeftHanded() const
     {
         return m_leftHanded;
@@ -817,6 +828,9 @@ Q_SIGNALS:
     void outputNameChanged();
     void leftHandedChanged();
     void disableWhileTypingChanged();
+    void disableWhileTypingTimeoutChanged();
+    void disableWhileTrackpointingChanged();
+    void disableWhileTrackpointingTimeoutChanged();
     void pointerAccelerationChanged();
     void pointerAccelerationProfileChanged();
     void enabledChanged();
@@ -906,6 +920,8 @@ private:
     quint32 m_defaultScrollButton;
     bool m_disableWhileTypingEnabledByDefault;
     bool m_disableWhileTyping;
+    quint32 m_disableWhileTypingTimeoutDefault;
+    quint32 m_disableWhileTypingTimeout;
     bool m_middleEmulation;
     bool m_leftHanded;
     bool m_naturalScroll;

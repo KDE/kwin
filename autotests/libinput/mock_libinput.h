@@ -59,6 +59,9 @@ struct libinput_device
     enum libinput_config_dwt_state disableWhileTypingEnabledByDefault = LIBINPUT_CONFIG_DWT_DISABLED;
     enum libinput_config_dwt_state disableWhileTyping = LIBINPUT_CONFIG_DWT_DISABLED;
     int setDisableWhileTypingReturnValue = 0;
+    quint32 disableWhileTypingTimeoutDefault = 500;
+    quint32 disableWhileTypingTimeout = 500;
+    int setDisableWhileTypingTimeoutReturnValue = 0;
     qreal defaultPointerAcceleration = 0.0;
     qreal pointerAcceleration = 0.0;
     int setPointerAccelerationReturnValue = 0;

@@ -138,6 +138,7 @@ enum class ConfigKey {
     DisableEventsOnExternalMouse,
     LeftHanded,
     DisableWhileTyping,
+    DisableWhileTypingTimeout,
     PointerAcceleration,
     PointerAccelerationProfile,
     TapToClick,
@@ -247,6 +248,7 @@ static const QMap<ConfigKey, std::shared_ptr<ConfigDataBase>> s_configData{
     {ConfigKey::DisableEventsOnExternalMouse, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("DisableEventsOnExternalMouse"), &Device::setDisableEventsOnExternalMouse, &Device::disableEventsOnExternalMouseEnabledByDefault)},
     {ConfigKey::LeftHanded, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("LeftHanded"), &Device::setLeftHanded, &Device::leftHandedEnabledByDefault)},
     {ConfigKey::DisableWhileTyping, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("DisableWhileTyping"), &Device::setDisableWhileTyping, &Device::disableWhileTypingEnabledByDefault)},
+    {ConfigKey::DisableWhileTypingTimeout, std::make_shared<ConfigData<quint32>>(QByteArrayLiteral("DisableWhileTypingTimeout"), &Device::setDisableWhileTypingTimeout, &Device::disableWhileTypingTimeoutDefault)},
     {ConfigKey::PointerAcceleration, std::make_shared<ConfigData<QString>>(QByteArrayLiteral("PointerAcceleration"), &Device::setPointerAccelerationFromString, &Device::defaultPointerAccelerationToString)},
     {ConfigKey::PointerAccelerationProfile, std::make_shared<ConfigData<quint32>>(QByteArrayLiteral("PointerAccelerationProfile"), &Device::setPointerAccelerationProfileFromInt, &Device::defaultPointerAccelerationProfileToInt)},
     {ConfigKey::TapToClick, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("TapToClick"), &Device::setTapToClick, &Device::tapToClickEnabledByDefault)},
@@ -379,6 +381,8 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_defaultScrollButton(libinput_device_config_scroll_get_default_button(m_device))
     , m_disableWhileTypingEnabledByDefault(libinput_device_config_dwt_get_default_enabled(m_device))
     , m_disableWhileTyping(m_supportsDisableWhileTyping ? libinput_device_config_dwt_get_enabled(m_device) == LIBINPUT_CONFIG_DWT_ENABLED : false)
+    , m_disableWhileTypingTimeoutDefault(m_supportsDisableWhileTyping ? libinput_device_config_dwt_get_default_timeout(m_device) : 0)
+    , m_disableWhileTypingTimeout(m_supportsDisableWhileTyping ? libinput_device_config_dwt_get_timeout(m_device) : 0)
     , m_middleEmulation(libinput_device_config_middle_emulation_get_enabled(m_device) == LIBINPUT_CONFIG_MIDDLE_EMULATION_ENABLED)
     , m_leftHanded(m_supportsLeftHanded ? libinput_device_config_left_handed_get(m_device) : false)
     , m_naturalScroll(m_supportsNaturalScroll ? libinput_device_config_scroll_get_natural_scroll_enabled(m_device) : false)
@@ -758,6 +762,25 @@ CONFIG(setTapToClick, m_tapFingerCount == 0, tap_set_enabled, TAP, tapToClick, T
 CONFIG(setTapAndDrag, false, tap_set_drag_enabled, DRAG, tapAndDrag, TapAndDrag)
 CONFIG(setTapDragLock, false, tap_set_drag_lock_enabled, DRAG_LOCK, tapDragLock, TapDragLock)
 CONFIG(setMiddleEmulation, m_supportsMiddleEmulation == false, middle_emulation_set_enabled, MIDDLE_EMULATION, middleEmulation, MiddleButtonEmulation)
+
+#undef CONFIG
+
+#define CONFIG(method, condition, function, variable, key)                                            \
+    void Device::method(quint32 milliseconds)                                                         \
+    {                                                                                                 \
+        if (condition) {                                                                              \
+            return;                                                                                   \
+        }                                                                                             \
+        if (libinput_device_config_##function(m_device, milliseconds) == LIBINPUT_CONFIG_STATUS_SUCCESS) { \
+            if (m_##variable != milliseconds) {                                                       \
+                m_##variable = milliseconds;                                                          \
+                writeEntry(ConfigKey::key, m_##variable);                                             \
+                Q_EMIT variable##Changed();                                                           \
+            }                                                                                         \
+        }                                                                                             \
+    }
+
+CONFIG(setDisableWhileTypingTimeout, !m_supportsDisableWhileTyping, dwt_set_timeout, disableWhileTypingTimeout, DisableWhileTypingTimeout)
 
 #undef CONFIG
 
