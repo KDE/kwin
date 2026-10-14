@@ -8,8 +8,7 @@
 #include "backendoutput.h"
 #include "options.h"
 #include "renderloop_p.h"
-#include "scene/surfaceitem.h"
-#include "scene/windowitem.h"
+#include "scene/item.h"
 #include "window.h"
 #include "workspace.h"
 
@@ -284,8 +283,8 @@ void RenderLoop::scheduleRepaint(Item *item, OutputLayer *outputLayer, std::opti
     if (d->preparingNewFrame) {
         return;
     }
-    const auto surfaceItem = repaintDriver();
-    if ((item || outputLayer) && d->output && surfaceItem && item != surfaceItem && (!item || !surfaceItem->isAncestorOf(item))) {
+    const auto driver = repaintDriver();
+    if ((item || outputLayer) && driver && driver != item && (!item || !item->isAncestorOf(driver))) {
         constexpr std::chrono::milliseconds s_delayVrrTimer = 1'000ms / 30;
         d->delayedVrrTimer.start(s_delayVrrTimer, Qt::PreciseTimer, this);
         return;
@@ -306,33 +305,12 @@ void RenderLoop::scheduleRepaint(Item *item, OutputLayer *outputLayer, std::opti
 
 Item *RenderLoop::repaintDriver() const
 {
-    if (Q_UNLIKELY(!workspace())) {
-        return nullptr;
-    }
+    return d->repaintDriver;
+}
 
-    const bool vrr = d->presentationMode == PresentationMode::AdaptiveSync || d->presentationMode == PresentationMode::AdaptiveAsync;
-    const bool tearing = d->presentationMode == PresentationMode::Async || d->presentationMode == PresentationMode::AdaptiveAsync;
-    if (!vrr && !tearing) {
-        return nullptr;
-    }
-
-    Window *const activeWindow = workspace()->activeWindow();
-    LogicalOutput *logical = workspace()->findOutput(d->output);
-    if (!logical) {
-        return nullptr;
-    }
-
-    const bool control = activeWindow
-        && activeWindow->frameGeometry().intersects(logical->geometryF())
-        && activeWindow->surfaceItem()
-        && activeWindow->surfaceItem()->recursiveFrameTimeEstimation().transform([](const auto t) {
-        return t <= std::chrono::nanoseconds(1'000'000'000) / 30;
-    }).value_or(false);
-    if (control) {
-        return activeWindow->windowItem();
-    } else {
-        return nullptr;
-    }
+void RenderLoop::setRepaintDriver(Item *item)
+{
+    d->repaintDriver = item;
 }
 
 std::chrono::nanoseconds RenderLoop::lastPresentationTimestamp() const
@@ -351,6 +329,11 @@ void RenderLoop::setPresentationMode(PresentationMode mode)
         qCDebug(KWIN_CORE) << "Changed presentation mode to" << mode;
     }
     d->presentationMode = mode;
+}
+
+PresentationMode RenderLoop::presentationMode() const
+{
+    return d->presentationMode;
 }
 
 void RenderLoop::setMaxPendingFrameCount(uint32_t maxCount)

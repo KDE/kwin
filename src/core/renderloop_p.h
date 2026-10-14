@@ -53,6 +53,7 @@ public:
     int inhibitCount = 0;
     std::optional<std::chrono::steady_clock::time_point> pendingReschedule;
     std::chrono::nanoseconds safetyMargin{0};
+    QPointer<Item> repaintDriver;
 
     PresentationMode presentationMode = PresentationMode::VSync;
     int maxPendingFrameCount = 1;

@@ -33,6 +33,7 @@
 #include "scene/itemrenderer_opengl.h"
 #include "scene/surfaceitem.h"
 #include "scene/surfaceitem_wayland.h"
+#include "scene/windowitem.h"
 #include "scene/workspacescene.h"
 #include "utils/common.h"
 #include "utils/envvar.h"
@@ -784,6 +785,29 @@ std::pair<QList<Compositor::LayerData>, std::expected<void, OutputError>> Compos
     return std::make_pair(layers, backendOutput->testPresentation(frame));
 }
 
+static Item *selectRepaintDriver(RenderLoop *renderLoop, LogicalOutput *logicalOutput)
+{
+    const bool vrr = renderLoop->presentationMode() == PresentationMode::AdaptiveSync || renderLoop->presentationMode() == PresentationMode::AdaptiveAsync;
+    const bool tearing = renderLoop->presentationMode() == PresentationMode::Async || renderLoop->presentationMode() == PresentationMode::AdaptiveAsync;
+    if (!vrr && !tearing) {
+        return nullptr;
+    }
+
+    Window *const activeWindow = workspace()->activeWindow();
+
+    const bool control = activeWindow
+        && activeWindow->frameGeometry().intersects(logicalOutput->geometryF())
+        && activeWindow->surfaceItem()
+        && activeWindow->surfaceItem()->recursiveFrameTimeEstimation().transform([](const auto t) {
+        return t <= std::chrono::nanoseconds(1'000'000'000) / 30;
+    }).value_or(false);
+    if (control) {
+        return activeWindow->windowItem();
+    } else {
+        return nullptr;
+    }
+}
+
 void Compositor::composite(RenderLoop *renderLoop)
 {
     if (m_backend->checkGraphicsReset()) {
@@ -1021,6 +1045,8 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
         output->repairPresentation();
     }
+
+    renderLoop->setRepaintDriver(selectRepaintDriver(renderLoop, logicalOutput));
 
     const bool forceRepaintForBrightness = (frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting()) > 0.001)
         || (desiredArtificalHdrHeadroom && frame->artificialHdrHeadroom() && std::abs(*frame->artificialHdrHeadroom() - *desiredArtificalHdrHeadroom) > 0.001);

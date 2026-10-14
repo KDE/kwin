@@ -92,6 +92,7 @@ public:
     std::chrono::nanoseconds nextPresentationTimestamp() const;
 
     void setPresentationMode(PresentationMode mode);
+    PresentationMode presentationMode() const;
 
     void setMaxPendingFrameCount(uint32_t maxCount);
 
@@ -106,6 +107,7 @@ public:
      * and its child items are delayed for improved frame pacing.
      */
     Item *repaintDriver() const;
+    void setRepaintDriver(Item *item);
 
     void timerEvent(QTimerEvent *event) override;
 
