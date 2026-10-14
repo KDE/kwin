@@ -6,6 +6,7 @@
 
 #include "renderbackend.h"
 #include "renderloop_p.h"
+#include "scene/item.h"
 #include "syncobjtimeline.h"
 
 #include <QCoreApplication>
@@ -48,6 +49,7 @@ OutputFrame::OutputFrame(RenderLoop *loop, std::chrono::nanoseconds refreshDurat
     , m_refreshDuration(refreshDuration)
     , m_targetPageflipTime(loop->nextPresentationTimestamp())
     , m_predictedRenderTime(loop->predictedRenderTime())
+    , m_repaintDriver(m_loop->repaintDriver())
 {
 }
 
@@ -192,6 +194,11 @@ std::optional<double> OutputFrame::artificialHdrHeadroom() const
 void OutputFrame::setArtificialHdrHeadroom(double edr)
 {
     m_artificialHdrHeadroom = edr;
+}
+
+Item *OutputFrame::repaintDriver() const
+{
+    return m_repaintDriver;
 }
 
 bool RenderBackend::checkGraphicsReset()

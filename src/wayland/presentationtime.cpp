@@ -84,6 +84,9 @@ void PresentationTimeFeedback::presented(OutputFrame *frame, std::chrono::nanose
     if (mode == PresentationMode::VSync) {
         flags |= WP_PRESENTATION_FEEDBACK_KIND_FIXED_RATE;
     }
+    if (adaptiveSync && (presentationFlags & PresentationFeedbackFlag::RepaintDriver)) {
+        flags |= WP_PRESENTATION_FEEDBACK_KIND_VARIABLE_RATE;
+    }
     if (presentationFlags.testFlag(PresentationFeedbackFlag::ZeroCopy)) {
         flags |= WP_PRESENTATION_FEEDBACK_KIND_ZERO_COPY;
     }

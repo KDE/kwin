@@ -284,7 +284,7 @@ void RenderLoop::scheduleRepaint(Item *item, OutputLayer *outputLayer, std::opti
         return;
     }
     const auto driver = repaintDriver();
-    if ((item || outputLayer) && driver && driver != item && (!item || !item->isAncestorOf(driver))) {
+    if ((item || outputLayer) && driver && driver != item) {
         constexpr std::chrono::milliseconds s_delayVrrTimer = 1'000ms / 30;
         d->delayedVrrTimer.start(s_delayVrrTimer, Qt::PreciseTimer, this);
         return;

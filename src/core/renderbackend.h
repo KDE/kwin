@@ -31,6 +31,7 @@ class OutputFrame;
 
 enum class PresentationFeedbackFlag {
     ZeroCopy = 0x1,
+    RepaintDriver = 0x2,
 };
 Q_DECLARE_FLAGS(PresentationFeedbackFlags, PresentationFeedbackFlag)
 
@@ -112,6 +113,8 @@ public:
     std::optional<RenderTimeSpan> queryRenderTime() const;
     std::optional<RenderTimeSpan> queryCpuRenderTime() const;
 
+    Item *repaintDriver() const;
+
 private:
     const QPointer<RenderLoop> m_loop;
     const std::chrono::nanoseconds m_refreshDuration;
@@ -130,6 +133,7 @@ private:
     std::optional<double> m_brightness;
     std::optional<double> m_dimmingFactor;
     std::optional<double> m_artificialHdrHeadroom;
+    QPointer<Item> m_repaintDriver;
 };
 
 /**

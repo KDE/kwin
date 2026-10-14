@@ -260,7 +260,14 @@ void SurfaceItemWayland::handleFramePainted(RenderView *view, LogicalOutput *out
     if (frame) {
         // FIXME make frame always valid
         if (auto feedback = m_surface->presentationFeedback(output)) {
-            frame->addFeedback(std::move(feedback), view && view->presentationIsZeroCopy(this) ? PresentationFeedbackFlag::ZeroCopy : PresentationFeedbackFlags{});
+            PresentationFeedbackFlags flags;
+            if (view && view->presentationIsZeroCopy(this)) {
+                flags |= PresentationFeedbackFlag::ZeroCopy;
+            }
+            if (frame->repaintDriver() == this) {
+                flags |= PresentationFeedbackFlag::RepaintDriver;
+            }
+            frame->addFeedback(std::move(feedback), flags);
         }
     }
     // TODO only call this once per refresh cycle

@@ -785,6 +785,42 @@ std::pair<QList<Compositor::LayerData>, std::expected<void, OutputError>> Compos
     return std::make_pair(layers, backendOutput->testPresentation(frame));
 }
 
+static SurfaceItem *selectRepaintDriver(LogicalOutput *logicalOutput, Item *item)
+{
+    const auto childItems = item->sortedChildItems();
+    auto childIt = childItems.rbegin();
+    for (; childIt != childItems.rend(); childIt++) {
+        Item *child = *childIt;
+        if (child->z() <= 0) {
+            break;
+        }
+        if (SurfaceItem *ret = selectRepaintDriver(logicalOutput, child)) {
+            return ret;
+        }
+    }
+
+    // TODO add frame time estimation to non-surface items?
+    SurfaceItem *surface = qobject_cast<SurfaceItem *>(item);
+
+    const RectF geo = item->mapToScene(item->rect());
+    const bool suitable = geo.intersects(logicalOutput->geometryF())
+        && surface
+        && surface->recursiveFrameTimeEstimation().transform([](const auto t) {
+        return t <= std::chrono::nanoseconds(1'000'000'000) / 30;
+    }).value_or(false);
+    if (suitable) {
+        return surface;
+    }
+
+    for (; childIt != childItems.rend(); childIt++) {
+        Item *child = *childIt;
+        if (SurfaceItem *ret = selectRepaintDriver(logicalOutput, child)) {
+            return ret;
+        }
+    }
+    return nullptr;
+}
+
 static Item *selectRepaintDriver(RenderLoop *renderLoop, LogicalOutput *logicalOutput)
 {
     const bool vrr = renderLoop->presentationMode() == PresentationMode::AdaptiveSync || renderLoop->presentationMode() == PresentationMode::AdaptiveAsync;
@@ -792,20 +828,10 @@ static Item *selectRepaintDriver(RenderLoop *renderLoop, LogicalOutput *logicalO
     if (!vrr && !tearing) {
         return nullptr;
     }
-
-    Window *const activeWindow = workspace()->activeWindow();
-
-    const bool control = activeWindow
-        && activeWindow->frameGeometry().intersects(logicalOutput->geometryF())
-        && activeWindow->surfaceItem()
-        && activeWindow->surfaceItem()->recursiveFrameTimeEstimation().transform([](const auto t) {
-        return t <= std::chrono::nanoseconds(1'000'000'000) / 30;
-    }).value_or(false);
-    if (control) {
-        return activeWindow->windowItem();
-    } else {
+    if (!workspace()->activeWindow()) {
         return nullptr;
     }
+    return selectRepaintDriver(logicalOutput, workspace()->activeWindow()->surfaceItem());
 }
 
 void Compositor::composite(RenderLoop *renderLoop)
