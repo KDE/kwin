@@ -139,6 +139,8 @@ enum class ConfigKey {
     LeftHanded,
     DisableWhileTyping,
     DisableWhileTypingTimeout,
+    DisableWhileTrackpointing,
+    DisableWhileTrackpointingTimeout,
     PointerAcceleration,
     PointerAccelerationProfile,
     TapToClick,
@@ -249,6 +251,8 @@ static const QMap<ConfigKey, std::shared_ptr<ConfigDataBase>> s_configData{
     {ConfigKey::LeftHanded, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("LeftHanded"), &Device::setLeftHanded, &Device::leftHandedEnabledByDefault)},
     {ConfigKey::DisableWhileTyping, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("DisableWhileTyping"), &Device::setDisableWhileTyping, &Device::disableWhileTypingEnabledByDefault)},
     {ConfigKey::DisableWhileTypingTimeout, std::make_shared<ConfigData<quint32>>(QByteArrayLiteral("DisableWhileTypingTimeout"), &Device::setDisableWhileTypingTimeout, &Device::disableWhileTypingTimeoutDefault)},
+    {ConfigKey::DisableWhileTrackpointing, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("DisableWhileTrackpointing"), &Device::setDisableWhileTrackpointing, &Device::disableWhileTrackpointingEnabledByDefault)},
+    {ConfigKey::DisableWhileTrackpointingTimeout, std::make_shared<ConfigData<quint32>>(QByteArrayLiteral("DisableWhileTrackpointingTimeout"), &Device::setDisableWhileTrackpointingTimeout, &Device::disableWhileTrackpointingTimeoutDefault)},
     {ConfigKey::PointerAcceleration, std::make_shared<ConfigData<QString>>(QByteArrayLiteral("PointerAcceleration"), &Device::setPointerAccelerationFromString, &Device::defaultPointerAccelerationToString)},
     {ConfigKey::PointerAccelerationProfile, std::make_shared<ConfigData<quint32>>(QByteArrayLiteral("PointerAccelerationProfile"), &Device::setPointerAccelerationProfileFromInt, &Device::defaultPointerAccelerationProfileToInt)},
     {ConfigKey::TapToClick, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("TapToClick"), &Device::setTapToClick, &Device::tapToClickEnabledByDefault)},
@@ -383,6 +387,11 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_disableWhileTyping(m_supportsDisableWhileTyping ? libinput_device_config_dwt_get_enabled(m_device) == LIBINPUT_CONFIG_DWT_ENABLED : false)
     , m_disableWhileTypingTimeoutDefault(m_supportsDisableWhileTyping ? libinput_device_config_dwt_get_default_timeout(m_device) : 0)
     , m_disableWhileTypingTimeout(m_supportsDisableWhileTyping ? libinput_device_config_dwt_get_timeout(m_device) : 0)
+    , m_supportsDisableWhileTrackpointing(libinput_device_config_dwtp_is_available(m_device))
+    , m_disableWhileTrackpointingEnabledByDefault(libinput_device_config_dwtp_get_default_enabled(m_device))
+    , m_disableWhileTrackpointing(m_supportsDisableWhileTrackpointing ? libinput_device_config_dwtp_get_enabled(m_device) == LIBINPUT_CONFIG_DWTP_ENABLED : false)
+    , m_disableWhileTrackpointingTimeoutDefault(m_supportsDisableWhileTrackpointing ? libinput_device_config_dwtp_get_default_timeout(m_device) : 0)
+    , m_disableWhileTrackpointingTimeout(m_supportsDisableWhileTrackpointing ? libinput_device_config_dwtp_get_timeout(m_device) : 0)
     , m_middleEmulation(libinput_device_config_middle_emulation_get_enabled(m_device) == LIBINPUT_CONFIG_MIDDLE_EMULATION_ENABLED)
     , m_leftHanded(m_supportsLeftHanded ? libinput_device_config_left_handed_get(m_device) : false)
     , m_naturalScroll(m_supportsNaturalScroll ? libinput_device_config_scroll_get_natural_scroll_enabled(m_device) : false)
@@ -758,6 +767,7 @@ CONFIG(setNaturalScroll, !m_supportsNaturalScroll, scroll_set_natural_scroll_ena
     }
 
 CONFIG(setDisableWhileTyping, !m_supportsDisableWhileTyping, dwt_set_enabled, DWT, disableWhileTyping, DisableWhileTyping)
+CONFIG(setDisableWhileTrackpointing, !m_supportsDisableWhileTrackpointing, dwtp_set_enabled, DWTP, disableWhileTrackpointing, DisableWhileTrackpointing)
 CONFIG(setTapToClick, m_tapFingerCount == 0, tap_set_enabled, TAP, tapToClick, TapToClick)
 CONFIG(setTapAndDrag, false, tap_set_drag_enabled, DRAG, tapAndDrag, TapAndDrag)
 CONFIG(setTapDragLock, false, tap_set_drag_lock_enabled, DRAG_LOCK, tapDragLock, TapDragLock)
@@ -781,6 +791,7 @@ CONFIG(setMiddleEmulation, m_supportsMiddleEmulation == false, middle_emulation_
     }
 
 CONFIG(setDisableWhileTypingTimeout, !m_supportsDisableWhileTyping, dwt_set_timeout, disableWhileTypingTimeout, DisableWhileTypingTimeout)
+CONFIG(setDisableWhileTrackpointingTimeout, !m_supportsDisableWhileTrackpointing, dwtp_set_timeout, disableWhileTrackpointingTimeout, DisableWhileTrackpointingTimeout)
 
 #undef CONFIG
 

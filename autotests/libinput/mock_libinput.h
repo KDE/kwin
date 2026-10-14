@@ -62,6 +62,13 @@ struct libinput_device
     quint32 disableWhileTypingTimeoutDefault = 500;
     quint32 disableWhileTypingTimeout = 500;
     int setDisableWhileTypingTimeoutReturnValue = 0;
+    bool supportsDisableWhileTrackpointing = false;
+    enum libinput_config_dwtp_state disableWhileTrackpointingEnabledByDefault = LIBINPUT_CONFIG_DWTP_DISABLED;
+    enum libinput_config_dwtp_state disableWhileTrackpointing = LIBINPUT_CONFIG_DWTP_DISABLED;
+    int setDisableWhileTrackpointingReturnValue = 0;
+    quint32 disableWhileTrackpointingTimeoutDefault = 500;
+    quint32 disableWhileTrackpointingTimeout = 500;
+    int setDisableWhileTrackpointingTimeoutReturnValue = 0;
     qreal defaultPointerAcceleration = 0.0;
     qreal pointerAcceleration = 0.0;
     int setPointerAccelerationReturnValue = 0;

@@ -201,6 +201,56 @@ uint32_t libinput_device_config_dwt_get_default_timeout(struct libinput_device *
 {
     return device->disableWhileTypingTimeoutDefault;
 }
+
+int libinput_device_config_dwtp_is_available(struct libinput_device *device)
+{
+    return device->supportsDisableWhileTrackpointing;
+}
+
+enum libinput_config_status libinput_device_config_dwtp_set_enabled(struct libinput_device *device, enum libinput_config_dwtp_state state)
+{
+    if (device->setDisableWhileTrackpointingReturnValue == 0) {
+        if (!device->supportsDisableWhileTrackpointing) {
+            return LIBINPUT_CONFIG_STATUS_INVALID;
+        }
+        device->disableWhileTrackpointing = state;
+        return LIBINPUT_CONFIG_STATUS_SUCCESS;
+    }
+    return LIBINPUT_CONFIG_STATUS_INVALID;
+}
+
+enum libinput_config_dwtp_state libinput_device_config_dwtp_get_enabled(struct libinput_device *device)
+{
+    return device->disableWhileTrackpointing;
+}
+
+enum libinput_config_dwtp_state libinput_device_config_dwtp_get_default_enabled(struct libinput_device *device)
+{
+    return device->disableWhileTrackpointingEnabledByDefault;
+}
+
+enum libinput_config_status libinput_device_config_dwtp_set_timeout(struct libinput_device *device, uint32_t timeout)
+{
+    if (device->setDisableWhileTrackpointingTimeoutReturnValue == 0) {
+        if (!device->supportsDisableWhileTrackpointing) {
+            return LIBINPUT_CONFIG_STATUS_INVALID;
+        }
+        device->disableWhileTrackpointingTimeout = timeout;
+        return LIBINPUT_CONFIG_STATUS_SUCCESS;
+    }
+    return LIBINPUT_CONFIG_STATUS_INVALID;
+}
+
+uint32_t libinput_device_config_dwtp_get_timeout(struct libinput_device *device)
+{
+    return device->disableWhileTrackpointingTimeout;
+}
+
+uint32_t libinput_device_config_dwtp_get_default_timeout(struct libinput_device *device)
+{
+    return device->disableWhileTrackpointingTimeoutDefault;
+}
+
 int libinput_device_config_accel_is_available(struct libinput_device *device)
 {
     return device->supportsPointerAcceleration;

@@ -100,6 +100,12 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(bool disableWhileTyping READ isDisableWhileTyping WRITE setDisableWhileTyping NOTIFY disableWhileTypingChanged)
     Q_PROPERTY(quint32 disableWhileTypingTimeoutDefault READ disableWhileTypingTimeoutDefault CONSTANT)
     Q_PROPERTY(quint32 disableWhileTypingTimeout READ disableWhileTypingTimeout WRITE setDisableWhileTypingTimeout NOTIFY disableWhileTypingTimeoutChanged)
+
+    Q_PROPERTY(bool supportsDisableWhileTrackpointing READ supportsDisableWhileTrackpointing CONSTANT)
+    Q_PROPERTY(bool disableWhileTrackpointingEnabledByDefault READ disableWhileTrackpointingEnabledByDefault CONSTANT)
+    Q_PROPERTY(bool disableWhileTrackpointing READ isDisableWhileTrackpointing WRITE setDisableWhileTrackpointing NOTIFY disableWhileTrackpointingChanged)
+    Q_PROPERTY(quint32 disableWhileTrackpointingTimeoutDefault READ disableWhileTrackpointingTimeoutDefault CONSTANT)
+    Q_PROPERTY(quint32 disableWhileTrackpointingTimeout READ disableWhileTrackpointingTimeout WRITE setDisableWhileTrackpointingTimeout NOTIFY disableWhileTrackpointingTimeoutChanged)
     //
     // acceleration speed and profile
     Q_PROPERTY(bool supportsPointerAcceleration READ supportsPointerAcceleration CONSTANT)
@@ -506,6 +512,29 @@ public:
         return m_disableWhileTypingTimeout;
     }
     void setDisableWhileTypingTimeout(quint32 milliseconds);
+
+    bool supportsDisableWhileTrackpointing() const
+    {
+        return m_supportsDisableWhileTrackpointing;
+    }
+    bool disableWhileTrackpointingEnabledByDefault() const
+    {
+        return m_disableWhileTrackpointingEnabledByDefault == LIBINPUT_CONFIG_DWTP_ENABLED;
+    }
+    bool isDisableWhileTrackpointing() const
+    {
+        return m_disableWhileTrackpointing;
+    }
+    void setDisableWhileTrackpointing(bool set);
+    quint32 disableWhileTrackpointingTimeoutDefault() const
+    {
+        return m_disableWhileTrackpointingTimeoutDefault;
+    }
+    quint32 disableWhileTrackpointingTimeout() const
+    {
+        return m_disableWhileTrackpointingTimeout;
+    }
+    void setDisableWhileTrackpointingTimeout(quint32 milliseconds);
     bool isLeftHanded() const
     {
         return m_leftHanded;
@@ -922,6 +951,11 @@ private:
     bool m_disableWhileTyping;
     quint32 m_disableWhileTypingTimeoutDefault;
     quint32 m_disableWhileTypingTimeout;
+    bool m_supportsDisableWhileTrackpointing;
+    enum libinput_config_dwtp_state m_disableWhileTrackpointingEnabledByDefault;
+    bool m_disableWhileTrackpointing;
+    quint32 m_disableWhileTrackpointingTimeoutDefault;
+    quint32 m_disableWhileTrackpointingTimeout;
     bool m_middleEmulation;
     bool m_leftHanded;
     bool m_naturalScroll;
