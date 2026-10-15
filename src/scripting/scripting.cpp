@@ -619,7 +619,6 @@ KWin::Scripting::Scripting()
     : m_qmlEngine(new QQmlEngine(this))
     , m_declarativeScriptSharedContext(new QQmlContext(m_qmlEngine, this))
     , m_workspaceWrapper(new QtScriptWorkspaceWrapper(this))
-    , m_scriptsLock(new QRecursiveMutex)
 {
     // For plain JavaScript extensions. There's no Rect factory function, we accept any object
     // with x, y, width, and height properties as rects.
@@ -675,13 +674,6 @@ KWin::Scripting::Scripting()
 
 void KWin::Scripting::start()
 {
-#if 0
-    // TODO make this threaded again once KConfigGroup is sufficiently thread safe, bug #305361 and friends
-    // perform querying for the services in a thread
-    QFutureWatcher<LoadScriptList> *watcher = new QFutureWatcher<LoadScriptList>(this);
-    connect(watcher, &QFutureWatcher<LoadScriptList>::finished, this, &Scripting::slotScriptsQueried);
-    watcher->setFuture(QtConcurrent::run(this, &KWin::Scripting::queryScriptsToLoad, pluginStates, offers));
-#else
     LoadScriptList scriptsToLoad = queryScriptsToLoad();
     for (LoadScriptList::const_iterator it = scriptsToLoad.constBegin();
          it != scriptsToLoad.constEnd();
@@ -694,7 +686,6 @@ void KWin::Scripting::start()
     }
 
     runScripts();
-#endif
 }
 
 LoadScriptList KWin::Scripting::queryScriptsToLoad()
@@ -741,29 +732,6 @@ LoadScriptList KWin::Scripting::queryScriptsToLoad()
     return scriptsToLoad;
 }
 
-void KWin::Scripting::slotScriptsQueried()
-{
-    QFutureWatcher<LoadScriptList> *watcher = dynamic_cast<QFutureWatcher<LoadScriptList> *>(sender());
-    if (!watcher) {
-        // slot invoked not from a FutureWatcher
-        return;
-    }
-
-    LoadScriptList scriptsToLoad = watcher->result();
-    for (LoadScriptList::const_iterator it = scriptsToLoad.constBegin();
-         it != scriptsToLoad.constEnd();
-         ++it) {
-        if (it->first) {
-            loadScript(it->second.first, it->second.second);
-        } else {
-            loadDeclarativeScript(it->second.first, it->second.second);
-        }
-    }
-
-    runScripts();
-    watcher->deleteLater();
-}
-
 bool KWin::Scripting::isScriptLoaded(const QString &pluginName) const
 {
     return findScript(pluginName) != nullptr;
@@ -771,7 +739,6 @@ bool KWin::Scripting::isScriptLoaded(const QString &pluginName) const
 
 KWin::AbstractScript *KWin::Scripting::findScript(const QString &pluginName) const
 {
-    QMutexLocker locker(m_scriptsLock.get());
     for (AbstractScript *script : std::as_const(scripts)) {
         if (script->pluginName() == pluginName) {
             return script;
@@ -782,7 +749,6 @@ KWin::AbstractScript *KWin::Scripting::findScript(const QString &pluginName) con
 
 bool KWin::Scripting::unloadScript(const QString &pluginName)
 {
-    QMutexLocker locker(m_scriptsLock.get());
     for (AbstractScript *script : std::as_const(scripts)) {
         if (script->pluginName() == pluginName) {
             script->deleteLater();
@@ -794,7 +760,6 @@ bool KWin::Scripting::unloadScript(const QString &pluginName)
 
 void KWin::Scripting::runScripts()
 {
-    QMutexLocker locker(m_scriptsLock.get());
     for (int i = 0; i < scripts.size(); i++) {
         scripts.at(i)->run();
     }
@@ -802,13 +767,11 @@ void KWin::Scripting::runScripts()
 
 void KWin::Scripting::scriptDestroyed(QObject *object)
 {
-    QMutexLocker locker(m_scriptsLock.get());
     scripts.removeAll(static_cast<KWin::Script *>(object));
 }
 
 int KWin::Scripting::loadScript(const QString &filePath, const QString &pluginName)
 {
-    QMutexLocker locker(m_scriptsLock.get());
     if (isScriptLoaded(pluginName)) {
         return -1;
     }
@@ -821,7 +784,6 @@ int KWin::Scripting::loadScript(const QString &filePath, const QString &pluginNa
 
 int KWin::Scripting::loadDeclarativeScript(const QString &filePath, const QString &pluginName)
 {
-    QMutexLocker locker(m_scriptsLock.get());
     if (isScriptLoaded(pluginName)) {
         return -1;
     }
