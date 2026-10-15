@@ -387,8 +387,10 @@ QString Workspace::outputLayoutId() const
     QStringList hashes;
     for (const auto &output : std::as_const(m_outputs)) {
         QCryptographicHash hash(QCryptographicHash::Md5);
-        if (output->backendOutput()->edid().isValid()) {
-            hash.addData(output->backendOutput()->edid().raw());
+        const auto &edid = output->backendOutput()->edid();
+        if (edid.isValid()) {
+            hash.addData(edid.identifier());
+            hash.addData(edid.serialNumber());
         } else {
             hash.addData(output->name().toLatin1());
         }
