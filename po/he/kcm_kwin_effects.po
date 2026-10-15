@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-10-15 00:47+0000\n"
 "PO-Revision-Date: 2023-10-29 14:45+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
 
-#: ui/Effect.qml:98
+#: ui/Effect.qml:102
 #, kde-format
 msgid ""
 "Author: %1\n"
@@ -28,7 +28,7 @@ msgstr ""
 "יוצר: %1\n"
 "רישיון: %2"
 
-#: ui/Effect.qml:110
+#: ui/Effect.qml:114
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"

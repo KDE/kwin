@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-10-15 00:47+0000\n"
 "PO-Revision-Date: 2023-06-27 08:56+0200\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard@neuf.fr>\n"
 "Language-Team: French <kde-francophone@kde.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 
-#: ui/Effect.qml:98
+#: ui/Effect.qml:102
 #, kde-format
 msgid ""
 "Author: %1\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Auteur : %1\n"
 "Licence : %2"
 
-#: ui/Effect.qml:110
+#: ui/Effect.qml:114
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"

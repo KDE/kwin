@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-17 00:45+0000\n"
+"POT-Creation-Date: 2026-10-15 00:47+0000\n"
 "PO-Revision-Date: 2026-02-28 22:46+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -896,27 +896,27 @@ msgstr "Selectează tot"
 msgid "Save Rules"
 msgstr "Salvează regulile"
 
-#: ui/main.qml:202
+#: ui/main.qml:206
 #, kde-format
 msgid "Edit"
 msgstr "Modifică"
 
-#: ui/main.qml:208
+#: ui/main.qml:212
 #, kde-format
 msgid "Duplicate"
 msgstr "Duplică"
 
-#: ui/main.qml:214
+#: ui/main.qml:218
 #, kde-format
 msgid "Delete"
 msgstr "Șterge"
 
-#: ui/main.qml:246
+#: ui/main.qml:250
 #, kde-format
 msgid "Import Rules"
 msgstr "Import reguli"
 
-#: ui/main.qml:258
+#: ui/main.qml:262
 #, kde-format
 msgid "Export Rules"
 msgstr "Export reguli"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-17 00:45+0000\n"
+"POT-Creation-Date: 2026-10-15 00:47+0000\n"
 "PO-Revision-Date: 2026-09-22 18:53+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -904,27 +904,27 @@ msgstr "Alles auswählen"
 msgid "Save Rules"
 msgstr "Regeln speichern"
 
-#: ui/main.qml:202
+#: ui/main.qml:206
 #, kde-format
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: ui/main.qml:208
+#: ui/main.qml:212
 #, kde-format
 msgid "Duplicate"
 msgstr "Duplizieren"
 
-#: ui/main.qml:214
+#: ui/main.qml:218
 #, kde-format
 msgid "Delete"
 msgstr "Entfernen"
 
-#: ui/main.qml:246
+#: ui/main.qml:250
 #, kde-format
 msgid "Import Rules"
 msgstr "Regeln importieren"
 
-#: ui/main.qml:258
+#: ui/main.qml:262
 #, kde-format
 msgid "Export Rules"
 msgstr "Regeln exportieren"

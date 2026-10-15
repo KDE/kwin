@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-17 00:45+0000\n"
+"POT-Creation-Date: 2026-10-15 00:47+0000\n"
 "PO-Revision-Date: 2026-03-26 02:27+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -894,27 +894,27 @@ msgstr "Hamısını seçmək"
 msgid "Save Rules"
 msgstr "Qaydaları saxlamaq"
 
-#: ui/main.qml:202
+#: ui/main.qml:206
 #, kde-format
 msgid "Edit"
 msgstr "Düzəliş etmək"
 
-#: ui/main.qml:208
+#: ui/main.qml:212
 #, kde-format
 msgid "Duplicate"
 msgstr "Təkrarı"
 
-#: ui/main.qml:214
+#: ui/main.qml:218
 #, kde-format
 msgid "Delete"
 msgstr "Silmək"
 
-#: ui/main.qml:246
+#: ui/main.qml:250
 #, kde-format
 msgid "Import Rules"
 msgstr "Qaydaları idxal etmək"
 
-#: ui/main.qml:258
+#: ui/main.qml:262
 #, kde-format
 msgid "Export Rules"
 msgstr "Qaydaları ixrac etmək"

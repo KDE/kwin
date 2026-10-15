@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-17 00:45+0000\n"
+"POT-Creation-Date: 2026-10-15 00:47+0000\n"
 "PO-Revision-Date: 2026-09-06 19:33+0200\n"
 "Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -910,27 +910,27 @@ msgstr "Выбрать все"
 msgid "Save Rules"
 msgstr "Сохранить правила"
 
-#: ui/main.qml:202
+#: ui/main.qml:206
 #, kde-format
 msgid "Edit"
 msgstr "Изменить"
 
-#: ui/main.qml:208
+#: ui/main.qml:212
 #, kde-format
 msgid "Duplicate"
 msgstr "Создать копию"
 
-#: ui/main.qml:214
+#: ui/main.qml:218
 #, kde-format
 msgid "Delete"
 msgstr "Удалить"
 
-#: ui/main.qml:246
+#: ui/main.qml:250
 #, kde-format
 msgid "Import Rules"
 msgstr "Импорт правил"
 
-#: ui/main.qml:258
+#: ui/main.qml:262
 #, kde-format
 msgid "Export Rules"
 msgstr "Экспорт правил"

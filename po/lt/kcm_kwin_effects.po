@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-10-15 00:47+0000\n"
 "PO-Revision-Date: 2024-01-18 00:50+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt\n"
@@ -19,7 +19,7 @@ msgstr ""
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#: ui/Effect.qml:98
+#: ui/Effect.qml:102
 #, kde-format
 msgid ""
 "Author: %1\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Autorius: %1\n"
 "Licencija: %2"
 
-#: ui/Effect.qml:110
+#: ui/Effect.qml:114
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-10-15 00:47+0000\n"
 "PO-Revision-Date: 2023-07-23 21:05+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Lokalize 22.12.3\n"
 
-#: ui/Effect.qml:98
+#: ui/Effect.qml:102
 #, kde-format
 msgid ""
 "Author: %1\n"
@@ -26,7 +26,7 @@ msgstr ""
 "작성자: %1\n"
 "라이선스: %2"
 
-#: ui/Effect.qml:110
+#: ui/Effect.qml:114
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"

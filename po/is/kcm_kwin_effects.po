@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-10-15 00:47+0000\n"
 "PO-Revision-Date: 2023-12-10 22:14+0000\n"
 "Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 23.08.3\n"
 
-#: ui/Effect.qml:98
+#: ui/Effect.qml:102
 #, kde-format
 msgid ""
 "Author: %1\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Höfundur: %1\n"
 "Leyfi: %2"
 
-#: ui/Effect.qml:110
+#: ui/Effect.qml:114
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"

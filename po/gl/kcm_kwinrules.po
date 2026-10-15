@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-17 00:45+0000\n"
+"POT-Creation-Date: 2026-10-15 00:47+0000\n"
 "PO-Revision-Date: 2025-05-03 07:00+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -892,27 +892,27 @@ msgstr "Seleccionalo todo"
 msgid "Save Rules"
 msgstr "Gardar as regras"
 
-#: ui/main.qml:202
+#: ui/main.qml:206
 #, kde-format
 msgid "Edit"
 msgstr "Editar"
 
-#: ui/main.qml:208
+#: ui/main.qml:212
 #, kde-format
 msgid "Duplicate"
 msgstr "Duplicar"
 
-#: ui/main.qml:214
+#: ui/main.qml:218
 #, kde-format
 msgid "Delete"
 msgstr "Eliminar"
 
-#: ui/main.qml:246
+#: ui/main.qml:250
 #, kde-format
 msgid "Import Rules"
 msgstr "Importar regras"
 
-#: ui/main.qml:258
+#: ui/main.qml:262
 #, kde-format
 msgid "Export Rules"
 msgstr "Exportar as regras"
