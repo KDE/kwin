@@ -93,6 +93,11 @@ void ScreencastManager::streamWaylandOutput(ScreencastStreamV1Interface *wayland
                                             OutputInterface *output,
                                             ScreencastV1Interface::CursorMode mode)
 {
+    if (!output || output->isRemoved()) {
+        waylandStream->sendFailed(i18n("Could not find output"));
+        return;
+    }
+
     if (!isSupportedCompositingType()) {
         waylandStream->sendFailed(i18n("Unsupported compositing type"));
         return;
