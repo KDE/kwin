@@ -135,10 +135,14 @@ Region WindowScreenCastSource::render(GLFramebuffer *target, const Region &buffe
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
     for (const auto &window : m_windows) {
-        renderer->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, Region::infinite(), WindowPaintData{}, {}, {});
+        if (!renderer->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, Region::infinite(), WindowPaintData{}, {}, {})) {
+            return {};
+        }
     }
     if (m_renderCursor && scene->cursorItem()->isVisible()) {
-        renderer->renderItem(renderTarget, viewport, scene->cursorItem(), 0, Region::infinite(), WindowPaintData{}, {}, {});
+        if (!renderer->renderItem(renderTarget, viewport, scene->cursorItem(), 0, Region::infinite(), WindowPaintData{}, {}, {})) {
+            return {};
+        }
     }
     renderer->endFrame();
     return Rect(QPoint(), target->size());

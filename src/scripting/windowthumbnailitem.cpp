@@ -146,7 +146,9 @@ void WindowThumbnailSource::update()
     ItemRenderer *renderer = kwinApp()->scene()->renderer(m_renderDevice);
     renderer->beginFrame(offscreenRenderTarget, offscreenViewport);
     renderer->renderBackground(offscreenRenderTarget, offscreenViewport, offscreenRenderTarget.transformedRect());
-    renderer->renderItem(offscreenRenderTarget, offscreenViewport, m_handle->windowItem(), mask, Region::infinite(), WindowPaintData{}, {}, {});
+    if (!renderer->renderItem(offscreenRenderTarget, offscreenViewport, m_handle->windowItem(), mask, Region::infinite(), WindowPaintData{}, {}, {})) {
+        return;
+    }
     renderer->endFrame();
 
     // The fence is needed to avoid the case where qtquick renderer starts using
