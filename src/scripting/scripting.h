@@ -27,7 +27,6 @@ class QQmlContext;
 class QQmlEngine;
 class QAction;
 class QMenu;
-class QRecursiveMutex;
 class QQuickWindow;
 class KConfigGroup;
 
@@ -346,9 +345,6 @@ public Q_SLOTS:
     void scriptDestroyed(QObject *object);
     Q_SCRIPTABLE void start();
 
-private Q_SLOTS:
-    void slotScriptsQueried();
-
 private:
     LoadScriptList queryScriptsToLoad();
 
@@ -360,10 +356,6 @@ private:
     QtScriptWorkspaceWrapper *m_workspaceWrapper;
     QStringList scriptList;
     QList<KWin::AbstractScript *> scripts;
-    /**
-     * Lock to protect the scripts member variable.
-     */
-    std::unique_ptr<QRecursiveMutex> m_scriptsLock;
 };
 
 inline QQmlEngine *Scripting::qmlEngine() const
