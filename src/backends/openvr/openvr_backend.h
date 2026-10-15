@@ -13,8 +13,6 @@
 #include "core/outputbackend.h"
 #include "utils/filedescriptor.h"
 
-#include <openvr.h>
-
 namespace KWin
 {
 
@@ -72,7 +70,6 @@ private:
     void removeOutput(OpenVROutput *output);
 
     QList<OpenVROutput *> m_outputs;
-    vr::EVRInitError m_lastHmdError = vr::VRInitError_None;
     QString m_vrDriver;
     QString m_vrDisplay;
     bool m_vrRuntimeConnected = false;

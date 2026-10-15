@@ -13,6 +13,7 @@
 
 #include <fcntl.h>
 #include <gbm.h>
+#include <openvr.h>
 #include <ranges>
 #include <xf86drm.h>
 
@@ -78,9 +79,9 @@ QString OpenVRBackend::vrDisplay() const
 
 bool OpenVRBackend::connectToVrRuntime()
 {
-    m_lastHmdError = vr::VRInitError_None;
-    vr::IVRSystem *vrSystem = vr::VR_Init(&m_lastHmdError, vr::VRApplication_Overlay);
-    if (m_lastHmdError != vr::VRInitError_None) {
+    vr::EVRInitError initError = vr::VRInitError_None;
+    vr::IVRSystem *vrSystem = vr::VR_Init(&initError, vr::VRApplication_Overlay);
+    if (initError != vr::VRInitError_None) {
         m_vrDriver = QStringLiteral("No Driver");
         m_vrDisplay = QStringLiteral("No Display");
         return false;

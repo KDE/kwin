@@ -11,6 +11,7 @@
 #include "config-kwin.h"
 
 #include "backends/drm/drm_backend.h"
+#include "backends/openvr/openvr_backend.h"
 #include "backends/virtual/virtual_backend.h"
 #include "backends/wayland/wayland_backend.h"
 #include "compositor.h"
@@ -351,6 +352,7 @@ int main(int argc, char *argv[])
                                             i18n("The Wayland Display to use in windowed mode on platform Wayland."),
                                             QStringLiteral("display"));
     QCommandLineOption virtualFbOption(QStringLiteral("virtual"), i18n("Render to a virtual framebuffer."));
+    QCommandLineOption openVrOption(QStringLiteral("openvr"), i18n("Render to an OpenVR headset."));
     QCommandLineOption widthOption(QStringLiteral("width"),
                                    i18n("The width for windowed mode. Default width is 1024."),
                                    QStringLiteral("width"));
@@ -422,6 +424,7 @@ int main(int argc, char *argv[])
 #endif
     parser.addOption(waylandDisplayOption);
     parser.addOption(virtualFbOption);
+    parser.addOption(openVrOption);
     parser.addOption(widthOption);
     parser.addOption(heightOption);
     parser.addOption(scaleOption);
@@ -491,6 +494,7 @@ int main(int argc, char *argv[])
 #endif
         Wayland,
         Virtual,
+        OpenVR,
     };
 
     BackendType backendType;
@@ -509,6 +513,8 @@ int main(int argc, char *argv[])
         backendType = BackendType::Wayland;
     } else if (parser.isSet(virtualFbOption)) {
         backendType = BackendType::Virtual;
+    } else if (parser.isSet(openVrOption)) {
+        backendType = BackendType::OpenVR;
     } else {
         if (qEnvironmentVariableIsSet("WAYLAND_DISPLAY")) {
             qInfo("No backend specified, automatically choosing Wayland because WAYLAND_DISPLAY is set");
@@ -569,6 +575,18 @@ int main(int argc, char *argv[])
         auto outputBackend = std::make_unique<KWin::VirtualBackend>();
         for (int i = 0; i < outputCount; ++i) {
             outputBackend->addOutput(KWin::VirtualBackend::OutputInfo{
+                .size = initialWindowSize,
+                .scale = outputScale,
+            });
+        }
+        a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
+        a.setOutputBackend(std::move(outputBackend));
+        break;
+    }
+    case BackendType::OpenVR: {
+        auto outputBackend = std::make_unique<KWin::OpenVRBackend>();
+        for (int i = 0; i < outputCount; ++i) {
+            outputBackend->addOutput(KWin::OpenVRBackend::OutputInfo{
                 .size = initialWindowSize,
                 .scale = outputScale,
             });
