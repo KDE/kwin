@@ -13,6 +13,8 @@
 #include "core/outputbackend.h"
 #include "utils/filedescriptor.h"
 
+#include <openvr.h>
+
 namespace KWin
 {
 
@@ -56,14 +58,24 @@ public:
 
     QList<CompositingType> supportedCompositors() const override;
 
+    bool isVrRuntimeConnected() const;
+    QString vrDriver() const;
+    QString vrDisplay() const;
+
 Q_SIGNALS:
     void openVROutputsSet(bool countChanged);
 
 private:
+    bool connectToVrRuntime();
+
     OpenVROutput *createOutput(const OutputInfo &info);
     void removeOutput(OpenVROutput *output);
 
     QList<OpenVROutput *> m_outputs;
+    vr::EVRInitError m_lastHmdError = vr::VRInitError_None;
+    QString m_vrDriver;
+    QString m_vrDisplay;
+    bool m_vrRuntimeConnected = false;
 };
 
 } // namespace KWin

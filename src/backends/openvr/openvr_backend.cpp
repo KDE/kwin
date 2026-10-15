@@ -19,15 +19,35 @@
 namespace KWin
 {
 
+namespace
+{
+
+QString getTrackedDeviceString(vr::IVRSystem *vrSystem, vr::TrackedDeviceIndex_t device, vr::TrackedDeviceProperty property)
+{
+    char buffer[128];
+    vr::TrackedPropertyError error;
+    vrSystem->GetStringTrackedDeviceProperty(device, property, buffer, sizeof(buffer), &error);
+    if (error != vr::TrackedProp_Success) {
+        return QStringLiteral("Error getting string: ") + QString::fromUtf8(vrSystem->GetPropErrorNameFromEnum(error));
+    }
+    return QString::fromUtf8(buffer);
+}
+
+} // namespace
+
 OpenVRBackend::OpenVRBackend(QObject *parent)
     : OutputBackend(parent)
 {
+    m_vrRuntimeConnected = connectToVrRuntime();
 }
 
 OpenVRBackend::~OpenVRBackend()
 {
     for (BackendOutput *output : m_outputs) {
         output->unref();
+    }
+    if (m_vrRuntimeConnected) {
+        vr::VR_Shutdown();
     }
 }
 
@@ -39,6 +59,36 @@ bool OpenVRBackend::initialize()
 QList<CompositingType> OpenVRBackend::supportedCompositors() const
 {
     return {OpenGLCompositing};
+}
+
+bool OpenVRBackend::isVrRuntimeConnected() const
+{
+    return m_vrRuntimeConnected;
+}
+
+QString OpenVRBackend::vrDriver() const
+{
+    return m_vrDriver;
+}
+
+QString OpenVRBackend::vrDisplay() const
+{
+    return m_vrDisplay;
+}
+
+bool OpenVRBackend::connectToVrRuntime()
+{
+    m_lastHmdError = vr::VRInitError_None;
+    vr::IVRSystem *vrSystem = vr::VR_Init(&m_lastHmdError, vr::VRApplication_Overlay);
+    if (m_lastHmdError != vr::VRInitError_None) {
+        m_vrDriver = QStringLiteral("No Driver");
+        m_vrDisplay = QStringLiteral("No Display");
+        return false;
+    }
+
+    m_vrDriver = getTrackedDeviceString(vrSystem, vr::k_unTrackedDeviceIndex_Hmd, vr::Prop_TrackingSystemName_String);
+    m_vrDisplay = getTrackedDeviceString(vrSystem, vr::k_unTrackedDeviceIndex_Hmd, vr::Prop_SerialNumber_String);
+    return true;
 }
 
 std::unique_ptr<EglBackend> OpenVRBackend::createOpenGLBackend(RenderDevice *renderDevice)
