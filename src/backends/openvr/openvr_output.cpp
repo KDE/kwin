@@ -1,0 +1,175 @@
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
+
+    SPDX-FileCopyrightText: 2018 Roman Gilg <subdiff@gmail.com>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
+#include "openvr_output.h"
+#include "openvr_backend.h"
+
+#include "compositor.h"
+#include "core/outputconfiguration.h"
+#include "core/outputlayer.h"
+#include "core/renderbackend.h"
+#include "core/renderloop.h"
+#include "utils/vsyncsource.h"
+
+namespace KWin
+{
+
+OpenVROutput::OpenVROutput(OpenVRBackend *parent, bool internal, const QSize &physicalSizeInMM, OutputTransform panelOrientation, const QByteArray &edid, std::optional<QByteArray> edidIdentifierOverride, const std::optional<QString> &connectorName, const std::optional<QByteArray> &mstPath, BackendOutput::Capabilities capabilities)
+    : BackendOutput()
+    , m_backend(parent)
+    , m_vsyncMonitor(std::make_unique<VsyncSource>())
+{
+    connect(m_vsyncMonitor.get(), &VsyncSource::vblankOccurred, this, &OpenVROutput::vblank);
+
+    static int identifier = -1;
+    m_identifier = ++identifier;
+    setInformation(Information{
+        .name = connectorName.value_or(QStringLiteral("OpenVR-%1").arg(identifier)),
+        .physicalSize = physicalSizeInMM,
+        .edid = Edid{edid, edidIdentifierOverride},
+        .capabilities = capabilities,
+        .panelOrientation = panelOrientation,
+        .internal = internal,
+        .mstPath = mstPath.value_or(QByteArray()),
+    });
+}
+
+OpenVROutput::~OpenVROutput()
+{
+}
+
+std::expected<void, OutputError> OpenVROutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
+{
+    return {};
+}
+
+std::expected<void, OutputError> OpenVROutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
+{
+    m_frame = frame;
+    m_vsyncMonitor->arm();
+    return {};
+}
+
+void OpenVROutput::init(const QSize &pixelSize, qreal scale, const QList<OutputModeline> &modes)
+{
+    QList<std::shared_ptr<OutputMode>> modeList;
+    for (const auto &mode : modes) {
+        modeList.push_back(std::make_shared<OutputMode>(mode));
+    }
+    if (modeList.empty()) {
+        modeList.push_back(std::make_shared<OutputMode>(OutputModeline(pixelSize, 60000, OutputModeline::Flag::Preferred)));
+    }
+
+    m_renderLoop->setRefreshRate(modeList.front()->refreshRate());
+    m_vsyncMonitor->setRefreshRate(modeList.front()->refreshRate());
+    setState(State{
+        .scale = scale,
+        .modes = modeList,
+        .currentMode = modeList.front(),
+        .scaleSetting = scale,
+    });
+}
+
+void OpenVROutput::applyChanges(const OutputConfiguration &config)
+{
+    auto props = config.constChangeSet(this);
+    if (!props) {
+        return;
+    }
+    Q_EMIT aboutToChange(props.get());
+
+    State next = m_state;
+    next.enabled = props->enabled.value_or(m_state.enabled);
+    next.transform = props->transform.value_or(m_state.transform);
+    next.position = props->pos.value_or(m_state.position);
+    next.scale = props->scale.value_or(m_state.scale);
+    next.scaleSetting = props->scaleSetting.value_or(m_state.scaleSetting);
+    next.uuid = props->uuid.value_or(m_state.uuid);
+    next.replicationSource = props->replicationSource.value_or(m_state.replicationSource);
+    next.priority = props->priority.value_or(m_state.priority);
+    next.deviceOffset = props->deviceOffset.value_or(m_state.deviceOffset);
+    if (props->customModes.has_value()) {
+        next.customModes = *props->customModes | std::views::transform([](const OutputModeline &modeline) {
+            return modeline.withFlags(OutputModeline::Flag::Generated | OutputModeline::Flag::Custom);
+        }) | std::ranges::to<QList>();
+
+        QList<std::shared_ptr<OutputMode>> newModes;
+        for (const auto &mode : next.modes) {
+            if (mode->flags() & OutputModeline::Flag::Custom) {
+                continue;
+            }
+            newModes.push_back(mode);
+        }
+        for (const auto &modeline : next.customModes) {
+            if (auto mode = modeline.match(next.modes)) {
+                newModes.append(mode);
+            } else {
+                newModes.push_back(std::make_shared<OutputMode>(modeline));
+            }
+        }
+        next.modes = newModes;
+    }
+
+    next.desiredMode = props->desiredMode.value_or(m_state.desiredMode);
+    if (props->currentMode) {
+        next.currentMode = props->currentMode->match(next.modes);
+    }
+
+    if (!next.currentMode) {
+        next.currentMode = next.modes.front();
+    } else if (!next.modes.contains(next.currentMode)) {
+        next.modes.push_front(next.currentMode);
+        next.currentMode->setRemoved();
+    }
+
+    next.dpmsMode = props->dpmsMode.value_or(next.dpmsMode);
+    next.uuid = props->uuid.value_or(next.uuid);
+
+    setState(next);
+    m_renderLoop->setRefreshRate(next.currentMode->refreshRate());
+    m_vsyncMonitor->setRefreshRate(next.currentMode->refreshRate());
+
+    Q_EMIT changed();
+}
+
+bool OpenVROutput::canResize() const
+{
+    return true;
+}
+
+void OpenVROutput::resize(const QSize &size)
+{
+    auto mode = std::make_shared<OutputMode>(OutputModeline(size, 60000, OutputModeline::Flag::Preferred));
+    auto next = m_state;
+    next.modes = {mode};
+    next.currentMode = mode;
+    setState(next);
+    Q_EMIT m_backend->outputsQueried();
+}
+
+void OpenVROutput::vblank(std::chrono::nanoseconds timestamp)
+{
+    if (m_frame) {
+        m_frame->presented(timestamp, PresentationMode::VSync);
+        m_frame.reset();
+    }
+}
+
+void OpenVROutput::setOutputLayer(std::unique_ptr<OutputLayer> &&layer)
+{
+    m_layer = std::move(layer);
+}
+
+OutputLayer *OpenVROutput::outputLayer() const
+{
+    return m_layer.get();
+}
+
+}
+
+#include "moc_openvr_output.cpp"

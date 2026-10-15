@@ -1,0 +1,156 @@
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
+
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
+#include "openvr_egl_backend.h"
+#include "core/drmdevice.h"
+#include "core/gbmgraphicsbufferallocator.h"
+#include "core/renderdevice.h"
+#include "opengl/eglswapchain.h"
+#include "opengl/glrendertimequery.h"
+#include "opengl/glutils.h"
+#include "openvr_backend.h"
+#include "openvr_logging.h"
+#include "openvr_output.h"
+#include "utils/vsyncsource.h"
+
+#include <drm_fourcc.h>
+
+namespace KWin
+{
+
+static const bool s_bufferAgeEnabled = qEnvironmentVariable("KWIN_USE_BUFFER_AGE") != QStringLiteral("0");
+
+OpenVREglLayer::OpenVREglLayer(BackendOutput *output, OpenVREglBackend *backend)
+    : OutputLayer(output, OutputLayerType::Primary)
+    , m_backend(backend)
+{
+}
+
+OpenVREglLayer::~OpenVREglLayer()
+{
+    (void)m_backend->openglContext()->makeCurrent();
+}
+
+std::optional<OutputLayerBeginFrameInfo> OpenVREglLayer::beginFrame(OutputFrame *frame)
+{
+    if (!m_backend->openglContext()->makeCurrent()) {
+        return std::nullopt;
+    }
+
+    const QSize nativeSize = m_output->modeSize();
+    if (!m_swapchain || m_swapchain->size() != nativeSize) {
+        GraphicsBufferOptions options{
+            .size = nativeSize,
+            .format = DRM_FORMAT_XRGB8888,
+            .modifiers = m_backend->supportedFormats()[DRM_FORMAT_XRGB8888],
+            .software = false,
+            .scanout = false,
+        };
+        m_swapchain = EglSwapchain::create(m_backend->renderDevice(), options);
+        if (!m_swapchain) {
+            return std::nullopt;
+        }
+    }
+
+    m_current = m_swapchain->acquire();
+    if (!m_current) {
+        return std::nullopt;
+    }
+
+    m_current->framebuffer()->colorAttachment()->setContentTransform(bufferTransform().combine(OutputTransform::FlipY));
+
+    m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
+
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(m_current->framebuffer()),
+        .repaint = s_bufferAgeEnabled ? m_damageJournal.accumulate(m_current->age(), Region::infinite()) : Region::infinite(),
+    };
+}
+
+bool OpenVREglLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
+{
+    if (frame && m_query) {
+        m_query->end();
+        frame->addRenderTimeQuery(std::move(m_query));
+    }
+    glFlush(); // flush pending rendering commands.
+    m_swapchain->release(m_current, FileDescriptor{});
+    m_damageJournal.add(damagedDeviceRegion);
+    return true;
+}
+
+FormatModifierMap OpenVREglLayer::supportedDrmFormats() const
+{
+    return m_backend->supportedFormats();
+}
+
+void OpenVREglLayer::releaseBuffers()
+{
+    m_current.reset();
+    m_swapchain.reset();
+}
+
+GLTexture *OpenVREglLayer::texture() const
+{
+    return m_current ? m_current->texture().get() : nullptr;
+}
+
+OpenVREglBackend::OpenVREglBackend(OpenVRBackend *b, RenderDevice *renderDevice)
+    : EglBackend(renderDevice)
+    , m_backend(b)
+{
+}
+
+OpenVREglBackend::~OpenVREglBackend()
+{
+    const auto outputs = m_backend->outputs();
+    for (BackendOutput *output : outputs) {
+        static_cast<OpenVROutput *>(output)->setOutputLayer(nullptr);
+    }
+    cleanup();
+}
+
+OpenVRBackend *OpenVREglBackend::backend() const
+{
+    return m_backend;
+}
+
+bool OpenVREglBackend::init()
+{
+    if (!initClientExtensions()) {
+        qCWarning(KWIN_OPENVR, "Could not initialize egl");
+        return false;
+    }
+    if (!createContext()) {
+        qCWarning(KWIN_OPENVR, "Could not initialize rendering context");
+        return false;
+    }
+    initWayland();
+
+    const auto outputs = m_backend->outputs();
+    for (BackendOutput *output : outputs) {
+        addOutput(output);
+    }
+
+    connect(m_backend, &OpenVRBackend::outputAdded, this, &OpenVREglBackend::addOutput);
+    return true;
+}
+
+void OpenVREglBackend::addOutput(BackendOutput *output)
+{
+    static_cast<OpenVROutput *>(output)->setOutputLayer(std::make_unique<OpenVREglLayer>(output, this));
+}
+
+QList<OutputLayer *> OpenVREglBackend::compatibleOutputLayers(BackendOutput *output)
+{
+    return {static_cast<OpenVROutput *>(output)->outputLayer()};
+}
+
+} // namespace
+
+#include "moc_openvr_egl_backend.cpp"
