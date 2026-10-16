@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-16 00:50+0000\n"
 "PO-Revision-Date: 2026-04-29 08:13+0200\n"
 "Last-Translator: Paolo Zamponi <feus73@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -63,31 +63,31 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "Aggiungi desktop"
 
-#: ui/main.qml:90
+#: ui/main.qml:91
 #, kde-format
 msgctxt "@action:button"
 msgid "Rename"
 msgstr "Rinomina"
 
-#: ui/main.qml:100
+#: ui/main.qml:101
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Rimuovi"
 
-#: ui/main.qml:119
+#: ui/main.qml:120
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
 msgstr "Applica il nuovo nome"
 
-#: ui/main.qml:132
+#: ui/main.qml:133
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
 msgstr "Annulla rinomina"
 
-#: ui/main.qml:179
+#: ui/main.qml:180
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -96,42 +96,42 @@ msgstr ""
 "I desktop virtuali sono stati modificati al di fuori di questa applicazione "
 "per le impostazioni. Salvando adesso, le modifiche verranno sovrascritte."
 
-#: ui/main.qml:195
+#: ui/main.qml:196
 #, kde-format
 msgid "Row %1"
 msgstr "Riga %1"
 
-#: ui/main.qml:209
+#: ui/main.qml:210
 #, kde-format
 msgid "Options:"
 msgstr "Opzioni:"
 
-#: ui/main.qml:211
+#: ui/main.qml:212
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Scorrimento ad anello"
 
-#: ui/main.qml:225
+#: ui/main.qml:226
 #, kde-format
 msgid "Switch desktops independently for each screen"
 msgstr "Cambia desktop in modo indipendente per ogni schermo"
 
-#: ui/main.qml:243
+#: ui/main.qml:244
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Mostra animazione al cambio:"
 
-#: ui/main.qml:294
+#: ui/main.qml:295
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Mostra visualizzazione su schermo durante il cambio:"
 
-#: ui/main.qml:313
+#: ui/main.qml:314
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:337
+#: ui/main.qml:338
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Mostra indicatori per la disposizione del desktop"

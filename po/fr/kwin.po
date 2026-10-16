@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-14 00:49+0000\n"
+"POT-Creation-Date: 2026-10-16 00:50+0000\n"
 "PO-Revision-Date: 2026-09-07 10:00+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
@@ -2518,28 +2518,66 @@ msgstr "Meta"
 msgid "Arrow draw modifier keys:"
 msgstr "Touches de la flèche modificatrices du tracé :"
 
-#: plugins/nightlight/nightlightmanager.cpp:55
+#: plugins/nightlight/nightlightmanager.cpp:57
 #, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
 msgstr "Couleur de nuit suspendue"
 
-#: plugins/nightlight/nightlightmanager.cpp:56
+#: plugins/nightlight/nightlightmanager.cpp:58
 #, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
 msgstr "Couleur de nuit ré-activée"
 
-#: plugins/nightlight/nightlightmanager.cpp:77
+#: plugins/nightlight/nightlightmanager.cpp:79
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr "Suspendre /Poursuivre l'utilisation de la couleur de nuit"
 
-#: plugins/nightlight/nightlightmanager.cpp:393
+#: plugins/nightlight/nightlightmanager.cpp:461
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Aperçu de la température de couleurs"
+
+#. i18n: ectx: label, entry (ActivatedUntil), group (NightLight)
+#: plugins/nightlight/nightlightstate.kcfg:21
+#, kde-format
+msgid ""
+"\n"
+"                Specifies the date and time until which Night Light must be "
+"temporarily active.\n"
+"            "
+msgstr ""
+
+#. i18n: ectx: label, entry (ActivatedManual), group (NightLight)
+#: plugins/nightlight/nightlightstate.kcfg:28
+#, kde-format
+msgid ""
+"\n"
+"                Night Light is activated until manually disabled.\n"
+"            "
+msgstr ""
+
+#. i18n: ectx: label, entry (DeactivatedUntil), group (NightLight)
+#: plugins/nightlight/nightlightstate.kcfg:35
+#, kde-format
+msgid ""
+"\n"
+"                Specifies the date and time until which Night Light must be "
+"temporarily inactive.\n"
+"            "
+msgstr ""
+
+#. i18n: ectx: label, entry (DeactivatedManual), group (NightLight)
+#: plugins/nightlight/nightlightstate.kcfg:42
+#, kde-format
+msgid ""
+"\n"
+"                Night Light is suspended until manually turned back on.\n"
+"            "
+msgstr ""
 
 #: plugins/outputlocator/outputlocator.cpp:26
 #, kde-format
@@ -2688,8 +2726,8 @@ msgstr "Impossible de se connecter à un contexte « PipeWire »"
 
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
-#: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:153
+#: plugins/screencast/screencastmanager.cpp:102
+#: plugins/screencast/screencastmanager.cpp:158
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Type de composition non prise en charge"
@@ -2699,12 +2737,13 @@ msgstr "Type de composition non prise en charge"
 msgid "Could not find window id %1"
 msgstr "Impossible de trouver l'identifiant de fenêtre %1"
 
-#: plugins/screencast/screencastmanager.cpp:120
+#: plugins/screencast/screencastmanager.cpp:97
+#: plugins/screencast/screencastmanager.cpp:125
 #, kde-format
 msgid "Could not find output"
 msgstr "Impossible de trouver une sortie"
 
-#: plugins/screencast/screencastmanager.cpp:158
+#: plugins/screencast/screencastmanager.cpp:163
 #, kde-format
 msgid "Invalid region"
 msgstr "Région non valable"
@@ -3796,7 +3835,7 @@ msgstr ""
 "Naviguer parmi les fenêtres de l'application alternative courante (en ordre "
 "inverse)"
 
-#: tabbox/tabboxhandler.cpp:189
+#: tabbox/tabboxhandler.cpp:190
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -4445,30 +4484,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ne répond plus)"
 
-#: workspace.cpp:1324
+#: workspace.cpp:1326
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Écran intégré"
 
-#: workspace.cpp:1337
+#: workspace.cpp:1339
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1347
+#: workspace.cpp:1349
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1350
+#: workspace.cpp:1352
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: workspace.cpp:1819
+#: workspace.cpp:1821
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

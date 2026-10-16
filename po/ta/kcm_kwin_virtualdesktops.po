@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-16 00:50+0000\n"
 "PO-Revision-Date: 2026-05-02 18:40+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -64,31 +64,31 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "பணிமேடையை சேர்"
 
-#: ui/main.qml:90
+#: ui/main.qml:91
 #, kde-format
 msgctxt "@action:button"
 msgid "Rename"
 msgstr "மறுபெயரிடு"
 
-#: ui/main.qml:100
+#: ui/main.qml:101
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "நீக்கு"
 
-#: ui/main.qml:119
+#: ui/main.qml:120
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
 msgstr "இப்பெயரை இடு"
 
-#: ui/main.qml:132
+#: ui/main.qml:133
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
 msgstr "மறுபெயரிடுவதை ரத்து செய்"
 
-#: ui/main.qml:179
+#: ui/main.qml:180
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -97,42 +97,42 @@ msgstr ""
 "வேறு செயலியால் மெய்நிகர் பணிமேடைகள் மாற்றப்பட்டுள்ளன. இப்போது சேமித்தல், அம்மாற்றங்களை "
 "மேலெழுதும்."
 
-#: ui/main.qml:195
+#: ui/main.qml:196
 #, kde-format
 msgid "Row %1"
 msgstr "வரிசை %1"
 
-#: ui/main.qml:209
+#: ui/main.qml:210
 #, kde-format
 msgid "Options:"
 msgstr "விருப்பங்கள்:"
 
-#: ui/main.qml:211
+#: ui/main.qml:212
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "உலாவல் சுற்றி ஆரம்பத்திற்கே வரும்"
 
-#: ui/main.qml:225
+#: ui/main.qml:226
 #, kde-format
 msgid "Switch desktops independently for each screen"
 msgstr "அனைத்து திரைகளிலும் பணிமேடையை ஒருங்கே மாற்று"
 
-#: ui/main.qml:243
+#: ui/main.qml:244
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "மாற்றும்போது இவ்வாறு அசைவூட்டு:"
 
-#: ui/main.qml:294
+#: ui/main.qml:295
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "மாற்றும்போது இவ்வளவு நேரத்துக்கு மேல்படியும் அறிவிப்பை காட்டு:"
 
-#: ui/main.qml:313
+#: ui/main.qml:314
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:337
+#: ui/main.qml:338
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "பணிமேடை தளவமைப்பை காட்டு"

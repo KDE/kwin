@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.0\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-16 00:50+0000\n"
 "PO-Revision-Date: 2026-05-30 21:45+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -65,31 +65,31 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "Asztal hozzáadása"
 
-#: ui/main.qml:90
+#: ui/main.qml:91
 #, kde-format
 msgctxt "@action:button"
 msgid "Rename"
 msgstr "Átnevezés"
 
-#: ui/main.qml:100
+#: ui/main.qml:101
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Eltávolítás"
 
-#: ui/main.qml:119
+#: ui/main.qml:120
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
 msgstr "Új név alkalmazása"
 
-#: ui/main.qml:132
+#: ui/main.qml:133
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
 msgstr "Átnevezés megszakítása"
 
-#: ui/main.qml:179
+#: ui/main.qml:180
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -98,42 +98,42 @@ msgstr ""
 "A virtuális asztalok beállítását a modul hatáskörén kívül módosították. A "
 "mentés felül fogja írni ezeket a változtatásokat."
 
-#: ui/main.qml:195
+#: ui/main.qml:196
 #, kde-format
 msgid "Row %1"
 msgstr "%1. sor"
 
-#: ui/main.qml:209
+#: ui/main.qml:210
 #, kde-format
 msgid "Options:"
 msgstr "Beállítások:"
 
-#: ui/main.qml:211
+#: ui/main.qml:212
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Körkörös navigáció"
 
-#: ui/main.qml:225
+#: ui/main.qml:226
 #, kde-format
 msgid "Switch desktops independently for each screen"
 msgstr "Asztalok váltása egymástól függetlenül minden képernyőn"
 
-#: ui/main.qml:243
+#: ui/main.qml:244
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Animáció váltáskor:"
 
-#: ui/main.qml:294
+#: ui/main.qml:295
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Miniatűr megjelenítése váltáskor:"
 
-#: ui/main.qml:313
+#: ui/main.qml:314
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:337
+#: ui/main.qml:338
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Asztalelrendezés-jelzők megjelenítése"

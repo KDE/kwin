@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-14 00:49+0000\n"
+"POT-Creation-Date: 2026-10-16 00:50+0000\n"
 "PO-Revision-Date: 2026-09-19 20:19+0300\n"
 "Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -2510,28 +2510,66 @@ msgstr "Meta"
 msgid "Arrow draw modifier keys:"
 msgstr "Клавиши-модификаторы для рисования стрелок:"
 
-#: plugins/nightlight/nightlightmanager.cpp:55
+#: plugins/nightlight/nightlightmanager.cpp:57
 #, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
 msgstr "Использование ночной цветовой схемы приостановлено"
 
-#: plugins/nightlight/nightlightmanager.cpp:56
+#: plugins/nightlight/nightlightmanager.cpp:58
 #, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
 msgstr "Использование ночной цветовой схемы возобновлено"
 
-#: plugins/nightlight/nightlightmanager.cpp:77
+#: plugins/nightlight/nightlightmanager.cpp:79
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr "Приостановить или возобновить использование ночной цветовой схемы"
 
-#: plugins/nightlight/nightlightmanager.cpp:393
+#: plugins/nightlight/nightlightmanager.cpp:461
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Предварительный просмотр цветовой температуры"
+
+#. i18n: ectx: label, entry (ActivatedUntil), group (NightLight)
+#: plugins/nightlight/nightlightstate.kcfg:21
+#, kde-format
+msgid ""
+"\n"
+"                Specifies the date and time until which Night Light must be "
+"temporarily active.\n"
+"            "
+msgstr ""
+
+#. i18n: ectx: label, entry (ActivatedManual), group (NightLight)
+#: plugins/nightlight/nightlightstate.kcfg:28
+#, kde-format
+msgid ""
+"\n"
+"                Night Light is activated until manually disabled.\n"
+"            "
+msgstr ""
+
+#. i18n: ectx: label, entry (DeactivatedUntil), group (NightLight)
+#: plugins/nightlight/nightlightstate.kcfg:35
+#, kde-format
+msgid ""
+"\n"
+"                Specifies the date and time until which Night Light must be "
+"temporarily inactive.\n"
+"            "
+msgstr ""
+
+#. i18n: ectx: label, entry (DeactivatedManual), group (NightLight)
+#: plugins/nightlight/nightlightstate.kcfg:42
+#, kde-format
+msgid ""
+"\n"
+"                Night Light is suspended until manually turned back on.\n"
+"            "
+msgstr ""
 
 #: plugins/outputlocator/outputlocator.cpp:26
 #, kde-format
@@ -2680,8 +2718,8 @@ msgstr "Не удалось подключиться к контексту PipeW
 
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
-#: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:153
+#: plugins/screencast/screencastmanager.cpp:102
+#: plugins/screencast/screencastmanager.cpp:158
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Неподдерживаемый тип компоновки"
@@ -2691,12 +2729,13 @@ msgstr "Неподдерживаемый тип компоновки"
 msgid "Could not find window id %1"
 msgstr "Не удалось найти окно с идентификатором %1"
 
-#: plugins/screencast/screencastmanager.cpp:120
+#: plugins/screencast/screencastmanager.cpp:97
+#: plugins/screencast/screencastmanager.cpp:125
 #, kde-format
 msgid "Could not find output"
 msgstr "Не удалось найти экран"
 
-#: plugins/screencast/screencastmanager.cpp:158
+#: plugins/screencast/screencastmanager.cpp:163
 #, kde-format
 msgid "Invalid region"
 msgstr "Недопустимая область"
@@ -3779,7 +3818,7 @@ msgstr "На одно окно вперёд текущего приложени�
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "На одно окно назад текущего приложения (альтернативный режим)"
 
-#: tabbox/tabboxhandler.cpp:189
+#: tabbox/tabboxhandler.cpp:190
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -4427,31 +4466,31 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(не отвечает)"
 
-#: workspace.cpp:1324
+#: workspace.cpp:1326
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Встроенный экран"
 
-#: workspace.cpp:1337
+#: workspace.cpp:1339
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1347
+#: workspace.cpp:1349
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1350
+#: workspace.cpp:1352
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
 # BUGME: please proofread this translation, it's full of worms --aspotashev
-#: workspace.cpp:1819
+#: workspace.cpp:1821
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
