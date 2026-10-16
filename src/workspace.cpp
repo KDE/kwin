@@ -374,6 +374,10 @@ void Workspace::init()
     connect(kwinApp()->outputBackend(), &OutputBackend::outputAdded, this, [this](BackendOutput *output) {
         connect(output, &BackendOutput::dpmsModeChanged, this, &Workspace::maybeUpdateDpmsState);
     });
+
+    connect(kwinApp()->session(), &Session::aboutToSleep, this, [this]() {
+        requestDpmsState(DpmsState::Off);
+    });
 }
 
 QString Workspace::outputLayoutId() const
