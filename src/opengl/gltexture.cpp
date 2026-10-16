@@ -218,6 +218,10 @@ void GLTexture::update(const QImage &image, const Region &region, const QPoint &
     glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
     glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 
+    if (supportsSwizzle()) {
+        glTexParameteri(d->m_target, GL_TEXTURE_SWIZZLE_A, image.hasAlphaChannel() ? GL_ALPHA : GL_ONE);
+    }
+
     unbind();
 }
 
@@ -539,6 +543,9 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
     glPixelStorei(GL_UNPACK_ROW_LENGTH, im.bytesPerLine() / (im.depth() / 8));
     glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, im.width(), im.height(), 0, format, type, im.constBits());
     glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+    if (supportsSwizzle()) {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, image.hasAlphaChannel() ? GL_ALPHA : GL_ONE);
+    }
     glBindTexture(GL_TEXTURE_2D, 0);
 
     return std::unique_ptr<GLTexture>(new GLTexture(GL_TEXTURE_2D, texture, internalFormat, image.size(), 1, true, OutputTransform::FlipY));
