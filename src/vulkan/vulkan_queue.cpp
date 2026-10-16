@@ -52,6 +52,7 @@ vk::raii::CommandBuffer VulkanQueue::createCommandBuffer()
 
 std::optional<FileDescriptor> VulkanQueue::submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd,
                                                   std::vector<GraphicsBufferRef> &&graphicsBuffers,
+                                                  std::vector<std::shared_ptr<VulkanShader>> &&shaders,
                                                   std::vector<VulkanDescriptor> &&descriptors)
 {
     vk::ExportFenceCreateInfo exportInfo{
@@ -102,6 +103,7 @@ std::optional<FileDescriptor> VulkanQueue::submit(vk::raii::CommandBuffer &&buff
     command->notifier.setEnabled(true);
     command->graphicsBuffers = std::move(graphicsBuffers);
     command->descriptors = std::move(descriptors);
+    command->shaders = std::move(shaders);
 
     QObject::connect(&command->notifier, &QSocketNotifier::activated, &command->notifier, [this, cmd = command.get()]() {
         const auto it = std::ranges::find(m_submittedCommandBuffers, cmd, &std::unique_ptr<SubmittedCommand>::get);

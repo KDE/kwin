@@ -40,16 +40,18 @@ void VulkanDescriptor::write(VulkanTexture *texture)
 
 std::optional<VulkanDescriptor> VulkanDescriptor::allocate(VulkanDevice *device, const vk::raii::DescriptorSetLayout &layout, vk::DescriptorType type, vk::ShaderStageFlags shaderStages)
 {
-    vk::DescriptorPoolSize poolSize(type, 1);
+    // FIXME why is pool size 1 not enough???
+    vk::DescriptorPoolSize poolSize(type, 5);
     vk::DescriptorPoolCreateInfo poolInfo(vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet, 1, poolSize);
     auto [imagePoolResult, pool] = device->logicalDevice().createDescriptorPool(poolInfo);
     if (imagePoolResult != vk::Result::eSuccess) {
         return std::nullopt;
     }
-    auto [setResult, sets] = device->logicalDevice().allocateDescriptorSets(vk::DescriptorSetAllocateInfo{
+    vk::DescriptorSetAllocateInfo info{
         *pool,
         *layout,
-    });
+    };
+    auto [setResult, sets] = device->logicalDevice().allocateDescriptorSets(info);
     if (setResult != vk::Result::eSuccess) {
         return std::nullopt;
     }

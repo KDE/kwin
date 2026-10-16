@@ -368,9 +368,9 @@ vk::raii::Sampler VulkanTexture::createSampler(VulkanDevice *device)
         vk::Filter::eLinear, // mag filter
         vk::Filter::eLinear, // min filter
         vk::SamplerMipmapMode::eNearest,
-        vk::SamplerAddressMode::eClampToBorder,
-        vk::SamplerAddressMode::eClampToBorder,
-        vk::SamplerAddressMode::eClampToBorder,
+        vk::SamplerAddressMode::eClampToEdge,
+        vk::SamplerAddressMode::eClampToEdge,
+        vk::SamplerAddressMode::eClampToEdge,
         0,
         false, // enable anisotropy
         0, // maxAnisotropy
