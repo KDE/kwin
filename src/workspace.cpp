@@ -378,6 +378,8 @@ void Workspace::init()
     connect(kwinApp()->session(), &Session::aboutToSleep, this, [this]() {
         requestDpmsState(DpmsState::Off);
     });
+
+    m_sleepInhibitor = kwinApp()->session()->delaySleep("turning screens off");
 }
 
 QString Workspace::outputLayoutId() const
@@ -599,13 +601,11 @@ void Workspace::requestDpmsState(DpmsState state)
     if (m_dpms == DpmsState::On) {
         m_dpmsFilter.reset();
         m_dpmsTimer.stop();
-        m_sleepInhibitor.reset();
+        m_sleepInhibitor = kwinApp()->session()->delaySleep("turning screens off");
     } else {
         m_dpmsFilter = std::make_unique<DpmsInputEventFilter>();
         input()->installInputEventFilter(m_dpmsFilter.get());
         m_dpmsTimer.start(animationTime);
-        // TODO only do this if sleep is actually requested
-        m_sleepInhibitor = kwinApp()->session()->delaySleep("dpms animation");
     }
 
     Q_EMIT dpmsStateChanged(animationTime);
