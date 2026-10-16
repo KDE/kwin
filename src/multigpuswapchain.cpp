@@ -159,7 +159,12 @@ static std::optional<CopyRet> createCopy(RenderDevice *device,
         if (!retModifiers.empty()) {
             const auto fmt = MultiGpuSwapchain::chooseFormat(sourceFormat, device->vulkanDevice()->transferFormats(), formats);
             if (fmt) {
-                options.format = fmt->format;
+                if (s_forceLinear.value_or(device->drmDevice() && device->drmDevice()->isAmdgpu() && allocator == device->allocator())
+                    && fmt->modifiers.contains(DRM_FORMAT_MOD_LINEAR)) {
+                    options.modifiers = {DRM_FORMAT_MOD_LINEAR};
+                } else {
+                    options.format = fmt->format;
+                }
                 options.modifiers = fmt->modifiers;
                 options.render = false;
                 auto swapchain = Swapchain::create(allocator, options);
