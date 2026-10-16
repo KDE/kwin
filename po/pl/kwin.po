@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1750193 $
+# Version: $Revision: 1750429 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011-2026 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-13 03:21+0000\n"
+"POT-Creation-Date: 2026-10-16 03:03+0000\n"
 "PO-Revision-Date: 2026-05-09 16:01+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -2665,8 +2665,8 @@ msgstr "Nie udało się połączyć z kontekstem PipeWire"
 
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
-#: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:152
+#: plugins/screencast/screencastmanager.cpp:102
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Nieobsługiwany rodzaj kompozycji"
@@ -2676,12 +2676,13 @@ msgstr "Nieobsługiwany rodzaj kompozycji"
 msgid "Could not find window id %1"
 msgstr "Nie można znaleźć id %1 okna"
 
-#: plugins/screencast/screencastmanager.cpp:119
+#: plugins/screencast/screencastmanager.cpp:97
+#: plugins/screencast/screencastmanager.cpp:124
 #, kde-format
 msgid "Could not find output"
 msgstr "Nie można znaleźć wyjścia"
 
-#: plugins/screencast/screencastmanager.cpp:157
+#: plugins/screencast/screencastmanager.cpp:162
 #, kde-format
 msgid "Invalid region"
 msgstr "Nieprawidłowy obszar"
@@ -3773,7 +3774,7 @@ msgstr "Przełącz okno bieżącego programu w drugi sposób"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Przełącz okno bieżącego programu w drugi sposób (w drugą stronę)"
 
-#: tabbox/tabboxhandler.cpp:189
+#: tabbox/tabboxhandler.cpp:190
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -4416,30 +4417,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Nie odpowiada)"
 
-#: workspace.cpp:1324
+#: workspace.cpp:1326
 #, kde-format
 msgid "Built-in Screen"
 msgstr ""
 
-#: workspace.cpp:1337
+#: workspace.cpp:1339
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr ""
 
-#: workspace.cpp:1347
+#: workspace.cpp:1349
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr ""
 
-#: workspace.cpp:1350
+#: workspace.cpp:1352
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr ""
 
-#: workspace.cpp:1819
+#: workspace.cpp:1821
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

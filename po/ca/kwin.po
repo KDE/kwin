@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-13 03:21+0000\n"
+"POT-Creation-Date: 2026-10-16 03:03+0000\n"
 "PO-Revision-Date: 2026-10-11 15:20+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -2650,8 +2650,8 @@ msgstr "Ha fallat en connectar amb el context del PipeWire"
 
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
-#: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:152
+#: plugins/screencast/screencastmanager.cpp:102
+#: plugins/screencast/screencastmanager.cpp:157
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Tipus de composició no acceptada"
@@ -2661,12 +2661,13 @@ msgstr "Tipus de composició no acceptada"
 msgid "Could not find window id %1"
 msgstr "No s'ha pogut trobar la finestra amb ID %1"
 
-#: plugins/screencast/screencastmanager.cpp:119
+#: plugins/screencast/screencastmanager.cpp:97
+#: plugins/screencast/screencastmanager.cpp:124
 #, kde-format
 msgid "Could not find output"
 msgstr "No s'ha pogut trobar la sortida"
 
-#: plugins/screencast/screencastmanager.cpp:157
+#: plugins/screencast/screencastmanager.cpp:162
 #, kde-format
 msgid "Invalid region"
 msgstr "Regió no vàlida"
@@ -3756,7 +3757,7 @@ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Recorre les finestres de l'aplicació actual en alternativa (a la inversa)"
 
-#: tabbox/tabboxhandler.cpp:189
+#: tabbox/tabboxhandler.cpp:190
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -4405,30 +4406,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(No respon)"
 
-#: workspace.cpp:1324
+#: workspace.cpp:1326
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Pantalla integrada"
 
-#: workspace.cpp:1337
+#: workspace.cpp:1339
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1347
+#: workspace.cpp:1349
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1350
+#: workspace.cpp:1352
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: workspace.cpp:1819
+#: workspace.cpp:1821
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
