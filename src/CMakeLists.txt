@@ -267,6 +267,8 @@ target_sources(kwin PRIVATE
     xxpipv1window.cpp
 )
 
+compile_vulkan_shader(kwin vulkan/copy_image2image.glsl copy_image2image.spv)
+
 target_link_libraries(kwin
     PUBLIC
         Qt::DBus

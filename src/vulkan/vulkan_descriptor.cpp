@@ -46,9 +46,10 @@ void VulkanDescriptor::write(VulkanTexture *texture)
     texture->device()->logicalDevice().updateDescriptorSets(write, {});
 }
 
-std::optional<VulkanDescriptor> VulkanDescriptor::allocate(VulkanDevice *device, const vk::raii::DescriptorSetLayout &layout, vk::DescriptorType type, vk::ShaderStageFlags shaderStages)
+std::optional<VulkanDescriptor> VulkanDescriptor::allocate(VulkanDevice *device, const vk::raii::DescriptorSetLayout &layout,
+                                                           vk::DescriptorType type, uint32_t descriptorCount, vk::ShaderStageFlags shaderStages)
 {
-    vk::DescriptorPoolSize poolSize(type, 1);
+    vk::DescriptorPoolSize poolSize(type, descriptorCount);
     vk::DescriptorPoolCreateInfo poolInfo(vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet, 1, poolSize);
     auto [imagePoolResult, pool] = device->logicalDevice().createDescriptorPool(poolInfo);
     if (imagePoolResult != vk::Result::eSuccess) {

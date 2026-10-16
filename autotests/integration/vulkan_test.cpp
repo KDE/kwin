@@ -184,11 +184,11 @@ void VulkanTest::testComputeShader()
 
     cmd.bindShadersEXT(vk::ShaderStageFlagBits::eCompute, *shader->handle());
 
-    auto outDescriptor = VulkanDescriptor::allocate(m_device, shader->descriptorSetLayouts()[0], vk::DescriptorType::eStorageImage);
+    auto outDescriptor = VulkanDescriptor::allocate(m_device, shader->descriptorSetLayouts()[0], vk::DescriptorType::eStorageImage, 1);
     QVERIFY(outDescriptor);
     outDescriptor->write(dst.get());
 
-    auto inDescriptor = VulkanDescriptor::allocate(m_device, shader->descriptorSetLayouts()[1], vk::DescriptorType::eCombinedImageSampler);
+    auto inDescriptor = VulkanDescriptor::allocate(m_device, shader->descriptorSetLayouts()[1], vk::DescriptorType::eCombinedImageSampler, 1);
     QVERIFY(inDescriptor);
     inDescriptor->write(src.get());
 

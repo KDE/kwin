@@ -26,6 +26,7 @@
 #include "vulkan/vulkan_device.h"
 #include "vulkan/vulkan_logging.h"
 #include "vulkan/vulkan_render_time_query.h"
+#include "vulkan/vulkan_shader.h"
 #include "vulkan/vulkan_texture.h"
 
 namespace KWin
@@ -184,7 +185,9 @@ static std::optional<CopyRet> createVulkanCopy(RenderDevice *device,
         return std::nullopt;
     }
 
-    const auto fmt = MultiGpuSwapchain::chooseFormat(sourceFormat, device->vulkanDevice()->sampleFormats(), formats);
+    const auto info = FormatInfo::get(sourceFormat);
+    const auto dstFormats = info->yuv ? device->vulkanDevice()->storageFormats() : device->vulkanDevice()->sampleFormats();
+    const auto fmt = MultiGpuSwapchain::chooseFormat(sourceFormat, dstFormats, formats);
     if (!fmt) {
         return std::nullopt;
     }
@@ -196,6 +199,18 @@ static std::optional<CopyRet> createVulkanCopy(RenderDevice *device,
         options.modifiers = fmt->modifiers;
     }
     options.render = false;
+
+    if (info->yuv) {
+        // NOTE that while allocating YUV buffers and copying YUV->YUV would be possible,
+        // different stride requirements on different GPUs make that challenging to rely on
+        std::vector descriptorLayouts{
+            vk::DescriptorSetLayoutBinding(0, vk::DescriptorType::eStorageImage, 1, vk::ShaderStageFlagBits::eCompute),
+            vk::DescriptorSetLayoutBinding(0, vk::DescriptorType::eCombinedImageSampler, 1, vk::ShaderStageFlagBits::eCompute),
+        };
+        if (!device->vulkanDevice()->loadYuvShader(QStringLiteral("kwin/vulkan/copy_image2image.spv"), std::move(descriptorLayouts), vk::Format(info->vulkanFormat))) {
+            return std::nullopt;
+        }
+    }
 
     auto swapchain = Swapchain::create(allocator, options);
     if (!swapchain) {
@@ -349,6 +364,7 @@ std::optional<MultiGpuSwapchain::AllocationInfo> MultiGpuSwapchain::createForSca
                                                                                      const FormatModifierMap &importFormats)
 {
     Q_ASSERT(options.scanout);
+    Q_ASSERT(!FormatInfo::get(options.format)->yuv);
     RenderDevice *destination = GpuManager::self()->compatibleRenderDevice(targetDevice);
     if (sourceDevice->isInReset() || (destination && destination->isInReset())) {
         // avoid creating a suboptimal swapchain while in a reset
@@ -540,6 +556,8 @@ static std::vector<vk::BufferImageCopy> bufferImageRegion(GraphicsBuffer *buffer
  *   - this only works if the formats have the same texel size (for our purposes, bits per pixel)
  * 4. import source and destination as VkImage, blit from image to image
  *   - this works in all cases where the stride is compatible, but is slower than a copy
+ * 5. import source and destination as VkImage, copy from image to image with a compute shader
+ *   - this is required for YCbCr buffers
  *
  * GPUs can have very different stride alignment requirements for operations on images, and
  * importing a dmabuf as an image into a different GPU can be successful but then yield incorrect
@@ -567,9 +585,21 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
 
     const auto copyVk = m_device->vulkanDevice();
 
+    const auto sourceFormat = FormatInfo::get(buffer->format());
+
     const uint32_t swapchainBPC = FormatInfo::get(m_swapchain->format())->bitsPerPixel;
-    const bool useTransferQueue = copyVk->transferQueue() && FormatInfo::get(buffer->format())->bitsPerPixel == swapchainBPC;
-    const auto queue = useTransferQueue ? copyVk->transferQueue() : copyVk->graphicsQueue();
+    const bool useTransferQueue = copyVk->transferQueue()
+        && !sourceFormat->yuv
+        && sourceFormat->bitsPerPixel == swapchainBPC;
+
+    VulkanQueue *queue = nullptr;
+    if (useTransferQueue) {
+        queue = copyVk->transferQueue();
+    } else if (sourceFormat->yuv) {
+        queue = copyVk->computeQueue();
+    } else {
+        queue = copyVk->graphicsQueue();
+    }
 
     m_currentSlot = m_swapchain->acquire();
     if (!m_currentSlot) {
@@ -585,7 +615,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
     }
     std::shared_ptr<VulkanTexture> dstTexture;
     if (!dstBuffer) {
-        dstTexture = copyVk->importBuffer(m_currentSlot->buffer(), VulkanDevice::s_imageSampleFlags);
+        dstTexture = copyVk->importBuffer(m_currentSlot->buffer(), sourceFormat->yuv ? VulkanDevice::s_imageStorageFlags : VulkanDevice::s_imageSampleFlags);
     }
     if (!dstBuffer && !dstTexture) {
         qCWarning(KWIN_VULKAN, "Could not import destination buffer for multi GPU copy!");
@@ -601,7 +631,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
     }
     std::shared_ptr<VulkanTexture> srcTexture;
     if (!srcBuffer) {
-        srcTexture = copyVk->importBuffer(buffer, VulkanDevice::s_imageSampleFlags);
+        srcTexture = copyVk->importBuffer(buffer, VulkanDevice::s_imageSampleFlags, color->yuvCoefficients(), color->range());
     }
     if (!srcBuffer && !srcTexture) {
         qCWarning(KWIN_VULKAN, "Could not import source buffer for multi GPU copy!");
@@ -709,6 +739,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
         imageBarriers,
     });
 
+    std::vector<VulkanDescriptor> descriptors;
     if (srcBuffer) {
         Q_ASSERT(dstTexture);
         const auto regions = bufferImageRegion(buffer, toRender);
@@ -742,6 +773,31 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
         commandBuffer.copyImage(srcTexture->handle(), vk::ImageLayout::eGeneral,
                                 dstTexture->handle(), vk::ImageLayout::eGeneral,
                                 regions);
+    } else if (sourceFormat->yuv) {
+        VulkanShader *shader = copyVk->getShader(QStringLiteral("kwin/vulkan/copy_image2image.spv"),
+                                                 vk::Format(sourceFormat->vulkanFormat),
+                                                 color->yuvCoefficients(),
+                                                 color->range());
+        if (!shader) {
+            return std::nullopt;
+        }
+
+        commandBuffer.bindShadersEXT(vk::ShaderStageFlagBits::eCompute, *shader->handle());
+
+        auto inDescriptor = VulkanDescriptor::allocate(copyVk, shader->descriptorSetLayouts()[1], vk::DescriptorType::eCombinedImageSampler,
+                                                       copyVk->ycbcrSamplerCount(srcTexture->format()));
+        auto outDescriptor = VulkanDescriptor::allocate(copyVk, shader->descriptorSetLayouts()[0], vk::DescriptorType::eStorageImage, 1);
+        if (!inDescriptor || !outDescriptor) {
+            return std::nullopt;
+        }
+        inDescriptor->write(srcTexture.get());
+        outDescriptor->write(dstTexture.get());
+
+        commandBuffer.bindDescriptorSets(vk::PipelineBindPoint::eCompute, *shader->pipelineLayout(), 0, {*outDescriptor->set(), *inDescriptor->set()}, {});
+        commandBuffer.dispatch(std::ceil(dstTexture->size().width() / 16.0), std::ceil(dstTexture->size().height() / 16.0), 1);
+
+        descriptors.push_back(std::move(*inDescriptor));
+        descriptors.push_back(std::move(*outDescriptor));
     } else {
         const std::vector<vk::ImageBlit> regions = toRender.rects() | std::views::transform([](const Rect &rect) {
             return vk::ImageBlit{
@@ -799,7 +855,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
         m_journal.clear();
         return std::nullopt;
     }
-    auto completionFd = queue->submit(std::move(commandBuffer), std::move(sync), {buffer, m_currentSlot->buffer()}, {});
+    auto completionFd = queue->submit(std::move(commandBuffer), std::move(sync), {buffer, m_currentSlot->buffer()}, {}, std::move(descriptors));
     if (!completionFd.has_value()) {
         return std::nullopt;
     }

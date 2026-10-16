@@ -28,7 +28,8 @@ public:
     void write(VulkanTexture *texture);
 
     static std::optional<VulkanDescriptor> allocate(VulkanDevice *device, const vk::raii::DescriptorSetLayout &layout,
-                                                    vk::DescriptorType type, vk::ShaderStageFlags shaderStages = vk::ShaderStageFlagBits::eAll);
+                                                    vk::DescriptorType type, uint32_t descriptorCount,
+                                                    vk::ShaderStageFlags shaderStages = vk::ShaderStageFlagBits::eAll);
 
 private:
     vk::raii::DescriptorPool m_pool;

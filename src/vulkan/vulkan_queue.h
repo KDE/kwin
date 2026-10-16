@@ -19,6 +19,7 @@ namespace KWin
 {
 
 class VulkanDevice;
+class VulkanShader;
 
 class KWIN_EXPORT VulkanQueue
 {
@@ -32,6 +33,7 @@ public:
     vk::raii::CommandBuffer createCommandBuffer();
     std::optional<FileDescriptor> submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd,
                                          std::vector<GraphicsBufferRef> &&graphicsBuffers,
+                                         std::vector<std::shared_ptr<VulkanShader>> &&shaders,
                                          std::vector<VulkanDescriptor> &&descriptors);
     bool submitBlocking(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd);
 
@@ -51,6 +53,7 @@ private:
         QSocketNotifier notifier{QSocketNotifier::Read};
         std::vector<GraphicsBufferRef> graphicsBuffers;
         std::vector<VulkanDescriptor> descriptors;
+        std::vector<std::shared_ptr<VulkanShader>> shaders;
     };
 
     VulkanDevice *const m_device;

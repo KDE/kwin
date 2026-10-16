@@ -10,6 +10,8 @@
 #include "vulkan_logging.h"
 
 #include <QFile>
+#include <QFileInfo>
+#include <QStandardPaths>
 
 namespace KWin
 {
@@ -42,7 +44,7 @@ const vk::raii::PipelineLayout &VulkanShader::pipelineLayout() const
     return m_pipelineLayout;
 }
 
-std::unique_ptr<VulkanShader> VulkanShader::compile(VulkanDevice *device, QByteArrayView spirV, std::span<const vk::DescriptorSetLayoutBinding> descriptorSetLayoutBindings)
+std::shared_ptr<VulkanShader> VulkanShader::compile(VulkanDevice *device, QByteArrayView spirV, std::span<const vk::DescriptorSetLayoutBinding> descriptorSetLayoutBindings)
 {
     std::vector<vk::raii::DescriptorSetLayout> descriptorSetLayouts;
     std::vector<vk::DescriptorSetLayout> layouts;
@@ -89,14 +91,15 @@ std::unique_ptr<VulkanShader> VulkanShader::compile(VulkanDevice *device, QByteA
         qCWarning(KWIN_VULKAN, "Compiling Vulkan shader failed!");
         return nullptr;
     }
-    return std::make_unique<VulkanShader>(std::move(shader), std::move(descriptorSetLayouts), std::move(pipelineLayout));
+    return std::make_shared<VulkanShader>(std::move(shader), std::move(descriptorSetLayouts), std::move(pipelineLayout));
 }
 
-std::unique_ptr<VulkanShader> VulkanShader::compileFromPath(VulkanDevice *device, const QString &path, std::span<const vk::DescriptorSetLayoutBinding> descriptorSetLayouts)
+std::shared_ptr<VulkanShader> VulkanShader::compileFromPath(VulkanDevice *device, const QString &path, std::span<const vk::DescriptorSetLayoutBinding> descriptorSetLayouts)
 {
-    QFile file(path);
+    const QString absolutePath = QFileInfo(path).isAbsolute() ? path : QStandardPaths::locate(QStandardPaths::AppDataLocation, path);
+    QFile file(absolutePath);
     if (!file.open(QFile::OpenModeFlag::ReadOnly)) {
-        qCWarning(KWIN_VULKAN, "Couldn't open shader file %s", qPrintable(path));
+        qCWarning(KWIN_VULKAN, "Couldn't open shader file %s / %s", qPrintable(path), qPrintable(absolutePath));
         return nullptr;
     }
     return compile(device, file.readAll(), descriptorSetLayouts);
