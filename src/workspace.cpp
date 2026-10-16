@@ -602,6 +602,11 @@ void Workspace::requestDpmsState(DpmsState state)
         m_dpmsFilter.reset();
         m_dpmsTimer.stop();
         m_sleepInhibitor = kwinApp()->session()->delaySleep("turning screens off");
+    } else if (kwinApp()->outputBackend()->outputs().isEmpty()) {
+        // Immediately transition to dpms off, to avoid being stuck in the
+        // AboutToTurnOff state, inhibiting sleep forever.
+        m_dpms = DpmsState::Off;
+        m_sleepInhibitor.reset();
     } else {
         m_dpmsFilter = std::make_unique<DpmsInputEventFilter>();
         input()->installInputEventFilter(m_dpmsFilter.get());
