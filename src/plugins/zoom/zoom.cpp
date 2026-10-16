@@ -262,6 +262,14 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
         m_yTranslation = std::min(0, std::max(int(screenSize.height() - screenSize.height() * m_zoom), int(screenSize.height() / 2 - m_prevPoint.y() * m_zoom)));
         break;
     case MouseTrackingPush: {
+        if (m_zoom != m_prevZoom && m_zoom > 1.0) {
+            // zoom towards the pointer by keeping it at the same place on the screen
+            const QPoint anchor = trackPoint + (m_prevPoint - trackPoint) * ((m_prevZoom - 1.0) / (m_zoom - 1.0));
+            m_prevPoint.setX(std::clamp(anchor.x(), 0, screenSize.width()));
+            m_prevPoint.setY(std::clamp(anchor.y(), 0, screenSize.height()));
+        }
+        m_prevZoom = m_zoom;
+
         // touching an edge of the screen moves the zoom-area in that direction.
         const int x = trackPoint.x() * m_zoom - m_prevPoint.x() * (m_zoom - 1.0);
         const int y = trackPoint.y() * m_zoom - m_prevPoint.y() * (m_zoom - 1.0);
@@ -614,6 +622,10 @@ void ZoomEffect::setTargetZoom(double value)
 
         connect(effects, &EffectsHandler::mouseChanged, this, &ZoomEffect::slotMouseChanged);
         m_cursorPoint = effects->cursorPos().toPoint();
+        if (m_zoom == 1.0) {
+            // start at the pointer rather than where the previous zoom ended
+            m_prevPoint = m_cursorPoint;
+        }
     } else if (!newActive && oldActive) {
         m_textCaretTracker.reset();
 #if KWIN_BUILD_QACCESSIBILITYCLIENT
