@@ -11,9 +11,13 @@
 #include "core/graphicsbuffer.h"
 #include "vulkan_buffer.h"
 #include "vulkan_logging.h"
+#include "vulkan_shader.h"
 #include "vulkan_texture.h"
 
 #include <QDebug>
+#include <QFile>
+#include <QFileInfo>
+#include <QStandardPaths>
 #include <sys/stat.h>
 
 namespace KWin
@@ -25,13 +29,13 @@ VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::De
     : m_type(type)
     , m_physical(physicalDevice)
     , m_logical(std::move(logicalDevice))
-    , m_sampleFormats(queryFormats(s_imageSampleFlags))
-    , m_storageFormats(queryFormats(s_imageStorageFlags))
     , m_queueProperties(std::move(queueProperties))
     , m_deviceLimits(m_physical.getProperties().limits)
     , m_minImportedHostPointerAlignment(minImportedHostPointerAlignment)
     , m_name(physicalDevice.getProperties().deviceName.data())
 {
+    queryFormats(m_sampleFormats, s_imageSampleFlags);
+    queryFormats(m_storageFormats, s_imageStorageFlags);
     m_memoryProperties = physicalDevice.getMemoryProperties();
     getQueues();
 }
@@ -39,6 +43,9 @@ VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::De
 VulkanDevice::~VulkanDevice()
 {
     Q_EMIT deviceLost();
+    m_shaders.clear();
+    m_samplers.clear();
+    m_yuvConversions.clear();
     m_graphicsQueue.reset();
     m_computeQueue.reset();
     m_transferQueue.reset();
@@ -76,7 +83,8 @@ void VulkanDevice::getQueues()
     m_graphicsQueue = VulkanQueue::create(this, std::distance(m_queueProperties.begin(), it));
 }
 
-std::shared_ptr<VulkanTexture> VulkanDevice::importBuffer(GraphicsBuffer *buffer, vk::ImageUsageFlags usage)
+std::shared_ptr<VulkanTexture> VulkanDevice::importBuffer(GraphicsBuffer *buffer, vk::ImageUsageFlags usage,
+                                                          YUVMatrixCoefficients coefficients, EncodingRange range)
 {
     if (!buffer->dmabufAttributes()) {
         return nullptr;
@@ -85,7 +93,7 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importBuffer(GraphicsBuffer *buffer
     if (it != m_importedTextures.end()) {
         return it.value();
     }
-    std::shared_ptr<VulkanTexture> ret = importDmabuf(buffer->dmabufAttributes(), usage);
+    std::shared_ptr<VulkanTexture> ret = importDmabuf(buffer->dmabufAttributes(), usage, coefficients, range);
     m_importedTextures[buffer] = ret;
     connect(buffer, &QObject::destroyed, this, [this, buffer]() {
         m_importedTextures.remove(buffer);
@@ -143,7 +151,8 @@ static bool isDisjoint(const DmaBufAttributes &attributes)
     return false;
 }
 
-std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes *attributes, vk::ImageUsageFlags usage)
+std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes *attributes, vk::ImageUsageFlags usage,
+                                                          YUVMatrixCoefficients coefficients, EncodingRange range)
 {
     std::vector<vk::SubresourceLayout> subLayouts;
     for (int i = 0; i < attributes->planeCount; i++) {
@@ -158,7 +167,8 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
         &modifierInfo,
     };
     const bool disjoint = isDisjoint(*attributes);
-    const auto format = vk::Format(FormatInfo::get(attributes->format)->vulkanFormat);
+    const auto info = FormatInfo::get(attributes->format);
+    const auto format = vk::Format(info->vulkanFormat);
     vk::ImageCreateInfo imageInfo{
         disjoint ? vk::ImageCreateFlagBits::eDisjoint : vk::ImageCreateFlags(),
         vk::ImageType::e2D,
@@ -272,6 +282,20 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
                 1,
             },
         };
+        vk::SamplerYcbcrConversionInfo ycbcrInfo;
+        if (info->yuv) {
+            Q_ASSERT(coefficients != YUVMatrixCoefficients::Identity);
+            auto conversion = createYuvConversion(SamplerKey{
+                .format = format,
+                .coefficients = coefficients,
+                .encodingRange = range,
+            });
+            if (!conversion) {
+                return nullptr;
+            }
+            ycbcrInfo.setConversion(*conversion);
+            viewInfo.setPNext(&ycbcrInfo);
+        }
         auto [viewResult, view2] = m_logical.createImageView(viewInfo);
         if (viewResult != vk::Result::eSuccess) {
             return nullptr;
@@ -412,12 +436,10 @@ std::shared_ptr<VulkanBuffer> VulkanDevice::importHostPointerAsBuffer(const Host
     return std::make_shared<VulkanBuffer>(std::move(buffer), std::move(memory), attributes->sizeInBytes);
 }
 
-FormatModifierMap VulkanDevice::queryFormats(vk::ImageUsageFlags flags) const
+void VulkanDevice::queryFormats(FormatModifierMap &ret, vk::ImageUsageFlags flags)
 {
-    FormatModifierMap ret;
     for (const auto &[drmFormat, info] : FormatInfo::s_knownFormats) {
-        // TODO support yuv formats
-        if (info.vulkanFormat == VK_FORMAT_UNDEFINED || info.yuv) {
+        if (info.vulkanFormat == VK_FORMAT_UNDEFINED) {
             continue;
         }
         vk::DrmFormatModifierPropertiesListEXT modifierInfos;
@@ -451,11 +473,16 @@ FormatModifierMap VulkanDevice::queryFormats(vk::ImageUsageFlags flags) const
                 vk::ImageCreateFlags(),
                 &externalInfo,
             };
+
+            vk::SamplerYcbcrConversionImageFormatProperties ycbcrProperties;
             vk::ExternalImageFormatProperties externalProps;
             vk::ImageFormatProperties2 imageProps{
                 {},
                 &externalProps,
             };
+            if (info.yuv) {
+                externalProps.pNext = &ycbcrProperties;
+            }
 
             const vk::Result result = physical.getImageFormatProperties2(&imageInfo, &imageProps);
             if (result == vk::Result::eErrorFormatNotSupported) {
@@ -478,9 +505,12 @@ FormatModifierMap VulkanDevice::queryFormats(vk::ImageUsageFlags flags) const
             }
 
             ret[drmFormat].insert(props.drmFormatModifier);
+
+            if (info.yuv) {
+                m_yuvSamplerCount[vk::Format(info.vulkanFormat)] = ycbcrProperties.combinedImageSamplerDescriptorCount;
+            }
         }
     }
-    return ret;
 }
 
 std::optional<uint32_t> VulkanDevice::findMemoryType(uint32_t typeBits, vk::MemoryPropertyFlags memoryPropertyFlags) const
@@ -521,6 +551,11 @@ const FormatModifierMap &VulkanDevice::sampleFormats() const
 const FormatModifierMap &VulkanDevice::storageFormats() const
 {
     return m_storageFormats;
+}
+
+uint32_t VulkanDevice::ycbcrSamplerCount(vk::Format format) const
+{
+    return m_yuvSamplerCount.at(format);
 }
 
 const vk::raii::Device &VulkanDevice::logicalDevice() const
@@ -635,6 +670,149 @@ vk::raii::DeviceMemory VulkanDevice::allocateMemory(const vk::BufferCreateInfo &
 void VulkanDevice::waitIdle()
 {
     m_graphicsQueue->waitIdle();
+}
+
+const vk::SamplerYcbcrConversion *VulkanDevice::createYuvConversion(const SamplerKey &key)
+{
+    const auto it = m_yuvConversions.find(key);
+    if (it != m_yuvConversions.end()) {
+        return &*it->second;
+    }
+    vk::SamplerYcbcrModelConversion coefficients = vk::SamplerYcbcrModelConversion::eYcbcrIdentity;
+    switch (key.coefficients) {
+    case YUVMatrixCoefficients::BT601:
+        coefficients = vk::SamplerYcbcrModelConversion::eYcbcr601;
+        break;
+    case YUVMatrixCoefficients::BT709:
+        coefficients = vk::SamplerYcbcrModelConversion::eYcbcr709;
+        break;
+    case YUVMatrixCoefficients::BT2020:
+        coefficients = vk::SamplerYcbcrModelConversion::eYcbcr2020;
+        break;
+    case YUVMatrixCoefficients::Identity:
+        coefficients = vk::SamplerYcbcrModelConversion::eRgbIdentity;
+        break;
+    }
+    vk::SamplerYcbcrConversionCreateInfo ycbcrConversionInfo{
+        key.format,
+        coefficients,
+        key.encodingRange == EncodingRange::Full ? vk::SamplerYcbcrRange::eItuFull : vk::SamplerYcbcrRange::eItuNarrow,
+        vk::ComponentMapping{},
+        vk::ChromaLocation::eMidpoint,
+        vk::ChromaLocation::eMidpoint,
+        vk::Filter::eLinear,
+        false,
+    };
+    auto [result, conversion] = m_logical.createSamplerYcbcrConversion(ycbcrConversionInfo);
+    if (result != vk::Result::eSuccess) {
+        return nullptr;
+    }
+    auto [ret, inserted] = m_yuvConversions.insert_or_assign(key, std::move(conversion));
+    return &*ret->second;
+}
+
+const vk::Sampler *VulkanDevice::createSampler(const SamplerKey &key)
+{
+    const auto it = m_samplers.find(key);
+    if (it != m_samplers.end()) {
+        return &*it->second;
+    }
+    vk::SamplerCreateInfo samplerInfo{
+        vk::SamplerCreateFlags{},
+        vk::Filter::eLinear, // mag filter
+        vk::Filter::eLinear, // min filter
+        vk::SamplerMipmapMode::eNearest,
+        vk::SamplerAddressMode::eClampToEdge,
+        vk::SamplerAddressMode::eClampToEdge,
+        vk::SamplerAddressMode::eClampToEdge,
+        0,
+        false, // enable anisotropy
+        0, // maxAnisotropy
+        false, // enable compare
+        vk::CompareOp::eNever,
+        0, // min lod
+        0, // max lod
+        vk::BorderColor::eFloatTransparentBlack,
+        false, // unnormalized coordinates
+    };
+    vk::SamplerYcbcrConversionInfo ycbcrInfo;
+    if (key.coefficients != YUVMatrixCoefficients::Identity) {
+        // TODO always use eYcbcrIdentity + a matrix in the shader
+        // to reduce the number of permutations?
+        auto conversion = createYuvConversion(key);
+        if (!conversion) {
+            return nullptr;
+        }
+        ycbcrInfo.setConversion(*conversion);
+        samplerInfo.setPNext(&ycbcrInfo);
+    }
+    auto [samplerResult, sampler] = m_logical.createSampler(samplerInfo);
+    if (samplerResult != vk::Result::eSuccess) {
+        return nullptr;
+    }
+    auto [ret, inserted] = m_samplers.insert_or_assign(key, std::move(sampler));
+    return &*ret->second;
+}
+
+bool VulkanDevice::loadYuvShader(const QString &path, std::vector<vk::DescriptorSetLayoutBinding> &&descriptorSetLayouts, vk::Format format)
+{
+    QByteArray data;
+    for (YUVMatrixCoefficients coefficients : {YUVMatrixCoefficients::Identity, YUVMatrixCoefficients::BT601, YUVMatrixCoefficients::BT709, YUVMatrixCoefficients::BT2020}) {
+        for (EncodingRange range : {EncodingRange::Limited, EncodingRange::Full}) {
+            const SamplerKey samplerKey{format, coefficients, range};
+            const ShaderKey shaderKey{path, samplerKey};
+
+            const auto it = m_shaders.find(shaderKey);
+            if (it != m_shaders.end()) {
+                continue;
+            }
+
+            if (data.isEmpty()) {
+                const QString absolutePath = QFileInfo(path).isAbsolute() ? path : QStandardPaths::locate(QStandardPaths::GenericDataLocation, path);
+                QFile file(absolutePath);
+                if (!file.open(QFile::OpenModeFlag::ReadOnly)) {
+                    qCWarning(KWIN_VULKAN, "Couldn't open shader file %s / %s", qPrintable(path), qPrintable(absolutePath));
+                    return false;
+                }
+                data = file.readAll();
+            }
+
+            for (auto &layout : descriptorSetLayouts) {
+                if (layout.descriptorType == vk::DescriptorType::eCombinedImageSampler
+                    || layout.descriptorType == vk::DescriptorType::eSampler) {
+                    auto sampler = createSampler(samplerKey);
+                    if (!sampler) {
+                        return false;
+                    }
+                    layout.setPImmutableSamplers(sampler);
+                    Q_ASSERT(layout.descriptorCount == 1);
+                }
+            }
+
+            auto shader = VulkanShader::compile(this, data, descriptorSetLayouts);
+            m_shaders[shaderKey] = shader;
+            if (!shader) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+VulkanShader *VulkanDevice::getShader(const QString &path,
+                                      vk::Format format,
+                                      YUVMatrixCoefficients coefficients,
+                                      EncodingRange range)
+{
+    const SamplerKey samplerKey{format, coefficients, range};
+    const ShaderKey shaderKey{path, samplerKey};
+
+    const auto it = m_shaders.find(shaderKey);
+    if (it != m_shaders.end()) {
+        return it->second.get();
+    } else {
+        return nullptr;
+    }
 }
 
 }

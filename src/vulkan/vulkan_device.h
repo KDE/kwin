@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "core/colorspace.h"
 #include "core/drm_formats.h"
 #include "kwin_export.h"
 #include "utils/filedescriptor.h"
@@ -46,7 +47,9 @@ public:
     VulkanDevice(const VulkanDevice &) = delete;
     ~VulkanDevice();
 
-    std::shared_ptr<VulkanTexture> importBuffer(GraphicsBuffer *buffer, vk::ImageUsageFlags usage);
+    std::shared_ptr<VulkanTexture> importBuffer(GraphicsBuffer *buffer, vk::ImageUsageFlags usage,
+                                                YUVMatrixCoefficients coefficients = YUVMatrixCoefficients::Identity,
+                                                EncodingRange range = EncodingRange::Full);
     std::shared_ptr<VulkanBuffer> importBufferAsBuffer(GraphicsBuffer *buffer);
 
     bool isSoftwareRenderer() const;
@@ -60,6 +63,7 @@ public:
 
     const FormatModifierMap &sampleFormats() const;
     const FormatModifierMap &storageFormats() const;
+    uint32_t ycbcrSamplerCount(vk::Format format) const;
 
     const vk::raii::Device &logicalDevice() const;
 
@@ -97,6 +101,12 @@ public:
      */
     void handleDeviceLoss();
 
+    /**
+     * loads all YUV permutations of the shader
+     */
+    bool loadYuvShader(const QString &path, std::vector<vk::DescriptorSetLayoutBinding> &&descriptorSetLayouts, vk::Format format);
+    VulkanShader *getShader(const QString &path, vk::Format format, YUVMatrixCoefficients coefficients, EncodingRange range);
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the associated Vulkan device has been
@@ -109,17 +119,30 @@ Q_SIGNALS:
 
 private:
     void getQueues();
-    FormatModifierMap queryFormats(vk::ImageUsageFlags flags) const;
+    void queryFormats(FormatModifierMap &ret, vk::ImageUsageFlags flags);
     std::optional<uint32_t> findMemoryType(uint32_t typeBits, vk::MemoryPropertyFlags memoryPropertyFlags) const;
-    std::shared_ptr<VulkanTexture> importDmabuf(const DmaBufAttributes *attributes, vk::ImageUsageFlags usage);
+    std::shared_ptr<VulkanTexture> importDmabuf(const DmaBufAttributes *attributes, vk::ImageUsageFlags usage,
+                                                YUVMatrixCoefficients coefficients, EncodingRange range);
     std::shared_ptr<VulkanBuffer> importDmabufAsBuffer(const DmaBufAttributes *attributes, vk::BufferUsageFlags usage);
     std::shared_ptr<VulkanBuffer> importHostPointerAsBuffer(const HostMemoryAttributes *attributes, vk::BufferUsageFlags usage);
+
+    struct SamplerKey
+    {
+        vk::Format format;
+        YUVMatrixCoefficients coefficients;
+        EncodingRange encodingRange;
+
+        auto operator<=>(const SamplerKey &) const = default;
+    };
+    const vk::SamplerYcbcrConversion *createYuvConversion(const SamplerKey &key);
+    const vk::Sampler *createSampler(const SamplerKey &key);
 
     vk::PhysicalDeviceType m_type;
     vk::raii::PhysicalDevice m_physical;
     vk::raii::Device m_logical;
     FormatModifierMap m_sampleFormats;
     FormatModifierMap m_storageFormats;
+    std::unordered_map<vk::Format, uint32_t> m_yuvSamplerCount;
     std::vector<vk::QueueFamilyProperties> m_queueProperties;
     vk::PhysicalDeviceMemoryProperties m_memoryProperties;
     vk::PhysicalDeviceLimits m_deviceLimits;
@@ -133,6 +156,17 @@ private:
     QHash<GraphicsBuffer *, std::shared_ptr<VulkanTexture>> m_importedTextures;
     QHash<GraphicsBuffer *, std::shared_ptr<VulkanBuffer>> m_importedBuffers;
     bool m_lost = false;
+
+    struct ShaderKey
+    {
+        QString path;
+        SamplerKey sampler;
+
+        auto operator<=>(const ShaderKey &) const = default;
+    };
+    std::map<ShaderKey, std::shared_ptr<VulkanShader>> m_shaders;
+    std::map<SamplerKey, vk::raii::SamplerYcbcrConversion> m_yuvConversions;
+    std::map<SamplerKey, vk::raii::Sampler> m_samplers;
 };
 
 }

@@ -24,8 +24,8 @@ public:
     const std::vector<vk::raii::DescriptorSetLayout> &descriptorSetLayouts() const;
     const vk::raii::PipelineLayout &pipelineLayout() const;
 
-    static std::unique_ptr<VulkanShader> compile(VulkanDevice *device, QByteArrayView spirV, std::span<const vk::DescriptorSetLayoutBinding> descriptorSetLayouts);
-    static std::unique_ptr<VulkanShader> compileFromPath(VulkanDevice *device, const QString &path, std::span<const vk::DescriptorSetLayoutBinding> descriptorSetLayouts);
+    static std::shared_ptr<VulkanShader> compile(VulkanDevice *device, QByteArrayView spirV, std::span<const vk::DescriptorSetLayoutBinding> descriptorSetLayouts);
+    static std::shared_ptr<VulkanShader> compileFromPath(VulkanDevice *device, const QString &path, std::span<const vk::DescriptorSetLayoutBinding> descriptorSetLayouts);
 
 private:
     vk::raii::ShaderEXT m_shader;

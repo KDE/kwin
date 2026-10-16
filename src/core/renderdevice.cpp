@@ -298,11 +298,17 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             continue;
         }
 
-        vk::StructureChain<vk::PhysicalDeviceFeatures2, vk::PhysicalDeviceSynchronization2Features, vk::PhysicalDeviceHostQueryResetFeatures, vk::PhysicalDeviceShaderObjectFeaturesEXT> features;
+        vk::StructureChain<vk::PhysicalDeviceFeatures2,
+                           vk::PhysicalDeviceSynchronization2Features,
+                           vk::PhysicalDeviceHostQueryResetFeatures,
+                           vk::PhysicalDeviceShaderObjectFeaturesEXT,
+                           vk::PhysicalDeviceSamplerYcbcrConversionFeatures>
+            features;
         features.get<vk::PhysicalDeviceFeatures2>().features.robustBufferAccess = true;
         features.get<vk::PhysicalDeviceHostQueryResetFeatures>().hostQueryReset = true;
         features.get<vk::PhysicalDeviceSynchronization2Features>().synchronization2 = true;
         features.get<vk::PhysicalDeviceShaderObjectFeaturesEXT>().shaderObject = true;
+        features.get<vk::PhysicalDeviceSamplerYcbcrConversionFeatures>().samplerYcbcrConversion = true;
 
         vk::DeviceCreateInfo deviceInfo{
             vk::DeviceCreateFlags{},
@@ -471,7 +477,7 @@ FileDescriptor RenderDevice::clearBuffer(GraphicsBuffer *buffer)
         if (result != vk::Result::eSuccess) {
             return FileDescriptor{};
         }
-        return m_vulkanDevice->graphicsQueue()->submit(std::move(cmd), FileDescriptor{}, {buffer}, {}).value_or(FileDescriptor{});
+        return m_vulkanDevice->graphicsQueue()->submit(std::move(cmd), FileDescriptor{}, {buffer}, {}, {}).value_or(FileDescriptor{});
     } else if (auto context = eglContext()) {
         if (!context->makeCurrent()) {
             return FileDescriptor{};
