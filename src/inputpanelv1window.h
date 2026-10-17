@@ -80,6 +80,9 @@ public:
     void hide();
     bool wasUnmapped() const;
 
+Q_SIGNALS:
+    void modeChanged();
+
 protected:
     void moveResizeInternal(const RectF &rect, MoveResizeMode mode) override;
     void doSetNextTargetScale() override;

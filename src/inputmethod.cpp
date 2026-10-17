@@ -293,16 +293,17 @@ void InputMethod::setPanel(InputPanelV1Window *panel)
     }
 
     m_panel = panel;
+    connect(m_panel, &InputPanelV1Window::modeChanged, this, &InputMethod::updateVisible);
     connect(m_panel, &Window::closed, this, [this]() {
         m_panel.clear();
         updateInputPanelState();
-        Q_EMIT visibleChanged();
+        updateVisible();
     });
     connect(m_panel, &Window::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
     connect(m_panel, &Window::hiddenChanged, this, &InputMethod::updateInputPanelState);
-    connect(m_panel, &Window::hiddenChanged, this, &InputMethod::visibleChanged);
-    connect(m_panel, &Window::readyForPaintingChanged, this, &InputMethod::visibleChanged);
-    Q_EMIT visibleChanged();
+    connect(m_panel, &Window::hiddenChanged, this, &InputMethod::updateVisible);
+    connect(m_panel, &Window::readyForPaintingChanged, this, &InputMethod::updateVisible);
+    updateVisible();
     updateInputPanelState();
     Q_EMIT panelChanged();
 
@@ -969,7 +970,18 @@ void InputMethod::updateModifiersMap(const QByteArray &modifiers)
 
 bool InputMethod::isVisible() const
 {
-    return m_panel && m_panel->isShown() && m_panel->readyForPainting();
+    return m_visible;
+}
+
+void InputMethod::updateVisible()
+{
+    const bool visible = m_panel && m_panel->mode() == InputPanelV1Window::Mode::VirtualKeyboard && m_panel->isShown() && m_panel->readyForPainting();
+    if (m_visible == visible) {
+        return;
+    }
+
+    m_visible = visible;
+    Q_EMIT visibleChanged();
 }
 
 bool InputMethod::isAvailable() const
