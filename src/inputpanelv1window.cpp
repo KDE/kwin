@@ -57,13 +57,19 @@ InputPanelV1Window::InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurfac
 
 void InputPanelV1Window::showOverlayPanel()
 {
-    m_mode = Mode::Overlay;
+    if (m_mode != Mode::Overlay) {
+        m_mode = Mode::Overlay;
+        Q_EMIT modeChanged();
+    }
     maybeShow();
 }
 
 void InputPanelV1Window::showTopLevel(OutputInterface *output, InputPanelSurfaceV1Interface::Position position)
 {
-    m_mode = Mode::VirtualKeyboard;
+    if (m_mode != Mode::VirtualKeyboard) {
+        m_mode = Mode::VirtualKeyboard;
+        Q_EMIT modeChanged();
+    }
     maybeShow();
 }
 

@@ -59,6 +59,7 @@ namespace KWin
 
 InputMethod::InputMethod()
 {
+    connect(this, &InputMethod::visibleChanged, this, &InputMethod::keyboardVisibleChanged);
     m_internalContext = new InternalInputMethodContext(this);
 
     auto group = kwinApp()->config()->group(QStringLiteral("Wayland"));
@@ -293,6 +294,7 @@ void InputMethod::setPanel(InputPanelV1Window *panel)
     }
 
     m_panel = panel;
+    connect(m_panel, &InputPanelV1Window::modeChanged, this, &InputMethod::keyboardVisibleChanged);
     connect(m_panel, &Window::closed, this, [this]() {
         m_panel.clear();
         updateInputPanelState();
@@ -970,6 +972,11 @@ void InputMethod::updateModifiersMap(const QByteArray &modifiers)
 bool InputMethod::isVisible() const
 {
     return m_panel && m_panel->isShown() && m_panel->readyForPainting();
+}
+
+bool InputMethod::isKeyboardVisible() const
+{
+    return isVisible() && m_panel->mode() == InputPanelV1Window::Mode::VirtualKeyboard;
 }
 
 bool InputMethod::isAvailable() const

@@ -116,9 +116,14 @@ public:
     void show();
 
     /*!
-     * Whether the on-screen keyboard is currently visible.
+     * Whether an input panel (on-screen keyboard or overlay) is currently visible.
      */
     bool isVisible() const;
+
+    /*!
+     * Whether the on-screen keyboard is currently visible, excluding overlay panels.
+     */
+    bool isKeyboardVisible() const;
 
     /*!
      * Whether an input method has been configured and is available for use.
@@ -220,9 +225,14 @@ Q_SIGNALS:
     void modeChanged(KWin::InputMethod::VirtualKeyboardVisibility mode);
 
     /*!
-     * Emitted when the on-screen keyboard is shown or hidden.
+     * Emitted when an input panel (on-screen keyboard or overlay) is shown or hidden.
      */
     void visibleChanged();
+
+    /*!
+     * Emitted when the visibility or type of the input panel changes.
+     */
+    void keyboardVisibleChanged();
 
     /*!
      * Emitted when the configured input method changes.

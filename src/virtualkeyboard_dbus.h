@@ -22,6 +22,7 @@ class KWIN_EXPORT VirtualKeyboardDBus : public QObject
     Q_PROPERTY(int mode READ mode WRITE setMode NOTIFY modeChanged)
     Q_PROPERTY(bool active READ isActive WRITE setActive NOTIFY activeChanged)
     Q_PROPERTY(bool visible READ isVisible NOTIFY visibleChanged)
+    Q_PROPERTY(bool keyboardVisible READ isKeyboardVisible NOTIFY keyboardVisibleChanged)
     Q_PROPERTY(bool activeClientSupportsTextInput READ activeClientSupportsTextInput NOTIFY activeClientSupportsTextInputChanged)
 
 public:
@@ -32,6 +33,7 @@ public:
 
     bool activeClientSupportsTextInput() const;
     bool isVisible() const;
+    bool isKeyboardVisible() const;
     bool isActive() const;
     bool isAvailable() const;
     void setMode(int mode);
@@ -44,6 +46,7 @@ Q_SIGNALS:
     Q_SCRIPTABLE void modeChanged();
     Q_SCRIPTABLE void activeChanged();
     Q_SCRIPTABLE void visibleChanged();
+    Q_SCRIPTABLE void keyboardVisibleChanged();
     Q_SCRIPTABLE void availableChanged();
     Q_SCRIPTABLE void activeClientSupportsTextInputChanged();
 
