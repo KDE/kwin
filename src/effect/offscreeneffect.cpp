@@ -362,6 +362,7 @@ class CrossFadeWindowData : public OffscreenData
 {
 public:
     RectF frameGeometryAtCapture;
+    RectF expandedGeometryAtCapture;
 };
 
 class CrossFadeEffectPrivate
@@ -399,8 +400,9 @@ bool CrossFadeEffect::drawWindow(const RenderTarget &renderTarget, const RenderV
     WindowPaintData previousWindowData = data;
     previousWindowData.setOpacity((1.0 - data.crossFadeProgress()) * data.opacity());
 
-    const RectF expandedGeometry = snapToPixels(window->expandedGeometry(), viewport.scale());
     const RectF frameGeometry = snapToPixels(window->frameGeometry(), viewport.scale());
+    const RectF capturedFrameGeometry = snapToPixels(offscreenData->frameGeometryAtCapture, viewport.scale());
+    const RectF capturedExpandedGeometry = snapToPixels(offscreenData->expandedGeometryAtCapture, viewport.scale());
 
     // This is for the case of *non* live effect, when the window buffer we saved has a different size
     // compared to the size the window has now. The "old" window will be rendered scaled to the current
@@ -409,14 +411,14 @@ bool CrossFadeEffect::drawWindow(const RenderTarget &renderTarget, const RenderV
     // to fix that, we consider how much the shadow will have scaled, and use that as margins to the
     // current frame geometry. this causes the scaled window to visually line up perfectly with frameGeometry,
     // having the scaled shadow all outside of it.
-    const qreal widthRatio = offscreenData->frameGeometryAtCapture.width() / frameGeometry.width();
-    const qreal heightRatio = offscreenData->frameGeometryAtCapture.height() / frameGeometry.height();
+    const qreal widthRatio = capturedFrameGeometry.width() / frameGeometry.width();
+    const qreal heightRatio = capturedFrameGeometry.height() / frameGeometry.height();
 
     const QMarginsF margins(
-        (expandedGeometry.x() - frameGeometry.x()) / widthRatio,
-        (expandedGeometry.y() - frameGeometry.y()) / heightRatio,
-        (frameGeometry.right() - expandedGeometry.right()) / widthRatio,
-        (frameGeometry.bottom() - expandedGeometry.bottom()) / heightRatio);
+        (capturedExpandedGeometry.x() - capturedFrameGeometry.x()) / widthRatio,
+        (capturedExpandedGeometry.y() - capturedFrameGeometry.y()) / heightRatio,
+        (capturedFrameGeometry.right() - capturedExpandedGeometry.right()) / widthRatio,
+        (capturedFrameGeometry.bottom() - capturedExpandedGeometry.bottom()) / heightRatio);
 
     RectF visibleRect = RectF(QPointF(0, 0), frameGeometry.size()) - margins;
 
@@ -456,6 +458,7 @@ void CrossFadeEffect::redirect(EffectWindow *window)
     effects->makeOpenGLContextCurrent();
     (void)offscreenData->maybeRender(window);
     offscreenData->frameGeometryAtCapture = window->frameGeometry();
+    offscreenData->expandedGeometryAtCapture = window->expandedGeometry();
 
     window->setData(WindowForceBlurRole, blurRole);
     window->setData(WindowForceBackgroundContrastRole, contrastRole);
