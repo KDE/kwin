@@ -14,6 +14,7 @@
 #include "utils/resource.h"
 
 #include <QTimer>
+#include <cmath>
 
 namespace KWin
 {
@@ -714,7 +715,17 @@ quint32 XdgToplevelInterface::sendConfigure(const QSizeF &size, const States &st
     const QByteArray xdgStates = QByteArray::fromRawData(reinterpret_cast<char *>(statesData), sizeof(uint32_t) * i);
     const quint32 serial = xdgSurface()->shell()->display()->nextSerial();
 
-    const QSize nativeSize = (size * d->xdgSurface->surface()->compositorToClientScale()).toSize();
+    // The protocol has whole logical pixels only. A size that fills an area, such as the one of a
+    // maximized window, rounds up: with some fractional scales, rounding it down leaves the last
+    // device pixel at the edge of the area uncovered. The fraction it adds lies outside the area.
+    const QSizeF clientSize = size * d->xdgSurface->surface()->compositorToClientScale();
+    const bool fillsWidth = states & (State::MaximizedHorizontal | State::FullScreen | State::TiledLeft | State::TiledRight);
+    const bool fillsHeight = states & (State::MaximizedVertical | State::FullScreen | State::TiledTop | State::TiledBottom);
+    const auto toWholePixels = [](qreal value, bool fillsArea) {
+        // The tolerance keeps a value that is whole but for floating point error from going up.
+        return fillsArea ? int(std::ceil(value - 0.01)) : qRound(value);
+    };
+    const QSize nativeSize(toWholePixels(clientSize.width(), fillsWidth), toWholePixels(clientSize.height(), fillsHeight));
     d->send_configure(nativeSize.width(), nativeSize.height(), xdgStates);
 
     auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface());
