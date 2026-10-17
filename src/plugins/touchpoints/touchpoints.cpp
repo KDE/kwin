@@ -88,6 +88,7 @@ bool TouchPointsEffect::touchUp(qint32 id, std::chrono::microseconds time)
         point.press = false;
         point.color = colorForId(id);
         m_points << point;
+        m_latestPositions.erase(it);
     }
     return false;
 }
@@ -158,14 +159,26 @@ float TouchPointsEffect::computeAlpha(int time, int ring)
 
 void TouchPointsEffect::repaint()
 {
-    if (!m_points.isEmpty()) {
-        Region dirtyRegion;
-        const int radius = m_ringMaxSize + m_lineWidth;
-        for (auto it = m_points.constBegin(), end = m_points.constEnd(); it != end; ++it) {
-            dirtyRegion += Rect(it->pos.x() - radius, it->pos.y() - radius, 2 * radius, 2 * radius);
-        }
-        effects->addRepaint(dirtyRegion);
+    if (m_points.isEmpty()) {
+        return;
     }
+    // A single bounding rect keeps the dirty Region to one rectangle, avoiding
+    // the superlinear Region::unite() cost that otherwise dominates the
+    // compositor thread while many touch points are moving.
+    const int radius = m_ringMaxSize + m_lineWidth;
+    qreal minX = m_points.constFirst().pos.x();
+    qreal maxX = minX;
+    qreal minY = m_points.constFirst().pos.y();
+    qreal maxY = minY;
+    for (auto it = m_points.constBegin(), end = m_points.constEnd(); it != end; ++it) {
+        minX = qMin(minX, it->pos.x());
+        maxX = qMax(maxX, it->pos.x());
+        minY = qMin(minY, it->pos.y());
+        maxY = qMax(maxY, it->pos.y());
+    }
+    effects->addRepaint(RectF(QPointF(minX, minY), QPointF(maxX, maxY))
+                            .roundedOut()
+                            .grownBy(QMargins(radius, radius, radius, radius)));
 }
 
 bool TouchPointsEffect::isActive() const
