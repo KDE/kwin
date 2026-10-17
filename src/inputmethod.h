@@ -262,6 +262,8 @@ private Q_SLOTS:
     void key(quint32 serial, quint32 time, quint32 key, KWin::KeyboardKeyState state);
     void modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group);
 
+    void updateVisible();
+
 private:
     void updateInputPanelState();
     void adoptInputMethodContext();
@@ -309,6 +311,7 @@ private:
     bool m_hasPendingModifiers = false;
     bool m_activeClientSupportsTextInput = false;
     bool m_showRequested = false;
+    bool m_visible = false;
 
     /**
      * Whether the input method was force activated, e.g. via forceActivate().
