@@ -6,6 +6,8 @@
 
 #include "effect/timeline.h"
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -59,6 +61,10 @@ void TimeLine::advance(std::chrono::milliseconds timestamp)
     std::chrono::milliseconds delta = std::chrono::milliseconds::zero();
     if (d->lastTimestamp.has_value()) {
         delta = timestamp - d->lastTimestamp.value();
+        if (delta == 0ms) {
+            // don't progress with a difference of 0ms, or it'll round away everything
+            return;
+        }
     }
 
     Q_ASSERT(delta >= std::chrono::milliseconds::zero());
