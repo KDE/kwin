@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-16 00:50+0000\n"
-"PO-Revision-Date: 2026-09-04 00:55+0100\n"
+"PO-Revision-Date: 2026-10-17 00:32+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "First-Translator: Boris Wesslowski <Boris@Wesslowski.com>\n"
-"X-Generator: Lokalize 26.08.0\n"
+"X-Generator: Lokalize 26.08.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -2522,6 +2522,10 @@ msgid ""
 "temporarily active.\n"
 "            "
 msgstr ""
+"\n"
+"                Indica la fecha y la hora hasta la que la luz nocturna debe "
+"estar temporalmente activa.\n"
+"            "
 
 #. i18n: ectx: label, entry (ActivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:28
@@ -2531,6 +2535,10 @@ msgid ""
 "                Night Light is activated until manually disabled.\n"
 "            "
 msgstr ""
+"\n"
+"                La luz nocturna está activada hasta que se desactive "
+"manualmente.\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedUntil), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:35
@@ -2541,6 +2549,10 @@ msgid ""
 "temporarily inactive.\n"
 "            "
 msgstr ""
+"\n"
+"                Indica la fecha y la hora hasta la que la luz nocturna debe "
+"estar temporalmente desactivada.\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:42
@@ -2550,6 +2562,10 @@ msgid ""
 "                Night Light is suspended until manually turned back on.\n"
 "            "
 msgstr ""
+"\n"
+"                La luz nocturna está suspendida hasta que se vuelva a "
+"activar manualmente.\n"
+"            "
 
 #: plugins/outputlocator/outputlocator.cpp:26
 #, kde-format
@@ -4504,11 +4520,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ha fallado"
-
-#~ msgid "OpenGL compositing is required for screencasting"
-#~ msgstr ""
-#~ "Se necesita composición OpenGL para hacer una grabación de la pantalla"
-
-#~ msgctxt "@label"
-#~ msgid "Paint Amount"
-#~ msgstr "Cantidad de pintura"

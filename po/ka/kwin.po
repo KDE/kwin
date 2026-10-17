@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-16 00:50+0000\n"
-"PO-Revision-Date: 2026-09-03 06:22+0200\n"
+"PO-Revision-Date: 2026-10-16 06:58+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.9\n"
+"X-Generator: Poedit 3.10\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2494,6 +2494,10 @@ msgid ""
 "temporarily active.\n"
 "            "
 msgstr ""
+"\n"
+"                განსაზღვრავს თარიღსა და დროს, სანამ ღამის სინათლე დროებით "
+"აქტიური უნდა იყოს.\n"
+"            "
 
 #. i18n: ectx: label, entry (ActivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:28
@@ -2503,6 +2507,9 @@ msgid ""
 "                Night Light is activated until manually disabled.\n"
 "            "
 msgstr ""
+"\n"
+"                ღამის სინათლე აქტიურია, სანამ მას ხელით არ გამორთავთ.\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedUntil), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:35
@@ -2513,6 +2520,10 @@ msgid ""
 "temporarily inactive.\n"
 "            "
 msgstr ""
+"\n"
+"                განსაზღვრავს თარიღსა და დროს, სადამდეც ღამის სინათლე დროებით "
+"არააქტიური უნდა იყოს.\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:42
@@ -2522,6 +2533,10 @@ msgid ""
 "                Night Light is suspended until manually turned back on.\n"
 "            "
 msgstr ""
+"\n"
+"                ღამის სინათლე დროებით გამორთულია, სანამ მას ხელით არ "
+"ჩართავენ.\n"
+"            "
 
 #: plugins/outputlocator/outputlocator.cpp:26
 #, kde-format

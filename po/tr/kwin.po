@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-16 00:50+0000\n"
-"PO-Revision-Date: 2026-09-03 20:32+0300\n"
+"PO-Revision-Date: 2026-10-16 19:19+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -2497,6 +2497,10 @@ msgid ""
 "temporarily active.\n"
 "            "
 msgstr ""
+"\n"
+"                Gece Işığı’nın hangi tarihe ve zamana değin geçici olarak "
+"etkin olması gerektiğini belirtir.\n"
+"            "
 
 #. i18n: ectx: label, entry (ActivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:28
@@ -2506,6 +2510,10 @@ msgid ""
 "                Night Light is activated until manually disabled.\n"
 "            "
 msgstr ""
+"\n"
+"                Gece Işığı, elle devre dışı bırakılana değin geçici olarak "
+"etkinleştirildi.\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedUntil), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:35
@@ -2516,6 +2524,10 @@ msgid ""
 "temporarily inactive.\n"
 "            "
 msgstr ""
+"\n"
+"                Gece Işığı’nın hangi tarihe ve zamana değin geçici olarak "
+"devre dışı kalması gerektiğini belirtir.\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:42
@@ -2525,6 +2537,9 @@ msgid ""
 "                Night Light is suspended until manually turned back on.\n"
 "            "
 msgstr ""
+"\n"
+"                Gece Işığı, elle yeniden açılana değin askıya alındı.\n"
+"            "
 
 #: plugins/outputlocator/outputlocator.cpp:26
 #, kde-format

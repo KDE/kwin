@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-16 00:50+0000\n"
-"PO-Revision-Date: 2026-09-03 19:35+0300\n"
+"PO-Revision-Date: 2026-10-16 11:33+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -2515,6 +2515,10 @@ msgid ""
 "temporarily active.\n"
 "            "
 msgstr ""
+"\n"
+"                Вказує дату і час моменту, до якого нічні кольори має бути "
+"тимчасово активовано\n"
+"            "
 
 #. i18n: ectx: label, entry (ActivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:28
@@ -2524,6 +2528,9 @@ msgid ""
 "                Night Light is activated until manually disabled.\n"
 "            "
 msgstr ""
+"\n"
+"                Нічні кольори активовано до вимикання вручну.\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedUntil), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:35
@@ -2534,6 +2541,10 @@ msgid ""
 "temporarily inactive.\n"
 "            "
 msgstr ""
+"\n"
+"                Вказує дату і час моменту, до якого нічні кольори має бути "
+"тимчасово дезактивовано.\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:42
@@ -2543,6 +2554,9 @@ msgid ""
 "                Night Light is suspended until manually turned back on.\n"
 "            "
 msgstr ""
+"\n"
+"                Нічні кольори призупинено до вмикання вручну.\n"
+"            "
 
 #: plugins/outputlocator/outputlocator.cpp:26
 #, kde-format

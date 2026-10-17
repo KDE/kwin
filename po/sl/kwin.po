@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1750425 2026-10-16 01:43:40Z scripty $
+# $Id: kwin.po 1750508 2026-10-17 01:45:57Z scripty $
 # $Source$
 #
 #
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-16 00:50+0000\n"
-"PO-Revision-Date: 2026-09-03 07:30+0200\n"
+"PO-Revision-Date: 2026-10-16 07:14+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -2511,6 +2511,10 @@ msgid ""
 "temporarily active.\n"
 "            "
 msgstr ""
+"\n"
+"                Določa datum in čas, do katerega mora biti funkcija Nočna "
+"luč začasno vključena.\n"
+"            "
 
 #. i18n: ectx: label, entry (ActivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:28
@@ -2520,6 +2524,9 @@ msgid ""
 "                Night Light is activated until manually disabled.\n"
 "            "
 msgstr ""
+"\n"
+"                Nočna luč je vključena, dokler je ročno ne izklopite.\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedUntil), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:35
@@ -2530,6 +2537,10 @@ msgid ""
 "temporarily inactive.\n"
 "            "
 msgstr ""
+"\n"
+"                Določa datum in čas, do katerega mora biti funkcija Nočna "
+"luč začasno neaktivna.\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:42
@@ -2539,6 +2550,10 @@ msgid ""
 "                Night Light is suspended until manually turned back on.\n"
 "            "
 msgstr ""
+"\n"
+"                Nočna luč je začasno izklopljena, dokler je ročno znova ne "
+"vklopite.\n"
+"            "
 
 #: plugins/outputlocator/outputlocator.cpp:26
 #, kde-format
