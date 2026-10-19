@@ -292,8 +292,7 @@ void ExpoCell::updateContentItemGeometry()
         rect.width() * m_partialActivationFactor + m_naturalWidth * (1.0 - m_partialActivationFactor),
         rect.height() * m_partialActivationFactor + m_naturalHeight * (1.0 - m_partialActivationFactor)};
 
-    m_contentItem->setX(rect.x());
-    m_contentItem->setY(rect.y());
+    m_contentItem->setPosition(rect.topLeft());
     m_contentItem->setSize(rect.size());
 }
 
@@ -418,10 +417,8 @@ void ExpoLayout::updatePolish()
             cell->setProperty("width", rect.width());
             cell->setProperty("height", rect.height());
         } else {
-            cell->setX(rect.x());
-            cell->setY(rect.y());
-            cell->setWidth(rect.width());
-            cell->setHeight(rect.height());
+            cell->setPosition(rect.topLeft());
+            cell->setSize(rect.size());
         }
     }
     setReady();
