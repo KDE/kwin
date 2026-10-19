@@ -598,7 +598,7 @@ std::optional<OutputConfigurationStore::SetupWithOutputs> OutputConfigurationSto
             outputStates[output] = *index;
         }
     }
-    const auto matchCount = [lidClosed, &outputStates](const Setup &setup) -> size_t {
+    const auto matchCount = [lidClosed, &outputStates](const Setup &setup) -> ssize_t {
         if (setup.lidClosed != lidClosed) {
             return 0;
         }
@@ -621,7 +621,11 @@ std::optional<OutputConfigurationStore::SetupWithOutputs> OutputConfigurationSto
     const auto bestSetup = std::ranges::max_element(m_setups, [&](const auto &left, const auto &right) {
         return matchCount(left) < matchCount(right);
     });
-    if (bestSetup == m_setups.end() || matchCount(*bestSetup) == 0) {
+    if (bestSetup == m_setups.end()) {
+        return std::nullopt;
+    }
+    const ssize_t count = matchCount(*bestSetup);
+    if (count == 0 || count == outputs.size()) {
         return std::nullopt;
     } else {
         return SetupWithOutputs{
