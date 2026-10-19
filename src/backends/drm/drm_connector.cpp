@@ -329,7 +329,7 @@ bool DrmConnector::updateProperties()
         m_driverModes.clear();
         const auto modes = std::span(m_conn->modes, m_conn->count_modes);
         auto usableModes = modes | std::views::filter([](drmModeModeInfo mode) {
-            return mode.hdisplay >= 640 && mode.vdisplay >= 480;
+            return (mode.type & DRM_MODE_TYPE_PREFERRED) || (mode.hdisplay >= 640 && mode.vdisplay >= 480);
         });
         if (usableModes.empty()) {
             // allow unusable modes, we don't have much of a choice

@@ -79,6 +79,8 @@ private Q_SLOTS:
     void testOutputDetection_data();
     void testOutputDetection();
     void testZeroModesHandling();
+    void testModeFiltering_data();
+    void testModeFiltering();
     void testModeGeneration_data();
     void testModeGeneration();
     void testConnectorLifetime();
@@ -233,6 +235,66 @@ void DrmTest::testZeroModesHandling()
     QVERIFY(gpu->updateOutputs());
     QCOMPARE(gpu->drmOutputs().size(), 1);
     QVERIFY(!gpu->drmOutputs().constFirst()->modes().empty());
+
+    gpu.reset();
+    verifyCleanup(mockGpu.get());
+}
+
+void DrmTest::testModeFiltering_data()
+{
+    QTest::addColumn<QSize>("smallModeSize");
+    QTest::addColumn<bool>("preferredMode");
+    QTest::addColumn<bool>("expectSmallMode");
+
+    QTest::newRow("preferred-small")
+        << QSize(320, 240) << true << true;
+
+    QTest::newRow("non-preferred-small")
+        << QSize(320, 240) << false << false;
+
+    QTest::newRow("minimum-size")
+        << QSize(640, 480) << false << true;
+}
+
+void DrmTest::testModeFiltering()
+{
+    QFETCH(QSize, smallModeSize);
+    QFETCH(bool, preferredMode);
+    QFETCH(bool, expectSmallMode);
+
+    const auto mockGpu = findPrimaryDevice(5);
+
+    const auto conn = std::make_shared<MockConnector>(mockGpu.get());
+    conn->modes.clear();
+    conn->addMode(1920, 1080, 60);
+    conn->addMode(smallModeSize.width(), smallModeSize.height(), 60, preferredMode);
+    mockGpu->connectors.push_back(conn);
+
+    const auto session = Session::create(Session::Type::Noop);
+    const auto backend = std::make_unique<DrmBackend>(session.get());
+    auto gpu = std::make_unique<DrmGpu>(
+        backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
+    const auto renderBackend = backend->createOpenGLBackend(gpu->renderDevice());
+
+    QVERIFY(gpu->updateOutputs());
+    QCOMPARE(gpu->drmOutputs().size(), 1);
+
+    const auto modes = gpu->drmOutputs().front()->modes();
+    QCOMPARE(modes.size(), expectSmallMode ? 2 : 1);
+
+    bool foundNormalMode = false;
+    bool foundSmallMode = false;
+    for (const auto &mode : modes) {
+        if (mode->size() == QSize(1920, 1080)) {
+            foundNormalMode = true;
+        }
+        if (mode->size() == smallModeSize) {
+            foundSmallMode = true;
+        }
+    }
+
+    QVERIFY(foundNormalMode);
+    QCOMPARE(foundSmallMode, expectSmallMode);
 
     gpu.reset();
     verifyCleanup(mockGpu.get());
