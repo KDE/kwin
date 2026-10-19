@@ -37,6 +37,7 @@ public:
     }
     bool showTabBox;
     bool highlightWindows;
+    bool preview = false;
 
     TabBoxConfig::ClientDesktopMode clientDesktopMode;
     TabBoxConfig::ClientActivitiesMode clientActivitiesMode;
@@ -64,6 +65,7 @@ TabBoxConfig &TabBoxConfig::operator=(const KWin::TabBox::TabBoxConfig &object)
 {
     d->showTabBox = object.isShowTabBox();
     d->highlightWindows = object.isHighlightWindows();
+    d->preview = object.isPreview();
     d->clientDesktopMode = object.clientDesktopMode();
     d->clientActivitiesMode = object.clientActivitiesMode();
     d->clientApplicationsMode = object.clientApplicationsMode();
@@ -85,6 +87,16 @@ void TabBoxConfig::setHighlightWindows(bool highlight)
 bool TabBoxConfig::isHighlightWindows() const
 {
     return d->highlightWindows;
+}
+
+void TabBoxConfig::setPreview(bool preview)
+{
+    d->preview = preview;
+}
+
+bool TabBoxConfig::isPreview() const
+{
+    return d->preview;
 }
 
 void TabBoxConfig::setShowTabBox(bool show)

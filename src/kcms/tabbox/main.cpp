@@ -272,37 +272,12 @@ void KWinTabBoxConfig::showPreview()
     auto form = qobject_cast<KWinTabBoxConfigForm *>(sender());
     Q_ASSERT(form);
 
-    // The process will close when losing focus, but check in case of multiple calls
-    if (m_previewProcess && m_previewProcess->state() != QProcess::NotRunning) {
-        return;
-    }
+    const QString pluginId = form->effectComboCurrentData(Qt::UserRole).toString();
+    const bool showDesktop = form->config()->showDesktopMode();
 
-    // Launch the preview helper executable with the required env var
-    // that allows the PlasmaDialog to position itself
-    // QT_WAYLAND_DISABLE_FIXED_POSITIONS=1 kwin-tabbox-preview <path> [--show-desktop]
-
-    const QString previewHelper = QStandardPaths::findExecutable("kwin-tabbox-preview", {LIBEXEC_DIR});
-    if (previewHelper.isEmpty()) {
-        qWarning() << "Cannot find tabbox preview helper executable \"kwin-tabbox-preview\" in" << LIBEXEC_DIR;
-        return;
-    }
-
-    QStringList args;
-    args << form->effectComboCurrentData(KWinTabBoxConfigForm::LayoutPath).toString();
-    if (form->config()->showDesktopMode()) {
-        args << QStringLiteral("--show-desktop");
-    }
-
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    env.insert(QStringLiteral("QT_WAYLAND_DISABLE_FIXED_POSITIONS"),
-               QStringLiteral("1"));
-
-    m_previewProcess = std::make_unique<QProcess>();
-    m_previewProcess->setArguments(args);
-    m_previewProcess->setProgram(previewHelper);
-    m_previewProcess->setProcessEnvironment(env);
-    m_previewProcess->setProcessChannelMode(QProcess::ForwardedChannels);
-    m_previewProcess->start();
+    QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KWin"), QStringLiteral("/TabBox"), QStringLiteral("org.kde.kwin.TabBox"), QStringLiteral("preview"));
+    message.setArguments({pluginId, showDesktop});
+    QDBusConnection::sessionBus().call(message, QDBus::NoBlock);
 }
 
 } // namespace

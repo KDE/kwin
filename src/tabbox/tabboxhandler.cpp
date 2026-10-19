@@ -237,11 +237,15 @@ void TabBoxHandlerPrivate::show()
         Q_EMIT item->aboutToShow();
 
         // When SwitcherItem gets hidden, destroy also the window and main item
-        QObject::connect(item, &SwitcherItem::visibleChanged, q, [this, item]() {
+        QObject::connect(item, &SwitcherItem::visibleChanged, q, [this, item, isPreview = config.isPreview(), layoutName = config.layoutName()]() {
             if (!item->isVisible()) {
                 if (QQuickWindow *w = window()) {
                     w->hide();
                     w->destroy();
+                }
+                if (isPreview) {
+                    // TODO Only if it's not a layout actually used by the tabbox.
+                    m_clientTabBoxes.take(layoutName)->deleteLater();
                 }
                 m_mainItem = nullptr;
             }

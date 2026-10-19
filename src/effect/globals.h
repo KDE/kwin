@@ -105,6 +105,7 @@ enum TabBoxMode {
     TabBoxWindowsAlternativeMode, // Secondary window switching mode
     TabBoxCurrentAppWindowsMode, // Same as primary window switching mode but only for windows of current application
     TabBoxCurrentAppWindowsAlternativeMode, // Same as secondary switching mode but only for windows of current application
+    TabBoxPreviewMode, // Preview mode for settings module
 };
 
 enum KWinOption {

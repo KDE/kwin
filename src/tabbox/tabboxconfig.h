@@ -134,6 +134,11 @@ public:
      */
     bool isHighlightWindows() const;
     /**
+     * @return If this is only a preview.
+     * @see setPreview
+     */
+    bool isPreview() const;
+    /**
      * @return The current ClientDesktopMode
      * @see setClientDesktopMode
      * @see defaultDesktopMode
@@ -204,6 +209,11 @@ public:
      * @see isHighlightWindows
      */
     void setHighlightWindows(bool highlight);
+    /**
+     * @param preview Set whether this is a preview.
+     * @see isPreview
+     */
+    void setPreview(bool preview);
     /**
      * @param desktopMode The new ClientDesktopMode to be used.
      * @see clientDesktopMode

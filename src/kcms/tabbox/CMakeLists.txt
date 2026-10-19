@@ -26,33 +26,6 @@ target_link_libraries(kcm_kwintabbox
     KF6::XmlGui # For kkeysequencewidget
     KF6::WidgetsAddons
 )
-if (KWIN_BUILD_X11)
-    target_link_libraries(kcm_kwintabbox
-        XCB::XCB
-    )
-endif()
-
-# TabBox preview helper
-add_executable(kwin-tabbox-preview
-    layoutpreview.cpp
-    thumbnailitem.cpp
-)
-qt_add_resources(kwin-tabbox-preview "thumbnails"
-    PREFIX "/kwin-tabbox-preview"
-    BASE "thumbnails"
-    FILES
-        thumbnails/falkon.png
-        thumbnails/kmail.png
-        thumbnails/systemsettings.png
-        thumbnails/dolphin.png
-        thumbnails/desktop.png
-)
-target_link_libraries(kwin-tabbox-preview
-    Qt::Quick
-    KF6::I18n
-    KF6::I18nQml
-)
-install(TARGETS kwin-tabbox-preview DESTINATION ${KDE_INSTALL_LIBEXECDIR})
 
 # KNewStuff
 install(FILES kwinswitcher.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})

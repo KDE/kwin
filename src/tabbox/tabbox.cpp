@@ -28,6 +28,7 @@
 #include "workspace.h"
 // Qt
 #include <QAction>
+#include <QDBusConnection>
 #include <QKeyEvent>
 // KDE
 #include <KConfig>
@@ -291,6 +292,8 @@ TabBox::TabBox()
     Workspace::self()->forEachWindow([this](Window *window) {
         watchWindow(window);
     });
+
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/TabBox"), this, QDBusConnection::ExportScriptableContents);
 }
 
 TabBox::~TabBox() = default;
@@ -779,6 +782,37 @@ void TabBox::slotWalkThroughCurrentAppWindowsAlternative()
 void TabBox::slotWalkBackThroughCurrentAppWindowsAlternative()
 {
     navigatingThroughWindows(false, m_cutWalkThroughCurrentAppWindowsAlternativeReverse, TabBoxCurrentAppWindowsAlternativeMode);
+}
+
+void TabBox::preview(const QString &layoutName, bool showDesktop)
+{
+    if (!options->focusPolicyIsReasonable()) {
+        return; // not supported.
+    }
+    if (isDisplayed()) {
+        close(true);
+    }
+    if (!establishTabBoxGrab()) {
+        return;
+    }
+    m_noModifierGrab = m_tabGrab = true;
+
+    input()->keyboard()->update();
+    input()->pointer()->setEnableConstraints(false);
+
+    // "setMode".
+    m_tabBoxMode = TabBoxPreviewMode;
+    TabBoxConfig config;
+    config.setPreview(true);
+    config.setShowTabBox(true);
+    config.setLayoutName(layoutName);
+    config.setShowDesktopMode(showDesktop ? TabBoxConfig::ShowDesktopClient : TabBoxConfig::DoNotShowDesktopClient);
+    // Awkward to have the KCM disappear.
+    config.setHighlightWindows(false);
+    m_tabBox->setConfig(config);
+
+    reset();
+    show();
 }
 
 bool TabBox::toggle(ElectricBorder eb)

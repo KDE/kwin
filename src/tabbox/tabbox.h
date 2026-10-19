@@ -75,6 +75,7 @@ private:
 class KWIN_EXPORT TabBox : public QObject
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.TabBox")
 
 public:
     explicit TabBox();
@@ -209,6 +210,8 @@ public:
         return m_noModifierGrab;
     }
     void setCurrentIndex(QModelIndex index, bool notifyEffects = true);
+
+    Q_SCRIPTABLE void preview(const QString &layoutName, bool showDesktop);
 
 public Q_SLOTS:
     /**
