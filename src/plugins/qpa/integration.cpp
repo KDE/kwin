@@ -202,8 +202,9 @@ void Integration::handleWorkspaceCreated()
 
 void Integration::updateEglContext() const
 {
-    RenderDevice *device = Compositor::self()->primaryDevice();
-    m_eglContext = EglContext::create(device->eglDisplay(), EGL_NO_CONFIG_KHR, device->eglShareContext());
+    if (RenderDevice *device = Compositor::self()->primaryDevice()) {
+        m_eglContext = EglContext::create(device->eglDisplay(), EGL_NO_CONFIG_KHR, device->eglShareContext());
+    }
 }
 
 void Integration::handleOutputEnabled(LogicalOutput *output)
