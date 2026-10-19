@@ -139,6 +139,7 @@ std::optional<DrmFormat> MultiGpuSwapchain::chooseFormat(uint32_t inputFormat, c
 }
 
 static const auto s_forceLinear = environmentVariableBoolValue("KWIN_VULKAN_FORCE_LINEAR_DST");
+static const auto s_allowVulkanCopy = environmentVariableBoolValue("KWIN_ALLOW_VULKAN_MGPU_COPIES");
 
 struct CopyRet
 {
@@ -153,8 +154,10 @@ static std::optional<CopyRet> createCopy(RenderDevice *device,
                                          GraphicsBufferOptions options,
                                          const std::shared_ptr<HostMemoryGraphicsBufferAllocator> &hostAllocator = nullptr)
 {
-    // use Vulkan if possible
-    if (device->vulkanDevice()) {
+    // use Vulkan if possible.
+    // NOTE that using Vulkan to copy from an Nvidia GPU to a dmabuf in system memory
+    // causes glitches due to a driver bug, so that path is disabled by default for now
+    if (device->vulkanDevice() && s_allowVulkanCopy.value_or(!device->isNvidia() || hostAllocator)) {
         auto retModifiers = device->vulkanDevice()->transferFormats()[sourceFormat].intersected(sourceModifiers);
         if (!retModifiers.empty()) {
             const auto fmt = MultiGpuSwapchain::chooseFormat(sourceFormat, device->vulkanDevice()->transferFormats(), formats);
