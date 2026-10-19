@@ -5,9 +5,13 @@
 
 */
 #include "popup_input_filter.h"
+#include "config-kwin.h"
 #include "input_event.h"
 #include "internalwindow.h"
 #include "keyboard_input.h"
+#if KWIN_BUILD_TABBOX
+#include "tabbox/tabbox.h"
+#endif
 #include "wayland/seat.h"
 #include "wayland_server.h"
 #include "waylandwindow.h"
@@ -51,6 +55,14 @@ void PopupInputFilter::handleWindowAdded(Window *window)
 
 void PopupInputFilter::handleWindowFocusChanged()
 {
+#if KWIN_BUILD_TABBOX
+    // While the task switcher holds the input grab, the user isn't the one moving focus. KWin is,
+    // for example because the active window closed. That must not close the switcher's own popup.
+    if (workspace()->tabbox() && workspace()->tabbox()->isGrabbed()) {
+        return;
+    }
+#endif
+
     // user focussed a window through another mechanism such as a shortcut
     cancelPopups();
 }
