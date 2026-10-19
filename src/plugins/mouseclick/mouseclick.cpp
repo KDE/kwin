@@ -68,7 +68,7 @@ void MouseClickEffect::reconfigure(ReconfigureFlags)
 
 void MouseClickEffect::prePaintScreen(ScreenPrePaintData &data)
 {
-    const int time = m_clock.tick(data.view).count();
+    const int time = m_clock.tickMs(data.view).count();
 
     for (auto &click : m_clicks) {
         click->m_time += time;

@@ -38,10 +38,12 @@ public:
      * limit the delta time between consecutive frames to minimize stuttering if a frame has missed
      * its target vblank. If the specified refresh rate is @c 0, the delta time is not limited.
      *
-     * Returns the number of milliseconds elapsed between this and the last tick().
+     * Returns the number of nanoseconds elapsed between this and the last tick().
      */
-    std::chrono::milliseconds tick(std::chrono::nanoseconds timestamp, uint refreshRate = 0);
-    std::chrono::milliseconds tick(const RenderView *view);
+    std::chrono::nanoseconds tick(std::chrono::nanoseconds timestamp, uint refreshRate = 0);
+    std::chrono::nanoseconds tick(const RenderView *view);
+    std::chrono::milliseconds tickMs(std::chrono::nanoseconds timestamp, uint refreshRate = 0);
+    std::chrono::milliseconds tickMs(const RenderView *view);
 
 private:
     std::optional<std::chrono::nanoseconds> m_lastTimestamp;
@@ -70,12 +72,11 @@ public:
     /**
      * Constructs a new instance of TimeLine.
      *
-     * @param duration Duration of the timeline, in milliseconds
+     * @param duration Duration of the timeline, in nanoseconds
      * @param direction Direction of the timeline
      * @since 5.14
      */
-    explicit TimeLine(std::chrono::milliseconds duration = std::chrono::milliseconds(1000),
-                      Direction direction = Forward);
+    explicit TimeLine(std::chrono::nanoseconds duration = std::chrono::milliseconds(1000), Direction direction = Forward);
     TimeLine(const TimeLine &other);
     ~TimeLine();
 
@@ -97,45 +98,45 @@ public:
     void advance(const RenderView *view);
 
     /**
-     * Returns the number of elapsed milliseconds.
+     * Returns the number of elapsed nanoseconds.
      *
      * @see setElapsed
      * @since 5.14
      */
-    std::chrono::milliseconds elapsed() const;
+    std::chrono::nanoseconds elapsed() const;
 
     /**
-     * Sets the number of elapsed milliseconds.
+     * Sets the number of elapsed nanoseconds.
      *
-     * This method overwrites previous value of elapsed milliseconds.
-     * If the new value of elapsed milliseconds is greater or equal
+     * This method overwrites previous value of elapsed nanoseconds.
+     * If the new value of elapsed nanoseconds is greater or equal
      * to duration of the timeline, the timeline will be finished, i.e.
      * proceeding TimeLine::done method calls will return @c true.
      * Please don't use it. Instead, use TimeLine::update.
      *
-     * @note The new number of elapsed milliseconds should be a non-negative
+     * @note The new number of elapsed nanoseconds should be a non-negative
      * number, i.e. it should be greater or equal to 0.
      *
-     * @param elapsed The new number of elapsed milliseconds
+     * @param elapsed The new number of elapsed nanoseconds
      * @see elapsed
      * @since 5.14
      */
-    void setElapsed(std::chrono::milliseconds elapsed);
+    void setElapsed(std::chrono::nanoseconds elapsed);
 
     /**
      * Returns the duration of the timeline.
      *
-     * @returns Duration of the timeline, in milliseconds
+     * @returns Duration of the timeline, in nanoseconds
      * @see setDuration
      * @since 5.14
      */
-    std::chrono::milliseconds duration() const;
+    std::chrono::nanoseconds duration() const;
 
     /**
      * Sets the duration of the timeline.
      *
      * In addition to setting new value of duration, the timeline will
-     * try to retarget the number of elapsed milliseconds to match
+     * try to retarget the number of elapsed nanoseconds to match
      * as close as possible old progress value. If the new duration
      * is much smaller than old duration, there is a big chance that
      * the timeline will be finished after setting new duration.
@@ -143,11 +144,11 @@ public:
      * @note The new duration should be a positive number, i.e. it
      * should be greater or equal to 1.
      *
-     * @param duration The new duration of the timeline, in milliseconds
+     * @param duration The new duration of the timeline, in nanoseconds
      * @see duration
      * @since 5.14
      */
-    void setDuration(std::chrono::milliseconds duration);
+    void setDuration(std::chrono::nanoseconds duration);
 
     /**
      * Returns the direction of the timeline.

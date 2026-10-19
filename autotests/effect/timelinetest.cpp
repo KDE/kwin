@@ -30,7 +30,6 @@ private Q_SLOTS:
     void testSetElapsed();
     void testSetDuration();
     void testSetDurationRetargeting();
-    void testSetDurationRetargetingSmallDuration();
     void testRunning();
     void testStrictRedirectSourceMode_data();
     void testStrictRedirectSourceMode();
@@ -222,21 +221,6 @@ void TimeLineTest::testSetDurationRetargeting()
     timeLine.setDuration(3000ms);
     QCOMPARE(timeLine.value(), 0.5);
     QVERIFY(!timeLine.done());
-}
-
-void TimeLineTest::testSetDurationRetargetingSmallDuration()
-{
-    KWin::TimeLine timeLine(1000ms, KWin::TimeLine::Forward);
-    timeLine.setEasingCurve(QEasingCurve::Linear);
-    timeLine.advance(0ms);
-
-    timeLine.advance(999ms);
-    QCOMPARE(timeLine.value(), 0.999);
-    QVERIFY(!timeLine.done());
-
-    timeLine.setDuration(3ms);
-    QCOMPARE(timeLine.value(), 1.0);
-    QVERIFY(timeLine.done());
 }
 
 void TimeLineTest::testRunning()

@@ -103,8 +103,8 @@ QString AniData::debugInfo() const
             + QLatin1StringView("\n     From: ") + from.toString()
             + QLatin1StringView("\n       To: ") + to.toString()
             + QLatin1StringView("\n  Started: ") + QString::number(AnimationEffect::clock() - startTime) + QLatin1StringView("ms ago\n")
-            + QLatin1StringView(" Duration: ") + QString::number(timeLine.duration().count()) + QLatin1StringView("ms\n")
-            + QLatin1StringView("   Passed: ") + QString::number(timeLine.elapsed().count()) + QLatin1StringView("ms\n"));
+            + QLatin1StringView(" Duration: ") + QString::number(timeLine.duration().count()) + QLatin1StringView("ns\n")
+            + QLatin1StringView("   Passed: ") + QString::number(timeLine.elapsed().count()) + QLatin1StringView("ns\n"));
 }
 
 } // namespace KWin

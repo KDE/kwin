@@ -94,7 +94,7 @@ bool TouchPointsEffect::touchUp(qint32 id, std::chrono::microseconds time)
 
 void TouchPointsEffect::prePaintScreen(ScreenPrePaintData &data)
 {
-    const int time = m_clock.tick(data.view).count();
+    const int time = m_clock.tickMs(data.view).count();
 
     auto it = m_points.begin();
     while (it != m_points.end()) {

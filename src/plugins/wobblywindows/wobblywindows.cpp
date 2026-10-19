@@ -234,7 +234,7 @@ void WobblyWindowsEffect::prePaintWindow(RenderView *view, EffectWindow *w, Wind
 {
     auto infoIt = windows.find(w);
     if (infoIt != windows.end()) {
-        std::chrono::milliseconds delta = infoIt->clock.tick(view);
+        std::chrono::milliseconds delta = infoIt->clock.tickMs(view);
         while (delta.count() > 0) {
             const auto dt = std::min(delta, integrationStep);
             delta -= dt;

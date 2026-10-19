@@ -140,7 +140,7 @@ void MagnifierEffect::reconfigure(ReconfigureFlags)
 
 void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data)
 {
-    const int time = m_clock.tick(data.view).count();
+    const int time = m_clock.tickMs(data.view).count();
 
     if (m_zoom != m_targetZoom) {
         double diff = double(time) / animationTime(500ms).count();

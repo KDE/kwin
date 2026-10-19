@@ -206,7 +206,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
 {
     data.mask |= PAINT_SCREEN_TRANSFORMED;
     if (m_zoom != m_targetZoom) {
-        const int time = m_clock.tick(data.view).count();
+        const int time = m_clock.tickMs(data.view).count();
 
         const float zoomDist = std::abs(m_targetZoom - m_sourceZoom);
         if (m_targetZoom > m_zoom) {

@@ -142,7 +142,7 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
 
 void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data)
 {
-    const int time = m_clock.tick(data.view).count();
+    const int time = m_clock.tickMs(data.view).count();
 
     if (m_active && effects->isCursorHidden()) {
         stop();
