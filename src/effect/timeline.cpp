@@ -7,6 +7,8 @@
 #include "effect/timeline.h"
 #include "scene/scene.h"
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -24,9 +26,13 @@ std::chrono::milliseconds AnimationClock::tick(std::chrono::nanoseconds timestam
     std::chrono::milliseconds delta = std::chrono::milliseconds::zero();
     if (m_lastTimestamp) {
         if (timestamp < m_lastTimestamp) {
-            return std::chrono::milliseconds::zero();
+            return 0ms;
         }
         delta = std::chrono::duration_cast<std::chrono::milliseconds>(timestamp - *m_lastTimestamp);
+        if (delta == 0ms) {
+            // don't progress with a difference of 0ms, or it'll round away everything
+            return 0ms;
+        }
     }
 
     // Prevent the delta time from getting too big to minimize stuttering. If we have missed a frame,
@@ -38,7 +44,6 @@ std::chrono::milliseconds AnimationClock::tick(std::chrono::nanoseconds timestam
         delta = std::min(delta, maximumDeltaTime);
     }
 
-    Q_ASSERT(delta >= std::chrono::milliseconds::zero());
     m_lastTimestamp = timestamp;
 
     return delta;
