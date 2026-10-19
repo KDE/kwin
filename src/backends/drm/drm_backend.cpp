@@ -158,7 +158,7 @@ bool DrmBackend::initialize()
 
     if (!m_explicitGpus.isEmpty()) {
         for (const QString &fileName : m_explicitGpus) {
-            addGpu(fileName);
+            addGpu(QFileInfo(fileName).canonicalFilePath());
         }
     } else {
         const auto devices = m_udev->listGPUs();
