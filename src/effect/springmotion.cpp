@@ -136,7 +136,7 @@ SpringMotion::State SpringMotion::integrate(const State &state, qreal dt)
     };
 }
 
-void SpringMotion::advance(std::chrono::milliseconds delta)
+void SpringMotion::advance(std::chrono::nanoseconds delta)
 {
     if (!isMoving()) {
         return;
@@ -154,7 +154,7 @@ void SpringMotion::advance(std::chrono::milliseconds delta)
 
     // If the delta interval is not multiple of m_timestep precisely, the previous and
     // the next samples will be linearly interpolated to get current position and velocity.
-    const qreal steps = (delta.count() / 1000.0) / m_timestep;
+    const qreal steps = (delta.count() / 1'000'000'000.0) / m_timestep;
     for (m_t += steps; m_t > 1.0; m_t -= 1.0) {
         m_prev = m_next;
         m_next = integrate(m_next, m_timestep);

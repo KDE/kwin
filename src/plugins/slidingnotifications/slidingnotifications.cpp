@@ -253,7 +253,7 @@ void SlideNotificationAnimation::revert()
 
 void SlideNotificationAnimation::advance(RenderView *view)
 {
-    const std::chrono::milliseconds delta = clock.tickMs(view);
+    const std::chrono::nanoseconds delta = clock.tick(view);
     springX.advance(delta);
     springY.advance(delta);
     fade.advance(delta);
@@ -348,7 +348,7 @@ void DisplaceNotificationAnimation::moveTo(const QPointF &point)
 
 void DisplaceNotificationAnimation::advance(RenderView *view)
 {
-    const std::chrono::milliseconds delta = clock.tickMs(view);
+    const std::chrono::nanoseconds delta = clock.tick(view);
     springX.advance(delta);
     springY.advance(delta);
 }

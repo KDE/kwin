@@ -144,7 +144,7 @@ void SlideEffectScreen::prePaintScreen(ScreenPrePaintData &data)
         Q_UNREACHABLE();
 
     case State::ActiveAnimation: {
-        const std::chrono::milliseconds timeDelta = m_clock.tickMs(data.view);
+        const std::chrono::nanoseconds timeDelta = m_clock.tick(data.view);
 
         m_motionX.advance(timeDelta);
         m_motionY.advance(timeDelta);

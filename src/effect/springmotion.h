@@ -27,9 +27,9 @@ public:
     SpringMotion(qreal springConstant, qreal dampingRatio);
 
     /**
-     * Advance the simulation by the given @a delta milliseconds.
+     * Advance the simulation by the given @a delta nanoseconds.
      */
-    void advance(std::chrono::milliseconds delta);
+    void advance(std::chrono::nanoseconds delta);
     bool isMoving() const;
 
     /**
