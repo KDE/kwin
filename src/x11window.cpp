@@ -922,6 +922,9 @@ DecorationMode X11Window::preferredDecorationMode() const
     case DecorationPolicy::Server:
         return DecorationMode::Server;
     case DecorationPolicy::Shadow:
+        if (!m_wantsNoDecoration) {
+            return DecorationMode::Server;
+        }
         if (Decoration::DecorationBridge::supportedStyles().contains(KDecoration3::Style::Shadow)) {
             return DecorationMode::Shadow;
         } else {
