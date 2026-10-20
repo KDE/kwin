@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-20 00:54+0000\n"
 "PO-Revision-Date: 2026-04-18 18:44+0300\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
@@ -22,56 +22,6 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
 "X-Generator: Poedit 3.8\n"
-
-#: layoutpreview.cpp:28
-#, kde-format
-msgid "Launch an interactive preview for a tabbox switcher"
-msgstr "Paleisti interaktyvią langų perjungiklio peržiūrą"
-
-#: layoutpreview.cpp:29
-#, kde-format
-msgid "Path to the Window Switcher QML main file"
-msgstr "Kelias iki langų perjungiklio QML pagrindinio failo"
-
-#: layoutpreview.cpp:30
-#, kde-format
-msgid "Show also a thumbnail for the desktop"
-msgstr "Taip pat rodyti darbalaukio miniatiūrą"
-
-#: layoutpreview.cpp:159
-#, kde-format
-msgctxt "The name of KDE's file manager in this language, if translated"
-msgid "Dolphin"
-msgstr "Dolphin"
-
-#: layoutpreview.cpp:163
-#, kde-format
-msgctxt "The name of KDE's web browser in this language, if translated"
-msgid "Konqueror"
-msgstr "Konqueror"
-
-#: layoutpreview.cpp:167
-#, kde-format
-msgctxt "The name of KDE's email client in this language, if translated"
-msgid "KMail"
-msgstr "KMail"
-
-#: layoutpreview.cpp:171
-#, kde-format
-msgctxt "The name of KDE's System Settings app in this language, if translated"
-msgid "System Settings"
-msgstr "Sistemos nuostatos"
-
-#: layoutpreview.cpp:177
-#, kde-format
-msgid "Peek at Desktop"
-msgstr "Žvilgsnis į darbalaukį"
-
-#: layoutpreview.cpp:207
-#, kde-format
-msgctxt "An example Desktop Name"
-msgid "Desktop 1"
-msgstr "Darbalaukis 1"
 
 #: main.cpp:74
 #, kde-format
@@ -379,6 +329,39 @@ msgstr "Eiti per dabartinės programos langus alternatyva"
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Eiti per dabartinės programos langus alternatyva (Atvirkštine tvarka)"
+
+#~ msgid "Launch an interactive preview for a tabbox switcher"
+#~ msgstr "Paleisti interaktyvią langų perjungiklio peržiūrą"
+
+#~ msgid "Path to the Window Switcher QML main file"
+#~ msgstr "Kelias iki langų perjungiklio QML pagrindinio failo"
+
+#~ msgid "Show also a thumbnail for the desktop"
+#~ msgstr "Taip pat rodyti darbalaukio miniatiūrą"
+
+#~ msgctxt "The name of KDE's file manager in this language, if translated"
+#~ msgid "Dolphin"
+#~ msgstr "Dolphin"
+
+#~ msgctxt "The name of KDE's web browser in this language, if translated"
+#~ msgid "Konqueror"
+#~ msgstr "Konqueror"
+
+#~ msgctxt "The name of KDE's email client in this language, if translated"
+#~ msgid "KMail"
+#~ msgstr "KMail"
+
+#~ msgctxt ""
+#~ "The name of KDE's System Settings app in this language, if translated"
+#~ msgid "System Settings"
+#~ msgstr "Sistemos nuostatos"
+
+#~ msgid "Peek at Desktop"
+#~ msgstr "Žvilgsnis į darbalaukį"
+
+#~ msgctxt "An example Desktop Name"
+#~ msgid "Desktop 1"
+#~ msgstr "Darbalaukis 1"
 
 #~ msgid "Show delay:"
 #~ msgstr "Rodymo delsa:"

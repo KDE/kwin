@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-16 00:50+0000\n"
+"POT-Creation-Date: 2026-10-20 00:54+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -1899,19 +1899,19 @@ msgstr ""
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
 msgctxt ""
-"@option:check, %1 is the application name. This option always allow apps "
-"claiming to be a given application name to control input devices"
-msgid "Always allow apps claiming to be %1"
+"@option:check, %1 is the application name. This option remembers the "
+"selection for apps claiming to be a given application name"
+msgid "Remember for apps claiming to be %1"
 msgstr ""
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
-"Identities of legacy X11 apps cannot be verified. Any app claiming to be "
-"<application>%1</application> will be able to control input devices. You can "
-"revoke this permission later on <application>System Settings</application>’ "
-"“Legacy X11 App Support” page."
+"Identities of legacy X11 apps cannot be verified. If permitted any app "
+"claiming to be <application>%1</application> will be able to control input "
+"devices. You can change this setting later on <application>System Settings</"
+"application>’ “Legacy X11 App Support” page."
 msgstr ""
 
 #: plugins/eis/eisprompter.cpp:69
@@ -3861,35 +3861,35 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "បង្អួច"
 
-#: tabbox/tabbox.cpp:319
+#: tabbox/tabbox.cpp:322
 msgid "Walk Through Windows"
 msgstr "ដើរ​កាត់​បង្អួច"
 
-#: tabbox/tabbox.cpp:320
+#: tabbox/tabbox.cpp:323
 msgid "Walk Through Windows (Reverse)"
 msgstr "ដើរ​កាត់​បង្អួច (បញ្ច្រាស)"
 
-#: tabbox/tabbox.cpp:321
+#: tabbox/tabbox.cpp:324
 msgid "Walk Through Windows Alternative"
 msgstr "ដើរ​កាត់​បង្អួច​ជម្រើស"
 
-#: tabbox/tabbox.cpp:322
+#: tabbox/tabbox.cpp:325
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "ដើរ​កាត់​បង្អួច​ជម្រើស (បញ្ច្រាស)"
 
-#: tabbox/tabbox.cpp:323
+#: tabbox/tabbox.cpp:326
 msgid "Walk Through Windows of Current Application"
 msgstr "ឆ្លង​​កាត់​បង្អួច​​នៃ​កម្មវិធី​បច្ចុប្បន្ន"
 
-#: tabbox/tabbox.cpp:324
+#: tabbox/tabbox.cpp:327
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "ឆ្លង​កាត់​បង្អួច​ជម្រើស​នៃ​កម្មវិធី​បច្ចុប្បន្ន (បញ្ច្រាស)"
 
-#: tabbox/tabbox.cpp:325
+#: tabbox/tabbox.cpp:328
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "ឆ្លង​​កាត់​បង្អួច​​នៃ​កម្មវិធី​បច្ចុប្បន្ន​ជំនួស"
 
-#: tabbox/tabbox.cpp:326
+#: tabbox/tabbox.cpp:329
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "ឆ្លង​​កាត់​បង្អួច​​នៃ​កម្មវិធី​បច្ចុប្បន្ន​ជំនួស (បញ្ច្រាស)"
 
@@ -4578,30 +4578,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1326
+#: workspace.cpp:1335
 #, kde-format
 msgid "Built-in Screen"
 msgstr ""
 
-#: workspace.cpp:1339
+#: workspace.cpp:1348
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr ""
 
-#: workspace.cpp:1349
+#: workspace.cpp:1358
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr ""
 
-#: workspace.cpp:1352
+#: workspace.cpp:1361
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr ""
 
-#: workspace.cpp:1821
+#: workspace.cpp:1830
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

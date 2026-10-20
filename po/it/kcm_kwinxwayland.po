@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-04 00:46+0000\n"
+"POT-Creation-Date: 2026-10-20 00:54+0000\n"
 "PO-Revision-Date: 2026-04-30 09:32+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -155,7 +155,37 @@ msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr "Vedi le applicazioni consentite…"
 
-#: ui/main.qml:167
+#: ui/main.qml:160
+#, kde-format
+msgctxt ""
+"@title:window title of the page opened by the 'See allowed applications' "
+"button"
+msgid "Applications allowed to control the pointer and keyboard"
+msgstr ""
+"Applicazioni alle quali è consentito controllare il puntatore e la tastiera"
+
+#: ui/main.qml:165
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "See Allowed Applications…"
+msgctxt "@action:button"
+msgid "See Denied Applications…"
+msgstr "Vedi le applicazioni consentite…"
+
+#: ui/main.qml:169
+#, fuzzy, kde-format
+#| msgctxt ""
+#| "@title:window title of the page opened by the 'See allowed applications' "
+#| "button"
+#| msgid "Applications allowed to control the pointer and keyboard"
+msgctxt ""
+"@title:window title of the page opened by the 'See denied applications' "
+"button"
+msgid "Applications never allowed to control the pointer and keyboard"
+msgstr ""
+"Applicazioni alle quali è consentito controllare il puntatore e la tastiera"
+
+#: ui/main.qml:178
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -168,7 +198,7 @@ msgstr ""
 "grado di assumere il controllo del computer, poiché l'identità delle "
 "applicazioni che utilizzano XWayland non può essere verificata."
 
-#: ui/main.qml:173
+#: ui/main.qml:184
 #, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
@@ -176,7 +206,7 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr "Consenti senza chiedere il permesso"
 
-#: ui/main.qml:182
+#: ui/main.qml:193
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
@@ -184,7 +214,7 @@ msgstr ""
 "Meno sicuro; tutte le applicazioni X11 saranno in grado di prendere il "
 "controllo del computer"
 
-#: ui/main.qml:189
+#: ui/main.qml:200
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -197,16 +227,7 @@ msgstr ""
 "controllo completo del puntatore e della tastiera. Assicurati di comprendere "
 "e accettare questo rischio."
 
-#: ui/main.qml:197
-#, kde-format
-msgctxt ""
-"@title:window title of the page opened by the 'See allowed applications' "
-"button"
-msgid "Applications allowed to control the pointer and keyboard"
-msgstr ""
-"Applicazioni alle quali è consentito controllare il puntatore e la tastiera"
-
-#: ui/main.qml:217
+#: ui/main.qml:229
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"

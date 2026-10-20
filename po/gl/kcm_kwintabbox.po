@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-20 00:54+0000\n"
 "PO-Revision-Date: 2025-05-18 10:05+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -18,58 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 25.04.1\n"
-
-#: layoutpreview.cpp:28
-#, kde-format
-msgid "Launch an interactive preview for a tabbox switcher"
-msgstr ""
-"Iniciar unha vista previa interactiva dun selector de grupo de separadores."
-
-#: layoutpreview.cpp:29
-#, kde-format
-msgid "Path to the Window Switcher QML main file"
-msgstr "Ruta do ficheiro principal de QML do selector de xanelas."
-
-#: layoutpreview.cpp:30
-#, kde-format
-msgid "Show also a thumbnail for the desktop"
-msgstr "Amosar tamén unha miniatura para o escritorio."
-
-#: layoutpreview.cpp:159
-#, kde-format
-msgctxt "The name of KDE's file manager in this language, if translated"
-msgid "Dolphin"
-msgstr "Dolphin"
-
-#: layoutpreview.cpp:163
-#, kde-format
-msgctxt "The name of KDE's web browser in this language, if translated"
-msgid "Konqueror"
-msgstr "Konqueror"
-
-#: layoutpreview.cpp:167
-#, kde-format
-msgctxt "The name of KDE's email client in this language, if translated"
-msgid "KMail"
-msgstr "KMail"
-
-#: layoutpreview.cpp:171
-#, kde-format
-msgctxt "The name of KDE's System Settings app in this language, if translated"
-msgid "System Settings"
-msgstr "Configuración do sistema"
-
-#: layoutpreview.cpp:177
-#, fuzzy, kde-format
-#| msgid "Desktop:"
-msgid "Peek at Desktop"
-msgstr "Escritorio"
-
-#: layoutpreview.cpp:207
-#, kde-format
-msgctxt "An example Desktop Name"
-msgid "Desktop 1"
-msgstr "Escritorio 1"
 
 #: main.cpp:74
 #, kde-format
@@ -381,6 +329,43 @@ msgstr "Percorrer as xanelas da aplicación actual, alternativo"
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Percorrer as xanelas da aplicación actual, alternativo (inverso)"
+
+#~ msgid "Launch an interactive preview for a tabbox switcher"
+#~ msgstr ""
+#~ "Iniciar unha vista previa interactiva dun selector de grupo de "
+#~ "separadores."
+
+#~ msgid "Path to the Window Switcher QML main file"
+#~ msgstr "Ruta do ficheiro principal de QML do selector de xanelas."
+
+#~ msgid "Show also a thumbnail for the desktop"
+#~ msgstr "Amosar tamén unha miniatura para o escritorio."
+
+#~ msgctxt "The name of KDE's file manager in this language, if translated"
+#~ msgid "Dolphin"
+#~ msgstr "Dolphin"
+
+#~ msgctxt "The name of KDE's web browser in this language, if translated"
+#~ msgid "Konqueror"
+#~ msgstr "Konqueror"
+
+#~ msgctxt "The name of KDE's email client in this language, if translated"
+#~ msgid "KMail"
+#~ msgstr "KMail"
+
+#~ msgctxt ""
+#~ "The name of KDE's System Settings app in this language, if translated"
+#~ msgid "System Settings"
+#~ msgstr "Configuración do sistema"
+
+#, fuzzy
+#~| msgid "Desktop:"
+#~ msgid "Peek at Desktop"
+#~ msgstr "Escritorio"
+
+#~ msgctxt "An example Desktop Name"
+#~ msgid "Desktop 1"
+#~ msgstr "Escritorio 1"
 
 #~ msgid "Show Desktop"
 #~ msgstr "Amosar o escritorio"

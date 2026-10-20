@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-04 00:46+0000\n"
+"POT-Creation-Date: 2026-10-20 00:54+0000\n"
 "PO-Revision-Date: 2024-11-13 11:14+0100\n"
 "Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -144,7 +144,29 @@ msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr ""
 
-#: ui/main.qml:167
+#: ui/main.qml:160
+#, kde-format
+msgctxt ""
+"@title:window title of the page opened by the 'See allowed applications' "
+"button"
+msgid "Applications allowed to control the pointer and keyboard"
+msgstr ""
+
+#: ui/main.qml:165
+#, kde-format
+msgctxt "@action:button"
+msgid "See Denied Applications…"
+msgstr ""
+
+#: ui/main.qml:169
+#, kde-format
+msgctxt ""
+"@title:window title of the page opened by the 'See denied applications' "
+"button"
+msgid "Applications never allowed to control the pointer and keyboard"
+msgstr ""
+
+#: ui/main.qml:178
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -153,7 +175,7 @@ msgid ""
 "identities can’t be verified"
 msgstr ""
 
-#: ui/main.qml:173
+#: ui/main.qml:184
 #, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
@@ -161,13 +183,13 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr ""
 
-#: ui/main.qml:182
+#: ui/main.qml:193
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr ""
 
-#: ui/main.qml:189
+#: ui/main.qml:200
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -176,15 +198,7 @@ msgid ""
 "keyboard. Make sure you understand and accept this risk."
 msgstr ""
 
-#: ui/main.qml:197
-#, kde-format
-msgctxt ""
-"@title:window title of the page opened by the 'See allowed applications' "
-"button"
-msgid "Applications allowed to control the pointer and keyboard"
-msgstr ""
-
-#: ui/main.qml:217
+#: ui/main.qml:229
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"

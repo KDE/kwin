@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-20 00:54+0000\n"
 "PO-Revision-Date: 2013-03-06 10:11+0530\n"
 "Last-Translator: Chetan Khona <chetan@kompkin.com>\n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -16,57 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 "X-Generator: Lokalize 1.5\n"
-
-#: layoutpreview.cpp:28
-#, kde-format
-msgid "Launch an interactive preview for a tabbox switcher"
-msgstr ""
-
-#: layoutpreview.cpp:29
-#, kde-format
-msgid "Path to the Window Switcher QML main file"
-msgstr ""
-
-#: layoutpreview.cpp:30
-#, kde-format
-msgid "Show also a thumbnail for the desktop"
-msgstr ""
-
-#: layoutpreview.cpp:159
-#, kde-format
-msgctxt "The name of KDE's file manager in this language, if translated"
-msgid "Dolphin"
-msgstr ""
-
-#: layoutpreview.cpp:163
-#, kde-format
-msgctxt "The name of KDE's web browser in this language, if translated"
-msgid "Konqueror"
-msgstr ""
-
-#: layoutpreview.cpp:167
-#, kde-format
-msgctxt "The name of KDE's email client in this language, if translated"
-msgid "KMail"
-msgstr ""
-
-#: layoutpreview.cpp:171
-#, kde-format
-msgctxt "The name of KDE's System Settings app in this language, if translated"
-msgid "System Settings"
-msgstr ""
-
-#: layoutpreview.cpp:177
-#, fuzzy, kde-format
-#| msgid "Current desktop"
-msgid "Peek at Desktop"
-msgstr "वर्तमान डेस्कटॉप"
-
-#: layoutpreview.cpp:207
-#, kde-format
-msgctxt "An example Desktop Name"
-msgid "Desktop 1"
-msgstr "डेस्कटॉप 1"
 
 #: main.cpp:74
 #, kde-format
@@ -375,6 +324,15 @@ msgstr ""
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Current desktop"
+#~ msgid "Peek at Desktop"
+#~ msgstr "वर्तमान डेस्कटॉप"
+
+#~ msgctxt "An example Desktop Name"
+#~ msgid "Desktop 1"
+#~ msgstr "डेस्कटॉप 1"
 
 #, fuzzy
 #~| msgctxt "An example Desktop Name"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-20 00:54+0000\n"
 "PO-Revision-Date: 2010-10-22 18:28+0200\n"
 "Last-Translator: Jean Cayron <jean.cayron@gmail.com>\n"
 "Language-Team: Walloon <linux@walon.org>\n"
@@ -16,58 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-
-#: layoutpreview.cpp:28
-#, kde-format
-msgid "Launch an interactive preview for a tabbox switcher"
-msgstr ""
-
-#: layoutpreview.cpp:29
-#, kde-format
-msgid "Path to the Window Switcher QML main file"
-msgstr ""
-
-#: layoutpreview.cpp:30
-#, kde-format
-msgid "Show also a thumbnail for the desktop"
-msgstr ""
-
-#: layoutpreview.cpp:159
-#, kde-format
-msgctxt "The name of KDE's file manager in this language, if translated"
-msgid "Dolphin"
-msgstr ""
-
-#: layoutpreview.cpp:163
-#, kde-format
-msgctxt "The name of KDE's web browser in this language, if translated"
-msgid "Konqueror"
-msgstr ""
-
-#: layoutpreview.cpp:167
-#, kde-format
-msgctxt "The name of KDE's email client in this language, if translated"
-msgid "KMail"
-msgstr ""
-
-#: layoutpreview.cpp:171
-#, kde-format
-msgctxt "The name of KDE's System Settings app in this language, if translated"
-msgid "System Settings"
-msgstr ""
-
-#: layoutpreview.cpp:177
-#, fuzzy, kde-format
-#| msgid "Current Desktop"
-msgid "Peek at Desktop"
-msgstr "Sicribanne do moumint"
-
-#: layoutpreview.cpp:207
-#, fuzzy, kde-format
-#| msgid "All Desktops"
-msgctxt "An example Desktop Name"
-msgid "Desktop 1"
-msgstr "Tos les scribannes"
 
 #: main.cpp:74
 #, kde-format
@@ -392,6 +340,17 @@ msgstr "Naivyî emey les purneas alternatif"
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Naivyî emey les purneas alternatif (å rvier)"
+
+#, fuzzy
+#~| msgid "Current Desktop"
+#~ msgid "Peek at Desktop"
+#~ msgstr "Sicribanne do moumint"
+
+#, fuzzy
+#~| msgid "All Desktops"
+#~ msgctxt "An example Desktop Name"
+#~ msgid "Desktop 1"
+#~ msgstr "Tos les scribannes"
 
 #, fuzzy
 #~| msgid "All Desktops"

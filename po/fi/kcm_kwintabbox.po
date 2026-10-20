@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-20 00:54+0000\n"
 "PO-Revision-Date: 2026-08-25 15:05+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -22,56 +22,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 25.04.0\n"
-
-#: layoutpreview.cpp:28
-#, kde-format
-msgid "Launch an interactive preview for a tabbox switcher"
-msgstr "Käynnistä ikkunavaihdon vuorovaikutteinen esikatselu"
-
-#: layoutpreview.cpp:29
-#, kde-format
-msgid "Path to the Window Switcher QML main file"
-msgstr "Ikkunavaihdon QML-päätiedoston sijainti"
-
-#: layoutpreview.cpp:30
-#, kde-format
-msgid "Show also a thumbnail for the desktop"
-msgstr "Näytä työpöydällä myös pienoiskuva"
-
-#: layoutpreview.cpp:159
-#, kde-format
-msgctxt "The name of KDE's file manager in this language, if translated"
-msgid "Dolphin"
-msgstr "Dolphin"
-
-#: layoutpreview.cpp:163
-#, kde-format
-msgctxt "The name of KDE's web browser in this language, if translated"
-msgid "Konqueror"
-msgstr "Konqueror"
-
-#: layoutpreview.cpp:167
-#, kde-format
-msgctxt "The name of KDE's email client in this language, if translated"
-msgid "KMail"
-msgstr "KMail"
-
-#: layoutpreview.cpp:171
-#, kde-format
-msgctxt "The name of KDE's System Settings app in this language, if translated"
-msgid "System Settings"
-msgstr "Järjestelmäasetukset"
-
-#: layoutpreview.cpp:177
-#, kde-format
-msgid "Peek at Desktop"
-msgstr "Kurkista työpöydälle"
-
-#: layoutpreview.cpp:207
-#, kde-format
-msgctxt "An example Desktop Name"
-msgid "Desktop 1"
-msgstr "Työpöytä 1"
 
 #: main.cpp:74
 #, kde-format
@@ -379,6 +329,39 @@ msgstr "Selaa nykyisen sovelluksen ikkunoita (vaihtoehtoinen)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Selaa nykyisen sovelluksen ikkunoita taaksepäin (vaihtoehtoinen käänteinen)"
+
+#~ msgid "Launch an interactive preview for a tabbox switcher"
+#~ msgstr "Käynnistä ikkunavaihdon vuorovaikutteinen esikatselu"
+
+#~ msgid "Path to the Window Switcher QML main file"
+#~ msgstr "Ikkunavaihdon QML-päätiedoston sijainti"
+
+#~ msgid "Show also a thumbnail for the desktop"
+#~ msgstr "Näytä työpöydällä myös pienoiskuva"
+
+#~ msgctxt "The name of KDE's file manager in this language, if translated"
+#~ msgid "Dolphin"
+#~ msgstr "Dolphin"
+
+#~ msgctxt "The name of KDE's web browser in this language, if translated"
+#~ msgid "Konqueror"
+#~ msgstr "Konqueror"
+
+#~ msgctxt "The name of KDE's email client in this language, if translated"
+#~ msgid "KMail"
+#~ msgstr "KMail"
+
+#~ msgctxt ""
+#~ "The name of KDE's System Settings app in this language, if translated"
+#~ msgid "System Settings"
+#~ msgstr "Järjestelmäasetukset"
+
+#~ msgid "Peek at Desktop"
+#~ msgstr "Kurkista työpöydälle"
+
+#~ msgctxt "An example Desktop Name"
+#~ msgid "Desktop 1"
+#~ msgstr "Työpöytä 1"
 
 #~ msgid "Show Desktop"
 #~ msgstr "Näytä työpöytä"

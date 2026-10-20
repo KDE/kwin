@@ -23,9 +23,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-16 00:50+0000\n"
-"PO-Revision-Date: 2026-09-19 20:19+0300\n"
-"Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
+"POT-Creation-Date: 2026-10-20 00:54+0000\n"
+"PO-Revision-Date: 2026-10-19 09:57+0200\n"
+"Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -1906,21 +1906,31 @@ msgstr ""
 "ввода"
 
 #: plugins/eis/eisprompter.cpp:64
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt ""
+#| "@option:check, %1 is the application name. This option always allow apps "
+#| "claiming to be a given application name to control input devices"
+#| msgid "Always allow apps claiming to be %1"
 msgctxt ""
-"@option:check, %1 is the application name. This option always allow apps "
-"claiming to be a given application name to control input devices"
-msgid "Always allow apps claiming to be %1"
+"@option:check, %1 is the application name. This option remembers the "
+"selection for apps claiming to be a given application name"
+msgid "Remember for apps claiming to be %1"
 msgstr "Всегда разрешать приложениям, выдающим себя за %1"
 
 #: plugins/eis/eisprompter.cpp:66
-#, kde-kuit-format
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info:tooltip"
+#| msgid ""
+#| "Identities of legacy X11 apps cannot be verified. Any app claiming to be "
+#| "<application>%1</application> will be able to control input devices. You "
+#| "can revoke this permission later on <application>System Settings</"
+#| "application>’ “Legacy X11 App Support” page."
 msgctxt "@info:tooltip"
 msgid ""
-"Identities of legacy X11 apps cannot be verified. Any app claiming to be "
-"<application>%1</application> will be able to control input devices. You can "
-"revoke this permission later on <application>System Settings</application>’ "
-"“Legacy X11 App Support” page."
+"Identities of legacy X11 apps cannot be verified. If permitted any app "
+"claiming to be <application>%1</application> will be able to control input "
+"devices. You can change this setting later on <application>System Settings</"
+"application>’ “Legacy X11 App Support” page."
 msgstr ""
 "Подлинность устаревших приложений X11 невозможно проверить. Любое "
 "приложение, выдающее себя за <application>%1</application>, сможет управлять "
@@ -2542,6 +2552,8 @@ msgid ""
 "temporarily active.\n"
 "            "
 msgstr ""
+"\n"
+"Дата и время, до которых ночная цветовая схема временно включена."
 
 #. i18n: ectx: label, entry (ActivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:28
@@ -2551,6 +2563,8 @@ msgid ""
 "                Night Light is activated until manually disabled.\n"
 "            "
 msgstr ""
+"\n"
+"Ночная цветовая схема включена до отключения вручную."
 
 #. i18n: ectx: label, entry (DeactivatedUntil), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:35
@@ -2561,6 +2575,9 @@ msgid ""
 "temporarily inactive.\n"
 "            "
 msgstr ""
+"\n"
+"Дата и время, до которых использование ночной цветовой схемы временно "
+"приостановлено."
 
 #. i18n: ectx: label, entry (DeactivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:42
@@ -2570,6 +2587,8 @@ msgid ""
 "                Night Light is suspended until manually turned back on.\n"
 "            "
 msgstr ""
+"\n"
+"Использование ночной цветовой схемы приостановлено до возобновления вручную."
 
 #: plugins/outputlocator/outputlocator.cpp:26
 #, kde-format
@@ -3786,35 +3805,35 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Не открыто ни одно окно"
 
-#: tabbox/tabbox.cpp:319
+#: tabbox/tabbox.cpp:322
 msgid "Walk Through Windows"
 msgstr "На одно окно вперёд"
 
-#: tabbox/tabbox.cpp:320
+#: tabbox/tabbox.cpp:323
 msgid "Walk Through Windows (Reverse)"
 msgstr "На одно окно назад"
 
-#: tabbox/tabbox.cpp:321
+#: tabbox/tabbox.cpp:324
 msgid "Walk Through Windows Alternative"
 msgstr "На одно окно вперёд (альтернативный режим)"
 
-#: tabbox/tabbox.cpp:322
+#: tabbox/tabbox.cpp:325
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "На одно окно назад (альтернативный режим)"
 
-#: tabbox/tabbox.cpp:323
+#: tabbox/tabbox.cpp:326
 msgid "Walk Through Windows of Current Application"
 msgstr "На одно окно вперёд текущего приложения"
 
-#: tabbox/tabbox.cpp:324
+#: tabbox/tabbox.cpp:327
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "На одно окно назад текущего приложения"
 
-#: tabbox/tabbox.cpp:325
+#: tabbox/tabbox.cpp:328
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "На одно окно вперёд текущего приложения (альтернативный режим)"
 
-#: tabbox/tabbox.cpp:326
+#: tabbox/tabbox.cpp:329
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "На одно окно назад текущего приложения (альтернативный режим)"
 
@@ -4466,31 +4485,31 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(не отвечает)"
 
-#: workspace.cpp:1326
+#: workspace.cpp:1335
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Встроенный экран"
 
-#: workspace.cpp:1339
+#: workspace.cpp:1348
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1349
+#: workspace.cpp:1358
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1352
+#: workspace.cpp:1361
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
 # BUGME: please proofread this translation, it's full of worms --aspotashev
-#: workspace.cpp:1821
+#: workspace.cpp:1830
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

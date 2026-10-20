@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-16 00:50+0000\n"
+"POT-Creation-Date: 2026-10-20 00:54+0000\n"
 "PO-Revision-Date: 2026-06-01 10:08+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
@@ -1878,21 +1878,31 @@ msgstr ""
 "<application>%1</application> er að biðja um að fá að stýra inntakstækjum"
 
 #: plugins/eis/eisprompter.cpp:64
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt ""
+#| "@option:check, %1 is the application name. This option always allow apps "
+#| "claiming to be a given application name to control input devices"
+#| msgid "Always allow apps claiming to be %1"
 msgctxt ""
-"@option:check, %1 is the application name. This option always allow apps "
-"claiming to be a given application name to control input devices"
-msgid "Always allow apps claiming to be %1"
+"@option:check, %1 is the application name. This option remembers the "
+"selection for apps claiming to be a given application name"
+msgid "Remember for apps claiming to be %1"
 msgstr "Alltaf leyfa forrit sem segjast vera %1"
 
 #: plugins/eis/eisprompter.cpp:66
-#, kde-kuit-format
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info:tooltip"
+#| msgid ""
+#| "Identities of legacy X11 apps cannot be verified. Any app claiming to be "
+#| "<application>%1</application> will be able to control input devices. You "
+#| "can revoke this permission later on <application>System Settings</"
+#| "application>’ “Legacy X11 App Support” page."
 msgctxt "@info:tooltip"
 msgid ""
-"Identities of legacy X11 apps cannot be verified. Any app claiming to be "
-"<application>%1</application> will be able to control input devices. You can "
-"revoke this permission later on <application>System Settings</application>’ "
-"“Legacy X11 App Support” page."
+"Identities of legacy X11 apps cannot be verified. If permitted any app "
+"claiming to be <application>%1</application> will be able to control input "
+"devices. You can change this setting later on <application>System Settings</"
+"application>’ “Legacy X11 App Support” page."
 msgstr ""
 "Ekki er hægt að sannreyna auðkenni eldri X11-forrita. Öll þau forrit sem "
 "segjast vera <application>%1</application> munu geta stýrt inntakstækjum. Þú "
@@ -3750,35 +3760,35 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Engir opnir gluggar"
 
-#: tabbox/tabbox.cpp:319
+#: tabbox/tabbox.cpp:322
 msgid "Walk Through Windows"
 msgstr "Fletta á milli glugga"
 
-#: tabbox/tabbox.cpp:320
+#: tabbox/tabbox.cpp:323
 msgid "Walk Through Windows (Reverse)"
 msgstr "Fletta á milli glugga (afturábak)"
 
-#: tabbox/tabbox.cpp:321
+#: tabbox/tabbox.cpp:324
 msgid "Walk Through Windows Alternative"
 msgstr "Fletta á milli glugga (varaleið)"
 
-#: tabbox/tabbox.cpp:322
+#: tabbox/tabbox.cpp:325
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Fletta á milli glugga (varaleið afturábak)"
 
-#: tabbox/tabbox.cpp:323
+#: tabbox/tabbox.cpp:326
 msgid "Walk Through Windows of Current Application"
 msgstr "Fletta á milli glugga núverandi forrits"
 
-#: tabbox/tabbox.cpp:324
+#: tabbox/tabbox.cpp:327
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Fletta á milli glugga núverandi forrits (afturábak)"
 
-#: tabbox/tabbox.cpp:325
+#: tabbox/tabbox.cpp:328
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Fletta á milli glugga núverandi forrits (varaleið)"
 
-#: tabbox/tabbox.cpp:326
+#: tabbox/tabbox.cpp:329
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Fletta á milli glugga núverandi forrits (varaleið afturábak)"
 
@@ -4425,30 +4435,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(svarar ekki)"
 
-#: workspace.cpp:1326
+#: workspace.cpp:1335
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Innbyggður skjár"
 
-#: workspace.cpp:1339
+#: workspace.cpp:1348
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1349
+#: workspace.cpp:1358
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1352
+#: workspace.cpp:1361
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: workspace.cpp:1821
+#: workspace.cpp:1830
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-04 00:46+0000\n"
+"POT-Creation-Date: 2026-10-20 00:54+0000\n"
 "PO-Revision-Date: 2026-04-30 13:58+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -148,7 +148,35 @@ msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr "הצגת היישומים המורשים…"
 
-#: ui/main.qml:167
+#: ui/main.qml:160
+#, kde-format
+msgctxt ""
+"@title:window title of the page opened by the 'See allowed applications' "
+"button"
+msgid "Applications allowed to control the pointer and keyboard"
+msgstr "יישומים שמורשים לשלוט בסמן ובמקלדת"
+
+#: ui/main.qml:165
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "See Allowed Applications…"
+msgctxt "@action:button"
+msgid "See Denied Applications…"
+msgstr "הצגת היישומים המורשים…"
+
+#: ui/main.qml:169
+#, fuzzy, kde-format
+#| msgctxt ""
+#| "@title:window title of the page opened by the 'See allowed applications' "
+#| "button"
+#| msgid "Applications allowed to control the pointer and keyboard"
+msgctxt ""
+"@title:window title of the page opened by the 'See denied applications' "
+"button"
+msgid "Applications never allowed to control the pointer and keyboard"
+msgstr "יישומים שמורשים לשלוט בסמן ובמקלדת"
+
+#: ui/main.qml:178
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -160,7 +188,7 @@ msgstr ""
 "מהרשימה הזאת יוכלו לשלוט במחשב, כיוון שאי אפשר לאמת זהויות של יישומים "
 "שמשתמשים ב־XWayland"
 
-#: ui/main.qml:173
+#: ui/main.qml:184
 #, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
@@ -168,13 +196,13 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr "לאפשר מבלי לבקש הרשאה"
 
-#: ui/main.qml:182
+#: ui/main.qml:193
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr "הכי פחות מאובטח, כל יישומי X11 יוכלו לשלוט על המחשב"
 
-#: ui/main.qml:189
+#: ui/main.qml:200
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -185,15 +213,7 @@ msgstr ""
 "נא לשים לב ששימוש בהגדרה זו יערער את אבטחת המערכת וירשה לתוכנות זדוניות "
 "להשתלט על הסמן והמקלדת שלך. נא לוודא שהכשלים האלו ברורים ומוסכמים עליך."
 
-#: ui/main.qml:197
-#, kde-format
-msgctxt ""
-"@title:window title of the page opened by the 'See allowed applications' "
-"button"
-msgid "Applications allowed to control the pointer and keyboard"
-msgstr "יישומים שמורשים לשלוט בסמן ובמקלדת"
-
-#: ui/main.qml:217
+#: ui/main.qml:229
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"

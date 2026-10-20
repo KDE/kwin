@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-20 00:54+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Zmicier <zmicerturok@gmail.com>\n"
 "Language-Team: Belarusian\n"
@@ -21,57 +21,6 @@ msgstr ""
 "X-Crowdin-File: /[antikruk.KDE] main/KDE6/be/messages/kwin/kcm_kwintabbox."
 "po\n"
 "X-Crowdin-File-ID: 10426\n"
-
-#: layoutpreview.cpp:28
-#, kde-format
-msgid "Launch an interactive preview for a tabbox switcher"
-msgstr ""
-
-#: layoutpreview.cpp:29
-#, kde-format
-msgid "Path to the Window Switcher QML main file"
-msgstr ""
-
-#: layoutpreview.cpp:30
-#, kde-format
-msgid "Show also a thumbnail for the desktop"
-msgstr ""
-
-#: layoutpreview.cpp:159
-#, kde-format
-msgctxt "The name of KDE's file manager in this language, if translated"
-msgid "Dolphin"
-msgstr ""
-
-#: layoutpreview.cpp:163
-#, kde-format
-msgctxt "The name of KDE's web browser in this language, if translated"
-msgid "Konqueror"
-msgstr ""
-
-#: layoutpreview.cpp:167
-#, kde-format
-msgctxt "The name of KDE's email client in this language, if translated"
-msgid "KMail"
-msgstr ""
-
-#: layoutpreview.cpp:171
-#, kde-format
-msgctxt "The name of KDE's System Settings app in this language, if translated"
-msgid "System Settings"
-msgstr ""
-
-#: layoutpreview.cpp:177
-#, fuzzy, kde-format
-#| msgid "Current desktop"
-msgid "Peek at Desktop"
-msgstr "Бягучы працоўны стол"
-
-#: layoutpreview.cpp:207
-#, kde-format
-msgctxt "An example Desktop Name"
-msgid "Desktop 1"
-msgstr "Працоўны стол 1"
 
 #: main.cpp:74
 #, kde-format
@@ -380,6 +329,15 @@ msgstr "Альтэрнатыўны пераход па вокнах бягуча
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Альтэрнатыўны пераход па вокнах бягучай праграмы ў адваротным кірунку"
+
+#, fuzzy
+#~| msgid "Current desktop"
+#~ msgid "Peek at Desktop"
+#~ msgstr "Бягучы працоўны стол"
+
+#~ msgctxt "An example Desktop Name"
+#~ msgid "Desktop 1"
+#~ msgstr "Працоўны стол 1"
 
 #~ msgid "Show Desktop"
 #~ msgstr "Паказаць працоўны стол"

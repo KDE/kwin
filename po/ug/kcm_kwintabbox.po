@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-20 00:54+0000\n"
 "PO-Revision-Date: 2026-09-24 19:36-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -17,56 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 3.9\n"
-
-#: layoutpreview.cpp:28
-#, kde-format
-msgid "Launch an interactive preview for a tabbox switcher"
-msgstr "بەتكۈچ قۇتىسى ئالماشتۇرغۇچنىڭ تەسىرلىشىشچان ئالدىن كۆزىتىشنى قوزغىتىدۇ"
-
-#: layoutpreview.cpp:29
-#, kde-format
-msgid "Path to the Window Switcher QML main file"
-msgstr "كۆزنەك ئالماشتۇرغۇچ QML ئاساسىي ھۆججەت يولى"
-
-#: layoutpreview.cpp:30
-#, kde-format
-msgid "Show also a thumbnail for the desktop"
-msgstr "ئۈستەلئۈستىنىڭ كىچىك كۆرۈنۈشىنىمۇ كۆرسىتىدۇ"
-
-#: layoutpreview.cpp:159
-#, kde-format
-msgctxt "The name of KDE's file manager in this language, if translated"
-msgid "Dolphin"
-msgstr "Dolphin ھۆججەت باشقۇرغۇچ"
-
-#: layoutpreview.cpp:163
-#, kde-format
-msgctxt "The name of KDE's web browser in this language, if translated"
-msgid "Konqueror"
-msgstr "Konqueror توركۆرگۈ"
-
-#: layoutpreview.cpp:167
-#, kde-format
-msgctxt "The name of KDE's email client in this language, if translated"
-msgid "KMail"
-msgstr "KMail  تور خەت"
-
-#: layoutpreview.cpp:171
-#, kde-format
-msgctxt "The name of KDE's System Settings app in this language, if translated"
-msgid "System Settings"
-msgstr "سىستېما تەڭشىكى"
-
-#: layoutpreview.cpp:177
-#, kde-format
-msgid "Peek at Desktop"
-msgstr "ئۈستەلئۈستى كۆرسەت"
-
-#: layoutpreview.cpp:207
-#, kde-format
-msgctxt "An example Desktop Name"
-msgid "Desktop 1"
-msgstr "1-ئۈستەلئۈستى"
 
 #: main.cpp:74
 #, kde-format
@@ -374,6 +324,40 @@ msgstr "نۆۋەتتىكى پىروگراممىنىڭ باشقىچە كۆزنى�
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "نۆۋەتتىكى پىروگراممىنىڭ باشقىچە كۆزنىكىنى ئارىلايدۇ(تەتۈر)"
+
+#~ msgid "Launch an interactive preview for a tabbox switcher"
+#~ msgstr ""
+#~ "بەتكۈچ قۇتىسى ئالماشتۇرغۇچنىڭ تەسىرلىشىشچان ئالدىن كۆزىتىشنى قوزغىتىدۇ"
+
+#~ msgid "Path to the Window Switcher QML main file"
+#~ msgstr "كۆزنەك ئالماشتۇرغۇچ QML ئاساسىي ھۆججەت يولى"
+
+#~ msgid "Show also a thumbnail for the desktop"
+#~ msgstr "ئۈستەلئۈستىنىڭ كىچىك كۆرۈنۈشىنىمۇ كۆرسىتىدۇ"
+
+#~ msgctxt "The name of KDE's file manager in this language, if translated"
+#~ msgid "Dolphin"
+#~ msgstr "Dolphin ھۆججەت باشقۇرغۇچ"
+
+#~ msgctxt "The name of KDE's web browser in this language, if translated"
+#~ msgid "Konqueror"
+#~ msgstr "Konqueror توركۆرگۈ"
+
+#~ msgctxt "The name of KDE's email client in this language, if translated"
+#~ msgid "KMail"
+#~ msgstr "KMail  تور خەت"
+
+#~ msgctxt ""
+#~ "The name of KDE's System Settings app in this language, if translated"
+#~ msgid "System Settings"
+#~ msgstr "سىستېما تەڭشىكى"
+
+#~ msgid "Peek at Desktop"
+#~ msgstr "ئۈستەلئۈستى كۆرسەت"
+
+#~ msgctxt "An example Desktop Name"
+#~ msgid "Desktop 1"
+#~ msgstr "1-ئۈستەلئۈستى"
 
 #~| msgid "Desktop:"
 #~ msgid "Show Desktop"

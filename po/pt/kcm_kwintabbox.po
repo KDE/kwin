@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-20 00:54+0000\n"
 "PO-Revision-Date: 2026-02-01 15:09+0000\n"
 "Last-Translator: César A. P. Cláudio <cesarapclaudio@gmail.com>\n"
 "Language-Team: pt\n"
@@ -14,58 +14,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-POFile-SpellExtra: KWin\n"
 "X-Generator: Lokalize 25.12.1\n"
-
-#: layoutpreview.cpp:28
-#, kde-format
-msgid "Launch an interactive preview for a tabbox switcher"
-msgstr ""
-"Iniciar uma pré-visualização interativa para um alternador de caixas de "
-"separadores"
-
-#: layoutpreview.cpp:29
-#, kde-format
-msgid "Path to the Window Switcher QML main file"
-msgstr "Caminho para o ficheiro principal QML do Comutador de Janelas"
-
-#: layoutpreview.cpp:30
-#, kde-format
-msgid "Show also a thumbnail for the desktop"
-msgstr "Mostrar também uma miniatura do ambiente de trabalho"
-
-#: layoutpreview.cpp:159
-#, kde-format
-msgctxt "The name of KDE's file manager in this language, if translated"
-msgid "Dolphin"
-msgstr "Dolphin"
-
-#: layoutpreview.cpp:163
-#, kde-format
-msgctxt "The name of KDE's web browser in this language, if translated"
-msgid "Konqueror"
-msgstr "Konqueror"
-
-#: layoutpreview.cpp:167
-#, kde-format
-msgctxt "The name of KDE's email client in this language, if translated"
-msgid "KMail"
-msgstr "KMail"
-
-#: layoutpreview.cpp:171
-#, kde-format
-msgctxt "The name of KDE's System Settings app in this language, if translated"
-msgid "System Settings"
-msgstr "Definições do Sistema"
-
-#: layoutpreview.cpp:177
-#, kde-format
-msgid "Peek at Desktop"
-msgstr "Espreitar ambiente de trabalho"
-
-#: layoutpreview.cpp:207
-#, kde-format
-msgctxt "An example Desktop Name"
-msgid "Desktop 1"
-msgstr "Ambiente de trabalho 1"
 
 #: main.cpp:74
 #, kde-format
@@ -377,6 +325,41 @@ msgstr "Alternativa a Percorrer janelas da aplicação atual"
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Alternativa a Percorrer janelas da aplicação atual (sentido inverso)"
+
+#~ msgid "Launch an interactive preview for a tabbox switcher"
+#~ msgstr ""
+#~ "Iniciar uma pré-visualização interativa para um alternador de caixas de "
+#~ "separadores"
+
+#~ msgid "Path to the Window Switcher QML main file"
+#~ msgstr "Caminho para o ficheiro principal QML do Comutador de Janelas"
+
+#~ msgid "Show also a thumbnail for the desktop"
+#~ msgstr "Mostrar também uma miniatura do ambiente de trabalho"
+
+#~ msgctxt "The name of KDE's file manager in this language, if translated"
+#~ msgid "Dolphin"
+#~ msgstr "Dolphin"
+
+#~ msgctxt "The name of KDE's web browser in this language, if translated"
+#~ msgid "Konqueror"
+#~ msgstr "Konqueror"
+
+#~ msgctxt "The name of KDE's email client in this language, if translated"
+#~ msgid "KMail"
+#~ msgstr "KMail"
+
+#~ msgctxt ""
+#~ "The name of KDE's System Settings app in this language, if translated"
+#~ msgid "System Settings"
+#~ msgstr "Definições do Sistema"
+
+#~ msgid "Peek at Desktop"
+#~ msgstr "Espreitar ambiente de trabalho"
+
+#~ msgctxt "An example Desktop Name"
+#~ msgid "Desktop 1"
+#~ msgstr "Ambiente de trabalho 1"
 
 #~ msgid "Show Desktop"
 #~ msgstr "Mostrar o Ecrã"

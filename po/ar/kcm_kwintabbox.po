@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-20 00:54+0000\n"
 "PO-Revision-Date: 2026-04-16 09:31+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -17,56 +17,6 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
 "X-Generator: Lokalize 23.08.5\n"
-
-#: layoutpreview.cpp:28
-#, kde-format
-msgid "Launch an interactive preview for a tabbox switcher"
-msgstr "أطلق معاينة تفاعلية لمبدل الألسنة"
-
-#: layoutpreview.cpp:29
-#, kde-format
-msgid "Path to the Window Switcher QML main file"
-msgstr "المسار إلى الملف الرئيسي لـ Window Switcher QML"
-
-#: layoutpreview.cpp:30
-#, kde-format
-msgid "Show also a thumbnail for the desktop"
-msgstr "إظهار أيضًا صورة مصغرة لسطح المكتب"
-
-#: layoutpreview.cpp:159
-#, kde-format
-msgctxt "The name of KDE's file manager in this language, if translated"
-msgid "Dolphin"
-msgstr "دولفين"
-
-#: layoutpreview.cpp:163
-#, kde-format
-msgctxt "The name of KDE's web browser in this language, if translated"
-msgid "Konqueror"
-msgstr "كنكر"
-
-#: layoutpreview.cpp:167
-#, kde-format
-msgctxt "The name of KDE's email client in this language, if translated"
-msgid "KMail"
-msgstr "بريدك"
-
-#: layoutpreview.cpp:171
-#, kde-format
-msgctxt "The name of KDE's System Settings app in this language, if translated"
-msgid "System Settings"
-msgstr "إعدادات النّظام"
-
-#: layoutpreview.cpp:177
-#, kde-format
-msgid "Peek at Desktop"
-msgstr "نظرة على سطح المكتب"
-
-#: layoutpreview.cpp:207
-#, kde-format
-msgctxt "An example Desktop Name"
-msgid "Desktop 1"
-msgstr "سطح المكتب 1"
 
 #: main.cpp:74
 #, kde-format
@@ -371,6 +321,39 @@ msgstr "تنقّل بين نوافذ التّطبيق الحاليّ البدي�
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "تنقّل بين نوافذ التّطبيق الحاليّ البديلة (بالعكس)"
+
+#~ msgid "Launch an interactive preview for a tabbox switcher"
+#~ msgstr "أطلق معاينة تفاعلية لمبدل الألسنة"
+
+#~ msgid "Path to the Window Switcher QML main file"
+#~ msgstr "المسار إلى الملف الرئيسي لـ Window Switcher QML"
+
+#~ msgid "Show also a thumbnail for the desktop"
+#~ msgstr "إظهار أيضًا صورة مصغرة لسطح المكتب"
+
+#~ msgctxt "The name of KDE's file manager in this language, if translated"
+#~ msgid "Dolphin"
+#~ msgstr "دولفين"
+
+#~ msgctxt "The name of KDE's web browser in this language, if translated"
+#~ msgid "Konqueror"
+#~ msgstr "كنكر"
+
+#~ msgctxt "The name of KDE's email client in this language, if translated"
+#~ msgid "KMail"
+#~ msgstr "بريدك"
+
+#~ msgctxt ""
+#~ "The name of KDE's System Settings app in this language, if translated"
+#~ msgid "System Settings"
+#~ msgstr "إعدادات النّظام"
+
+#~ msgid "Peek at Desktop"
+#~ msgstr "نظرة على سطح المكتب"
+
+#~ msgctxt "An example Desktop Name"
+#~ msgid "Desktop 1"
+#~ msgstr "سطح المكتب 1"
 
 #~ msgid "Show delay:"
 #~ msgstr "تأخير الإظهار:"

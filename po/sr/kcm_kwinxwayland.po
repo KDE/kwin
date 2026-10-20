@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-04 00:46+0000\n"
+"POT-Creation-Date: 2026-10-20 00:54+0000\n"
 "PO-Revision-Date: 2026-10-02 20:50+0200\n"
 "Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -151,7 +151,35 @@ msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr "Погледај дозвољене програме…"
 
-#: ui/main.qml:167
+#: ui/main.qml:160
+#, kde-format
+msgctxt ""
+"@title:window title of the page opened by the 'See allowed applications' "
+"button"
+msgid "Applications allowed to control the pointer and keyboard"
+msgstr "Програми којима је дозвољено да управљају показивачем и тастатуром"
+
+#: ui/main.qml:165
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "See Allowed Applications…"
+msgctxt "@action:button"
+msgid "See Denied Applications…"
+msgstr "Погледај дозвољене програме…"
+
+#: ui/main.qml:169
+#, fuzzy, kde-format
+#| msgctxt ""
+#| "@title:window title of the page opened by the 'See allowed applications' "
+#| "button"
+#| msgid "Applications allowed to control the pointer and keyboard"
+msgctxt ""
+"@title:window title of the page opened by the 'See denied applications' "
+"button"
+msgid "Applications never allowed to control the pointer and keyboard"
+msgstr "Програми којима је дозвољено да управљају показивачем и тастатуром"
+
+#: ui/main.qml:178
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -163,7 +191,7 @@ msgstr ""
 "нешто са овог списка моћи ће да преузму управљање рачунаром, јер идентитет "
 "програма који користе Икс‑вејланд не може да се провери"
 
-#: ui/main.qml:173
+#: ui/main.qml:184
 #, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
@@ -171,14 +199,14 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr "Дозвољено без тражења одобрења"
 
-#: ui/main.qml:182
+#: ui/main.qml:193
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr ""
 "Најмање безбедно; сви икс11 програми моћи ће да преузму управљање рачунаром"
 
-#: ui/main.qml:189
+#: ui/main.qml:200
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -190,15 +218,7 @@ msgstr ""
 "и дозвољава злонамерном софтверу да преузме потпуно управљање вашим "
 "показивачем и тастатуром. Уверите се да разумете и прихватате овај ризик."
 
-#: ui/main.qml:197
-#, kde-format
-msgctxt ""
-"@title:window title of the page opened by the 'See allowed applications' "
-"button"
-msgid "Applications allowed to control the pointer and keyboard"
-msgstr "Програми којима је дозвољено да управљају показивачем и тастатуром"
-
-#: ui/main.qml:217
+#: ui/main.qml:229
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"

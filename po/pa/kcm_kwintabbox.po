@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-20 00:54+0000\n"
 "PO-Revision-Date: 2024-01-28 17:59-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -16,58 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Lokalize 23.08.4\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-
-#: layoutpreview.cpp:28
-#, kde-format
-msgid "Launch an interactive preview for a tabbox switcher"
-msgstr ""
-
-#: layoutpreview.cpp:29
-#, kde-format
-msgid "Path to the Window Switcher QML main file"
-msgstr ""
-
-#: layoutpreview.cpp:30
-#, kde-format
-msgid "Show also a thumbnail for the desktop"
-msgstr ""
-
-#: layoutpreview.cpp:159
-#, kde-format
-msgctxt "The name of KDE's file manager in this language, if translated"
-msgid "Dolphin"
-msgstr ""
-
-#: layoutpreview.cpp:163
-#, kde-format
-msgctxt "The name of KDE's web browser in this language, if translated"
-msgid "Konqueror"
-msgstr ""
-
-#: layoutpreview.cpp:167
-#, kde-format
-msgctxt "The name of KDE's email client in this language, if translated"
-msgid "KMail"
-msgstr ""
-
-#: layoutpreview.cpp:171
-#, kde-format
-msgctxt "The name of KDE's System Settings app in this language, if translated"
-msgid "System Settings"
-msgstr ""
-
-#: layoutpreview.cpp:177
-#, fuzzy, kde-format
-#| msgctxt "An example Desktop Name"
-#| msgid "Desktop 1"
-msgid "Peek at Desktop"
-msgstr "ਡੈਸਕਟਾਪ 1"
-
-#: layoutpreview.cpp:207
-#, kde-format
-msgctxt "An example Desktop Name"
-msgid "Desktop 1"
-msgstr "ਡੈਸਕਟਾਪ 1"
 
 #: main.cpp:74
 #, kde-format
@@ -375,6 +323,16 @@ msgstr "ਵਿੰਡੋ ਵਿੱਚ ਬਦਲੇ ਢੰਗ ਨਾਲ ਜਾਓ"
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "ਮੌਜੂਦਾ ਐਪਲੀਕੇਸ਼ਨ ਦੀਆਂ ਵਿੰਡੋਜ਼ ਵਿੱਚ ਬਦਲਵੇਂ ਰੂਪ ਵਿੱਚ ਵੇਖੋ (ਉਲਟ)"
+
+#, fuzzy
+#~| msgctxt "An example Desktop Name"
+#~| msgid "Desktop 1"
+#~ msgid "Peek at Desktop"
+#~ msgstr "ਡੈਸਕਟਾਪ 1"
+
+#~ msgctxt "An example Desktop Name"
+#~ msgid "Desktop 1"
+#~ msgstr "ਡੈਸਕਟਾਪ 1"
 
 #~ msgid "Show Desktop"
 #~ msgstr "ਡੈਸਕਟਾਪ ਵੇਖੋ"

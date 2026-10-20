@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-14 00:45+0000\n"
+"POT-Creation-Date: 2026-10-20 00:54+0000\n"
 "PO-Revision-Date: 2026-10-02 20:50+0200\n"
 "Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -19,57 +19,6 @@ msgstr ""
 "X-Text-Markup: kde4\n"
 "X-Environment: kde\n"
 "X-Associated-UI-Catalogs: kwin\n"
-
-#: layoutpreview.cpp:28
-#, kde-format
-msgid "Launch an interactive preview for a tabbox switcher"
-msgstr "Покреће интерактивни преглед мењача прозора"
-
-#: layoutpreview.cpp:29
-#, kde-format
-msgid "Path to the Window Switcher QML main file"
-msgstr "Путања до главног КуМЛ фајла мењача прозора"
-
-#: layoutpreview.cpp:30
-#, kde-format
-msgid "Show also a thumbnail for the desktop"
-msgstr "Прикажи и сличицу површи"
-
-#: layoutpreview.cpp:159
-#, kde-format
-msgctxt "The name of KDE's file manager in this language, if translated"
-msgid "Dolphin"
-msgstr "Делфин"
-
-#: layoutpreview.cpp:163
-#, kde-format
-msgctxt "The name of KDE's web browser in this language, if translated"
-msgid "Konqueror"
-msgstr "К‑освајач"
-
-#: layoutpreview.cpp:167
-#, kde-format
-msgctxt "The name of KDE's email client in this language, if translated"
-msgid "KMail"
-msgstr "К‑пошта"
-
-#: layoutpreview.cpp:171
-#, kde-format
-msgctxt "The name of KDE's System Settings app in this language, if translated"
-msgid "System Settings"
-msgstr "Системске поставке"
-
-# >> @item:inlistbox List windows:
-#: layoutpreview.cpp:177
-#, kde-format
-msgid "Peek at Desktop"
-msgstr "Завири у површ"
-
-#: layoutpreview.cpp:207
-#, kde-format
-msgctxt "An example Desktop Name"
-msgid "Desktop 1"
-msgstr "површ 1"
 
 # >> @title:tab
 #: main.cpp:74
@@ -394,3 +343,37 @@ msgstr "Мењај прозоре текућег програма алтерна
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Мењај прозоре текућег програма алтернативно (обратно)"
+
+#~ msgid "Launch an interactive preview for a tabbox switcher"
+#~ msgstr "Покреће интерактивни преглед мењача прозора"
+
+#~ msgid "Path to the Window Switcher QML main file"
+#~ msgstr "Путања до главног КуМЛ фајла мењача прозора"
+
+#~ msgid "Show also a thumbnail for the desktop"
+#~ msgstr "Прикажи и сличицу површи"
+
+#~ msgctxt "The name of KDE's file manager in this language, if translated"
+#~ msgid "Dolphin"
+#~ msgstr "Делфин"
+
+#~ msgctxt "The name of KDE's web browser in this language, if translated"
+#~ msgid "Konqueror"
+#~ msgstr "К‑освајач"
+
+#~ msgctxt "The name of KDE's email client in this language, if translated"
+#~ msgid "KMail"
+#~ msgstr "К‑пошта"
+
+#~ msgctxt ""
+#~ "The name of KDE's System Settings app in this language, if translated"
+#~ msgid "System Settings"
+#~ msgstr "Системске поставке"
+
+# >> @item:inlistbox List windows:
+#~ msgid "Peek at Desktop"
+#~ msgstr "Завири у површ"
+
+#~ msgctxt "An example Desktop Name"
+#~ msgid "Desktop 1"
+#~ msgstr "површ 1"
