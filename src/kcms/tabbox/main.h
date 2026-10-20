@@ -16,8 +16,6 @@
 #include <kcmodule.h>
 #include <ksharedconfig.h>
 
-class QProcess;
-
 namespace KWin
 {
 
@@ -58,8 +56,6 @@ private:
     KSharedConfigPtr m_config;
 
     TabBox::KWinTabboxData *m_data;
-
-    std::unique_ptr<QProcess> m_previewProcess;
 };
 
 } // namespace

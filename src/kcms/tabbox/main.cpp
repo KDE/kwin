@@ -21,7 +21,6 @@
 #include <QDialogButtonBox>
 #include <QHBoxLayout>
 #include <QPointer>
-#include <QProcess>
 #include <QPushButton>
 #include <QSpacerItem>
 #include <QStandardPaths>
