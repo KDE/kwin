@@ -234,6 +234,12 @@ std::expected<void, OutputError> DrmPipeline::setLegacyGamma()
                 output = tf->tf.nitsToEncoded(output);
             } else if (auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
                 output *= mult->factors;
+            } else if (auto clamp = std::get_if<ColorClamp>(&op.operation)) {
+                output = QVector3D{
+                    std::clamp<float>(output.x(), clamp->m_minValue, clamp->m_maxValue),
+                    std::clamp<float>(output.y(), clamp->m_minValue, clamp->m_maxValue),
+                    std::clamp<float>(output.z(), clamp->m_minValue, clamp->m_maxValue),
+                };
             } else {
                 // not supported
                 return std::unexpected(OutputError{
