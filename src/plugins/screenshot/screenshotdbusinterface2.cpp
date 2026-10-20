@@ -33,9 +33,9 @@ namespace KWin
 class ScreenShotWriter2 : public QRunnable
 {
 public:
-    ScreenShotWriter2(FileDescriptor &&fileDescriptor, const QImage &image)
+    ScreenShotWriter2(FileDescriptor &&fileDescriptor, ScreenShotBuffer &&buffer)
         : m_fileDescriptor(std::move(fileDescriptor))
-        , m_image(image)
+        , m_buffer(std::move(buffer))
     {
     }
 
@@ -59,7 +59,7 @@ public:
             return;
         }
 
-        const QByteArrayView buffer(m_image.constBits(), m_image.sizeInBytes());
+        const QByteArrayView buffer(static_cast<const char *>(m_buffer.map.data()), m_buffer.map.size());
         qint64 remainingSize = buffer.size();
 
         pollfd pfds[1];
@@ -98,7 +98,7 @@ public:
 
 protected:
     FileDescriptor m_fileDescriptor;
-    QImage m_image;
+    ScreenShotBuffer m_buffer;
 };
 
 static ScreenShotFlags screenShotFlagsFromOptions(const QVariantMap &options)
@@ -165,7 +165,7 @@ public:
     ScreenShotSinkPipe2(int fileDescriptor, QDBusMessage replyMessage);
 
     void cancel();
-    void flush(const QImage &image, const QVariantMap &attributes);
+    void flush(ScreenShotBuffer &&buffer, const QVariantMap &attributes);
 
 private:
     QDBusMessage m_replyMessage;
@@ -184,7 +184,7 @@ void ScreenShotSinkPipe2::cancel()
                                                                        s_errorCancelledMessage));
 }
 
-void ScreenShotSinkPipe2::flush(const QImage &image, const QVariantMap &attributes)
+void ScreenShotSinkPipe2::flush(ScreenShotBuffer &&buffer, const QVariantMap &attributes)
 {
     if (!m_fileDescriptor.isValid()) {
         return;
@@ -193,14 +193,14 @@ void ScreenShotSinkPipe2::flush(const QImage &image, const QVariantMap &attribut
     // Note that the type of the data stored in the vardict matters. Be careful.
     QVariantMap results = attributes;
     results.insert(QStringLiteral("type"), QStringLiteral("raw"));
-    results.insert(QStringLiteral("format"), quint32(image.format()));
-    results.insert(QStringLiteral("width"), quint32(image.width()));
-    results.insert(QStringLiteral("height"), quint32(image.height()));
-    results.insert(QStringLiteral("stride"), quint32(image.bytesPerLine()));
-    results.insert(QStringLiteral("scale"), double(image.devicePixelRatio()));
+    results.insert(QStringLiteral("format"), quint32(buffer.format));
+    results.insert(QStringLiteral("width"), quint32(buffer.size.width()));
+    results.insert(QStringLiteral("height"), quint32(buffer.size.height()));
+    results.insert(QStringLiteral("stride"), quint32(buffer.bytesPerLine));
+    results.insert(QStringLiteral("scale"), double(buffer.devicePixelRatio));
     QDBusConnection::sessionBus().send(m_replyMessage.createReply(results));
 
-    auto writer = new ScreenShotWriter2(std::move(m_fileDescriptor), image);
+    auto writer = new ScreenShotWriter2(std::move(m_fileDescriptor), std::move(buffer));
     writer->setAutoDelete(true);
     QThreadPool::globalInstance()->start(writer);
 }
@@ -432,10 +432,10 @@ QVariantMap ScreenShotDBusInterface2::CaptureWorkspace(const QVariantMap &option
 void ScreenShotDBusInterface2::takeScreenShot(LogicalOutput *screen, ScreenShotFlags flags,
                                               ScreenShotSinkPipe2 *sink, std::optional<pid_t> pid)
 {
-    if (const auto result = m_effect->takeScreenShot(screen, flags, pid)) {
-        sink->flush(*result, QVariantMap{
-                                 {QStringLiteral("screen"), screen->name()},
-                             });
+    if (auto result = m_effect->takeScreenShot(screen, flags, pid)) {
+        sink->flush(std::move(*result), QVariantMap{
+                                            {QStringLiteral("screen"), screen->name()},
+                                        });
     } else {
         sink->cancel();
     }
@@ -445,8 +445,8 @@ void ScreenShotDBusInterface2::takeScreenShot(LogicalOutput *screen, ScreenShotF
 void ScreenShotDBusInterface2::takeScreenShot(const Rect &area, ScreenShotFlags flags,
                                               ScreenShotSinkPipe2 *sink, std::optional<pid_t> pid)
 {
-    if (const auto result = m_effect->takeScreenShot(area, flags, pid)) {
-        sink->flush(*result, {});
+    if (auto result = m_effect->takeScreenShot(area, flags, pid)) {
+        sink->flush(std::move(*result), {});
     } else {
         sink->cancel();
     }
@@ -456,10 +456,10 @@ void ScreenShotDBusInterface2::takeScreenShot(const Rect &area, ScreenShotFlags 
 void ScreenShotDBusInterface2::takeScreenShot(Window *window, ScreenShotFlags flags,
                                               ScreenShotSinkPipe2 *sink)
 {
-    if (const auto result = m_effect->takeScreenShot(window, flags)) {
-        sink->flush(*result, QVariantMap{
-                                 {QStringLiteral("windowId"), window->internalId().toString()},
-                             });
+    if (auto result = m_effect->takeScreenShot(window, flags)) {
+        sink->flush(std::move(*result), QVariantMap{
+                                            {QStringLiteral("windowId"), window->internalId().toString()},
+                                        });
     } else {
         sink->cancel();
     }

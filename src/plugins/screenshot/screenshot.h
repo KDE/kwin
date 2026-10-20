@@ -10,7 +10,11 @@
 
 #pragma once
 
+#include "anonymousfile.h"
 #include "plugin.h"
+#include "utils/memorymap.h"
+
+#include <QImage>
 
 namespace KWin
 {
@@ -31,6 +35,19 @@ class Rect;
 class ScreenShotDBusInterface2;
 class Window;
 
+struct ScreenShotBuffer
+{
+    FileDescriptor file;
+    MemoryMap map;
+
+    QSize size;
+    int bytesPerLine;
+    QImage::Format format;
+    qreal devicePixelRatio;
+
+    static std::optional<ScreenShotBuffer> allocate(const QSize &size, qreal devicePixelRatio, QImage::Format format);
+};
+
 /**
  * The ScreenShotManager provides a convenient way to capture the contents of a given window,
  * screen or an area in the global coordinates.
@@ -43,9 +60,9 @@ public:
     ScreenShotManager();
     ~ScreenShotManager() override;
 
-    std::optional<QImage> takeScreenShot(LogicalOutput *screen, ScreenShotFlags flags, std::optional<pid_t> pidToHide);
-    std::optional<QImage> takeScreenShot(const Rect &area, ScreenShotFlags flags, std::optional<pid_t> pidToHide);
-    std::optional<QImage> takeScreenShot(Window *window, ScreenShotFlags flags = {});
+    std::optional<ScreenShotBuffer> takeScreenShot(LogicalOutput *screen, ScreenShotFlags flags, std::optional<pid_t> pidToHide);
+    std::optional<ScreenShotBuffer> takeScreenShot(const Rect &area, ScreenShotFlags flags, std::optional<pid_t> pidToHide);
+    std::optional<ScreenShotBuffer> takeScreenShot(Window *window, ScreenShotFlags flags = {});
 
 private:
     std::unique_ptr<ScreenShotDBusInterface2> m_dbusInterface2;
