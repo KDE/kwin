@@ -121,6 +121,9 @@ QDBusUnixFileDescriptor ScreenShotDBusInterface3::CaptureActiveWindow(const QVar
         return QDBusUnixFileDescriptor();
     }
 
+    setDelayedReply(true);
+    takeScreenShot(window, screenShotFlagsFromOptions(options), message());
+
     return QDBusUnixFileDescriptor();
 }
 
@@ -131,6 +134,9 @@ QDBusUnixFileDescriptor ScreenShotDBusInterface3::CaptureWindow(const QString &h
         sendErrorReply(s_errorInvalidWindow, s_errorInvalidWindowMessage);
         return QDBusUnixFileDescriptor();
     }
+
+    setDelayedReply(true);
+    takeScreenShot(window, screenShotFlagsFromOptions(options), message());
 
     return QDBusUnixFileDescriptor();
 }
@@ -145,6 +151,9 @@ QDBusUnixFileDescriptor ScreenShotDBusInterface3::CaptureArea(int x, int y, int 
         return QDBusUnixFileDescriptor();
     }
 
+    setDelayedReply(true);
+    takeScreenShot(area, screenShotFlagsFromOptions(options), message(), pid);
+
     return QDBusUnixFileDescriptor();
 }
 
@@ -157,6 +166,9 @@ QDBusUnixFileDescriptor ScreenShotDBusInterface3::CaptureScreen(const QString &n
         sendErrorReply(s_errorInvalidScreen, s_errorInvalidScreenMessage);
         return QDBusUnixFileDescriptor();
     }
+
+    setDelayedReply(true);
+    takeScreenShot(screen, screenShotFlagsFromOptions(options), message(), pid);
 
     return QDBusUnixFileDescriptor();
 }
@@ -171,11 +183,15 @@ QDBusUnixFileDescriptor ScreenShotDBusInterface3::CaptureActiveScreen(const QVar
         return QDBusUnixFileDescriptor();
     }
 
+    setDelayedReply(true);
+    takeScreenShot(screen, screenShotFlagsFromOptions(options), message(), pid);
+
     return QDBusUnixFileDescriptor();
 }
 
 QDBusUnixFileDescriptor ScreenShotDBusInterface3::CaptureInteractive(uint kind, const QVariantMap &options, QVariantMap &results)
 {
+    const auto pid = determineCallerPid();
     const QDBusMessage replyMessage = message();
 
     if (kind == 0) {
@@ -186,7 +202,7 @@ QDBusUnixFileDescriptor ScreenShotDBusInterface3::CaptureInteractive(uint kind, 
                 QDBusConnection bus = QDBusConnection::sessionBus();
                 bus.send(replyMessage.createErrorReply(s_errorCancelled, s_errorCancelledMessage));
             } else {
-                // TODO
+                takeScreenShot(window, screenShotFlagsFromOptions(options), replyMessage);
             }
         });
         effects->showOnScreenMessage(i18n("Select window to screen shot with left click or enter.\n"
@@ -200,7 +216,8 @@ QDBusUnixFileDescriptor ScreenShotDBusInterface3::CaptureInteractive(uint kind, 
                 QDBusConnection bus = QDBusConnection::sessionBus();
                 bus.send(replyMessage.createErrorReply(s_errorCancelled, s_errorCancelledMessage));
             } else {
-                // TODO
+                LogicalOutput *screen = effects->screenAt(point.toPoint());
+                takeScreenShot(screen, screenShotFlagsFromOptions(options), replyMessage, pidToHide(pid, options));
             }
         });
         effects->showOnScreenMessage(i18n("Create screen shot with left click or enter.\n"
@@ -215,6 +232,57 @@ QDBusUnixFileDescriptor ScreenShotDBusInterface3::CaptureInteractive(uint kind, 
 QDBusUnixFileDescriptor ScreenShotDBusInterface3::CaptureWorkspace(const QVariantMap &options, QVariantMap &results)
 {
     return QDBusUnixFileDescriptor();
+}
+
+void ScreenShotDBusInterface3::takeScreenShot(LogicalOutput *screen, ScreenShotFlags flags, const QDBusMessage &message, std::optional<pid_t> pid)
+{
+    if (auto result = m_effect->takeScreenShot(screen, flags, pid)) {
+        send(std::move(*result), QVariantMap{
+                                     {QStringLiteral("screen"), screen->name()},
+                                 },
+             message);
+    } else {
+        cancel(message);
+    }
+}
+
+void ScreenShotDBusInterface3::takeScreenShot(const Rect &area, ScreenShotFlags flags, const QDBusMessage &message, std::optional<pid_t> pid)
+{
+    if (auto result = m_effect->takeScreenShot(area, flags, pid)) {
+        send(std::move(*result), {}, message);
+    } else {
+        cancel(message);
+    }
+}
+
+void ScreenShotDBusInterface3::takeScreenShot(Window *window, ScreenShotFlags flags, const QDBusMessage &message)
+{
+    if (auto result = m_effect->takeScreenShot(window, flags)) {
+        send(std::move(*result), QVariantMap{
+                                     {QStringLiteral("windowId"), window->internalId().toString()},
+                                 },
+             message);
+    } else {
+        cancel(message);
+    }
+}
+
+void ScreenShotDBusInterface3::send(ScreenShotBuffer &&buffer, const QVariantMap &options, const QDBusMessage &message)
+{
+    // Note that the type of the data stored in the vardict matters. Be careful.
+    QVariantMap results = options;
+    results.insert(QStringLiteral("type"), QStringLiteral("raw"));
+    results.insert(QStringLiteral("format"), quint32(buffer.format));
+    results.insert(QStringLiteral("width"), quint32(buffer.size.width()));
+    results.insert(QStringLiteral("height"), quint32(buffer.size.height()));
+    results.insert(QStringLiteral("stride"), quint32(buffer.bytesPerLine));
+    results.insert(QStringLiteral("scale"), double(buffer.devicePixelRatio));
+    QDBusConnection::sessionBus().send(message.createReply({QVariant::fromValue(QDBusUnixFileDescriptor(buffer.file.take())), results}));
+}
+
+void ScreenShotDBusInterface3::cancel(const QDBusMessage &message)
+{
+    QDBusConnection::sessionBus().send(message.createErrorReply(s_errorCancelled, s_errorCancelledMessage));
 }
 
 } // namespace KWin

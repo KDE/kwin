@@ -45,8 +45,15 @@ public Q_SLOTS:
     QDBusUnixFileDescriptor CaptureWorkspace(const QVariantMap &options, QVariantMap &results);
 
 private:
+    void takeScreenShot(LogicalOutput *screen, ScreenShotFlags flags, const QDBusMessage &message, std::optional<pid_t> pid);
+    void takeScreenShot(const Rect &area, ScreenShotFlags flags, const QDBusMessage &message, std::optional<pid_t> pid);
+    void takeScreenShot(Window *window, ScreenShotFlags flags, const QDBusMessage &message);
+
     std::optional<pid_t> determineCallerPid() const;
     bool checkPermissions(std::optional<pid_t> pid) const;
+
+    void send(ScreenShotBuffer &&buffer, const QVariantMap &options, const QDBusMessage &message);
+    void cancel(const QDBusMessage &message);
 
     ScreenShotManager *m_effect;
 };
