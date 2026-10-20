@@ -11,6 +11,7 @@
 #include "config-kwin.h"
 
 #include "backends/drm/drm_backend.h"
+#include "compositor.h"
 #include "core/backendoutput.h"
 #include "core/drmdevice.h"
 #include "core/gpumanager.h"
@@ -604,6 +605,7 @@ void WaylandServer::initWorkspace()
     updateSyncobjSupport();
     connect(GpuManager::self(), &GpuManager::renderDeviceAdded, this, &WaylandServer::updateSyncobjSupport);
     connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, &WaylandServer::updateSyncobjSupport);
+    connect(Compositor::self(), &Compositor::primaryGpuChanged, this, &WaylandServer::updateSyncobjSupport);
 
     Q_EMIT initialized();
 }
@@ -824,11 +826,20 @@ ExtBackgroundEffectManagerV1 *WaylandServer::backgroundEffectManager() const
 void WaylandServer::updateSyncobjSupport()
 {
     const auto &devices = GpuManager::self()->renderDevices();
-    const auto it = std::ranges::find_if(devices, [](const auto &device) {
-        return device->drmDevice()
-            && device->drmDevice()->supportsSyncObjTimelines();
-    });
-    if (it != devices.end()) {
+    RenderDevice *syncobjDevice = nullptr;
+    RenderDevice *primary = Compositor::self()->primaryDevice();
+    if (primary && primary->drmDevice() && primary->drmDevice()->supportsSyncObjTimelines()) {
+        // WORKAROUND: the kernel wakes GPUs with some syncobj related ioctls,
+        // so using a non-primary one can cause power management problems
+        syncobjDevice = primary;
+    } else {
+        const auto it = std::ranges::find_if(devices, [](const auto &device) {
+            return device->drmDevice()
+                && device->drmDevice()->supportsSyncObjTimelines();
+        });
+        syncobjDevice = it == devices.end() ? nullptr : it->get();
+    }
+    if (syncobjDevice) {
         // ensure the DRM_IOCTL_SYNCOBJ_EVENTFD ioctl is supported
         const auto linuxVersion = linuxKernelVersion();
         if (linuxVersion < Version(6, 6)) {
@@ -839,9 +850,9 @@ void WaylandServer::updateSyncobjSupport()
             return;
         }
         if (m_linuxDrmSyncObj) {
-            m_linuxDrmSyncObj->setDrmDevice((*it)->drmDevice());
+            m_linuxDrmSyncObj->setDrmDevice(syncobjDevice->drmDevice());
         } else {
-            m_linuxDrmSyncObj = new LinuxDrmSyncObjV1Interface(m_display, m_display, (*it)->drmDevice());
+            m_linuxDrmSyncObj = new LinuxDrmSyncObjV1Interface(m_display, m_display, syncobjDevice->drmDevice());
         }
     } else if (m_linuxDrmSyncObj) {
         m_linuxDrmSyncObj->remove();
