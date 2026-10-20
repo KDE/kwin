@@ -1267,21 +1267,34 @@ LogicalOutput *Workspace::findOutput(LogicalOutput *reference, Direction directi
         }
     });
 
-    std::sort(relevantOutputs.begin(), relevantOutputs.end(), [direction](const LogicalOutput *o1, const LogicalOutput *o2) {
+    // pre-sort the outputs for deterministic behavior
+    std::sort(relevantOutputs.begin(), relevantOutputs.end(), [](const LogicalOutput *o1, const LogicalOutput *o2) {
+        return (o1->geometry().top() == o2->geometry().top())
+            ? o1->geometry().left() < o2->geometry().left()
+            : o1->geometry().top() < o2->geometry().top();
+    });
+
+    // the actual sorting logic
+    std::stable_sort(relevantOutputs.begin(), relevantOutputs.end(), [direction](const LogicalOutput *o1, const LogicalOutput *o2) {
+        const Rect g1 = o1->geometry();
+        const Rect g2 = o2->geometry();
+
         switch (direction) {
         case DirectionEast:
         case DirectionWest:
             // order outputs from left to right
-            return o1->geometry().center().x() < o2->geometry().center().x();
+            return g1.horizontalCenter() < g2.horizontalCenter();
         case DirectionSouth:
         case DirectionNorth:
             // order outputs from top to bottom
-            return o1->geometry().center().y() < o2->geometry().center().y();
+            return g1.verticalCenter() < g2.verticalCenter();
         default:
-            // order outputs from top to bottom, then left to right
-            // case 1: o1 is above o2
-            // case 2: o1 is not below o2, and o1 is left of o2
-            return o1->geometry().y() + o1->geometry().height() <= o2->geometry().top() || (o1->geometry().top() < o2->geometry().y() + o2->geometry().height() && o1->geometry().left() < o2->geometry().left());
+            // order outputs from left to right and then top to bottom
+
+            // Row is determined when neither screen has its top below the vertical center of the other
+            return (g1.top() <= g2.verticalCenter() && g2.top() <= g1.verticalCenter())
+                ? g1.left() < g2.left()
+                : g1.top() < g2.top();
         }
     });
 
