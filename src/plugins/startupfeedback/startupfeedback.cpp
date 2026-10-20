@@ -254,18 +254,22 @@ void StartupFeedbackEffect::start(const Startup &startup)
         iconSize = QApplication::style()->pixelMetric(QStyle::PM_SmallIconSize);
     }
     // get ratio for bouncing cursor so we don't need to manually calculate the sizes for each icon size
-    if (m_type == BouncingFeedback) {
+    switch (m_type) {
+    case NoFeedback:
+    case BlinkingFeedback:
+        m_bounceSizesRatio = 1.0;
+        break;
+    case BouncingFeedback:
+    case PassiveFeedback:
         m_bounceSizesRatio = iconSize / 16.0;
+        break;
     }
 
     m_item = std::make_unique<ImageItem>(effects->scene()->cursorItem());
     m_item->setPosition(feedbackOffset());
     m_item->setImage(startup.icon.pixmap(QSize(iconSize, iconSize), output->scale()).toImage());
-    if (m_type == BouncingFeedback) {
-        m_item->setSize(QSize(iconSize, iconSize) * m_bounceSizesRatio);
-    } else {
-        m_item->setSize(QSize(iconSize, iconSize));
-    }
+    m_item->setSize(feedbackIconSize());
+
     if (m_type == BlinkingFeedback) {
         m_blinkItem = std::make_unique<ImageItem>(m_item.get());
         QImage img(1, 1, QImage::Format_ARGB32_Premultiplied);
