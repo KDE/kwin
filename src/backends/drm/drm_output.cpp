@@ -839,7 +839,7 @@ bool DrmOutput::setPostBlendPipeline(const ColorPipeline &pipeline, const std::s
 {
     // like in tryKmsColorOffloading, and additionally only when we're doing color management
     // on the CRTC, instead of in the shadow buffer
-    if (!m_pipeline->activePending() || m_pipeline->layers().empty() || m_lease || m_needsShadowBuffer) {
+    if (!m_pipeline->activePending() || !m_pipeline->gpu()->atomicModeSetting() || m_pipeline->layers().empty() || m_lease || m_needsShadowBuffer) {
         return false;
     }
     // steady state: the same offload is already applied, don't re-test the commit every frame
