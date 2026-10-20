@@ -160,17 +160,18 @@ void EGLPlatformContext::swapBuffers(QPlatformSurface *surface)
             return;
         }
 
+        const auto currentSlot = std::exchange(m_currentSlot, nullptr);
+        const auto current = std::exchange(m_current, nullptr);
+
         EGLNativeFence fence(EglContext::currentContext()->displayObject());
+        currentSlot->releasePoint()->addReleaseFence(fence.fileDescriptor());
+
         internalWindow->present(InternalWindowFrame{
-            .buffer = m_current->buffer,
+            .buffer = current->buffer,
             .syncFd = fence.takeFileDescriptor(),
-            .bufferDamage = Rect(QPoint(0, 0), m_current->buffer->size()),
+            .bufferDamage = Rect(QPoint(0, 0), current->buffer->size()),
             .bufferTransform = OutputTransform::FlipY,
         });
-
-        m_currentSlot->releasePoint()->addReleaseFence(fence.takeFileDescriptor());
-        m_currentSlot.reset();
-        m_current.reset();
     }
 }
 
