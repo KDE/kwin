@@ -124,7 +124,9 @@ EglContext::~EglContext()
 
 bool EglContext::makeCurrent()
 {
-    if (QOpenGLContext *context = QOpenGLContext::currentContext()) {
+    if (m_failed) {
+        return false;
+    } else if (QOpenGLContext *context = QOpenGLContext::currentContext()) {
         // Workaround to tell Qt that no QOpenGLContext is current
         context->doneCurrent();
     } else if (s_currentContext == this) {
