@@ -388,6 +388,10 @@ void TabBox::setMode(TabBoxMode mode)
     case TabBoxCurrentAppWindowsAlternativeMode:
         m_tabBox->setConfig(m_alternativeCurrentApplicationConfig);
         break;
+    case TabBoxPreviewMode:
+        // Needs custom config, done manually in preview().
+        Q_UNREACHABLE();
+        break;
     }
 }
 
@@ -1095,6 +1099,8 @@ QList<QKeySequence> TabBox::activationShortcut(TabBoxMode mode) const
         return m_cutWalkThroughCurrentAppWindows;
     case TabBoxCurrentAppWindowsAlternativeMode:
         return m_cutWalkThroughCurrentAppWindowsAlternative;
+    case TabBoxPreviewMode:
+        return {};
     }
     return {};
 }
