@@ -9,6 +9,7 @@
 */
 #include "screenshot.h"
 #include "screenshotdbusinterface2.h"
+#include "screenshotdbusinterface3.h"
 
 #include "compositor.h"
 #include "core/output.h"
@@ -41,8 +42,35 @@ static bool shouldFilterWindowFromCapture(Window *window, std::optional<pid_t> p
     return window->excludeFromCapture() || (pidToHide.has_value() && window->pid() == *pidToHide);
 }
 
+std::optional<ScreenShotBuffer> ScreenShotBuffer::allocate(const QSize &size, qreal devicePixelRatio, QImage::Format format)
+{
+    const int bytesPerPixel = 4;
+    const int bytesPerLine = size.width() * bytesPerPixel;
+    const int sizeInBytes = size.height() * bytesPerLine;
+
+    FileDescriptor fd = AnonymousFile::allocate("screenshot", sizeInBytes);
+    if (!fd) {
+        return std::nullopt;
+    }
+
+    MemoryMap memoryMap = MemoryMap(sizeInBytes, PROT_READ | PROT_WRITE, MAP_SHARED, fd.get(), 0);
+    if (!memoryMap.isValid()) {
+        return std::nullopt;
+    }
+
+    return ScreenShotBuffer{
+        .file = std::move(fd),
+        .map = std::move(memoryMap),
+        .size = size,
+        .bytesPerLine = bytesPerLine,
+        .format = format,
+        .devicePixelRatio = devicePixelRatio,
+    };
+}
+
 ScreenShotManager::ScreenShotManager()
     : m_dbusInterface2(new ScreenShotDBusInterface2(this))
+    , m_dbusInterface3(new ScreenShotDBusInterface3(this))
 {
 }
 
@@ -52,7 +80,7 @@ ScreenShotManager::~ScreenShotManager()
 
 // TODO share code with the screencast plugin?
 
-std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, ScreenShotFlags flags, std::optional<pid_t> pidToHide)
+std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(LogicalOutput *screen, ScreenShotFlags flags, std::optional<pid_t> pidToHide)
 {
     RenderDevice *device = Compositor::self()->primaryDevice();
     const auto context = device->eglContext();
@@ -110,16 +138,19 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
         return std::nullopt;
     }
 
+    auto file = ScreenShotBuffer::allocate(offscreenTexture->size(), scale, QImage::Format_RGBX8888);
+    if (!file) {
+        return std::nullopt;
+    }
+
     GLFramebuffer::pushFramebuffer(target.get());
-    QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBX8888);
-    context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
+    context->glReadnPixels(0, 0, offscreenTexture->width(), offscreenTexture->height(), GL_RGBA, GL_UNSIGNED_BYTE, file->map.size(), file->map.data());
     GLFramebuffer::popFramebuffer();
 
-    snapshot.setDevicePixelRatio(scale);
-    return snapshot;
+    return file;
 }
 
-std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, ScreenShotFlags flags, std::optional<pid_t> pidToHide)
+std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(const Rect &area, ScreenShotFlags flags, std::optional<pid_t> pidToHide)
 {
     RenderDevice *device = Compositor::self()->primaryDevice();
     const auto context = device->eglContext();
@@ -180,16 +211,19 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
         return std::nullopt;
     }
 
+    auto file = ScreenShotBuffer::allocate(offscreenTexture->size(), scale, QImage::Format_RGBX8888);
+    if (!file) {
+        return std::nullopt;
+    }
+
     GLFramebuffer::pushFramebuffer(target.get());
-    QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBX8888);
-    context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
+    context->glReadnPixels(0, 0, offscreenTexture->width(), offscreenTexture->height(), GL_RGBA, GL_UNSIGNED_BYTE, file->map.size(), file->map.data());
     GLFramebuffer::popFramebuffer();
 
-    snapshot.setDevicePixelRatio(scale);
-    return snapshot;
+    return file;
 }
 
-std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenShotFlags flags)
+std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(Window *window, ScreenShotFlags flags)
 {
     if (window->excludeFromCapture()) {
         return std::nullopt;
@@ -242,13 +276,16 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
     }
     renderer->endFrame();
 
+    auto file = ScreenShotBuffer::allocate(offscreenTexture->size(), scale, QImage::Format_RGBA8888_Premultiplied);
+    if (!file) {
+        return std::nullopt;
+    }
+
     GLFramebuffer::pushFramebuffer(&offscreenTarget);
-    QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBA8888_Premultiplied);
-    context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
+    context->glReadnPixels(0, 0, offscreenTexture->width(), offscreenTexture->height(), GL_RGBA, GL_UNSIGNED_BYTE, file->map.size(), file->map.data());
     GLFramebuffer::popFramebuffer();
 
-    snapshot.setDevicePixelRatio(scale);
-    return snapshot;
+    return file;
 }
 
 } // namespace KWin

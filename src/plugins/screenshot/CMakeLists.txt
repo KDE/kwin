@@ -2,10 +2,12 @@ set(screenshot_SOURCES
     main.cpp
     screenshot.cpp
     screenshotdbusinterface2.cpp
+    screenshotdbusinterface3.cpp
     screenshotlayer.cpp
 )
 
 qt_add_dbus_adaptor(screenshot_SOURCES org.kde.KWin.ScreenShot2.xml screenshotdbusinterface2.h KWin::ScreenShotDBusInterface2)
+qt_add_dbus_adaptor(screenshot_SOURCES org.kde.KWin.ScreenShot3.xml screenshotdbusinterface3.h KWin::ScreenShotDBusInterface3)
 
 kcoreaddons_add_plugin(screenshot SOURCES ${screenshot_SOURCES} INSTALL_NAMESPACE "kwin/plugins")
 target_link_libraries(screenshot PRIVATE
