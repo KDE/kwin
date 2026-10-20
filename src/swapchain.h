@@ -55,7 +55,7 @@ public:
     bool scanout() const;
 
     std::shared_ptr<SwapchainSlot> acquire();
-    void release(SwapchainSlot *slot, FileDescriptor &&releaseFd);
+    void release(SwapchainSlot *slot, const FileDescriptor &releaseFd);
 
     void resetBufferAge();
 

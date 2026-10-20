@@ -731,7 +731,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
     if (releasePoint) {
         releasePoint->addReleaseFence(*completionFd);
     }
-    m_swapchain->release(m_currentSlot.get(), completionFd->duplicate());
+    m_swapchain->release(m_currentSlot.get(), *completionFd);
     return MultiGpuSwapchain::Ret{
         .buffer = m_currentSlot->buffer(),
         .sync = std::move(*completionFd),

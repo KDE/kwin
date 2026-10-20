@@ -104,7 +104,7 @@ std::shared_ptr<SwapchainSlot> Swapchain::acquire()
     return slot;
 }
 
-void Swapchain::release(SwapchainSlot *released, FileDescriptor &&releaseFd)
+void Swapchain::release(SwapchainSlot *released, const FileDescriptor &releaseFd)
 {
     released->m_releasePoint->addReleaseFence(releaseFd);
     for (const auto &slot : m_slots) {
