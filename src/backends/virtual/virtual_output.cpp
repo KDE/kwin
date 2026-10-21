@@ -51,7 +51,9 @@ std::expected<void, OutputError> VirtualOutput::testPresentation(const std::shar
 std::expected<void, OutputError> VirtualOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
     m_frame = frame;
-    m_vsyncMonitor->arm();
+    if (m_frame) {
+        m_vsyncMonitor->arm(m_frame->targetPageflipTime().time_since_epoch());
+    }
     return {};
 }
 

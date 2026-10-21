@@ -27,7 +27,7 @@ public:
     void setRefreshRate(int refreshRate);
 
 public Q_SLOTS:
-    void arm();
+    void arm(std::chrono::nanoseconds earliestPresentTime);
     void disarm();
 
 Q_SIGNALS:

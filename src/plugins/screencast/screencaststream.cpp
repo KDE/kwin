@@ -527,7 +527,7 @@ void ScreenCastStream::scheduleRecord(Contents contents)
 
     m_pendingContents |= contents;
 
-    m_vsync->arm();
+    m_vsync->arm(std::chrono::steady_clock::now().time_since_epoch());
 }
 
 pw_buffer *ScreenCastStream::dequeueBuffer()
