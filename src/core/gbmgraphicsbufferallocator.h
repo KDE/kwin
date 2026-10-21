@@ -21,7 +21,7 @@ public:
     explicit GbmGraphicsBufferAllocator(DrmDevice *device);
     ~GbmGraphicsBufferAllocator() override;
 
-    GraphicsBuffer *allocate(const GraphicsBufferOptions &options) override;
+    std::expected<GraphicsBuffer *, std::string> allocate(const GraphicsBufferOptions &options) override;
 
 private:
     DrmDevice *const m_device;

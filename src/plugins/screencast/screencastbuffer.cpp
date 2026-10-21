@@ -35,38 +35,36 @@ DmaBufScreenCastBuffer::DmaBufScreenCastBuffer(GraphicsBuffer *buffer, std::shar
 
 DmaBufScreenCastBuffer *DmaBufScreenCastBuffer::create(RenderDevice *renderDevice, pw_buffer *pwBuffer, const GraphicsBufferOptions &options)
 {
-    GraphicsBuffer *buffer = renderDevice->allocator()->allocate(options);
+    auto buffer = renderDevice->allocator()->allocate(options);
     if (!buffer) {
         return nullptr;
     }
+    auto drop = qScopeGuard([&buffer]() {
+        buffer.value()->drop();
+    });
 
-    const DmaBufAttributes *attrs = buffer->dmabufAttributes();
+    const DmaBufAttributes *attrs = buffer.value()->dmabufAttributes();
     if (!attrs) {
-        buffer->drop();
         return nullptr;
     }
 
     const void *syncTimelineMeta = spa_buffer_find_meta_data(pwBuffer->buffer, SPA_META_SyncTimeline, sizeof(spa_meta_sync_timeline));
     if (pwBuffer->buffer->n_datas != uint32_t(attrs->planeCount + (syncTimelineMeta ? 2 : 0))) {
-        buffer->drop();
         return nullptr;
     }
 
     auto context = renderDevice->eglContext();
     if (!context->makeCurrent()) {
-        buffer->drop();
         return nullptr;
     }
 
     auto texture = context->importDmaBufAsTexture(*attrs);
     if (!texture) {
-        buffer->drop();
         return nullptr;
     }
 
     auto framebuffer = std::make_unique<GLFramebuffer>(texture.get());
     if (!framebuffer->valid()) {
-        buffer->drop();
         return nullptr;
     }
 
@@ -89,7 +87,6 @@ DmaBufScreenCastBuffer *DmaBufScreenCastBuffer::create(RenderDevice *renderDevic
         synctimeline = std::make_unique<SyncTimeline>(renderDevice->drmDevice()->fileDescriptor());
         const FileDescriptor &syncobjfd = synctimeline->fileDescriptor();
         if (!syncobjfd.isValid()) {
-            buffer->drop();
             return nullptr;
         }
 
@@ -107,7 +104,8 @@ DmaBufScreenCastBuffer *DmaBufScreenCastBuffer::create(RenderDevice *renderDevic
         releaseData.fd = syncobjfd.get();
     }
 
-    return new DmaBufScreenCastBuffer(buffer, std::move(texture), std::move(framebuffer), std::move(synctimeline));
+    drop.dismiss();
+    return new DmaBufScreenCastBuffer(buffer.value(), std::move(texture), std::move(framebuffer), std::move(synctimeline));
 }
 
 MemFdScreenCastBuffer::MemFdScreenCastBuffer(GraphicsBuffer *buffer, GraphicsBufferView &&view)
@@ -118,10 +116,11 @@ MemFdScreenCastBuffer::MemFdScreenCastBuffer(GraphicsBuffer *buffer, GraphicsBuf
 
 MemFdScreenCastBuffer *MemFdScreenCastBuffer::create(pw_buffer *pwBuffer, const GraphicsBufferOptions &options)
 {
-    GraphicsBuffer *buffer = ShmGraphicsBufferAllocator().allocate(options);
-    if (!buffer) {
+    auto ret = ShmGraphicsBufferAllocator().allocate(options);
+    if (!ret) {
         return nullptr;
     }
+    GraphicsBuffer *buffer = ret.value();
 
     GraphicsBufferView view(buffer, GraphicsBuffer::Read | GraphicsBuffer::Write);
     if (view.isNull()) {

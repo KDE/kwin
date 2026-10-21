@@ -83,18 +83,18 @@ std::shared_ptr<QPainterSwapchainSlot> QPainterSwapchain::acquire()
         }
     }
 
-    GraphicsBuffer *buffer = m_allocator->allocate(GraphicsBufferOptions{
+    auto buffer = m_allocator->allocate(GraphicsBufferOptions{
         .size = m_size,
         .format = m_format,
         .software = true,
         .scanout = m_scanout,
     });
     if (!buffer) {
-        qCWarning(KWIN_CORE) << "Failed to allocate a qpainter swapchain graphics buffer";
+        qCWarning(KWIN_CORE) << "Failed to allocate a qpainter swapchain graphics buffer:" << buffer.error();
         return nullptr;
     }
 
-    auto slot = QPainterSwapchainSlot::create(buffer);
+    auto slot = QPainterSwapchainSlot::create(buffer.value());
     if (!slot) {
         qCWarning(KWIN_CORE) << "Failed to create a qpainter swapchain slot";
         return nullptr;

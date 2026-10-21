@@ -897,7 +897,7 @@ void ScreenCastStream::setCursorMode(ScreencastV1Interface::CursorMode mode)
 
 std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(RenderDevice *device, const QSize &size, quint32 format, const ModifierList &modifiers)
 {
-    GraphicsBuffer *buffer = device->allocator()->allocate(GraphicsBufferOptions{
+    auto buffer = device->allocator()->allocate(GraphicsBufferOptions{
         .size = size,
         .format = format,
         .modifiers = modifiers,
@@ -907,10 +907,10 @@ std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(
         return std::nullopt;
     }
     auto drop = qScopeGuard([&buffer]() {
-        buffer->drop();
+        buffer.value()->drop();
     });
 
-    const DmaBufAttributes *attrs = buffer->dmabufAttributes();
+    const DmaBufAttributes *attrs = buffer.value()->dmabufAttributes();
     if (!attrs) {
         return std::nullopt;
     }

@@ -181,8 +181,10 @@ const struct wl_buffer_interface ShmClientBuffer::implementation = {
 ShmClientBuffer::ShmClientBuffer(ShmPool *pool, ShmAttributes attributes, wl_client *client, uint32_t id)
     : m_shmPool(pool)
     , m_shmAttributes(std::move(attributes))
-    , m_udmabufAttributes(GpuManager::self()->createUdmabuf(&m_shmAttributes))
 {
+    if (auto attrs = GpuManager::self()->createUdmabuf(&m_shmAttributes)) {
+        m_udmabufAttributes = std::move(*attrs);
+    }
     m_shmPool->ref();
     if (m_udmabufAttributes) {
 #if defined(Q_OS_LINUX)

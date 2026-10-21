@@ -119,23 +119,27 @@ UDmabufAllocator::UDmabufAllocator()
 {
 }
 
-GraphicsBuffer *UDmabufAllocator::allocate(const GraphicsBufferOptions &options)
+std::expected<GraphicsBuffer *, std::string> UDmabufAllocator::allocate(const GraphicsBufferOptions &options)
 {
     if (!options.modifiers.contains(DRM_FORMAT_MOD_LINEAR)) {
-        return nullptr;
+        return std::unexpected("udmabuf can't allocate non-linear buffers");
     }
     return allocate(options.format, options.size);
 }
 
-GraphicsBuffer *UDmabufAllocator::allocate(uint32_t format, const QSize &size)
+std::expected<GraphicsBuffer *, std::string> UDmabufAllocator::allocate(uint32_t format, const QSize &size)
 {
 #if HAVE_MEMFD && defined(Q_OS_LINUX)
     if (!GpuManager::self()->udmabuf().isValid()) {
-        return nullptr;
+        return std::unexpected("udmabuf isn't supported");
     }
     auto info = FormatInfo::get(format);
     if (!info) {
-        return nullptr;
+        return std::unexpected(std::format("The format {}{}{}{} has no format info",
+                                           (format >> 24) & 0xFF,
+                                           (format >> 16) & 0xFF,
+                                           (format >> 8) & 0xFF,
+                                           (format >> 0) & 0xFF));
     }
     // padding to 64 pixels is required to work around a crash in llvmpipe:
     // https://gitlab.freedesktop.org/mesa/mesa/-/work_items/16447
@@ -146,23 +150,19 @@ GraphicsBuffer *UDmabufAllocator::allocate(uint32_t format, const QSize &size)
 
     FileDescriptor fd = FileDescriptor(memfd_create("udmabuf", MFD_CLOEXEC | MFD_ALLOW_SEALING));
     if (!fd.isValid()) {
-        qCWarning(KWIN_CORE, "Creating memfd for udmabuf failed!");
-        return nullptr;
+        return std::unexpected(std::format("Creating memfd for udmabuf failed: {}", strerror(errno)));
     }
 
     if (ftruncate(fd.get(), bufferSize) < 0) {
-        qCWarning(KWIN_CORE, "Resizing memfd for udmabuf failed!");
-        return nullptr;
+        return std::unexpected(std::format("Resizing memfd for udmabuf failed: {}", strerror(errno)));
     }
     if (fcntl(fd.get(), F_ADD_SEALS, F_SEAL_SHRINK | F_SEAL_SEAL) != 0) {
-        qCWarning(KWIN_CORE, "Sealing memfd for udmabuf failed!");
-        return nullptr;
+        return std::unexpected(std::format("Sealing memfd for udmabuf failed: {}", strerror(errno)));
     }
 
     MemoryMap memoryMap(stride * size.height(), PROT_READ | PROT_WRITE, MAP_SHARED, fd.get(), 0);
     if (!memoryMap.isValid()) {
-        qCWarning(KWIN_CORE, "Mapping memfd for udmabuf failed!");
-        return nullptr;
+        return std::unexpected(std::format("Mapping memfd for udmabuf failed: {}", strerror(errno)));
     }
 
     ShmAttributes attributes{
@@ -174,12 +174,12 @@ GraphicsBuffer *UDmabufAllocator::allocate(uint32_t format, const QSize &size)
     };
     auto dmabufAttributes = GpuManager::self()->createUdmabuf(&attributes);
     if (!dmabufAttributes) {
-        return nullptr;
+        return std::unexpected(dmabufAttributes.error());
     }
     dmabufAttributes->height = size.height();
     return new UdmabufGraphicsBuffer(std::move(*dmabufAttributes), std::move(memoryMap));
 #else
-    return nullptr;
+    return std::unexpected("udmabuf is only supported on Linux");
 #endif
 }
 

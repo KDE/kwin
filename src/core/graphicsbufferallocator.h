@@ -11,6 +11,7 @@
 
 #include <QList>
 #include <QSize>
+#include <expected>
 
 namespace KWin
 {
@@ -47,7 +48,7 @@ public:
     GraphicsBufferAllocator();
     virtual ~GraphicsBufferAllocator();
 
-    virtual GraphicsBuffer *allocate(const GraphicsBufferOptions &options) = 0;
+    virtual std::expected<GraphicsBuffer *, std::string> allocate(const GraphicsBufferOptions &options) = 0;
 
     static uint64_t align(uint64_t size, uint64_t minimum);
 };

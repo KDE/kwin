@@ -25,7 +25,7 @@
 namespace KWin
 {
 
-static inline std::optional<DmaBufAttributes> dmaBufAttributesForBo(gbm_bo *bo, dev_t deviceId)
+static inline std::expected<DmaBufAttributes, std::string> dmaBufAttributesForBo(gbm_bo *bo, dev_t deviceId)
 {
     DmaBufAttributes attributes;
     attributes.planeCount = gbm_bo_get_plane_count(bo);
@@ -39,8 +39,7 @@ static inline std::optional<DmaBufAttributes> dmaBufAttributesForBo(gbm_bo *bo, 
     for (int i = 0; i < attributes.planeCount; ++i) {
         attributes.fd[i] = FileDescriptor{gbm_bo_get_fd_for_plane(bo, i)};
         if (!attributes.fd[i].isValid()) {
-            qWarning() << "gbm_bo_get_fd_for_plane() failed:" << strerror(errno);
-            return std::nullopt;
+            return std::unexpected(std::format("gbm_bo_get_fd_for_plane() failed: {}", strerror(errno)));
         }
         attributes.offset[i] = gbm_bo_get_offset(bo, i);
         attributes.pitch[i] = gbm_bo_get_stride_for_plane(bo, i);
@@ -52,8 +51,7 @@ static inline std::optional<DmaBufAttributes> dmaBufAttributesForBo(gbm_bo *bo, 
 
     attributes.fd[0] = FileDescriptor{gbm_bo_get_fd(bo)};
     if (!attributes.fd[0].isValid()) {
-        qWarning() << "gbm_bo_get_fd() failed:" << strerror(errno);
-        return std::nullopt;
+        return std::unexpected(std::format("gbm_bo_get_fd() failed: {}", strerror(errno)));
     }
     attributes.offset[0] = gbm_bo_get_offset(bo, 0);
     attributes.pitch[0] = gbm_bo_get_stride_for_plane(bo, 0);
@@ -119,10 +117,10 @@ GbmGraphicsBufferAllocator::~GbmGraphicsBufferAllocator()
 {
 }
 
-static GraphicsBuffer *allocateDumb(gbm_device *device, dev_t deviceId, const GraphicsBufferOptions &options)
+static std::expected<GraphicsBuffer *, std::string> allocateDumb(gbm_device *device, dev_t deviceId, const GraphicsBufferOptions &options)
 {
     if (!options.modifiers.empty()) {
-        return nullptr;
+        return std::unexpected(std::format("dumb buffers can't support modifiers"));
     }
 
     drm_mode_create_dumb createArgs{
@@ -131,18 +129,16 @@ static GraphicsBuffer *allocateDumb(gbm_device *device, dev_t deviceId, const Gr
         .bpp = 32,
     };
     if (drmIoctl(gbm_device_get_fd(device), DRM_IOCTL_MODE_CREATE_DUMB, &createArgs) != 0) {
-        qCWarning(KWIN_CORE) << "DRM_IOCTL_MODE_CREATE_DUMB failed:" << strerror(errno);
-        return nullptr;
+        return std::unexpected(std::format("DRM_IOCTL_MODE_CREATE_DUMB failed: {}", strerror(errno)));
     }
 
     int primeFd;
     if (drmPrimeHandleToFD(gbm_device_get_fd(device), createArgs.handle, DRM_CLOEXEC, &primeFd) != 0) {
-        qCWarning(KWIN_CORE) << "drmPrimeHandleToFD() failed:" << strerror(errno);
         drm_mode_destroy_dumb destroyArgs{
             .handle = createArgs.handle,
         };
         drmIoctl(gbm_device_get_fd(device), DRM_IOCTL_MODE_DESTROY_DUMB, &destroyArgs);
-        return nullptr;
+        return std::unexpected(std::format("drmPrimeHandleToFD() failed: {}", strerror(errno)));
     }
 
     return new DumbGraphicsBuffer(gbm_device_get_fd(device), createArgs.handle, DmaBufAttributes{
@@ -158,7 +154,7 @@ static GraphicsBuffer *allocateDumb(gbm_device *device, dev_t deviceId, const Gr
                                                                                 });
 }
 
-static GraphicsBuffer *allocateDmaBuf(gbm_device *device, dev_t deviceId, const GraphicsBufferOptions &options)
+static std::expected<GraphicsBuffer *, std::string> allocateDmaBuf(gbm_device *device, dev_t deviceId, const GraphicsBufferOptions &options)
 {
     uint32_t flags = 0;
     if (options.render) {
@@ -176,10 +172,10 @@ static GraphicsBuffer *allocateDmaBuf(gbm_device *device, dev_t deviceId, const 
                                                    options.modifiers.size(),
                                                    flags);
         if (bo) {
-            std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo, deviceId);
+            auto attributes = dmaBufAttributesForBo(bo, deviceId);
             gbm_bo_destroy(bo);
             if (!attributes.has_value()) {
-                return nullptr;
+                return std::unexpected(attributes.error());
             }
             return new GbmGraphicsBuffer(std::move(attributes.value()));
         }
@@ -188,7 +184,7 @@ static GraphicsBuffer *allocateDmaBuf(gbm_device *device, dev_t deviceId, const 
     if (options.modifiers.size() == 1 && options.modifiers.front() == DRM_FORMAT_MOD_LINEAR) {
         flags |= GBM_BO_USE_LINEAR;
     } else if (!options.modifiers.empty() && !options.modifiers.contains(DRM_FORMAT_MOD_INVALID)) {
-        return nullptr;
+        return std::unexpected("Can't allocate non-invalid and non-linear modifiers with gbm_bo_create");
     }
 
     gbm_bo *bo = gbm_bo_create(device,
@@ -197,10 +193,10 @@ static GraphicsBuffer *allocateDmaBuf(gbm_device *device, dev_t deviceId, const 
                                options.format,
                                flags);
     if (bo) {
-        std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo, deviceId);
+        auto attributes = dmaBufAttributesForBo(bo, deviceId);
         gbm_bo_destroy(bo);
         if (!attributes.has_value()) {
-            return nullptr;
+            return std::unexpected(attributes.error());
         }
         if (flags & GBM_BO_USE_LINEAR) {
             attributes->modifier = DRM_FORMAT_MOD_LINEAR;
@@ -210,10 +206,10 @@ static GraphicsBuffer *allocateDmaBuf(gbm_device *device, dev_t deviceId, const 
         return new GbmGraphicsBuffer(std::move(attributes.value()));
     }
 
-    return nullptr;
+    return std::unexpected(std::format("gbm_bo_create with flags 0x{:x} failed: {}", flags, strerror(errno)));
 }
 
-GraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
+std::expected<GraphicsBuffer *, std::string> GbmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
 {
     if (options.software) {
         if (!options.scanout) {

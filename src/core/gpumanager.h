@@ -12,6 +12,7 @@
 #include "renderdevice.h"
 #include "utils/filedescriptor.h"
 
+#include <expected>
 #include <sys/types.h>
 #include <xf86drm.h>
 
@@ -57,7 +58,7 @@ public:
      *      the exact same memory as the shm buffer. Synchronization of
      *      both CPU and GPU side accesses is up to the importer!
      */
-    std::optional<DmaBufAttributes> createUdmabuf(const ShmAttributes *attributes) const;
+    std::expected<DmaBufAttributes, std::string> createUdmabuf(const ShmAttributes *attributes) const;
     const FileDescriptor &udmabuf() const;
 
     void addDevice(std::unique_ptr<RenderDevice> &&kmsSoftwareDevice);

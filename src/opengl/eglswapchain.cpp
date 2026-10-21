@@ -142,13 +142,13 @@ std::shared_ptr<EglSwapchainSlot> EglSwapchain::acquire()
         return *it;
     }
 
-    GraphicsBuffer *buffer = m_allocator->allocate(m_options);
+    auto buffer = m_allocator->allocate(m_options);
     if (!buffer) {
-        qCWarning(KWIN_OPENGL) << "Failed to allocate an egl gbm swapchain graphics buffer";
+        qCWarning(KWIN_OPENGL) << "Failed to allocate an egl gbm swapchain graphics buffer" << buffer.error();
         return nullptr;
     }
 
-    auto slot = EglSwapchainSlot::create(m_context, buffer);
+    auto slot = EglSwapchainSlot::create(m_context, buffer.value());
     if (!slot) {
         return nullptr;
     }
@@ -191,15 +191,16 @@ std::shared_ptr<EglSwapchain> EglSwapchain::create(GraphicsBufferAllocator *allo
     }
 
     // The seed graphics buffer is used to fixate modifiers.
-    GraphicsBuffer *seed = allocator->allocate(options);
+    auto seed = allocator->allocate(options);
     if (!seed) {
+        qCWarning(KWIN_OPENGL) << "Failed to allocate an egl gbm swapchain graphics buffer" << seed.error();
         return nullptr;
     }
-    const auto first = EglSwapchainSlot::create(context, seed);
+    const auto first = EglSwapchainSlot::create(context, seed.value());
     if (!first) {
         return nullptr;
     }
-    options.modifiers = {seed->dmabufAttributes()->modifier};
+    options.modifiers = {seed.value()->dmabufAttributes()->modifier};
     return std::make_shared<EglSwapchain>(std::move(allocator),
                                           context,
                                           options,

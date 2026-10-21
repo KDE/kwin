@@ -95,13 +95,13 @@ uint32_t ShmGraphicsBuffer::pitch() const
     return m_attributes.stride;
 }
 
-GraphicsBuffer *ShmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
+std::expected<GraphicsBuffer *, std::string> ShmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
 {
     if (!options.software) {
-        return nullptr;
+        return std::unexpected("can't allocate a non-software buffer with shm");
     }
     if (!options.modifiers.empty() && !options.modifiers.contains(DRM_FORMAT_MOD_LINEAR)) {
-        return nullptr;
+        return std::unexpected("can't allocate non-linear buffers with shm");
     }
 
     switch (options.format) {
@@ -109,7 +109,11 @@ GraphicsBuffer *ShmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions
     case DRM_FORMAT_XRGB8888:
         break;
     default:
-        return nullptr;
+        return std::unexpected(std::format("shm allocator doesn't support requested format {}{}{}{}",
+                                           (options.format >> 24) & 0xFF,
+                                           (options.format >> 16) & 0xFF,
+                                           (options.format >> 8) & 0xFF,
+                                           (options.format >> 0) & 0xFF));
     }
 
     const int stride = options.size.width() * 4;
@@ -118,11 +122,11 @@ GraphicsBuffer *ShmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions
 #if HAVE_MEMFD
     FileDescriptor fd = FileDescriptor(memfd_create("shm", MFD_CLOEXEC | MFD_ALLOW_SEALING));
     if (!fd.isValid()) {
-        return nullptr;
+        return std::unexpected(std::format("memfd_create failed: {}", strerror(errno)));
     }
 
     if (ftruncate(fd.get(), bufferSize) < 0) {
-        return nullptr;
+        return std::unexpected(std::format("ftruncate failed: {}", strerror(errno)));
     }
 
     fcntl(fd.get(), F_ADD_SEALS, F_SEAL_SHRINK | F_SEAL_GROW | F_SEAL_SEAL);
@@ -130,17 +134,17 @@ GraphicsBuffer *ShmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions
     char templateName[] = "/tmp/kwin-shm-XXXXXX";
     FileDescriptor fd{mkstemp(templateName)};
     if (!fd.isValid()) {
-        return nullptr;
+        return std::unexpected(std::format("mkstemp failed: {}", strerror(errno)));
     }
 
     unlink(templateName);
     int flags = fcntl(fd.get(), F_GETFD);
     if (flags == -1 || fcntl(fd.get(), F_SETFD, flags | FD_CLOEXEC) == -1) {
-        return nullptr;
+        return std::unexpected(std::format("fnctl failed: {}", strerror(errno)));
     }
 
     if (ftruncate(fd.get(), bufferSize) < 0) {
-        return nullptr;
+        return std::unexpected(std::format("ftruncate failed: {}", strerror(errno)));
     }
 #endif
 
@@ -154,7 +158,7 @@ GraphicsBuffer *ShmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions
 
     MemoryMap memoryMap(attributes.stride * attributes.size.height(), PROT_READ | PROT_WRITE, MAP_SHARED, attributes.fd.get(), attributes.offset);
     if (!memoryMap.isValid()) {
-        return nullptr;
+        return std::unexpected(std::format("couldn't map shm buffer: {}", strerror(errno)));
     }
 
     return new ShmGraphicsBuffer(std::move(attributes), std::move(memoryMap));

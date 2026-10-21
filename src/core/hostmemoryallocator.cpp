@@ -67,20 +67,24 @@ HostMemoryGraphicsBufferAllocator::HostMemoryGraphicsBufferAllocator(size_t alig
 {
 }
 
-GraphicsBuffer *HostMemoryGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
+std::expected<GraphicsBuffer *, std::string> HostMemoryGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
 {
     if (!options.modifiers.contains(DRM_FORMAT_MOD_LINEAR)) {
-        return nullptr;
+        return std::unexpected("host memory can't support non-linear modifiers");
     }
     const auto info = FormatInfo::get(options.format);
     if (!info) {
-        return nullptr;
+        return std::unexpected(std::format("The format {}{}{}{} has no format info",
+                                           (options.format >> 24) & 0xFF,
+                                           (options.format >> 16) & 0xFF,
+                                           (options.format >> 8) & 0xFF,
+                                           (options.format >> 0) & 0xFF));
     }
     const uint32_t stride = options.size.width() * info->bitsPerPixel / 8;
     const size_t size = align(stride * options.size.height(), m_alignment);
     std::unique_ptr<std::byte[]> data(new (std::align_val_t(m_alignment)) std::byte[size]());
     if (!data) {
-        return nullptr;
+        return std::unexpected("host memory allocation failed");
     }
     return new HostMemoryBuffer(HostMemoryAttributes{
         .data = std::move(data),

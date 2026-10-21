@@ -93,13 +93,13 @@ std::shared_ptr<SwapchainSlot> Swapchain::acquire()
         }
     }
 
-    GraphicsBuffer *buffer = m_allocator->allocate(m_options);
+    auto buffer = m_allocator->allocate(m_options);
     if (!buffer) {
-        qCWarning(KWIN_CORE) << "Failed to allocate a swapchain buffer";
+        qCWarning(KWIN_CORE) << "Failed to allocate a swapchain buffer:" << buffer.error();
         return nullptr;
     }
 
-    auto slot = std::make_shared<SwapchainSlot>(buffer);
+    auto slot = std::make_shared<SwapchainSlot>(buffer.value());
     m_slots.push_back(slot);
     return slot;
 }
@@ -125,13 +125,13 @@ void Swapchain::resetBufferAge()
 
 std::unique_ptr<Swapchain> Swapchain::create(GraphicsBufferAllocator *allocator, GraphicsBufferOptions options)
 {
-    GraphicsBuffer *buffer = allocator->allocate(options);
+    auto buffer = allocator->allocate(options);
     if (!buffer) {
-        qCWarning(KWIN_CORE) << "Failed to allocate a graphics buffer for a swapchain";
+        qCWarning(KWIN_CORE) << "Failed to allocate a graphics buffer for a swapchain:" << buffer.error();
         return nullptr;
     }
-    options.modifiers = {buffer->modifier()};
-    auto slot = std::make_shared<SwapchainSlot>(buffer);
+    options.modifiers = {buffer.value()->modifier()};
+    auto slot = std::make_shared<SwapchainSlot>(buffer.value());
     return std::make_unique<Swapchain>(allocator, options, std::move(slot));
 }
 
