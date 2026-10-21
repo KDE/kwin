@@ -59,7 +59,7 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const std
         m_A.reset();
         return false;
     }
-    if (m_profile != profile || *m_inputColor != *inputColor || m_intent != intent) {
+    if (m_profile != profile || m_inputColor != inputColor || m_intent != intent) {
         const auto vcgt = profile->vcgt();
         QMatrix4x4 toXYZD50;
         std::unique_ptr<GlLookUpTable> B;

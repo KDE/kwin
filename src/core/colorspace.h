@@ -317,14 +317,14 @@ private:
     EncodingRange m_range = EncodingRange::Full;
 };
 
-}
-
-inline bool operator==(const std::shared_ptr<KWin::ColorDescription> &left, const std::shared_ptr<KWin::ColorDescription> &right)
+inline bool operator==(const std::shared_ptr<ColorDescription> &left, const std::shared_ptr<ColorDescription> &right)
 {
     if (!left || !right) {
         return left.get() == right.get();
     }
     return left.get() == right.get() || *left == *right;
+}
+
 }
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::TransferFunction &tf);
