@@ -1889,9 +1889,19 @@ QString Workspace::supportInformation() const
         support.append(m_decorationBridge->supportInformation());
         support.append(QStringLiteral("\n"));
     }
-    support.append(QStringLiteral("LogicalOutput backend\n"));
+    support.append(QStringLiteral("Output backend\n"));
     support.append(QStringLiteral("==============\n"));
     support.append(kwinApp()->outputBackend()->supportInformation());
+    support.append(QStringLiteral("\n"));
+
+    support.append(QStringLiteral("Environment variables\n"));
+    support.append(QStringLiteral("=====================\n"));
+    const QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
+    for (const QString &key : environment.keys()) {
+        if (key.contains("KWIN")) {
+            support.append(key + '=' + environment.value(key) + '\n');
+        }
+    }
     support.append(QStringLiteral("\n"));
 
     const Cursor *cursor = Cursors::self()->mouse();
