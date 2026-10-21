@@ -17,6 +17,7 @@
 #endif
 #include "input_event.h"
 #include "inputmethod.h"
+#include "wayland-client/fifo.h"
 #include "wayland-client/linuxdmabuf.h"
 #include "wayland-client/viewporter.h"
 #include "wayland-linux-dmabuf-v1-client-protocol.h"
@@ -552,8 +553,8 @@ std::unique_ptr<Connection> Connection::setup(int socket, AdditionalWaylandInter
             }
         }
         if (flags & AdditionalWaylandInterface::FifoV1) {
-            if (interface == wp_fifo_manager_v1_interface.name) {
-                c->fifoManager = std::make_unique<FifoManagerV1>(*c->registry, name, version);
+            if (interface == WaylandClient::FifoManagerV1::s_interfaceName) {
+                c->fifoManager = std::make_unique<WaylandClient::FifoManagerV1>(*c->registry, name, version);
             }
         }
         if (interface == wp_presentation_interface.name) {
@@ -932,7 +933,7 @@ ColorManagerV1 *colorManager()
     return s_waylandConnection->colorManager.get();
 }
 
-FifoManagerV1 *fifoManager()
+WaylandClient::FifoManagerV1 *fifoManager()
 {
     return s_waylandConnection->fifoManager.get();
 }
@@ -2055,16 +2056,6 @@ TearingControlV1::TearingControlV1(::wp_tearing_control_v1 *object)
 TearingControlV1::~TearingControlV1()
 {
     destroy();
-}
-
-FifoManagerV1::FifoManagerV1(::wl_registry *registry, uint32_t id, int version)
-    : QtWayland::wp_fifo_manager_v1(registry, id, version)
-{
-}
-
-FifoManagerV1::~FifoManagerV1()
-{
-    wp_fifo_manager_v1_destroy(object());
 }
 
 PresentationTime::PresentationTime(::wl_registry *registry, uint32_t id, int version)

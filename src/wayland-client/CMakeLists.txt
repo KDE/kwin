@@ -1,4 +1,5 @@
 target_sources(kwin PRIVATE
+    fifo.cpp
     linuxdmabuf.cpp
     viewporter.cpp
 )

@@ -32,7 +32,6 @@
 #include "qwayland-commit-timing-v1.h"
 #include "qwayland-cursor-shape-v1.h"
 #include "qwayland-fake-input.h"
-#include "qwayland-fifo-v1.h"
 #include "qwayland-fractional-scale-v1.h"
 #include "qwayland-idle-inhibit-unstable-v1.h"
 #include "qwayland-input-method-unstable-v1.h"
@@ -104,6 +103,7 @@ namespace WaylandClient
 
 class LinuxDmabufV1;
 class Viewporter;
+class FifoManagerV1;
 
 }
 
@@ -916,13 +916,6 @@ public:
     ~ColorManagerV1() override;
 };
 
-class FifoManagerV1 : public QtWayland::wp_fifo_manager_v1
-{
-public:
-    explicit FifoManagerV1(::wl_registry *registry, uint32_t id, int version);
-    ~FifoManagerV1() override;
-};
-
 class PresentationTime : public QtWayland::wp_presentation
 {
 public:
@@ -1253,7 +1246,7 @@ struct Connection
     SecurityContextManagerV1 *securityContextManagerV1 = nullptr;
     XdgWmDialogV1 *xdgWmDialogV1;
     std::unique_ptr<ColorManagerV1> colorManager;
-    std::unique_ptr<FifoManagerV1> fifoManager;
+    std::unique_ptr<WaylandClient::FifoManagerV1> fifoManager;
     std::unique_ptr<PresentationTime> presentationTime;
     std::unique_ptr<XdgActivation> xdgActivation;
     std::unique_ptr<XdgSessionManagerV1> sessionManager;
@@ -1339,7 +1332,7 @@ QList<WaylandOutputDeviceV2 *> waylandOutputDevicesV2();
 FakeInput *waylandFakeInput();
 SecurityContextManagerV1 *waylandSecurityContextManagerV1();
 ColorManagerV1 *colorManager();
-FifoManagerV1 *fifoManager();
+WaylandClient::FifoManagerV1 *fifoManager();
 PresentationTime *presentationTime();
 XdgActivation *xdgActivation();
 WpTabletManagerV2 *tabletManager();

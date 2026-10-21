@@ -13,6 +13,7 @@
 #include "outputconfigurationstore.h"
 #include "pointer_input.h"
 #include "tiles/tilemanager.h"
+#include "wayland-client/fifo.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -54,22 +55,6 @@ private Q_SLOTS:
     void testFifoWithExplicitReset();
     void testFifoCommitTiming();
     void testCommitTiming();
-};
-
-class FifoV1Surface : public QObject, public QtWayland::wp_fifo_v1
-{
-    Q_OBJECT
-
-public:
-    explicit FifoV1Surface(::wp_fifo_v1 *obj)
-        : QtWayland::wp_fifo_v1(obj)
-    {
-    }
-
-    ~FifoV1Surface() override
-    {
-        wp_fifo_v1_destroy(object());
-    }
 };
 
 class CommitTimerV1 : public QtWayland::wp_commit_timer_v1
@@ -142,7 +127,7 @@ void FifoTest::testFifo()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
 
-    auto fifo = std::make_unique<FifoV1Surface>(Test::fifoManager()->get_fifo(*surface));
+    auto fifo = Test::fifoManager()->createFifo(*surface);
 
     std::array<std::unique_ptr<Test::WpPresentationFeedback>, 3> frames;
 
@@ -163,12 +148,12 @@ void FifoTest::testFifo()
     }
 
     // do it again; this time with fifo, all frames should be presented
-    fifo->set_barrier();
+    fifo->setBarrier();
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     for (auto &frame : frames) {
         frame = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
-        fifo->set_barrier();
-        fifo->wait_barrier();
+        fifo->setBarrier();
+        fifo->waitBarrier();
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
 
@@ -200,13 +185,13 @@ void FifoTest::testFifo()
 
     for (auto &frame : frames) {
         frame = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
-        fifo->set_barrier();
-        fifo->wait_barrier();
+        fifo->setBarrier();
+        fifo->waitBarrier();
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
     // another commit, so that the last one will be discarded as well
-    fifo->set_barrier();
-    fifo->wait_barrier();
+    fifo->setBarrier();
+    fifo->waitBarrier();
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     {
@@ -237,19 +222,19 @@ void FifoTest::testFifoInitiallyHidden()
     QVERIFY(window);
     window->setMinimized(true);
 
-    auto fifo = std::make_unique<FifoV1Surface>(Test::fifoManager()->get_fifo(*surface));
+    auto fifo = Test::fifoManager()->createFifo(*surface);
 
     std::array<std::unique_ptr<Test::WpPresentationFeedback>, 3> frames;
 
     for (auto &frame : frames) {
         frame = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
-        fifo->set_barrier();
-        fifo->wait_barrier();
+        fifo->setBarrier();
+        fifo->waitBarrier();
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
     // another commit, so that the last one will be discarded as well
-    fifo->set_barrier();
-    fifo->wait_barrier();
+    fifo->setBarrier();
+    fifo->waitBarrier();
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     {
@@ -278,17 +263,17 @@ void FifoTest::testFifoBarriersOnly()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
 
-    auto fifo = std::make_unique<FifoV1Surface>(Test::fifoManager()->get_fifo(*surface));
+    auto fifo = Test::fifoManager()->createFifo(*surface);
 
     std::array<std::unique_ptr<Test::WpPresentationFeedback>, 3> frames;
 
     for (auto &frame : frames) {
         frame = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
-        fifo->set_barrier();
+        fifo->setBarrier();
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
     // another commit, so that the last one will be discarded as well
-    fifo->set_barrier();
+    fifo->setBarrier();
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     {
@@ -313,17 +298,17 @@ void FifoTest::testFifoWaitOnly()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
 
-    auto fifo = std::make_unique<FifoV1Surface>(Test::fifoManager()->get_fifo(*surface));
+    auto fifo = Test::fifoManager()->createFifo(*surface);
 
     std::array<std::unique_ptr<Test::WpPresentationFeedback>, 3> frames;
 
     for (auto &frame : frames) {
         frame = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
-        fifo->wait_barrier();
+        fifo->waitBarrier();
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
     // another commit, so that the last one will be discarded as well
-    fifo->wait_barrier();
+    fifo->waitBarrier();
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     {
@@ -359,20 +344,20 @@ void FifoTest::testFifoOnSubsurfaces()
     auto subsurface = Test::createSubSurface(surface.get(), parentSurface.get());
     Test::render(surface.get(), QSize(100, 50), Qt::red);
 
-    auto fifo = std::make_unique<FifoV1Surface>(Test::fifoManager()->get_fifo(*surface));
+    auto fifo = Test::fifoManager()->createFifo(*surface);
     std::array<std::unique_ptr<Test::WpPresentationFeedback>, 3> frames;
 
     // when the surface is desync, fifo should work like on a toplevel surface
     subsurface->setMode(KWayland::Client::SubSurface::Mode::Desynchronized);
     for (auto &frame : frames) {
         frame = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
-        fifo->set_barrier();
-        fifo->wait_barrier();
+        fifo->setBarrier();
+        fifo->waitBarrier();
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
     // another commit, so that the last one will be discarded as well
-    fifo->set_barrier();
-    fifo->wait_barrier();
+    fifo->setBarrier();
+    fifo->waitBarrier();
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     {
@@ -390,13 +375,13 @@ void FifoTest::testFifoOnSubsurfaces()
     subsurface->setMode(KWayland::Client::SubSurface::Mode::Synchronized);
     for (auto &frame : frames) {
         frame = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
-        fifo->set_barrier();
-        fifo->wait_barrier();
+        fifo->setBarrier();
+        fifo->waitBarrier();
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
     // another commit, so that the last one will be discarded as well
-    fifo->set_barrier();
-    fifo->wait_barrier();
+    fifo->setBarrier();
+    fifo->waitBarrier();
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     {
@@ -418,11 +403,11 @@ void FifoTest::testBarrierNotClearedByEmptyCommit()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
 
-    auto fifo = std::make_unique<FifoV1Surface>(Test::fifoManager()->get_fifo(*surface));
+    auto fifo = Test::fifoManager()->createFifo(*surface);
 
     std::array<std::unique_ptr<Test::WpPresentationFeedback>, 2> frames;
 
-    fifo->set_barrier();
+    fifo->setBarrier();
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // this additional commit must not clear the barrier
@@ -430,7 +415,7 @@ void FifoTest::testBarrierNotClearedByEmptyCommit()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     auto secondFrame = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
-    fifo->wait_barrier();
+    fifo->waitBarrier();
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     QSignalSpy firstSpy(firstFrame.get(), &Test::WpPresentationFeedback::presented);
@@ -454,13 +439,13 @@ void FifoTest::testFifoOnUnmappedSurface()
 
     Test::XdgToplevelWindow window;
 
-    auto fifo = std::make_unique<FifoV1Surface>(Test::fifoManager()->get_fifo(*window.m_surface));
+    auto fifo = Test::fifoManager()->createFifo(*window.m_surface);
     auto timer = std::make_unique<CommitTimerV1>(Test::connection()->commitTiming->get_timer(*window.m_surface));
 
     std::array<std::unique_ptr<Test::WpPresentationFeedback>, 3> frames;
     for (size_t i = 0; i < frames.size(); i++) {
-        fifo->set_barrier();
-        fifo->wait_barrier();
+        fifo->setBarrier();
+        fifo->waitBarrier();
         timer->setTimestamp(std::chrono::steady_clock::now().time_since_epoch() + 50ms);
         frames[i] = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*window.m_surface));
         window.m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -505,11 +490,11 @@ void FifoTest::testFifoOnSubsurfaceOfUnmappedToplevel()
 
     Test::render(surface.get(), QSize(100, 100), Qt::blue);
 
-    auto fifo = std::make_unique<FifoV1Surface>(Test::fifoManager()->get_fifo(*surface));
+    auto fifo = Test::fifoManager()->createFifo(*surface);
     auto timer = std::make_unique<CommitTimerV1>(Test::connection()->commitTiming->get_timer(*surface));
     for (size_t i = 0; i < frames.size(); i++) {
-        fifo->set_barrier();
-        fifo->wait_barrier();
+        fifo->setBarrier();
+        fifo->waitBarrier();
         timer->setTimestamp(std::chrono::steady_clock::now().time_since_epoch() + 50ms);
         frames[i] = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -550,10 +535,10 @@ void FifoTest::testFifoOnSubsurfaceOfUnmappedSubsurface()
 
     Test::render(surface.get(), QSize(100, 100), Qt::blue);
 
-    auto fifo = std::make_unique<FifoV1Surface>(Test::fifoManager()->get_fifo(*surface));
+    auto fifo = Test::fifoManager()->createFifo(*surface);
     for (size_t i = 0; i < frames.size(); i++) {
-        fifo->set_barrier();
-        fifo->wait_barrier();
+        fifo->setBarrier();
+        fifo->waitBarrier();
         frames[i] = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
@@ -587,16 +572,16 @@ void FifoTest::testFifoOnSubsurfaceOfUnmappedSubsurfaceInitiallyMapped()
 
     Test::render(surface.get(), QSize(100, 100), Qt::blue);
 
-    auto fifo = std::make_unique<FifoV1Surface>(Test::fifoManager()->get_fifo(*surface));
+    auto fifo = Test::fifoManager()->createFifo(*surface);
     // queue some commits
     for (size_t i = 0; i < frames.size(); i++) {
-        fifo->set_barrier();
-        fifo->wait_barrier();
+        fifo->setBarrier();
+        fifo->waitBarrier();
         frames[i] = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
-    fifo->set_barrier();
-    fifo->wait_barrier();
+    fifo->setBarrier();
+    fifo->waitBarrier();
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // and unmap the parent surface
@@ -630,19 +615,19 @@ void FifoTest::testFifoWithExplicitReset()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
 
-    auto fifo = std::make_unique<FifoV1Surface>(Test::fifoManager()->get_fifo(*surface));
+    auto fifo = Test::fifoManager()->createFifo(*surface);
     auto timer = std::make_unique<CommitTimerV1>(Test::connection()->commitTiming->get_timer(*surface));
 
     std::array<std::unique_ptr<Test::WpPresentationFeedback>, 2> frames;
     for (int i = 0; i < 2; i++) {
         frames[i] = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
-        fifo->set_barrier();
-        fifo->wait_barrier();
+        fifo->setBarrier();
+        fifo->waitBarrier();
         timer->setTimestamp(std::chrono::steady_clock::now().time_since_epoch() + 50ms);
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
-    fifo->set_barrier();
-    fifo->wait_barrier();
+    fifo->setBarrier();
+    fifo->waitBarrier();
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     if (destroyShellFirst) {
@@ -671,7 +656,7 @@ void FifoTest::testFifoCommitTiming()
     Test::XdgToplevelWindow window;
     QVERIFY(window.show());
 
-    auto fifo = std::make_unique<FifoV1Surface>(Test::fifoManager()->get_fifo(*window.m_surface));
+    auto fifo = Test::fifoManager()->createFifo(*window.m_surface);
     auto timer = std::make_unique<CommitTimerV1>(Test::connection()->commitTiming->get_timer(*window.m_surface));
 
     std::deque<std::unique_ptr<Test::WpPresentationFeedback>> frames;
@@ -698,13 +683,13 @@ void FifoTest::testFifoCommitTiming()
         }
 
         frames.push_back(std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*window.m_surface)));
-        fifo->set_barrier();
-        fifo->wait_barrier();
+        fifo->setBarrier();
+        fifo->waitBarrier();
         timer->setTimestamp(lastTarget + refreshDuration - 500us);
         lastTarget += refreshDuration;
         window.commit();
 
-        fifo->wait_barrier();
+        fifo->waitBarrier();
         window.commit();
     }
 }
