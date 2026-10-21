@@ -328,14 +328,14 @@ static uint64_t align(uint64_t size, uint64_t minimum)
     }
 }
 
-std::optional<DmaBufAttributes> GpuManager::createUdmabuf(const ShmAttributes *attributes) const
+std::expected<DmaBufAttributes, std::string> GpuManager::createUdmabuf(const ShmAttributes *attributes) const
 {
 #if defined(Q_OS_LINUX)
     if (!m_udmabuf.isValid() || !m_udmabufDevId) {
-        return std::nullopt;
+        return std::unexpected("udmabuf isn't supported");
     }
     if (attributes->offset % getpagesize() != 0) {
-        return std::nullopt;
+        return std::unexpected("can't createa a udmabuf that isn't aligned to pages");
     }
     struct udmabuf_create create{
         .memfd = uint32_t(attributes->fd.get()),
@@ -345,8 +345,7 @@ std::optional<DmaBufAttributes> GpuManager::createUdmabuf(const ShmAttributes *a
     };
     int dmabufFd = ioctl(m_udmabuf.get(), UDMABUF_CREATE, &create);
     if (dmabufFd < 0) {
-        qCDebug(KWIN_CORE, "Could not create udmabuf: %s", strerror(errno));
-        return std::nullopt;
+        return std::unexpected(std::format("Could not create udmabuf: {}", strerror(errno)));
     }
 
     DmaBufAttributes ret;
@@ -363,7 +362,7 @@ std::optional<DmaBufAttributes> GpuManager::createUdmabuf(const ShmAttributes *a
     ret.pitch[0] = attributes->stride;
     return ret;
 #else
-    return std::nullopt;
+    return std::unexpected("udmabuf is only supported on Linux");
 #endif
 }
 

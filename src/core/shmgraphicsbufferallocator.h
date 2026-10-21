@@ -14,7 +14,7 @@ namespace KWin
 class KWIN_EXPORT ShmGraphicsBufferAllocator : public GraphicsBufferAllocator
 {
 public:
-    GraphicsBuffer *allocate(const GraphicsBufferOptions &options) override;
+    std::expected<GraphicsBuffer *, std::string> allocate(const GraphicsBufferOptions &options) override;
 };
 
 } // namespace KWin

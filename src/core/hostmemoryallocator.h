@@ -14,7 +14,7 @@ class KWIN_EXPORT HostMemoryGraphicsBufferAllocator : public GraphicsBufferAlloc
 public:
     explicit HostMemoryGraphicsBufferAllocator(size_t alignment);
 
-    GraphicsBuffer *allocate(const GraphicsBufferOptions &options) override;
+    std::expected<GraphicsBuffer *, std::string> allocate(const GraphicsBufferOptions &options) override;
 
 private:
     const size_t m_alignment;

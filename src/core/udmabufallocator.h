@@ -15,9 +15,9 @@ class KWIN_EXPORT UDmabufAllocator : public GraphicsBufferAllocator
 public:
     explicit UDmabufAllocator();
 
-    GraphicsBuffer *allocate(const GraphicsBufferOptions &options) override;
+    std::expected<GraphicsBuffer *, std::string> allocate(const GraphicsBufferOptions &options) override;
 
-    static GraphicsBuffer *allocate(uint32_t format, const QSize &size);
+    static std::expected<GraphicsBuffer *, std::string> allocate(uint32_t format, const QSize &size);
 };
 
 }

@@ -101,7 +101,7 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(LogicalOutput 
     }
     const QSize nativeSize = (screen->geometryF().size() * scale).toSize();
 
-    GraphicsBuffer *buffer = device->allocator()->allocate(GraphicsBufferOptions{
+    auto buffer = device->allocator()->allocate(GraphicsBufferOptions{
         .size = nativeSize,
         .format = DRM_FORMAT_XRGB8888,
         .modifiers = backend->supportedFormats()[DRM_FORMAT_XRGB8888],
@@ -113,10 +113,10 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(LogicalOutput 
         return std::nullopt;
     }
     auto dropBuffer = qScopeGuard([buffer]() {
-        buffer->drop();
+        (*buffer)->drop();
     });
 
-    ScreenshotLayer layer(screen, buffer);
+    ScreenshotLayer layer(screen, *buffer);
     if (!layer.preparePresentationTest()) {
         return std::nullopt;
     }
@@ -130,7 +130,7 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(LogicalOutput 
     sceneView.addWindowFilter([pidToHide](Window *window) {
         return shouldFilterWindowFromCapture(window, pidToHide);
     });
-    const Rect fullDamage = Rect(QPoint(), buffer->size());
+    const Rect fullDamage = Rect(QPoint(), (*buffer)->size());
     sceneView.setViewport(screen->geometryF());
     sceneView.setScale(scale);
 
@@ -148,7 +148,7 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(LogicalOutput 
         return std::nullopt;
     }
 
-    return ScreenShotBuffer::from(device, buffer, std::move(sync), scale);
+    return ScreenShotBuffer::from(device, *buffer, std::move(sync), scale);
 }
 
 std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(const Rect &area, ScreenShotFlags flags, std::optional<pid_t> pidToHide)
@@ -165,7 +165,7 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(const Rect &ar
     }
     const QSize nativeSize = area.size() * scale;
 
-    GraphicsBuffer *buffer = device->allocator()->allocate(GraphicsBufferOptions{
+    auto buffer = device->allocator()->allocate(GraphicsBufferOptions{
         .size = nativeSize,
         .format = DRM_FORMAT_XRGB8888,
         .modifiers = backend->supportedFormats()[DRM_FORMAT_XRGB8888],
@@ -177,10 +177,10 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(const Rect &ar
         return std::nullopt;
     }
     auto dropBuffer = qScopeGuard([buffer]() {
-        buffer->drop();
+        (*buffer)->drop();
     });
 
-    ScreenshotLayer layer(workspace()->outputs().front(), buffer);
+    ScreenshotLayer layer(workspace()->outputs().front(), *buffer);
     if (!layer.preparePresentationTest()) {
         return std::nullopt;
     }
@@ -194,7 +194,7 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(const Rect &ar
     sceneView.addWindowFilter([pidToHide](Window *window) {
         return shouldFilterWindowFromCapture(window, pidToHide);
     });
-    const Rect fullDamage = Rect(QPoint(), buffer->size());
+    const Rect fullDamage = Rect(QPoint(), (*buffer)->size());
     sceneView.setViewport(area);
     sceneView.setScale(scale);
 
@@ -212,7 +212,7 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(const Rect &ar
         return std::nullopt;
     }
 
-    return ScreenShotBuffer::from(device, buffer, std::move(sync), scale);
+    return ScreenShotBuffer::from(device, *buffer, std::move(sync), scale);
 }
 
 std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(Window *window, ScreenShotFlags flags)
@@ -233,7 +233,7 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(Window *window
     }
     const QSize nativeSize = (geometry.size() * scale).toSize();
 
-    GraphicsBuffer *buffer = device->allocator()->allocate(GraphicsBufferOptions{
+    auto buffer = device->allocator()->allocate(GraphicsBufferOptions{
         .size = nativeSize,
         .format = DRM_FORMAT_ARGB8888,
         .modifiers = backend->supportedFormats()[DRM_FORMAT_ARGB8888],
@@ -245,14 +245,14 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(Window *window
         return std::nullopt;
     }
     auto dropBuffer = qScopeGuard([buffer]() {
-        buffer->drop();
+        (*buffer)->drop();
     });
 
     WorkspaceScene *scene = kwinApp()->scene();
     auto renderer = scene->renderer(device);
 
     OutputLayerBeginFrameInfo beginInfo{
-        .renderTarget = RenderTarget(buffer, OutputTransform::Normal),
+        .renderTarget = RenderTarget(*buffer, OutputTransform::Normal),
         .repaint = Region::infinite(),
     };
     const auto renderInfo = renderer->beginFrame(beginInfo, nullptr, nullptr);
@@ -278,7 +278,7 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(Window *window
     }
     FileDescriptor sync = renderer->endFrame(Region::infinite(), nullptr, nullptr);
 
-    return ScreenShotBuffer::from(device, buffer, std::move(sync), scale);
+    return ScreenShotBuffer::from(device, *buffer, std::move(sync), scale);
 }
 
 } // namespace KWin

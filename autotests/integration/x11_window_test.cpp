@@ -3593,7 +3593,7 @@ public:
     {
         m_size = size;
         ShmGraphicsBufferAllocator allocator;
-        GraphicsBufferRef buffer = allocator.allocate(GraphicsBufferOptions{
+        auto buffer = allocator.allocate(GraphicsBufferOptions{
             .size = size,
             .format = DRM_FORMAT_XRGB8888,
             .modifiers = ModifierList{DRM_FORMAT_MOD_LINEAR},
@@ -3603,8 +3603,9 @@ public:
         if (!buffer) {
             return false;
         }
+        GraphicsBufferRef bufferRef = buffer.value();
         // xcb_shm_attach_fd() takes the ownership of the passed shm file descriptor.
-        FileDescriptor poolFileDescriptor = buffer->shmAttributes()->fd.duplicate();
+        FileDescriptor poolFileDescriptor = bufferRef->shmAttributes()->fd.duplicate();
         if (!poolFileDescriptor.isValid()) {
             return false;
         }
