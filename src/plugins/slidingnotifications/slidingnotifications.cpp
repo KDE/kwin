@@ -225,15 +225,27 @@ static QPointF slideOffset(const EffectWindow *notification)
     }
 }
 
+static qreal springConstantFactor()
+{
+    const double factor = effects->animationTimeFactor();
+
+    // The animation duration factor is capped to avoid spring constants that can make SpringMotion unstable.
+    if (factor < 0.25) {
+        return 0.0;
+    } else {
+        return factor;
+    }
+}
+
 static SpringMotion makeSpring()
 {
-    return SpringMotion(900.0 / effects->animationTimeFactor(), 1.0);
+    return SpringMotion(900.0 / springConstantFactor(), 1.0);
 }
 
 static SpringMotion makeFadeSpring()
 {
     // Stiffer than the motion spring, so the fade settles just before the slide does.
-    SpringMotion spring(2000.0 / effects->animationTimeFactor(), 1.0);
+    SpringMotion spring(2000.0 / springConstantFactor(), 1.0);
     spring.setEpsilon(0.01); // opacity spans 0..1, so it needs a much finer stop threshold
     return spring;
 }
@@ -498,6 +510,10 @@ void SlidingNotificationsEffect::onWindowAdded(EffectWindow *window)
 
     connect(window, &EffectWindow::windowFrameGeometryChanged, this, &SlidingNotificationsEffect::onWindowFrameGeometryChanged);
 
+    if (qFuzzyIsNull(springConstantFactor())) {
+        return;
+    }
+
     if (effects->hasActiveFullScreenEffect()) {
         return;
     }
@@ -516,6 +532,10 @@ void SlidingNotificationsEffect::onWindowAdded(EffectWindow *window)
 void SlidingNotificationsEffect::onWindowClosed(EffectWindow *window)
 {
     if (!window->isNotification() && !window->isCriticalNotification()) {
+        return;
+    }
+
+    if (qFuzzyIsNull(springConstantFactor())) {
         return;
     }
 
@@ -543,6 +563,10 @@ void SlidingNotificationsEffect::onWindowClosed(EffectWindow *window)
 void SlidingNotificationsEffect::onWindowFrameGeometryChanged(EffectWindow *window, const RectF &oldGeometry)
 {
     if (effects->hasActiveFullScreenEffect()) {
+        return;
+    }
+
+    if (qFuzzyIsNull(springConstantFactor())) {
         return;
     }
 
