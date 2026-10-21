@@ -17,6 +17,7 @@
 #endif
 #include "input_event.h"
 #include "inputmethod.h"
+#include "wayland-client/committiming.h"
 #include "wayland-client/fifo.h"
 #include "wayland-client/linuxdmabuf.h"
 #include "wayland-client/viewporter.h"
@@ -606,8 +607,8 @@ std::unique_ptr<Connection> Connection::setup(int socket, AdditionalWaylandInter
         if (flags.testFlag(AdditionalWaylandInterface::Seat) && interface == wl_seat_interface.name) {
             c->kwinSeat = std::make_unique<WlSeat>(*c->registry, name, version);
         }
-        if ((flags & AdditionalWaylandInterface::CommitTiming) && interface == wp_commit_timing_manager_v1_interface.name) {
-            c->commitTiming = std::make_unique<CommitTimingManager>(*c->registry, name, version);
+        if ((flags & AdditionalWaylandInterface::CommitTiming) && interface == WaylandClient::CommitTimingManagerV1::s_interfaceName) {
+            c->commitTiming = std::make_unique<WaylandClient::CommitTimingManagerV1>(*c->registry, name, version);
         }
         if ((flags & AdditionalWaylandInterface::PointerWarp) && interface == wp_pointer_warp_v1_interface.name) {
             c->pointerWarp = std::make_unique<PointerWarpV1>(*c->registry, name, version);
@@ -2643,16 +2644,6 @@ void WlTouch::touch_cancel()
 {
     m_touchIds.clear();
     Q_EMIT sequenceCanceled();
-}
-
-CommitTimingManager::CommitTimingManager(::wl_registry *registry, uint32_t id, int version)
-    : QtWayland::wp_commit_timing_manager_v1(registry, id, version)
-{
-}
-
-CommitTimingManager::~CommitTimingManager()
-{
-    destroy();
 }
 
 PointerWarpV1::PointerWarpV1(::wl_registry *registry, uint32_t id, int version)

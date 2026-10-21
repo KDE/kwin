@@ -1,4 +1,5 @@
 target_sources(kwin PRIVATE
+    committiming.cpp
     fifo.cpp
     linuxdmabuf.cpp
     viewporter.cpp

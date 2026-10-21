@@ -13,6 +13,7 @@
 #include "outputconfigurationstore.h"
 #include "pointer_input.h"
 #include "tiles/tilemanager.h"
+#include "wayland-client/committiming.h"
 #include "wayland-client/fifo.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
@@ -55,27 +56,6 @@ private Q_SLOTS:
     void testFifoWithExplicitReset();
     void testFifoCommitTiming();
     void testCommitTiming();
-};
-
-class CommitTimerV1 : public QtWayland::wp_commit_timer_v1
-{
-public:
-    explicit CommitTimerV1(::wp_commit_timer_v1 *obj)
-        : QtWayland::wp_commit_timer_v1(obj)
-    {
-    }
-
-    ~CommitTimerV1() override
-    {
-        destroy();
-    }
-
-    void setTimestamp(std::chrono::nanoseconds time)
-    {
-        const uint64_t seconds = time / 1s;
-        const uint64_t nanos = (time - std::chrono::seconds(seconds)).count();
-        set_timestamp(seconds >> 32, seconds & 0xFFFFFFFF, nanos);
-    }
 };
 
 void FifoTest::initTestCase()
@@ -440,13 +420,13 @@ void FifoTest::testFifoOnUnmappedSurface()
     Test::XdgToplevelWindow window;
 
     auto fifo = Test::fifoManager()->createFifo(*window.m_surface);
-    auto timer = std::make_unique<CommitTimerV1>(Test::connection()->commitTiming->get_timer(*window.m_surface));
+    auto timer = Test::connection()->commitTiming->createTimer(*window.m_surface);
 
     std::array<std::unique_ptr<Test::WpPresentationFeedback>, 3> frames;
     for (size_t i = 0; i < frames.size(); i++) {
         fifo->setBarrier();
         fifo->waitBarrier();
-        timer->setTimestamp(std::chrono::steady_clock::now().time_since_epoch() + 50ms);
+        timer->setTimestamp(std::chrono::steady_clock::now() + 50ms);
         frames[i] = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*window.m_surface));
         window.m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
@@ -491,11 +471,11 @@ void FifoTest::testFifoOnSubsurfaceOfUnmappedToplevel()
     Test::render(surface.get(), QSize(100, 100), Qt::blue);
 
     auto fifo = Test::fifoManager()->createFifo(*surface);
-    auto timer = std::make_unique<CommitTimerV1>(Test::connection()->commitTiming->get_timer(*surface));
+    auto timer = Test::connection()->commitTiming->createTimer(*surface);
     for (size_t i = 0; i < frames.size(); i++) {
         fifo->setBarrier();
         fifo->waitBarrier();
-        timer->setTimestamp(std::chrono::steady_clock::now().time_since_epoch() + 50ms);
+        timer->setTimestamp(std::chrono::steady_clock::now() + 50ms);
         frames[i] = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
@@ -616,14 +596,14 @@ void FifoTest::testFifoWithExplicitReset()
     QVERIFY(window);
 
     auto fifo = Test::fifoManager()->createFifo(*surface);
-    auto timer = std::make_unique<CommitTimerV1>(Test::connection()->commitTiming->get_timer(*surface));
+    auto timer = Test::connection()->commitTiming->createTimer(*surface);
 
     std::array<std::unique_ptr<Test::WpPresentationFeedback>, 2> frames;
     for (int i = 0; i < 2; i++) {
         frames[i] = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
         fifo->setBarrier();
         fifo->waitBarrier();
-        timer->setTimestamp(std::chrono::steady_clock::now().time_since_epoch() + 50ms);
+        timer->setTimestamp(std::chrono::steady_clock::now() + 50ms);
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
     fifo->setBarrier();
@@ -657,11 +637,11 @@ void FifoTest::testFifoCommitTiming()
     QVERIFY(window.show());
 
     auto fifo = Test::fifoManager()->createFifo(*window.m_surface);
-    auto timer = std::make_unique<CommitTimerV1>(Test::connection()->commitTiming->get_timer(*window.m_surface));
+    auto timer = Test::connection()->commitTiming->createTimer(*window.m_surface);
 
     std::deque<std::unique_ptr<Test::WpPresentationFeedback>> frames;
 
-    auto lastTarget = std::chrono::steady_clock::now().time_since_epoch();
+    auto lastTarget = std::chrono::steady_clock::now();
     auto refreshDuration = std::chrono::nanoseconds(1'000'000) / workspace()->outputs().front()->refreshRate();
     std::optional<std::chrono::nanoseconds> lastPresentation;
 
@@ -701,9 +681,9 @@ void FifoTest::testCommitTiming()
     Test::XdgToplevelWindow window;
     QVERIFY(window.show());
 
-    auto timer = std::make_unique<CommitTimerV1>(Test::connection()->commitTiming->get_timer(*window.m_surface));
+    auto timer = Test::connection()->commitTiming->createTimer(*window.m_surface);
 
-    const auto start = std::chrono::steady_clock::now().time_since_epoch();
+    const auto start = std::chrono::steady_clock::now();
     std::array targetTimes{
         start + 50ms,
         start + 150ms,
@@ -725,7 +705,7 @@ void FifoTest::testCommitTiming()
     };
     for (size_t i = 0; i < frames.size(); i++) {
         QVERIFY(spies[i].count() || spies[i].wait());
-        QCOMPARE_GE(spies[i].last().first().value<std::chrono::nanoseconds>(), targetTimes[i]);
+        QCOMPARE_GE(spies[i].last().first().value<std::chrono::steady_clock::time_point>(), targetTimes[i]);
     }
 }
 

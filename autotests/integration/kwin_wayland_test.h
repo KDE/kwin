@@ -29,7 +29,6 @@
 #include "qwayland-alpha-modifier-v1.h"
 #include "qwayland-color-management-v1.h"
 #include "qwayland-color-representation-v1.h"
-#include "qwayland-commit-timing-v1.h"
 #include "qwayland-cursor-shape-v1.h"
 #include "qwayland-fake-input.h"
 #include "qwayland-fractional-scale-v1.h"
@@ -104,6 +103,7 @@ namespace WaylandClient
 class LinuxDmabufV1;
 class Viewporter;
 class FifoManagerV1;
+class CommitTimingManagerV1;
 
 }
 
@@ -1190,13 +1190,6 @@ private:
     QSet<int32_t> m_touchIds;
 };
 
-class CommitTimingManager : public QtWayland::wp_commit_timing_manager_v1
-{
-public:
-    explicit CommitTimingManager(::wl_registry *registry, uint32_t id, int version);
-    ~CommitTimingManager() override;
-};
-
 class PointerWarpV1 : public QtWayland::wp_pointer_warp_v1
 {
 public:
@@ -1261,7 +1254,7 @@ struct Connection
     std::unique_ptr<TearingControlManagerV1> tearingControl;
     // TODO port everything away from KWayland::Client::Seat
     std::unique_ptr<WlSeat> kwinSeat;
-    std::unique_ptr<CommitTimingManager> commitTiming;
+    std::unique_ptr<WaylandClient::CommitTimingManagerV1> commitTiming;
     std::unique_ptr<PointerWarpV1> pointerWarp;
 };
 
