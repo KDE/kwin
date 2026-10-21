@@ -307,6 +307,15 @@ int main(int argc, char *argv[])
 
     QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
 
+    const QStringList kwinEnvs = environment.keys() | std::views::filter([](const QString &key) {
+        return key.startsWith("KWIN_");
+    }) | std::views::transform([&environment](const QString &key) {
+        return key + '=' + environment.value(key);
+    }) | std::ranges::to<QStringList>();
+    if (!kwinEnvs.isEmpty()) {
+        qWarning() << "KWIN environment variables:" << kwinEnvs;
+    }
+
     // enforce our internal qpa plugin, unfortunately command line switch has precedence
     setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true);
 
