@@ -37,7 +37,7 @@ T alignTimestamp(const T &timestamp, const T &alignment)
     return timestamp + ((alignment - (timestamp % alignment)) % alignment);
 }
 
-void VsyncSource::arm()
+void VsyncSource::arm(std::chrono::nanoseconds earliestPresentTime)
 {
     if (m_softwareClock.isActive()) {
         return;
@@ -46,7 +46,7 @@ void VsyncSource::arm()
     const std::chrono::nanoseconds currentTime(std::chrono::steady_clock::now().time_since_epoch());
     const std::chrono::nanoseconds vblankInterval(1'000'000'000'000ull / m_refreshRate);
 
-    m_vblankTimestamp = alignTimestamp(std::max(currentTime, m_vblankTimestamp + 1ns), vblankInterval);
+    m_vblankTimestamp = alignTimestamp(std::max({currentTime, earliestPresentTime, m_vblankTimestamp + 1ns}), vblankInterval);
 
     m_softwareClock.start(m_vblankTimestamp);
 }

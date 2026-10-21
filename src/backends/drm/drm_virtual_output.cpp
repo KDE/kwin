@@ -57,7 +57,9 @@ std::expected<void, OutputError> DrmVirtualOutput::testPresentation(const std::s
 std::expected<void, OutputError> DrmVirtualOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
     m_frame = frame;
-    m_vsyncMonitor->arm();
+    if (m_frame) {
+        m_vsyncMonitor->arm(m_frame->targetPageflipTime().time_since_epoch());
+    }
     return {};
 }
 
