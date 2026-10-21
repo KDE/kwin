@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-20 00:54+0000\n"
-"PO-Revision-Date: 2026-06-18 18:04+0200\n"
-"Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
+"PO-Revision-Date: 2026-10-20 11:20+0200\n"
+"Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -166,24 +166,18 @@ msgid "Applications allowed to control the pointer and keyboard"
 msgstr "Приложения, управляющие указателем и клавиатурой"
 
 #: ui/main.qml:165
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "See Allowed Applications…"
+#, kde-format
 msgctxt "@action:button"
 msgid "See Denied Applications…"
-msgstr "Просмотреть разрешённые приложения…"
+msgstr "Просмотреть запрещённые приложения…"
 
 #: ui/main.qml:169
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@title:window title of the page opened by the 'See allowed applications' "
-#| "button"
-#| msgid "Applications allowed to control the pointer and keyboard"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See denied applications' "
 "button"
 msgid "Applications never allowed to control the pointer and keyboard"
-msgstr "Приложения, управляющие указателем и клавиатурой"
+msgstr "Приложения, которым запрещено управлять указателем и клавиатурой"
 
 #: ui/main.qml:178
 #, kde-format

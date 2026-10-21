@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-20 00:54+0000\n"
-"PO-Revision-Date: 2026-04-29 10:38+0200\n"
+"PO-Revision-Date: 2026-10-20 13:43+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 26.04.0\n"
+"X-Generator: Lokalize 26.08.2\n"
 
 #: ui/main.qml:28
 #, kde-kuit-format
@@ -165,25 +165,20 @@ msgstr ""
 "Toepassingen die zijn toegestaan de muisaanwijzer en toetsenbord te besturen:"
 
 #: ui/main.qml:165
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "See Allowed Applications…"
+#, kde-format
 msgctxt "@action:button"
 msgid "See Denied Applications…"
-msgstr "Zie toegestane toepassingen…"
+msgstr "Zie geweigerde toepassingen…"
 
 #: ui/main.qml:169
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@title:window title of the page opened by the 'See allowed applications' "
-#| "button"
-#| msgid "Applications allowed to control the pointer and keyboard"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See denied applications' "
 "button"
 msgid "Applications never allowed to control the pointer and keyboard"
 msgstr ""
-"Toepassingen die zijn toegestaan de muisaanwijzer en toetsenbord te besturen:"
+"Toepassingen die nooit zijn toegestaan de muisaanwijzer en toetsenbord te "
+"besturen"
 
 #: ui/main.qml:178
 #, kde-format

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-20 00:54+0000\n"
+"POT-Creation-Date: 2026-10-21 00:53+0000\n"
 "PO-Revision-Date: 2026-04-14 08:28+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -20,22 +20,22 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
-#: main.cpp:74
+#: main.cpp:73
 #, kde-format
 msgid "Main"
 msgstr "Основний"
 
-#: main.cpp:75
+#: main.cpp:74
 #, kde-format
 msgid "Alternative"
 msgstr "Альтернативний"
 
-#: main.cpp:77
+#: main.cpp:76
 #, kde-format
 msgid "Get New Task Switcher Styles…"
 msgstr "Отримати нові стилі засобу перемикання вікон…"
 
-#: main.cpp:95
+#: main.cpp:94
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."

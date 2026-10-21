@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-20 00:54+0000\n"
-"PO-Revision-Date: 2026-10-17 00:32+0100\n"
+"POT-Creation-Date: 2026-10-21 00:53+0000\n"
+"PO-Revision-Date: 2026-10-20 12:25+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -1892,25 +1892,15 @@ msgstr ""
 "entrada"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check, %1 is the application name. This option always allow apps "
-#| "claiming to be a given application name to control input devices"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option remembers the "
 "selection for apps claiming to be a given application name"
 msgid "Remember for apps claiming to be %1"
-msgstr "Permitir siempre las aplicaciones que afirman ser %1"
+msgstr "Recordar para las aplicaciones que afirman ser %1"
 
 #: plugins/eis/eisprompter.cpp:66
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Identities of legacy X11 apps cannot be verified. Any app claiming to be "
-#| "<application>%1</application> will be able to control input devices. You "
-#| "can revoke this permission later on <application>System Settings</"
-#| "application>’ “Legacy X11 App Support” page."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Identities of legacy X11 apps cannot be verified. If permitted any app "
@@ -1918,11 +1908,11 @@ msgid ""
 "devices. You can change this setting later on <application>System Settings</"
 "application>’ “Legacy X11 App Support” page."
 msgstr ""
-"No se puede verificar la identidad de las aplicaciones X11 heredadas. "
-"Cualquier aplicación que afirme ser <application>%1</application> podrá "
-"tomar el control de los dispositivos de entrada. Puede revocar este permiso "
-"posteriormente en la página «Compatibilidad con aplicaciones X11 heredadas» "
-"de las <application>Preferencias del sistema</application>."
+"No se puede verificar la identidad de las aplicaciones X11 heredadas. Si se "
+"permite, cualquier aplicación que afirme ser <application>%1</application> "
+"podrá tomar el control de los dispositivos de entrada. Puede cambiar este "
+"ajuste posteriormente en la página «Compatibilidad con aplicaciones X11 "
+"heredadas» de las <application>Preferencias del sistema</application>."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
@@ -4478,30 +4468,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(no responde)"
 
-#: workspace.cpp:1335
+#: workspace.cpp:1350
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Pantalla integrada"
 
-#: workspace.cpp:1348
+#: workspace.cpp:1363
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1358
+#: workspace.cpp:1373
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1361
+#: workspace.cpp:1376
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: workspace.cpp:1830
+#: workspace.cpp:1845
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

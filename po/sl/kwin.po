@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1750746 2026-10-20 01:55:46Z scripty $
+# $Id: kwin.po 1750805 2026-10-21 01:50:01Z scripty $
 # $Source$
 #
 #
@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-20 00:54+0000\n"
-"PO-Revision-Date: 2026-10-16 07:14+0200\n"
+"POT-Creation-Date: 2026-10-21 00:53+0000\n"
+"PO-Revision-Date: 2026-10-20 12:22+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -1879,25 +1879,15 @@ msgid "<application>%1</application> is asking to control input devices"
 msgstr "<application>%1</application> prosi za nadzor vhodnih naprav"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check, %1 is the application name. This option always allow apps "
-#| "claiming to be a given application name to control input devices"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option remembers the "
 "selection for apps claiming to be a given application name"
 msgid "Remember for apps claiming to be %1"
-msgstr "Vedno dovoli aplikacijam, ki trdijo, da so %1"
+msgstr "Zapomni si za aplikacije, ki trdijo, da so %1"
 
 #: plugins/eis/eisprompter.cpp:66
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Identities of legacy X11 apps cannot be verified. Any app claiming to be "
-#| "<application>%1</application> will be able to control input devices. You "
-#| "can revoke this permission later on <application>System Settings</"
-#| "application>’ “Legacy X11 App Support” page."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Identities of legacy X11 apps cannot be verified. If permitted any app "
@@ -1905,11 +1895,11 @@ msgid ""
 "devices. You can change this setting later on <application>System Settings</"
 "application>’ “Legacy X11 App Support” page."
 msgstr ""
-"Identitet starejših aplikacij X11 ni mogoče preveriti. Vsaka aplikacija, ki "
-"trdi, da je <application>%1</application>, bo lahko nadzorovala vhodne "
-"naprave. To dovoljenje lahko prekličete pozneje na strani "
-"<application>Sistemske nastavitve</application> v \"Podpora za starejše "
-"aplikacije X11\"."
+"Identitete podedovanih aplikacij X11 ni mogoče preveriti. Če je dovoljeno, "
+"bo katera koli aplikacija, ki trdi, da je <application>%1</application>, "
+"lahko nadzorovala vhodne naprave. To nastavitev lahko pozneje spremenite na "
+"strani \"Podpora za podedovane aplikacije X11\" v <application>Sistemske "
+"nastavitve</application>."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
@@ -4456,30 +4446,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(se ne odziva)"
 
-#: workspace.cpp:1335
+#: workspace.cpp:1350
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Vgrajen zaslon"
 
-#: workspace.cpp:1348
+#: workspace.cpp:1363
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1358
+#: workspace.cpp:1373
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1361
+#: workspace.cpp:1376
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: workspace.cpp:1830
+#: workspace.cpp:1845
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

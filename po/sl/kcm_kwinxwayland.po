@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-20 00:54+0000\n"
-"PO-Revision-Date: 2026-04-29 09:30+0200\n"
+"PO-Revision-Date: 2026-10-20 12:18+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -162,24 +162,18 @@ msgid "Applications allowed to control the pointer and keyboard"
 msgstr "Aplikacije, ki lahko upravljajo kazalec in tipkovnico"
 
 #: ui/main.qml:165
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "See Allowed Applications…"
+#, kde-format
 msgctxt "@action:button"
 msgid "See Denied Applications…"
-msgstr "Glejte dovoljene aplikacije…"
+msgstr "Glejte zavrnjene aplikacije…"
 
 #: ui/main.qml:169
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@title:window title of the page opened by the 'See allowed applications' "
-#| "button"
-#| msgid "Applications allowed to control the pointer and keyboard"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See denied applications' "
 "button"
 msgid "Applications never allowed to control the pointer and keyboard"
-msgstr "Aplikacije, ki lahko upravljajo kazalec in tipkovnico"
+msgstr "Aplikacije, ki nikoli ne smejo upravljati kazalca in tipkovnice"
 
 #: ui/main.qml:178
 #, kde-format
