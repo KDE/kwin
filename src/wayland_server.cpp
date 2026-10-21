@@ -541,7 +541,7 @@ void WaylandServer::initWorkspace()
     connect(layerShellV1Integration, &LayerShellV1Integration::windowCreated,
             this, &WaylandServer::registerWindow);
 
-    if (qEnvironmentVariableIntValue("KWIN_WAYLAND_SUPPORT_XX_PIP_V1") == 1) {
+    if (environmentVariableBoolValue("KWIN_WAYLAND_SUPPORT_XX_PIP_V1").value_or(true)) {
         auto pipV1Integration = new XXPipV1Integration(this);
         connect(pipV1Integration, &XXPipV1Integration::windowCreated,
                 this, &WaylandServer::registerWindow);
