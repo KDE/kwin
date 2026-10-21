@@ -609,6 +609,8 @@ void Workspace::requestDpmsState(DpmsState state)
         // AboutToTurnOff state, inhibiting sleep forever.
         m_dpms = DpmsState::Off;
         m_sleepInhibitor.reset();
+        m_dpmsFilter = std::make_unique<DpmsInputEventFilter>();
+        input()->installInputEventFilter(m_dpmsFilter.get());
     } else {
         m_dpmsFilter = std::make_unique<DpmsInputEventFilter>();
         input()->installInputEventFilter(m_dpmsFilter.get());
