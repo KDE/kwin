@@ -46,6 +46,8 @@ class OutputFrame;
 namespace WaylandClient
 {
 
+class CommitTimerV1;
+class FifoV1;
 class Viewport;
 
 }

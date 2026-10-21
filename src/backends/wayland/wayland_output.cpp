@@ -322,7 +322,7 @@ std::expected<void, OutputError> WaylandOutput::present(const QList<OutputLayer 
     for (OutputLayer *layer : layersToUpdate) {
         // TODO maybe also make the cursor a WaylandLayer?
         if (layer->type() != OutputLayerType::CursorOnly) {
-            static_cast<WaylandLayer *>(layer)->commit(frame->presentationMode());
+            static_cast<WaylandLayer *>(layer)->commit(frame);
         }
     }
     if (m_backend->display()->tearingControl()) {

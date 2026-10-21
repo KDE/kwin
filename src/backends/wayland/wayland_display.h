@@ -42,6 +42,8 @@ class SubCompositor;
 namespace KWin::WaylandClient
 {
 
+class CommitTimingManagerV1;
+class FifoManagerV1;
 class LinuxDmabufV1;
 class Viewporter;
 
@@ -85,6 +87,8 @@ public:
     wp_single_pixel_buffer_manager_v1 *singlePixelManager() const;
     xdg_toplevel_icon_manager_v1 *toplevelIconManager() const;
     zwp_keyboard_shortcuts_inhibit_manager_v1 *keyboardShortcutsInhibitManager() const;
+    WaylandClient::FifoManagerV1 *fifoManager() const;
+    WaylandClient::CommitTimingManagerV1 *commitTimingManager() const;
 
 public Q_SLOTS:
     void flush();
@@ -114,6 +118,8 @@ private:
     std::unique_ptr<KWayland::Client::Seat> m_seat;
     std::unique_ptr<KWayland::Client::XdgDecorationManager> m_xdgDecorationManager;
     std::unique_ptr<KWayland::Client::XdgShell> m_xdgShell;
+    std::unique_ptr<WaylandClient::FifoManagerV1> m_fifoManager;
+    std::unique_ptr<WaylandClient::CommitTimingManagerV1> m_commitTimingManager;
 };
 
 }

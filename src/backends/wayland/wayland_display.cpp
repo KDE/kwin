@@ -6,6 +6,8 @@
 
 #include "wayland_display.h"
 #include "utils/memorymap.h"
+#include "wayland-client/committiming.h"
+#include "wayland-client/fifo.h"
 #include "wayland-client/linuxdmabuf.h"
 #include "wayland-client/viewporter.h"
 #include "wayland_logging.h"
@@ -182,6 +184,8 @@ WaylandDisplay::~WaylandDisplay()
     m_linuxDmabuf.reset();
     m_colorManager.reset();
     m_viewporter.reset();
+    m_fifoManager.reset();
+    m_commitTimingManager.reset();
 
     if (m_shm) {
         wl_shm_destroy(m_shm);
@@ -375,6 +379,16 @@ zwp_keyboard_shortcuts_inhibit_manager_v1 *WaylandDisplay::keyboardShortcutsInhi
     return m_keyboardShortcutsInhibitManager;
 }
 
+WaylandClient::FifoManagerV1 *WaylandDisplay::fifoManager() const
+{
+    return m_fifoManager.get();
+}
+
+WaylandClient::CommitTimingManagerV1 *WaylandDisplay::commitTimingManager() const
+{
+    return m_commitTimingManager.get();
+}
+
 void WaylandDisplay::registry_global(void *data, wl_registry *registry, uint32_t name, const char *interface, uint32_t version)
 {
     WaylandDisplay *display = static_cast<WaylandDisplay *>(data);
@@ -431,6 +445,10 @@ void WaylandDisplay::registry_global(void *data, wl_registry *registry, uint32_t
         display->m_toplevelIconManager = reinterpret_cast<xdg_toplevel_icon_manager_v1 *>(wl_registry_bind(registry, name, &xdg_toplevel_icon_manager_v1_interface, 1));
     } else if (strcmp(interface, zwp_keyboard_shortcuts_inhibit_manager_v1_interface.name) == 0) {
         display->m_keyboardShortcutsInhibitManager = reinterpret_cast<zwp_keyboard_shortcuts_inhibit_manager_v1 *>(wl_registry_bind(registry, name, &zwp_keyboard_shortcuts_inhibit_manager_v1_interface, 1));
+    } else if (interface == WaylandClient::FifoManagerV1::s_globalName) {
+        display->m_fifoManager = std::make_unique<WaylandClient::FifoManagerV1>(registry, name, 1);
+    } else if (interface == WaylandClient::CommitTimingManagerV1::s_globalName) {
+        display->m_commitTimingManager = std::make_unique<WaylandClient::CommitTimingManagerV1>(registry, name, 1);
     }
 }
 

@@ -8,6 +8,9 @@
 */
 #include "wayland_layer.h"
 #include "color_manager.h"
+#include "core/renderbackend.h"
+#include "wayland-client/committiming.h"
+#include "wayland-client/fifo.h"
 #include "wayland-client/viewporter.h"
 #include "wayland_backend.h"
 #include "wayland_display.h"
@@ -20,6 +23,8 @@
 
 #include "wayland-presentation-time-client-protocol.h"
 #include "wayland-tearing-control-v1-client-protocol.h"
+
+using namespace std::chrono_literals;
 
 namespace KWin
 {
@@ -47,6 +52,13 @@ WaylandLayer::WaylandLayer(WaylandOutput *output, OutputLayerType type, int zpos
         }
     }
     m_viewport = display->viewporter()->createViewport(*m_surface);
+
+    if (auto manager = display->fifoManager()) {
+        m_fifo = manager->createFifo(*m_surface);
+    }
+    if (auto manager = display->commitTimingManager()) {
+        m_commitTimer = manager->createTimer(*m_surface);
+    }
 }
 
 WaylandLayer::~WaylandLayer()
@@ -83,7 +95,7 @@ void WaylandLayer::setBuffer(GraphicsBuffer *buffer, const Region &deviceDamaged
     m_pendingDamage = deviceDamagedRegion;
 }
 
-void WaylandLayer::commit(PresentationMode presentationMode)
+void WaylandLayer::commit(const std::shared_ptr<OutputFrame> &frame)
 {
     if (!isEnabled()) {
         m_pendingBuffer.reset();
@@ -108,11 +120,17 @@ void WaylandLayer::commit(PresentationMode presentationMode)
         m_previousColor = m_color;
     }
     if (m_tearingControl) {
-        if (presentationMode == PresentationMode::Async) {
+        if (frame->presentationMode() == PresentationMode::Async) {
             wp_tearing_control_v1_set_presentation_hint(m_tearingControl, WP_TEARING_CONTROL_V1_PRESENTATION_HINT_ASYNC);
         } else {
             wp_tearing_control_v1_set_presentation_hint(m_tearingControl, WP_TEARING_CONTROL_V1_PRESENTATION_HINT_VSYNC);
         }
+    }
+    if (m_fifo && frame->presentationMode() == PresentationMode::VSync) {
+        m_fifo->setBarrier();
+    }
+    if (m_commitTimer) {
+        m_commitTimer->setTimestamp(frame->targetPageflipTime() - 100us);
     }
     if (m_pendingBuffer) {
         m_surface->attachBuffer(output->backend()->importBuffer(m_pendingBuffer.get()));
@@ -121,6 +139,22 @@ void WaylandLayer::commit(PresentationMode presentationMode)
         m_pendingBuffer.reset();
     }
     m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    if (m_fifo && frame->presentationMode() == PresentationMode::VSync) {
+        // NOTE wait_barrier ensures this commit only gets applied when the previous commit
+        // was shown for a whole frame, so it needs to be called in an additional commit.
+        // Otherwise, in situations like
+        // - setBarrier
+        // - waitBarrier
+        // - commit 1
+        //
+        // - set_tearing
+        // - commit 2
+        //
+        // commit 2 would replace commit 1 potentially before it's shown for a full refresh cycle
+        m_fifo->waitBarrier();
+        m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    }
 }
 
 KWayland::Client::Surface *WaylandLayer::surface() const

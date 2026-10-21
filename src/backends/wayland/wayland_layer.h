@@ -33,6 +33,8 @@ namespace KWin
 namespace WaylandClient
 {
 
+class CommitTimerV1;
+class FifoV1;
 class Viewport;
 
 }
@@ -50,7 +52,7 @@ public:
 
     bool test() const;
     void setBuffer(GraphicsBuffer *buffer, const Region &deviceDamagedRegion);
-    void commit(PresentationMode presentationMode);
+    void commit(const std::shared_ptr<OutputFrame> &frame);
 
     KWayland::Client::Surface *surface() const;
     KWayland::Client::SubSurface *subSurface() const;
@@ -63,6 +65,9 @@ protected:
     wp_color_management_surface_v1 *m_colorSurface = nullptr;
     wp_fractional_scale_v1 *m_fractionalScale = nullptr;
     std::unique_ptr<WaylandClient::Viewport> m_viewport;
+    std::unique_ptr<WaylandClient::FifoV1> m_fifo;
+    std::unique_ptr<WaylandClient::CommitTimerV1> m_commitTimer;
+
     std::shared_ptr<ColorDescription> m_previousColor;
     GraphicsBufferRef m_pendingBuffer;
     Region m_pendingDamage;
