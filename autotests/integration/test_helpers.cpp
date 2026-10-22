@@ -2584,7 +2584,7 @@ WlPointer::~WlPointer()
 
 void WlPointer::setCursor(KWayland::Client::Surface *surface, const QPoint &hotspot)
 {
-    set_cursor(m_enterSerial, surface ? *surface : nullptr, hotspot.x(), hotspot.y());
+    set_cursor(m_enterSerial, surface ? static_cast<::wl_surface *>(*surface) : nullptr, hotspot.x(), hotspot.y());
 }
 
 void WlPointer::pointer_enter(uint32_t serial, ::wl_surface *surface, wl_fixed_t surface_x, wl_fixed_t surface_y)
