@@ -24,7 +24,7 @@ public:
     bool keyboardKey(KeyboardKeyEvent *event) override;
     bool pointerButton(PointerButtonEvent *event) override;
 
-    enum KeyState {
+    enum class KeyState {
         None,
         Latched,
         Locked,
