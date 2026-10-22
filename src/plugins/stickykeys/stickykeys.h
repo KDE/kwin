@@ -35,8 +35,7 @@ private:
     void disableStickyKeys();
 
     KConfigWatcher::Ptr m_configWatcher;
-    QMap<Qt::Key, KeyState> m_keyStates;
-    const QList<Qt::Key> m_modifiers = {Qt::Key_Shift, Qt::Key_Control, Qt::Key_Alt, Qt::Key_AltGr, Qt::Key_Meta};
+    QMap<Qt::Key, KeyState> m_modifierStates;
     bool m_lockKeys = false;
     bool m_showNotificationForLockedKeys = false;
     bool m_disableOnTwoKeys = false;
