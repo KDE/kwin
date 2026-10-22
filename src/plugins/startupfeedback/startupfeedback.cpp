@@ -292,7 +292,7 @@ void StartupFeedbackEffect::stop()
 
 QSize StartupFeedbackEffect::feedbackIconSize() const
 {
-    return QSize(20, 20) * m_bounceSizesRatio;
+    return QSize(16, 16) * m_bounceSizesRatio;
 }
 
 QPointF StartupFeedbackEffect::feedbackOffset() const
