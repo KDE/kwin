@@ -110,7 +110,7 @@ SpringMotion::Slope SpringMotion::evaluate(const State &state, qreal dt, const S
     const qreal acceleration = springForce + dampingForce;
 
     return Slope{
-        .dp = state.velocity,
+        .dp = next.velocity,
         .dv = acceleration,
     };
 }
