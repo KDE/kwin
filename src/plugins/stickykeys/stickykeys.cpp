@@ -146,7 +146,7 @@ bool StickyKeysFilter::keyboardKey(KeyboardKeyEvent *event)
                     notification->sendEvent();
                 }
 #endif
-            } else if (*modifierState == KeyState::Locked && m_lockKeys) {
+            } else if (*modifierState == KeyState::Locked) {
                 *modifierState = KeyState::None;
                 input()->keyboard()->xkb()->setModifierLocked(keyToModifier(event->key), false);
                 changed = true;
