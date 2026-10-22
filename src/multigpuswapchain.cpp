@@ -797,6 +797,9 @@ std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::copy(GraphicsBuffer *buff
 
     const auto &context = m_swapchain->context();
 
+    EGLNativeFence importFence = EGLNativeFence::importFence(context->displayObject(), std::move(sync));
+    importFence.waitSync();
+
     std::unique_ptr<GLRenderTimeQuery> renderTime;
     if (frame) {
         renderTime = GLRenderTimeQuery::begin(context);
