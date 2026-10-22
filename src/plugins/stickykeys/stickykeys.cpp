@@ -121,14 +121,11 @@ bool StickyKeysFilter::keyboardKey(KeyboardKeyEvent *event)
                 }
             }
 
-            // An unlatched modifier was pressed, latch it
             if (*modifierState == KeyState::None) {
                 *modifierState = KeyState::Latched;
                 input()->keyboard()->xkb()->setModifierLatched(keyToModifier(event->key), true);
                 changed = true;
-            }
-            // A latched modifier was pressed, lock it
-            else if (*modifierState == KeyState::Latched && m_lockKeys) {
+            } else if (*modifierState == KeyState::Latched && m_lockKeys) {
                 *modifierState = KeyState::Locked;
                 input()->keyboard()->xkb()->setModifierLatched(keyToModifier(event->key), false);
                 input()->keyboard()->xkb()->setModifierLocked(keyToModifier(event->key), true);
@@ -149,9 +146,7 @@ bool StickyKeysFilter::keyboardKey(KeyboardKeyEvent *event)
                     notification->sendEvent();
                 }
 #endif
-            }
-            // A locked modifier was pressed, unlock it
-            else if (*modifierState == KeyState::Locked && m_lockKeys) {
+            } else if (*modifierState == KeyState::Locked && m_lockKeys) {
                 *modifierState = KeyState::None;
                 input()->keyboard()->xkb()->setModifierLocked(keyToModifier(event->key), false);
                 changed = true;
