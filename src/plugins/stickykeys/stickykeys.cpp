@@ -46,7 +46,7 @@ StickyKeysFilter::StickyKeysFilter()
     loadConfig(m_configWatcher->config()->group(groupName));
 
     for (Qt::Key mod : std::as_const(m_modifiers)) {
-        m_keyStates[mod] = None;
+        m_keyStates[mod] = KeyState::None;
     }
 }
 
@@ -123,14 +123,14 @@ bool StickyKeysFilter::keyboardKey(KeyboardKeyEvent *event)
 
             if (auto keyState = m_keyStates.find(event->key); keyState != m_keyStates.end()) {
                 // An unlatched modifier was pressed, latch it
-                if (*keyState == None) {
-                    *keyState = Latched;
+                if (*keyState == KeyState::None) {
+                    *keyState = KeyState::Latched;
                     input()->keyboard()->xkb()->setModifierLatched(keyToModifier(event->key), true);
                     changed = true;
                 }
                 // A latched modifier was pressed, lock it
-                else if (*keyState == Latched && m_lockKeys) {
-                    *keyState = Locked;
+                else if (*keyState == KeyState::Latched && m_lockKeys) {
+                    *keyState = KeyState::Locked;
                     input()->keyboard()->xkb()->setModifierLatched(keyToModifier(event->key), false);
                     input()->keyboard()->xkb()->setModifierLocked(keyToModifier(event->key), true);
                     changed = true;
@@ -152,8 +152,8 @@ bool StickyKeysFilter::keyboardKey(KeyboardKeyEvent *event)
                     }
                 }
                 // A locked modifier was pressed, unlock it
-                else if (*keyState == Locked && m_lockKeys) {
-                    *keyState = None;
+                else if (*keyState == KeyState::Locked && m_lockKeys) {
+                    *keyState = KeyState::None;
                     input()->keyboard()->xkb()->setModifierLocked(keyToModifier(event->key), false);
                     changed = true;
                 }
@@ -167,7 +167,7 @@ bool StickyKeysFilter::keyboardKey(KeyboardKeyEvent *event)
 
         // a non-modifier key was pressed, unlatch all unlocked modifiers
         for (auto [key, state] : m_keyStates.asKeyValueRange()) {
-            if (state == Locked) {
+            if (state == KeyState::Locked) {
                 continue;
             }
 
@@ -205,7 +205,7 @@ bool StickyKeysFilter::pointerButton(PointerButtonEvent *event)
     if (event->state == PointerButtonState::Released) {
         // unlatch all unlocked modifiers
         for (auto [key, state] : m_keyStates.asKeyValueRange()) {
-            if (state == Locked) {
+            if (state == KeyState::Locked) {
                 continue;
             }
 
