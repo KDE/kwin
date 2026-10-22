@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-21 00:53+0000\n"
+"POT-Creation-Date: 2026-10-22 00:52+0000\n"
 "PO-Revision-Date: 2026-10-07 11:45+0200\n"
 "Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -1665,55 +1665,55 @@ msgstr "Vlad Zahorodnii"
 msgid "Xaver Hugl"
 msgstr "Xaver Hugl"
 
-#: main_wayland.cpp:340
+#: main_wayland.cpp:349
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Покрени бескорени икс‑вејланд сервер."
 
 # literal-segment: wayland-0
-#: main_wayland.cpp:343
+#: main_wayland.cpp:352
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 "Име вејланд сокета на коме се слуша. Ако се не зада, користи се „wayland-0“."
 
-#: main_wayland.cpp:347
+#: main_wayland.cpp:356
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "Икс11 приказ за прозорски режим на платформи Икс11."
 
-#: main_wayland.cpp:351
+#: main_wayland.cpp:360
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "Вејланд приказ за прозорски режим на платформи вејланд."
 
-#: main_wayland.cpp:353
+#: main_wayland.cpp:362
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Рендеруј у виртуелни кадробафер."
 
-#: main_wayland.cpp:355
+#: main_wayland.cpp:364
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Ширина прозорског режима. Подразумевана је 1024."
 
-#: main_wayland.cpp:359
+#: main_wayland.cpp:368
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Висина прозорског режима. Подразумевана је 768."
 
-#: main_wayland.cpp:364
+#: main_wayland.cpp:373
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
 msgstr "Да ли да прозорски режим буде преко целог екрана"
 
-#: main_wayland.cpp:368
+#: main_wayland.cpp:377
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Размера прозорског режима. Подразумевана је 1."
 
-#: main_wayland.cpp:373
+#: main_wayland.cpp:382
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1721,7 +1721,7 @@ msgstr ""
 "Број прозора који се отварају као излази у прозорском режиму. Подразумевано "
 "је 1."
 
-#: main_wayland.cpp:378
+#: main_wayland.cpp:387
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1730,7 +1730,7 @@ msgstr ""
 "Вејланд сокет за долазне везе. Може се комбиновати са --socket да би се "
 "сокет именовао"
 
-#: main_wayland.cpp:382
+#: main_wayland.cpp:391
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1738,74 +1738,74 @@ msgid ""
 msgstr ""
 "Икс‑вејланд сокет за долазне везе Икс‑вејланда. Може се задати више пута"
 
-#: main_wayland.cpp:386
+#: main_wayland.cpp:395
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Име унапред постављеног икс‑вејланд приказа"
 
-#: main_wayland.cpp:390
+#: main_wayland.cpp:399
 #, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
 msgstr "Икс‑вејланд сокет за почетне везе Икс‑вејланда"
 
-#: main_wayland.cpp:394
+#: main_wayland.cpp:403
 #, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
 msgstr "Име унапред постављеног почетног икс‑вејланд приказа"
 
-#: main_wayland.cpp:398
+#: main_wayland.cpp:407
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Име фајла xauthority "
 
-#: main_wayland.cpp:402
+#: main_wayland.cpp:411
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr "Напушта овај примерак да би га kwin_wayland_wrapper поново покренуо."
 
-#: main_wayland.cpp:404
+#: main_wayland.cpp:413
 #, kde-format
 msgid "Render through drm node."
 msgstr "Рендеруј кроз ДРМ чвор."
 
-#: main_wayland.cpp:405
+#: main_wayland.cpp:414
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr "Подаци о локалитету узимају се из locale1 уместо из корисничке поставе"
 
-#: main_wayland.cpp:434
+#: main_wayland.cpp:443
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Метод уноса који К‑вин покреће."
 
-#: main_wayland.cpp:440
+#: main_wayland.cpp:449
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Покреће сесију у закључаном режиму."
 
-#: main_wayland.cpp:444
+#: main_wayland.cpp:453
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Покреће сесију без подршке за закључавање екрана."
 
-#: main_wayland.cpp:449
+#: main_wayland.cpp:458
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Покреће сесију без подршке за глобалне пречице."
 
 # rewrite-msgid: /KActivities/activities/
-#: main_wayland.cpp:454
+#: main_wayland.cpp:463
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Искључи уклапање са активностима."
 
-#: main_wayland.cpp:459
+#: main_wayland.cpp:468
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Излазак пошто се програм сесије, који покрене К‑вин, затвори."
 
-#: main_wayland.cpp:464
+#: main_wayland.cpp:473
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
