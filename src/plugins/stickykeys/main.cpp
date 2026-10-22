@@ -17,7 +17,7 @@ class KWIN_EXPORT StickyKeysFactory : public KWin::PluginFactory
 public:
     std::unique_ptr<KWin::Plugin> create() const override
     {
-        return std::make_unique<StickyKeysFilter>();
+        return std::make_unique<KWin::StickyKeysFilter>();
     }
 };
 

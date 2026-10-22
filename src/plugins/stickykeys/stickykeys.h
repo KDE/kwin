@@ -11,15 +11,18 @@
 #include "input.h"
 #include "input_event.h"
 
-class StickyKeysFilter : public KWin::Plugin, public KWin::InputEventFilter
+namespace KWin
+{
+
+class StickyKeysFilter : public Plugin, public InputEventFilter
 {
     Q_OBJECT
 
 public:
     explicit StickyKeysFilter();
 
-    bool keyboardKey(KWin::KeyboardKeyEvent *event) override;
-    bool pointerButton(KWin::PointerButtonEvent *event) override;
+    bool keyboardKey(KeyboardKeyEvent *event) override;
+    bool pointerButton(PointerButtonEvent *event) override;
 
     enum KeyState {
         None,
@@ -40,3 +43,5 @@ private:
     QSet<int> m_pressedModifiers;
     bool m_ringBell = false;
 };
+
+}
