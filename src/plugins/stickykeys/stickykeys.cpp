@@ -45,8 +45,8 @@ StickyKeysFilter::StickyKeysFilter()
     });
     loadConfig(m_configWatcher->config()->group(groupName));
 
-    for (Qt::Key mod : std::as_const(m_modifiers)) {
-        m_keyStates[mod] = KeyState::None;
+    for (Qt::Key modifier : std::as_const(m_modifiers)) {
+        m_keyStates[modifier] = KeyState::None;
     }
 }
 
@@ -135,21 +135,21 @@ bool StickyKeysFilter::keyboardKey(KeyboardKeyEvent *event)
                     input()->keyboard()->xkb()->setModifierLocked(keyToModifier(event->key), true);
                     changed = true;
 
-                    if (m_showNotificationForLockedKeys) {
 #if KWIN_BUILD_NOTIFICATIONS
-                        KNotification *noti = new KNotification("modifierkey-locked");
-                        noti->setComponentName("kaccess");
+                    if (m_showNotificationForLockedKeys) {
+                        auto notification = new KNotification("modifierkey-locked");
+                        notification->setComponentName("kaccess");
 
-                        for (const auto mod : modifiers) {
-                            if (mod.key == event->key) {
-                                noti->setText(mod.lockedText.toString());
+                        for (const auto &modifier : modifiers) {
+                            if (modifier.key == event->key) {
+                                notification->setText(modifier.lockedText.toString());
                                 break;
                             }
                         }
 
-                        noti->sendEvent();
-#endif
+                        notification->sendEvent();
                     }
+#endif
                 }
                 // A locked modifier was pressed, unlock it
                 else if (*keyState == KeyState::Locked && m_lockKeys) {
