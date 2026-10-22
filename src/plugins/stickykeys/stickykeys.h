@@ -36,10 +36,10 @@ private:
 
     KConfigWatcher::Ptr m_configWatcher;
     QMap<Qt::Key, KeyState> m_modifierStates;
+    QSet<Qt::Key> m_pressedModifiers;
     bool m_lockKeys = false;
     bool m_showNotificationForLockedKeys = false;
     bool m_disableOnTwoKeys = false;
-    QSet<Qt::Key> m_pressedModifiers;
     bool m_ringBell = false;
 };
 
