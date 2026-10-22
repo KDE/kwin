@@ -50,7 +50,7 @@ StickyKeysFilter::StickyKeysFilter()
     }
 }
 
-Xkb::Modifier keyToModifier(Qt::Key key)
+static Xkb::Modifier keyToModifier(Qt::Key key)
 {
     if (key == Qt::Key_Shift) {
         return Xkb::Shift;
