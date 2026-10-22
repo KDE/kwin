@@ -104,19 +104,19 @@ void StickyKeysTest::testStick()
 
     quint32 timestamp = 0;
 
-    // press mod to latch it
+    // press the mod
     Test::keyboardKeyPressed(modifierKey, ++timestamp);
     QVERIFY(modifierSpy.wait());
     // arguments are: quint32 depressed, quint32 latched, quint32 locked, quint32 group
     QCOMPARE(modifierSpy.first()[1], expectedMods); // verify that mod is depressed
-    QCOMPARE(modifierSpy.first()[2], expectedMods); // verify that mod is latched
+    QCOMPARE(modifierSpy.first()[2], 0); // verify that mod is not latched yet
 
     modifierSpy.clear();
-    // release mod, the modifier should still be latched
+    // release the mod to latch it
     Test::keyboardKeyReleased(modifierKey, ++timestamp);
     QVERIFY(modifierSpy.wait());
     QCOMPARE(modifierSpy.first()[1], 0); // verify that mod is not depressed
-    QCOMPARE(modifierSpy.first()[2], expectedMods); // verify that mod is still latched
+    QCOMPARE(modifierSpy.first()[2], expectedMods); // verify that mod is latched now
 
     // press and release a letter, this unlatches the modifier
     modifierSpy.clear();
@@ -182,40 +182,38 @@ void StickyKeysTest::testLock()
 
     quint32 timestamp = 0;
 
-    // press mod to latch it
+    // press the mod
     Test::keyboardKeyPressed(modifierKey, ++timestamp);
     QVERIFY(waitSignals(modifierSpy, keyStateSpy));
     // arguments are: quint32 depressed, quint32 latched, quint32 locked, quint32 group
     QCOMPARE(modifierSpy.first()[1], expectedMods); // verify that mod is depressed
-    QCOMPARE(modifierSpy.first()[2], expectedMods); // verify that mod is latched
-    QCOMPARE(Test::keyState()->keyToState[keyStateKey], Test::KeyStateV1::state_latched);
+    QCOMPARE(modifierSpy.first()[2], 0); // verify that mod is not latched yet
+    QCOMPARE(Test::keyState()->keyToState[keyStateKey], Test::KeyStateV1::state_pressed);
 
     modifierSpy.clear();
-    // release mod, the modifier should still be latched
+    // release the mod to latch it
     Test::keyboardKeyReleased(modifierKey, ++timestamp);
     QVERIFY(waitSignals(modifierSpy, keyStateSpy));
     QCOMPARE(modifierSpy.first()[1], 0); // verify that mod is not depressed
-    QCOMPARE(modifierSpy.first()[2], expectedMods); // verify that mod is still latched
+    QCOMPARE(modifierSpy.first()[2], expectedMods); // verify that mod is latched now
     QCOMPARE(Test::keyState()->keyToState[keyStateKey], Test::KeyStateV1::state_latched);
 
-    // press mod again to lock it
+    // press the mod again
     modifierSpy.clear();
     Test::keyboardKeyPressed(modifierKey, ++timestamp);
     QVERIFY(waitSignals(modifierSpy, keyStateSpy));
     QCOMPARE(modifierSpy.first()[1], expectedMods); // verify that mod is depressed
-    QCOMPARE(modifierSpy.first()[2], 0); // verify that mod is unlatched
-    QCOMPARE(modifierSpy.first()[3], expectedMods); // verify that mod is locked
-    QCOMPARE(Test::keyState()->keyToState[keyStateKey], Test::KeyStateV1::state_locked);
+    QCOMPARE(modifierSpy.first()[2], expectedMods); // verify that mod is unlatched
+    QCOMPARE(modifierSpy.first()[3], 0); // verify that mod is not locked yet
+    QCOMPARE(Test::keyState()->keyToState[keyStateKey], Test::KeyStateV1::state_latched);
 
-    // release mod, modifier should still be locked
+    // release the mod to lock it
     modifierSpy.clear();
     Test::keyboardKeyReleased(modifierKey, ++timestamp);
     QVERIFY(modifierSpy.wait());
     QCOMPARE(modifierSpy.first()[1], 0);
     QCOMPARE(modifierSpy.first()[2], 0);
-    QEXPECT_FAIL("", "FIXME!", Continue);
     QCOMPARE(modifierSpy.first()[3], expectedMods);
-    QEXPECT_FAIL("", "FIXME!", Continue);
     QCOMPARE(Test::keyState()->keyToState[keyStateKey], Test::KeyStateV1::state_locked);
 
     // press and release a letter, this does not unlock the modifier
@@ -226,16 +224,22 @@ void StickyKeysTest::testLock()
     Test::keyboardKeyReleased(KEY_A, ++timestamp);
     QVERIFY(!modifierSpy.wait(10));
 
-    // press mod again to unlock it
+    // press the mod again
     Test::keyboardKeyPressed(modifierKey, ++timestamp);
     QVERIFY(waitSignals(modifierSpy, keyStateSpy));
     QCOMPARE(modifierSpy.first()[1], expectedMods); // verify that mod is depressed
     QCOMPARE(modifierSpy.first()[2], 0); // verify that mod is unlatched
-    QCOMPARE(modifierSpy.first()[3], 0); // verify that mod is not locked
-    QEXPECT_FAIL("", "FIXME!", Continue);
-    QCOMPARE(Test::keyState()->keyToState[keyStateKey], Test::KeyStateV1::state_unlocked);
+    QCOMPARE(modifierSpy.first()[3], expectedMods); // verify that mod is still locked
+    QCOMPARE(Test::keyState()->keyToState[keyStateKey], Test::KeyStateV1::state_locked);
 
+    // release the mod to unlock it
+    modifierSpy.clear();
     Test::keyboardKeyReleased(modifierKey, ++timestamp);
+    QVERIFY(waitSignals(modifierSpy, keyStateSpy));
+    QCOMPARE(modifierSpy.first()[1], 0); // verify that mod is depressed
+    QCOMPARE(modifierSpy.first()[2], 0); // verify that mod is unlatched
+    QCOMPARE(modifierSpy.first()[3], 0); // verify that mod is unlocked
+    QCOMPARE(Test::keyState()->keyToState[keyStateKey], Test::KeyStateV1::state_unlocked);
 }
 
 void StickyKeysTest::testDisableTwoKeys()
@@ -260,16 +264,11 @@ void StickyKeysTest::testDisableTwoKeys()
     QVERIFY(modifierSpy.wait());
     // arguments are: quint32 depressed, quint32 latched, quint32 locked, quint32 group
     QCOMPARE(modifierSpy.first()[1], 1); // verify that mod is depressed
-    QCOMPARE(modifierSpy.first()[2], 1); // verify that mod is latched
+    QCOMPARE(modifierSpy.first()[2], 0); // verify that mod is not latched yet
     modifierSpy.clear();
 
     // press key while modifier is pressed, this disables sticky keys
     Test::keyboardKeyPressed(KEY_A, ++timestamp);
-    QVERIFY(modifierSpy.wait());
-    QCOMPARE(modifierSpy.first()[1], 1); // verify that mod is depressed
-    QCOMPARE(modifierSpy.first()[2], 0); // verify that mod is not latched any more
-    modifierSpy.clear();
-
     Test::keyboardKeyReleased(KEY_A, ++timestamp);
 
     // release mod, the modifier should not be depressed or latched
@@ -337,14 +336,14 @@ void StickyKeysTest::testMouse()
     QVERIFY(modifierSpy.wait());
     // arguments are: quint32 depressed, quint32 latched, quint32 locked, quint32 group
     QCOMPARE(modifierSpy.first()[1], expectedMods); // verify that mod is depressed
-    QCOMPARE(modifierSpy.first()[2], expectedMods); // verify that mod is latched
+    QCOMPARE(modifierSpy.first()[2], 0); // verify that mod is not latched yet
 
     modifierSpy.clear();
-    // release mod, the modifier should still be latched
+    // release mod, the modifier should be latched
     Test::keyboardKeyReleased(modifierKey, ++timestamp);
     QVERIFY(modifierSpy.wait());
     QCOMPARE(modifierSpy.first()[1], 0); // verify that mod is not depressed
-    QCOMPARE(modifierSpy.first()[2], expectedMods); // verify that mod is still latched
+    QCOMPARE(modifierSpy.first()[2], expectedMods); // verify that mod is latched
 
     // press and release a mouse button, this unlatches the modifier
     modifierSpy.clear();

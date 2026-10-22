@@ -114,20 +114,14 @@ bool StickyKeysFilter::keyboardKey(KeyboardKeyEvent *event)
     if (m_modifiers.contains(event->key)) {
         if (pressed) {
             m_pressedModifiers << event->key;
-        } else {
-            m_pressedModifiers.remove(event->key);
-        }
-
-        auto keyState = m_keyStates.find(event->key);
-
-        if (m_ringBell && !pressed) {
-            if (auto effect = effects->provides(Effect::SystemBell)) {
-                effect->perform(Effect::SystemBell, {});
+        } else if (m_pressedModifiers.remove(event->key)) {
+            if (m_ringBell) {
+                if (auto effect = effects->provides(Effect::SystemBell)) {
+                    effect->perform(Effect::SystemBell, {});
+                }
             }
-        }
 
-        if (keyState != m_keyStates.end()) {
-            if (pressed) {
+            if (auto keyState = m_keyStates.find(event->key); keyState != m_keyStates.end()) {
                 // An unlatched modifier was pressed, latch it
                 if (keyState.value() == None) {
                     keyState.value() = Latched;
@@ -181,6 +175,9 @@ bool StickyKeysFilter::keyboardKey(KeyboardKeyEvent *event)
 
             input()->keyboard()->xkb()->setModifierLatched(keyToModifier(static_cast<Qt::Key>(it->first)), false);
             changed = true;
+
+            // Avoid latching and locking modifiers when a normal key is pressed so shortcuts work as expected.
+            m_pressedModifiers.remove(it->first);
         }
     }
     if (changed) {
@@ -197,6 +194,8 @@ void StickyKeysFilter::disableStickyKeys()
         input()->keyboard()->xkb()->setModifierLatched(keyToModifier(static_cast<Qt::Key>(it->first)), false);
         input()->keyboard()->xkb()->setModifierLocked(keyToModifier(static_cast<Qt::Key>(it->first)), false);
     }
+
+    m_pressedModifiers.clear();
 
     input()->uninstallInputEventFilter(this);
 }
@@ -219,6 +218,8 @@ bool StickyKeysFilter::pointerButton(PointerButtonEvent *event)
             QTimer::singleShot(0, this, [] {
                 input()->keyboard()->xkb()->forwardModifiers();
             });
+
+            m_pressedModifiers.remove(it->first);
         }
     }
 
