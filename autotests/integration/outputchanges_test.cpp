@@ -128,7 +128,6 @@ private Q_SLOTS:
     void testMaximizedWindowDoesntDisappear();
     void testXwaylandScaleChange();
 
-    void testWindowNotRestoredAfterMovingWindowAndEnablingOutput();
     void testLaptopLidClosed();
     void testGenerateConfigs_data();
     void testGenerateConfigs();
@@ -408,56 +407,6 @@ void OutputChangesTest::testWindowRestoredAfterEnablingOutput()
     // The window will be moved back to the right monitor.
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
     QCOMPARE(window->frameGeometry(), RectF(1280 + 50, 100, 100, 50));
-}
-
-void OutputChangesTest::testWindowNotRestoredAfterMovingWindowAndEnablingOutput()
-{
-    // This test verifies that a window won't be moved to its original output when it's
-    // hotplugged because the window was moved manually by the user.
-
-    const auto outputs = kwinApp()->outputBackend()->outputs();
-
-    // Create a window.
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
-    QVERIFY(window);
-
-    // Move the window to the right output.
-    window->move(QPointF(1280 + 50, 100));
-    QCOMPARE(window->output()->backendOutput(), outputs[1]);
-    QCOMPARE(window->frameGeometry(), RectF(1280 + 50, 100, 100, 50));
-
-    // Disable the right output.
-    OutputConfiguration config1;
-    {
-        auto changeSet = config1.changeSet(outputs[1]);
-        changeSet->enabled = false;
-    }
-    QVERIFY(workspace()->applyOutputConfiguration(config1));
-
-    // The window will be moved to the left monitor.
-    QCOMPARE(window->output()->backendOutput(), outputs[0]);
-    QCOMPARE(window->frameGeometry(), RectF(50, 100, 100, 50));
-
-    // Pretend that the user moved the window.
-    workspace()->slotWindowMove();
-    QVERIFY(window->isInteractiveMove());
-    window->keyPressEvent(Qt::Key_Right);
-    window->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(window->frameGeometry(), RectF(58, 100, 100, 50));
-
-    // Enable the right monitor.
-    OutputConfiguration config2;
-    {
-        auto changeSet = config2.changeSet(outputs[1]);
-        changeSet->enabled = true;
-    }
-    QVERIFY(workspace()->applyOutputConfiguration(config2));
-
-    // The window is still on the left monitor because user manually moved it.
-    QCOMPARE(window->output()->backendOutput(), outputs[0]);
-    QCOMPARE(window->frameGeometry(), RectF(58, 100, 100, 50));
 }
 
 void OutputChangesTest::testMaximizedWindowRestoredAfterEnablingOutput()

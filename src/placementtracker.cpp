@@ -81,7 +81,6 @@ void PlacementTracker::restore(const QString &key)
         return;
     }
     auto &dataMap = m_data[key];
-    auto &oldDataMap = m_data[m_currentKey];
     const auto outputs = m_workspace->outputs();
 
     inhibit();
@@ -90,48 +89,13 @@ void PlacementTracker::restore(const QString &key)
         if (it != dataMap.end()) {
             const WindowData &newData = it.value();
 
-            const auto checkQuickTileMode = [window](QuickTileMode oldMode) {
-                if (window->requestedQuickTileMode() == oldMode) {
-                    return true;
-                }
-                // custom-tiled windows lose their quick tile mode when the output they're on is unplugged
-                // TODO find some nicer way of handling this?
-                return window->requestedQuickTileMode() == QuickTileFlag::None && oldMode == QuickTileFlag::Custom;
-            };
-
-            // don't touch windows where the user intentionally changed their state
-            bool restore = window->interactiveMoveResizeCount() == newData.interactiveMoveResizeCount
-                && window->requestedMaximizeMode() == newData.maximize
-                && checkQuickTileMode(newData.quickTile)
-                && window->isFullScreen() == newData.fullscreen;
-            if (!restore) {
-                // the logic above can have false negatives if PlacementTracker changed the window state
-                // to prevent that, also restore if the window still has the same state from that
-                if (const auto it = m_lastRestoreData.find(window); it != m_lastRestoreData.end()) {
-                    restore = window->interactiveMoveResizeCount() == it->interactiveMoveResizeCount
-                        && window->requestedMaximizeMode() == it->maximize
-                        && checkQuickTileMode(it->quickTile)
-                        && window->isFullScreen() == it->fullscreen
-                        && window->moveResizeOutput()->uuid() == it->outputUuid;
-                }
-            }
-            if (!restore) {
-                // restore anyways if the output the window was on got removed
-                if (const auto oldData = oldDataMap.find(window); oldData != oldDataMap.end()) {
-                    restore = std::none_of(outputs.begin(), outputs.end(), [&oldData](const auto output) {
-                        return output->uuid() == oldData->outputUuid;
-                    });
-                }
-            }
-            if (restore) {
-                window->setQuickTileMode(newData.quickTile, newData.geometry.center());
-                window->setMaximize(newData.maximize & MaximizeMode::MaximizeVertical, newData.maximize & MaximizeMode::MaximizeHorizontal);
-                window->setFullScreen(newData.fullscreen);
-                window->moveResize(newData.geometry);
-                window->setGeometryRestore(newData.geometryRestore);
-                window->setFullscreenGeometryRestore(newData.fullscreenGeometryRestore);
-                m_lastRestoreData[window] = dataForWindow(window);
-            }
+            window->setQuickTileMode(newData.quickTile, newData.geometry.center());
+            window->setMaximize(newData.maximize & MaximizeMode::MaximizeVertical, newData.maximize & MaximizeMode::MaximizeHorizontal);
+            window->setFullScreen(newData.fullscreen);
+            window->moveResize(newData.geometry);
+            window->setGeometryRestore(newData.geometryRestore);
+            window->setFullscreenGeometryRestore(newData.fullscreenGeometryRestore);
+            m_lastRestoreData[window] = dataForWindow(window);
         }
         // ensure data in current map is always up to date
         dataMap[window] = dataForWindow(window);
