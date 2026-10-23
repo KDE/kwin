@@ -47,6 +47,7 @@ public:
     GLShader *m_shader = nullptr;
     RenderGeometry::VertexSnappingMode m_vertexSnappingMode = RenderGeometry::VertexSnappingMode::Round;
     QMetaObject::Connection m_windowDamagedConnection;
+    QMetaObject::Connection m_windowOpacityChangedConnection;
     ItemEffect m_windowEffect;
 };
 
@@ -82,6 +83,8 @@ void OffscreenEffect::redirect(EffectWindow *window)
     offscreenData->m_windowEffect = ItemEffect(window->windowItem());
     offscreenData->m_windowDamagedConnection =
         connect(window, &EffectWindow::windowDamaged, this, &OffscreenEffect::handleWindowDamaged);
+    offscreenData->m_windowOpacityChangedConnection =
+        connect(window, &EffectWindow::windowOpacityChanged, this, &OffscreenEffect::handleWindowDamaged);
 
     if (d->windows.size() == 1) {
         setupConnections();
@@ -202,6 +205,7 @@ bool OffscreenData::maybeRender(EffectWindow *window)
 OffscreenData::~OffscreenData()
 {
     QObject::disconnect(m_windowDamagedConnection);
+    QObject::disconnect(m_windowOpacityChangedConnection);
 }
 
 void OffscreenData::setDirty()
