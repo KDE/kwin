@@ -832,7 +832,7 @@ bool XdgToplevelWindow::acceptsFocus() const
                 break;
             }
         }
-        return !isDeleted() && readyForPainting();
+        return true;
     }();
 
     return rules()->checkAcceptFocus(accepts);
