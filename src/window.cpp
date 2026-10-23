@@ -542,7 +542,7 @@ Layer Window::belongsToLayer() const
         return OverlayLayer;
     }
     if (isPictureInPicture()) {
-        return OverlayLayer;
+        return PopupLayer;
     }
     if (isInputMethod()) {
         return OverlayLayer;
