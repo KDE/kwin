@@ -424,11 +424,6 @@ QWindow *InternalWindow::handle() const
     return m_handle;
 }
 
-bool InternalWindow::acceptsFocus() const
-{
-    return false;
-}
-
 bool InternalWindow::belongsToSameApplication(const Window *other, SameApplicationChecks checks) const
 {
     const InternalWindow *otherInternal = qobject_cast<const InternalWindow *>(other);

@@ -132,7 +132,7 @@ bool LayerShellV1Window::isResizable() const
 
 bool LayerShellV1Window::wantsInput() const
 {
-    return acceptsFocus() && readyForPainting();
+    return !isDeleted() && m_shellSurface->acceptsFocus() && readyForPainting();
 }
 
 StrutRect LayerShellV1Window::strutRect(StrutArea area) const
@@ -227,11 +227,6 @@ Layer LayerShellV1Window::belongsToLayer() const
     default:
         Q_UNREACHABLE();
     }
-}
-
-bool LayerShellV1Window::acceptsFocus() const
-{
-    return !isDeleted() && m_shellSurface->acceptsFocus();
 }
 
 void LayerShellV1Window::moveResizeInternal(const RectF &rect, MoveResizeMode mode)

@@ -53,10 +53,6 @@ public:
     {
         return false;
     }
-    bool acceptsFocus() const override
-    {
-        return false;
-    }
     void closeWindow() override
     {
     }

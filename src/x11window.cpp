@@ -1937,12 +1937,7 @@ void X11Window::sendSyncRequest()
 
 bool X11Window::wantsInput() const
 {
-    return rules()->checkAcceptFocus(acceptsFocus() || info->supportsProtocol(NET::TakeFocusProtocol)) && isClient();
-}
-
-bool X11Window::acceptsFocus() const
-{
-    return info->input() && isClient();
+    return isClient() && rules()->checkAcceptFocus(info->input() || info->supportsProtocol(NET::TakeFocusProtocol));
 }
 
 void X11Window::doSetQuickTileMode()

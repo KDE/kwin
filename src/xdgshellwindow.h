@@ -187,7 +187,6 @@ protected:
     void doSetMaximized();
     bool doStartInteractiveMoveResize() override;
     void doFinishInteractiveMoveResize() override;
-    bool acceptsFocus() const override;
     void doSetQuickTileMode() override;
     void doSetSuspended() override;
     void doSetNextTargetScale() override;
@@ -292,7 +291,6 @@ public:
     bool wantsInput() const override;
 
 protected:
-    bool acceptsFocus() const override;
     XdgSurfaceConfigure *sendRoleConfigure() override;
     void handleRoleCommit() override;
     void handleRoleDestroyed() override;

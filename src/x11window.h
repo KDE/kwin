@@ -271,7 +271,6 @@ protected:
     bool isWaitingForInteractiveResizeSync() const override;
     void doInteractiveResizeSync(const RectF &rect) override;
     QSizeF resizeIncrements() const override;
-    bool acceptsFocus() const override;
     void doSetQuickTileMode() override;
     void moveResizeInternal(const RectF &rect, MoveResizeMode mode) override;
     std::unique_ptr<WindowItem> createItem(Item *parentItem) override;
