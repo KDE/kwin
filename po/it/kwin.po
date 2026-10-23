@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-21 03:03+0000\n"
-"PO-Revision-Date: 2026-09-03 17:01+0200\n"
+"POT-Creation-Date: 2026-10-23 02:58+0000\n"
+"PO-Revision-Date: 2026-10-20 15:21+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 26.08.0\n"
+"X-Generator: Poedit 3.10\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -131,7 +131,7 @@ msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
 "Il profilo ICC «%1» è danneggiato, l'analisi della matrice di adattamento "
-"cromatico non è riuscita."
+"cromatico non è riuscita"
 
 #: core/iccprofile.cpp:446
 #, kde-format
@@ -139,7 +139,7 @@ msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
 "Il profilo ICC «%1» è danneggiato, l'inversione della matrice di adattamento "
-"cromatico non è riuscita."
+"cromatico non è riuscita"
 
 #: core/iccprofile.cpp:455 core/iccprofile.cpp:470 core/iccprofile.cpp:488
 #, kde-format
@@ -879,7 +879,7 @@ msgstr "Effetti"
 #: debug_console.cpp:977
 #, kde-format
 msgid "No Mouse Buttons"
-msgstr "nessun pulsante del mouse"
+msgstr "Nessun pulsante del mouse"
 
 #: debug_console.cpp:981
 #, kde-format
@@ -1110,7 +1110,7 @@ msgstr "Finestre"
 #, kde-format
 msgctxt "@action:button"
 msgid "Pick Window…"
-msgstr "Scegli la finestra..."
+msgstr "Scegli la finestra…"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:54
@@ -1420,7 +1420,7 @@ msgstr ""
 #: helpers/killer/killdialog.cpp:66
 #, kde-format
 msgid "Terminating %1…"
-msgstr "Chiusura di %1..."
+msgstr "Chiusura di %1…"
 
 #: helpers/killer/killdialog.cpp:69
 #, kde-format
@@ -1580,12 +1580,12 @@ msgstr "Vlad Zahorodnii"
 msgid "Xaver Hugl"
 msgstr "Xaver Hugl"
 
-#: main_wayland.cpp:340
+#: main_wayland.cpp:349
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Avvia un server Xwayland senza radice."
 
-#: main_wayland.cpp:343
+#: main_wayland.cpp:352
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1593,47 +1593,47 @@ msgstr ""
 "Nome del socket Wayland in ascolto. Se non impostato, è utilizzato "
 "«wayland-0»."
 
-#: main_wayland.cpp:347
+#: main_wayland.cpp:356
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr ""
 "Il Display X11 da utilizzare nella modalità con finestre su piattaforma X11."
 
-#: main_wayland.cpp:351
+#: main_wayland.cpp:360
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "Il Display Wayland da utilizzare nella modalità con finestre su piattaforma "
 "Wayland."
 
-#: main_wayland.cpp:353
+#: main_wayland.cpp:362
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Resa su un framebuffer virtuale."
 
-#: main_wayland.cpp:355
+#: main_wayland.cpp:364
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr ""
 "La larghezza per la modalità con finestre. La larghezza predefinita è 1024."
 
-#: main_wayland.cpp:359
+#: main_wayland.cpp:368
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr ""
 "L'altezza per la modalità con finestre. La larghezza predefinita è 768."
 
-#: main_wayland.cpp:364
+#: main_wayland.cpp:373
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
 msgstr "Decidi se rendere o meno la modalità finestra a schermo intero"
 
-#: main_wayland.cpp:368
+#: main_wayland.cpp:377
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "La scala per la modalità a finestra. Il valore predefinito è 1."
 
-#: main_wayland.cpp:373
+#: main_wayland.cpp:382
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1641,7 +1641,7 @@ msgstr ""
 "Il numero di finestre da aprire come uscite nella modalità con finestre. Il "
 "valore predefinito è 1"
 
-#: main_wayland.cpp:378
+#: main_wayland.cpp:387
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1650,52 +1650,52 @@ msgstr ""
 "Socket di Wayland da utilizzare per le connessioni in entrata. Può essere "
 "combinato con --socket per assegnare un nome al socket"
 
-#: main_wayland.cpp:382
+#: main_wayland.cpp:391
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
 "Socket di XWayland da utilizzare per le connessioni in entrata di Xwayland. "
-"Può essere impostato più volte."
+"Può essere impostato più volte"
 
-#: main_wayland.cpp:386
+#: main_wayland.cpp:395
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Nome del display XWayland che è stato pre-impostato"
 
-#: main_wayland.cpp:390
+#: main_wayland.cpp:399
 #, kde-format
 msgid "XWayland socket to use for Xwayland's init connections"
 msgstr ""
 "Socket XWayland da utilizzare per le connessioni di inizializzazione di "
-"XWayland."
+"XWayland"
 
-#: main_wayland.cpp:394
+#: main_wayland.cpp:403
 #, kde-format
 msgid "Name of the xwayland init display that has been pre-set up"
 msgstr ""
 "Nome della visualizzazione di inizializzazione xwayland che è stata "
 "preconfigurata"
 
-#: main_wayland.cpp:398
+#: main_wayland.cpp:407
 #, kde-format
 msgid "Name of the xauthority file "
-msgstr "Nome del file xauthority"
+msgstr "Nome del file xauthority "
 
-#: main_wayland.cpp:402
+#: main_wayland.cpp:411
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Esce da questa istanza in modo che possa essere riavviata da "
 "kwin_wayland_wrapper."
 
-#: main_wayland.cpp:404
+#: main_wayland.cpp:413
 #, kde-format
 msgid "Render through drm node."
 msgstr "Resa tramite nodo drm."
 
-#: main_wayland.cpp:405
+#: main_wayland.cpp:414
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
@@ -1703,38 +1703,38 @@ msgstr ""
 "Estrai e informazioni sulle impostazioni locali da locale1 anziché dalla "
 "configurazione dell'utente"
 
-#: main_wayland.cpp:434
+#: main_wayland.cpp:443
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Metodo di inserimento che KWin avvia."
 
-#: main_wayland.cpp:440
+#: main_wayland.cpp:449
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Avvia la sessione in modalità bloccata."
 
-#: main_wayland.cpp:444
+#: main_wayland.cpp:453
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Avvia la sessione senza il supporto per il blocco dello schermo."
 
-#: main_wayland.cpp:449
+#: main_wayland.cpp:458
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Avvia la sessione senza il supporto per le scorciatoie globali."
 
-#: main_wayland.cpp:454
+#: main_wayland.cpp:463
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Disabilita l'integrazione di KActivities."
 
-#: main_wayland.cpp:459
+#: main_wayland.cpp:468
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr ""
 "Esci dopo la chiusura dell'applicazione di sessione, che è avviata da KWin."
 
-#: main_wayland.cpp:464
+#: main_wayland.cpp:473
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Le applicazioni da eseguire dopo l'avvio di Wayland e Xwayland"
@@ -2437,7 +2437,7 @@ msgstr "&Colore:"
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
 msgstr ""
 "Disegna con il mouse tenendo premuto i tasti modificatori e spostando il "
-"mouse."
+"mouse"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
@@ -2594,7 +2594,7 @@ msgstr "Aggiungi desktop virtuale"
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Configura i desktop virtuali..."
+msgstr "Configura i desktop virtuali…"
 
 #: plugins/overview/Main.qml:792
 #, kde-format
@@ -2909,7 +2909,7 @@ msgstr "Trasparenza"
 #: plugins/translucency/package/contents/ui/config.ui:20
 #, kde-format
 msgid "General Translucency Settings"
-msgstr "Impostazioni generali della trasparenza:"
+msgstr "Impostazioni generali della trasparenza"
 
 #. i18n: ectx: property (text), widget (QLabel, comboboxpopup_label)
 #: plugins/translucency/package/contents/ui/config.ui:64
@@ -3684,7 +3684,7 @@ msgstr "Tipo di regola Nascondi da schermate e registrazioni dello schermo"
 #: scene/workspacescene.cpp:116
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
-msgstr "Attiva/disattiva l'effetto «Mostra composizione»."
+msgstr "Attiva/disattiva l'effetto «Mostra composizione»"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3824,17 +3824,17 @@ msgstr "Nascondi da sc&hermate e registrazioni dello schermo"
 #: useractions.cpp:256
 #, kde-format
 msgid "Set Window Short&cut…"
-msgstr "Imposta s&corciatoia finestra..."
+msgstr "Imposta s&corciatoia finestra…"
 
 #: useractions.cpp:262
 #, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "Configura imposta&zioni specifiche per la finestra..."
+msgstr "Configura imposta&zioni specifiche per la finestra…"
 
 #: useractions.cpp:267
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "Configura im&postazioni specifiche per l'applicazione..."
+msgstr "Configura im&postazioni specifiche per l'applicazione…"
 
 #: useractions.cpp:273
 #, kde-format
@@ -4346,7 +4346,7 @@ msgid ""
 "is unsupported"
 msgstr ""
 "L'impostazione di modalità personalizzate con versioni troppo datate del "
-"protocollo kde-output-management-v2 non è supportata."
+"protocollo kde-output-management-v2 non è supportata"
 
 #: wayland/outputmanagement_v2.cpp:575
 #, kde-format
@@ -4421,30 +4421,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Non risponde)"
 
-#: workspace.cpp:1337
+#: workspace.cpp:1339
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Schermo integrato"
 
-#: workspace.cpp:1350
+#: workspace.cpp:1352
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1360
+#: workspace.cpp:1362
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1363
+#: workspace.cpp:1365
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: workspace.cpp:1832
+#: workspace.cpp:1834
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

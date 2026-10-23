@@ -70,7 +70,7 @@ msgstr "Nová pracovná plocha"
 #, kde-kuit-format
 msgctxt "@label/rich"
 msgid "%1"
-msgstr ""
+msgstr "%1"
 
 #: ui/main.qml:90
 #, kde-format
