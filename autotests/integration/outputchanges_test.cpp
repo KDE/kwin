@@ -1494,7 +1494,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(68, 145),
                .modes = {OutputModeline(QSize(1080, 2280), 60000, OutputModeline::Flag::Preferred)},
            }
-        << OutputModeline(QSize(1080, 2280), 60000ul, OutputModeline::Flag::Preferred) << 2.65 << true;
+        << OutputModeline(QSize(1080, 2280), 60000ul, OutputModeline::Flag::Preferred) << 3.0 << true;
 
     QTest::addRow("Samsung Odyssey G5")
         << DeviceType::Desktop

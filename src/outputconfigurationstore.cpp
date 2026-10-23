@@ -889,7 +889,7 @@ double OutputConfigurationStore::chooseScale(BackendOutput *output, const QSize 
             minSize = 800;
         } else {
             // phone screens: even closer than laptops
-            targetDpi = 150;
+            targetDpi = 135;
             minSize = 360;
         }
     } else {
