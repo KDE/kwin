@@ -1464,8 +1464,11 @@ void windowToDesktop(Window *window, VirtualDesktopManager::Direction direction)
 
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     Workspace *ws = Workspace::self();
-    // TODO: why is options->isRollOverDesktops() not honored?
-    const auto desktop = vds->inDirection(vds->currentDesktop(window->output()), direction, true);
+    const auto current = vds->currentDesktop(window->output());
+    const auto desktop = vds->inDirection(current, direction, options->isRollOverDesktops());
+    if (desktop == current) {
+        return;
+    }
     if (ws->moveResizeWindow()) {
         if (ws->moveResizeWindow() == window) {
             vds->setCurrent(desktop, window->output());
