@@ -52,7 +52,6 @@ public:
 
 protected:
     Layer belongsToLayer() const override;
-    bool acceptsFocus() const override;
     void moveResizeInternal(const RectF &rect, MoveResizeMode mode) override;
     void doSetNextTargetScale() override;
     void doSetPreferredBufferTransform() override;

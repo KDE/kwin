@@ -818,25 +818,24 @@ void XdgToplevelWindow::takeFocus()
 
 bool XdgToplevelWindow::wantsInput() const
 {
-    return rules()->checkAcceptFocus(acceptsFocus());
-}
+    const bool accepts = [this]() {
+        if (m_plasmaShellSurface) {
+            if (m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::OnScreenDisplay || m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::ToolTip) {
+                return false;
+            }
+            switch (m_plasmaShellSurface->role()) {
+            case PlasmaShellSurfaceInterface::Role::Notification:
+            case PlasmaShellSurfaceInterface::Role::CriticalNotification:
+            case PlasmaShellSurfaceInterface::Role::Panel:
+                return m_plasmaShellSurface->panelTakesFocus();
+            default:
+                break;
+            }
+        }
+        return !isDeleted() && readyForPainting();
+    }();
 
-bool XdgToplevelWindow::acceptsFocus() const
-{
-    if (m_plasmaShellSurface) {
-        if (m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::OnScreenDisplay || m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::ToolTip) {
-            return false;
-        }
-        switch (m_plasmaShellSurface->role()) {
-        case PlasmaShellSurfaceInterface::Role::Notification:
-        case PlasmaShellSurfaceInterface::Role::CriticalNotification:
-        case PlasmaShellSurfaceInterface::Role::Panel:
-            return m_plasmaShellSurface->panelTakesFocus();
-        default:
-            break;
-        }
-    }
-    return !isDeleted() && readyForPainting();
+    return rules()->checkAcceptFocus(accepts);
 }
 
 void XdgToplevelWindow::handleWindowTitleChanged()
@@ -1978,11 +1977,6 @@ void XdgPopupWindow::closeWindow()
 }
 
 bool XdgPopupWindow::wantsInput() const
-{
-    return false;
-}
-
-bool XdgPopupWindow::acceptsFocus() const
 {
     return false;
 }

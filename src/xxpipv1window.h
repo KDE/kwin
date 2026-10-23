@@ -28,7 +28,6 @@ public:
     bool wantsInput() const override;
 
 protected:
-    bool acceptsFocus() const override;
     XdgSurfaceConfigure *sendRoleConfigure() override;
     void handleRoleCommit() override;
     void handleRoleDestroyed() override;

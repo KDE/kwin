@@ -76,7 +76,6 @@ Q_SIGNALS:
     void presented(const KWin::InternalWindowFrame &frame);
 
 protected:
-    bool acceptsFocus() const override;
     bool belongsToSameApplication(const Window *other, SameApplicationChecks checks) const override;
     void updateCaption() override;
     void moveResizeInternal(const RectF &rect, MoveResizeMode mode) override;

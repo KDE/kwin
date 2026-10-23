@@ -1721,12 +1721,6 @@ protected:
     void markAsDeleted();
     void markAsPlaced();
     /*!
-     * Whether the window accepts focus.
-     * The difference to wantsInput is that the implementation should not check rules and return
-     * what the window effectively supports.
-     */
-    virtual bool acceptsFocus() const = 0;
-    /*!
      * Called from setActive once the active value got updated, but before the changed signal
      * is emitted.
      *
