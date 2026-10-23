@@ -556,10 +556,10 @@ Layer Window::belongsToLayer() const
     if (isSplash()) { // no damn annoying splashscreens
         return NormalLayer; // getting in the way of everything else
     }
-    if (isDock() || isAppletPopup()) {
+    if (isDock()) {
         return AboveLayer;
     }
-    if (isPopupWindow()) {
+    if (isPopupWindow() || isAppletPopup()) {
         return PopupLayer;
     }
     if (isOnScreenDisplay()) {
