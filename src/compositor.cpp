@@ -477,6 +477,19 @@ static bool prepareDirectScanout(RenderView *view, LogicalOutput *logicalOutput,
     if (!attrs) {
         return false;
     }
+    const auto compatibleDevice = GpuManager::self()->compatibleRenderDevice(layer->scanoutDevice());
+    if (attrs->device != layer->scanoutDevice()->deviceId() && attrs->device != compatibleDevice->deviceId()) {
+        // Disallow direct scanout between GPUs, as
+        // - there are some significant driver bugs with direct scanout from other GPUs,
+        //   like https://gitlab.freedesktop.org/drm/amd/-/issues/2075
+        // - with implicit modifiers, direct scanout on secondary GPUs
+        //   is also very unlikely to yield the correct results.
+        // - requesting clients to re-allocate from an incompatible device can trigger
+        //   driver bugs as well (like rendering freezing on Nvidia, when asked to
+        //   re-allocate for an integrated GPU)
+        return false;
+    }
+
     const auto info = FormatInfo::get(attrs->format);
     const auto bufferType = info && info->floatingPoint ? ColorPipeline::InputType::FloatingPoint : ColorPipeline::InputType::FixedPoint;
 
