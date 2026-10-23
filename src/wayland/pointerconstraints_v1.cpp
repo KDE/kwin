@@ -192,6 +192,7 @@ LockedPointerV1Interface::LockedPointerV1Interface(SurfaceInterface *surface,
         priv->lastTransaction->amend(surface, lock);
     } else {
         lock(priv->current.get());
+        lock(priv->pending.get());
         priv->effectivePointerLock = priv->mapConfinementRegion(region);
         Q_EMIT surface->pointerConfinementChangedWithoutCommit();
         Q_EMIT surface->lockedPointerRegionChanged();
@@ -216,6 +217,7 @@ LockedPointerV1Interface::~LockedPointerV1Interface()
             priv->lastTransaction->amend(d->m_surface, unlock);
         } else {
             unlock(priv->current.get());
+            unlock(priv->pending.get());
             priv->effectivePointerLock.reset();
             Q_EMIT d->m_surface->pointerConfinementChangedWithoutCommit();
             Q_EMIT d->m_surface->lockedPointerRegionChanged();
@@ -312,6 +314,7 @@ ConfinedPointerV1Interface::ConfinedPointerV1Interface(SurfaceInterface *surface
         priv->lastTransaction->amend(surface, lock);
     } else {
         lock(priv->current.get());
+        lock(priv->pending.get());
         priv->effectivePointerConfinement = priv->mapConfinementRegion(region);
         Q_EMIT surface->pointerConfinementChangedWithoutCommit();
         Q_EMIT surface->confinedPointerRegionChanged();
@@ -334,6 +337,7 @@ ConfinedPointerV1Interface::~ConfinedPointerV1Interface()
             priv->lastTransaction->amend(d->m_surface, amend);
         } else {
             amend(priv->current.get());
+            amend(priv->pending.get());
             priv->effectivePointerConfinement.reset();
             Q_EMIT d->m_surface->pointerConfinementChangedWithoutCommit();
             Q_EMIT d->m_surface->confinedPointerRegionChanged();
