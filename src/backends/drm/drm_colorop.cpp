@@ -173,12 +173,12 @@ static std::optional<Assignments> findColorPipelineAssignments(DrmAbstractColorO
     auto nextHardwareOp = hardwareOp->supportsMultipleOps() ? hardwareOp : hardwareOp->next();
     auto ret = findColorPipelineAssignments(nextHardwareOp, hardwareOp, nextOps, outputScaling ? std::optional(outputScaling->inverse) : std::nullopt);
     if (!ret) {
-        if (!nextHardwareOp) {
+        // A block already in use can finish here without being bypassed.
+        if (isInput && !hardwareOp->canBypass()) {
             return std::nullopt;
         }
-        // in some cases, skipping hardware ops can find working configurations
-        // as some hardware ops can only operate on specific color spaces
-        if (auto ret = findColorPipelineAssignments(nextHardwareOp->next(), nextHardwareOp, ops, previousInverseOutputScaling)) {
+        // Retry the remaining transform at the immediate next block.
+        if (auto ret = findColorPipelineAssignments(hardwareOp->next(), hardwareOp, ops, previousInverseOutputScaling)) {
             backpropagateNextInputScaling(hardwareOp, previousHardwareOp, *ret);
             return ret;
         } else {
