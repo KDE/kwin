@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-22 00:52+0000\n"
-"PO-Revision-Date: 2026-10-19 15:27+0200\n"
+"POT-Creation-Date: 2026-10-23 00:50+0000\n"
+"PO-Revision-Date: 2026-10-22 21:36+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -1871,25 +1871,15 @@ msgstr ""
 "<application>%1</application> иска да контролира устройствата за въвеждане"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check, %1 is the application name. This option always allow apps "
-#| "claiming to be a given application name to control input devices"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option remembers the "
 "selection for apps claiming to be a given application name"
 msgid "Remember for apps claiming to be %1"
-msgstr "Винаги да се  позволява на приложения, които твърдят, че са %1"
+msgstr "Запомняне за приложения, които твърдят, че са %1"
 
 #: plugins/eis/eisprompter.cpp:66
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Identities of legacy X11 apps cannot be verified. Any app claiming to be "
-#| "<application>%1</application> will be able to control input devices. You "
-#| "can revoke this permission later on <application>System Settings</"
-#| "application>’ “Legacy X11 App Support” page."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Identities of legacy X11 apps cannot be verified. If permitted any app "
@@ -1897,11 +1887,11 @@ msgid ""
 "devices. You can change this setting later on <application>System Settings</"
 "application>’ “Legacy X11 App Support” page."
 msgstr ""
-"Идентичността на старите X11 приложения не може да бъде потвърдена. Всяко "
-"приложение, което твърди, че е <application>%1</application>, ще може да "
-"контролира устройствата за въвеждане. Можете да оттеглите това разрешение по-"
-"късно в <application>Системни настройки</application> на страницата "
-"„Поддръжка на стари X11 приложения“."
+"Идентичностите на старите X11 приложения не могат да бъдат проверени. Ако "
+"бъде разрешено, всяко приложение, заявяващо, че е <application>%1</"
+"application>, ще може да контролира устройствата за въвеждане. Тази "
+"настройка може да бъде променена по-късно в <application>Системни настройки</"
+"application> на страницата „Поддръжка на стари X11 приложения“."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
@@ -2795,31 +2785,31 @@ msgstr "Вертикално:"
 msgid "Slide desktop background"
 msgstr "Сменяне на фона на работния плот"
 
-#: plugins/stickykeys/stickykeys.cpp:26
+#: plugins/stickykeys/stickykeys.cpp:29
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "Клавишът Shift е натиснат и е активен за всички последващи клавиши."
 
-#: plugins/stickykeys/stickykeys.cpp:27
+#: plugins/stickykeys/stickykeys.cpp:30
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "Клавишът Ctrl е натиснат и е активен за всички последващи клавиши."
 
-#: plugins/stickykeys/stickykeys.cpp:28
+#: plugins/stickykeys/stickykeys.cpp:31
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "Клавишът Alt е натиснат и е активен за всички последващи клавиши."
 
-#: plugins/stickykeys/stickykeys.cpp:29
+#: plugins/stickykeys/stickykeys.cpp:32
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "Клавишът Meta е натиснат и е активен за всички последващи клавиши."
 
-#: plugins/stickykeys/stickykeys.cpp:30
+#: plugins/stickykeys/stickykeys.cpp:33
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
@@ -3755,7 +3745,7 @@ msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
 msgstr "Поглед върху работния плот"
 
-#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
+#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:210
 #, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
@@ -4440,30 +4430,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Не отговаря)"
 
-#: workspace.cpp:1350
+#: workspace.cpp:1352
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Вграден екран"
 
-#: workspace.cpp:1363
+#: workspace.cpp:1365
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1373
+#: workspace.cpp:1375
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1376
+#: workspace.cpp:1378
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2```"
 
-#: workspace.cpp:1845
+#: workspace.cpp:1847
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

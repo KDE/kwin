@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-22 00:52+0000\n"
+"POT-Creation-Date: 2026-10-23 00:50+0000\n"
 "PO-Revision-Date: 2026-10-20 07:28-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -2804,7 +2804,7 @@ msgstr "Vertical:"
 msgid "Slide desktop background"
 msgstr "Deslizar o plano de fundo da área de trabalho"
 
-#: plugins/stickykeys/stickykeys.cpp:26
+#: plugins/stickykeys/stickykeys.cpp:29
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
@@ -2812,7 +2812,7 @@ msgstr ""
 "A tecla Shift foi travada e agora está ativa para todas as teclas que forem "
 "pressionadas em seguida."
 
-#: plugins/stickykeys/stickykeys.cpp:27
+#: plugins/stickykeys/stickykeys.cpp:30
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
@@ -2820,7 +2820,7 @@ msgstr ""
 "A tecla Control foi travada e agora está ativa para todas as teclas que "
 "forem pressionadas em seguida."
 
-#: plugins/stickykeys/stickykeys.cpp:28
+#: plugins/stickykeys/stickykeys.cpp:31
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
@@ -2828,7 +2828,7 @@ msgstr ""
 "A tecla Alt foi travada e agora está ativa para todas as teclas que forem "
 "pressionadas em seguida."
 
-#: plugins/stickykeys/stickykeys.cpp:29
+#: plugins/stickykeys/stickykeys.cpp:32
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
@@ -2836,7 +2836,7 @@ msgstr ""
 "A tecla Meta foi travada e agora está ativa para todas as teclas que forem "
 "pressionadas em seguida."
 
-#: plugins/stickykeys/stickykeys.cpp:30
+#: plugins/stickykeys/stickykeys.cpp:33
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
@@ -3775,7 +3775,7 @@ msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
 msgstr "Espiar área de trabalho"
 
-#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
+#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:210
 #, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
@@ -4461,30 +4461,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(não está respondendo)"
 
-#: workspace.cpp:1350
+#: workspace.cpp:1352
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Tela embutida"
 
-#: workspace.cpp:1363
+#: workspace.cpp:1365
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1373
+#: workspace.cpp:1375
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1376
+#: workspace.cpp:1378
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: workspace.cpp:1845
+#: workspace.cpp:1847
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

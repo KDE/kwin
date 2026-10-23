@@ -162,24 +162,18 @@ msgid "Applications allowed to control the pointer and keyboard"
 msgstr "Aplikácie s povolením ovládať ukazovateľ a klávesnicu"
 
 #: ui/main.qml:165
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "See Allowed Applications…"
+#, kde-format
 msgctxt "@action:button"
 msgid "See Denied Applications…"
-msgstr "Zobraziť povolené aplikácie…"
+msgstr "Zobraziť zamietnuté aplikácie…"
 
 #: ui/main.qml:169
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@title:window title of the page opened by the 'See allowed applications' "
-#| "button"
-#| msgid "Applications allowed to control the pointer and keyboard"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See denied applications' "
 "button"
 msgid "Applications never allowed to control the pointer and keyboard"
-msgstr "Aplikácie s povolením ovládať ukazovateľ a klávesnicu"
+msgstr "Aplikácie, ktoré nikdy nesmú ovládať ukazovateľ a klávesnicu"
 
 #: ui/main.qml:178
 #, kde-format

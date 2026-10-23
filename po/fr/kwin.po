@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-22 00:52+0000\n"
-"PO-Revision-Date: 2026-10-17 18:27+0200\n"
+"POT-Creation-Date: 2026-10-23 00:50+0000\n"
+"PO-Revision-Date: 2026-10-21 10:06+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -1913,25 +1913,15 @@ msgstr ""
 "périphériques d'entrée"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check, %1 is the application name. This option always allow apps "
-#| "claiming to be a given application name to control input devices"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option remembers the "
 "selection for apps claiming to be a given application name"
 msgid "Remember for apps claiming to be %1"
-msgstr "Toujours autoriser les applications prétendant être %1"
+msgstr "Se souvenir des applications prétendant être %1"
 
 #: plugins/eis/eisprompter.cpp:66
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Identities of legacy X11 apps cannot be verified. Any app claiming to be "
-#| "<application>%1</application> will be able to control input devices. You "
-#| "can revoke this permission later on <application>System Settings</"
-#| "application>’ “Legacy X11 App Support” page."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Identities of legacy X11 apps cannot be verified. If permitted any app "
@@ -1939,12 +1929,11 @@ msgid ""
 "devices. You can change this setting later on <application>System Settings</"
 "application>’ “Legacy X11 App Support” page."
 msgstr ""
-"Les identités des anciennes applications X11 ne peuvent pas être vérifiées. "
-"Toute application prétendant être <application>%1</application> pourra "
-"prendre le contrôle des périphériques d'entrée. Vous pouvez révoquer cette "
-"autorisation plus tard sur la page « Prise en charge des anciennes "
-"applications sous X11 » de <application>Configuration du système</"
-"application>."
+"Il est impossible de vérifier les identités des anciennes applications sous "
+"X11. Toute application prétendant être <application>%1</application> pourra "
+"prendre le contrôle des périphériques d'entrée. Vous pouvez modifier ce "
+"paramètre plus tard sur la page « Prise en charge des anciennes applications "
+"sous X11 » de <application>Configuration du système</application>."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
@@ -2846,7 +2835,7 @@ msgstr "Vertical :"
 msgid "Slide desktop background"
 msgstr "Faire glisser le fond d'écran"
 
-#: plugins/stickykeys/stickykeys.cpp:26
+#: plugins/stickykeys/stickykeys.cpp:29
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
@@ -2854,7 +2843,7 @@ msgstr ""
 "La touche « Maj. » a été verrouillée et est maintenant active pour tous les "
 "appuis suivants."
 
-#: plugins/stickykeys/stickykeys.cpp:27
+#: plugins/stickykeys/stickykeys.cpp:30
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
@@ -2862,7 +2851,7 @@ msgstr ""
 "La touche « CTRL » a été verrouillée et est maintenant active pour tous les "
 "appuis suivants."
 
-#: plugins/stickykeys/stickykeys.cpp:28
+#: plugins/stickykeys/stickykeys.cpp:31
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
@@ -2870,7 +2859,7 @@ msgstr ""
 "La touche « ALT » a été verrouillée et est maintenant active pour tous les "
 "appuis suivants."
 
-#: plugins/stickykeys/stickykeys.cpp:29
+#: plugins/stickykeys/stickykeys.cpp:32
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
@@ -2878,7 +2867,7 @@ msgstr ""
 "La touche « Meta. » a été verrouillée et est maintenant active pour tous les "
 "appuis suivants."
 
-#: plugins/stickykeys/stickykeys.cpp:30
+#: plugins/stickykeys/stickykeys.cpp:33
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
@@ -3819,7 +3808,7 @@ msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
 msgstr "Coup d'œil sur le bureau"
 
-#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
+#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:210
 #, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
@@ -4509,30 +4498,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ne répond plus)"
 
-#: workspace.cpp:1350
+#: workspace.cpp:1352
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Écran intégré"
 
-#: workspace.cpp:1363
+#: workspace.cpp:1365
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1373
+#: workspace.cpp:1375
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1376
+#: workspace.cpp:1378
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: workspace.cpp:1845
+#: workspace.cpp:1847
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-22 00:52+0000\n"
-"PO-Revision-Date: 2026-09-03 17:01+0200\n"
+"POT-Creation-Date: 2026-10-23 00:50+0000\n"
+"PO-Revision-Date: 2026-10-20 15:21+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 26.08.0\n"
+"X-Generator: Poedit 3.10\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -131,7 +131,7 @@ msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
 "Il profilo ICC «%1» è danneggiato, l'analisi della matrice di adattamento "
-"cromatico non è riuscita."
+"cromatico non è riuscita"
 
 #: core/iccprofile.cpp:446
 #, kde-format
@@ -139,7 +139,7 @@ msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
 "Il profilo ICC «%1» è danneggiato, l'inversione della matrice di adattamento "
-"cromatico non è riuscita."
+"cromatico non è riuscita"
 
 #: core/iccprofile.cpp:455 core/iccprofile.cpp:470 core/iccprofile.cpp:488
 #, kde-format
@@ -879,7 +879,7 @@ msgstr "Effetti"
 #: debug_console.cpp:977
 #, kde-format
 msgid "No Mouse Buttons"
-msgstr "nessun pulsante del mouse"
+msgstr "Nessun pulsante del mouse"
 
 #: debug_console.cpp:981
 #, kde-format
@@ -1110,7 +1110,7 @@ msgstr "Finestre"
 #, kde-format
 msgctxt "@action:button"
 msgid "Pick Window…"
-msgstr "Scegli la finestra..."
+msgstr "Scegli la finestra…"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:54
@@ -1420,7 +1420,7 @@ msgstr ""
 #: helpers/killer/killdialog.cpp:66
 #, kde-format
 msgid "Terminating %1…"
-msgstr "Chiusura di %1..."
+msgstr "Chiusura di %1…"
 
 #: helpers/killer/killdialog.cpp:69
 #, kde-format
@@ -1657,7 +1657,7 @@ msgid ""
 "multiple times"
 msgstr ""
 "Socket di XWayland da utilizzare per le connessioni in entrata di Xwayland. "
-"Può essere impostato più volte."
+"Può essere impostato più volte"
 
 #: main_wayland.cpp:395
 #, kde-format
@@ -1669,7 +1669,7 @@ msgstr "Nome del display XWayland che è stato pre-impostato"
 msgid "XWayland socket to use for Xwayland's init connections"
 msgstr ""
 "Socket XWayland da utilizzare per le connessioni di inizializzazione di "
-"XWayland."
+"XWayland"
 
 #: main_wayland.cpp:403
 #, kde-format
@@ -1681,7 +1681,7 @@ msgstr ""
 #: main_wayland.cpp:407
 #, kde-format
 msgid "Name of the xauthority file "
-msgstr "Nome del file xauthority"
+msgstr "Nome del file xauthority "
 
 #: main_wayland.cpp:411
 #, kde-format
@@ -1890,25 +1890,15 @@ msgstr ""
 "immissione"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check, %1 is the application name. This option always allow apps "
-#| "claiming to be a given application name to control input devices"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option remembers the "
 "selection for apps claiming to be a given application name"
 msgid "Remember for apps claiming to be %1"
-msgstr "Consenti sempre alle applicazioni che dichiarano di essere %1"
+msgstr "Ricorda per le applicazioni che dichiarano di essere %1"
 
 #: plugins/eis/eisprompter.cpp:66
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Identities of legacy X11 apps cannot be verified. Any app claiming to be "
-#| "<application>%1</application> will be able to control input devices. You "
-#| "can revoke this permission later on <application>System Settings</"
-#| "application>’ “Legacy X11 App Support” page."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Identities of legacy X11 apps cannot be verified. If permitted any app "
@@ -1916,7 +1906,7 @@ msgid ""
 "devices. You can change this setting later on <application>System Settings</"
 "application>’ “Legacy X11 App Support” page."
 msgstr ""
-"Non è possibile verificare l'identità delle applicazioni X11 originali. "
+"Impossibile verificare l'identità delle applicazioni X11 originali. "
 "Qualsiasi applicazione che affermi di essere <application>%1</application> "
 "sarà in grado di controllare i dispositivi di immissione. È possibile "
 "revocare questa autorizzazione in seguito nella pagina «Supporto per le "
@@ -2447,7 +2437,7 @@ msgstr "&Colore:"
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
 msgstr ""
 "Disegna con il mouse tenendo premuto i tasti modificatori e spostando il "
-"mouse."
+"mouse"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
@@ -2533,6 +2523,10 @@ msgid ""
 "temporarily active.\n"
 "            "
 msgstr ""
+"\n"
+"                Specifica la data e l'ora fino alle quali Luce notturna deve "
+"rimanere temporaneamente attiva.\n"
+"            "
 
 #. i18n: ectx: label, entry (ActivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:28
@@ -2542,6 +2536,10 @@ msgid ""
 "                Night Light is activated until manually disabled.\n"
 "            "
 msgstr ""
+"\n"
+"                Luce notturna rimane attiva finché non viene disattivata "
+"manualmente.\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedUntil), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:35
@@ -2552,6 +2550,10 @@ msgid ""
 "temporarily inactive.\n"
 "            "
 msgstr ""
+"\n"
+"                Specifica la data e l'ora fino alle quali Luce notturna deve "
+"rimanere temporaneamente inattiva.\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:42
@@ -2561,6 +2563,10 @@ msgid ""
 "                Night Light is suspended until manually turned back on.\n"
 "            "
 msgstr ""
+"\n"
+"                Luce notturna è sospesa finché non viene riattivata "
+"manualmente.\n"
+"            "
 
 #: plugins/outputlocator/outputlocator.cpp:26
 #, kde-format
@@ -2642,7 +2648,7 @@ msgstr "Aggiungi desktop virtuale"
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Configura i desktop virtuali..."
+msgstr "Configura i desktop virtuali…"
 
 #: plugins/overview/Main.qml:792
 #, kde-format
@@ -2803,7 +2809,7 @@ msgstr "Verticale:"
 msgid "Slide desktop background"
 msgstr "Scorri lo sfondo del desktop"
 
-#: plugins/stickykeys/stickykeys.cpp:26
+#: plugins/stickykeys/stickykeys.cpp:29
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
@@ -2811,7 +2817,7 @@ msgstr ""
 "Il tasto Shift è stato bloccato ed è adesso attivo per tutte le immissioni "
 "successive."
 
-#: plugins/stickykeys/stickykeys.cpp:27
+#: plugins/stickykeys/stickykeys.cpp:30
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
@@ -2819,7 +2825,7 @@ msgstr ""
 "Il tasto Ctrl è stato bloccato ed è adesso attivo per tutte le immissioni "
 "successive."
 
-#: plugins/stickykeys/stickykeys.cpp:28
+#: plugins/stickykeys/stickykeys.cpp:31
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
@@ -2827,7 +2833,7 @@ msgstr ""
 "Il tasto Alt è stato bloccato ed è ora attivo per tutte le immissioni "
 "successive."
 
-#: plugins/stickykeys/stickykeys.cpp:29
+#: plugins/stickykeys/stickykeys.cpp:32
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
@@ -2835,7 +2841,7 @@ msgstr ""
 "Il tasto Meta è stato bloccato ed è adesso attivo per tutte le immissioni "
 "successive."
 
-#: plugins/stickykeys/stickykeys.cpp:30
+#: plugins/stickykeys/stickykeys.cpp:33
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
@@ -2957,7 +2963,7 @@ msgstr "Trasparenza"
 #: plugins/translucency/package/contents/ui/config.ui:20
 #, kde-format
 msgid "General Translucency Settings"
-msgstr "Impostazioni generali della trasparenza:"
+msgstr "Impostazioni generali della trasparenza"
 
 #. i18n: ectx: property (text), widget (QLabel, comboboxpopup_label)
 #: plugins/translucency/package/contents/ui/config.ui:64
@@ -3732,7 +3738,7 @@ msgstr "Tipo di regola Nascondi da schermate e registrazioni dello schermo"
 #: scene/workspacescene.cpp:116
 #, kde-format
 msgid "Toggle “Show Compositing” effect"
-msgstr "Attiva/disattiva l'effetto «Mostra composizione»."
+msgstr "Attiva/disattiva l'effetto «Mostra composizione»"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3775,7 +3781,7 @@ msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
 msgstr "Dai un'occhiata al desktop"
 
-#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
+#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:210
 #, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
@@ -3872,17 +3878,17 @@ msgstr "Nascondi da sc&hermate e registrazioni dello schermo"
 #: useractions.cpp:256
 #, kde-format
 msgid "Set Window Short&cut…"
-msgstr "Imposta s&corciatoia finestra..."
+msgstr "Imposta s&corciatoia finestra…"
 
 #: useractions.cpp:262
 #, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "Configura imposta&zioni specifiche per la finestra..."
+msgstr "Configura imposta&zioni specifiche per la finestra…"
 
 #: useractions.cpp:267
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "Configura im&postazioni specifiche per l'applicazione..."
+msgstr "Configura im&postazioni specifiche per l'applicazione…"
 
 #: useractions.cpp:273
 #, kde-format
@@ -4394,7 +4400,7 @@ msgid ""
 "is unsupported"
 msgstr ""
 "L'impostazione di modalità personalizzate con versioni troppo datate del "
-"protocollo kde-output-management-v2 non è supportata."
+"protocollo kde-output-management-v2 non è supportata"
 
 #: wayland/outputmanagement_v2.cpp:575
 #, kde-format
@@ -4469,30 +4475,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Non risponde)"
 
-#: workspace.cpp:1350
+#: workspace.cpp:1352
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Schermo integrato"
 
-#: workspace.cpp:1363
+#: workspace.cpp:1365
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1373
+#: workspace.cpp:1375
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1376
+#: workspace.cpp:1378
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: workspace.cpp:1845
+#: workspace.cpp:1847
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

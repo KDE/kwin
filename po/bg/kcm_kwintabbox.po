@@ -329,36 +329,3 @@ msgstr "Алтернативно преминаване през прозорц�
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Алтернативно преминаване през прозорци на текущото приложение (в обратен ред)"
-
-#~ msgid "Launch an interactive preview for a tabbox switcher"
-#~ msgstr "Стартиране на интерактивна визуализация за превключвател на раздели"
-
-#~ msgid "Path to the Window Switcher QML main file"
-#~ msgstr "Път до главния QML файл на превключвател на прозорци"
-
-#~ msgid "Show also a thumbnail for the desktop"
-#~ msgstr "Показване и на миниатюра за работния плот"
-
-#~ msgctxt "The name of KDE's file manager in this language, if translated"
-#~ msgid "Dolphin"
-#~ msgstr "Dolphin"
-
-#~ msgctxt "The name of KDE's web browser in this language, if translated"
-#~ msgid "Konqueror"
-#~ msgstr "Konqueror"
-
-#~ msgctxt "The name of KDE's email client in this language, if translated"
-#~ msgid "KMail"
-#~ msgstr "KMail"
-
-#~ msgctxt ""
-#~ "The name of KDE's System Settings app in this language, if translated"
-#~ msgid "System Settings"
-#~ msgstr "Системни настройки"
-
-#~ msgid "Peek at Desktop"
-#~ msgstr "Поглед върху работния плот"
-
-#~ msgctxt "An example Desktop Name"
-#~ msgid "Desktop 1"
-#~ msgstr "Работен плот 1"
