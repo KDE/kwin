@@ -29,7 +29,6 @@ PlacementTracker::WindowData PlacementTracker::dataForWindow(Window *window) con
         .geometryRestore = window->geometryRestore(),
         .fullscreen = window->isRequestedFullScreen(),
         .fullscreenGeometryRestore = window->fullscreenGeometryRestore(),
-        .interactiveMoveResizeCount = window->interactiveMoveResizeCount(),
     };
 }
 
@@ -49,9 +48,6 @@ void PlacementTracker::add(Window *window)
     });
     connect(window, &Window::fullScreenChanged, this, [this, window]() {
         saveFullscreen(window);
-    });
-    connect(window, &Window::interactiveMoveResizeFinished, this, [this, window]() {
-        saveInteractionCounter(window);
     });
     connect(window, &Window::maximizeGeometryRestoreChanged, this, [this, window]() {
         saveMaximizeGeometryRestore(window);
@@ -115,13 +111,6 @@ void PlacementTracker::saveGeometry(Window *window)
         auto &data = m_data[m_currentKey][window];
         data.geometry = window->moveResizeGeometry();
         data.outputUuid = window->moveResizeOutput()->uuid();
-    }
-}
-
-void PlacementTracker::saveInteractionCounter(Window *window)
-{
-    if (m_inhibitCount == 0) {
-        m_data[m_currentKey][window].interactiveMoveResizeCount = window->interactiveMoveResizeCount();
     }
 }
 

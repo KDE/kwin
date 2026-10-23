@@ -1098,7 +1098,6 @@ void Window::finishInteractiveMoveResize(bool cancel)
     setElectricBorderMode(std::nullopt);
     workspace()->outline()->hide();
 
-    m_interactiveMoveResize.counter++;
     Q_EMIT interactiveMoveResizeFinished();
 }
 
@@ -4380,11 +4379,6 @@ void Window::setLastUsageSerial(quint32 serial)
 quint32 Window::lastUsageSerial() const
 {
     return m_lastUsageSerial;
-}
-
-uint32_t Window::interactiveMoveResizeCount() const
-{
-    return m_interactiveMoveResize.counter;
 }
 
 void Window::setLockScreenOverlay(bool allowed)

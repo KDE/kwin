@@ -1369,7 +1369,6 @@ public:
     {
         return m_interactiveMoveResize.cursor;
     }
-    uint32_t interactiveMoveResizeCount() const;
 
     void updateInteractiveMoveResize(const QPointF &global, Qt::KeyboardModifiers modifiers);
     /*!
@@ -2075,7 +2074,6 @@ protected:
         QString initialOutputId;
         RectF initialScreenArea;
         QTimer *delayedTimer = nullptr;
-        uint32_t counter = 0;
         MaximizeMode initialMaximizeMode;
         QuickTileMode initialQuickTileMode;
     } m_interactiveMoveResize;

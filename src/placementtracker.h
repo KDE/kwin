@@ -48,11 +48,9 @@ private:
         RectF geometryRestore;
         bool fullscreen;
         RectF fullscreenGeometryRestore;
-        uint32_t interactiveMoveResizeCount;
     };
 
     void saveGeometry(Window *window);
-    void saveInteractionCounter(Window *window);
     void saveMaximize(Window *window);
     void saveQuickTile(Window *window);
     void saveFullscreen(Window *window);
