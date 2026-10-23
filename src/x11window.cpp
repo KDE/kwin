@@ -1935,7 +1935,7 @@ void X11Window::sendSyncRequest()
     m_syncRequest.interactiveResize = isInteractiveResize();
 }
 
-bool X11Window::wantsInput() const
+bool X11Window::acceptsFocus() const
 {
     return isClient() && rules()->checkAcceptFocus(info->input() || info->supportsProtocol(NET::TakeFocusProtocol));
 }

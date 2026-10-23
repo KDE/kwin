@@ -133,7 +133,7 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
 void PlasmaSurfaceTest::testAcceptsFocus_data()
 {
     QTest::addColumn<KWayland::Client::PlasmaShellSurface::Role>("role");
-    QTest::addColumn<bool>("wantsInput");
+    QTest::addColumn<bool>("acceptsFocus");
     QTest::addColumn<bool>("active");
 
     QTest::newRow("Desktop") << KWayland::Client::PlasmaShellSurface::Role::Desktop << true << true;
@@ -162,7 +162,7 @@ void PlasmaSurfaceTest::testAcceptsFocus()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
     QVERIFY(window);
-    QTEST(window->wantsInput(), "wantsInput");
+    QTEST(window->acceptsFocus(), "acceptsFocus");
     QTEST(window->isActive(), "active");
 }
 
@@ -252,7 +252,7 @@ void PlasmaSurfaceTest::testPanelActivate()
     QCOMPARE(panel->windowType(), WindowType::Dock);
     QVERIFY(panel->isDock());
     QFETCH(bool, active);
-    QCOMPARE(panel->wantsInput(), active);
+    QCOMPARE(panel->acceptsFocus(), active);
     QCOMPARE(panel->isActive(), active);
 }
 

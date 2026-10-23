@@ -48,7 +48,7 @@ public:
     bool isMovableAcrossScreens() const override;
     bool isResizable() const override;
     bool isPlaceable() const override;
-    bool wantsInput() const override;
+    bool acceptsFocus() const override;
     bool isInternal() const override;
     bool isLockScreen() const override;
     bool isOutline() const override;

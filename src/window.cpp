@@ -660,7 +660,7 @@ bool Window::isMostRecentlyRaised() const
 
 bool Window::wantsTabFocus() const
 {
-    return (isNormalWindow() || isDialog() || isAppletPopup()) && wantsInput();
+    return (isNormalWindow() || isDialog() || isAppletPopup()) && acceptsFocus();
 }
 
 void Window::takeFocus()
@@ -2036,7 +2036,7 @@ bool Window::mousePressCommandConsumesEvent(Options::MouseCommand command) const
     case Options::MouseActivateAndLower:
     case Options::MouseActivateAndRaise:
     case Options::MouseActivate:
-        return !isActive() && wantsInput();
+        return !isActive() && acceptsFocus();
     case Options::MouseActivateRaiseAndMove:
     case Options::MouseActivateRaiseAndUnrestrictedMove:
     case Options::MouseMove:
@@ -2804,7 +2804,7 @@ void Window::processDecorationButtonPress(const QPointF &localPos, const QPointF
 {
     Options::MouseCommand com = Options::MouseNothing;
     bool active = isActive();
-    if (!wantsInput()) { // we cannot be active, use it anyway
+    if (!acceptsFocus()) { // we cannot be active, use it anyway
         active = true;
     }
 

@@ -40,7 +40,7 @@ public:
     bool isMovable() const override;
     bool isMovableAcrossScreens() const override;
     bool isResizable() const override;
-    bool wantsInput() const override;
+    bool acceptsFocus() const override;
     StrutRect strutRect(StrutArea area) const override;
     bool hasStrut() const override;
     void destroyWindow() override;

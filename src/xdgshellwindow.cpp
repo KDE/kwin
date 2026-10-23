@@ -816,7 +816,7 @@ void XdgToplevelWindow::takeFocus()
     sendPing(PingReason::FocusWindow);
 }
 
-bool XdgToplevelWindow::wantsInput() const
+bool XdgToplevelWindow::acceptsFocus() const
 {
     const bool accepts = [this]() {
         if (m_plasmaShellSurface) {
@@ -1976,7 +1976,7 @@ void XdgPopupWindow::closeWindow()
 {
 }
 
-bool XdgPopupWindow::wantsInput() const
+bool XdgPopupWindow::acceptsFocus() const
 {
     return false;
 }

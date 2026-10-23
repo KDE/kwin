@@ -56,7 +56,7 @@ public:
     void closeWindow() override
     {
     }
-    bool wantsInput() const override
+    bool acceptsFocus() const override
     {
         return false;
     }

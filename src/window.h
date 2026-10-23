@@ -579,7 +579,7 @@ class KWIN_EXPORT Window : public QObject
      * The value is evaluated each time the getter is called.
      * Because of that no changed signal is provided.
      */
-    Q_PROPERTY(bool wantsInput READ wantsInput)
+    Q_PROPERTY(bool wantsInput READ acceptsFocus)
 
     /*!
      * \qmlproperty bool Window::transient
@@ -1308,7 +1308,7 @@ public:
 
     bool wantsTabFocus() const;
     virtual void takeFocus();
-    virtual bool wantsInput() const = 0;
+    virtual bool acceptsFocus() const = 0;
     void checkWorkspacePosition(RectF oldGeometry = RectF(), LogicalOutput *oldOutput = nullptr);
 #if KWIN_BUILD_X11
     virtual xcb_timestamp_t userTime() const;

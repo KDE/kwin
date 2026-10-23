@@ -130,7 +130,7 @@ bool LayerShellV1Window::isResizable() const
     return false;
 }
 
-bool LayerShellV1Window::wantsInput() const
+bool LayerShellV1Window::acceptsFocus() const
 {
     return !isDeleted() && m_shellSurface->acceptsFocus() && readyForPainting();
 }
@@ -311,7 +311,7 @@ void LayerShellV1Window::handleAcceptsFocusChanged()
     switch (m_shellSurface->layer()) {
     case LayerSurfaceV1Interface::TopLayer:
     case LayerSurfaceV1Interface::OverlayLayer:
-        if (wantsInput()) {
+        if (acceptsFocus()) {
             workspace()->activateWindow(this);
         }
         break;

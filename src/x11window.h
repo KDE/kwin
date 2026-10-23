@@ -139,8 +139,7 @@ public:
 
     int sessionStackingOrder() const;
 
-    // Auxiliary functions, depend on the windowType
-    bool wantsInput() const override;
+    bool acceptsFocus() const override;
 
     bool isResizable() const override;
     bool isMovable() const override;

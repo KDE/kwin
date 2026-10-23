@@ -25,7 +25,7 @@ public:
     bool isMovableAcrossScreens() const override;
     bool isCloseable() const override;
     void closeWindow() override;
-    bool wantsInput() const override;
+    bool acceptsFocus() const override;
 
 protected:
     XdgSurfaceConfigure *sendRoleConfigure() override;

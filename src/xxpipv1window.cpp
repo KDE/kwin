@@ -75,7 +75,7 @@ void XXPipV1Window::closeWindow()
     m_shellSurface->sendClosed();
 }
 
-bool XXPipV1Window::wantsInput() const
+bool XXPipV1Window::acceptsFocus() const
 {
     return false;
 }
