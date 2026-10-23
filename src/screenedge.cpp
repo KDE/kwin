@@ -799,7 +799,11 @@ void ScreenEdges::reconfigure()
     }
     KConfigGroup screenEdgesConfig = m_config->group(QStringLiteral("ScreenEdges"));
     setRemainActiveOnFullscreen(screenEdgesConfig.readEntry("RemainActiveOnFullscreen", false));
-    m_touchTarget = screenEdgesConfig.readEntry("TouchTarget", 8);
+    int touchTarget = screenEdgesConfig.readEntry("TouchTarget", 8);
+    if (touchTarget != m_touchTarget) {
+        m_touchTarget = touchTarget;
+        recreateEdges();
+    }
 
     // TODO: migrate settings to a group ScreenEdges
     KConfigGroup windowsConfig = m_config->group(QStringLiteral("Windows"));
