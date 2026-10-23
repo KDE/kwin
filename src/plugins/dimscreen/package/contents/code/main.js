@@ -18,7 +18,8 @@ var authenticationAgents = [
     // On Wayland, the resource name is filename of executable. It's empty for
     // authentication agents because KWayland can't get their executable paths.
     " org.kde.kdesu",
-    " org.kde.polkit-kde-authentication-agent-1"
+    " org.kde.polkit-kde-authentication-agent-1",
+    "pinentry-qt org.gnupg.pinentry-qt",
 ];
 
 function activeAuthenticationAgent() {
