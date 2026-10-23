@@ -77,12 +77,12 @@ void XXPipV1Window::closeWindow()
 
 bool XXPipV1Window::wantsInput() const
 {
-    return false;
+    return true;
 }
 
 bool XXPipV1Window::acceptsFocus() const
 {
-    return false;
+    return true;
 }
 
 XdgSurfaceConfigure *XXPipV1Window::sendRoleConfigure()

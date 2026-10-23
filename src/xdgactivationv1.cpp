@@ -120,6 +120,10 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
         return;
     }
 
+    if (window->isPictureInPicture()) {
+        return;
+    }
+
     if (!window->readyForPainting()) {
         window->setActivationToken(token);
         return;
