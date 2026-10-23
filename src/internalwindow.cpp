@@ -210,7 +210,7 @@ bool InternalWindow::isPlaceable() const
     return !m_internalWindowFlags.testFlag(Qt::BypassWindowManagerHint) && !m_internalWindowFlags.testFlag(Qt::Popup);
 }
 
-bool InternalWindow::wantsInput() const
+bool InternalWindow::acceptsFocus() const
 {
     return false;
 }

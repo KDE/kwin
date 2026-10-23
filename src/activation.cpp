@@ -297,7 +297,7 @@ void Workspace::activateWindow(Window *window, bool force)
         resetFocus();
         return;
     }
-    if (!window->isClient() || window->isDeleted() || !window->wantsInput()) {
+    if (!window->isClient() || window->isDeleted() || !window->acceptsFocus()) {
         return;
     }
     if (window->isHiddenByShowDesktop()) {
@@ -391,7 +391,7 @@ bool Workspace::requestFocus(Window *window, bool force)
         return false;
     }
 
-    if (!window->wantsInput()) {
+    if (!window->acceptsFocus()) {
         return false;
     }
 

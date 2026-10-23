@@ -165,7 +165,7 @@ public:
     bool supportsWindowRules() const override;
     void applyWindowRules() override;
     void takeFocus() override;
-    bool wantsInput() const override;
+    bool acceptsFocus() const override;
     void setFullScreen(bool set) override;
     void closeWindow() override;
     void maximize(MaximizeMode mode, const RectF &restore = RectF()) override;
@@ -288,7 +288,7 @@ public:
     bool isMovableAcrossScreens() const override;
     bool isCloseable() const override;
     void closeWindow() override;
-    bool wantsInput() const override;
+    bool acceptsFocus() const override;
 
 protected:
     XdgSurfaceConfigure *sendRoleConfigure() override;
