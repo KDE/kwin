@@ -31,6 +31,8 @@
 
 #include <functional>
 
+using namespace std::chrono_literals;
+
 using namespace KWin;
 
 typedef std::function<QPointF(const RectF &)> PointerFunc;
@@ -49,6 +51,7 @@ private Q_SLOTS:
     void testLockedPointer();
     void testCloseWindowWithLockedPointer();
     void testUnlockAndWarp();
+    void testUnlockWithoutCommit();
 };
 
 void TestPointerConstraints::initTestCase()
@@ -391,6 +394,49 @@ void TestPointerConstraints::testUnlockAndWarp()
 
     QVERIFY(motion.wait());
     QCOMPARE(motion.last()[0].value<QPointF>(), QPointF(10, 10));
+}
+
+void TestPointerConstraints::testUnlockWithoutCommit()
+{
+    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
+    QSignalSpy enter(pointer.get(), &KWayland::Client::Pointer::entered);
+    QSignalSpy motion(pointer.get(), &KWayland::Client::Pointer::motion);
+
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show());
+    window.m_window->move(QPointF(0, 0));
+
+    input()->pointer()->warp(window.m_window->frameGeometry().center());
+    QVERIFY(enter.wait());
+
+    std::unique_ptr<KWayland::Client::LockedPointer> lockedPointer(Test::waylandPointerConstraints()->lockPointer(window.m_surface.get(), pointer.get(), nullptr, KWayland::Client::PointerConstraints::LifeTime::OneShot));
+    QSignalSpy lockedSpy(lockedPointer.get(), &KWayland::Client::LockedPointer::locked);
+
+    QVERIFY(lockedSpy.wait());
+
+    lockedPointer->setCursorPositionHint(QPointF(10, 10));
+    window.commit();
+
+    // destroying the locked pointer object should warp the pointer
+    // even if the surface is not commited afterwards
+    lockedPointer.reset();
+    QVERIFY(motion.wait());
+    QCOMPARE(motion.last()[0].value<QPointF>(), QPointF(10, 10));
+
+    input()->pointer()->warp(QPointF(20, 20));
+    QVERIFY(motion.wait());
+    QCOMPARE(motion.last()[0].value<QPointF>(), QPointF(20, 20));
+
+    // lock and unlock, without setting the pointer hint.
+    // The pointer should not be moved
+    lockedPointer.reset(Test::waylandPointerConstraints()->lockPointer(window.m_surface.get(), pointer.get(), nullptr, KWayland::Client::PointerConstraints::LifeTime::OneShot));
+    QSignalSpy lockedSpy2(lockedPointer.get(), &KWayland::Client::LockedPointer::locked);
+    QVERIFY(lockedSpy2.wait());
+
+    window.commit();
+
+    lockedPointer.reset();
+    QVERIFY(!motion.wait(100ms));
 }
 
 WAYLANDTEST_MAIN(TestPointerConstraints)
