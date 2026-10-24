@@ -497,7 +497,7 @@ bool WaylandServer::init()
     m_colorRepresentation = new ColorRepresentationManagerV1(m_display, m_display);
     m_pointerWarp = new PointerWarpV1(m_display, m_display);
     m_backgroundEffect = new ExtBackgroundEffectManagerV1(m_display, m_display);
-    if (environmentVariableBoolValue("KWIN_WAYLAND_SUPPORT_COMMIT_TIMING_V1").value_or(true)) {
+    if (environmentVariableBoolValue("KWIN_WAYLAND_SUPPORT_COMMIT_TIMING_V1").value_or(false)) {
         m_commitTiming = new CommitTimingManagerV1(m_display, m_display);
     }
     return true;
