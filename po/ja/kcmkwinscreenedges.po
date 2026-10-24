@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2026-07-23 17:16+0900\n"
+"PO-Revision-Date: 2026-10-17 20:18+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
@@ -25,12 +25,12 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Ryuichi Yamada, UTUMI Hirosi"
+msgstr "Ryuichi Yamada, UTUMI Hirosi, Mint"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "ryuichi_ya220@outlook.jp, utuhiro78@yahoo.co.jp"
+msgstr "ryuichi_ya220@outlook.jp, utuhiro78@yahoo.co.jp, 5602mint@gmail.com"
 
 #: main.cpp:130 touch.cpp:124
 #, kde-format
