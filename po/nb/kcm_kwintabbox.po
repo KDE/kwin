@@ -329,29 +329,3 @@ msgstr "Bla gjennom vinduer til gjeldende program (alternativ)"
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Bla gjennom vinduer til gjeldende program (alternativ, baklengs)"
-
-#~ msgctxt "The name of KDE's file manager in this language, if translated"
-#~ msgid "Dolphin"
-#~ msgstr "Dolphin"
-
-#~ msgctxt "The name of KDE's web browser in this language, if translated"
-#~ msgid "Konqueror"
-#~ msgstr "Konqueror"
-
-#~ msgctxt "The name of KDE's email client in this language, if translated"
-#~ msgid "KMail"
-#~ msgstr "KMail"
-
-#~ msgctxt ""
-#~ "The name of KDE's System Settings app in this language, if translated"
-#~ msgid "System Settings"
-#~ msgstr "Systeminnstillinger"
-
-#, fuzzy
-#~| msgid "Current desktop"
-#~ msgid "Peek at Desktop"
-#~ msgstr "Gjeldende skrivebord"
-
-#~ msgctxt "An example Desktop Name"
-#~ msgid "Desktop 1"
-#~ msgstr "Skrivebord 1"

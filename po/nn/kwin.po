@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 00:50+0000\n"
+"POT-Creation-Date: 2026-10-24 00:52+0000\n"
 "PO-Revision-Date: 2026-09-25 17:30+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
@@ -4417,7 +4417,7 @@ msgstr "Fleire skjermar enn det som er støtta av skjermkortet, er påslegne."
 msgid "The driver rejected the output configuration: %s"
 msgstr "Drivaren avviste uteiningsoppsettet: %s"
 
-#: window.cpp:3183
+#: window.cpp:3182
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 00:50+0000\n"
+"POT-Creation-Date: 2026-10-24 00:52+0000\n"
 "PO-Revision-Date: 2026-10-07 11:45+0200\n"
 "Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -4550,7 +4550,7 @@ msgstr "Укључено је више екрана него што графич
 msgid "The driver rejected the output configuration: %s"
 msgstr "Драјвер је одбио поставу излаза: %s"
 
-#: window.cpp:3183
+#: window.cpp:3182
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

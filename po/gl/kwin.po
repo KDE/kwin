@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 00:50+0000\n"
+"POT-Creation-Date: 2026-10-24 00:52+0000\n"
 "PO-Revision-Date: 2025-06-19 10:31+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -4488,7 +4488,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %s"
 msgstr "O controlador rexeitou a configuración de saída."
 
-#: window.cpp:3183
+#: window.cpp:3182
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
