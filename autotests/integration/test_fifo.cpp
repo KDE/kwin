@@ -97,6 +97,7 @@ void FifoTest::initTestCase()
 {
     qRegisterMetaType<Window *>();
 
+    qputenv("KWIN_WAYLAND_SUPPORT_COMMIT_TIMING_V1", "1");
     QVERIFY(waylandServer()->init(qAppName()));
     kwinApp()->start();
 }
