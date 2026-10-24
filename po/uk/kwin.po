@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 02:58+0000\n"
+"POT-Creation-Date: 2026-10-24 02:54+0000\n"
 "PO-Revision-Date: 2026-09-03 19:35+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -2747,7 +2747,7 @@ msgstr "Вертикально:"
 msgid "Slide desktop background"
 msgstr "Ковзне тло стільниці"
 
-#: plugins/stickykeys/stickykeys.cpp:26
+#: plugins/stickykeys/stickykeys.cpp:29
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
@@ -2755,7 +2755,7 @@ msgstr ""
 "Клавішу Shift було заблоковано і тепер вона активна для всіх наступних "
 "натискань клавіш."
 
-#: plugins/stickykeys/stickykeys.cpp:27
+#: plugins/stickykeys/stickykeys.cpp:30
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
@@ -2763,7 +2763,7 @@ msgstr ""
 "Клавішу Ctrl було заблоковано і тепер вона активна для всіх наступних "
 "натискань клавіш."
 
-#: plugins/stickykeys/stickykeys.cpp:28
+#: plugins/stickykeys/stickykeys.cpp:31
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
@@ -2771,7 +2771,7 @@ msgstr ""
 "Клавішу Alt було заблоковано і тепер вона активна для всіх наступних "
 "натискань клавіш."
 
-#: plugins/stickykeys/stickykeys.cpp:29
+#: plugins/stickykeys/stickykeys.cpp:32
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
@@ -2779,7 +2779,7 @@ msgstr ""
 "Клавішу Meta було заблоковано і тепер вона активна для всіх наступних "
 "натискань клавіш."
 
-#: plugins/stickykeys/stickykeys.cpp:30
+#: plugins/stickykeys/stickykeys.cpp:33
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."

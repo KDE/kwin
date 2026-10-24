@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 02:58+0000\n"
+"POT-Creation-Date: 2026-10-24 02:54+0000\n"
 "PO-Revision-Date: 2026-09-03 06:22+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -2725,7 +2725,7 @@ msgstr "ვერტიკალური:"
 msgid "Slide desktop background"
 msgstr "გაუსვით ეკრანის ფონს"
 
-#: plugins/stickykeys/stickykeys.cpp:26
+#: plugins/stickykeys/stickykeys.cpp:29
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
@@ -2733,7 +2733,7 @@ msgstr ""
 "ღილაკი Shift დაბლოკილია და ახლა აქტიურია ყველა შემდეგი ღილაკების "
 "მიმდევრობისთვის."
 
-#: plugins/stickykeys/stickykeys.cpp:27
+#: plugins/stickykeys/stickykeys.cpp:30
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
@@ -2741,7 +2741,7 @@ msgstr ""
 "ღილაკი Control დაბლოკილია და ახლა აქტიურია ყველა შემდეგი ღილაკების "
 "მიმდევრობისთვის."
 
-#: plugins/stickykeys/stickykeys.cpp:28
+#: plugins/stickykeys/stickykeys.cpp:31
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
@@ -2749,7 +2749,7 @@ msgstr ""
 "ღილაკი Alt დაბლოკილია და ახლა აქტიურია ყველა შემდეგი ღილაკების "
 "მიმდევრობისთვის."
 
-#: plugins/stickykeys/stickykeys.cpp:29
+#: plugins/stickykeys/stickykeys.cpp:32
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
@@ -2757,7 +2757,7 @@ msgstr ""
 "ღილაკი Meta დაბლოკილია და ახლა აქტიურია ყველა შემდეგი ღილაკების "
 "მიმდევრობისთვის."
 
-#: plugins/stickykeys/stickykeys.cpp:30
+#: plugins/stickykeys/stickykeys.cpp:33
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."

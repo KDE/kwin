@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 02:58+0000\n"
+"POT-Creation-Date: 2026-10-24 02:54+0000\n"
 "PO-Revision-Date: 2026-09-23 11:02+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -2764,7 +2764,7 @@ msgstr "Senkrecht:"
 msgid "Slide desktop background"
 msgstr "Arbeitsflächen-Hintergrund gleiten lassen"
 
-#: plugins/stickykeys/stickykeys.cpp:26
+#: plugins/stickykeys/stickykeys.cpp:29
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
@@ -2772,7 +2772,7 @@ msgstr ""
 "Die Umschalttaste wurde eingerastet und ist nun für alle nachfolgenden "
 "Tastendrücke aktiv."
 
-#: plugins/stickykeys/stickykeys.cpp:27
+#: plugins/stickykeys/stickykeys.cpp:30
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
@@ -2780,7 +2780,7 @@ msgstr ""
 "Die Strg-Taste wurde eingerastet und ist nun für alle nachfolgenden "
 "Tastendrücke aktiv."
 
-#: plugins/stickykeys/stickykeys.cpp:28
+#: plugins/stickykeys/stickykeys.cpp:31
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
@@ -2788,7 +2788,7 @@ msgstr ""
 "Die Alt-Taste wurde eingerastet und ist nun für alle nachfolgenden "
 "Tastendrücke aktiv."
 
-#: plugins/stickykeys/stickykeys.cpp:29
+#: plugins/stickykeys/stickykeys.cpp:32
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
@@ -2796,7 +2796,7 @@ msgstr ""
 "Die Meta-Taste wurde eingerastet und ist nun für alle nachfolgenden "
 "Tastendrücke aktiv."
 
-#: plugins/stickykeys/stickykeys.cpp:30
+#: plugins/stickykeys/stickykeys.cpp:33
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."

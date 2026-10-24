@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 02:58+0000\n"
+"POT-Creation-Date: 2026-10-24 02:54+0000\n"
 "PO-Revision-Date: 2024-10-18 17:18+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -2804,39 +2804,39 @@ msgstr "Vertical:"
 msgid "Slide desktop background"
 msgstr "Slide desktop background"
 
-#: plugins/stickykeys/stickykeys.cpp:26
-msgid ""
-"The Shift key has been locked and is now active for all of the following "
-"keypresses."
-msgstr ""
-"The Shift key has been locked and is now active for all of the following "
-"keypresses."
-
-#: plugins/stickykeys/stickykeys.cpp:27
-msgid ""
-"The Control key has been locked and is now active for all of the following "
-"keypresses."
-msgstr ""
-"The Control key has been locked and is now active for all of the following "
-"keypresses."
-
-#: plugins/stickykeys/stickykeys.cpp:28
-msgid ""
-"The Alt key has been locked and is now active for all of the following "
-"keypresses."
-msgstr ""
-"The Alt key has been locked and is now active for all of the following "
-"keypresses."
-
 #: plugins/stickykeys/stickykeys.cpp:29
 msgid ""
-"The Meta key has been locked and is now active for all of the following "
+"The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
-"The Meta key has been locked and is now active for all of the following "
+"The Shift key has been locked and is now active for all of the following "
 "keypresses."
 
 #: plugins/stickykeys/stickykeys.cpp:30
+msgid ""
+"The Control key has been locked and is now active for all of the following "
+"keypresses."
+msgstr ""
+"The Control key has been locked and is now active for all of the following "
+"keypresses."
+
+#: plugins/stickykeys/stickykeys.cpp:31
+msgid ""
+"The Alt key has been locked and is now active for all of the following "
+"keypresses."
+msgstr ""
+"The Alt key has been locked and is now active for all of the following "
+"keypresses."
+
+#: plugins/stickykeys/stickykeys.cpp:32
+msgid ""
+"The Meta key has been locked and is now active for all of the following "
+"keypresses."
+msgstr ""
+"The Meta key has been locked and is now active for all of the following "
+"keypresses."
+
+#: plugins/stickykeys/stickykeys.cpp:33
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."

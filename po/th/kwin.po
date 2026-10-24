@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 02:58+0000\n"
+"POT-Creation-Date: 2026-10-24 02:54+0000\n"
 "PO-Revision-Date: 2025-03-01 14:53+0700\n"
 "Last-Translator: Pongsakorn S. <kde@xerusion.me>\n"
 "Language-Team: Thai\n"
@@ -2832,31 +2832,31 @@ msgstr "แนวตั้ง"
 msgid "Slide desktop background"
 msgstr "เลื่อนเมื่อทำการจัดกลุ่ม"
 
-#: plugins/stickykeys/stickykeys.cpp:26
+#: plugins/stickykeys/stickykeys.cpp:29
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
 
-#: plugins/stickykeys/stickykeys.cpp:27
+#: plugins/stickykeys/stickykeys.cpp:30
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
 
-#: plugins/stickykeys/stickykeys.cpp:28
+#: plugins/stickykeys/stickykeys.cpp:31
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
 
-#: plugins/stickykeys/stickykeys.cpp:29
+#: plugins/stickykeys/stickykeys.cpp:32
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
 
-#: plugins/stickykeys/stickykeys.cpp:30
+#: plugins/stickykeys/stickykeys.cpp:33
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
