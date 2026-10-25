@@ -603,6 +603,9 @@ void WorkspaceScene::preparePaintGenericScreen()
 
 static void addOpaqueRegionRecursive(SceneView *view, Item *item, const std::optional<ClipCorner> &parentCorner, Region &ret)
 {
+    if (!item->isVisible()) {
+        return;
+    }
     const std::optional<ClipCorner> corner = calculateClipCorner(item, parentCorner);
     RegionF opaque = item->opaque();
     if (corner.has_value()) {
