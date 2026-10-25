@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-20 00:54+0000\n"
-"PO-Revision-Date: 2026-05-01 02:10+0300\n"
+"PO-Revision-Date: 2026-10-24 22:46+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: lt\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.10\n"
 
 #: ui/main.qml:28
 #, kde-kuit-format
@@ -165,24 +165,19 @@ msgid "Applications allowed to control the pointer and keyboard"
 msgstr "Programos, kurioms leidžiama valdyti pelės rodyklę ir klaviatūrą"
 
 #: ui/main.qml:165
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "See Allowed Applications…"
+#, kde-format
 msgctxt "@action:button"
 msgid "See Denied Applications…"
-msgstr "Rodyti leidžiamas programas…"
+msgstr "Rodyti atmestas programas…"
 
 #: ui/main.qml:169
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@title:window title of the page opened by the 'See allowed applications' "
-#| "button"
-#| msgid "Applications allowed to control the pointer and keyboard"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See denied applications' "
 "button"
 msgid "Applications never allowed to control the pointer and keyboard"
-msgstr "Programos, kurioms leidžiama valdyti pelės rodyklę ir klaviatūrą"
+msgstr ""
+"Programos, kurioms niekada neleidžiama valdyti pelės rodyklę ir klaviatūrą"
 
 #: ui/main.qml:178
 #, kde-format
@@ -191,7 +186,10 @@ msgid ""
 "Moderate security; XWayland-using apps claiming to be something on this list "
 "will be able to take control of the computer, because XWayland-using apps’ "
 "identities can’t be verified"
-msgstr "Vidutiniškai saugu; XWayland naudojančios programos"
+msgstr ""
+"Vidutiniškai saugu; XWayland naudojančios programos, kurios tvirtina, jog "
+"yra kažkurios iš šio sąrašo, galės perimti kompiuterio valdymą, nes XWayland "
+"naudojančių programų tapatybės negali būti patikrintos"
 
 #: ui/main.qml:184
 #, kde-format

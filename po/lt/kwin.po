@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-24 00:52+0000\n"
-"PO-Revision-Date: 2026-10-17 12:16+0300\n"
+"PO-Revision-Date: 2026-10-24 22:40+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 3.9\n"
+"X-Generator: Poedit 3.10\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1875,25 +1875,15 @@ msgid "<application>%1</application> is asking to control input devices"
 msgstr "<application>%1</application> prašo leidimo valdyti įvedimo įrenginius"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check, %1 is the application name. This option always allow apps "
-#| "claiming to be a given application name to control input devices"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option remembers the "
 "selection for apps claiming to be a given application name"
 msgid "Remember for apps claiming to be %1"
-msgstr "Visada leisti programas, kurios tvirtina, jog yra %1"
+msgstr "Prisiminti programoms, kurios tvirtina, jog yra %1"
 
 #: plugins/eis/eisprompter.cpp:66
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Identities of legacy X11 apps cannot be verified. Any app claiming to be "
-#| "<application>%1</application> will be able to control input devices. You "
-#| "can revoke this permission later on <application>System Settings</"
-#| "application>’ “Legacy X11 App Support” page."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Identities of legacy X11 apps cannot be verified. If permitted any app "
@@ -1901,10 +1891,11 @@ msgid ""
 "devices. You can change this setting later on <application>System Settings</"
 "application>’ “Legacy X11 App Support” page."
 msgstr ""
-"Pasenusių X11 programų tapatybė negali būti patikrinta. Bet kuri programa, "
-"tvirtinanti, jog yra <application>%1</application>, galės valdyti įvedimo "
-"įrenginius. Vėliau galite panaikinti šį leidimą <application>Sistemos "
-"nuostatų</application> „Pasenusių X11 programų palaikymas“ puslapyje."
+"Pasenusių X11 programų tapatybė negali būti patikrinta. Jei leidžiama, bet "
+"kuri programa, tvirtinanti, jog yra <application>%1</application>, galės "
+"valdyti įvedimo įrenginius. Vėliau galite keisti šią nuostatą "
+"<application>Sistemos nuostatų</application> „Pasenusių X11 programų "
+"palaikymas“ puslapyje."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
