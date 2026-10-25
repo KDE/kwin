@@ -1,0 +1,8 @@
+{
+    "KPlugin": {
+        "Description": "Effect used by the external effects test",
+        "EnabledByDefault": false,
+        "Id": "externaleffect",
+        "Name": "External Effect"
+    }
+}

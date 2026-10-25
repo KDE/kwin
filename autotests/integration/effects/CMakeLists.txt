@@ -9,3 +9,16 @@ integrationTest(NAME testMaximizeAnimation SRCS maximize_animation_test.cpp BUIL
 if(KWIN_BUILD_X11)
     integrationTest(NAME testTranslucency SRCS translucency_test.cpp LIBS XCB::ICCCM BUILTIN_EFFECTS)
 endif()
+
+add_library(externaleffect MODULE externaleffect/externaleffect.cpp)
+target_link_libraries(externaleffect kwin)
+set_target_properties(externaleffect PROPERTIES
+    PREFIX ""
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/kwin/effects/plugins"
+)
+
+foreach(restartCount 0 1 2)
+    integrationTest(NAME testExternalEffects${restartCount} SRCS external_effects_test.cpp BUILTIN_EFFECTS)
+    target_compile_definitions(testExternalEffects${restartCount} PRIVATE KWIN_TEST_RESTART_COUNT=${restartCount})
+    add_dependencies(testExternalEffects${restartCount} externaleffect)
+endforeach()

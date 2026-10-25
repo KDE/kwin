@@ -382,10 +382,24 @@ bool PluginEffectLoader::loadEffect(const KPluginMetaData &info, LoadEffectFlags
 
 void PluginEffectLoader::queryAndLoadAll()
 {
+    // kwin_wayland_wrapper restarts kwin after a crash and exports the number of
+    // crashes in KWIN_RESTART_COUNT. If kwin keeps crashing, an effect that is not
+    // shipped with kwin (for example, one built against an older version of kwin or
+    // Qt) is a likely culprit, so stop loading such effects automatically. The first
+    // restart still loads them in case the crash was a one-off.
+    const int restartCount = qEnvironmentVariableIntValue("KWIN_RESTART_COUNT");
+    const bool skipExternalEffects = restartCount >= 2;
+
     const auto effects = findAllEffects();
     for (const auto &effect : effects) {
         const LoadEffectFlags flags = readConfig(effect.pluginId(), effect.isEnabledByDefault());
         if (flags.testFlag(LoadEffectFlag::Load)) {
+            // Built-in effects are static plugins, so they are never skipped
+            if (skipExternalEffects && !effect.isStaticPlugin()) {
+                qCWarning(KWIN_CORE) << "Not loading effect" << effect.pluginId() << "from" << effect.fileName()
+                                     << "because KWin has been restarted" << restartCount << "times after crashing";
+                continue;
+            }
             loadEffect(effect, flags);
         }
     }
