@@ -34,7 +34,7 @@ public:
 
     void applyChanges(const OutputConfiguration &config) override;
     bool canResize() const override;
-    void resize(const QSize &size) override;
+    void resize(const QSize &size, std::optional<qreal> scale) override;
 
     void setOutputLayer(std::unique_ptr<OutputLayer> &&layer);
     OutputLayer *outputLayer() const;

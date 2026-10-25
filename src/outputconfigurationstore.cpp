@@ -482,14 +482,17 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
                     qPrintable(state.edidIdentifier), effectiveMode->size().width(), effectiveMode->size().height(), effectiveMode->refreshRate());
         }
 
+        // whoever manages the scale of these outputs sets it, not the stored configuration
+        const bool externalScale = output->capabilities() & BackendOutput::Capability::ExternallyManagedScale;
+        const std::optional<double> scaleSetting = externalScale ? std::optional<double>(output->scaleSetting()) : state.scaleSetting;
         *ret.changeSet(output) = OutputChangeSet{
             .currentMode = effectiveMode,
             .desiredMode = state.mode,
             .customModes = state.customModes,
             .enabled = setupState.enabled,
             .pos = setupState.position,
-            .scale = state.scaleSetting,
-            .scaleSetting = state.scaleSetting,
+            .scale = scaleSetting,
+            .scaleSetting = scaleSetting,
             .transform = state.transform,
             .manualTransform = state.manualTransform,
             .overscan = state.overscan,
@@ -736,6 +739,7 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
             modeline = chooseMode(output)->modeline();
         }
 
+        const bool externalScale = output->capabilities() & BackendOutput::Capability::ExternallyManagedScale;
         const auto changeset = ret.changeSet(output);
         *changeset = {
             .currentMode = modeline,
@@ -745,7 +749,7 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
             .pos = setupState ? setupState->position : rightMostPosition,
             // kscreen scale is unreliable because it gets overwritten with the value 1 on Xorg,
             // and we don't know if it's from Xorg or the 5.27 Wayland session... so just ignore it
-            .scaleSetting = existingData.scaleSetting.value_or(chooseScale(output, modeline->size())),
+            .scaleSetting = externalScale ? output->scaleSetting() : existingData.scaleSetting.value_or(chooseScale(output, modeline->size())),
             .transform = existingData.transform.value_or(kscreenChangeSet.transform.value_or(output->panelOrientation())),
             .manualTransform = existingData.manualTransform.value_or(kscreenChangeSet.transform.value_or(output->panelOrientation())),
             .overscan = existingData.overscan.value_or(kscreenChangeSet.overscan.value_or(0)),

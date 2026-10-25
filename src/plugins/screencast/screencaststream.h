@@ -121,6 +121,7 @@ private:
     uint32_t m_pwNodeId = 0;
 
     QSize m_resolution;
+    std::optional<qreal> m_preferredScale;
     bool m_closed = false;
 
     spa_video_info_raw m_videoFormat;

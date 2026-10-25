@@ -86,6 +86,7 @@ public:
         HdrIccProfile = 1 << 17,
         AbmLevel = 1 << 18,
         Disable = 1 << 19,
+        ExternallyManagedScale = 1 << 20,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -220,7 +221,7 @@ public:
 
     virtual void applyChanges(const OutputConfiguration &config);
     virtual bool canResize() const;
-    virtual void resize(const QSize &size);
+    virtual void resize(const QSize &size, std::optional<qreal> scale);
 
     SubPixel subPixel() const;
     QString description() const;

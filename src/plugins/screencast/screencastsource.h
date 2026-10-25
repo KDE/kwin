@@ -47,7 +47,7 @@ public:
     virtual QPointF mapFromGlobal(const QPointF &point) const = 0;
     virtual RectF mapFromGlobal(const RectF &rect) const = 0;
     virtual bool followsStreamSize();
-    virtual void resize(const QSize &size);
+    virtual void resize(const QSize &size, std::optional<qreal> scale);
 
     RenderDevice *renderDevice() const;
     const std::shared_ptr<EglContext> &eglContext() const;

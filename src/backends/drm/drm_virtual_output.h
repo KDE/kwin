@@ -38,7 +38,7 @@ public:
     void releaseLayer();
 
     bool canResize() const override;
-    void resize(const QSize &size) override;
+    void resize(const QSize &size, std::optional<qreal> scale) override;
 
 private:
     void vblank(std::chrono::nanoseconds timestamp);

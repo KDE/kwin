@@ -274,7 +274,7 @@ bool BackendOutput::canResize() const
     return false;
 }
 
-void BackendOutput::resize(const QSize &size)
+void BackendOutput::resize(const QSize &size, std::optional<qreal> scale)
 {
     Q_ASSERT(false);
 }

@@ -443,9 +443,10 @@ public:
     bool canResize() const;
 
     /*!
-     * Sets the pixel size of the output
+     * Sets the pixel size of the output, and its scale if \a scale is set. A scale set this way
+     * is managed externally from then on, the stored output configuration doesn't change it.
      */
-    void resize(const QSize &size);
+    void resize(const QSize &size, std::optional<qreal> scale);
 
     /*!
      * Returns \c true if this is a placeholder output; otherwise returns \c false.

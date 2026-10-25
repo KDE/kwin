@@ -35,6 +35,7 @@
 
 #include <libdrm/drm_fourcc.h>
 #include <spa/buffer/meta.h>
+#include <spa/param/tag-utils.h>
 #include <spa/pod/dynamic.h>
 
 namespace KWin
@@ -223,9 +224,39 @@ void ScreenCastStream::newStreamParams()
     pw_stream_update_params(m_pwStream, params.data(), params.count());
 }
 
+static std::optional<qreal> preferredScale(const spa_pod *tag)
+{
+    spa_tag_info info;
+    void *state = nullptr;
+    while (spa_tag_parse(tag, &info, &state) == 1) {
+        spa_dict dict{};
+        if (info.direction != SPA_DIRECTION_INPUT || spa_tag_info_parse(&info, &dict, nullptr) < 0) {
+            continue;
+        }
+        QVarLengthArray<spa_dict_item> items(dict.n_items);
+        if (spa_tag_info_parse(&info, &dict, items.data()) < 0) {
+            continue;
+        }
+        bool ok = false;
+        const qreal scale = QByteArray(spa_dict_lookup(&dict, "org.kde.preferred-scale")).toDouble(&ok);
+        if (ok && scale > 0) {
+            return scale;
+        }
+    }
+    return std::nullopt;
+}
+
 void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *format)
 {
     if (m_closed) {
+        return;
+    }
+
+    if (id == SPA_PARAM_Tag) {
+        m_preferredScale = format ? preferredScale(format) : std::nullopt;
+        if (m_preferredScale && m_source && m_source->followsStreamSize()) {
+            m_source->resize(m_resolution, m_preferredScale);
+        }
         return;
     }
 
@@ -241,7 +272,7 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
     m_resolution = negotiatedSize;
 
     if (m_source && m_source->followsStreamSize()) {
-        m_source->resize(negotiatedSize);
+        m_source->resize(negotiatedSize, m_preferredScale);
     }
 
     m_vsync->setRefreshRate(framerate());

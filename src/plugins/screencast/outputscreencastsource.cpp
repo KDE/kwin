@@ -10,6 +10,7 @@
 #include "screencastutils.h"
 
 #include "compositor.h"
+#include "core/backendoutput.h"
 #include "core/output.h"
 #include "core/renderdevice.h"
 #include "cursor.h"
@@ -176,12 +177,14 @@ bool OutputScreenCastSource::followsStreamSize()
     return m_output->canResize();
 }
 
-void OutputScreenCastSource::resize(const QSize &size)
+void OutputScreenCastSource::resize(const QSize &size, std::optional<qreal> scale)
 {
-    if (m_output->pixelSize() == size) {
+    // a scale is applied even if it's the current one, so that it's managed externally from then on
+    const bool scaleManaged = m_output->backendOutput()->capabilities() & BackendOutput::Capability::ExternallyManagedScale;
+    if (m_output->pixelSize() == size && (!scale || (scaleManaged && qFuzzyCompare(m_output->scale(), *scale)))) {
         return;
     }
-    m_output->resize(size);
+    m_output->resize(size, scale);
 }
 
 } // namespace KWin

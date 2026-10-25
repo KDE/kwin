@@ -560,9 +560,9 @@ bool LogicalOutput::canResize() const
     return m_backendOutput->canResize();
 }
 
-void LogicalOutput::resize(const QSize &size)
+void LogicalOutput::resize(const QSize &size, std::optional<qreal> scale)
 {
-    m_backendOutput->resize(size);
+    m_backendOutput->resize(size, scale);
 }
 
 BackendOutput *LogicalOutput::backendOutput() const

@@ -27,7 +27,7 @@ bool ScreenCastSource::followsStreamSize()
     return false;
 }
 
-void ScreenCastSource::resize(const QSize &)
+void ScreenCastSource::resize(const QSize &, std::optional<qreal>)
 {
     Q_ASSERT(false);
 }

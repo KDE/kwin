@@ -150,12 +150,21 @@ bool DrmVirtualOutput::canResize() const
     return true;
 }
 
-void DrmVirtualOutput::resize(const QSize &size)
+void DrmVirtualOutput::resize(const QSize &size, std::optional<qreal> scale)
 {
     auto mode = std::make_shared<OutputMode>(OutputModeline(size, 60000, OutputModeline::Flag::Preferred));
     auto next = m_state;
     next.modes = {mode};
     next.currentMode = mode;
+    if (scale) {
+        next.scale = *scale;
+        next.scaleSetting = *scale;
+        if (!(m_information.capabilities & Capability::ExternallyManagedScale)) {
+            auto info = m_information;
+            info.capabilities |= Capability::ExternallyManagedScale;
+            setInformation(info);
+        }
+    }
     setState(next);
     Q_EMIT m_backend->outputsQueried();
 }
