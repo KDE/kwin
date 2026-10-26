@@ -10,6 +10,7 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
+#include "core/session.h"
 #include "outputconfigurationstore.h"
 #include "pointer_input.h"
 #include "tiles/tilemanager.h"
@@ -29,6 +30,8 @@
 
 #include <drm_mode.h>
 #include <ranges>
+
+#include <linux/input.h>
 
 using namespace std::chrono_literals;
 
@@ -150,6 +153,7 @@ private Q_SLOTS:
     void testAutoBrightness();
     void testPerOutputDesktopsOutputToggle();
     void testTemporaryDpmsHotplug();
+    void testDpmsWakeDuringSleep();
 };
 
 void OutputChangesTest::initTestCase()
@@ -2458,6 +2462,39 @@ void OutputChangesTest::testTemporaryDpmsHotplug()
         },
     });
     QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::Off);
+}
+
+void OutputChangesTest::testDpmsWakeDuringSleep()
+{
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = Rect(0, 0, 1280, 1024),
+            .connectorName = QStringLiteral("TEST"),
+        },
+    });
+    workspace()->requestDpmsState(Workspace::DpmsState::On);
+    QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::On);
+
+    // the system is about to suspend, so the outputs get turned off
+    Q_EMIT kwinApp()->session()->aboutToSleep();
+    QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::AboutToTurnOff);
+
+    // user input while turning off must not wake the outputs again, otherwise
+    // the suspend would stay delayed until the inhibitor times out
+    quint32 timestamp = 1;
+    Test::pointerMotion(QPointF(100, 100), timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::AboutToTurnOff);
+
+    QSignalSpy dpmsChanged(workspace(), &Workspace::dpmsStateChanged);
+    QVERIFY(dpmsChanged.wait());
+    QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::Off);
+
+    // after resuming, input wakes the outputs again
+    Q_EMIT kwinApp()->session()->awoke();
+    Test::pointerMotion(QPointF(200, 200), timestamp++);
+    QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::On);
 }
 
 } // namespace KWin

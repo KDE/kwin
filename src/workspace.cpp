@@ -380,7 +380,13 @@ void Workspace::init()
     });
 
     connect(kwinApp()->session(), &Session::aboutToSleep, this, [this]() {
+        // Once the system is going to sleep, the screens must stay off. Waking
+        // them would leave the delay inhibitor open until logind times out.
+        m_sleepPending = true;
         requestDpmsState(DpmsState::Off);
+    });
+    connect(kwinApp()->session(), &Session::awoke, this, [this]() {
+        m_sleepPending = false;
     });
 
     m_sleepInhibitor = kwinApp()->session()->delaySleep("turning screens off");
@@ -585,6 +591,9 @@ std::expected<void, OutputError> Workspace::applyOutputConfiguration(OutputConfi
 
 void Workspace::requestDpmsState(DpmsState state)
 {
+    if (state == DpmsState::On && m_sleepPending) {
+        return;
+    }
     const bool requestOn = state == DpmsState::On;
     const bool isOn = m_dpms == DpmsState::On;
     if (requestOn == isOn) {
