@@ -32,4 +32,8 @@ PlasmaCore.Dialog {
             text: osd.message
         }
     }
+
+    onSceneGraphError: (error, message) => {
+        console.warn("onscreennotification: scene graph error:", message);
+    }
 }
