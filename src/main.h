@@ -15,6 +15,7 @@
 #include "effect/globals.h"
 
 #include <KSharedConfig>
+#include <condition_variable>
 #include <memory>
 // Qt
 #include <QApplication>
@@ -307,6 +308,8 @@ protected:
     void destroyPlatform();
     void destroyScene();
     void applyXwaylandScale();
+    void handlePing();
+    void onMainHang();
 
     void setTerminating()
     {
@@ -344,6 +347,14 @@ private:
     std::unique_ptr<TabletModeManager> m_tabletModeManager;
     std::unique_ptr<GpuManager> m_gpuManager;
     std::unique_ptr<A11yManager> m_a11yManager;
+
+    struct
+    {
+        std::unique_ptr<QThread> thread;
+        std::mutex mutex;
+        std::condition_variable pong;
+        bool ping = false;
+    } m_hangDetection;
 };
 
 inline bool Application::initiallyLocked() const
