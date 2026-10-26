@@ -76,7 +76,6 @@ private:
     bool m_customBell = false;
     QString m_customBellFile;
     KConfigWatcher::Ptr m_configWatcher;
-    KConfig m_kdeglobals;
     KConfigGroup m_bellConfig;
 
     static QTimer *s_systemBellRemoveTimer;
