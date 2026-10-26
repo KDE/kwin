@@ -127,7 +127,7 @@ struct KWIN_EXPORT CvtModeline
      *
      * @note The refresh rate of the generated mode will likely be different from the given @a refreshRate.
      */
-    static CvtModeline generate(const QSize &size, uint32_t refreshRate, bool reducedBlanking = false);
+    static CvtModeline generate(const QSize &size, uint32_t refreshRate, bool reducedBlanking = false, bool interlaced = false);
 
     QSize size() const;
     uint32_t refreshRate() const;
