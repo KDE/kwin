@@ -5,6 +5,7 @@
 */
 
 #include "effect/timeline.h"
+#include "core/renderdevice.h"
 #include "scene/scene.h"
 
 using namespace std::chrono_literals;
@@ -48,7 +49,7 @@ std::chrono::nanoseconds AnimationClock::tick(std::chrono::nanoseconds timestamp
 
 std::chrono::nanoseconds AnimationClock::tick(const RenderView *view)
 {
-    return tick(view->nextPresentationTimestamp(), view->repaintDriver() ? 0 : view->refreshRate());
+    return tick(view->nextPresentationTimestamp(), view->repaintDriver() || view->renderDevice()->isSoftwareDevice() ? 0 : view->refreshRate());
 }
 
 std::chrono::milliseconds AnimationClock::tickMs(std::chrono::nanoseconds timestamp, uint refreshRate)
@@ -62,7 +63,7 @@ std::chrono::milliseconds AnimationClock::tickMs(std::chrono::nanoseconds timest
 
 std::chrono::milliseconds AnimationClock::tickMs(const RenderView *view)
 {
-    return tickMs(view->nextPresentationTimestamp(), view->repaintDriver() ? 0 : view->refreshRate());
+    return tickMs(view->nextPresentationTimestamp(), view->repaintDriver() || view->renderDevice()->isSoftwareDevice() ? 0 : view->refreshRate());
 }
 
 class Q_DECL_HIDDEN TimeLine::Data : public QSharedData
@@ -122,7 +123,7 @@ void TimeLine::advance(std::chrono::nanoseconds timestamp, uint refreshRate)
 
 void TimeLine::advance(const RenderView *view)
 {
-    advance(view->nextPresentationTimestamp(), view->repaintDriver() ? 0 : view->refreshRate());
+    advance(view->nextPresentationTimestamp(), view->repaintDriver() || view->renderDevice()->isSoftwareDevice() ? 0 : view->refreshRate());
 }
 
 std::chrono::nanoseconds TimeLine::elapsed() const
