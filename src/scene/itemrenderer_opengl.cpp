@@ -74,7 +74,8 @@ std::unique_ptr<Atlas> ItemRendererOpenGL::createAtlas(const QList<QImage> &spri
 void ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)
 {
     GLFramebuffer *fbo = renderTarget.framebuffer();
-    GLFramebuffer::pushFramebuffer(fbo);
+    m_currentContext = fbo->context();
+    m_currentContext->pushFramebuffer(fbo);
 
     GLVertexBuffer::streamingBuffer()->beginFrame();
 }
@@ -82,7 +83,9 @@ void ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const Rend
 void ItemRendererOpenGL::endFrame()
 {
     GLVertexBuffer::streamingBuffer()->endOfFrame();
-    GLFramebuffer::popFramebuffer();
+
+    m_currentContext->popFramebuffer();
+    m_currentContext = nullptr;
 
     EGLNativeFence fence(m_renderDevice->eglDisplay());
     if (fence.isValid()) {
@@ -208,7 +211,8 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
     // For multi-gpu copies, preprocess may change the active EGL context,
     // and switching back can fail in the case of a GPU reset.
     item->preprocess(this);
-    if (!EglContext::currentContext()) {
+    if (m_currentContext != EglContext::currentContext()) {
+        m_currentContext->setFailed();
         return false;
     }
 
@@ -413,7 +417,7 @@ bool ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
     const auto map = vbo->map<GLVertex2D>(totalVertexCount);
     if (!map) {
-        EglContext::currentContext()->setFailed();
+        m_currentContext->setFailed();
         return true;
     }
 

@@ -96,6 +96,7 @@ private:
     bool createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter);
     void visualizeFractional(const RenderViewport &viewport, const Region &logicalRegion, const RenderContext &renderContext);
 
+    EglContext *m_currentContext = nullptr;
     bool m_blendingEnabled = false;
     std::unordered_set<std::shared_ptr<SyncReleasePoint>> m_releasePoints;
 
