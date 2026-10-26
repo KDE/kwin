@@ -34,6 +34,7 @@
 #include "screenedge.h"
 #include "sm.h"
 #include "tabletmodemanager.h"
+#include "utils/envvar.h"
 #include "wayland/surface.h"
 #include "workspace.h"
 
@@ -50,12 +51,14 @@
 // Qt
 #include <QCommandLineParser>
 #include <QQuickWindow>
+#include <QThread>
 #if KWIN_BUILD_X11
 #include <private/qtx11extras_p.h>
 #endif
 #include <qplatformdefs.h>
 
 #include <cerrno>
+#include <thread>
 
 #if __has_include(<malloc.h>)
 #include <malloc.h>
@@ -110,10 +113,45 @@ void Application::start()
     }
 
     performStartup();
+
+    if (auto timeout = qEnvironmentVariableIntegerValue("KWIN_HANG_DETECTION_TIMEOUT"); timeout && timeout > 0) {
+        m_hangDetection.thread.reset(QThread::create([this, timeout]() {
+            qCWarning(KWIN_CORE, "started hang detector with a timeout of %lldµs", *timeout);
+            const auto thisThread = QThread::currentThread();
+            while (!thisThread->isInterruptionRequested()) {
+                std::unique_lock lock(m_hangDetection.mutex);
+                const auto before = std::chrono::steady_clock::now();
+
+                m_hangDetection.ping = true;
+                QMetaObject::invokeMethod(this, &Application::handlePing, Qt::ConnectionType::QueuedConnection);
+
+                lock.unlock();
+                std::this_thread::sleep_for(std::chrono::microseconds(*timeout));
+                lock.lock();
+                if (!m_hangDetection.ping) {
+                    continue;
+                }
+                onMainHang();
+                m_hangDetection.pong.wait(lock, [&]() {
+                    return !m_hangDetection.ping;
+                });
+
+                const auto micros = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - before);
+                qCWarning(KWIN_CORE, "Main thread was busy for %luµs", micros.count());
+            }
+        }));
+        m_hangDetection.thread->setObjectName("hang detector");
+        m_hangDetection.thread->start();
+    }
 }
 
 Application::~Application()
 {
+    if (m_hangDetection.thread) {
+        m_hangDetection.thread->requestInterruption();
+        handlePing();
+        m_hangDetection.thread.reset();
+    }
     delete options;
     destroyAtoms();
     destroyPlatform();
@@ -562,6 +600,21 @@ void Application::createScene()
 void Application::destroyScene()
 {
     m_scene.reset();
+}
+
+void Application::handlePing()
+{
+    std::unique_lock lock(m_hangDetection.mutex);
+    m_hangDetection.ping = false;
+    m_hangDetection.pong.notify_all();
+}
+
+void Application::onMainHang()
+{
+    // NOTE this trivial code is intentionally in a separate method,
+    // so you can set a breakpoint for Application::onMainHang
+    // instead of having to find the line of code manually
+    qCWarning(KWIN_CORE, "Main thread is busy");
 }
 
 } // namespace
