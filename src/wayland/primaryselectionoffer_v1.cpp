@@ -62,10 +62,6 @@ PrimarySelectionOfferV1Interface::PrimarySelectionOfferV1Interface(AbstractDataS
     : QObject()
     , d(new PrimarySelectionOfferV1InterfacePrivate(this, source, resource))
 {
-    Q_ASSERT(source);
-    connect(source, &AbstractDataSource::mimeTypeOffered, this, [this](const QString &mimeType) {
-        d->send_offer(mimeType);
-    });
 }
 
 PrimarySelectionOfferV1Interface::~PrimarySelectionOfferV1Interface() = default;

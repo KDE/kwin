@@ -127,7 +127,6 @@ public:
 Q_SIGNALS:
     void aboutToBeDestroyed();
 
-    void mimeTypeOffered(const QString &);
     void supportedDragAndDropActionsChanged();
     void keyboardModifiersChanged();
     void dndActionChanged();

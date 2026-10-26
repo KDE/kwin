@@ -32,7 +32,6 @@ void DataSourceInterfacePrivate::data_source_destroy_resource(Resource *resource
 void DataSourceInterfacePrivate::data_source_offer(QtWaylandServer::wl_data_source::Resource *resource, const QString &mime_type)
 {
     mimeTypes << mime_type;
-    Q_EMIT q->mimeTypeOffered(mime_type);
 }
 
 void DataSourceInterfacePrivate::data_source_destroy(QtWaylandServer::wl_data_source::Resource *resource)
@@ -43,7 +42,6 @@ void DataSourceInterfacePrivate::data_source_destroy(QtWaylandServer::wl_data_so
 void DataSourceInterfacePrivate::offer(const QString &mimeType)
 {
     mimeTypes << mimeType;
-    Q_EMIT q->mimeTypeOffered(mimeType);
 }
 
 void DataSourceInterfacePrivate::data_source_set_actions(Resource *resource, uint32_t dnd_actions)

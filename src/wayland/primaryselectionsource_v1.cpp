@@ -45,7 +45,6 @@ void PrimarySelectionSourceV1InterfacePrivate::zwp_primary_selection_source_v1_d
 void PrimarySelectionSourceV1InterfacePrivate::zwp_primary_selection_source_v1_offer(Resource *, const QString &mimeType)
 {
     mimeTypes << mimeType;
-    Q_EMIT q->mimeTypeOffered(mimeType);
 }
 
 void PrimarySelectionSourceV1InterfacePrivate::zwp_primary_selection_source_v1_destroy(QtWaylandServer::zwp_primary_selection_source_v1::Resource *resource)

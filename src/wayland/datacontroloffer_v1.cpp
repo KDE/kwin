@@ -59,10 +59,6 @@ DataControlOfferV1Interface::DataControlOfferV1Interface(AbstractDataSource *sou
     : QObject()
     , d(new DataControlOfferV1InterfacePrivate(this, source, resource))
 {
-    Q_ASSERT(source);
-    connect(source, &AbstractDataSource::mimeTypeOffered, this, [this](const QString &mimeType) {
-        d->send_offer(mimeType);
-    });
 }
 
 DataControlOfferV1Interface::~DataControlOfferV1Interface() = default;

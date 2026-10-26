@@ -158,10 +158,6 @@ DataOfferInterface::DataOfferInterface(AbstractDataSource *source, wl_resource *
     : QObject(nullptr)
     , d(new DataOfferInterfacePrivate(source, this, resource))
 {
-    Q_ASSERT(source);
-    connect(source, &DataSourceInterface::mimeTypeOffered, this, [this](const QString &mimeType) {
-        d->send_offer(mimeType);
-    });
 }
 
 DataOfferInterface::~DataOfferInterface()
