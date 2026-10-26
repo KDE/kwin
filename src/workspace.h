@@ -757,6 +757,7 @@ private:
     QList<QString> m_recentlyRemovedDpmsOffOutputs;
     QTimer m_dpmsTimer;
     std::shared_ptr<FileDescriptor> m_sleepInhibitor;
+    bool m_sleepPending = false;
 
 private:
     friend Workspace *workspace();
