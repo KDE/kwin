@@ -59,7 +59,6 @@
 #include "utils/envvar.h"
 #include "utils/kernel.h"
 #include "utils/lightsensor.h"
-#include "utils/orientationsensor.h"
 #include "virtualdesktops.h"
 #include "wayland/externalbrightness_v1.h"
 #include "wayland/surface.h"
@@ -236,7 +235,12 @@ void Workspace::init()
         const auto outputs = kwinApp()->outputBackend()->outputs();
         m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(outputs, kwinApp()->tabletModeManager()->effectiveTabletMode()));
         m_lightSensor->setEnabled(m_outputConfigStore->isAutoBrightnessActive(outputs));
-        auto opt = m_outputConfigStore->queryConfig(outputs, m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
+        auto opt = m_outputConfigStore->queryConfig(outputs, OutputConfigurationStore::OutputConfigurationStore::Parameters{
+                                                                 .isLidClosed = m_lidSwitchTracker->isLidClosed(),
+                                                                 .orientation = m_orientationSensor->reading(),
+                                                                 .isTabletMode = kwinApp()->tabletModeManager()->effectiveTabletMode(),
+                                                                 .isSoftwareRendered = Compositor::self()->primaryDevice()->isSoftwareDevice(),
+                                                             });
         if (!opt) {
             return;
         }
@@ -697,7 +701,12 @@ void Workspace::updateOutputConfiguration()
     QList<BackendOutput *> toEnable = outputs;
     std::expected<void, OutputError> result;
     do {
-        auto opt = m_outputConfigStore->queryConfig(toEnable, m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
+        auto opt = m_outputConfigStore->queryConfig(toEnable, OutputConfigurationStore::Parameters{
+                                                                  .isLidClosed = m_lidSwitchTracker->isLidClosed(),
+                                                                  .orientation = m_orientationSensor->reading(),
+                                                                  .isTabletMode = kwinApp()->tabletModeManager()->effectiveTabletMode(),
+                                                                  .isSoftwareRendered = Compositor::self()->primaryDevice()->isSoftwareDevice(),
+                                                              });
         if (!opt) {
             return;
         }

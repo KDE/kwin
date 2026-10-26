@@ -1540,7 +1540,7 @@ void OutputChangesTest::testGenerateConfigs()
 
     const auto outputs = kwinApp()->outputBackend()->outputs();
     OutputConfigurationStore configs;
-    auto cfg = configs.queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
+    auto cfg = configs.queryConfig(outputs, OutputConfigurationStore::Parameters{});
     QVERIFY(cfg.has_value());
     const auto [config, type] = *cfg;
     const auto outputConfig = config.constChangeSet(outputs.front());
@@ -1677,7 +1677,12 @@ void OutputChangesTest::testAutorotate()
 
     const auto outputs = kwinApp()->outputBackend()->outputs();
     OutputConfigurationStore configs;
-    auto cfg = configs.queryConfig(outputs, false, orientation, true);
+    auto cfg = configs.queryConfig(outputs, OutputConfigurationStore::Parameters{
+                                                .isLidClosed = false,
+                                                .orientation = orientation,
+                                                .isTabletMode = true,
+                                                .isSoftwareRendered = false,
+                                            });
     QVERIFY(cfg.has_value());
     const auto [config, type] = *cfg;
     const auto outputConfig = config.constChangeSet(outputs.front());
@@ -1877,7 +1882,7 @@ void OutputChangesTest::testSettingRestoration()
 
     QList<std::optional<QPoint>> outputPositions;
     {
-        auto cfg = configurationStore->queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
+        auto cfg = configurationStore->queryConfig(outputs, OutputConfigurationStore::Parameters{});
         QVERIFY(cfg.has_value());
         auto [config, type] = *cfg;
         QVERIFY(workspace()->applyOutputConfiguration(config));
@@ -1889,7 +1894,7 @@ void OutputChangesTest::testSettingRestoration()
     // the positions must be independent of the order of outputs in the list
     std::ranges::reverse(outputs);
     {
-        auto cfg = configurationStore->queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
+        auto cfg = configurationStore->queryConfig(outputs, OutputConfigurationStore::Parameters{});
         QVERIFY(cfg.has_value());
         const auto [config, type] = *cfg;
         auto revertedPositions = outputPositions | std::views::reverse;
@@ -1928,7 +1933,7 @@ void OutputChangesTest::testSettingRestoration()
     outputs = kwinApp()->outputBackend()->outputs();
 
     {
-        auto cfg = configurationStore->queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
+        auto cfg = configurationStore->queryConfig(outputs, OutputConfigurationStore::Parameters{});
         QVERIFY(cfg.has_value());
         const auto [config, type] = *cfg;
         auto revertedPositions = outputPositions | std::views::reverse;
@@ -1986,7 +1991,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
 
     {
         // query the generated config, like KWin normally would
-        auto cfg = configurationStore->queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
+        auto cfg = configurationStore->queryConfig(outputs, OutputConfigurationStore::Parameters{});
         QVERIFY(cfg.has_value());
         auto [config, type] = *cfg;
         QVERIFY(workspace()->applyOutputConfiguration(config));
@@ -2003,7 +2008,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
     {
         // verify that querying the config also shows the changed mode
         // things could already go wrong here
-        auto cfg = configurationStore->queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
+        auto cfg = configurationStore->queryConfig(outputs, OutputConfigurationStore::Parameters{});
         QVERIFY(cfg.has_value());
         auto [config, type] = *cfg;
         QCOMPARE(type, OutputConfigurationStore::ConfigType::Preexisting);
@@ -2043,7 +2048,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
     outputs = kwinApp()->outputBackend()->outputs();
 
     {
-        auto cfg = configurationStore->queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
+        auto cfg = configurationStore->queryConfig(outputs, OutputConfigurationStore::Parameters{});
         QVERIFY(cfg.has_value());
         const auto [config, type] = *cfg;
         QCOMPARE(config.constChangeSet(outputs[0])->desiredMode->size(), QSize(640, 480));
@@ -2088,7 +2093,7 @@ void OutputChangesTest::testSettingRestoration_replacedMode()
     // now, mark the mode as "removed". Its replacement is already in the mode list
     outputs[0]->modes()[1]->setRemoved();
 
-    const auto opt = configurationStore->queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
+    const auto opt = configurationStore->queryConfig(outputs, OutputConfigurationStore::Parameters{});
     QVERIFY(opt.has_value());
     auto [config, type] = *opt;
     QVERIFY(workspace()->applyOutputConfiguration(config));

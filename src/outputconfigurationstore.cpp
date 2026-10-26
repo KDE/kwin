@@ -68,7 +68,8 @@ void OutputConfigurationStore::clear()
     m_outputs.clear();
 }
 
-std::optional<std::pair<OutputConfiguration, OutputConfigurationStore::ConfigType>> OutputConfigurationStore::queryConfig(const QList<BackendOutput *> &outputs, bool isLidClosed, AccelerometerOrientation orientation, bool isTabletMode)
+std::optional<std::pair<OutputConfiguration, OutputConfigurationStore::ConfigType>> OutputConfigurationStore::queryConfig(const QList<BackendOutput *> &outputs,
+                                                                                                                          const Parameters &params)
 {
     QList<BackendOutput *> relevantOutputs;
     std::copy_if(outputs.begin(), outputs.end(), std::back_inserter(relevantOutputs), [](BackendOutput *output) {
@@ -79,15 +80,15 @@ std::optional<std::pair<OutputConfiguration, OutputConfigurationStore::ConfigTyp
     }
     // assigns uuids, if the outputs don't have one yet
     registerOutputs(outputs);
-    if (const auto opt = findSetup(relevantOutputs, isLidClosed)) {
+    if (const auto opt = findSetup(relevantOutputs, params.isLidClosed)) {
         const auto &[setup, outputStates] = *opt;
         auto config = setupToConfig(setup, outputStates);
-        applyOrientationReading(config, relevantOutputs, orientation, isTabletMode);
+        applyOrientationReading(config, relevantOutputs, params.orientation, params.isTabletMode);
         applyMirroring(config, relevantOutputs);
         return std::make_tuple(config, ConfigType::Preexisting);
     }
-    auto config = generateConfig(relevantOutputs, isLidClosed);
-    applyOrientationReading(config, relevantOutputs, orientation, isTabletMode);
+    auto config = generateConfig(relevantOutputs, params);
+    applyOrientationReading(config, relevantOutputs, params.orientation, params.isTabletMode);
     applyMirroring(config, relevantOutputs);
     return std::make_tuple(config, ConfigType::Generated);
 }
@@ -636,16 +637,16 @@ std::optional<OutputConfigurationStore::SetupWithOutputs> OutputConfigurationSto
     }
 }
 
-OutputConfiguration OutputConfigurationStore::generateConfig(const QList<BackendOutput *> &outputs, bool isLidClosed)
+OutputConfiguration OutputConfigurationStore::generateConfig(const QList<BackendOutput *> &outputs, const Parameters &params)
 {
     qCDebug(KWIN_OUTPUT_CONFIG, "Generating new config for %lld outputs", outputs.size());
-    if (isLidClosed) {
+    if (params.isLidClosed) {
         if (const auto closedConfig = generateLidClosedConfig(outputs)) {
             return *closedConfig;
         }
     }
-    const auto closestSetup = findPartialSetup(outputs, isLidClosed);
-    const auto kscreenConfig = KScreenIntegration::readOutputConfig(outputs, isLidClosed);
+    const auto closestSetup = findPartialSetup(outputs, params.isLidClosed);
+    const auto kscreenConfig = KScreenIntegration::readOutputConfig(outputs, params.isLidClosed);
     OutputConfiguration ret;
     QPoint rightMostPosition(0, 0);
     int priority = 0;
@@ -676,7 +677,7 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
         }
 
         const auto outputIndex = findOutputIndex(output, outputs);
-        const bool enable = kscreenChangeSet.enabled.value_or(!isLidClosed || !output->isInternal() || outputs.size() == 1);
+        const bool enable = kscreenChangeSet.enabled.value_or(!params.isLidClosed || !output->isInternal() || outputs.size() == 1);
         const OutputState existingData = outputIndex ? m_outputs[*outputIndex] : OutputState{};
 
         std::optional<OutputModeline> modeline;
@@ -771,6 +772,10 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
             .autoBrightnessCurve = existingData.autoBrightnessCurve,
             .abmLevel = existingData.abmLevel.value_or(0),
         };
+        if ((output->capabilities() & BackendOutput::Capability::BuiltInColorProfile) && !params.isSoftwareRendered) {
+            changeset->colorProfileSource = BackendOutput::ColorProfileSource::EDID;
+        }
+
         if (setupState) {
             priority = std::max(setupState->priority + 1, priority);
         } else {

@@ -9,6 +9,7 @@
 #pragma once
 
 #include "core/backendoutput.h"
+#include "utils/orientationsensor.h"
 
 #include <QList>
 #include <QPoint>
@@ -21,7 +22,6 @@
 namespace KWin
 {
 
-enum class AccelerometerOrientation;
 class OutputConfiguration;
 
 struct LegacyOutputModeline
@@ -42,11 +42,18 @@ public:
 
     void clear();
 
+    struct Parameters
+    {
+        bool isLidClosed = false;
+        AccelerometerOrientation orientation = AccelerometerOrientation::Undefined;
+        bool isTabletMode = false;
+        bool isSoftwareRendered = false;
+    };
     enum class ConfigType {
         Preexisting,
         Generated,
     };
-    std::optional<std::pair<OutputConfiguration, ConfigType>> queryConfig(const QList<BackendOutput *> &outputs, bool isLidClosed, AccelerometerOrientation orientation, bool isTabletMode);
+    std::optional<std::pair<OutputConfiguration, ConfigType>> queryConfig(const QList<BackendOutput *> &outputs, const Parameters &params);
     void storeConfig(const QList<BackendOutput *> &allOutputs, bool isLidClosed);
 
     void applyMirroring(OutputConfiguration &config, const QList<BackendOutput *> &outputs);
@@ -54,7 +61,7 @@ public:
     bool isAutoBrightnessActive(const QList<BackendOutput *> &outputs) const;
 
 private:
-    OutputConfiguration generateConfig(const QList<BackendOutput *> &outputs, bool isLidClosed);
+    OutputConfiguration generateConfig(const QList<BackendOutput *> &outputs, const Parameters &params);
     void registerOutputs(const QList<BackendOutput *> &outputs);
     void applyOrientationReading(OutputConfiguration &config, const QList<BackendOutput *> &outputs, AccelerometerOrientation orientation, bool isTabletMode);
     std::optional<OutputConfiguration> generateLidClosedConfig(const QList<BackendOutput *> &outputs);
