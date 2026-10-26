@@ -42,6 +42,7 @@ XXPipV1Window::XXPipV1Window(XXPipV1Interface *shellSurface)
 
 void XXPipV1Window::initialize()
 {
+    setupWindowManagementInterface();
     scheduleConfigure();
 }
 
@@ -171,6 +172,8 @@ void XXPipV1Window::handleRoleCommit()
 
 void XXPipV1Window::handleRoleDestroyed()
 {
+    destroyWindowManagementInterface();
+
     m_shellSurface->disconnect(this);
 
     XdgSurfaceWindow::handleRoleDestroyed();
