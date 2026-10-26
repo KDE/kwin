@@ -39,7 +39,7 @@ void KWinOptions::save()
 
 bool KWinOptions::isPiPEnabled() const
 {
-    return qEnvironmentVariableIsSet("KWIN_WAYLAND_SUPPORT_XX_PIP_V1");
+    return qEnvironmentVariableIntegerValue("KWIN_WAYLAND_SUPPORT_XX_PIP_V1").value_or(1);
 }
 
 KWinOptionsSettings *KWinOptions::kwinSettings() const
