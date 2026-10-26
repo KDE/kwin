@@ -5,6 +5,7 @@
 */
 
 #include "effect/timeline.h"
+#include "core/renderdevice.h"
 #include "scene/scene.h"
 
 using namespace std::chrono_literals;
@@ -52,7 +53,7 @@ std::chrono::milliseconds AnimationClock::tick(std::chrono::nanoseconds timestam
 
 std::chrono::milliseconds AnimationClock::tick(const RenderView *view)
 {
-    return tick(view->nextPresentationTimestamp(), view->repaintDriver() ? 0 : view->refreshRate());
+    return tick(view->nextPresentationTimestamp(), view->repaintDriver() || view->renderDevice()->isSoftwareDevice() ? 0 : view->refreshRate());
 }
 
 class Q_DECL_HIDDEN TimeLine::Data : public QSharedData
@@ -112,7 +113,7 @@ void TimeLine::advance(std::chrono::nanoseconds timestamp, uint refreshRate)
 
 void TimeLine::advance(const RenderView *view)
 {
-    advance(view->nextPresentationTimestamp(), view->repaintDriver() ? 0 : view->refreshRate());
+    advance(view->nextPresentationTimestamp(), view->repaintDriver() || view->renderDevice()->isSoftwareDevice() ? 0 : view->refreshRate());
 }
 
 std::chrono::milliseconds TimeLine::elapsed() const
