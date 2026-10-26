@@ -70,13 +70,11 @@ bool Context::initialize()
         return false;
     }
 
-#if HAVE_LIBINPUT_PLUGINS
     const bool wantsPlugins = !environmentVariableBoolValue("KWIN_LIBINPUT_NO_PLUGINS").value_or(false);
     if (wantsPlugins) {
         libinput_plugin_system_append_default_paths(m_libinput);
         libinput_plugin_system_load_plugins(m_libinput, LIBINPUT_PLUGIN_SYSTEM_FLAG_NONE);
     }
-#endif
 
     return libinput_udev_assign_seat(m_libinput, m_session->seat().toUtf8().constData()) == 0;
 }
