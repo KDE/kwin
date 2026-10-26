@@ -137,15 +137,6 @@ bool EglGbmLayer::earlyScanoutChecks()
 
 bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
 {
-    if (buffer->dmabufAttributes()->device != gpu()->drmDevice()->deviceId()
-        && (!gpu()->renderDevice() || buffer->dmabufAttributes()->device != gpu()->renderDevice()->deviceId())) {
-        // Disallow direct scanout between GPUs, as
-        // - there are some significant driver bugs with direct scanout from other GPUs,
-        //   like https://gitlab.freedesktop.org/drm/amd/-/issues/2075
-        // - with implicit modifiers, direct scanout on secondary GPUs
-        //   is also very unlikely to yield the correct results.
-        return false;
-    }
     m_scanoutBuffer = gpu()->importBuffer(buffer, FileDescriptor{});
     if (m_scanoutBuffer) {
         m_surface.forgetDamage(); // TODO: Use absolute frame sequence numbers for indexing the DamageJournal. It's more flexible and less error-prone
