@@ -768,6 +768,7 @@ private:
 
     DpmsState m_dpms = DpmsState::On;
     QList<QString> m_recentlyRemovedDpmsOffOutputs;
+    QList<QString> m_previousBackendOutputs;
     QTimer m_dpmsTimer;
     std::shared_ptr<FileDescriptor> m_sleepInhibitor;
     bool m_sleepPending = false;
