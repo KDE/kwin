@@ -11,6 +11,7 @@
 #include "core/outputbackend.h"
 #include "input_event.h"
 #include "main.h"
+#include "touch_input.h"
 #include "utils/keys.h"
 #include "utils/proximitysensor.h"
 #include "wayland_server.h"
@@ -25,6 +26,11 @@ namespace KWin
 DpmsInputEventFilter::DpmsInputEventFilter()
     : InputEventFilter(InputFilterOrder::Dpms)
 {
+    // Touch up events are swallowed while this filter is installed, so a touch sequence
+    // that started before the screens turned off would never end and block pointer focus
+    // updates. The filter is not installed yet, so the cancel reaches the seat.
+    input()->touch()->cancel();
+
     KSharedConfig::Ptr kwinSettings = kwinApp()->config();
     m_enableDoubleTap = kwinSettings->group(QStringLiteral("Wayland")).readEntry<bool>("DoubleTapWakeup", true);
 
