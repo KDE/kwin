@@ -59,6 +59,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
     connect(ws, &Workspace::outputsChanged, this, &WorkspaceWrapper::screensChanged);
     connect(ws, &Workspace::outputOrderChanged, this, &WorkspaceWrapper::screenOrderChanged);
     connect(Cursors::self()->mouse(), &Cursor::posChanged, this, &WorkspaceWrapper::cursorPosChanged);
+    connect(ws, &Workspace::screenCaptureActiveChanged, this, &WorkspaceWrapper::screenCaptureActiveChanged);
 }
 
 VirtualDesktop *WorkspaceWrapper::currentDesktop() const
@@ -148,6 +149,11 @@ QStringList WorkspaceWrapper::activityList() const
 QPoint WorkspaceWrapper::cursorPos() const
 {
     return Cursors::self()->mouse()->pos().toPoint();
+}
+
+bool WorkspaceWrapper::isScreenCaptureActive() const
+{
+    return workspace()->isScreenCaptureActive();
 }
 
 #define SLOTWRAPPER(name)          \

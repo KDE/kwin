@@ -116,9 +116,9 @@ ExpoCell {
         z: (activeDragHandler.active || returnAnimation.running) ? 1000
             : thumb.window.stackingOrder * (presentOnCurrentDesktop ? 1 : 0.001)
 
-        KWinComponents.WindowThumbnail {
+        Item {
             id: thumbSource
-            wId: thumb.window.internalId
+            readonly property KWinComponents.Window client: thumb.window
             scale: targetScale
             width: mainContent.width
             height: mainContent.height
@@ -169,6 +169,18 @@ ExpoCell {
             }
             function deleteDND() {
                 thumb.windowHeap.deleteDND(thumb.window.internalId);
+            }
+
+            KWinComponents.WindowThumbnail {
+                anchors.fill: parent
+                wId: thumb.window.internalId
+                visible: !thumbPlaceholder.active
+            }
+
+            CaptureExcludedPlaceholder {
+                id: thumbPlaceholder
+                anchors.fill: parent
+                window: thumb.window
             }
 
             // Not using FrameSvg hover element intentionally for stylistic reasons

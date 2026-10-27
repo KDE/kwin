@@ -644,6 +644,28 @@ Workspace::DpmsState Workspace::dpmsState() const
     return m_dpms;
 }
 
+bool Workspace::isScreenCaptureActive() const
+{
+    return m_screenCaptureCount > 0;
+}
+
+void Workspace::addScreenCapture()
+{
+    m_screenCaptureCount++;
+    if (m_screenCaptureCount == 1) {
+        Q_EMIT screenCaptureActiveChanged();
+    }
+}
+
+void Workspace::removeScreenCapture()
+{
+    Q_ASSERT(m_screenCaptureCount > 0);
+    m_screenCaptureCount--;
+    if (m_screenCaptureCount == 0) {
+        Q_EMIT screenCaptureActiveChanged();
+    }
+}
+
 void Workspace::updateXwaylandScale()
 {
     KConfigGroup kscreenGroup = kwinApp()->kdeglobals()->group(QStringLiteral("KScreen"));

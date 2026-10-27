@@ -152,6 +152,16 @@ class WorkspaceWrapper : public QObject
      */
     Q_PROPERTY(QPoint cursorPos READ cursorPos NOTIFY cursorPosChanged)
 
+    /*!
+     * \qmlproperty bool Workspace::screenCaptureActive
+     *
+     * Whether the contents of an output or a screen region are being captured,
+     * e.g. by a screen recording or a remote desktop session.
+     *
+     * \since 6.9
+     */
+    Q_PROPERTY(bool screenCaptureActive READ isScreenCaptureActive NOTIFY screenCaptureActiveChanged)
+
 private:
     Q_DISABLE_COPY(WorkspaceWrapper)
 
@@ -279,6 +289,12 @@ Q_SIGNALS:
      */
     void cursorPosChanged();
 
+    /*!
+     * This signal is emitted when screenCaptureActive changes.
+     * \since 6.9
+     */
+    void screenCaptureActiveChanged();
+
 public:
     //------------------------------------------------------------------
     // enums copy&pasted from kwinglobals.h because qtscript is evil
@@ -357,6 +373,7 @@ public:
     QSize virtualScreenSize() const;
     QRect virtualScreenGeometry() const;
     QPoint cursorPos() const;
+    bool isScreenCaptureActive() const;
 
     QList<VirtualDesktop *> desktops() const;
     VirtualDesktop *currentDesktop() const;

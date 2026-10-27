@@ -450,6 +450,14 @@ public:
     void requestDpmsState(DpmsState state);
     DpmsState dpmsState() const;
 
+    /**
+     * Returns \c true if the contents of an output or a screen region are being captured,
+     * e.g. by a screen recording or a remote desktop session.
+     */
+    bool isScreenCaptureActive() const;
+    void addScreenCapture();
+    void removeScreenCapture();
+
 public Q_SLOTS:
     void performWindowOperation(KWin::Window *window, KWin::Options::WindowOperation op);
     // Keybindings
@@ -578,6 +586,7 @@ Q_SIGNALS:
     void stackingOrderChanged();
     void aboutToRearrange();
     void dpmsStateChanged(std::chrono::milliseconds animationTime);
+    void screenCaptureActiveChanged();
 
 private:
     void init();
@@ -757,6 +766,7 @@ private:
     QList<QString> m_recentlyRemovedDpmsOffOutputs;
     QTimer m_dpmsTimer;
     std::shared_ptr<FileDescriptor> m_sleepInhibitor;
+    int m_screenCaptureCount = 0;
 
 private:
     friend Workspace *workspace();

@@ -6,6 +6,7 @@ ecm_add_qml_module(effectsplugin URI "org.kde.kwin.private.effects" VERSION 1.0 
 
 ecm_target_qml_sources(effectsplugin
     SOURCES
+        qml/CaptureExcludedPlaceholder.qml
         qml/WindowHeap.qml
         qml/WindowHeapDelegate.qml
 )

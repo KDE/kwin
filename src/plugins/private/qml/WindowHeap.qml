@@ -70,18 +70,30 @@ FocusScope {
         delete dndManagerStore[key];
     }
 
-    KWinComponents.WindowThumbnail {
+    Item {
         id: otherScreenThumbnail
         z: 2
-        property KWinComponents.WindowThumbnail cloneOf
+        property Item cloneOf
+        readonly property KWinComponents.Window client: cloneOf ? cloneOf.client : null
         visible: false
-        client: cloneOf ? cloneOf.client : null
         width: cloneOf ? cloneOf.width : 0
         height: cloneOf ? cloneOf.height : 0
         onCloneOfChanged: {
             if (!cloneOf) {
                 visible = false;
             }
+        }
+
+        KWinComponents.WindowThumbnail {
+            anchors.fill: parent
+            client: otherScreenThumbnail.client
+            visible: !otherScreenPlaceholder.active
+        }
+
+        CaptureExcludedPlaceholder {
+            id: otherScreenPlaceholder
+            anchors.fill: parent
+            window: otherScreenThumbnail.client
         }
     }
 

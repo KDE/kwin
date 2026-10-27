@@ -38,6 +38,13 @@ FilteredSceneView::FilteredSceneView(Scene *scene, LogicalOutput *output, Output
     for (auto window : windows) {
         setupRepaintOnExcludedFromCapture(window);
     }
+
+    workspace()->addScreenCapture();
+}
+
+FilteredSceneView::~FilteredSceneView()
+{
+    workspace()->removeScreenCapture();
 }
 
 void FilteredSceneView::prePaint(OutputFrame *frame)
