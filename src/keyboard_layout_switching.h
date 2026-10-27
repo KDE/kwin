@@ -140,6 +140,7 @@ protected:
 
 private:
     void windowActivated(Window *window);
+    void windowClosed(Window *window);
     QHash<Window *, quint32> m_layouts;
     QHash<QString, quint32> m_layoutsRestored;
 };

@@ -236,6 +236,12 @@ ApplicationPolicy::ApplicationPolicy(KWin::Xkb *xkb, KWin::KeyboardLayout *layou
     connect(workspace()->sessionManager(), &SessionManager::prepareSessionSaveRequested, this, [this](const QString &name) {
         clearLayouts();
 
+        // applications that have no window open; an open window of the same application overrides this below
+        for (auto i = m_layoutsRestored.constBegin(); i != m_layoutsRestored.constEnd(); ++i) {
+            if (const uint layout = *i) {
+                m_config.writeEntry(defaultLayoutEntryKey() % i.key(), layout);
+            }
+        }
         for (auto i = m_layouts.constBegin(); i != m_layouts.constEnd(); ++i) {
             if (const uint layout = *i) {
                 const QString desktopFileName = i.key()->desktopFileName();
@@ -292,6 +298,27 @@ void ApplicationPolicy::windowActivated(Window *window)
     }
 }
 
+void ApplicationPolicy::windowClosed(Window *window)
+{
+    const auto it = m_layouts.constFind(window);
+    if (it == m_layouts.constEnd()) {
+        return;
+    }
+    const uint layout = it.value();
+    m_layouts.erase(it);
+    const QString desktopFileName = window->desktopFileName();
+    if (desktopFileName.isEmpty()) {
+        return;
+    }
+    for (auto other = m_layouts.constBegin(); other != m_layouts.constEnd(); other++) {
+        if (Window::belongToSameApplication(window, other.key())) {
+            return;
+        }
+    }
+    // keep the layout of the application's last window, so that the next window it opens gets it
+    m_layoutsRestored.insert(desktopFileName, layout);
+}
+
 void ApplicationPolicy::clearCache()
 {
     m_layouts.clear();
@@ -312,7 +339,7 @@ void ApplicationPolicy::layoutChanged(uint index)
     if (it == m_layouts.end()) {
         m_layouts.insert(window, index);
         connect(window, &Window::closed, this, [this, window]() {
-            m_layouts.remove(window);
+            windowClosed(window);
         });
     } else {
         if (it.value() == index) {

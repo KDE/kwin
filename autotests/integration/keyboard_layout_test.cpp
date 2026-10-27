@@ -508,6 +508,8 @@ void KeyboardLayoutTest::testApplicationPolicy()
     QCOMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
 
     resetLayouts();
+    // the saved session has one layout entry, for org.kde.foo
+    QCOMPARE(layoutGroup.keyList().filter(QStringLiteral("LayoutDefault")).count(), 1);
     // to trigger layout application for current client
     workspace()->activateWindow(c1);
     workspace()->activateWindow(c2);
@@ -530,8 +532,45 @@ void KeyboardLayoutTest::testApplicationPolicy()
     QVERIFY(!layoutChangedSpy.wait(1000));
     QCOMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
 
+    // a window of another application; it needs its own connection, as the windows of one
+    // Wayland client count as the same application
+    auto otherClient = Test::Connection::setup();
+    QVERIFY(otherClient);
+    std::unique_ptr<KWayland::Client::Surface> otherSurface(Test::createSurface(otherClient->compositor));
+    std::unique_ptr<Test::XdgToplevel> otherShellSurface(Test::createXdgToplevelSurface(otherClient->xdgShell, otherSurface.get()));
+    otherShellSurface->set_app_id(QStringLiteral("org.kde.bar"));
+    auto c3 = Test::renderAndWaitForShown(otherClient->shm, otherSurface.get(), QSize(100, 100), Qt::blue);
+    QVERIFY(c3);
+    QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+
+    // close the last window of org.kde.foo, with the window of org.kde.bar active
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowClosed(c1));
+    QTRY_COMPARE(workspace()->activeWindow(), c3);
+    QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+
+    // a new window of org.kde.foo gets the layout its last window had
+    std::unique_ptr<KWayland::Client::Surface> surface4(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface4(Test::createXdgToplevelSurface(surface4.get()));
+    shellSurface4->set_app_id(QStringLiteral("org.kde.foo"));
+    auto c4 = Test::renderAndWaitForShown(surface4.get(), QSize(100, 100), Qt::red);
+    QVERIFY(c4);
+    QCOMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
+
+    // with no window of org.kde.foo left, its layout is saved with the session and restored
+    shellSurface4.reset();
+    surface4.reset();
+    QVERIFY(Test::waitForWindowClosed(c4));
     resetLayouts();
+    QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
     QCOMPARE(layoutGroup.keyList().filter(QStringLiteral("LayoutDefault")).count(), 1);
+    std::unique_ptr<KWayland::Client::Surface> surface5(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface5(Test::createXdgToplevelSurface(surface5.get()));
+    shellSurface5->set_app_id(QStringLiteral("org.kde.foo"));
+    auto c5 = Test::renderAndWaitForShown(surface5.get(), QSize(100, 100), Qt::red);
+    QVERIFY(c5);
+    QCOMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
 }
 
 void KeyboardLayoutTest::testNumLock()
