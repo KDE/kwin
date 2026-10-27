@@ -38,6 +38,8 @@ private:
     std::unique_ptr<ShapeCursorSource> m_source;
 };
 
+using ShakeCursorCacheKey = std::tuple<QString, int, qreal>;
+
 class ShakeCursorEffect : public Effect, public InputEventSpy
 {
     Q_OBJECT
@@ -53,6 +55,7 @@ public:
     void pointerMotion(PointerMotionEvent *event) override;
 
 private:
+    CursorTheme themeAtMagnification(qreal magnification);
     void magnify(qreal magnification);
 
     void inflate();
@@ -65,7 +68,7 @@ private:
 
     Cursor *m_cursor;
     std::unique_ptr<ShakeCursorItem> m_cursorItem;
-    CursorTheme m_cursorTheme;
+    QMap<ShakeCursorCacheKey, CursorTheme> m_cursorThemes;
     qreal m_targetMagnification = 1.0;
     qreal m_currentMagnification = 1.0;
 };
