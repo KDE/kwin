@@ -63,13 +63,22 @@ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimes
 
     if (presentationMode == PresentationMode::VSync) {
         // normal presentation: pageflips only happen at vblank
-        const uint64_t pageflipsSince = std::max<int64_t>((presentNotBefore - lastPresentationTimestamp) / vblankInterval, 0);
-        if (pageflipsSince > 100) {
+        // all pageflip counts are relative to the last presentation timestamp.
+
+        // the previous pageflip
+        const uint64_t pageflipsToNow = std::max<int64_t>((currentTime - lastPresentationTimestamp) / vblankInterval, 0);
+
+        // the first pageflip that's after "presentNotBefore"
+        const uint64_t pageflipsSinceLastToTarget = std::max<int64_t>((presentNotBefore - lastPresentationTimestamp) / vblankInterval, 0) + 1;
+
+        // the first pageflip after the last target
+        const uint64_t pageflipsSinceLastToLastTarget = std::max<int64_t>(std::round((lastTargetTimestamp - lastPresentationTimestamp).count() / double(vblankInterval.count())), 0) + 1;
+
+        if (pageflipsSinceLastToTarget > 100) {
             // if it's been a while since the last frame, the GPU is likely in a low power state and render time will be increased
             // -> take that into account and start compositing very early
             expectedCompositingTime = std::max(vblankInterval - 1us, expectedCompositingTime);
         }
-        const uint64_t pageflipsSinceLastToTarget = std::max<int64_t>(std::round((lastTargetTimestamp - lastPresentationTimestamp).count() / double(vblankInterval.count())), 0);
         uint64_t pageflipsInAdvance = std::min<int64_t>(expectedCompositingTime / vblankInterval + 1, maxPendingFrameCount);
 
         // switching from double to triple buffering causes a frame drop
@@ -104,7 +113,7 @@ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimes
             targetTimestamp = lastPresentationTimestamp + intervalsSinceLastTimestamp * vblankInterval;
         } else {
             // Either no frame is scheduled yet, or presentNotBefore is earlier than the last presentNotBefore hint
-            targetTimestamp = lastPresentationTimestamp + std::max(pageflipsSince + pageflipsInAdvance, pageflipsSinceLastToTarget + 1) * vblankInterval;
+            targetTimestamp = lastPresentationTimestamp + std::max({pageflipsToNow + pageflipsInAdvance, pageflipsSinceLastToLastTarget, pageflipsSinceLastToTarget}) * vblankInterval;
         }
     } else {
         wasTripleBuffering = false;
