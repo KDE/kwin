@@ -490,6 +490,11 @@ XwaylandInterface *Application::xwayland() const
 
 static PlatformCursorImage grabCursorOpenGL(WorkspaceScene *scene)
 {
+    const auto context = Compositor::self()->primaryDevice()->eglContext();
+    if (!context || !context->makeCurrent()) {
+        return PlatformCursorImage{};
+    }
+
     Cursor *cursor = Cursors::self()->currentCursor();
     LogicalOutput *output = workspace()->outputAt(cursor->pos());
 
