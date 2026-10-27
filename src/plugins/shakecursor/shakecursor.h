@@ -29,6 +29,8 @@ class ShakeCursorItem : public Item
 public:
     ShakeCursorItem(const CursorTheme &theme, Item *parent);
 
+    void setTheme(const CursorTheme &theme);
+
 private:
     void refresh();
 

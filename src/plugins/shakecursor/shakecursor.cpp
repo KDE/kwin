@@ -28,6 +28,11 @@ ShakeCursorItem::ShakeCursorItem(const CursorTheme &theme, Item *parent)
     connect(m_source.get(), &CursorSource::changed, this, &ShakeCursorItem::refresh);
 }
 
+void ShakeCursorItem::setTheme(const CursorTheme &theme)
+{
+    m_source->setTheme(theme);
+}
+
 void ShakeCursorItem::refresh()
 {
     if (!m_imageItem) {
@@ -148,7 +153,11 @@ void ShakeCursorEffect::magnify(qreal magnification)
             if (m_cursorTheme.name() != originalTheme.name() || m_cursorTheme.size() != originalTheme.size() || m_cursorTheme.devicePixelRatio() != devicePixelRatio) {
                 m_cursorTheme = CursorTheme(originalTheme.name(), originalTheme.size(), devicePixelRatio);
             }
+        }
 
+        if (m_cursorItem) {
+            m_cursorItem->setTheme(m_cursorTheme);
+        } else {
             m_cursorItem = std::make_unique<ShakeCursorItem>(m_cursorTheme, effects->scene()->overlayItem());
             m_cursorItem->setPosition(m_cursor->pos());
             connect(m_cursor, &Cursor::posChanged, m_cursorItem.get(), [this]() {
