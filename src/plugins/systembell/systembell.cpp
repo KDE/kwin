@@ -44,7 +44,7 @@ XdgSystemBellV1Interface *SystemBellEffect::s_systemBell = nullptr;
 
 SystemBellEffect::SystemBellEffect()
     : m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kaccessrc")))
-    , m_kdeglobals(QStringLiteral("kdeglobals"))
+    , m_kdeglobalsWatcher(KConfigWatcher::create(kwinApp()->kdeglobals()))
 {
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/Effect/SystemBell1"),
                                                  QStringLiteral("org.kde.KWin.Effect.SystemBell1"),
@@ -298,7 +298,7 @@ void SystemBellEffect::playAudibleBell()
                         "event",
                         nullptr);
     } else {
-        const QString themeName = m_kdeglobals.group(QStringLiteral("Sounds")).readEntry("Theme", QStringLiteral("ocean"));
+        const QString themeName = m_kdeglobalsWatcher->config()->group(QStringLiteral("Sounds")).readEntry("Theme", QStringLiteral("ocean"));
         ca_context_play(m_caContext,
                         0,
                         CA_PROP_EVENT_ID,
