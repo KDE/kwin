@@ -45,9 +45,9 @@ QDebug operator<<(QDebug debug, const LogicalOutput *output)
     return debug;
 }
 
-CvtModeline CvtModeline::generate(const QSize &size, uint32_t refreshRate, bool reducedBlanking)
+CvtModeline CvtModeline::generate(const QSize &size, uint32_t refreshRate, bool reducedBlanking, bool interlaced)
 {
-    libxcvt_mode_info *modeInfo = libxcvt_gen_mode_info(size.width(), size.height(), refreshRate / 1000.0f, reducedBlanking, false);
+    libxcvt_mode_info *modeInfo = libxcvt_gen_mode_info(size.width(), size.height(), refreshRate / 1000.0f, reducedBlanking, interlaced);
 
     const CvtModeline modeline{
         .clock = uint32_t(modeInfo->dot_clock),

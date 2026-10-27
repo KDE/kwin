@@ -27,6 +27,7 @@
 #include <xcb/xcb_icccm.h>
 #endif
 
+#include <drm_mode.h>
 #include <ranges>
 
 using namespace std::chrono_literals;
@@ -1552,6 +1553,19 @@ void OutputChangesTest::testGenerateConfigs_data()
                },
            }
         << OutputModeline(QSize(3840, 2160), 60000ul, OutputModeline::Flag::Preferred) << 2.0 << true;
+
+    QTest::addRow("No preferred interlace")
+        << DeviceType::Desktop
+        << Test::OutputInfo{
+               .geometry = QRect(),
+               .internal = false,
+               .physicalSizeInMM = QSize(527, 296),
+               .modes = {
+                   OutputModeline(QSize(1920, 1080), 60000, OutputModeline::Flag::Preferred),
+                   OutputModeline(CvtModeline::generate(QSize(1920, 1080), 75000, false, true), OutputModeline::Flags{}),
+               },
+           }
+        << OutputModeline(QSize(1920, 1080), 60000, OutputModeline::Flag::Preferred) << 1.0 << true;
 }
 
 void OutputChangesTest::testGenerateConfigs()
