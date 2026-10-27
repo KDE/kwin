@@ -1414,7 +1414,6 @@ void Workspace::updateOutputs()
     const auto availableOutputs = kwinApp()->outputBackend()->outputs();
     const auto oldLogicalOutputs = m_outputs;
     QList<BackendOutput *> newBackendOutputs;
-    bool wakeUp = false;
 
     for (BackendOutput *output : availableOutputs) {
         output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
@@ -1489,7 +1488,6 @@ void Workspace::updateOutputs()
         output->backendOutput()->ref();
         m_tileManagers[output] = std::make_unique<TileManager>(output);
         Q_EMIT outputAdded(output);
-        wakeUp |= !output->isPlaceholder() && !m_recentlyRemovedDpmsOffOutputs.contains(output->uuid());
     }
 
     m_placementTracker->inhibit();
@@ -1550,20 +1548,32 @@ void Workspace::updateOutputs()
     Q_EMIT outputsChanged();
 
     for (LogicalOutput *output : removed) {
-        if (m_dpms == Workspace::DpmsState::Off) {
-            m_recentlyRemovedDpmsOffOutputs.push_back(output->uuid());
-            QTimer::singleShot(s_dpmsTimeout, [this, uuid = output->uuid()]() {
-                m_recentlyRemovedDpmsOffOutputs.removeOne(uuid);
-            });
-        }
         output->backendOutput()->unref();
         output->unref();
     }
 
     // if a new output was added, turn all displays on
+    const bool wakeUp = std::ranges::any_of(availableOutputs, [this](BackendOutput *output) {
+        return !output->isPlaceholder()
+            && !m_previousBackendOutputs.contains(output->uuid())
+            && !m_recentlyRemovedDpmsOffOutputs.contains(output->uuid());
+    });
     if (wakeUp) {
         requestDpmsState(DpmsState::On);
     }
+
+    if (m_dpms == Workspace::DpmsState::Off) {
+        for (BackendOutput *output : availableOutputs) {
+            m_previousBackendOutputs.removeOne(output->uuid());
+        }
+        for (const QString &uuid : m_previousBackendOutputs) {
+            m_recentlyRemovedDpmsOffOutputs.push_back(uuid);
+            QTimer::singleShot(s_dpmsTimeout, [this, uuid]() {
+                m_recentlyRemovedDpmsOffOutputs.removeOne(uuid);
+            });
+        }
+    }
+    m_previousBackendOutputs = availableOutputs | std::views::transform(&BackendOutput::uuid) | std::ranges::to<QList>();
 }
 
 void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)

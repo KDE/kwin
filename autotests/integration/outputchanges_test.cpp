@@ -150,6 +150,7 @@ private Q_SLOTS:
     void testAutoBrightness();
     void testPerOutputDesktopsOutputToggle();
     void testTemporaryDpmsHotplug();
+    void testTemporaryDpmsHotplugEnableChange();
 };
 
 void OutputChangesTest::initTestCase()
@@ -2452,6 +2453,45 @@ void OutputChangesTest::testTemporaryDpmsHotplug()
             .connectorName = QStringLiteral("TEST"),
         },
     });
+    QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::Off);
+}
+
+void OutputChangesTest::testTemporaryDpmsHotplugEnableChange()
+{
+    workspace()->outputConfigureStore()->clear();
+
+    const auto outputs = {
+        Test::OutputInfo{
+            .geometry = Rect(0, 0, 1280, 1200),
+            .connectorName = QStringLiteral("TEST-1"),
+        },
+        Test::OutputInfo{
+            .geometry = Rect(0, 0, 1280, 1200),
+            .connectorName = QStringLiteral("TEST-2"),
+        },
+    };
+    Test::setOutputConfig(outputs);
+
+    QCOMPARE(kwinApp()->outputBackend()->outputs()[0]->name(), QStringLiteral("TEST-1"));
+    OutputConfiguration config;
+    config.changeSet(kwinApp()->outputBackend()->outputs()[0])->enabled = false;
+    QVERIFY(workspace()->applyOutputConfiguration(config));
+
+    // turn off the outputs
+    workspace()->requestDpmsState(Workspace::DpmsState::Off);
+    QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::AboutToTurnOff);
+    QSignalSpy dpmsChanged(workspace(), &Workspace::dpmsStateChanged);
+    QVERIFY(dpmsChanged.wait());
+    QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::Off);
+
+    // remove the output
+    Test::setOutputConfig(outputs | std::views::drop(1) | std::ranges::to<QList>());
+
+    // displays should still be off
+    QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::Off);
+
+    // re-adding the output immediately should keep it off
+    Test::setOutputConfig(outputs);
     QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::Off);
 }
 
