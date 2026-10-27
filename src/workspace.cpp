@@ -2695,12 +2695,11 @@ QPointF Workspace::adjustWindowPosition(const Window *window, QPointF pos, bool 
     int guideMaximized = MaximizeRestore;
     if (window->maximizeMode() != MaximizeRestore) {
         maxRect = clientArea(MaximizeArea, window, pos + window->rect().center());
-        RectF geo = window->frameGeometry();
-        if (window->maximizeMode() & MaximizeHorizontal && (geo.x() == maxRect.left() || geo.right() == maxRect.right())) {
+        if (window->maximizeMode() & MaximizeHorizontal) {
             guideMaximized |= MaximizeHorizontal;
             borderSnapZone.setWidth(std::max(borderSnapZone.width() + 2, maxRect.width() / 16));
         }
-        if (window->maximizeMode() & MaximizeVertical && (geo.y() == maxRect.top() || geo.bottom() == maxRect.bottom())) {
+        if (window->maximizeMode() & MaximizeVertical) {
             guideMaximized |= MaximizeVertical;
             borderSnapZone.setHeight(std::max(borderSnapZone.height() + 2, maxRect.height() / 16));
         }
