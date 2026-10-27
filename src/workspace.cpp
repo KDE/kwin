@@ -2891,7 +2891,7 @@ RectF Workspace::adjustWindowSize(const Window *window, RectF moveResizeGeom, Gr
     if (options->windowSnapZone() || options->borderSnapZone()) { // || options->centerSnapZone )
         const bool sOWO = options->isSnapOnlyWhenOverlapping();
 
-        const RectF maxRect = clientArea(MaximizeArea, window, window->rect().center());
+        const RectF maxRect = clientArea(MaximizeArea, window, moveResizeGeom.center());
         const qreal xmin = maxRect.left();
         const qreal xmax = maxRect.right(); // desk size
         const qreal ymin = maxRect.top();
