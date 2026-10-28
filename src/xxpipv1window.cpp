@@ -124,40 +124,40 @@ void XXPipV1Window::handleRoleCommit()
             if (const auto anchor = confineInteractiveMove(frameGeometry)) {
                 frameGeometry.moveTopLeft(*anchor);
             }
-        }
 
-        const RectF safeArea = workspace()->clientArea(PlacementArea, this)
-            .shrunkBy(QMarginsF(options->pictureInPictureMargin(),
-                                options->pictureInPictureMargin(),
-                                options->pictureInPictureMargin(),
-                                options->pictureInPictureMargin()));
-        const qreal snapDistance = options->pictureInPictureMargin() / 2.0;
+            const RectF safeArea = workspace()->clientArea(PlacementArea, this)
+                .shrunkBy(QMarginsF(options->pictureInPictureMargin(),
+                                    options->pictureInPictureMargin(),
+                                    options->pictureInPictureMargin(),
+                                    options->pictureInPictureMargin()));
+            const qreal snapDistance = options->pictureInPictureMargin() / 2.0;
 
-        if (m_frameGeometry.right() - safeArea.right() < snapDistance) {
-            if (frameGeometry.right() - safeArea.right() > -snapDistance
-                || m_frameGeometry.right() - safeArea.right() > -snapDistance) {
-                frameGeometry.moveRight(safeArea.right());
+            if (m_frameGeometry.right() - safeArea.right() < snapDistance) {
+                if (frameGeometry.right() - safeArea.right() > -snapDistance
+                    || m_frameGeometry.right() - safeArea.right() > -snapDistance) {
+                    frameGeometry.moveRight(safeArea.right());
+                }
             }
-        }
 
-        if (m_frameGeometry.left() - safeArea.left() > -snapDistance) {
-            if (frameGeometry.left() - safeArea.left() < snapDistance
-                || m_frameGeometry.left() - safeArea.left() < snapDistance) {
-                frameGeometry.moveLeft(safeArea.left());
+            if (m_frameGeometry.left() - safeArea.left() > -snapDistance) {
+                if (frameGeometry.left() - safeArea.left() < snapDistance
+                    || m_frameGeometry.left() - safeArea.left() < snapDistance) {
+                    frameGeometry.moveLeft(safeArea.left());
+                }
             }
-        }
 
-        if (m_frameGeometry.bottom() - safeArea.bottom() < snapDistance) {
-            if (frameGeometry.bottom() - safeArea.bottom() > -snapDistance
-                || m_frameGeometry.bottom() - safeArea.bottom() > -snapDistance) {
-                frameGeometry.moveBottom(safeArea.bottom());
+            if (m_frameGeometry.bottom() - safeArea.bottom() < snapDistance) {
+                if (frameGeometry.bottom() - safeArea.bottom() > -snapDistance
+                    || m_frameGeometry.bottom() - safeArea.bottom() > -snapDistance) {
+                    frameGeometry.moveBottom(safeArea.bottom());
+                }
             }
-        }
 
-        if (m_frameGeometry.top() - safeArea.top() > -snapDistance) {
-            if (frameGeometry.top() - safeArea.top() < snapDistance
-                || m_frameGeometry.top() - safeArea.top() < snapDistance) {
-                frameGeometry.moveTop(safeArea.top());
+            if (m_frameGeometry.top() - safeArea.top() > -snapDistance) {
+                if (frameGeometry.top() - safeArea.top() < snapDistance
+                    || m_frameGeometry.top() - safeArea.top() < snapDistance) {
+                    frameGeometry.moveTop(safeArea.top());
+                }
             }
         }
     }
