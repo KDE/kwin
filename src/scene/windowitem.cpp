@@ -57,6 +57,7 @@ WindowItem::WindowItem(Window *window, Item *parent)
     updateVisibility();
 
     connect(window, &Window::opacityChanged, this, &WindowItem::updateOpacity);
+    connect(window, &Window::opacityChanged, this, &WindowItem::markDamaged);
     updateOpacity();
 
     connect(window, &Window::stackingOrderChanged, this, &WindowItem::updateStackingOrder);
