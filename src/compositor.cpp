@@ -328,9 +328,12 @@ void Compositor::createRenderer()
         if (stop) {
             break;
         } else if (qEnvironmentVariableIsSet("KWIN_COMPOSE")) {
-            qCCritical(KWIN_CORE) << "Could not fulfill the requested compositing mode in KWIN_COMPOSE:" << type << ". Exiting.";
-            qApp->quit();
+            qCFatal(KWIN_CORE) << "Could not fulfill the requested compositing mode in KWIN_COMPOSE:" << type << ". Exiting.";
         }
+    }
+
+    if (!m_backend) {
+        qCFatal(KWIN_CORE) << "Couldn't create a renderer. We are going to quit KWin now as it is broken";
     }
 }
 
@@ -348,15 +351,6 @@ void Compositor::start()
 
     if (!m_backend) {
         createRenderer();
-    }
-
-    if (!m_backend) {
-        m_state = State::Off;
-
-        qCCritical(KWIN_CORE) << "The used windowing system requires compositing";
-        qCCritical(KWIN_CORE) << "We are going to quit KWin now as it is broken";
-        qApp->quit();
-        return;
     }
 
     if (m_selectedCompositor == NoCompositing) {
