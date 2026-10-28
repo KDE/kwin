@@ -153,6 +153,7 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
     m_pixelGridZoom = ZoomConfig::pixelGridZoom();
     // Track moving of the mouse.
     m_mouseTracking = MouseTrackingType(ZoomConfig::mouseTracking());
+    m_zoomAllScreens = ZoomConfig::zoomAllScreens();
 
     if (ZoomConfig::enableFocusTracking()) {
         if (m_targetZoom > 1) {
@@ -213,8 +214,14 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
     effects->prePaintScreen(data);
 }
 
-void ZoomEffect::updateZoomParameters(SceneView *view)
+bool ZoomEffect::updateZoomParameters(SceneView *view)
 {
+    if (m_zoom == 1.0 && m_targetZoom == 1.0) {
+        return false;
+    }
+
+    bool zoomThisScreen = m_zoomAllScreens;
+
     if (m_zoom != m_targetZoom) {
         const int time = m_clock.tickMs(view).count();
 
@@ -255,6 +262,7 @@ void ZoomEffect::updateZoomParameters(SceneView *view)
     case MouseTrackingProportional:
         m_translation = -trackPoint * (m_zoom - 1.0);
         m_prevPoint = m_cursorPoint;
+        zoomThisScreen |= view->viewport().contains(trackPoint);
         break;
     case MouseTrackingCentered:
         m_prevPoint = m_cursorPoint;
@@ -262,6 +270,7 @@ void ZoomEffect::updateZoomParameters(SceneView *view)
             std::min<float>(0, std::max(screenSize.width() - screenSize.width() * m_zoom, screenSize.width() / 2 - trackPoint.x() * m_zoom)),
             std::min<float>(0, std::max(screenSize.height() - screenSize.height() * m_zoom, screenSize.height() / 2 - trackPoint.y() * m_zoom)),
         };
+        zoomThisScreen |= view->viewport().contains(trackPoint);
         break;
     case MouseTrackingCenteredStrict:
         m_prevPoint = m_cursorPoint;
@@ -269,12 +278,14 @@ void ZoomEffect::updateZoomParameters(SceneView *view)
             screenSize.width() / 2 - trackPoint.x() * m_zoom,
             screenSize.height() / 2 - trackPoint.y() * m_zoom,
         };
+        zoomThisScreen |= view->viewport().contains(trackPoint);
         break;
     case MouseTrackingDisabled:
         m_translation = QPointF{
             std::min<float>(0, std::max(screenSize.width() - screenSize.width() * m_zoom, screenSize.width() / 2 - m_prevPoint.x() * m_zoom)),
             std::min<float>(0, std::max(screenSize.height() - screenSize.height() * m_zoom, screenSize.height() / 2 - m_prevPoint.y() * m_zoom)),
         };
+        zoomThisScreen |= view->viewport().contains(m_prevPoint);
         break;
     case MouseTrackingPush: {
         if (m_zoom != m_prevZoom && m_zoom > 1.0) {
@@ -289,7 +300,7 @@ void ZoomEffect::updateZoomParameters(SceneView *view)
         const int x = trackPoint.x() * m_zoom - m_prevPoint.x() * (m_zoom - 1.0);
         const int y = trackPoint.y() * m_zoom - m_prevPoint.y() * (m_zoom - 1.0);
         const int threshold = 4;
-        const RectF currScreen = effects->screenAt(QPoint(x, y))->geometry();
+        const RectF currScreen = m_zoomAllScreens ? effects->screenAt(QPoint(x, y))->geometry() : effects->screenAt(trackPoint)->geometry();
 
         // bounds of the screen the cursor's on
         const int screenTop = currScreen.top();
@@ -299,10 +310,10 @@ void ZoomEffect::updateZoomParameters(SceneView *view)
         
         // figure out whether we have adjacent displays in all 4 directions
         // We pan within the screen in directions where there are no adjacent screens.
-        const bool adjacentLeft = screenExistsAt(QPoint(screenLeft - 1, y));
-        const bool adjacentRight = screenExistsAt(QPoint(screenRight + 1, y));
-        const bool adjacentTop = screenExistsAt(QPoint(x, screenTop - 1));
-        const bool adjacentBottom = screenExistsAt(QPoint(x, screenBottom + 1));
+        const bool adjacentLeft = m_zoomAllScreens && screenExistsAt(QPoint(screenLeft - 1, y));
+        const bool adjacentRight = m_zoomAllScreens && screenExistsAt(QPoint(screenRight + 1, y));
+        const bool adjacentTop = m_zoomAllScreens && screenExistsAt(QPoint(x, screenTop - 1));
+        const bool adjacentBottom = m_zoomAllScreens && screenExistsAt(QPoint(x, screenBottom + 1));
 
         m_xMove = m_yMove = 0;
         if (x < screenLeft + threshold && !adjacentLeft) {
@@ -322,9 +333,29 @@ void ZoomEffect::updateZoomParameters(SceneView *view)
             m_prevPoint.setY(m_prevPoint.y() + m_yMove);
         }
         m_translation = -m_prevPoint * (m_zoom - 1.0);
+        zoomThisScreen |= view->viewport().contains(trackPoint);
         break;
     }
     }
+
+    if (zoomThisScreen && !m_zoomAllScreens) {
+        const QPointF topLeft = view->viewport().topLeft() * (1.0 - m_zoom);
+        const QPointF bottomRight = view->viewport().bottomRight() * (1.0 - m_zoom);
+        const QPointF minTranslation{
+            std::min(topLeft.x(), bottomRight.x()),
+            std::min(topLeft.y(), bottomRight.y()),
+        };
+        const QPointF maxTranslation{
+            std::max(topLeft.x(), bottomRight.x()),
+            std::max(topLeft.y(), bottomRight.y()),
+        };
+        m_translation = QPointF{
+            std::clamp(m_translation.x(), minTranslation.x(), maxTranslation.x()),
+            std::clamp(m_translation.y(), minTranslation.y(), maxTranslation.y()),
+        };
+    }
+
+    return zoomThisScreen;
 }
 
 void ZoomEffect::prePaintView(SceneView *view, OutputFrame *frame)
@@ -334,16 +365,12 @@ void ZoomEffect::prePaintView(SceneView *view, OutputFrame *frame)
     }
 
     const auto previousTranslation = m_translation;
+    const auto previousPrevPoint = m_prevPoint;
     const auto previousZoom = m_zoom;
 
-    updateZoomParameters(view);
+    const bool zoomThisView = updateZoomParameters(view);
 
-    if (m_translation != previousTranslation || m_zoom != previousZoom) {
-        // other views need to be repainted as well
-        effects->scheduleFrame();
-    }
-
-    if (m_zoom == 1.0) {
+    if (!zoomThisView) {
         auto it = m_offscreenData.find(view);
         if (it != m_offscreenData.end()) {
             effects->makeOpenGLContextCurrent();
@@ -351,6 +378,11 @@ void ZoomEffect::prePaintView(SceneView *view, OutputFrame *frame)
             view->addDeviceRepaint(view->deviceRect());
         }
         return;
+    }
+
+    if (m_translation != previousTranslation || m_zoom != previousZoom || previousPrevPoint != m_prevPoint) {
+        // other views need to be repainted as well
+        effects->scheduleFrame();
     }
 
     m_paintingZoom = true;
@@ -442,7 +474,7 @@ bool ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
     }
     auto it = m_offscreenData.find(m_currentView);
     if (it == m_offscreenData.end()) {
-        return true;
+        return effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
     }
     OffscreenData &offscreenData = it->second;
 

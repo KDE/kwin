@@ -37,5 +37,8 @@
         <entry name="UsePatternUpscaler" type="Bool">
             <default>true</default>
         </entry>
+        <entry name="ZoomAllScreens" type="Bool">
+            <default>false</default>
+        </entry>
     </group>
 </kcfg>
