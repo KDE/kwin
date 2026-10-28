@@ -34,11 +34,7 @@ function isPopupWindow(window) {
         return true;
     }
 
-    if (window.splash || window.toolbar || window.onScreenDisplay || window.appletPopup) {
-        return true;
-    }
-
-    return false;
+    return window.splash || window.toolbar || window.onScreenDisplay || window.appletPopup;
 }
 
 var fadingPopupsEffect = {
