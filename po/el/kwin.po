@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-24 02:54+0000\n"
+"POT-Creation-Date: 2026-10-28 03:17+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -1578,7 +1578,7 @@ msgstr ""
 "Επιλέξτε παράθυρο για εξαναγκασμένο κλείσιμο με αριστερό κλικ ή enter.\n"
 "Esc ή δεξί κλικ για ακύρωση."
 
-#: main.cpp:140 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:178 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
@@ -1589,57 +1589,57 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:142 main.cpp:160
+#: main.cpp:180 main.cpp:198
 #, kde-format
 msgid "KDE window manager"
 msgstr "Ο διαχειριστής παραθύρων του KDE"
 
-#: main.cpp:144
+#: main.cpp:182
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2019, οι προγραμματιστές του KDE"
 
-#: main.cpp:146
+#: main.cpp:184
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:147
+#: main.cpp:185
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:148
+#: main.cpp:186
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:149
+#: main.cpp:187
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:150
+#: main.cpp:188
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin flöser"
 
-#: main.cpp:151
+#: main.cpp:189
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:152
+#: main.cpp:190
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:153
+#: main.cpp:191
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:154
+#: main.cpp:192
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "Xaver Hugl"
