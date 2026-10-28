@@ -9,23 +9,7 @@
 
 "use strict";
 
-var blacklist = [
-    // ignore black background behind lockscreen
-    "ksmserver ksmserver",
-    // The logout screen has to be animated only by the logout effect.
-    "ksmserver-logout-greeter ksmserver-logout-greeter",
-    // The lockscreen isn't a popup window
-    "kscreenlocker_greet kscreenlocker_greet",
-    // KDE Plasma splash screen has to be animated only by the login effect.
-    "ksplashqml ksplashqml",
-];
-
 function isPopupWindow(window) {
-    // If the window is blacklisted, don't animate it.
-    if (blacklist.indexOf(window.windowClass) != -1) {
-        return false;
-    }
-
     // Animate combo box popups, tooltips, popup menus, etc.
     if (window.popupWindow) {
         return true;
