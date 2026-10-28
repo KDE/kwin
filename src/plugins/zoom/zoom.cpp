@@ -243,23 +243,28 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
     // mouse-tracking allows navigation of the zoom-area using the mouse.
     switch (m_mouseTracking) {
     case MouseTrackingProportional:
-        m_xTranslation = -int(trackPoint.x() * (m_zoom - 1.0));
-        m_yTranslation = -int(trackPoint.y() * (m_zoom - 1.0));
+        m_translation = -trackPoint * (m_zoom - 1.0);
         m_prevPoint = m_cursorPoint;
         break;
     case MouseTrackingCentered:
         m_prevPoint = m_cursorPoint;
-        m_xTranslation = std::min(0, std::max(int(screenSize.width() - screenSize.width() * m_zoom), int(screenSize.width() / 2 - trackPoint.x() * m_zoom)));
-        m_yTranslation = std::min(0, std::max(int(screenSize.height() - screenSize.height() * m_zoom), int(screenSize.height() / 2 - trackPoint.y() * m_zoom)));
+        m_translation = QPointF{
+            std::min<float>(0, std::max(screenSize.width() - screenSize.width() * m_zoom, screenSize.width() / 2 - trackPoint.x() * m_zoom)),
+            std::min<float>(0, std::max(screenSize.height() - screenSize.height() * m_zoom, screenSize.height() / 2 - trackPoint.y() * m_zoom)),
+        };
         break;
     case MouseTrackingCenteredStrict:
         m_prevPoint = m_cursorPoint;
-        m_xTranslation = int(screenSize.width() / 2 - trackPoint.x() * m_zoom);
-        m_yTranslation = int(screenSize.height() / 2 - trackPoint.y() * m_zoom);
+        m_translation = QPointF{
+            screenSize.width() / 2 - trackPoint.x() * m_zoom,
+            screenSize.height() / 2 - trackPoint.y() * m_zoom,
+        };
         break;
     case MouseTrackingDisabled:
-        m_xTranslation = std::min(0, std::max(int(screenSize.width() - screenSize.width() * m_zoom), int(screenSize.width() / 2 - m_prevPoint.x() * m_zoom)));
-        m_yTranslation = std::min(0, std::max(int(screenSize.height() - screenSize.height() * m_zoom), int(screenSize.height() / 2 - m_prevPoint.y() * m_zoom)));
+        m_translation = QPointF{
+            std::min<float>(0, std::max(screenSize.width() - screenSize.width() * m_zoom, screenSize.width() / 2 - m_prevPoint.x() * m_zoom)),
+            std::min<float>(0, std::max(screenSize.height() - screenSize.height() * m_zoom, screenSize.height() / 2 - m_prevPoint.y() * m_zoom)),
+        };
         break;
     case MouseTrackingPush: {
         if (m_zoom != m_prevZoom && m_zoom > 1.0) {
@@ -306,8 +311,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
         if (m_yMove) {
             m_prevPoint.setY(m_prevPoint.y() + m_yMove);
         }
-        m_xTranslation = -int(m_prevPoint.x() * (m_zoom - 1.0));
-        m_yTranslation = -int(m_prevPoint.y() * (m_zoom - 1.0));
+        m_translation = -m_prevPoint * (m_zoom - 1.0);
         break;
     }
     }
@@ -392,7 +396,7 @@ bool ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
     shader->setUniform("zoomLevel", this->m_zoom);
     for (auto &[screen, offscreen] : m_offscreenData) {
         QMatrix4x4 matrix;
-        matrix.translate(m_xTranslation * scale, m_yTranslation * scale);
+        matrix.translate(m_translation.x() * scale, m_translation.y() * scale);
         matrix.scale(m_zoom, m_zoom);
         matrix.translate(offscreen.viewport.x() * scale, offscreen.viewport.y() * scale);
 
