@@ -1484,12 +1484,13 @@ void OutputConfigurationStore::load()
             }
             if (const auto it = outputData.find("priority"); it != outputData.end()) {
                 state.priority = it->toInt(-1);
-                if (state.priority < 0 && state.enabled) {
+                if (state.priority < 0 || state.priority > 1'000'000) {
                     fail = true;
                     break;
                 }
             } else {
-                state.priority = INT_MAX;
+                fail = true;
+                break;
             }
             if (const auto it = outputData.find("replicationSource"); it != outputData.end()) {
                 const QString replicationSource = it->toString();
