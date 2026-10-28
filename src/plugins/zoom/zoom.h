@@ -95,7 +95,7 @@ private:
     void moveZoom(int x, int y);
     bool screenExistsAt(const QPoint &point) const;
     void realtimeZoom(double delta);
-    void updateZoomParameters(SceneView *view);
+    bool updateZoomParameters(SceneView *view);
 
     GLShader *shaderForZoom(double zoom);
     void trackTextCaret();
@@ -129,6 +129,7 @@ private:
     std::unique_ptr<QAction> m_touchpadAction;
     double m_lastPinchProgress = 0;
     bool m_usePatternUpscaler = true;
+    bool m_zoomAllScreens = true;
 
     std::unique_ptr<TextCaretTracker> m_textCaretTracker;
 #if KWIN_BUILD_QACCESSIBILITYCLIENT
