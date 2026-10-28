@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-24 00:52+0000\n"
+"POT-Creation-Date: 2026-10-28 01:02+0000\n"
 "PO-Revision-Date: 2026-09-04 08:45+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -1506,7 +1506,7 @@ msgstr ""
 "בחירת חלון לכפיית סגירה בלחיצה שמאלית או enter.\n"
 "Escape או לחיצה ימנית לביטול."
 
-#: main.cpp:140 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:178 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
@@ -1517,57 +1517,57 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:142 main.cpp:160
+#: main.cpp:180 main.cpp:198
 #, kde-format
 msgid "KDE window manager"
 msgstr "מנהל החלונות של KDE"
 
-#: main.cpp:144
+#: main.cpp:182
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999‏-2019, מפתחי KDE"
 
-#: main.cpp:146
+#: main.cpp:184
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "מתיאס אטריק"
 
-#: main.cpp:147
+#: main.cpp:185
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "כריסטיאן טיבירנה"
 
-#: main.cpp:148
+#: main.cpp:186
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "דניאל מ. דיולי"
 
-#: main.cpp:149
+#: main.cpp:187
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "לובוש לוניאק"
 
-#: main.cpp:150
+#: main.cpp:188
 #, kde-format
 msgid "Martin Flöser"
 msgstr "מרטין פלויסר"
 
-#: main.cpp:151
+#: main.cpp:189
 #, kde-format
 msgid "David Edmundson"
 msgstr "דיויד אדמונדסון"
 
-#: main.cpp:152
+#: main.cpp:190
 #, kde-format
 msgid "Roman Gilg"
 msgstr "רומן גילג"
 
-#: main.cpp:153
+#: main.cpp:191
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "ולאד זהורודני"
 
-#: main.cpp:154
+#: main.cpp:192
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "קסאבר הוגל"
@@ -2639,12 +2639,12 @@ msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "החלפת מצב תצוגת רשת"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:229
+#: plugins/private/qml/WindowHeapDelegate.qml:241
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "גרירה למטה לסגירה"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:373
+#: plugins/private/qml/WindowHeapDelegate.qml:385
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -4414,30 +4414,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(לא מגיב)"
 
-#: workspace.cpp:1352
+#: workspace.cpp:1383
 #, kde-format
 msgid "Built-in Screen"
 msgstr "מסך מובנה"
 
-#: workspace.cpp:1365
+#: workspace.cpp:1396
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1375
+#: workspace.cpp:1406
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1378
+#: workspace.cpp:1409
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: workspace.cpp:1847
+#: workspace.cpp:1878
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
