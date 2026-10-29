@@ -1187,10 +1187,12 @@ Q_SIGNALS:
     void sequenceEnded();
     void sequenceCanceled();
     void touchDown(uint32_t serial, uint32_t time, ::wl_surface *surface, int32_t id, const QPointF &position);
+    void touchMotion(uint32_t time, int32_t id, const QPointF &position);
     void touchUp(uint32_t serial, uint32_t time, int32_t id);
 
 private:
     void touch_down(uint32_t serial, uint32_t time, ::wl_surface *surface, int32_t id, wl_fixed_t x, wl_fixed_t y) override;
+    void touch_motion(uint32_t time, int32_t id, wl_fixed_t x, wl_fixed_t y) override;
     void touch_up(uint32_t serial, uint32_t time, int32_t id) override;
     void touch_cancel() override;
 

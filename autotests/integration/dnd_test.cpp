@@ -19,7 +19,6 @@
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/touch.h>
 
 #include <QFile>
 #include <QFuture>
@@ -892,7 +891,7 @@ void DndTest::touchDrag()
     QVERIFY(Test::waitForWaylandTouch());
 
     // Setup the data source.
-    auto touch = Test::waylandSeat()->createTouch(Test::waylandSeat());
+    auto touch = Test::kwinSeat()->getTouch();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
@@ -904,8 +903,8 @@ void DndTest::touchDrag()
         }
         close(fd);
     });
-    QSignalSpy touchSequenceStartedSpy(touch, &KWayland::Client::Touch::sequenceStarted);
-    QSignalSpy touchSequenceEndedSpy(touch, &KWayland::Client::Touch::sequenceEnded);
+    QSignalSpy touchDownSpy(touch.get(), &Test::WlTouch::touchDown);
+    QSignalSpy touchSequenceEndedSpy(touch.get(), &Test::WlTouch::sequenceEnded);
     QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dataDeviceDragLeftSpy(dataDevice, &KWayland::Client::DataDevice::dragLeft);
     QSignalSpy dataDeviceDragMotionSpy(dataDevice, &KWayland::Client::DataDevice::dragMotion);
@@ -928,10 +927,10 @@ void DndTest::touchDrag()
     // Tap the source surface.
     quint32 timestamp = 0;
     Test::touchDown(0, QPointF(50, 50), timestamp++);
-    QVERIFY(touchSequenceStartedSpy.wait());
+    QVERIFY(touchDownSpy.wait());
 
     // Start a drag-and-drop operation.
-    dataDevice->startDrag(touchSequenceStartedSpy.last().at(0).value<KWayland::Client::TouchPoint *>()->downSerial(), dataSource, sourceSurface.get());
+    dataDevice->startDrag(touchDownSpy.last().at(0).value<quint32>(), dataSource, sourceSurface.get());
     QVERIFY(dataDeviceDragEnteredSpy.wait());
     QCOMPARE(dataDeviceDragEnteredSpy.last().at(1).value<QPointF>(), QPointF(50, 50));
     QCOMPARE(dataDevice->dragSurface(), sourceSurface.get());
@@ -1052,13 +1051,13 @@ void DndTest::touchSubSurfaceDrag()
     QVERIFY(Test::waitForWaylandTouch());
 
     // Setup the data source.
-    auto touch = Test::waylandSeat()->createTouch(Test::waylandSeat());
+    auto touch = Test::kwinSeat()->getTouch();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
     dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
-    QSignalSpy touchSequenceStartedSpy(touch, &KWayland::Client::Touch::sequenceStarted);
-    QSignalSpy touchSequenceEndedSpy(touch, &KWayland::Client::Touch::sequenceEnded);
+    QSignalSpy touchDownSpy(touch.get(), &Test::WlTouch::touchDown);
+    QSignalSpy touchSequenceEndedSpy(touch.get(), &Test::WlTouch::sequenceEnded);
     QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dataDeviceDragLeftSpy(dataDevice, &KWayland::Client::DataDevice::dragLeft);
     QSignalSpy dataDeviceDragMotionSpy(dataDevice, &KWayland::Client::DataDevice::dragMotion);
@@ -1080,10 +1079,10 @@ void DndTest::touchSubSurfaceDrag()
     // Tap the child surface.
     quint32 timestamp = 0;
     Test::touchDown(0, QPointF(75, 50), timestamp++);
-    QVERIFY(touchSequenceStartedSpy.wait());
+    QVERIFY(touchDownSpy.wait());
 
     // Start a drag-and-drop operation.
-    dataDevice->startDrag(touchSequenceStartedSpy.last().at(0).value<KWayland::Client::TouchPoint *>()->downSerial(), dataSource, childSurface.get());
+    dataDevice->startDrag(touchDownSpy.last().at(0).value<quint32>(), dataSource, childSurface.get());
     QVERIFY(dataDeviceDragEnteredSpy.wait());
     QCOMPARE(dataDeviceDragEnteredSpy.last().at(1).value<QPointF>(), QPointF(25, 50));
     QCOMPARE(dataDevice->dragSurface(), childSurface.get());
@@ -1168,12 +1167,12 @@ void DndTest::touchDragAction()
     QFETCH(KWayland::Client::DataDeviceManager::DnDAction, action);
 
     // Setup the data source.
-    auto touch = Test::waylandSeat()->createTouch(Test::waylandSeat());
+    auto touch = Test::kwinSeat()->getTouch();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
     dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move | KWayland::Client::DataDeviceManager::DnDAction::Ask);
-    QSignalSpy touchSequenceStartedSpy(touch, &KWayland::Client::Touch::sequenceStarted);
+    QSignalSpy touchDownSpy(touch.get(), &Test::WlTouch::touchDown);
     QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dataDeviceDroppedSpy(dataDevice, &KWayland::Client::DataDevice::dropped);
     QSignalSpy dataSourceSelectedDragAndDropActionChangedSpy(dataSource, &KWayland::Client::DataSource::selectedDragAndDropActionChanged);
@@ -1188,10 +1187,10 @@ void DndTest::touchDragAction()
     // Touch the surface in the center.
     quint32 timestamp = 0;
     Test::touchDown(0, QPointF(50, 50), timestamp++);
-    QVERIFY(touchSequenceStartedSpy.wait());
+    QVERIFY(touchDownSpy.wait());
 
     // Start a drag-and-drop operation.
-    dataDevice->startDrag(touchSequenceStartedSpy.last().at(0).value<KWayland::Client::TouchPoint *>()->downSerial(), dataSource, surface.get());
+    dataDevice->startDrag(touchDownSpy.last().at(0).value<quint32>(), dataSource, surface.get());
     QVERIFY(dataDeviceDragEnteredSpy.wait());
 
     const auto offer = dataDevice->takeDragOffer();
@@ -1240,12 +1239,12 @@ void DndTest::inertTouchDragOffer()
     QVERIFY(Test::waitForWaylandTouch());
 
     // Setup the data source.
-    auto touch = Test::waylandSeat()->createTouch(Test::waylandSeat());
+    auto touch = Test::kwinSeat()->getTouch();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
     dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
-    QSignalSpy touchSequenceStartedSpy(touch, &KWayland::Client::Touch::sequenceStarted);
+    QSignalSpy touchDownSpy(touch.get(), &Test::WlTouch::touchDown);
     QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dataDeviceDragLeftSpy(dataDevice, &KWayland::Client::DataDevice::dragLeft);
     QSignalSpy dataDeviceDroppedSpy(dataDevice, &KWayland::Client::DataDevice::dropped);
@@ -1262,10 +1261,10 @@ void DndTest::inertTouchDragOffer()
     // Tap the surface in the center.
     quint32 timestamp = 0;
     Test::touchDown(0, QPointF(50, 50), timestamp++);
-    QVERIFY(touchSequenceStartedSpy.wait());
+    QVERIFY(touchDownSpy.wait());
 
     // Start a drag-and-drop operation.
-    dataDevice->startDrag(touchSequenceStartedSpy.last().at(0).value<KWayland::Client::TouchPoint *>()->downSerial(), dataSource, surface.get());
+    dataDevice->startDrag(touchDownSpy.last().at(0).value<quint32>(), dataSource, surface.get());
     QVERIFY(dataDeviceDragEnteredSpy.wait());
 
     const auto firstOffer = dataDevice->takeDragOffer();
@@ -1343,7 +1342,7 @@ void DndTest::invalidSerialForTouchDrag()
     QVERIFY(Test::waitForWaylandTouch());
 
     // Setup the data source.
-    auto touch = Test::waylandSeat()->createTouch(Test::waylandSeat());
+    auto touch = Test::kwinSeat()->getTouch();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
@@ -1357,15 +1356,15 @@ void DndTest::invalidSerialForTouchDrag()
     window->move(QPointF(0, 0));
 
     // Tap the surface.
-    QSignalSpy touchSequenceStartedSpy(touch, &KWayland::Client::Touch::sequenceStarted);
+    QSignalSpy touchDownSpy(touch.get(), &Test::WlTouch::touchDown);
     quint32 timestamp = 0;
     Test::touchDown(0, QPointF(75, 50), timestamp++);
     Test::touchUp(0, timestamp++);
-    QVERIFY(touchSequenceStartedSpy.wait());
+    QVERIFY(touchDownSpy.wait());
 
     // The dnd operation will be rejected because the touch point is already released.
     QSignalSpy dataSourceCanceledSpy(dataSource, &KWayland::Client::DataSource::cancelled);
-    dataDevice->startDrag(touchSequenceStartedSpy.last().at(0).value<KWayland::Client::TouchPoint *>()->downSerial(), dataSource, surface.get());
+    dataDevice->startDrag(touchDownSpy.last().at(0).value<quint32>(), dataSource, surface.get());
     QVERIFY(dataSourceCanceledSpy.wait());
 }
 
@@ -1376,12 +1375,12 @@ void DndTest::noAcceptedMimeTypeTouchDrag()
     QVERIFY(Test::waitForWaylandTouch());
 
     // Setup the data source.
-    auto touch = Test::waylandSeat()->createTouch(Test::waylandSeat());
+    auto touch = Test::kwinSeat()->getTouch();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
     dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
-    QSignalSpy touchSequenceStartedSpy(touch, &KWayland::Client::Touch::sequenceStarted);
+    QSignalSpy touchDownSpy(touch.get(), &Test::WlTouch::touchDown);
     QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dataDeviceDragLeftSpy(dataDevice, &KWayland::Client::DataDevice::dragLeft);
     QSignalSpy dataDeviceDragMotionSpy(dataDevice, &KWayland::Client::DataDevice::dragMotion);
@@ -1399,10 +1398,10 @@ void DndTest::noAcceptedMimeTypeTouchDrag()
     // Tap the surface.
     quint32 timestamp = 0;
     Test::touchDown(0, QPointF(50, 50), timestamp++);
-    QVERIFY(touchSequenceStartedSpy.wait());
+    QVERIFY(touchDownSpy.wait());
 
     // Start a drag-and-drop operation.
-    dataDevice->startDrag(touchSequenceStartedSpy.last().at(0).value<KWayland::Client::TouchPoint *>()->downSerial(), dataSource, surface.get());
+    dataDevice->startDrag(touchDownSpy.last().at(0).value<quint32>(), dataSource, surface.get());
     QVERIFY(dataDeviceDragEnteredSpy.wait());
     QCOMPARE(dataDeviceDragEnteredSpy.last().at(1).value<QPointF>(), QPointF(50, 50));
     QCOMPARE(dataDevice->dragSurface(), surface.get());
@@ -1428,12 +1427,12 @@ void DndTest::noSelectedActionTouchDrag()
     QVERIFY(Test::waitForWaylandTouch());
 
     // Setup the data source.
-    auto touch = Test::waylandSeat()->createTouch(Test::waylandSeat());
+    auto touch = Test::kwinSeat()->getTouch();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
     dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
-    QSignalSpy touchSequenceStartedSpy(touch, &KWayland::Client::Touch::sequenceStarted);
+    QSignalSpy touchDownSpy(touch.get(), &Test::WlTouch::touchDown);
     QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dataDeviceDragLeftSpy(dataDevice, &KWayland::Client::DataDevice::dragLeft);
     QSignalSpy dataDeviceDragMotionSpy(dataDevice, &KWayland::Client::DataDevice::dragMotion);
@@ -1451,10 +1450,10 @@ void DndTest::noSelectedActionTouchDrag()
     // Tap the surface.
     quint32 timestamp = 0;
     Test::touchDown(0, QPointF(50, 50), timestamp++);
-    QVERIFY(touchSequenceStartedSpy.wait());
+    QVERIFY(touchDownSpy.wait());
 
     // Start a drag-and-drop operation.
-    dataDevice->startDrag(touchSequenceStartedSpy.last().at(0).value<KWayland::Client::TouchPoint *>()->downSerial(), dataSource, surface.get());
+    dataDevice->startDrag(touchDownSpy.last().at(0).value<quint32>(), dataSource, surface.get());
     QVERIFY(dataDeviceDragEnteredSpy.wait());
     QCOMPARE(dataDeviceDragEnteredSpy.last().at(1).value<QPointF>(), QPointF(50, 50));
     QCOMPARE(dataDevice->dragSurface(), surface.get());
@@ -1480,12 +1479,12 @@ void DndTest::secondTouchDrag()
     QVERIFY(Test::waitForWaylandTouch());
 
     // Setup the data source.
-    auto touch = Test::waylandSeat()->createTouch(Test::waylandSeat());
+    auto touch = Test::kwinSeat()->getTouch();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
     dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
-    QSignalSpy touchSequenceStartedSpy(touch, &KWayland::Client::Touch::sequenceStarted);
+    QSignalSpy touchDownSpy(touch.get(), &Test::WlTouch::touchDown);
     QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dataDeviceDragLeftSpy(dataDevice, &KWayland::Client::DataDevice::dragLeft);
     QSignalSpy dataDeviceDragMotionSpy(dataDevice, &KWayland::Client::DataDevice::dragMotion);
@@ -1507,10 +1506,10 @@ void DndTest::secondTouchDrag()
     // Tap the surface.
     quint32 timestamp = 0;
     Test::touchDown(0, QPointF(50, 50), timestamp++);
-    QVERIFY(touchSequenceStartedSpy.wait());
+    QVERIFY(touchDownSpy.wait());
 
     // Start a drag-and-drop operation.
-    const quint32 downSerial = touchSequenceStartedSpy.last().at(0).value<KWayland::Client::TouchPoint *>()->downSerial();
+    const quint32 downSerial = touchDownSpy.last().at(0).value<quint32>();
     dataDevice->startDrag(downSerial, dataSource, surface.get());
     QVERIFY(dataDeviceDragEnteredSpy.wait());
     QCOMPARE(dataDeviceDragEnteredSpy.last().at(1).value<QPointF>(), QPointF(50, 50));
@@ -1537,12 +1536,12 @@ void DndTest::cancelTouchSequence()
     QVERIFY(Test::waitForWaylandTouch());
 
     // Setup the data source.
-    auto touch = Test::waylandSeat()->createTouch(Test::waylandSeat());
+    auto touch = Test::kwinSeat()->getTouch();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
     dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
-    QSignalSpy touchSequenceStartedSpy(touch, &KWayland::Client::Touch::sequenceStarted);
+    QSignalSpy touchDownSpy(touch.get(), &Test::WlTouch::touchDown);
     QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dataDeviceDragLeftSpy(dataDevice, &KWayland::Client::DataDevice::dragLeft);
     QSignalSpy dataDeviceDroppedSpy(dataDevice, &KWayland::Client::DataDevice::dropped);
@@ -1559,10 +1558,10 @@ void DndTest::cancelTouchSequence()
     // Tap the surface.
     quint32 timestamp = 0;
     Test::touchDown(0, QPointF(50, 50), timestamp++);
-    QVERIFY(touchSequenceStartedSpy.wait());
+    QVERIFY(touchDownSpy.wait());
 
     // Start a drag-and-drop operation.
-    dataDevice->startDrag(touchSequenceStartedSpy.last().at(0).value<KWayland::Client::TouchPoint *>()->downSerial(), dataSource, surface.get());
+    dataDevice->startDrag(touchDownSpy.last().at(0).value<quint32>(), dataSource, surface.get());
     QVERIFY(dataDeviceDragEnteredSpy.wait());
     QCOMPARE(dataDeviceDragEnteredSpy.last().at(1).value<QPointF>(), QPointF(50, 50));
     QCOMPARE(dataDevice->dragSurface(), surface.get());
