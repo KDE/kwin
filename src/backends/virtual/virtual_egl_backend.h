@@ -18,8 +18,8 @@
 namespace KWin
 {
 
-class EglSwapchainSlot;
-class EglSwapchain;
+class SwapchainSlot;
+class Swapchain;
 class GraphicsBufferAllocator;
 class VirtualBackend;
 class GLFramebuffer;
@@ -43,8 +43,8 @@ public:
 
 private:
     VirtualEglBackend *const m_backend;
-    std::shared_ptr<EglSwapchain> m_swapchain;
-    std::shared_ptr<EglSwapchainSlot> m_current;
+    std::shared_ptr<Swapchain> m_swapchain;
+    std::shared_ptr<SwapchainSlot> m_current;
     std::unique_ptr<GLRenderTimeQuery> m_query;
     DamageJournal m_damageJournal;
 };
