@@ -25,7 +25,6 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KWayland/Client/pointer.h>
 #include <KWayland/Client/seat.h>
 #include <optional>
 #include <ranges>
@@ -467,8 +466,8 @@ void DrmTest::testCursorLayer()
     window.m_window->move(output->position());
 
     // if there's a visible cursor, a non-primary plane should be used to present it
-    std::unique_ptr<KWayland::Client::Pointer> pointer{Test::waylandSeat()->createPointer()};
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    auto pointer = Test::kwinSeat()->getPointer();
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
     Test::pointerMotion(window.m_window->frameGeometry().center(), time++);
     QVERIFY(enteredSpy.wait());
     auto cursorShapeDevice = Test::createCursorShapeDeviceV1(pointer.get());
@@ -567,8 +566,8 @@ void DrmTest::testDirectScanout()
     QVERIFY(window.renderAndWaitForShown(bufferSize));
 
     // if there's a visible cursor, a non-primary plane should be used to present it
-    std::unique_ptr<KWayland::Client::Pointer> pointer{Test::waylandSeat()->createPointer()};
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    auto pointer = Test::kwinSeat()->getPointer();
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
     Test::pointerMotion(window.m_window->frameGeometry().center(), time++);
     QVERIFY(enteredSpy.wait());
     auto cursorShapeDevice = Test::createCursorShapeDeviceV1(pointer.get());
@@ -662,8 +661,8 @@ void DrmTest::testOverlay()
     }
 
     // if there's a visible cursor, a non-primary plane should be used to present it
-    std::unique_ptr<KWayland::Client::Pointer> pointer{Test::waylandSeat()->createPointer()};
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    auto pointer = Test::kwinSeat()->getPointer();
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
     Test::pointerMotion(window.m_window->frameGeometry().center(), time++);
     QVERIFY(enteredSpy.wait());
     auto cursorShapeDevice = Test::createCursorShapeDeviceV1(pointer.get());

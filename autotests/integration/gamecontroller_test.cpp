@@ -376,7 +376,7 @@ void TestGameController::testPointerMapping()
 
     QCOMPARE(buttonChangedSpy.count(), 1);
     QCOMPARE(buttonChangedSpy.at(0).at(2).value<qint32>(), expectedButton);
-    QCOMPARE(buttonChangedSpy.at(0).at(3).value<uint32_t>(), uint32_t(Test::WlPointer::button_state_pressed));
+    QCOMPARE(buttonChangedSpy.at(0).at(3).value<uint32_t>(), Test::WlPointer::button_state_pressed);
 
     QVERIFY(libevdev_uinput_write_event(m_uinput, EV_ABS, analogAxis, 0) == 0);
     QVERIFY(libevdev_uinput_write_event(m_uinput, EV_SYN, SYN_REPORT, 0) == 0);
@@ -384,7 +384,7 @@ void TestGameController::testPointerMapping()
     buttonChangedSpy.clear();
     QCOMPARE(buttonChangedSpy.count(), 1);
     QCOMPARE(buttonChangedSpy.at(0).at(2).value<qint32>(), 0);
-    QCOMPARE(buttonChangedSpy.at(0).at(3).value<uint32_t>(), uint32_t(Test::WlPointer::button_state_released));
+    QCOMPARE(buttonChangedSpy.at(0).at(3).value<uint32_t>(), Test::WlPointer::button_state_released);
 }
 
 void TestGameController::testAnalogStickPointerMovement_data()

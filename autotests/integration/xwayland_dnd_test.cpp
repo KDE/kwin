@@ -19,7 +19,6 @@
 #include <KWayland/Client/datadevicemanager.h>
 #include <KWayland/Client/dataoffer.h>
 #include <KWayland/Client/datasource.h>
-#include <KWayland/Client/pointer.h>
 #include <KWayland/Client/seat.h>
 
 #include <QAbstractEventDispatcher>
@@ -1425,7 +1424,7 @@ void XwaylandDndTest::waylandToX11()
     QVERIFY(Test::waitForWaylandPointer());
 
     // Initialize the wayland window.
-    auto waylandPointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto waylandPointer = Test::kwinSeat()->getPointer();
     auto waylandDataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto waylandDataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     for (const QMimeType &mimeType : offeredMimeTypes) {
@@ -1438,7 +1437,7 @@ void XwaylandDndTest::waylandToX11()
         }
         close(fd);
     });
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy waylandPointerButtonSpy(waylandPointer.get(), &Test::WlPointer::buttonStateChanged);
     QSignalSpy waylandDataSourceDragAndDropFinishedSpy(waylandDataSource, &KWayland::Client::DataSource::dragAndDropFinished);
 
     auto surface = Test::createSurface();
@@ -1552,7 +1551,7 @@ void XwaylandDndTest::noAcceptedMimeTypeWaylandToX11()
     QVERIFY(Test::waitForWaylandPointer());
 
     // Initialize the wayland window.
-    auto waylandPointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto waylandPointer = Test::kwinSeat()->getPointer();
     auto waylandDataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto waylandDataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     waylandDataSource->offer(QStringLiteral("text/plain"));
@@ -1564,7 +1563,7 @@ void XwaylandDndTest::noAcceptedMimeTypeWaylandToX11()
         }
         close(fd);
     });
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy waylandPointerButtonSpy(waylandPointer.get(), &Test::WlPointer::buttonStateChanged);
     QSignalSpy waylandDataSourceCancelledSpy(waylandDataSource, &KWayland::Client::DataSource::cancelled);
 
     auto surface = Test::createSurface();
@@ -1620,7 +1619,7 @@ void XwaylandDndTest::destroyWaylandToX11Source()
     QVERIFY(Test::waitForWaylandPointer());
 
     // Initialize the wayland window.
-    auto waylandPointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto waylandPointer = Test::kwinSeat()->getPointer();
     auto waylandDataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto waylandDataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     waylandDataSource->offer(QStringLiteral("text/plain"));
@@ -1632,7 +1631,7 @@ void XwaylandDndTest::destroyWaylandToX11Source()
         }
         close(fd);
     });
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy waylandPointerButtonSpy(waylandPointer.get(), &Test::WlPointer::buttonStateChanged);
     QSignalSpy waylandDataSourceCancelledSpy(waylandDataSource, &KWayland::Client::DataSource::cancelled);
 
     auto surface = Test::createSurface();
@@ -1686,7 +1685,7 @@ void XwaylandDndTest::cancelWaylandToX11()
     QVERIFY(Test::waitForWaylandPointer());
 
     // Initialize the wayland window.
-    auto waylandPointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto waylandPointer = Test::kwinSeat()->getPointer();
     auto waylandDataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto waylandDataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     waylandDataSource->offer(QStringLiteral("text/plain"));
@@ -1698,7 +1697,7 @@ void XwaylandDndTest::cancelWaylandToX11()
         }
         close(fd);
     });
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy waylandPointerButtonSpy(waylandPointer.get(), &Test::WlPointer::buttonStateChanged);
     QSignalSpy waylandDataSourceCancelledSpy(waylandDataSource, &KWayland::Client::DataSource::cancelled);
 
     auto surface = Test::createSurface();
@@ -1752,7 +1751,7 @@ void XwaylandDndTest::waylandToXdndUnawareWindow()
     QVERIFY(Test::waitForWaylandPointer());
 
     // Initialize the wayland window.
-    auto waylandPointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto waylandPointer = Test::kwinSeat()->getPointer();
     auto waylandDataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto waylandDataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     waylandDataSource->offer(QStringLiteral("text/plain"));
@@ -1764,7 +1763,7 @@ void XwaylandDndTest::waylandToXdndUnawareWindow()
         }
         close(fd);
     });
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy waylandPointerButtonSpy(waylandPointer.get(), &Test::WlPointer::buttonStateChanged);
     QSignalSpy waylandDataSourceCancelledSpy(waylandDataSource, &KWayland::Client::DataSource::cancelled);
 
     auto surface = Test::createSurface();

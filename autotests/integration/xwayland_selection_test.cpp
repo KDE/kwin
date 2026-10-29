@@ -19,7 +19,6 @@
 #include <KWayland/Client/datadevice.h>
 #include <KWayland/Client/datadevicemanager.h>
 #include <KWayland/Client/datasource.h>
-#include <KWayland/Client/pointer.h>
 #include <KWayland/Client/seat.h>
 
 #include <QFutureWatcher>
@@ -814,14 +813,14 @@ void XwaylandSelectionTest::clipboardWaylandToX11()
 
     // Show a Wayland window.
     KWayland::Client::DataDevice *waylandDataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
-    KWayland::Client::Pointer *waylandPointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto waylandPointer = Test::kwinSeat()->getPointer();
     std::unique_ptr<KWayland::Client::Surface> waylandSurface = Test::createSurface();
     std::unique_ptr<Test::XdgToplevel> waylandShellSurface = Test::createXdgToplevelSurface(waylandSurface.get());
     Window *waylandWindow = Test::renderAndWaitForShown(waylandSurface.get(), QSize(100, 100), Qt::red);
     QVERIFY(waylandWindow);
 
     // Copy.
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy waylandPointerButtonSpy(waylandPointer.get(), &Test::WlPointer::buttonStateChanged);
     quint32 timestamp = 0;
     Test::pointerMotion(waylandWindow->frameGeometry().center(), timestamp++);
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
@@ -872,14 +871,14 @@ void XwaylandSelectionTest::emptyClipboardWaylandToX11()
 
     // Show a Wayland window.
     KWayland::Client::DataDevice *waylandDataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
-    KWayland::Client::Pointer *waylandPointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto waylandPointer = Test::kwinSeat()->getPointer();
     std::unique_ptr<KWayland::Client::Surface> waylandSurface = Test::createSurface();
     std::unique_ptr<Test::XdgToplevel> waylandShellSurface = Test::createXdgToplevelSurface(waylandSurface.get());
     Window *waylandWindow = Test::renderAndWaitForShown(waylandSurface.get(), QSize(100, 100), Qt::red);
     QVERIFY(waylandWindow);
 
     // Copy.
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy waylandPointerButtonSpy(waylandPointer.get(), &Test::WlPointer::buttonStateChanged);
     quint32 timestamp = 0;
     Test::pointerMotion(waylandWindow->frameGeometry().center(), timestamp++);
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
@@ -930,14 +929,14 @@ void XwaylandSelectionTest::snoopClipboard()
 
     // Show a Wayland window.
     KWayland::Client::DataDevice *waylandDataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
-    KWayland::Client::Pointer *waylandPointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto waylandPointer = Test::kwinSeat()->getPointer();
     std::unique_ptr<KWayland::Client::Surface> waylandSurface = Test::createSurface();
     std::unique_ptr<Test::XdgToplevel> waylandShellSurface = Test::createXdgToplevelSurface(waylandSurface.get());
     Window *waylandWindow = Test::renderAndWaitForShown(waylandSurface.get(), QSize(100, 100), Qt::red);
     QVERIFY(waylandWindow);
 
     // Copy.
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy waylandPointerButtonSpy(waylandPointer.get(), &Test::WlPointer::buttonStateChanged);
     quint32 timestamp = 0;
     Test::pointerMotion(waylandWindow->frameGeometry().center(), timestamp++);
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
@@ -1218,14 +1217,14 @@ void XwaylandSelectionTest::primarySelectionWaylandToX11()
 
     // Show a Wayland window.
     std::unique_ptr<Test::WpPrimarySelectionDeviceV1> waylandDataDevice = Test::primarySelectionManager()->getDevice(Test::waylandSeat());
-    KWayland::Client::Pointer *waylandPointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto waylandPointer = Test::kwinSeat()->getPointer();
     std::unique_ptr<KWayland::Client::Surface> waylandSurface = Test::createSurface();
     std::unique_ptr<Test::XdgToplevel> waylandShellSurface = Test::createXdgToplevelSurface(waylandSurface.get());
     Window *waylandWindow = Test::renderAndWaitForShown(waylandSurface.get(), QSize(100, 100), Qt::red);
     QVERIFY(waylandWindow);
 
     // Copy.
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy waylandPointerButtonSpy(waylandPointer.get(), &Test::WlPointer::buttonStateChanged);
     quint32 timestamp = 0;
     Test::pointerMotion(waylandWindow->frameGeometry().center(), timestamp++);
     Test::pointerButtonPressed(BTN_MIDDLE, timestamp++);
@@ -1275,14 +1274,14 @@ void XwaylandSelectionTest::emptyPrimarySelectionWaylandToX11()
 
     // Show a Wayland window.
     std::unique_ptr<Test::WpPrimarySelectionDeviceV1> waylandDataDevice = Test::primarySelectionManager()->getDevice(Test::waylandSeat());
-    KWayland::Client::Pointer *waylandPointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto waylandPointer = Test::kwinSeat()->getPointer();
     std::unique_ptr<KWayland::Client::Surface> waylandSurface = Test::createSurface();
     std::unique_ptr<Test::XdgToplevel> waylandShellSurface = Test::createXdgToplevelSurface(waylandSurface.get());
     Window *waylandWindow = Test::renderAndWaitForShown(waylandSurface.get(), QSize(100, 100), Qt::red);
     QVERIFY(waylandWindow);
 
     // Copy.
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy waylandPointerButtonSpy(waylandPointer.get(), &Test::WlPointer::buttonStateChanged);
     quint32 timestamp = 0;
     Test::pointerMotion(waylandWindow->frameGeometry().center(), timestamp++);
     Test::pointerButtonPressed(BTN_MIDDLE, timestamp++);
@@ -1332,14 +1331,14 @@ void XwaylandSelectionTest::snoopPrimarySelection()
 
     // Show a Wayland window.
     std::unique_ptr<Test::WpPrimarySelectionDeviceV1> waylandDataDevice = Test::primarySelectionManager()->getDevice(Test::waylandSeat());
-    KWayland::Client::Pointer *waylandPointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto waylandPointer = Test::kwinSeat()->getPointer();
     std::unique_ptr<KWayland::Client::Surface> waylandSurface = Test::createSurface();
     std::unique_ptr<Test::XdgToplevel> waylandShellSurface = Test::createXdgToplevelSurface(waylandSurface.get());
     Window *waylandWindow = Test::renderAndWaitForShown(waylandSurface.get(), QSize(100, 100), Qt::red);
     QVERIFY(waylandWindow);
 
     // Copy.
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy waylandPointerButtonSpy(waylandPointer.get(), &Test::WlPointer::buttonStateChanged);
     quint32 timestamp = 0;
     Test::pointerMotion(waylandWindow->frameGeometry().center(), timestamp++);
     Test::pointerButtonPressed(BTN_MIDDLE, timestamp++);
