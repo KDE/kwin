@@ -16,7 +16,6 @@
 #include <KWayland/Client/datadevice.h>
 #include <KWayland/Client/dataoffer.h>
 #include <KWayland/Client/datasource.h>
-#include <KWayland/Client/pointer.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
 

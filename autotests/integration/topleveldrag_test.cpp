@@ -14,7 +14,6 @@
 #include <KWayland/Client/datadevice.h>
 #include <KWayland/Client/datadevicemanager.h>
 #include <KWayland/Client/datasource.h>
-#include <KWayland/Client/pointer.h>
 #include <KWayland/Client/seat.h>
 
 #include <linux/input-event-codes.h>
@@ -56,7 +55,7 @@ void TestToplevelDrag::testDragging()
     uint32_t timestamp = 0;
 
     QVERIFY(Test::waitForWaylandPointer());
-    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
+    auto pointer = Test::kwinSeat()->getPointer();
     auto surface = Test::createSurface();
     auto shellSurface = Test::createXdgToplevelSurface(surface.get());
     auto window = Test::renderAndWaitForShown(surface.get(), {100, 100}, Qt::cyan);
@@ -64,12 +63,12 @@ void TestToplevelDrag::testDragging()
 
     Test::pointerMotion({50, 10}, ++timestamp);
     Test::pointerButtonPressed(BTN_LEFT, ++timestamp);
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy buttonStateChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy buttonStateChangedSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
     QVERIFY(enteredSpy.wait());
     QVERIFY(!buttonStateChangedSpy.isEmpty() || buttonStateChangedSpy.wait());
-    QCOMPARE(pointer->enteredSurface(), surface.get());
-    const QPointF enteredPosition = enteredSpy[0][1].toPointF();
+    QCOMPARE(pointer->enteredSurface(), surface->operator wl_surface *());
+    const QPointF enteredPosition = enteredSpy[0][2].toPointF();
     const uint serial = buttonStateChangedSpy[0][0].toUInt();
 
     std::unique_ptr<KWayland::Client::DataSource> dataSource(Test::waylandDataDeviceManager()->createDataSource());
@@ -102,7 +101,7 @@ void TestToplevelDrag::testAttachUnmappedToplevel()
     uint32_t timestamp = 0;
 
     QVERIFY(Test::waitForWaylandPointer());
-    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
+    auto pointer = Test::kwinSeat()->getPointer();
     auto surface = Test::createSurface();
     auto shellSurface = Test::createXdgToplevelSurface(surface.get());
     auto window = Test::renderAndWaitForShown(surface.get(), {100, 100}, Qt::cyan);
@@ -110,9 +109,9 @@ void TestToplevelDrag::testAttachUnmappedToplevel()
 
     Test::pointerMotion({50, 10}, ++timestamp);
     Test::pointerButtonPressed(BTN_LEFT, ++timestamp);
-    QSignalSpy buttonStateChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy buttonStateChangedSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
     QVERIFY(!buttonStateChangedSpy.isEmpty() || buttonStateChangedSpy.wait());
-    QCOMPARE(pointer->enteredSurface(), surface.get());
+    QCOMPARE(pointer->enteredSurface(), surface->operator wl_surface *());
     const uint serial = buttonStateChangedSpy[0][0].toUInt();
 
     std::unique_ptr<KWayland::Client::DataSource> dataSource(Test::waylandDataDeviceManager()->createDataSource());
@@ -155,7 +154,7 @@ void TestToplevelDrag::testMapAttachedAfterDragEnd()
     options->setPlacement(PlacementZeroCornered);
 
     QVERIFY(Test::waitForWaylandPointer());
-    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
+    auto pointer = Test::kwinSeat()->getPointer();
     auto surface = Test::createSurface();
     auto shellSurface = Test::createXdgToplevelSurface(surface.get());
     auto window = Test::renderAndWaitForShown(surface.get(), {100, 100}, Qt::cyan);
@@ -163,9 +162,9 @@ void TestToplevelDrag::testMapAttachedAfterDragEnd()
 
     Test::pointerMotion({50, 10}, ++timestamp);
     Test::pointerButtonPressed(BTN_LEFT, ++timestamp);
-    QSignalSpy buttonStateChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy buttonStateChangedSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
     QVERIFY(buttonStateChangedSpy.wait());
-    QCOMPARE(pointer->enteredSurface(), surface.get());
+    QCOMPARE(pointer->enteredSurface(), surface->operator wl_surface *());
     const uint serial = buttonStateChangedSpy[0][0].toUInt();
 
     std::unique_ptr<KWayland::Client::DataSource> dataSource(Test::waylandDataDeviceManager()->createDataSource());
