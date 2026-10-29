@@ -15,8 +15,8 @@
 namespace KWin
 {
 
-class EglSwapchainSlot;
-class EglSwapchain;
+class SwapchainSlot;
+class Swapchain;
 class X11WindowedBackend;
 class X11WindowedOutput;
 class X11WindowedEglBackend;
@@ -34,8 +34,8 @@ public:
     void releaseBuffers() override;
 
 private:
-    std::shared_ptr<EglSwapchain> m_swapchain;
-    std::shared_ptr<EglSwapchainSlot> m_buffer;
+    std::shared_ptr<Swapchain> m_swapchain;
+    std::shared_ptr<SwapchainSlot> m_buffer;
     std::unique_ptr<GLRenderTimeQuery> m_query;
     X11WindowedOutput *const m_output;
     X11WindowedEglBackend *const m_backend;
