@@ -19,7 +19,6 @@
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/touch.h>
 
 #include <QAction>
 #include <QSignalSpy>
@@ -52,7 +51,7 @@ private:
         std::unique_ptr<Test::XdgToplevelDecorationV1> decoration;
     };
     WindowHandle showWindow(bool decorated = false);
-    KWayland::Client::Touch *m_touch = nullptr;
+    std::unique_ptr<Test::WlTouch> m_touch;
 };
 
 void TouchInputTest::initTestCase()
@@ -75,9 +74,8 @@ void TouchInputTest::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::XdgDecorationV1));
     QVERIFY(Test::waitForWaylandTouch());
-    m_touch = Test::waylandSeat()->createTouch(Test::waylandSeat());
+    m_touch = Test::kwinSeat()->getTouch();
     QVERIFY(m_touch);
-    QVERIFY(m_touch->isValid());
 
     workspace()->setActiveOutput(QPoint(640, 512));
     input()->pointer()->warp(QPoint(640, 512));
@@ -85,8 +83,7 @@ void TouchInputTest::init()
 
 void TouchInputTest::cleanup()
 {
-    delete m_touch;
-    m_touch = nullptr;
+    m_touch.reset();
     Test::destroyWaylandConnection();
 }
 
@@ -163,20 +160,18 @@ void TouchInputTest::testMultipleTouchPoints()
     QCOMPARE(window->isDecorated(), decorated);
     window->move(QPoint(100, 100));
     QVERIFY(window);
-    QSignalSpy sequenceStartedSpy(m_touch, &KWayland::Client::Touch::sequenceStarted);
-    QSignalSpy pointAddedSpy(m_touch, &KWayland::Client::Touch::pointAdded);
-    QSignalSpy pointMovedSpy(m_touch, &KWayland::Client::Touch::pointMoved);
-    QSignalSpy pointRemovedSpy(m_touch, &KWayland::Client::Touch::pointRemoved);
-    QSignalSpy endedSpy(m_touch, &KWayland::Client::Touch::sequenceEnded);
+    QSignalSpy sequenceStartedSpy(m_touch.get(), &Test::WlTouch::sequenceStarted);
+    QSignalSpy pointAddedSpy(m_touch.get(), &Test::WlTouch::touchDown);
+    QSignalSpy pointMovedSpy(m_touch.get(), &Test::WlTouch::touchMotion);
+    QSignalSpy pointRemovedSpy(m_touch.get(), &Test::WlTouch::touchUp);
+    QSignalSpy endedSpy(m_touch.get(), &Test::WlTouch::sequenceEnded);
 
     quint32 timestamp = 1;
     Test::touchDown(1, window->mapFromLocal(QPointF(25, 25)), timestamp++);
     QVERIFY(sequenceStartedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
-    QCOMPARE(m_touch->sequence().count(), 1);
-    QCOMPARE(m_touch->sequence().first()->isDown(), true);
-    QCOMPARE(m_touch->sequence().first()->position(), QPointF(25, 25));
-    QCOMPARE(pointAddedSpy.count(), 0);
+    QCOMPARE(pointAddedSpy.count(), 1);
+    QCOMPARE(pointAddedSpy.first().at(4).toPointF(), QPointF(25, 25));
     QCOMPARE(pointMovedSpy.count(), 0);
 
     auto [window2, surface2, shellSurface2, decoration2] = showWindow(decorated);
@@ -187,35 +182,25 @@ void TouchInputTest::testMultipleTouchPoints()
     // a point outside the window, where window2 is
     Test::touchDown(2, window->mapFromLocal(QPointF(-100, -100)), timestamp++);
     QVERIFY(pointAddedSpy.wait());
-    QCOMPARE(pointAddedSpy.count(), 1);
-    QCOMPARE(m_touch->sequence().count(), 2);
-    QCOMPARE(m_touch->sequence().at(1)->isDown(), true);
-    QCOMPARE(m_touch->sequence().at(1)->surface(), surface2.get());
-    QCOMPARE(m_touch->sequence().at(1)->position(), QPointF(0, 0));
+    QCOMPARE(pointAddedSpy.count(), 2);
+    QCOMPARE(pointAddedSpy.last().at(2).value<::wl_surface *>(), surface2->operator wl_surface *());
+    QCOMPARE(pointAddedSpy.last().at(4).toPointF(), QPointF(0, 0));
     QCOMPARE(pointMovedSpy.count(), 0);
 
     // let's move that one. Since it started in window2 it stays with window2
     Test::touchMotion(2, window->mapFromLocal(QPointF(0, 0)), timestamp++);
     QVERIFY(pointMovedSpy.wait());
     QCOMPARE(pointMovedSpy.count(), 1);
-    QCOMPARE(m_touch->sequence().count(), 2);
-    QCOMPARE(m_touch->sequence().at(1)->isDown(), true);
-    QCOMPARE(m_touch->sequence().at(1)->surface(), surface2.get());
-    QCOMPARE(m_touch->sequence().at(1)->position(), QPointF(100, 100));
+    QCOMPARE(pointMovedSpy.last().at(2).toPointF(), QPointF(100, 100));
 
     Test::touchUp(1, timestamp++);
     QVERIFY(pointRemovedSpy.wait());
     QCOMPARE(pointRemovedSpy.count(), 1);
-    QCOMPARE(m_touch->sequence().count(), 2);
-    QCOMPARE(m_touch->sequence().first()->isDown(), false);
     QCOMPARE(endedSpy.count(), 0);
 
     Test::touchUp(2, timestamp++);
     QVERIFY(pointRemovedSpy.wait());
     QCOMPARE(pointRemovedSpy.count(), 2);
-    QCOMPARE(m_touch->sequence().count(), 2);
-    QCOMPARE(m_touch->sequence().first()->isDown(), false);
-    QCOMPARE(m_touch->sequence().at(1)->isDown(), false);
     QCOMPARE(endedSpy.count(), 1);
 }
 
@@ -224,9 +209,9 @@ void TouchInputTest::testCancel()
     auto [window, surface, shellSurface, decoration] = showWindow();
     window->move(QPoint(100, 100));
     QVERIFY(window);
-    QSignalSpy sequenceStartedSpy(m_touch, &KWayland::Client::Touch::sequenceStarted);
-    QSignalSpy cancelSpy(m_touch, &KWayland::Client::Touch::sequenceCanceled);
-    QSignalSpy pointRemovedSpy(m_touch, &KWayland::Client::Touch::pointRemoved);
+    QSignalSpy sequenceStartedSpy(m_touch.get(), &Test::WlTouch::sequenceStarted);
+    QSignalSpy cancelSpy(m_touch.get(), &Test::WlTouch::sequenceCanceled);
+    QSignalSpy pointRemovedSpy(m_touch.get(), &Test::WlTouch::touchUp);
 
     quint32 timestamp = 1;
     Test::touchDown(1, QPointF(125, 125), timestamp++);
@@ -253,7 +238,7 @@ void TouchInputTest::testTouchMouseAction()
     QVERIFY(c2->isActive());
 
     // also create a sequence started spy as the touch event should be passed through
-    QSignalSpy sequenceStartedSpy(m_touch, &KWayland::Client::Touch::sequenceStarted);
+    QSignalSpy sequenceStartedSpy(m_touch.get(), &Test::WlTouch::sequenceStarted);
 
     quint32 timestamp = 1;
     Test::touchDown(1, c1->frameGeometry().center(), timestamp++);
@@ -287,7 +272,7 @@ void TouchInputTest::testUpdateFocusOnDecorationDestroy()
     // This test verifies that a maximized window gets it's touch focus
     // if decoration was focused and then destroyed on maximize with BorderlessMaximizedWindows option.
 
-    QSignalSpy sequenceEndedSpy(m_touch, &KWayland::Client::Touch::sequenceEnded);
+    QSignalSpy sequenceEndedSpy(m_touch.get(), &Test::WlTouch::sequenceEnded);
 
     // Enable the borderless maximized windows option.
     auto group = kwinApp()->config()->group(QStringLiteral("Windows"));

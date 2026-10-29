@@ -23,7 +23,6 @@
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/touch.h>
 
 #include <QSignalSpy>
 

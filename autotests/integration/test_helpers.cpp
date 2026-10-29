@@ -2716,6 +2716,11 @@ void WlTouch::touch_up(uint32_t serial, uint32_t time, int32_t id)
     }
 }
 
+void WlTouch::touch_motion(uint32_t time, int32_t id, wl_fixed_t x, wl_fixed_t y)
+{
+    Q_EMIT touchMotion(time, id, QPointF(wl_fixed_to_double(x), wl_fixed_to_double(y)));
+}
+
 void WlTouch::touch_cancel()
 {
     m_touchIds.clear();
