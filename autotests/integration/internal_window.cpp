@@ -20,7 +20,6 @@
 #include <QRasterWindow>
 #include <QSignalSpy>
 
-#include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
 #include <KWindowSystem>

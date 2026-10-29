@@ -19,7 +19,6 @@
 #include "workspace.h"
 
 #include <KWayland/Client/compositor.h>
-#include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/pointerconstraints.h>
 #include <KWayland/Client/region.h>
 #include <KWayland/Client/seat.h>

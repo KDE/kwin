@@ -16,7 +16,6 @@
 #include "window.h"
 #include "workspace.h"
 
-#include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/seat.h>
 
 #include <linux/input.h>
