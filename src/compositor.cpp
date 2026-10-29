@@ -478,7 +478,7 @@ static bool prepareDirectScanout(RenderView *view, LogicalOutput *logicalOutput,
         return false;
     }
     const auto compatibleDevice = GpuManager::self()->compatibleRenderDevice(layer->scanoutDevice());
-    if (attrs->device != layer->scanoutDevice()->deviceId() && attrs->device != compatibleDevice->deviceId()) {
+    if (attrs->device != layer->scanoutDevice()->deviceId() && (!compatibleDevice || attrs->device != compatibleDevice->deviceId())) {
         // Disallow direct scanout between GPUs, as
         // - there are some significant driver bugs with direct scanout from other GPUs,
         //   like https://gitlab.freedesktop.org/drm/amd/-/issues/2075
