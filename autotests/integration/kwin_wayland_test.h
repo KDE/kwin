@@ -26,6 +26,7 @@
 #include <xkbcommon/xkbcommon.h>
 
 #include "qwayland-alpha-modifier-v1.h"
+#include "qwayland-appmenu.h"
 #include "qwayland-color-management-v1.h"
 #include "qwayland-color-representation-v1.h"
 #include "qwayland-commit-timing-v1.h"
@@ -62,7 +63,6 @@ namespace KWayland
 namespace Client
 {
 
-class AppMenuManager;
 class ConnectionThread;
 class Compositor;
 class DataSource;
@@ -1262,6 +1262,13 @@ public:
     ~PointerWarpV1() override;
 };
 
+class AppMenuManager : public QtWayland::org_kde_kwin_appmenu_manager
+{
+public:
+    explicit AppMenuManager(::wl_registry *registry, uint32_t id, int version);
+    ~AppMenuManager() override;
+};
+
 struct Connection
 {
     static std::unique_ptr<Connection> setup(AdditionalWaylandInterfaces interfaces = AdditionalWaylandInterfaces());
@@ -1288,7 +1295,7 @@ struct Connection
     QList<KWayland::Client::Output *> outputs;
     QList<WaylandOutputDeviceV2 *> outputDevicesV2;
     IdleInhibitManagerV1 *idleInhibitManagerV1 = nullptr;
-    KWayland::Client::AppMenuManager *appMenu = nullptr;
+    AppMenuManager *appMenu = nullptr;
     XdgDecorationManagerV1 *xdgDecorationManagerV1 = nullptr;
     KWayland::Client::TextInputManager *textInputManager = nullptr;
     QtWayland::zwp_input_panel_v1 *inputPanelV1 = nullptr;
@@ -1380,7 +1387,7 @@ KWayland::Client::DataDeviceManager *waylandDataDeviceManager();
 KWayland::Client::PlasmaShell *waylandPlasmaShell();
 KWayland::Client::PlasmaWindowManagement *waylandWindowManagement();
 WlPointerConstraints *waylandPointerConstraints();
-KWayland::Client::AppMenuManager *waylandAppMenuManager();
+AppMenuManager *waylandAppMenuManager();
 WaylandOutputManagementV2 *waylandOutputManagementV2();
 KWayland::Client::TextInputManager *waylandTextInputManager();
 QList<KWayland::Client::Output *> waylandOutputs();

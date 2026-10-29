@@ -26,7 +26,6 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KWayland/Client/appmenu.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/datadevicemanager.h>
@@ -671,10 +670,8 @@ std::unique_ptr<Connection> Connection::setup(int socket, AdditionalWaylandInter
         connection->pointerConstraints = new WlPointerConstraints(*registry, interface.name, interface.version);
     }
     if (flags.testFlag(AdditionalWaylandInterface::AppMenu)) {
-        connection->appMenu = registry->createAppMenuManager(registry->interface(KWayland::Client::Registry::Interface::AppMenu).name, registry->interface(KWayland::Client::Registry::Interface::AppMenu).version);
-        if (!connection->appMenu->isValid()) {
-            return nullptr;
-        }
+        const auto interface = registry->interface(KWayland::Client::Registry::Interface::AppMenu);
+        connection->appMenu = new AppMenuManager(*registry, interface.name, interface.version);
     }
     if (flags.testFlag(AdditionalWaylandInterface::TextInputManagerV2)) {
         connection->textInputManager = registry->createTextInputManager(registry->interface(KWayland::Client::Registry::Interface::TextInputManagerUnstableV2).name, registry->interface(KWayland::Client::Registry::Interface::TextInputManagerUnstableV2).version);
@@ -864,7 +861,7 @@ WlPointerConstraints *waylandPointerConstraints()
     return s_waylandConnection->pointerConstraints;
 }
 
-KWayland::Client::AppMenuManager *waylandAppMenuManager()
+AppMenuManager *waylandAppMenuManager()
 {
     return s_waylandConnection->appMenu;
 }
@@ -2745,6 +2742,16 @@ PointerWarpV1::PointerWarpV1(::wl_registry *registry, uint32_t id, int version)
 PointerWarpV1::~PointerWarpV1()
 {
     destroy();
+}
+
+AppMenuManager::AppMenuManager(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::org_kde_kwin_appmenu_manager(registry, id, version)
+{
+}
+
+AppMenuManager::~AppMenuManager()
+{
+    release();
 }
 
 void keyboardKeyPressed(quint32 key, quint32 time)
