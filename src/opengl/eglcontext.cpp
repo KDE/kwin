@@ -123,6 +123,8 @@ EglContext::~EglContext()
     m_shaderManager.reset();
     m_streamingBuffer.reset();
     m_indexBuffer.reset();
+    m_importedFbos.clear();
+    m_importedTextures.clear();
     doneCurrent();
     eglDestroyContext(m_display->handle(), m_handle);
 }
@@ -678,6 +680,59 @@ void EglContext::renderRegion(const Region &framebufferRegion, const std::functi
         }
         glDisable(GL_SCISSOR_TEST);
     }
+}
+
+GLTexture *EglContext::importDmaBufAsTexture(GraphicsBuffer *buffer)
+{
+    if (!buffer->dmabufAttributes()) {
+        return nullptr;
+    }
+    const DmaBufAttributes &attributes = *buffer->dmabufAttributes();
+    const auto it = m_importedTextures.find(buffer);
+    if (it != m_importedTextures.end()) {
+        return it->second.get();
+    }
+    auto &ret = m_importedTextures[buffer];
+
+    connect(buffer, &QObject::destroyed, this, [this, buffer]() {
+        auto previousContext = EglContext::currentContext();
+        std::ignore = makeCurrent();
+        // NOTE this also handles the fbo, since it has to
+        // be deleted before the texture it's referencing
+        m_importedFbos.erase(buffer);
+        m_importedTextures.erase(buffer);
+        if (previousContext) {
+            std::ignore = previousContext->makeCurrent();
+        }
+    });
+
+    EGLImageKHR image = m_display->importDmaBufAsImage(attributes);
+    if (image != EGL_NO_IMAGE_KHR) {
+        const auto info = FormatInfo::get(attributes.format);
+        ret = EGLImageTexture::create(m_display, image, info ? info->openglFormat : GL_RGBA8, QSize(attributes.width, attributes.height), m_display->isExternalOnly(attributes.format, attributes.modifier));
+    }
+    return ret.get();
+}
+
+GLFramebuffer *EglContext::importDmaBufAsFbo(GraphicsBuffer *buffer)
+{
+    if (!buffer->dmabufAttributes()) {
+        return nullptr;
+    }
+    const auto it = m_importedFbos.find(buffer);
+    if (it != m_importedFbos.end()) {
+        return it->second.get();
+    }
+    auto &ret = m_importedFbos[buffer];
+
+    GLTexture *texture = importDmaBufAsTexture(buffer);
+    if (texture) {
+        ret = std::make_unique<GLFramebuffer>(texture);
+        if (!ret->valid()) {
+            ret.reset();
+        }
+    }
+    return ret.get();
 }
 
 }
