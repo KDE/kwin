@@ -24,8 +24,8 @@ namespace KWin
 {
 
 class DrmFramebuffer;
-class EglSwapchain;
-class EglSwapchainSlot;
+class Swapchain;
+class SwapchainSlot;
 class QPainterSwapchain;
 class EglContext;
 class EglGbmBackend;
@@ -82,8 +82,8 @@ private:
         bool needsRecreation = false;
 
         std::shared_ptr<EglContext> context;
-        std::shared_ptr<EglSwapchain> gbmSwapchain;
-        std::shared_ptr<EglSwapchainSlot> currentSlot;
+        std::shared_ptr<Swapchain> swapchain;
+        std::shared_ptr<SwapchainSlot> currentSlot;
         DamageJournal damageJournal;
         std::unique_ptr<QPainterSwapchain> importDumbSwapchain;
         std::unique_ptr<MultiGpuSwapchain> importSwapchain;
@@ -93,11 +93,12 @@ private:
         BufferTarget bufferTarget;
         double scale = 1;
         uint32_t requiredAlphaBits = 0;
+        OutputTransform transformation = OutputTransform::Kind::Normal;
 
         // for color management
         bool needsShadowBuffer = false;
-        std::shared_ptr<EglSwapchain> shadowSwapchain;
-        std::shared_ptr<EglSwapchainSlot> currentShadowSlot;
+        std::shared_ptr<Swapchain> shadowSwapchain;
+        std::shared_ptr<SwapchainSlot> currentShadowSlot;
         std::shared_ptr<ColorDescription> layerBlendingColor = ColorDescription::sRGB;
         std::shared_ptr<ColorDescription> blendingColor = ColorDescription::sRGB;
         double brightness = 1.0;
@@ -116,9 +117,9 @@ private:
     std::unique_ptr<Surface> createSurface(const QSize &size, uint32_t format, const ModifierList &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const;
 
     std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface *surface) const;
-    std::shared_ptr<DrmFramebuffer> importBuffer(Surface *surface, EglSwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const;
-    std::shared_ptr<DrmFramebuffer> importWithCopy(Surface *surface, EglSwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const;
-    std::shared_ptr<DrmFramebuffer> importWithCpu(Surface *surface, EglSwapchainSlot *source, OutputFrame *frame) const;
+    std::shared_ptr<DrmFramebuffer> importBuffer(Surface *surface, SwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const;
+    std::shared_ptr<DrmFramebuffer> importWithCopy(Surface *surface, SwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const;
+    std::shared_ptr<DrmFramebuffer> importWithCpu(Surface *surface, SwapchainSlot *source, OutputFrame *frame) const;
 
     std::unique_ptr<Surface> m_surface;
     std::unique_ptr<Surface> m_oldSurface;
