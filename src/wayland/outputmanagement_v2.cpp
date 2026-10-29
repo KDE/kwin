@@ -747,7 +747,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
         sendFailure(resource, i18n("More displays are enabled than are supported by the graphics card."));
         return;
     default:
-        sendFailure(resource, i18n("The driver rejected the output configuration: %s", qPrintable(result.error().message)));
+        sendFailure(resource, i18n("The driver rejected the output configuration: %1", result.error().message));
         return;
     }
 }
