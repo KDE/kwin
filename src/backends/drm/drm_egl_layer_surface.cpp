@@ -171,68 +171,13 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     }
 }
 
-static GLVertexBuffer *uploadGeometry(const Region &devicePixels, const QSize &fboSize)
-{
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->reset();
-    vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
-    const auto optMap = vbo->map<GLVertex2D>(devicePixels.rects().size() * 6);
-    if (!optMap) {
-        return nullptr;
-    }
-    const auto map = *optMap;
-    size_t vboIndex = 0;
-    for (RectF rect : devicePixels.rects()) {
-        const float x0 = rect.left();
-        const float y0 = rect.top();
-        const float x1 = rect.right();
-        const float y1 = rect.bottom();
-
-        const float u0 = x0 / fboSize.width();
-        const float v0 = y0 / fboSize.height();
-        const float u1 = x1 / fboSize.width();
-        const float v1 = y1 / fboSize.height();
-
-        // first triangle
-        map[vboIndex++] = GLVertex2D{
-            .position = QVector2D(x0, y0),
-            .texcoord = QVector2D(u0, v0),
-        };
-        map[vboIndex++] = GLVertex2D{
-            .position = QVector2D(x1, y1),
-            .texcoord = QVector2D(u1, v1),
-        };
-        map[vboIndex++] = GLVertex2D{
-            .position = QVector2D(x0, y1),
-            .texcoord = QVector2D(u0, v1),
-        };
-
-        // second triangle
-        map[vboIndex++] = GLVertex2D{
-            .position = QVector2D(x0, y0),
-            .texcoord = QVector2D(u0, v0),
-        };
-        map[vboIndex++] = GLVertex2D{
-            .position = QVector2D(x1, y0),
-            .texcoord = QVector2D(u1, v0),
-        };
-        map[vboIndex++] = GLVertex2D{
-            .position = QVector2D(x1, y1),
-            .texcoord = QVector2D(u1, v1),
-        };
-    }
-    vbo->unmap();
-    vbo->setVertexCount(vboIndex);
-    return vbo;
-}
-
 bool EglGbmLayerSurface::endRendering(const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     if (m_surface->needsShadowBuffer) {
         const Region deviceRepaint = damagedDeviceRegion | m_surface->damageJournal.accumulate(m_surface->currentSlot->age(), Region::infinite());
         m_surface->damageJournal.add(damagedDeviceRegion);
         m_surface->shadowDamageJournal.add(damagedDeviceRegion);
-        const auto mapping = m_surface->currentShadowSlot->framebuffer()->colorAttachment()->contentTransform().combine(OutputTransform::FlipY);
+        const auto mapping = m_surface->currentShadowSlot->framebuffer()->colorAttachment()->contentTransform();
         const QSize rotatedSize = mapping.map(m_surface->gbmSwapchain->size());
         const Region repaint = mapping.map(deviceRepaint & Rect(QPoint(), rotatedSize), rotatedSize);
 
@@ -252,11 +197,13 @@ bool EglGbmLayerSurface::endRendering(const Region &damagedDeviceRegion, OutputF
         mat.ortho(QRectF(QPointF(), fbo->size()));
         binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
         glDisable(GL_BLEND);
-        if (const auto vbo = uploadGeometry(repaint, m_surface->gbmSwapchain->size())) {
-            m_surface->currentShadowSlot->texture()->bind();
-            vbo->render(GL_TRIANGLES);
-            m_surface->currentShadowSlot->texture()->unbind();
-        }
+
+        m_surface->currentShadowSlot->texture()->bind();
+        m_surface->context->renderRegion(repaint, [&]() {
+            m_surface->currentShadowSlot->texture()->render(fbo->size());
+        });
+        m_surface->currentShadowSlot->texture()->unbind();
+
         EGLNativeFence fence(m_surface->context->displayObject());
         m_surface->shadowSwapchain->release(m_surface->currentShadowSlot, fence.takeFileDescriptor());
         GLFramebuffer::popFramebuffer();
