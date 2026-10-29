@@ -85,8 +85,7 @@ class EglMultiGpuCopy : public MultiGpuCopy
     Q_OBJECT
 
 public:
-    explicit EglMultiGpuCopy(RenderDevice *device, std::shared_ptr<EglSwapchain> &&swapchain);
-    ~EglMultiGpuCopy() override;
+    explicit EglMultiGpuCopy(RenderDevice *device, std::shared_ptr<Swapchain> &&swapchain, std::shared_ptr<EglContext> &&context);
 
     std::optional<MultiGpuSwapchain::Ret> copy(GraphicsBuffer *buffer,
                                                const Region &damage,
@@ -98,8 +97,9 @@ public:
     uint32_t format() const override;
     uint64_t modifier() const override;
 
-    std::shared_ptr<EglSwapchain> m_swapchain;
-    std::shared_ptr<EglSwapchainSlot> m_currentSlot;
+    std::shared_ptr<EglContext> m_context;
+    std::shared_ptr<Swapchain> m_swapchain;
+    std::shared_ptr<SwapchainSlot> m_currentSlot;
 };
 
 std::optional<DrmFormat> MultiGpuSwapchain::chooseFormat(uint32_t inputFormat, const FormatModifierMap &srcFormats, const FormatModifierMap &dstFormats)
@@ -212,12 +212,12 @@ static std::optional<CopyRet> createCopy(RenderDevice *device,
     options.format = fmt->format;
     options.modifiers = fmt->modifiers;
     options.render = true;
-    auto swapchain = EglSwapchain::create(allocator, context, options);
+    auto swapchain = Swapchain::create(allocator, options);
     if (!swapchain) {
         return std::nullopt;
     }
     return CopyRet{
-        .copy = std::make_unique<EglMultiGpuCopy>(device, std::move(swapchain)),
+        .copy = std::make_unique<EglMultiGpuCopy>(device, std::move(swapchain), std::move(context)),
         .sourceModifiers = retModifiers,
     };
 }
@@ -763,20 +763,11 @@ uint64_t VulkanMultiGpuCopy::modifier() const
     return m_swapchain->modifier();
 }
 
-EglMultiGpuCopy::EglMultiGpuCopy(RenderDevice *device, std::shared_ptr<EglSwapchain> &&swapchain)
+EglMultiGpuCopy::EglMultiGpuCopy(RenderDevice *device, std::shared_ptr<Swapchain> &&swapchain, std::shared_ptr<EglContext> &&context)
     : MultiGpuCopy(device)
+    , m_context(std::move(context))
     , m_swapchain(std::move(swapchain))
 {
-}
-
-EglMultiGpuCopy::~EglMultiGpuCopy()
-{
-    auto previousContext = EglContext::currentContext();
-    m_currentSlot.reset();
-    m_swapchain.reset();
-    if (previousContext) {
-        (void)previousContext->makeCurrent();
-    }
 }
 
 std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::copy(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
@@ -798,27 +789,30 @@ std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::copy(GraphicsBuffer *buff
             (void)previousContext->makeCurrent();
         }
     });
-    if (!m_swapchain || m_swapchain->context()->isFailed() || !m_swapchain->context()->makeCurrent()) {
+    if (!m_context || !m_context->makeCurrent()) {
         Q_EMIT gpuReset();
         return std::nullopt;
     }
 
-    const auto &context = m_swapchain->context();
-
-    EGLNativeFence importFence = EGLNativeFence::importFence(context->displayObject(), std::move(sync));
+    EGLNativeFence importFence = EGLNativeFence::importFence(m_context->displayObject(), std::move(sync));
     importFence.waitSync();
 
     std::unique_ptr<GLRenderTimeQuery> renderTime;
     if (frame) {
-        renderTime = GLRenderTimeQuery::begin(context);
+        renderTime = GLRenderTimeQuery::begin(m_context);
     }
     m_currentSlot = m_swapchain->acquire();
     if (!m_currentSlot) {
         m_journal.clear();
         return std::nullopt;
     }
-    auto sourceTex = context->importDmaBufAsTexture(*buffer->dmabufAttributes());
+    auto sourceTex = m_context->importDmaBufAsTexture(buffer);
     if (!sourceTex) {
+        m_journal.clear();
+        return std::nullopt;
+    }
+    auto destinationFbo = m_context->importDmaBufAsFbo(m_currentSlot->buffer());
+    if (!destinationFbo) {
         m_journal.clear();
         return std::nullopt;
     }
@@ -835,7 +829,7 @@ std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::copy(GraphicsBuffer *buff
     const Region toRender = OutputTransform(OutputTransform::FlipY).map((m_journal.accumulate(m_currentSlot->age(), completeRect) | damage) & completeRect, m_swapchain->size());
     m_journal.add(damage);
 
-    context->pushFramebuffer(m_currentSlot->framebuffer());
+    m_context->pushFramebuffer(destinationFbo);
     ShaderBinder binder(sourceTex->target() == GL_TEXTURE_EXTERNAL_OES ? ShaderTrait::MapExternalTexture : ShaderTrait::MapTexture);
     QMatrix4x4 proj;
     proj.scale(1, -1);
@@ -844,12 +838,10 @@ std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::copy(GraphicsBuffer *buff
 
     sourceTex->render(toRender, buffer->size());
 
-    context->popFramebuffer();
-    EGLNativeFence fence(context->displayObject());
-    m_swapchain->release(m_currentSlot, fence.fileDescriptor().duplicate());
+    m_context->popFramebuffer();
+    EGLNativeFence fence(m_context->displayObject());
+    m_swapchain->release(m_currentSlot.get(), fence.fileDescriptor().duplicate());
 
-    // destroy resources before the context switch
-    sourceTex.reset();
     if (renderTime) {
         renderTime->end();
         frame->addRenderTimeQuery(std::move(renderTime));
