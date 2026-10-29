@@ -70,9 +70,7 @@ private:
     QSurfaceFormat m_format;
     EGLConfig m_config = EGL_NO_CONFIG_KHR;
     std::shared_ptr<EglContext> m_eglContext;
-    std::unordered_map<GraphicsBuffer *, std::shared_ptr<EGLRenderTarget>> m_renderTargets;
-    std::vector<std::shared_ptr<EGLRenderTarget>> m_zombieRenderTargets;
-    std::shared_ptr<EGLRenderTarget> m_current;
+    GLFramebuffer *m_current = nullptr;
     std::shared_ptr<SwapchainSlot> m_currentSlot;
     bool m_markedInvalid = false;
 };
