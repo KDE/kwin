@@ -103,9 +103,12 @@ void GlobalShortcutsManager::init()
         qCDebug(KWIN_CORE) << "Init of kglobalaccel failed";
         m_kglobalAccel.reset();
     } else {
-        m_kglobalAccel->setActivationTokenCreator([](const QString &componentId) {
+        m_kglobalAccel->setActivationTokenCreator([](const QString &componentId, KGlobalAccelD::ActivationTokenUsage usage) {
             auto seat = KWin::waylandServer()->seat();
-            return KWin::waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, seat->display()->serial(), seat, componentId);
+            // Only pass the app id when an application is being launched, otherwise we'd show
+            // launch feedback for applications that are already running
+            const QString appId = usage == KGlobalAccelD::ActivationTokenUsage::Launch ? componentId : QString();
+            return KWin::waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, seat->display()->serial(), seat, appId);
         });
     }
 #endif
