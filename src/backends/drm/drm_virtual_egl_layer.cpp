@@ -13,9 +13,9 @@
 #include "drm_logging.h"
 #include "drm_virtual_output.h"
 #include "opengl/eglnativefence.h"
-#include "opengl/eglswapchain.h"
 #include "opengl/glrendertimequery.h"
 #include "scene/surfaceitem_wayland.h"
+#include "swapchain.h"
 #include "utils/envvar.h"
 #include "wayland/surface.h"
 
@@ -69,13 +69,18 @@ std::optional<OutputLayerBeginFrameInfo> VirtualDrmEglLayer::beginFrame(OutputFr
         return std::nullopt;
     }
 
+    auto fbo = m_eglBackend->openglContext()->importDmaBufAsFbo(slot->buffer());
+    if (!fbo) {
+        return std::nullopt;
+    }
+
     m_currentSlot = slot;
 
     m_query = GLRenderTimeQuery::begin(m_eglBackend->openglContextRef());
 
     const Region repair = m_damageJournal.accumulate(slot->age(), Region::infinite());
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(slot->framebuffer()),
+        .renderTarget = RenderTarget(fbo),
         .repaint = repair,
     };
 }
@@ -90,11 +95,11 @@ bool VirtualDrmEglLayer::endFrame(const Region &renderedDeviceRegion, const Regi
     m_damageJournal.add(damagedDeviceRegion);
 
     EGLNativeFence releaseFence{m_eglBackend->eglDisplayObject()};
-    m_swapchain->release(m_currentSlot, releaseFence.takeFileDescriptor());
+    m_swapchain->release(m_currentSlot.get(), releaseFence.takeFileDescriptor());
     return true;
 }
 
-std::shared_ptr<EglSwapchain> VirtualDrmEglLayer::createSwapchain() const
+std::shared_ptr<Swapchain> VirtualDrmEglLayer::createSwapchain() const
 {
     static bool modifiersEnvSet = false;
     static const bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
@@ -114,7 +119,7 @@ std::shared_ptr<EglSwapchain> VirtualDrmEglLayer::createSwapchain() const
                 .software = false,
                 .scanout = false,
             };
-            if (auto swapchain = EglSwapchain::create(m_eglBackend->renderDevice(), options)) {
+            if (auto swapchain = Swapchain::create(m_eglBackend->renderDevice()->allocator(), options)) {
                 return swapchain;
             }
         }
@@ -123,7 +128,7 @@ std::shared_ptr<EglSwapchain> VirtualDrmEglLayer::createSwapchain() const
     return nullptr;
 }
 
-bool VirtualDrmEglLayer::doesSwapchainFit(EglSwapchain *swapchain) const
+bool VirtualDrmEglLayer::doesSwapchainFit(Swapchain *swapchain) const
 {
     return swapchain && swapchain->size() == m_output->modeSize();
 }
@@ -141,7 +146,6 @@ bool VirtualDrmEglLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::
 
 void VirtualDrmEglLayer::releaseBuffers()
 {
-    (void)m_eglBackend->openglContext()->makeCurrent();
     m_swapchain.reset();
     m_oldSwapchain.reset();
     m_currentSlot.reset();
