@@ -10,8 +10,8 @@
 #include "core/gbmgraphicsbufferallocator.h"
 #include "core/renderdevice.h"
 #include "opengl/eglnativefence.h"
-#include "opengl/eglswapchain.h"
 #include "opengl/glrendertimequery.h"
+#include "swapchain.h"
 #include "x11_windowed_backend.h"
 #include "x11_windowed_logging.h"
 #include "x11_windowed_output.h"
@@ -52,7 +52,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
             .software = false,
             .scanout = false,
         };
-        m_swapchain = EglSwapchain::create(m_backend->renderDevice(), options);
+        m_swapchain = Swapchain::create(m_backend->renderDevice()->allocator(), options);
         if (!m_swapchain) {
             return std::nullopt;
         }
@@ -62,13 +62,17 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
     if (!m_buffer) {
         return std::nullopt;
     }
+    auto fbo = m_backend->openglContext()->importDmaBufAsFbo(m_buffer->buffer());
+    if (!fbo) {
+        return std::nullopt;
+    }
 
     Region repaint = Region::infinite();
     m_output->clearExposedArea();
 
     m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_buffer->framebuffer()),
+        .renderTarget = RenderTarget(fbo),
         .repaint = repaint,
     };
 }
@@ -80,7 +84,7 @@ bool X11WindowedEglPrimaryLayer::endFrame(const Region &renderedDeviceRegion, co
         frame->addRenderTimeQuery(std::move(m_query));
     }
     EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
-    m_swapchain->release(m_buffer, releaseFence.fileDescriptor().duplicate());
+    m_swapchain->release(m_buffer.get(), releaseFence.fileDescriptor().duplicate());
     m_output->setPrimaryBuffer(m_buffer->buffer());
     return true;
 }
