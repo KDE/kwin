@@ -12,14 +12,24 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
+#include "qwayland-slide.h"
+
 #include <KConfigGroup>
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/registry.h>
-#include <KWayland/Client/slide.h>
 #include <KWayland/Client/surface.h>
 
 using namespace KWin;
+
+class SlideManager : public QtWayland::org_kde_kwin_slide_manager
+{
+public:
+    SlideManager(::wl_registry *registry, uint32_t id, int version)
+        : QtWayland::org_kde_kwin_slide_manager(registry, id, version)
+    {
+    }
+};
 
 class SlidingPopupsTest : public QObject
 {
@@ -132,7 +142,7 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     QVERIFY(!otherEffect->isActive());
     QSignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
 
-    // the test created the slide protocol, let's create a Registry and listen for it
+    // The test created the slide protocol, let's create a Registry and listen for it.
     std::unique_ptr<KWayland::Client::Registry> registry(new KWayland::Client::Registry);
     registry->create(Test::waylandConnection());
 
@@ -141,15 +151,14 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     QVERIFY(interfacesAnnouncedSpy.wait());
     auto slideInterface = registry->interface(KWayland::Client::Registry::Interface::Slide);
     QVERIFY(slideInterface.name != 0);
-    std::unique_ptr<KWayland::Client::SlideManager> slideManager(registry->createSlideManager(slideInterface.name, slideInterface.version));
-    QVERIFY(slideManager);
+    SlideManager slideManager(registry->registry(), slideInterface.name, slideInterface.version);
 
     // create Wayland window
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface);
-    std::unique_ptr<KWayland::Client::Slide> slide(slideManager->createSlide(surface.get()));
-    slide->setLocation(KWayland::Client::Slide::Location::Left);
-    slide->commit();
+    QtWayland::org_kde_kwin_slide slide(slideManager.create(*surface));
+    slide.set_location(QtWayland::org_kde_kwin_slide::location_left);
+    slide.commit();
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     QVERIFY(shellSurface);
     QCOMPARE(windowAddedSpy.count(), 0);
