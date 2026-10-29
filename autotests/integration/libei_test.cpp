@@ -11,7 +11,6 @@
 #include "pluginmanager.h"
 #include "wayland_server.h"
 
-#include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/seat.h>
 
 #include <QDBusConnection>

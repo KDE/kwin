@@ -2499,6 +2499,11 @@ QSet<quint32> WlKeyboard::heldKeys() const
     return m_heldKeys;
 }
 
+bool WlKeyboard::isKeyRepeatEnabled() const
+{
+    return m_repeatRate > 0;
+}
+
 void WlKeyboard::keyboard_keymap(uint32_t format, int32_t fd, uint32_t size)
 {
     Q_EMIT keymap(format, fd, size);
@@ -2545,6 +2550,7 @@ void WlKeyboard::keyboard_modifiers(uint32_t serial, uint32_t depressed, uint32_
 
 void WlKeyboard::keyboard_repeat_info(int32_t rate, int32_t delay)
 {
+    m_repeatRate = rate;
     Q_EMIT repeatInfo(rate, delay);
 }
 

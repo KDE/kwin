@@ -14,7 +14,6 @@
 #include "window.h"
 
 // KWayland
-#include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/surface.h>
 
 // Qt
@@ -1121,6 +1120,7 @@ public:
 
     KWayland::Client::Surface *focusedSurface() const;
     QSet<quint32> heldKeys() const;
+    bool isKeyRepeatEnabled() const;
 
 Q_SIGNALS:
     void keymap(uint32_t format, int32_t fd, uint32_t size);
@@ -1140,6 +1140,7 @@ private:
 
     KWayland::Client::Surface *m_focusedSurface = nullptr;
     QSet<quint32> m_heldKeys;
+    int32_t m_repeatRate = 0;
 };
 
 class WlPointer : public QObject, public QtWayland::wl_pointer

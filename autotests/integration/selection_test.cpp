@@ -149,8 +149,8 @@ void SelectionTest::selection()
     auto targetWindow = Test::renderAndWaitForShown(targetConnection->shm, targetSurface.get(), QSize(100, 100), Qt::blue);
 
     // Activate the source window.
-    std::unique_ptr<KWayland::Client::Keyboard> sourceKeyboard(sourceConnection->seat->createKeyboard());
-    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    auto sourceKeyboard = sourceConnection->kwinSeat->getKeyboard();
+    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &Test::WlKeyboard::enter);
     workspace()->activateWindow(sourceWindow);
     QVERIFY(sourceKeyboardEnteredSpy.wait());
     const quint32 sourceEnteredSerial = sourceKeyboardEnteredSpy.last().at(0).value<quint32>();
@@ -202,8 +202,8 @@ void SelectionTest::internalSelection()
     auto shellSurface = Test::createXdgToplevelSurface(connection->xdgShell, surface.get());
     auto window = Test::renderAndWaitForShown(connection->shm, surface.get(), QSize(100, 100), Qt::red);
 
-    std::unique_ptr<KWayland::Client::Keyboard> keyboard(connection->seat->createKeyboard());
-    QSignalSpy keyboardEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    auto keyboard = connection->kwinSeat->getKeyboard();
+    QSignalSpy keyboardEnteredSpy(keyboard.get(), &Test::WlKeyboard::enter);
     workspace()->activateWindow(window);
     QVERIFY(keyboardEnteredSpy.wait());
     const quint32 enteredSerial = keyboardEnteredSpy.last().at(0).value<quint32>();
@@ -261,8 +261,8 @@ void SelectionTest::destroySelection()
     auto targetWindow = Test::renderAndWaitForShown(targetConnection->shm, targetSurface.get(), QSize(100, 100), Qt::blue);
 
     // Activate the source window.
-    std::unique_ptr<KWayland::Client::Keyboard> sourceKeyboard(sourceConnection->seat->createKeyboard());
-    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    auto sourceKeyboard = sourceConnection->kwinSeat->getKeyboard();
+    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &Test::WlKeyboard::enter);
     workspace()->activateWindow(sourceWindow);
     QVERIFY(sourceKeyboardEnteredSpy.wait());
     const quint32 sourceEnteredSerial = sourceKeyboardEnteredSpy.last().at(0).value<quint32>();
@@ -302,8 +302,8 @@ void SelectionTest::invalidSerialForSelection()
     auto shellSurface = Test::createXdgToplevelSurface(connection->xdgShell, surface.get());
     Test::renderAndWaitForShown(connection->shm, surface.get(), QSize(100, 100), Qt::red);
 
-    std::unique_ptr<KWayland::Client::Keyboard> keyboard(connection->seat->createKeyboard());
-    QSignalSpy keyboardEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    auto keyboard = connection->kwinSeat->getKeyboard();
+    QSignalSpy keyboardEnteredSpy(keyboard.get(), &Test::WlKeyboard::enter);
     QVERIFY(keyboardEnteredSpy.wait());
     const quint32 enteredSerial = keyboardEnteredSpy.last().at(0).value<quint32>();
 
@@ -321,7 +321,7 @@ void SelectionTest::unsetSupersededSelection()
     auto firstConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::DataDeviceManager);
     QVERIFY(Test::waitForWaylandKeyboard(firstConnection->seat));
 
-    std::unique_ptr<KWayland::Client::Keyboard> firstKeyboard(firstConnection->seat->createKeyboard());
+    auto firstKeyboard = firstConnection->kwinSeat->getKeyboard();
     std::unique_ptr<KWayland::Client::DataDevice> firstDataDevice(firstConnection->dataDeviceManager->getDataDevice(firstConnection->seat));
     std::unique_ptr<KWayland::Client::DataSource> firstDataSource(firstConnection->dataDeviceManager->createDataSource());
     firstDataSource->offer(plainText());
@@ -339,7 +339,7 @@ void SelectionTest::unsetSupersededSelection()
     auto secondConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::DataDeviceManager);
     QVERIFY(Test::waitForWaylandKeyboard(secondConnection->seat));
 
-    std::unique_ptr<KWayland::Client::Keyboard> secondKeyboard(secondConnection->seat->createKeyboard());
+    auto secondKeyboard = secondConnection->kwinSeat->getKeyboard();
     std::unique_ptr<KWayland::Client::DataDevice> secondDataDevice(secondConnection->dataDeviceManager->getDataDevice(secondConnection->seat));
     std::unique_ptr<KWayland::Client::DataSource> secondDataSource(secondConnection->dataDeviceManager->createDataSource());
     secondDataSource->offer(htmlText());
@@ -354,7 +354,7 @@ void SelectionTest::unsetSupersededSelection()
     auto secondWindow = Test::renderAndWaitForShown(secondConnection->shm, secondSurface.get(), QSize(100, 100), Qt::blue);
 
     // Activate the first window and set the selection.
-    QSignalSpy firstKeyboardEnteredSpy(firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    QSignalSpy firstKeyboardEnteredSpy(firstKeyboard.get(), &Test::WlKeyboard::enter);
     QSignalSpy firstDataDeviceSelectionOfferedSpy(firstDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
     workspace()->activateWindow(firstWindow);
     QVERIFY(firstKeyboardEnteredSpy.wait());
@@ -364,7 +364,7 @@ void SelectionTest::unsetSupersededSelection()
     QVERIFY(firstDataDeviceSelectionOfferedSpy.wait());
 
     // Activate the second window and set the selection.
-    QSignalSpy secondKeyboardEnteredSpy(secondKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    QSignalSpy secondKeyboardEnteredSpy(secondKeyboard.get(), &Test::WlKeyboard::enter);
     QSignalSpy secondDataDeviceSelectionOfferedSpy(secondDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
     workspace()->activateWindow(secondWindow);
     QVERIFY(secondKeyboardEnteredSpy.wait());
@@ -412,8 +412,8 @@ void SelectionTest::receiveFromWithdrawnSelectionOffer()
     auto targetWindow = Test::renderAndWaitForShown(targetConnection->shm, targetSurface.get(), QSize(100, 100), Qt::blue);
 
     // Focus the source window, and set the selection.
-    std::unique_ptr<KWayland::Client::Keyboard> sourceKeyboard(sourceConnection->seat->createKeyboard());
-    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    auto sourceKeyboard = sourceConnection->kwinSeat->getKeyboard();
+    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &Test::WlKeyboard::enter);
     workspace()->activateWindow(sourceWindow);
     QVERIFY(sourceKeyboardEnteredSpy.wait());
     const quint32 sourceEnteredSerial = sourceKeyboardEnteredSpy.last().at(0).value<quint32>();
@@ -448,7 +448,7 @@ void SelectionTest::singleSelectionPerClient()
     auto firstConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::DataDeviceManager);
     QVERIFY(Test::waitForWaylandKeyboard(firstConnection->seat));
 
-    std::unique_ptr<KWayland::Client::Keyboard> firstKeyboard(firstConnection->seat->createKeyboard());
+    auto firstKeyboard = firstConnection->kwinSeat->getKeyboard();
     std::unique_ptr<KWayland::Client::DataDevice> firstDataDevice(firstConnection->dataDeviceManager->getDataDevice(firstConnection->seat));
     std::unique_ptr<KWayland::Client::DataSource> firstDataSource(firstConnection->dataDeviceManager->createDataSource());
     firstDataSource->offer(plainText());
@@ -466,7 +466,7 @@ void SelectionTest::singleSelectionPerClient()
     auto secondConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::DataDeviceManager);
     QVERIFY(Test::waitForWaylandKeyboard(secondConnection->seat));
 
-    std::unique_ptr<KWayland::Client::Keyboard> secondKeyboard(secondConnection->seat->createKeyboard());
+    auto secondKeyboard = secondConnection->kwinSeat->getKeyboard();
     std::unique_ptr<KWayland::Client::DataDevice> secondDataDevice(secondConnection->dataDeviceManager->getDataDevice(secondConnection->seat));
 
     auto secondSurface = Test::createSurface(secondConnection->compositor);
@@ -478,7 +478,7 @@ void SelectionTest::singleSelectionPerClient()
     auto thirdWindow = Test::renderAndWaitForShown(secondConnection->shm, thirdSurface.get(), QSize(100, 100), Qt::green);
 
     // Activate the first window and set the selection.
-    QSignalSpy firstKeyboardEnteredSpy(firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    QSignalSpy firstKeyboardEnteredSpy(firstKeyboard.get(), &Test::WlKeyboard::enter);
     workspace()->activateWindow(firstWindow);
     QVERIFY(firstKeyboardEnteredSpy.wait());
     const quint32 firstEnteredSerial = firstKeyboardEnteredSpy.last().at(0).value<quint32>();
@@ -580,8 +580,8 @@ void SelectionTest::primarySelection()
     auto targetWindow = Test::renderAndWaitForShown(targetConnection->shm, targetSurface.get(), QSize(100, 100), Qt::blue);
 
     // Activate the source window.
-    std::unique_ptr<KWayland::Client::Keyboard> sourceKeyboard(sourceConnection->seat->createKeyboard());
-    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    auto sourceKeyboard = sourceConnection->kwinSeat->getKeyboard();
+    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &Test::WlKeyboard::enter);
     workspace()->activateWindow(sourceWindow);
     QVERIFY(sourceKeyboardEnteredSpy.wait());
     const quint32 sourceEnteredSerial = sourceKeyboardEnteredSpy.last().at(0).value<quint32>();
@@ -633,8 +633,8 @@ void SelectionTest::internalPrimarySelection()
     auto shellSurface = Test::createXdgToplevelSurface(connection->xdgShell, surface.get());
     auto window = Test::renderAndWaitForShown(connection->shm, surface.get(), QSize(100, 100), Qt::red);
 
-    std::unique_ptr<KWayland::Client::Keyboard> keyboard(connection->seat->createKeyboard());
-    QSignalSpy keyboardEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    auto keyboard = connection->kwinSeat->getKeyboard();
+    QSignalSpy keyboardEnteredSpy(keyboard.get(), &Test::WlKeyboard::enter);
     workspace()->activateWindow(window);
     QVERIFY(keyboardEnteredSpy.wait());
     const quint32 enteredSerial = keyboardEnteredSpy.last().at(0).value<quint32>();
@@ -692,8 +692,8 @@ void SelectionTest::destroyPrimarySelection()
     auto targetWindow = Test::renderAndWaitForShown(targetConnection->shm, targetSurface.get(), QSize(100, 100), Qt::blue);
 
     // Activate the source window.
-    std::unique_ptr<KWayland::Client::Keyboard> sourceKeyboard(sourceConnection->seat->createKeyboard());
-    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    auto sourceKeyboard = sourceConnection->kwinSeat->getKeyboard();
+    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &Test::WlKeyboard::enter);
     workspace()->activateWindow(sourceWindow);
     QVERIFY(sourceKeyboardEnteredSpy.wait());
     const quint32 sourceEnteredSerial = sourceKeyboardEnteredSpy.last().at(0).value<quint32>();
@@ -733,8 +733,8 @@ void SelectionTest::invalidSerialForPrimarySelection()
     auto shellSurface = Test::createXdgToplevelSurface(connection->xdgShell, surface.get());
     Test::renderAndWaitForShown(connection->shm, surface.get(), QSize(100, 100), Qt::red);
 
-    std::unique_ptr<KWayland::Client::Keyboard> keyboard(connection->seat->createKeyboard());
-    QSignalSpy keyboardEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    auto keyboard = connection->kwinSeat->getKeyboard();
+    QSignalSpy keyboardEnteredSpy(keyboard.get(), &Test::WlKeyboard::enter);
     QVERIFY(keyboardEnteredSpy.wait());
     const quint32 enteredSerial = keyboardEnteredSpy.last().at(0).value<quint32>();
 
@@ -752,7 +752,7 @@ void SelectionTest::unsetSupersededPrimarySelection()
     auto firstConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::WpPrimarySelectionV1);
     QVERIFY(Test::waitForWaylandKeyboard(firstConnection->seat));
 
-    std::unique_ptr<KWayland::Client::Keyboard> firstKeyboard(firstConnection->seat->createKeyboard());
+    auto firstKeyboard = firstConnection->kwinSeat->getKeyboard();
     std::unique_ptr<Test::WpPrimarySelectionDeviceV1> firstDataDevice(firstConnection->primarySelectionManager->getDevice(firstConnection->seat));
     std::unique_ptr<Test::WpPrimarySelectionSourceV1> firstDataSource(firstConnection->primarySelectionManager->createSource());
     firstDataSource->offer(plainText().name());
@@ -770,7 +770,7 @@ void SelectionTest::unsetSupersededPrimarySelection()
     auto secondConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::WpPrimarySelectionV1);
     QVERIFY(Test::waitForWaylandKeyboard(secondConnection->seat));
 
-    std::unique_ptr<KWayland::Client::Keyboard> secondKeyboard(secondConnection->seat->createKeyboard());
+    auto secondKeyboard = secondConnection->kwinSeat->getKeyboard();
     std::unique_ptr<Test::WpPrimarySelectionDeviceV1> secondDataDevice(secondConnection->primarySelectionManager->getDevice(secondConnection->seat));
     std::unique_ptr<Test::WpPrimarySelectionSourceV1> secondDataSource(secondConnection->primarySelectionManager->createSource());
     secondDataSource->offer(htmlText().name());
@@ -785,7 +785,7 @@ void SelectionTest::unsetSupersededPrimarySelection()
     auto secondWindow = Test::renderAndWaitForShown(secondConnection->shm, secondSurface.get(), QSize(100, 100), Qt::blue);
 
     // Activate the first window and set the selection.
-    QSignalSpy firstKeyboardEnteredSpy(firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    QSignalSpy firstKeyboardEnteredSpy(firstKeyboard.get(), &Test::WlKeyboard::enter);
     QSignalSpy firstDataDeviceSelectionOfferedSpy(firstDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
     workspace()->activateWindow(firstWindow);
     QVERIFY(firstKeyboardEnteredSpy.wait());
@@ -795,7 +795,7 @@ void SelectionTest::unsetSupersededPrimarySelection()
     QVERIFY(firstDataDeviceSelectionOfferedSpy.wait());
 
     // Activate the second window and set the selection.
-    QSignalSpy secondKeyboardEnteredSpy(secondKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    QSignalSpy secondKeyboardEnteredSpy(secondKeyboard.get(), &Test::WlKeyboard::enter);
     QSignalSpy secondDataDeviceSelectionOfferedSpy(secondDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
     workspace()->activateWindow(secondWindow);
     QVERIFY(secondKeyboardEnteredSpy.wait());
@@ -843,8 +843,8 @@ void SelectionTest::receiveFromWithdrawnPrimarySelectionOffer()
     auto targetWindow = Test::renderAndWaitForShown(targetConnection->shm, targetSurface.get(), QSize(100, 100), Qt::blue);
 
     // Focus the source window, and set the primary selection.
-    std::unique_ptr<KWayland::Client::Keyboard> sourceKeyboard(sourceConnection->seat->createKeyboard());
-    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    auto sourceKeyboard = sourceConnection->kwinSeat->getKeyboard();
+    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &Test::WlKeyboard::enter);
     workspace()->activateWindow(sourceWindow);
     QVERIFY(sourceKeyboardEnteredSpy.wait());
     const quint32 sourceEnteredSerial = sourceKeyboardEnteredSpy.last().at(0).value<quint32>();
@@ -879,7 +879,7 @@ void SelectionTest::singlePrimarySelectionPerClient()
     auto firstConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::WpPrimarySelectionV1);
     QVERIFY(Test::waitForWaylandKeyboard(firstConnection->seat));
 
-    std::unique_ptr<KWayland::Client::Keyboard> firstKeyboard(firstConnection->seat->createKeyboard());
+    auto firstKeyboard = firstConnection->kwinSeat->getKeyboard();
     std::unique_ptr<Test::WpPrimarySelectionDeviceV1> firstDataDevice(firstConnection->primarySelectionManager->getDevice(firstConnection->seat));
     std::unique_ptr<Test::WpPrimarySelectionSourceV1> firstDataSource(firstConnection->primarySelectionManager->createSource());
     firstDataSource->offer(plainText().name());
@@ -897,7 +897,7 @@ void SelectionTest::singlePrimarySelectionPerClient()
     auto secondConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::WpPrimarySelectionV1);
     QVERIFY(Test::waitForWaylandKeyboard(secondConnection->seat));
 
-    std::unique_ptr<KWayland::Client::Keyboard> secondKeyboard(secondConnection->seat->createKeyboard());
+    auto secondKeyboard = secondConnection->kwinSeat->getKeyboard();
     std::unique_ptr<Test::WpPrimarySelectionDeviceV1> secondDataDevice(secondConnection->primarySelectionManager->getDevice(secondConnection->seat));
 
     auto secondSurface = Test::createSurface(secondConnection->compositor);
@@ -909,7 +909,7 @@ void SelectionTest::singlePrimarySelectionPerClient()
     auto thirdWindow = Test::renderAndWaitForShown(secondConnection->shm, thirdSurface.get(), QSize(100, 100), Qt::green);
 
     // Activate the first window and set the selection.
-    QSignalSpy firstKeyboardEnteredSpy(firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    QSignalSpy firstKeyboardEnteredSpy(firstKeyboard.get(), &Test::WlKeyboard::enter);
     workspace()->activateWindow(firstWindow);
     QVERIFY(firstKeyboardEnteredSpy.wait());
     const quint32 firstEnteredSerial = firstKeyboardEnteredSpy.last().at(0).value<quint32>();
