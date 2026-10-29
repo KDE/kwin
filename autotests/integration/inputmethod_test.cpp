@@ -37,7 +37,6 @@
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/region.h>
 #include <KWayland/Client/registry.h>
@@ -689,9 +688,9 @@ void InputMethodTest::testDisableShowInputPanel()
 void InputMethodTest::testModifierForwarding()
 {
     QVERIFY(Test::waitForWaylandKeyboard());
-    auto clientKeyboard = std::unique_ptr<KWayland::Client::Keyboard>(Test::waylandSeat()->createKeyboard(Test::waylandSeat()));
+    auto clientKeyboard = Test::kwinSeat()->getKeyboard();
     QVERIFY(clientKeyboard);
-    QSignalSpy enteredSpy(clientKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    QSignalSpy enteredSpy(clientKeyboard.get(), &Test::WlKeyboard::enter);
 
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -715,36 +714,35 @@ void InputMethodTest::testModifierForwarding()
     QVERIFY(kwinApp()->inputMethod()->isActive());
     QVERIFY(inputMethodActivateSpy.wait());
     auto context = Test::inputMethod()->context();
-    std::unique_ptr<KWayland::Client::Keyboard> keyboardGrab(new KWayland::Client::Keyboard);
-    keyboardGrab->setup(zwp_input_method_context_v1_grab_keyboard(context));
-    QSignalSpy keyboardGrabModifierSpy(keyboardGrab.get(), &KWayland::Client::Keyboard::modifiersChanged);
+    auto keyboardGrab = std::make_unique<Test::WlKeyboard>(zwp_input_method_context_v1_grab_keyboard(context));
+    QSignalSpy keyboardGrabModifierSpy(keyboardGrab.get(), &Test::WlKeyboard::modifiers);
     // Wait for initial modifiers update
     QVERIFY(keyboardGrabModifierSpy.wait());
 
     quint32 timestamp = 1;
     quint32 serial = 1;
 
-    connect(keyboardGrab.get(), &KWayland::Client::Keyboard::keyChanged, keyboardGrab.get(), [context, &serial](quint32 key, KWayland::Client::Keyboard::KeyState state, quint32 time) {
+    connect(keyboardGrab.get(), &Test::WlKeyboard::key, keyboardGrab.get(), [context, &serial](quint32, quint32 time, quint32 key, Test::WlKeyboard::key_state state) {
         zwp_input_method_context_v1_key(context,
                                         serial++,
                                         time,
                                         key,
-                                        state == KWayland::Client::Keyboard::KeyState::Pressed ? WL_KEYBOARD_KEY_STATE_PRESSED : WL_KEYBOARD_KEY_STATE_RELEASED);
+                                        state == Test::WlKeyboard::key_state_pressed ? WL_KEYBOARD_KEY_STATE_PRESSED : WL_KEYBOARD_KEY_STATE_RELEASED);
     });
-    connect(keyboardGrab.get(), &KWayland::Client::Keyboard::modifiersChanged, keyboardGrab.get(), [context, &serial](quint32 depressed, quint32 latched, quint32 locked, quint32 group) {
+    connect(keyboardGrab.get(), &Test::WlKeyboard::modifiers, keyboardGrab.get(), [context, &serial](quint32, quint32 depressed, quint32 latched, quint32 locked, quint32 group) {
         zwp_input_method_context_v1_modifiers(context, serial++, depressed, latched, locked, group);
     });
 
-    QSignalSpy keySpy(clientKeyboard.get(), &KWayland::Client::Keyboard::keyChanged);
-    QSignalSpy modifierSpy(clientKeyboard.get(), &KWayland::Client::Keyboard::modifiersChanged);
+    QSignalSpy keySpy(clientKeyboard.get(), &Test::WlKeyboard::key);
+    QSignalSpy modifierSpy(clientKeyboard.get(), &Test::WlKeyboard::modifiers);
     bool keyChanged = false;
     bool modifiersChanged = false;
     // We want to verify the order of two signals, so SignalSpy is not very useful here.
-    auto keyChangedConnection = connect(clientKeyboard.get(), &KWayland::Client::Keyboard::keyChanged, clientKeyboard.get(), [&keyChanged, &modifiersChanged]() {
+    auto keyChangedConnection = connect(clientKeyboard.get(), &Test::WlKeyboard::key, clientKeyboard.get(), [&keyChanged, &modifiersChanged]() {
         QVERIFY(!modifiersChanged);
         keyChanged = true;
     });
-    auto modifiersChangedConnection = connect(clientKeyboard.get(), &KWayland::Client::Keyboard::modifiersChanged, clientKeyboard.get(), [&keyChanged, &modifiersChanged]() {
+    auto modifiersChangedConnection = connect(clientKeyboard.get(), &Test::WlKeyboard::modifiers, clientKeyboard.get(), [&keyChanged, &modifiersChanged]() {
         QVERIFY(keyChanged);
         modifiersChanged = true;
     });
@@ -761,11 +759,11 @@ void InputMethodTest::testModifierForwarding()
     // verify the order of key and modifiers again. Key first, then modifiers.
     keyChanged = false;
     modifiersChanged = false;
-    keyChangedConnection = connect(clientKeyboard.get(), &KWayland::Client::Keyboard::keyChanged, clientKeyboard.get(), [&keyChanged, &modifiersChanged]() {
+    keyChangedConnection = connect(clientKeyboard.get(), &Test::WlKeyboard::key, clientKeyboard.get(), [&keyChanged, &modifiersChanged]() {
         QVERIFY(!modifiersChanged);
         keyChanged = true;
     });
-    modifiersChangedConnection = connect(clientKeyboard.get(), &KWayland::Client::Keyboard::modifiersChanged, clientKeyboard.get(), [&keyChanged, &modifiersChanged]() {
+    modifiersChangedConnection = connect(clientKeyboard.get(), &Test::WlKeyboard::modifiers, clientKeyboard.get(), [&keyChanged, &modifiersChanged]() {
         QVERIFY(keyChanged);
         modifiersChanged = true;
     });
@@ -980,18 +978,18 @@ void InputMethodTest::testSendRepeatInfo()
     // Use an old version supported by kwayland right now.
     legacyClient->seat = registry->createSeat(seatInterface.name, 5);
     QVERIFY(Test::waitForWaylandKeyboard(legacyClient->seat));
-    auto legacyKeyboard = std::unique_ptr<KWayland::Client::Keyboard>(legacyClient->seat->createKeyboard());
-    auto *wlKeyboard = static_cast<wl_keyboard *>(*legacyKeyboard);
+    auto legacyKeyboard = std::make_unique<Test::WlKeyboard>(wl_seat_get_keyboard(*legacyClient->seat));
+    auto *wlKeyboard = legacyKeyboard->object();
     QVERIFY(wl_proxy_get_version(reinterpret_cast<wl_proxy *>(wlKeyboard)) == 5);
 
-    QSignalSpy keyrepeatSpy(legacyKeyboard.get(), &KWayland::Client::Keyboard::keyRepeatChanged);
+    QSignalSpy keyrepeatSpy(legacyKeyboard.get(), &Test::WlKeyboard::repeatInfo);
     // Wait for initial modifiers update
     QVERIFY(keyrepeatSpy.wait());
     QVERIFY(legacyKeyboard->isKeyRepeatEnabled());
     auto surface = Test::createSurface(legacyClient->compositor);
     auto shellSurface = Test::createXdgToplevelSurface(legacyClient->xdgShell, surface.get());
     Test::renderAndWaitForShown(legacyClient->shm, surface.get(), QSize(100, 100), Qt::cyan);
-    QSignalSpy firstEnteredSpy(legacyKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    QSignalSpy firstEnteredSpy(legacyKeyboard.get(), &Test::WlKeyboard::enter);
     QVERIFY(firstEnteredSpy.wait());
 
     auto textInputV3 = std::make_unique<Test::TextInputV3>();
@@ -1007,10 +1005,9 @@ void InputMethodTest::testSendRepeatInfo()
     QVERIFY(kwinApp()->inputMethod()->isActive());
     QVERIFY(inputMethodActivateSpy.wait());
     auto *context = Test::inputMethod()->context();
-    std::unique_ptr<KWayland::Client::Keyboard> keyboardGrab(new KWayland::Client::Keyboard);
-    keyboardGrab->setup(zwp_input_method_context_v1_grab_keyboard(context));
+    auto keyboardGrab = std::make_unique<Test::WlKeyboard>(zwp_input_method_context_v1_grab_keyboard(context));
 
-    QSignalSpy keygrabRepeatSpy(keyboardGrab.get(), &KWayland::Client::Keyboard::keyRepeatChanged);
+    QSignalSpy keygrabRepeatSpy(keyboardGrab.get(), &Test::WlKeyboard::repeatInfo);
     // Wait for initial modifiers update
     QVERIFY(keygrabRepeatSpy.wait());
     QVERIFY(keyboardGrab->isKeyRepeatEnabled());
@@ -1030,17 +1027,17 @@ void InputMethodTest::testSendRepeatInfoV10()
     client->seat = new KWayland::Client::Seat;
     client->seat->setup(wlSeat);
     QVERIFY(Test::waitForWaylandKeyboard(client->seat));
-    auto keyboard = std::unique_ptr<KWayland::Client::Keyboard>(client->seat->createKeyboard());
-    auto *wlKeyboard = static_cast<wl_keyboard *>(*keyboard);
+    auto keyboard = std::make_unique<Test::WlKeyboard>(wl_seat_get_keyboard(wlSeat));
+    auto *wlKeyboard = keyboard->object();
     QVERIFY(wl_proxy_get_version(reinterpret_cast<wl_proxy *>(wlKeyboard)) == seatInterface.version);
-    QSignalSpy keyrepeatSpy(keyboard.get(), &KWayland::Client::Keyboard::keyRepeatChanged);
+    QSignalSpy keyrepeatSpy(keyboard.get(), &Test::WlKeyboard::repeatInfo);
     // Wait for initial modifiers update
     QVERIFY(keyrepeatSpy.wait());
     QVERIFY(!keyboard->isKeyRepeatEnabled());
     auto surface = Test::createSurface(client->compositor);
     auto shellSurface = Test::createXdgToplevelSurface(client->xdgShell, surface.get());
     Test::renderAndWaitForShown(client->shm, surface.get(), QSize(100, 100), Qt::cyan);
-    QSignalSpy firstEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    QSignalSpy firstEnteredSpy(keyboard.get(), &Test::WlKeyboard::enter);
     QVERIFY(firstEnteredSpy.wait());
 
     auto textInputV3 = std::make_unique<Test::TextInputV3>();
@@ -1056,10 +1053,9 @@ void InputMethodTest::testSendRepeatInfoV10()
     QVERIFY(kwinApp()->inputMethod()->isActive());
     QVERIFY(inputMethodActivateSpy.wait());
     auto *context = Test::inputMethod()->context();
-    std::unique_ptr<KWayland::Client::Keyboard> keyboardGrab(new KWayland::Client::Keyboard);
-    keyboardGrab->setup(zwp_input_method_context_v1_grab_keyboard(context));
+    auto keyboardGrab = std::make_unique<Test::WlKeyboard>(zwp_input_method_context_v1_grab_keyboard(context));
 
-    QSignalSpy keygrabRepeatSpy(keyboardGrab.get(), &KWayland::Client::Keyboard::keyRepeatChanged);
+    QSignalSpy keygrabRepeatSpy(keyboardGrab.get(), &Test::WlKeyboard::repeatInfo);
     // Wait for initial modifiers update
     QVERIFY(keygrabRepeatSpy.wait());
 
