@@ -77,7 +77,7 @@ std::unique_ptr<DrmPipelineLayer> EglGbmBackend::createDrmPlaneLayer(DrmGpu *gpu
 
 std::unique_ptr<DrmOutputLayer> EglGbmBackend::createLayer(DrmVirtualOutput *output)
 {
-    return std::make_unique<VirtualEglGbmLayer>(this, output);
+    return std::make_unique<VirtualDrmEglLayer>(this, output);
 }
 
 } // namespace KWin
