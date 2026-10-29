@@ -10,9 +10,9 @@
 #include "core/drmdevice.h"
 #include "core/gbmgraphicsbufferallocator.h"
 #include "core/renderdevice.h"
-#include "opengl/eglswapchain.h"
 #include "opengl/glrendertimequery.h"
 #include "opengl/glutils.h"
+#include "swapchain.h"
 #include "utils/vsyncsource.h"
 #include "virtual_backend.h"
 #include "virtual_logging.h"
@@ -51,7 +51,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame(OutputFrame
             .software = false,
             .scanout = false,
         };
-        m_swapchain = EglSwapchain::create(m_backend->renderDevice(), options);
+        m_swapchain = Swapchain::create(m_backend->renderDevice()->allocator(), options);
         if (!m_swapchain) {
             return std::nullopt;
         }
@@ -62,12 +62,17 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame(OutputFrame
         return std::nullopt;
     }
 
-    m_current->framebuffer()->colorAttachment()->setContentTransform(bufferTransform().combine(OutputTransform::FlipY));
+    auto fbo = m_backend->openglContext()->importDmaBufAsFbo(m_current->buffer());
+    if (!fbo) {
+        return std::nullopt;
+    }
+
+    fbo->colorAttachment()->setContentTransform(bufferTransform().combine(OutputTransform::FlipY));
 
     m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_current->framebuffer()),
+        .renderTarget = RenderTarget(fbo),
         .repaint = s_bufferAgeEnabled ? m_damageJournal.accumulate(m_current->age(), Region::infinite()) : Region::infinite(),
     };
 }
@@ -79,7 +84,7 @@ bool VirtualEglLayer::endFrame(const Region &renderedDeviceRegion, const Region 
         frame->addRenderTimeQuery(std::move(m_query));
     }
     glFlush(); // flush pending rendering commands.
-    m_swapchain->release(m_current, FileDescriptor{});
+    m_swapchain->release(m_current.get(), FileDescriptor{});
     m_damageJournal.add(damagedDeviceRegion);
     return true;
 }
@@ -97,7 +102,10 @@ void VirtualEglLayer::releaseBuffers()
 
 GLTexture *VirtualEglLayer::texture() const
 {
-    return m_current ? m_current->texture().get() : nullptr;
+    if (!m_current) {
+        return nullptr;
+    }
+    return m_backend->openglContext()->importDmaBufAsTexture(m_current->buffer());
 }
 
 VirtualEglBackend::VirtualEglBackend(VirtualBackend *b, RenderDevice *renderDevice)
