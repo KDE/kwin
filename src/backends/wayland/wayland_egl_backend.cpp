@@ -12,10 +12,10 @@
 #include "core/drmdevice.h"
 #include "core/gbmgraphicsbufferallocator.h"
 #include "core/renderdevice.h"
-#include "opengl/eglswapchain.h"
 #include "opengl/glrendertimequery.h"
 #include "opengl/glutils.h"
 #include "scene/surfaceitem_wayland.h"
+#include "swapchain.h"
 #include "wayland-client/linuxdmabuf.h"
 #include "wayland/surface.h"
 #include "wayland_backend.h"
@@ -48,11 +48,6 @@ WaylandEglLayer::~WaylandEglLayer()
 {
 }
 
-GLFramebuffer *WaylandEglLayer::fbo() const
-{
-    return m_buffer->framebuffer();
-}
-
 std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame(OutputFrame *frame)
 {
     if (!m_backend->openglContext()->makeCurrent()) {
@@ -81,7 +76,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame(OutputFrame
                 .software = false,
                 .scanout = false,
             };
-            m_swapchain = EglSwapchain::create(m_backend->renderDevice(), options);
+            m_swapchain = Swapchain::create(m_backend->renderDevice()->allocator(), options);
             if (m_swapchain) {
                 break;
             }
@@ -97,20 +92,25 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame(OutputFrame
         return std::nullopt;
     }
 
+    auto fbo = m_backend->openglContext()->importDmaBufAsFbo(m_buffer->buffer());
+    if (!fbo) {
+        return std::nullopt;
+    }
+
     // The picture is composed for the display as the user sees it, while the buffer has the
     // size the panel is driven at, so a rotated display has to be turned on the way in. The
     // journal is about where things changed, and after a turn its entries describe somewhere
     // else entirely.
     const OutputTransform contentTransform = bufferTransform().combine(OutputTransform::FlipY);
-    if (m_buffer->framebuffer()->colorAttachment()->contentTransform() != contentTransform) {
+    if (fbo->colorAttachment()->contentTransform() != contentTransform) {
         m_damageJournal.clear();
     }
-    m_buffer->framebuffer()->colorAttachment()->setContentTransform(contentTransform);
+    fbo->colorAttachment()->setContentTransform(contentTransform);
 
     const Region repair = bufferAgeEnabled ? m_damageJournal.accumulate(m_buffer->age(), Region::infinite()) : Region::infinite();
     m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_buffer->framebuffer(), m_color),
+        .renderTarget = RenderTarget(fbo, m_color),
         .repaint = repair,
     };
 }
@@ -129,10 +129,10 @@ bool WaylandEglLayer::endFrame(const Region &renderedDeviceRegion, const Region 
     // sees it. What the host reads is the buffer, which a rotated display fills turned, so
     // the region has to be turned with it - the journal stays in the picture's own
     // coordinates, because that is what it is compared against next time.
-    const auto mapping = m_buffer->framebuffer()->colorAttachment()->contentTransform().combine(OutputTransform::FlipY);
+    const auto mapping = bufferTransform();
     const QSize pictureSize = mapping.map(m_swapchain->size());
     setBuffer(m_buffer->buffer(), mapping.map(damagedDeviceRegion & Rect(QPoint(), pictureSize), pictureSize));
-    m_swapchain->release(m_buffer, releaseFence.takeFileDescriptor());
+    m_swapchain->release(m_buffer.get(), releaseFence.takeFileDescriptor());
 
     m_damageJournal.add(damagedDeviceRegion);
     return true;
@@ -194,7 +194,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame(Outpu
                 .software = false,
                 .scanout = false,
             };
-            m_swapchain = EglSwapchain::create(m_backend->renderDevice(), options);
+            m_swapchain = Swapchain::create(m_backend->renderDevice()->allocator(), options);
             if (m_swapchain) {
                 break;
             }
@@ -209,13 +209,18 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame(Outpu
         return std::nullopt;
     }
 
+    auto fbo = m_backend->openglContext()->importDmaBufAsFbo(m_buffer->buffer());
+    if (!fbo) {
+        return std::nullopt;
+    }
+
     // The hotspot is handed over turned with the display, so the picture it points into has
     // to be turned as well - and on a rotated screen the cursor has to stand upright anyway.
-    m_buffer->framebuffer()->colorAttachment()->setContentTransform(bufferTransform().combine(OutputTransform::FlipY));
+    fbo->colorAttachment()->setContentTransform(bufferTransform().combine(OutputTransform::FlipY));
 
     m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_buffer->framebuffer()),
+        .renderTarget = RenderTarget(fbo),
         .repaint = Region::infinite(),
     };
 }
@@ -235,7 +240,7 @@ bool WaylandEglCursorLayer::endFrame(const Region &renderedDeviceRegion, const R
     static_cast<WaylandOutput *>(m_output.get())->cursor()->update(buffer, m_buffer->buffer()->size() / m_output->scale(), (hotspot() / m_output->scale()).toPoint());
 
     EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
-    m_swapchain->release(m_buffer, releaseFence.takeFileDescriptor());
+    m_swapchain->release(m_buffer.get(), releaseFence.takeFileDescriptor());
     return true;
 }
 

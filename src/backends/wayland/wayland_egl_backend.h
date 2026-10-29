@@ -21,10 +21,8 @@ struct wl_buffer;
 namespace KWin
 {
 
-class EglSwapchainSlot;
-class EglSwapchain;
-class GLFramebuffer;
-class GraphicsBufferAllocator;
+class SwapchainSlot;
+class Swapchain;
 class GLRenderTimeQuery;
 
 namespace Wayland
@@ -40,7 +38,6 @@ public:
     WaylandEglLayer(WaylandOutput *output, WaylandEglBackend *backend, OutputLayerType type, int zpos);
     ~WaylandEglLayer() override;
 
-    GLFramebuffer *fbo() const;
     std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
     bool endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame) override;
     bool earlyScanoutChecks() override;
@@ -50,8 +47,8 @@ public:
 
 private:
     DamageJournal m_damageJournal;
-    std::shared_ptr<EglSwapchain> m_swapchain;
-    std::shared_ptr<EglSwapchainSlot> m_buffer;
+    std::shared_ptr<Swapchain> m_swapchain;
+    std::shared_ptr<SwapchainSlot> m_buffer;
     std::unique_ptr<GLRenderTimeQuery> m_query;
     WaylandEglBackend *const m_backend;
 
@@ -73,8 +70,8 @@ public:
 
 private:
     WaylandEglBackend *m_backend;
-    std::shared_ptr<EglSwapchain> m_swapchain;
-    std::shared_ptr<EglSwapchainSlot> m_buffer;
+    std::shared_ptr<Swapchain> m_swapchain;
+    std::shared_ptr<SwapchainSlot> m_buffer;
     std::unique_ptr<GLRenderTimeQuery> m_query;
 };
 
