@@ -19,8 +19,8 @@
 namespace KWin
 {
 
-class EglSwapchain;
-class EglSwapchainSlot;
+class Swapchain;
+class SwapchainSlot;
 class GLTexture;
 class EglGbmBackend;
 class DrmVirtualOutput;
@@ -41,15 +41,15 @@ public:
 private:
     bool earlyScanoutChecks() override;
     bool importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame) override;
-    std::shared_ptr<EglSwapchain> createSwapchain() const;
-    bool doesSwapchainFit(EglSwapchain *swapchain) const;
+    std::shared_ptr<Swapchain> createSwapchain() const;
+    bool doesSwapchainFit(Swapchain *swapchain) const;
 
     GraphicsBufferRef m_scanoutBuffer;
     DamageJournal m_damageJournal;
     DamageJournal m_oldDamageJournal;
-    std::shared_ptr<EglSwapchain> m_swapchain;
-    std::shared_ptr<EglSwapchain> m_oldSwapchain;
-    std::shared_ptr<EglSwapchainSlot> m_currentSlot;
+    std::shared_ptr<Swapchain> m_swapchain;
+    std::shared_ptr<Swapchain> m_oldSwapchain;
+    std::shared_ptr<SwapchainSlot> m_currentSlot;
     std::unique_ptr<GLRenderTimeQuery> m_query;
 
     EglGbmBackend *const m_eglBackend;
