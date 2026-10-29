@@ -17,12 +17,6 @@ RenderTarget::RenderTarget(GLFramebuffer *fbo, const std::shared_ptr<ColorDescri
 {
 }
 
-RenderTarget::RenderTarget(QImage *image, const std::shared_ptr<ColorDescription> &colorDescription)
-    : m_image(image)
-    , m_colorDescription(colorDescription)
-{
-}
-
 QSize RenderTarget::transformedSize() const
 {
     return m_transform.map(size());
@@ -35,13 +29,7 @@ Rect RenderTarget::transformedRect() const
 
 QSize RenderTarget::size() const
 {
-    if (m_framebuffer) {
-        return m_framebuffer->size();
-    } else if (m_image) {
-        return m_image->size();
-    } else {
-        Q_UNREACHABLE();
-    }
+    return m_framebuffer->size();
 }
 
 OutputTransform RenderTarget::transform() const
@@ -57,11 +45,6 @@ GLFramebuffer *RenderTarget::framebuffer() const
 GLTexture *RenderTarget::texture() const
 {
     return m_framebuffer->colorAttachment();
-}
-
-QImage *RenderTarget::image() const
-{
-    return m_image;
 }
 
 const std::shared_ptr<ColorDescription> &RenderTarget::colorDescription() const
