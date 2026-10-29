@@ -21,8 +21,6 @@ namespace KWin
 
 class DrmDevice;
 class EglContext;
-class EglSwapchain;
-class EglSwapchainSlot;
 class GraphicsBuffer;
 class OutputFrame;
 class RenderDevice;
