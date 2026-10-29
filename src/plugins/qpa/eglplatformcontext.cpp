@@ -50,14 +50,6 @@ EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, const std::share
 
 EGLPlatformContext::~EGLPlatformContext()
 {
-    if (!m_eglContext) {
-        return;
-    }
-    if (!m_renderTargets.empty() || !m_zombieRenderTargets.empty()) {
-        (void)m_eglContext->makeCurrent();
-        m_renderTargets.clear();
-        m_zombieRenderTargets.clear();
-    }
 }
 
 bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
@@ -67,14 +59,10 @@ bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
     }
     const bool ok = m_eglContext->makeCurrent();
     if (!ok) {
-        m_renderTargets.clear();
-        m_zombieRenderTargets.clear();
         m_current = nullptr;
         m_eglContext.reset();
         return false;
     }
-
-    m_zombieRenderTargets.clear();
 
     if (surface->surface()->surfaceClass() == QSurface::Window) {
         Window *window = static_cast<Window *>(surface);
@@ -88,34 +76,13 @@ bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
             return false;
         }
         GraphicsBuffer *buffer = m_currentSlot->buffer();
-
-        auto it = m_renderTargets.find(buffer);
-        if (it != m_renderTargets.end()) {
-            m_current = it->second;
-        } else {
-            std::shared_ptr<GLTexture> texture = m_eglContext->importDmaBufAsTexture(*buffer->dmabufAttributes());
-            if (!texture) {
-                return false;
-            }
-
-            std::unique_ptr<GLFramebuffer> fbo = std::make_unique<GLFramebuffer>(texture.get(), GLFramebuffer::CombinedDepthStencil);
-            if (!fbo->valid()) {
-                return false;
-            }
-
-            auto target = std::make_shared<EGLRenderTarget>(buffer, std::move(fbo), std::move(texture));
-            m_renderTargets[buffer] = target;
-            QObject::connect(buffer, &QObject::destroyed, this, [this, buffer]() {
-                if (auto it = m_renderTargets.find(buffer); it != m_renderTargets.end()) {
-                    m_zombieRenderTargets.push_back(std::move(it->second));
-                    m_renderTargets.erase(it);
-                }
-            });
-
-            m_current = target;
+        GLFramebuffer *fbo = m_eglContext->importDmaBufAsFbo(buffer);
+        if (!fbo) {
+            return false;
         }
+        m_current = fbo;
 
-        glBindFramebuffer(GL_FRAMEBUFFER, m_current->fbo->handle());
+        glBindFramebuffer(GL_FRAMEBUFFER, m_current->handle());
     }
 
     return true;
@@ -158,15 +125,15 @@ void EGLPlatformContext::swapBuffers(QPlatformSurface *surface)
         }
 
         const auto currentSlot = std::exchange(m_currentSlot, nullptr);
-        const auto current = std::exchange(m_current, nullptr);
+        m_current = nullptr;
 
         EGLNativeFence fence(EglContext::currentContext()->displayObject());
         currentSlot->releasePoint()->addReleaseFence(fence.fileDescriptor());
 
         internalWindow->present(InternalWindowFrame{
-            .buffer = current->buffer,
+            .buffer = currentSlot->buffer(),
             .syncFd = fence.takeFileDescriptor(),
-            .bufferDamage = Rect(QPoint(0, 0), current->buffer->size()),
+            .bufferDamage = Rect(QPoint(0, 0), currentSlot->buffer()->size()),
             .bufferTransform = OutputTransform::FlipY,
         });
     }
@@ -176,7 +143,7 @@ GLuint EGLPlatformContext::defaultFramebufferObject(QPlatformSurface *surface) c
 {
     if (surface->surface()->surfaceClass() == QSurface::Window) {
         if (m_current) {
-            return m_current->fbo->handle();
+            return m_current->handle();
         }
         qCDebug(KWIN_QPA) << "No default framebuffer object for internal window";
     }
@@ -247,13 +214,8 @@ EGLDisplay EGLPlatformContext::display() const
 void EGLPlatformContext::invalidateContext()
 {
     m_markedInvalid = true;
-    if (m_eglContext) {
-        (void)m_eglContext->makeCurrent();
-        m_renderTargets.clear();
-        m_zombieRenderTargets.clear();
-        m_eglContext.reset();
-    }
     m_currentSlot.reset();
+    m_eglContext.reset();
 }
 
 } // namespace QPA
