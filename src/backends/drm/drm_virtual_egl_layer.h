@@ -27,11 +27,11 @@ class DrmVirtualOutput;
 class GLRenderTimeQuery;
 class SurfaceInterface;
 
-class VirtualEglGbmLayer : public DrmOutputLayer
+class VirtualDrmEglLayer : public DrmOutputLayer
 {
 public:
-    VirtualEglGbmLayer(EglGbmBackend *eglBackend, DrmVirtualOutput *output);
-    ~VirtualEglGbmLayer() override;
+    VirtualDrmEglLayer(EglGbmBackend *eglBackend, DrmVirtualOutput *output);
+    ~VirtualDrmEglLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
     bool endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame) override;
@@ -41,14 +41,14 @@ public:
 private:
     bool earlyScanoutChecks() override;
     bool importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame) override;
-    std::shared_ptr<EglSwapchain> createGbmSwapchain() const;
-    bool doesGbmSwapchainFit(EglSwapchain *swapchain) const;
+    std::shared_ptr<EglSwapchain> createSwapchain() const;
+    bool doesSwapchainFit(EglSwapchain *swapchain) const;
 
     GraphicsBufferRef m_scanoutBuffer;
     DamageJournal m_damageJournal;
     DamageJournal m_oldDamageJournal;
-    std::shared_ptr<EglSwapchain> m_gbmSwapchain;
-    std::shared_ptr<EglSwapchain> m_oldGbmSwapchain;
+    std::shared_ptr<EglSwapchain> m_swapchain;
+    std::shared_ptr<EglSwapchain> m_oldSwapchain;
     std::shared_ptr<EglSwapchainSlot> m_currentSlot;
     std::unique_ptr<GLRenderTimeQuery> m_query;
 
