@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1751347 2026-10-28 01:56:52Z scripty $
+# $Id: kwin.po 1751412 2026-10-29 01:53:58Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-28 01:02+0000\n"
+"POT-Creation-Date: 2026-10-29 00:55+0000\n"
 "PO-Revision-Date: 2026-10-20 12:22+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -4446,30 +4446,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(se ne odziva)"
 
-#: workspace.cpp:1383
+#: workspace.cpp:1392
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Vgrajen zaslon"
 
-#: workspace.cpp:1396
+#: workspace.cpp:1405
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1406
+#: workspace.cpp:1415
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1409
+#: workspace.cpp:1418
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: workspace.cpp:1878
+#: workspace.cpp:1887
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
