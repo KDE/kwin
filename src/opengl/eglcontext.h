@@ -26,6 +26,7 @@ class IndexBuffer;
 class GLPlatform;
 class GLFramebuffer;
 struct DmaBufAttributes;
+class GraphicsBuffer;
 
 // GL_ARB_robustness / GL_EXT_robustness
 using glGetGraphicsResetStatus_func = GLenum (*)();
@@ -46,6 +47,8 @@ public:
     [[nodiscard]] bool makeCurrent();
     void doneCurrent() const;
     std::shared_ptr<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes) const;
+    GLTexture *importDmaBufAsTexture(GraphicsBuffer *buffer);
+    GLFramebuffer *importDmaBufAsFbo(GraphicsBuffer *buffer);
 
     EglDisplay *displayObject() const;
     ::EGLContext handle() const;
@@ -179,6 +182,9 @@ private:
     bool m_failed = false;
     // for GL_EXT_window_rectangles
     QList<int> m_windowRectangles;
+
+    std::unordered_map<GraphicsBuffer *, std::shared_ptr<GLTexture>> m_importedTextures;
+    std::unordered_map<GraphicsBuffer *, std::unique_ptr<GLFramebuffer>> m_importedFbos;
 };
 
 }
