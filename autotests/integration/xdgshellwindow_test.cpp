@@ -26,7 +26,6 @@
 #include <KDecoration3/Decoration>
 #include <KDecoration3/DecorationSettings>
 
-#include <KWayland/Client/appmenu.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/output.h>
@@ -925,9 +924,9 @@ void TestXdgShellWindow::testAppMenu()
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
-    std::unique_ptr<KWayland::Client::AppMenu> menu(Test::waylandAppMenuManager()->create(surface.get()));
+    QtWayland::org_kde_kwin_appmenu menu(Test::waylandAppMenuManager()->create(*surface));
     QSignalSpy spy(window, &Window::hasApplicationMenuChanged);
-    menu->setAddress("service.name", "object/path");
+    menu.set_address("service.name", "object/path");
     spy.wait();
     QCOMPARE(window->hasApplicationMenu(), true);
     QCOMPARE(window->applicationMenuServiceName(), QString("service.name"));
