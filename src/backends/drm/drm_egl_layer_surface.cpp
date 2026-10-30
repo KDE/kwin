@@ -229,15 +229,9 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     };
     if (m_gpu->renderDevice() == m_eglBackend->renderDevice()) {
         return doTestFormats(sortedFormats, MultiGpuImportMode::None);
+    } else {
+        return doTestFormats(sortedFormats, MultiGpuImportMode::GpuCopy);
     }
-    // special case, we're using different display devices but the same render device
-    const auto device = m_gpu->renderDevice();
-    if (device && !device->eglDisplay()->renderNode().isEmpty() && device->eglDisplay()->renderNode() == m_eglBackend->eglDisplayObject()->renderNode()) {
-        if (auto surface = doTestFormats(sortedFormats, MultiGpuImportMode::None)) {
-            return surface;
-        }
-    }
-    return doTestFormats(sortedFormats, MultiGpuImportMode::GpuCopy);
 }
 
 std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, uint32_t format, const ModifierList &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
