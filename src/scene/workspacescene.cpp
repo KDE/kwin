@@ -712,7 +712,9 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QPoint &devic
     RenderViewport viewport(painted_delegate->viewport(), painted_delegate->scale(), renderTarget, deviceOffset);
     auto &renderer = m_renderers[painted_delegate->renderDevice()];
 
-    renderer->beginFrame(renderTarget, viewport);
+    if (!renderer->beginFrame(renderTarget, viewport)) {
+        return;
+    }
 
     if (!effects->paintScreen(renderTarget, viewport, m_paintContext.mask, deviceRegion, painted_screen)) {
         return;

@@ -81,7 +81,7 @@ public:
 
     std::unique_ptr<Atlas> createAtlas(const QList<QImage> &sprites) override;
 
-    void beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport) override;
+    bool beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport) override;
     void endFrame() override;
 
     void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion) override;
@@ -96,6 +96,7 @@ private:
     bool maybeCreateSingleRenderNode(Item *item, RenderContext *context, bool hole);
     void visualizeFractional(const RenderViewport &viewport, const Region &logicalRegion, const RenderContext &renderContext);
 
+    const std::shared_ptr<EglContext> m_context;
     bool m_blendingEnabled = false;
     std::unordered_set<std::shared_ptr<SyncReleasePoint>> m_releasePoints;
 

@@ -18,14 +18,6 @@ ItemRenderer::~ItemRenderer()
 {
 }
 
-void ItemRenderer::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)
-{
-}
-
-void ItemRenderer::endFrame()
-{
-}
-
 void ItemRenderer::setLayerDebugging(bool enable)
 {
 }
