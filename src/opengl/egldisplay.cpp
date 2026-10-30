@@ -146,7 +146,6 @@ EglDisplay::EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions
     , m_renderDevNode(devIdForFileName(m_renderNode))
     , m_drmDevice(drmDevice)
     , m_type(hasExtension("EGL_EXT_device_query") ? checkDeviceType(display) : std::nullopt)
-    , m_supportsBufferAge(extensions.contains(QByteArrayLiteral("EGL_EXT_buffer_age")) && qgetenv("KWIN_USE_BUFFER_AGE") != "0")
     , m_supportsNativeFence(extensions.contains(QByteArrayLiteral("EGL_ANDROID_native_fence_sync"))
                             && extensions.contains(QByteArrayLiteral("EGL_KHR_wait_sync")))
     , m_isSoftwareRenderer(m_type ? *m_type == GpuType::Software : m_clientExtensions.contains("EGL_EXT_device_query") && checkSoftwareDevice(display))
@@ -210,11 +209,6 @@ static bool checkExtension(const QByteArrayView extensions, const QByteArrayView
 QString EglDisplay::renderNode() const
 {
     return m_renderNode;
-}
-
-bool EglDisplay::supportsBufferAge() const
-{
-    return m_supportsBufferAge;
 }
 
 bool EglDisplay::supportsNativeFence() const
