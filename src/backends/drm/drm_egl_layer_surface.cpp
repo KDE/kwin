@@ -35,10 +35,6 @@
 namespace KWin
 {
 
-static const ModifierList linearModifier = {DRM_FORMAT_MOD_LINEAR};
-static const ModifierList implicitModifier = {DRM_FORMAT_MOD_INVALID};
-static const QList<uint32_t> cpuCopyFormats = {DRM_FORMAT_ARGB8888, DRM_FORMAT_XRGB8888};
-
 static const bool bufferAgeEnabled = environmentVariableBoolValue("KWIN_USE_BUFFER_AGE").value_or(true);
 static const bool s_forceMGPUSync = environmentVariableBoolValue("KWIN_DRM_FORCE_GL_FINISH_MGPU_COPY").value_or(false);
 static const bool s_forcePresentSync = environmentVariableBoolValue("KWIN_DRM_FORCE_GL_FINISH_PRESENT").value_or(false);
@@ -207,19 +203,12 @@ bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, con
         // TODO requiredAlphaBits could be a bit more conservative with reallocations?
         return false;
     }
-    if (surface->bufferTarget == BufferTarget::Dumb) {
-        return formats.contains(surface->importDumbSwapchain->format());
-    }
-    switch (surface->importMode) {
-    case MultiGpuImportMode::None:
+    if (surface->importMode == MultiGpuImportMode::None && surface->bufferTarget == BufferTarget::Normal) {
         return formats.containsFormat(surface->swapchain->format(), surface->swapchain->modifier());
-    case MultiGpuImportMode::DumbBuffer:
-        return formats.contains(surface->importDumbSwapchain->format());
-    case MultiGpuImportMode::GpuCopy:
+    } else {
         return !surface->importSwapchain->needsRecreation()
             && formats.containsFormat(surface->importSwapchain->format(), surface->importSwapchain->modifier());
     }
-    Q_UNREACHABLE();
 }
 
 std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, const FormatModifierMap &formats, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
@@ -278,25 +267,22 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
 
 std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, uint32_t format, const ModifierList &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
 {
-    const bool cpuCopy = importMode == MultiGpuImportMode::DumbBuffer || bufferTarget == BufferTarget::Dumb;
     auto ret = std::make_unique<Surface>();
     ModifierList renderModifiers = m_eglBackend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats()[format];
-    if (cpuCopy) {
-        if (!cpuCopyFormats.contains(format)) {
+
+    const bool cpuCopy = importMode == MultiGpuImportMode::DumbBuffer || bufferTarget == BufferTarget::Dumb;
+    if (cpuCopy || importMode == MultiGpuImportMode::GpuCopy) {
+        if (!m_eglBackend->renderDevice() || !m_gpu->renderDevice()) {
             return nullptr;
         }
-        ret->importDumbSwapchain = std::make_unique<QPainterSwapchain>(m_gpu->drmDevice()->allocator(), size, format, true);
-        if (!ret->importDumbSwapchain) {
-            return nullptr;
-        }
-    } else if (importMode == MultiGpuImportMode::GpuCopy) {
-        if (!m_eglBackend->renderDevice()
-            || !m_gpu->renderDevice()
-            || m_eglBackend->renderDevice()->isSoftwareDevice()
-            || m_gpu->renderDevice()->isSoftwareDevice()) {
-            return nullptr;
-        }
-        auto copy = MultiGpuSwapchain::createForScanout(m_eglBackend->renderDevice(), m_gpu->drmDevice(), format, renderModifiers, size, FormatModifierMap{{format, modifiers}});
+        GraphicsBufferOptions options{
+            .size = size,
+            .format = format,
+            .modifiers = renderModifiers,
+            .software = cpuCopy,
+            .scanout = true,
+        };
+        auto copy = MultiGpuSwapchain::createForScanout(m_eglBackend->renderDevice(), m_gpu->drmDevice(), options, FormatModifierMap{{format, modifiers}});
         if (!copy) {
             return nullptr;
         }
@@ -359,10 +345,34 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *
 
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surface, SwapchainSlot *slot, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const
 {
-    if (surface->bufferTarget == BufferTarget::Dumb || surface->importMode == MultiGpuImportMode::DumbBuffer) {
-        return importWithCpu(surface, slot, frame);
-    } else if (surface->importMode == MultiGpuImportMode::GpuCopy) {
-        return importWithCopy(surface, slot, std::move(readFence), frame, damagedDeviceRegion);
+    if (surface->importSwapchain) {
+        const auto renderDevice = m_gpu->renderDevice();
+        // older versions of the NVidia proprietary driver support neither implicit sync nor EGL_ANDROID_native_fence_sync
+        if (!readFence.isValid() || !renderDevice->eglDisplay()->supportsNativeFence() || s_forceMGPUSync) {
+            glFinish();
+        }
+
+        // The source texture transform looks as follows: output transform + flip-y transform. The
+        // flip-y transform is added by the render backend to handle the OpenGL render target origin
+        // being in the bottom-left corner.
+        //
+        // As is, without the flip-y transform, the top-left corner of the graphics buffer will
+        // map to the bottom-left corner of the render target and the final image will look upside down.
+        //
+        // .combine(FlipY) undoes the flip-y transform in "output transform + flip-y" so we only end
+        // with the output transform and the bufferDamage has its origin in the top-left corner rather
+        // than in the bottom-left corner.
+        const OutputTransform mapping = surface->transformation.combine(OutputTransform::FlipY);
+        const QSize orientedSize = mapping.map(slot->buffer()->size());
+        const Region bufferDamage = mapping.map(damagedDeviceRegion, orientedSize);
+
+        auto imported = surface->importSwapchain->copyRgbBuffer(slot->buffer(), bufferDamage, std::move(readFence), frame, slot->releasePoint());
+        if (!imported) {
+            // this is probably caused by a GPU reset, let's not take any chances
+            surface->needsRecreation = true;
+            return nullptr;
+        }
+        return m_gpu->importBuffer(imported->buffer, std::move(imported->sync));
     } else {
         const auto ret = m_gpu->importBuffer(slot->buffer(), std::move(readFence));
         if (!ret) {
@@ -370,84 +380,6 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surfac
         }
         return ret;
     }
-}
-
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCopy(Surface *surface, SwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const
-{
-    Q_ASSERT(surface->importSwapchain);
-
-    const auto renderDevice = m_gpu->renderDevice();
-    // older versions of the NVidia proprietary driver support neither implicit sync nor EGL_ANDROID_native_fence_sync
-    if (!readFence.isValid() || !renderDevice->eglDisplay()->supportsNativeFence() || s_forceMGPUSync) {
-        glFinish();
-    }
-
-    // The source texture transform looks as follows: output transform + flip-y transform. The
-    // flip-y transform is added by the render backend to handle the OpenGL render target origin
-    // being in the bottom-left corner.
-    //
-    // As is, without the flip-y transform, the top-left corner of the graphics buffer will
-    // map to the bottom-left corner of the render target and the final image will look upside down.
-    //
-    // .combine(FlipY) undoes the flip-y transform in "output transform + flip-y" so we only end
-    // with the output transform and the bufferDamage has its origin in the top-left corner rather
-    // than in the bottom-left corner.
-    const OutputTransform mapping = surface->transformation.combine(OutputTransform::FlipY);
-    const QSize orientedSize = mapping.map(source->buffer()->size());
-    const Region bufferDamage = mapping.map(damagedDeviceRegion, orientedSize);
-    auto imported = surface->importSwapchain->copyRgbBuffer(source->buffer(), bufferDamage, std::move(readFence), frame, source->releasePoint());
-    if (!imported) {
-        // this is probably caused by a GPU reset, let's not take any chances
-        surface->needsRecreation = true;
-        return nullptr;
-    }
-    return m_gpu->importBuffer(imported->buffer, std::move(imported->sync));
-}
-
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCpu(Surface *surface, SwapchainSlot *source, OutputFrame *frame) const
-{
-    std::unique_ptr<CpuRenderTimeQuery> copyTime;
-    if (frame) {
-        copyTime = std::make_unique<CpuRenderTimeQuery>();
-    }
-    Q_ASSERT(surface->importDumbSwapchain);
-    const auto slot = surface->importDumbSwapchain->acquire();
-    if (!slot) {
-        qCWarning(KWIN_DRM) << "EglGbmLayerSurface::importWithCpu: failed to get a target dumb buffer";
-        return nullptr;
-    }
-    const auto size = source->buffer()->size();
-    const qsizetype srcStride = 4 * size.width();
-
-    const auto &context = surface->context;
-    auto fbo = context->importDmaBufAsFbo(surface->currentSlot->buffer());
-
-    GLFramebuffer::pushFramebuffer(fbo);
-    QImage *const dst = slot->view()->image();
-    if (dst->bytesPerLine() == srcStride) {
-        context->glReadnPixels(0, 0, dst->width(), dst->height(), GL_BGRA, GL_UNSIGNED_BYTE, dst->sizeInBytes(), dst->bits());
-    } else {
-        // there's padding, need to copy line by line
-        if (surface->cpuCopyCache.size() != dst->size()) {
-            surface->cpuCopyCache = QImage(dst->size(), QImage::Format_RGBA8888);
-        }
-        context->glReadnPixels(0, 0, dst->width(), dst->height(), GL_BGRA, GL_UNSIGNED_BYTE, surface->cpuCopyCache.sizeInBytes(), surface->cpuCopyCache.bits());
-        for (int i = 0; i < dst->height(); i++) {
-            std::memcpy(dst->scanLine(i), surface->cpuCopyCache.scanLine(i), srcStride);
-        }
-    }
-    GLFramebuffer::popFramebuffer();
-
-    const auto ret = m_gpu->importBuffer(slot->buffer(), FileDescriptor{});
-    if (!ret) {
-        qCWarning(KWIN_DRM, "Failed to create a framebuffer: %s", strerror(errno));
-    }
-    surface->importDumbSwapchain->release(slot);
-    if (frame) {
-        copyTime->end();
-        frame->addRenderTimeQuery(std::move(copyTime));
-    }
-    return ret;
 }
 
 }

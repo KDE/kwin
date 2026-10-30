@@ -10,6 +10,7 @@
 #include "core/drmdevice.h"
 #include "core/gpumanager.h"
 #include "core/graphicsbuffer.h"
+#include "core/graphicsbufferview.h"
 #include "core/hostmemoryallocator.h"
 #include "core/renderbackend.h"
 #include "core/syncobjtimeline.h"
@@ -100,6 +101,13 @@ public:
     std::shared_ptr<EglContext> m_context;
     std::shared_ptr<Swapchain> m_swapchain;
     std::shared_ptr<SwapchainSlot> m_currentSlot;
+    QImage m_cpuCopyCache;
+
+private:
+    std::optional<MultiGpuSwapchain::Ret> cpuCopy(GraphicsBuffer *buffer,
+                                                  const Region &damage,
+                                                  OutputFrame *frame,
+                                                  const std::shared_ptr<SyncReleasePoint> &releasePoint);
 };
 
 std::optional<DrmFormat> MultiGpuSwapchain::chooseFormat(uint32_t inputFormat, const FormatModifierMap &srcFormats, const FormatModifierMap &dstFormats)
@@ -310,41 +318,76 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::createForSampling(RenderDe
 }
 
 std::optional<MultiGpuSwapchain::AllocationInfo> MultiGpuSwapchain::createForScanout(RenderDevice *sourceDevice, DrmDevice *targetDevice,
-                                                                                     uint32_t format, const ModifierList &modifiers,
-                                                                                     const QSize &size, const FormatModifierMap &importFormats)
+                                                                                     GraphicsBufferOptions options,
+                                                                                     const FormatModifierMap &importFormats)
 {
+    Q_ASSERT(options.scanout);
     RenderDevice *destination = GpuManager::self()->compatibleRenderDevice(targetDevice);
     if (sourceDevice->isInReset() || (destination && destination->isInReset())) {
         // avoid creating a suboptimal swapchain while in a reset
         return std::nullopt;
     }
 
-    if (!destination) {
-        // TODO this should fall back to CPU copy
+    if (!destination || options.software) {
+        options.software = true;
+        // CPU copy only supports EGL and 8 bits per color atm
+
+        const auto srcInfo = FormatInfo::get(options.format);
+        if (!srcInfo || srcInfo->bitsPerPixel != 32 || srcInfo->bitsPerColor != 8) {
+            return std::nullopt;
+        }
+        for (const auto &[format, modifiers] : importFormats.asKeyValueRange()) {
+            const auto info = FormatInfo::get(format);
+            if (!info
+                || info->bitsPerPixel != 32
+                || info->bitsPerColor != 8
+                || info->alphaBits != srcInfo->alphaBits
+                || !modifiers.contains(DRM_FORMAT_MOD_LINEAR)) {
+                continue;
+            }
+            options.format = format;
+            options.modifiers = {DRM_FORMAT_MOD_LINEAR};
+            options.render = true;
+
+            const auto restoreContext = qScopeGuard([ctx = EglContext::currentContext()]() {
+                if (ctx) {
+                    (void)ctx->makeCurrent();
+                }
+            });
+            auto context = sourceDevice->eglContext();
+            if (!context || !context->makeCurrent()) {
+                return std::nullopt;
+            }
+
+            auto swapchain = Swapchain::create(targetDevice->allocator(), options);
+            if (!swapchain) {
+                return std::nullopt;
+            }
+
+            auto copy = std::make_unique<EglMultiGpuCopy>(sourceDevice, std::move(swapchain), std::move(context));
+            return MultiGpuSwapchain::AllocationInfo{
+                .swapchain = std::make_unique<MultiGpuSwapchain>(std::move(copy), nullptr, options.format),
+                .importModifiers = sourceDevice->eglDisplay()->nonExternalOnlySupportedDrmFormats()[format],
+            };
+        }
         return std::nullopt;
     }
 
-    if (!sourceDevice->allImportableFormats().contains(format)) {
+    if (!sourceDevice->allImportableFormats().contains(options.format)) {
         // This should never happen
         return std::nullopt;
     }
 
-    GraphicsBufferOptions options{
-        .size = size,
-        .software = false,
-        .scanout = false,
-    };
-
     // The destination buffer must not be migrated, or scanout will fail.
     if (sourceDevice->isInternal()) {
-        auto retModifiers = destination->allImportableFormats()[format].intersected(modifiers);
+        auto retModifiers = destination->allImportableFormats()[options.format].intersected(options.modifiers);
         if (!retModifiers.isEmpty()) {
             // We can use the source buffer directly, since it's already in system memory.
             options.scanout = true;
-            auto copy = createCopy(destination, BufferType::SystemMemory, format, modifiers, targetDevice->allocator(), importFormats, options);
+            auto copy = createCopy(destination, BufferType::SystemMemory, options.format, options.modifiers, targetDevice->allocator(), importFormats, options);
             if (copy) {
                 return AllocationInfo{
-                    .swapchain = std::make_unique<MultiGpuSwapchain>(std::move(copy->copy), nullptr, format),
+                    .swapchain = std::make_unique<MultiGpuSwapchain>(std::move(copy->copy), nullptr, options.format),
                     .importModifiers = copy->sourceModifiers,
                 };
             }
@@ -363,27 +406,27 @@ std::optional<MultiGpuSwapchain::AllocationInfo> MultiGpuSwapchain::createForSca
         const auto alignment = std::lcm(*sourceDevice->vulkanDevice()->minImportedHostPointerAlignment(),
                                         *destination->vulkanDevice()->minImportedHostPointerAlignment());
         hostAllocator = std::make_shared<HostMemoryGraphicsBufferAllocator>(alignment);
-        firstCopy = createCopy(sourceDevice, BufferType::SystemMemory, format, modifiers, hostAllocator.get(), destination->allImportableFormats(), options, hostAllocator);
+        firstCopy = createCopy(sourceDevice, BufferType::SystemMemory, options.format, options.modifiers, hostAllocator.get(), destination->allImportableFormats(), options, hostAllocator);
         if (!firstCopy) {
             hostAllocator.reset();
         }
     }
     if (!firstCopy && sysMemDevice) {
-        firstCopy = createCopy(sourceDevice, BufferType::SystemMemory, format, modifiers, sysMemDevice->allocator(), destination->allImportableFormats(), options);
+        firstCopy = createCopy(sourceDevice, BufferType::SystemMemory, options.format, options.modifiers, sysMemDevice->allocator(), destination->allImportableFormats(), options);
     }
     if (!firstCopy) {
-        firstCopy = createCopy(sourceDevice, BufferType::SystemMemory, format, modifiers, fallbackDevice->allocator(), destination->allImportableFormats(), options);
+        firstCopy = createCopy(sourceDevice, BufferType::SystemMemory, options.format, options.modifiers, fallbackDevice->allocator(), destination->allImportableFormats(), options);
     }
     if (!firstCopy) {
         return std::nullopt;
     }
     options.scanout = true;
-    auto secondCopy = createCopy(destination, BufferType::DeviceMemory, format, {firstCopy->copy->modifier()}, targetDevice->allocator(), importFormats, options, hostAllocator);
+    auto secondCopy = createCopy(destination, BufferType::DeviceMemory, options.format, {firstCopy->copy->modifier()}, targetDevice->allocator(), importFormats, options, hostAllocator);
     if (!secondCopy) {
         return std::nullopt;
     }
     return AllocationInfo{
-        .swapchain = std::make_unique<MultiGpuSwapchain>(std::move(firstCopy->copy), std::move(secondCopy->copy), format),
+        .swapchain = std::make_unique<MultiGpuSwapchain>(std::move(firstCopy->copy), std::move(secondCopy->copy), options.format),
         .importModifiers = firstCopy->sourceModifiers,
     };
 }
@@ -797,6 +840,10 @@ std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::copy(GraphicsBuffer *buff
     EGLNativeFence importFence = EGLNativeFence::importFence(m_context->displayObject(), std::move(sync));
     importFence.waitSync();
 
+    if (m_swapchain->options().software) {
+        return cpuCopy(buffer, damage, frame, releasePoint);
+    }
+
     std::unique_ptr<GLRenderTimeQuery> renderTime;
     if (frame) {
         renderTime = GLRenderTimeQuery::begin(m_context);
@@ -853,6 +900,64 @@ std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::copy(GraphicsBuffer *buff
         .buffer = m_currentSlot->buffer(),
         .sync = fence.takeFileDescriptor(),
         .releasePoint = m_currentSlot->releasePoint(),
+    };
+}
+
+std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::cpuCopy(GraphicsBuffer *buffer,
+                                                               const Region &damage,
+                                                               OutputFrame *frame,
+                                                               const std::shared_ptr<SyncReleasePoint> &releasePoint)
+{
+    std::unique_ptr<CpuRenderTimeQuery> copyTime;
+    if (frame) {
+        copyTime = std::make_unique<CpuRenderTimeQuery>();
+    }
+
+    const auto slot = m_swapchain->acquire();
+    if (!slot) {
+        return std::nullopt;
+    }
+
+    auto fbo = m_context->importDmaBufAsFbo(buffer);
+    if (!fbo) {
+        return std::nullopt;
+    }
+
+    GraphicsBufferView view(slot->buffer(), GraphicsBuffer::MapFlag::Write);
+    if (view.isNull()) {
+        return std::nullopt;
+    }
+
+    m_context->pushFramebuffer(fbo);
+
+    const auto size = buffer->size();
+    const qsizetype srcStride = 4 * size.width();
+
+    QImage *const dst = view.image();
+    if (dst->bytesPerLine() == srcStride) {
+        m_context->glReadnPixels(0, 0, dst->width(), dst->height(), GL_BGRA, GL_UNSIGNED_BYTE, dst->sizeInBytes(), dst->bits());
+    } else {
+        // there's padding, need to copy line by line
+        if (m_cpuCopyCache.size() != dst->size()) {
+            m_cpuCopyCache = QImage(dst->size(), QImage::Format_RGBA8888);
+        }
+        m_context->glReadnPixels(0, 0, dst->width(), dst->height(), GL_BGRA, GL_UNSIGNED_BYTE, m_cpuCopyCache.sizeInBytes(), m_cpuCopyCache.bits());
+        for (int i = 0; i < dst->height(); i++) {
+            std::memcpy(dst->scanLine(i), m_cpuCopyCache.scanLine(i), srcStride);
+        }
+    }
+
+    m_context->popFramebuffer();
+
+    m_swapchain->release(slot.get(), FileDescriptor{});
+    if (frame) {
+        copyTime->end();
+        frame->addRenderTimeQuery(std::move(copyTime));
+    }
+    return MultiGpuSwapchain::Ret{
+        .buffer = slot->buffer(),
+        .sync = FileDescriptor{},
+        .releasePoint = slot->releasePoint(),
     };
 }
 
