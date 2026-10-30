@@ -13,12 +13,14 @@
 #include "graphicsbuffer.h"
 #include "opengl/eglcontext.h"
 #include "opengl/egldisplay.h"
+#include "opengl/eglnativefence.h"
 #include "opengl/glplatform.h"
 #include "udmabufallocator.h"
 #include "utils/common.h"
 #include "utils/envvar.h"
 #include "vulkan/vulkan_device.h"
 #include "vulkan/vulkan_logging.h"
+#include "vulkan/vulkan_texture.h"
 
 #include <expected>
 #include <vulkan/vulkan_raii.hpp>
@@ -444,6 +446,46 @@ void RenderDevice::fetchName()
     }
     // better than nothing
     m_name = m_path;
+}
+
+FileDescriptor RenderDevice::clearBuffer(GraphicsBuffer *buffer)
+{
+    if (m_vulkanDevice && m_vulkanDevice->transferFormats().containsFormat(buffer->format(), buffer->modifier())) {
+        auto texture = m_vulkanDevice->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_DST_BIT);
+        if (!texture) {
+            return FileDescriptor{};
+        }
+
+        auto cmd = m_vulkanDevice->graphicsQueue()->createCommandBuffer();
+        vk::Result result = cmd.begin(vk::CommandBufferBeginInfo{
+            vk::CommandBufferUsageFlagBits::eOneTimeSubmit,
+        });
+        if (result != vk::Result::eSuccess) {
+            return FileDescriptor{};
+        }
+
+        vk::ImageSubresourceRange range{vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1};
+        cmd.clearColorImage(texture->handle(), vk::ImageLayout::eGeneral, vk::ClearColorValue{0, 0, 0, 0}, range);
+
+        result = cmd.end();
+        if (result != vk::Result::eSuccess) {
+            return FileDescriptor{};
+        }
+        return m_vulkanDevice->graphicsQueue()->submit(std::move(cmd), FileDescriptor{}, {buffer}).value_or(FileDescriptor{});
+    } else if (auto context = eglContext()) {
+        auto fbo = context->importDmaBufAsFbo(buffer);
+        if (!fbo) {
+            return FileDescriptor{};
+        }
+        EglContext::currentContext()->pushFramebuffer(fbo);
+        glClearColor(0, 0, 0, 0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EglContext::currentContext()->popFramebuffer();
+        EGLNativeFence fence(context->displayObject());
+        return fence.takeFileDescriptor();
+    } else {
+        return FileDescriptor{};
+    }
 }
 
 }

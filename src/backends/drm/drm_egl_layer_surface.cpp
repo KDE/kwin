@@ -340,14 +340,11 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *
     if (!slot) {
         return nullptr;
     }
+    FileDescriptor sync;
     if (!m_gpu->atomicModeSetting()) {
-        auto fbo = surface->context->importDmaBufAsFbo(surface->currentSlot->buffer());
-        EglContext::currentContext()->pushFramebuffer(fbo);
-        glClearColor(0, 0, 0, 0);
-        glClear(GL_COLOR_BUFFER_BIT);
-        EglContext::currentContext()->popFramebuffer();
+        sync = m_gpu->renderDevice()->clearBuffer(surface->currentSlot->buffer());
     }
-    if (const auto ret = importBuffer(surface, slot.get(), FileDescriptor{}, nullptr, Region::infinite())) {
+    if (const auto ret = importBuffer(surface, slot.get(), std::move(sync), nullptr, Region::infinite())) {
         // clear the render journal, because this was just a nonsense frame
         if (surface->importSwapchain) {
             surface->importSwapchain->resetDamageTracking();
