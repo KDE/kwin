@@ -226,9 +226,9 @@ void SceneView::postPaint()
     m_scene->postPaint();
 }
 
-void SceneView::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceDamage)
+FileDescriptor SceneView::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceDamage)
 {
-    m_scene->paint(info, deviceOffset, deviceDamage);
+    return m_scene->paint(info, deviceOffset, deviceDamage);
 }
 
 double SceneView::desiredHdrHeadroom() const
@@ -444,12 +444,12 @@ Region ItemView::collectDamage()
         | m_layer->deviceRepaints();
 }
 
-void ItemView::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceDamage)
+FileDescriptor ItemView::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceDamage)
 {
     auto renderer = m_item->scene()->renderer(renderDevice());
     const auto renderInfo = renderer->beginFrame(info, this);
     if (!renderInfo) {
-        return;
+        return FileDescriptor{};
     }
 
     const Region repaint = (renderInfo->repaint | deviceDamage) & renderInfo->renderTarget.transformedRect();
@@ -461,9 +461,9 @@ void ItemView::paint(const OutputLayerBeginFrameInfo &info, const QPoint &device
         return toRender != m_item;
     }, {});
     if (!success) {
-        return;
+        return FileDescriptor{};
     }
-    renderer->endFrame(repaint, this);
+    return renderer->endFrame(repaint, this);
 }
 
 bool ItemView::shouldRenderItem(Item *item) const
@@ -584,12 +584,12 @@ Region ItemTreeView::collectDamage()
     return ret;
 }
 
-void ItemTreeView::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceDamage)
+FileDescriptor ItemTreeView::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceDamage)
 {
     auto renderer = m_item->scene()->renderer(renderDevice());
     const auto renderInfo = renderer->beginFrame(info, this);
     if (!renderInfo) {
-        return;
+        return FileDescriptor{};
     }
 
     const Region repaint = (renderInfo->repaint | deviceDamage) & renderInfo->renderTarget.transformedRect();
@@ -598,9 +598,9 @@ void ItemTreeView::paint(const OutputLayerBeginFrameInfo &info, const QPoint &de
 
     renderer->renderBackground(renderInfo->renderTarget, renderViewport, repaint);
     if (!renderer->renderItem(renderInfo->renderTarget, renderViewport, m_item, 0, repaint, data, {}, {})) {
-        return;
+        return FileDescriptor{};
     }
-    renderer->endFrame(repaint, this);
+    return renderer->endFrame(repaint, this);
 }
 
 bool ItemTreeView::shouldRenderItem(Item *item) const

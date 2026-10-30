@@ -27,7 +27,7 @@ std::optional<OutputLayerBeginFrameInfo> ColorPickerLayer::beginFrame(OutputFram
     };
 }
 
-bool ColorPickerLayer::endFrame(const Region &damagedRegion, OutputFrame *frame)
+bool ColorPickerLayer::endFrame(const Region &damagedRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
     return true;
 }

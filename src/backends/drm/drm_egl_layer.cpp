@@ -63,9 +63,9 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame(OutputFrame *fr
                                     m_requiredAlphaBits);
 }
 
-bool EglGbmLayer::endFrame(const Region &damagedDeviceRegion, OutputFrame *frame)
+bool EglGbmLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
-    return m_surface.endRendering(damagedDeviceRegion, frame);
+    return m_surface.endRendering(damagedDeviceRegion, std::move(sync), frame);
 }
 
 bool EglGbmLayer::preparePresentationTest()

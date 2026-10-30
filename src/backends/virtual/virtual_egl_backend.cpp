@@ -75,14 +75,13 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame(OutputFrame
     };
 }
 
-bool VirtualEglLayer::endFrame(const Region &damagedDeviceRegion, OutputFrame *frame)
+bool VirtualEglLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
     if (frame && m_query) {
         m_query->end();
         frame->addRenderTimeQuery(std::move(m_query));
     }
-    glFlush(); // flush pending rendering commands.
-    m_swapchain->release(m_current.get(), FileDescriptor{});
+    m_swapchain->release(m_current.get(), std::move(sync));
     m_damageJournal.add(damagedDeviceRegion);
     return true;
 }
