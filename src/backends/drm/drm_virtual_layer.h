@@ -21,16 +21,15 @@ namespace KWin
 
 class Swapchain;
 class SwapchainSlot;
-class GLTexture;
-class EglGbmBackend;
+class RenderBackend;
 class DrmVirtualOutput;
 class SurfaceInterface;
 
-class VirtualDrmEglLayer : public DrmOutputLayer
+class VirtualDrmLayer : public OutputLayer
 {
 public:
-    VirtualDrmEglLayer(EglGbmBackend *eglBackend, DrmVirtualOutput *output);
-    ~VirtualDrmEglLayer() override;
+    VirtualDrmLayer(RenderBackend *backend, DrmVirtualOutput *output);
+    ~VirtualDrmLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
     bool endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame) override;
@@ -50,7 +49,7 @@ private:
     std::shared_ptr<Swapchain> m_oldSwapchain;
     std::shared_ptr<SwapchainSlot> m_currentSlot;
 
-    EglGbmBackend *const m_eglBackend;
+    RenderBackend *const m_backend;
 };
 
 }
