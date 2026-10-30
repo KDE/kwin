@@ -81,9 +81,7 @@ private:
         std::shared_ptr<Swapchain> swapchain;
         std::shared_ptr<SwapchainSlot> currentSlot;
         DamageJournal damageJournal;
-        std::unique_ptr<QPainterSwapchain> importDumbSwapchain;
         std::unique_ptr<MultiGpuSwapchain> importSwapchain;
-        QImage cpuCopyCache;
         MultiGpuImportMode importMode;
         std::shared_ptr<DrmFramebuffer> currentFramebuffer;
         BufferTarget bufferTarget;
@@ -101,8 +99,6 @@ private:
 
     std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface *surface) const;
     std::shared_ptr<DrmFramebuffer> importBuffer(Surface *surface, SwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const;
-    std::shared_ptr<DrmFramebuffer> importWithCopy(Surface *surface, SwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const;
-    std::shared_ptr<DrmFramebuffer> importWithCpu(Surface *surface, SwapchainSlot *source, OutputFrame *frame) const;
 
     std::unique_ptr<Surface> m_surface;
     std::unique_ptr<Surface> m_oldSurface;
