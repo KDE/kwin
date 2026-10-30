@@ -552,9 +552,7 @@ static bool renderLayer(RenderView *view, LogicalOutput *logicalOutput, BackendO
     if (!beginInfo) {
         return false;
     }
-    auto &[renderTarget, repaint] = beginInfo.value();
-    const Region bufferDamage = surfaceDamage.united(repaint).intersected(renderTarget.transformedRect());
-    view->paint(renderTarget, view->renderOffset(), bufferDamage);
+    view->paint(*beginInfo, view->renderOffset(), surfaceDamage);
     return view->layer()->endFrame(surfaceDamage, frame.get());
 }
 

@@ -105,7 +105,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
     if (!beginInfo) {
         return std::nullopt;
     }
-    sceneView.paint(beginInfo->renderTarget, QPoint(), fullDamage);
+    sceneView.paint(*beginInfo, QPoint(), fullDamage);
     if (!layer.endFrame(fullDamage, nullptr)) {
         return std::nullopt;
     }
@@ -175,7 +175,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
     if (!beginInfo) {
         return std::nullopt;
     }
-    sceneView.paint(beginInfo->renderTarget, QPoint(), fullDamage);
+    sceneView.paint(*beginInfo, QPoint(), fullDamage);
     if (!layer.endFrame(fullDamage, nullptr)) {
         return std::nullopt;
     }

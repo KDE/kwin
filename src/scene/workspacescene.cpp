@@ -707,16 +707,18 @@ void WorkspaceScene::postPaint()
     clearStackingOrder();
 }
 
-void WorkspaceScene::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion)
+void WorkspaceScene::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceDamage)
 {
-    RenderViewport viewport(painted_delegate->viewport(), painted_delegate->scale(), renderTarget, deviceOffset);
+    const Region repaint = (info.repaint | deviceDamage) & info.renderTarget.transformedRect();
+
+    RenderViewport viewport(painted_delegate->viewport(), painted_delegate->scale(), info.renderTarget, deviceOffset);
     auto &renderer = m_renderers[painted_delegate->renderDevice()];
 
-    if (!renderer->beginFrame(renderTarget, viewport)) {
+    if (!renderer->beginFrame(info.renderTarget, viewport)) {
         return;
     }
 
-    if (!effects->paintScreen(renderTarget, viewport, m_paintContext.mask, deviceRegion, painted_screen)) {
+    if (!effects->paintScreen(info.renderTarget, viewport, m_paintContext.mask, repaint, painted_screen)) {
         return;
     }
 

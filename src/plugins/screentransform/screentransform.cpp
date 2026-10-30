@@ -105,14 +105,17 @@ void ScreenTransformEffect::addScreen(LogicalOutput *screen)
         state.m_angle = transformAngle(changeSet->transform.value(), state.m_oldTransform);
         state.m_prev.texture = std::move(texture);
         state.m_prev.framebuffer = std::make_unique<GLFramebuffer>(state.m_prev.texture.get());
-        RenderTarget renderTarget(state.m_prev.framebuffer.get(), screen->blendingColor());
 
         Scene *scene = effects->scene();
         SceneView delegate(scene, screen, nullptr, nullptr, Compositor::self()->primaryDevice());
         delegate.setViewport(screen->geometryF());
         delegate.setScale(screen->scale());
         scene->prePaint(&delegate);
-        scene->paint(renderTarget, QPoint(), screen->geometry());
+        OutputLayerBeginFrameInfo beginInfo{
+            .renderTarget = RenderTarget(state.m_prev.framebuffer.get(), screen->blendingColor()),
+            .repaint = Region::infinite(),
+        };
+        scene->paint(beginInfo, QPoint(), screen->geometry());
         scene->postPaint();
     });
 }

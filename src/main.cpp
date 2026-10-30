@@ -542,11 +542,15 @@ static PlatformCursorImage grabCursorOpenGL(WorkspaceScene *scene)
     }
     texture->setContentTransform(OutputTransform::FlipY);
     GLFramebuffer framebuffer(texture.get());
-    RenderTarget renderTarget(&framebuffer);
 
     SceneView sceneView(scene, output, nullptr, nullptr, Compositor::self()->primaryDevice());
     ItemTreeView cursorView(&sceneView, scene->cursorItem(), output, nullptr, nullptr);
-    cursorView.paint(renderTarget, QPoint(), Region::infinite());
+
+    OutputLayerBeginFrameInfo beginInfo{
+        .renderTarget = RenderTarget{&framebuffer},
+        .repaint = Region::infinite(),
+    };
+    cursorView.paint(beginInfo, QPoint(), Region::infinite());
 
     QImage image = texture->toImage();
     image.setDevicePixelRatio(output->scale());

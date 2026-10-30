@@ -226,9 +226,9 @@ void SceneView::postPaint()
     m_scene->postPaint();
 }
 
-void SceneView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion)
+void SceneView::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceDamage)
 {
-    m_scene->paint(renderTarget, deviceOffset, deviceRegion);
+    m_scene->paint(info, deviceOffset, deviceDamage);
 }
 
 double SceneView::desiredHdrHeadroom() const
@@ -444,18 +444,18 @@ Region ItemView::collectDamage()
         | m_layer->deviceRepaints();
 }
 
-void ItemView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &region)
+void ItemView::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceDamage)
 {
-    const Region globalRegion = region == Region::infinite() ? Region::infinite() : region.translated(viewport().topLeft().toPoint());
-    RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), renderTarget, deviceOffset);
+    const Region repaint = (info.repaint | deviceDamage) & info.renderTarget.transformedRect();
+    RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), info.renderTarget, deviceOffset);
 
     auto renderer = m_item->scene()->renderer(renderDevice());
-    if (!renderer->beginFrame(renderTarget, renderViewport)) {
+    if (!renderer->beginFrame(info.renderTarget, renderViewport)) {
         return;
     }
-    renderer->renderBackground(renderTarget, renderViewport, globalRegion);
+    renderer->renderBackground(info.renderTarget, renderViewport, repaint);
     WindowPaintData data;
-    const bool success = renderer->renderItem(renderTarget, renderViewport, m_item, 0, globalRegion, data, [this](Item *toRender) {
+    const bool success = renderer->renderItem(info.renderTarget, renderViewport, m_item, 0, repaint, data, [this](Item *toRender) {
         return toRender != m_item;
     }, {});
     if (!success) {
@@ -582,17 +582,18 @@ Region ItemTreeView::collectDamage()
     return ret;
 }
 
-void ItemTreeView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion)
+void ItemTreeView::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceDamage)
 {
-    RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), renderTarget, deviceOffset);
+    const Region repaint = (info.repaint | deviceDamage) & info.renderTarget.transformedRect();
+    RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), info.renderTarget, deviceOffset);
 
     auto renderer = m_item->scene()->renderer(renderDevice());
-    if (!renderer->beginFrame(renderTarget, renderViewport)) {
+    if (!renderer->beginFrame(info.renderTarget, renderViewport)) {
         return;
     }
-    renderer->renderBackground(renderTarget, renderViewport, deviceRegion);
+    renderer->renderBackground(info.renderTarget, renderViewport, repaint);
     WindowPaintData data;
-    if (!renderer->renderItem(renderTarget, renderViewport, m_item, 0, deviceRegion, data, {}, {})) {
+    if (!renderer->renderItem(info.renderTarget, renderViewport, m_item, 0, repaint, data, {}, {})) {
         return;
     }
     renderer->endFrame();
