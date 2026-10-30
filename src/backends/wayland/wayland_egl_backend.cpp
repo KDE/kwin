@@ -36,8 +36,6 @@ namespace KWin
 namespace Wayland
 {
 
-static const bool bufferAgeEnabled = qEnvironmentVariable("KWIN_USE_BUFFER_AGE") != QStringLiteral("0");
-
 WaylandEglLayer::WaylandEglLayer(WaylandOutput *output, WaylandEglBackend *backend, OutputLayerType type, int zpos)
     : WaylandLayer(output, type, zpos)
     , m_backend(backend)
@@ -107,11 +105,10 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame(OutputFrame
     }
     fbo->colorAttachment()->setContentTransform(contentTransform);
 
-    const Region repair = bufferAgeEnabled ? m_damageJournal.accumulate(m_buffer->age(), Region::infinite()) : Region::infinite();
     m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(fbo, m_color),
-        .repaint = repair,
+        .repaint = m_damageJournal.accumulate(m_buffer->age(), Region::infinite()),
     };
 }
 

@@ -23,8 +23,6 @@
 namespace KWin
 {
 
-static const bool s_bufferAgeEnabled = qEnvironmentVariable("KWIN_USE_BUFFER_AGE") != QStringLiteral("0");
-
 VirtualEglLayer::VirtualEglLayer(BackendOutput *output, VirtualEglBackend *backend)
     : OutputLayer(output, OutputLayerType::Primary)
     , m_backend(backend)
@@ -73,7 +71,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame(OutputFrame
 
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(fbo),
-        .repaint = s_bufferAgeEnabled ? m_damageJournal.accumulate(m_current->age(), Region::infinite()) : Region::infinite(),
+        .repaint = m_damageJournal.accumulate(m_current->age(), Region::infinite()),
     };
 }
 
