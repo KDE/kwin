@@ -11,12 +11,12 @@
 #include "core/renderdevice.h"
 #include "core/syncobjtimeline.h"
 #include "drm_backend.h"
-#include "drm_egl_layer.h"
 #include "drm_gpu.h"
+#include "drm_layer.h"
 #include "drm_logging.h"
 #include "drm_output.h"
 #include "drm_pipeline.h"
-#include "drm_virtual_egl_layer.h"
+#include "drm_virtual_layer.h"
 #include "drm_virtual_output.h"
 // system
 #include <drm_fourcc.h>
@@ -67,17 +67,17 @@ QList<OutputLayer *> EglGbmBackend::compatibleOutputLayers(BackendOutput *output
 
 std::unique_ptr<DrmPipelineLayer> EglGbmBackend::createDrmPlaneLayer(DrmPlane *plane)
 {
-    return std::make_unique<EglGbmLayer>(this, plane);
+    return std::make_unique<DrmPipelineLayer>(this, plane);
 }
 
 std::unique_ptr<DrmPipelineLayer> EglGbmBackend::createDrmPlaneLayer(DrmGpu *gpu, DrmPlane::TypeIndex type)
 {
-    return std::make_unique<EglGbmLayer>(this, gpu, type);
+    return std::make_unique<DrmPipelineLayer>(this, gpu, type);
 }
 
-std::unique_ptr<DrmOutputLayer> EglGbmBackend::createLayer(DrmVirtualOutput *output)
+std::unique_ptr<VirtualDrmLayer> EglGbmBackend::createLayer(DrmVirtualOutput *output)
 {
-    return std::make_unique<VirtualDrmEglLayer>(this, output);
+    return std::make_unique<VirtualDrmLayer>(this, output);
 }
 
 } // namespace KWin

@@ -26,20 +26,15 @@ namespace KWin
 class DrmFramebuffer;
 class Swapchain;
 class SwapchainSlot;
-class QPainterSwapchain;
-class EglContext;
-class EglGbmBackend;
 class GraphicsBuffer;
 class SurfaceItem;
 class GLTexture;
 class ColorTransformation;
-class GlLookUpTable;
-class IccProfile;
-class IccShader;
 class MultiGpuSwapchain;
 class RenderDevice;
+class RenderBackend;
 
-class EglGbmLayerSurface : public QObject
+class DrmLayerSurface : public QObject
 {
     Q_OBJECT
 
@@ -48,8 +43,8 @@ public:
         Normal,
         Dumb,
     };
-    explicit EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal);
-    ~EglGbmLayerSurface();
+    explicit DrmLayerSurface(DrmGpu *gpu, RenderBackend *backend, BufferTarget target = BufferTarget::Normal);
+    ~DrmLayerSurface();
 
     std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const FormatModifierMap &formats,
                                                             const std::shared_ptr<ColorDescription> &layerBlendingColor,
@@ -58,7 +53,6 @@ public:
     bool endRendering(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame);
 
     void destroyResources();
-    EglGbmBackend *eglBackend() const;
     std::shared_ptr<DrmFramebuffer> renderTestBuffer(const QSize &bufferSize, const FormatModifierMap &formats, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits);
     void forgetDamage();
 
@@ -99,7 +93,7 @@ private:
     std::unique_ptr<Surface> m_oldSurface;
 
     DrmGpu *const m_gpu;
-    EglGbmBackend *const m_eglBackend;
+    RenderBackend *const m_backend;
     const BufferTarget m_requestedBufferTarget;
 };
 

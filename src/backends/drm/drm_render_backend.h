@@ -17,8 +17,7 @@ namespace KWin
 class DrmPipelineLayer;
 class DrmVirtualOutput;
 class DrmPipeline;
-class DrmOutputLayer;
-class DrmOverlayLayer;
+class VirtualDrmLayer;
 
 class DrmRenderBackend
 {
@@ -27,7 +26,7 @@ public:
 
     virtual std::unique_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmPlane *plane) = 0;
     virtual std::unique_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmGpu *gpu, DrmPlane::TypeIndex type) = 0;
-    virtual std::unique_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) = 0;
+    virtual std::unique_ptr<VirtualDrmLayer> createLayer(DrmVirtualOutput *output) = 0;
 };
 
 }
