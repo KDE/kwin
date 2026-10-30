@@ -101,9 +101,6 @@ X11WindowedEglCursorLayer::X11WindowedEglCursorLayer(X11WindowedEglBackend *back
 
 X11WindowedEglCursorLayer::~X11WindowedEglCursorLayer()
 {
-    (void)m_backend->openglContext()->makeCurrent();
-    m_framebuffer.reset();
-    m_texture.reset();
 }
 
 std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame(OutputFrame *frame)
@@ -113,27 +110,44 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame(O
     }
 
     const auto bufferSize = targetRect().size();
-    if (!m_texture || m_texture->size() != bufferSize) {
-        m_texture = GLTexture::allocate(GL_RGBA8, bufferSize);
-        if (!m_texture) {
+    if (!m_swapchain || m_swapchain->size() != bufferSize) {
+        GraphicsBufferOptions options{
+            .size = bufferSize,
+            .format = DRM_FORMAT_ARGB8888,
+            .modifiers = m_backend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats()[DRM_FORMAT_ARGB8888],
+            .software = false,
+            .scanout = false,
+            .render = true,
+        };
+        m_swapchain = Swapchain::create(m_backend->renderDevice()->allocator(), options);
+        if (!m_swapchain) {
             return std::nullopt;
         }
-        m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
     }
+
+    m_slot = m_swapchain->acquire();
+    if (!m_slot) {
+        return std::nullopt;
+    }
+
+    auto fbo = m_backend->openglContext()->importDmaBufAsFbo(m_slot->buffer());
+    if (!fbo) {
+        return std::nullopt;
+    }
+
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_framebuffer.get()),
+        .renderTarget = RenderTarget(fbo),
         .repaint = Region::infinite(),
     };
 }
 
 bool X11WindowedEglCursorLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
-    EglContext *context = m_backend->openglContext();
-    QImage buffer(m_framebuffer->size(), QImage::Format_RGBA8888_Premultiplied);
-
-    GLFramebuffer::pushFramebuffer(m_framebuffer.get());
-    context->glReadnPixels(0, 0, buffer.width(), buffer.height(), GL_RGBA, GL_UNSIGNED_BYTE, buffer.sizeInBytes(), buffer.bits());
-    GLFramebuffer::popFramebuffer();
+    const QImage buffer = m_backend->renderDevice()->download(m_slot->buffer());
+    m_slot.reset();
+    if (buffer.isNull()) {
+        return false;
+    }
 
     static_cast<X11WindowedOutput *>(m_output.get())->cursor()->update(buffer.mirrored(false, true), hotspot());
     return true;
