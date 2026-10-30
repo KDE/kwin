@@ -45,50 +45,6 @@ CompositingType EglBackend::compositingType() const
     return OpenGLCompositing;
 }
 
-bool EglBackend::checkGraphicsReset()
-{
-    const auto context = openglContext();
-    if (context != EglContext::currentContext()) {
-        const bool success = context->makeCurrent();
-        if (!success) {
-            // not necessarily a graphics reset, but we can't really know
-            // and need to re-create everything either way
-            return true;
-        }
-    }
-    const GLenum status = context->checkGraphicsResetStatus();
-    if (Q_LIKELY(status == GL_NO_ERROR)) {
-        return false;
-    }
-
-    switch (status) {
-    case GL_GUILTY_CONTEXT_RESET:
-        qCWarning(KWIN_OPENGL) << "A graphics reset attributable to the current GL context occurred.";
-        break;
-    case GL_INNOCENT_CONTEXT_RESET:
-        qCWarning(KWIN_OPENGL) << "A graphics reset not attributable to the current GL context occurred.";
-        break;
-    case GL_UNKNOWN_CONTEXT_RESET:
-        qCWarning(KWIN_OPENGL) << "A graphics reset of an unknown cause occurred.";
-        break;
-    default:
-        break;
-    }
-
-    QElapsedTimer timer;
-    timer.start();
-
-    // Wait until the reset is completed or max one second
-    while (timer.elapsed() < 10000 && context->checkGraphicsResetStatus() != GL_NO_ERROR) {
-        usleep(50);
-    }
-    if (timer.elapsed() >= 10000) {
-        qCWarning(KWIN_OPENGL) << "Waiting for glGetGraphicsResetStatus to return GL_NO_ERROR timed out!";
-    }
-
-    return true;
-}
-
 void EglBackend::cleanup()
 {
     m_context.reset();

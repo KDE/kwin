@@ -38,7 +38,6 @@ public:
 
     virtual bool init() = 0;
     CompositingType compositingType() const override final;
-    bool checkGraphicsReset() override final;
 
     EglContext *openglContext() const;
     std::shared_ptr<EglContext> openglContextRef() const;

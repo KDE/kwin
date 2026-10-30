@@ -136,20 +136,21 @@ bool EglContext::makeCurrent()
         context->doneCurrent();
     } else if (s_currentContext == this) {
         // nothing to do
-        return true;
+        return !checkGraphicsReset();
     }
-    const bool ret = eglMakeCurrent(m_display->handle(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_handle) == EGL_TRUE;
-    if (ret) {
-        Q_ASSERT(m_handle != EGL_NO_CONTEXT);
-        Q_ASSERT(eglGetCurrentContext() == m_handle);
-        s_currentContext = this;
-    } else {
+    if (eglMakeCurrent(m_display->handle(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_handle) != EGL_TRUE) {
         // QOpenGLContext::doneCurrent unset the context, we need to mirror that here!
         s_currentContext = nullptr;
         qCWarning(KWIN_OPENGL, "Could not make egl context current! %s", qPrintable(getEglErrorString()));
-        m_failed = true;
+        setFailed();
+        return false;
     }
-    return ret;
+
+    Q_ASSERT(m_handle != EGL_NO_CONTEXT);
+    Q_ASSERT(eglGetCurrentContext() == m_handle);
+    s_currentContext = this;
+
+    return !checkGraphicsReset();
 }
 
 void EglContext::doneCurrent() const
@@ -536,17 +537,31 @@ void EglContext::initDebugOutput()
     }
 }
 
-GLenum EglContext::checkGraphicsResetStatus()
+bool EglContext::checkGraphicsReset()
 {
-    if (m_glGetGraphicsResetStatus) {
-        const GLenum ret = m_glGetGraphicsResetStatus();
-        if (ret != GL_NO_ERROR) {
-            m_failed = true;
-        }
-        return ret;
-    } else {
-        return GL_NO_ERROR;
+    if (!m_glGetGraphicsResetStatus) {
+        return false;
     }
+    const GLenum status = m_glGetGraphicsResetStatus();
+    if (status == GL_NO_ERROR) {
+        return false;
+    }
+    switch (status) {
+    case GL_GUILTY_CONTEXT_RESET:
+        qCWarning(KWIN_OPENGL) << "A graphics reset attributable to the current GL context occurred.";
+        break;
+    case GL_INNOCENT_CONTEXT_RESET:
+        qCWarning(KWIN_OPENGL) << "A graphics reset not attributable to the current GL context occurred.";
+        break;
+    case GL_UNKNOWN_CONTEXT_RESET:
+        qCWarning(KWIN_OPENGL) << "A graphics reset of an unknown cause occurred.";
+        break;
+    default:
+        qCWarning(KWIN_OPENGL) << "Received unexpected return value" << status << "from glGetGraphicsResetStatus";
+        break;
+    }
+    setFailed();
+    return true;
 }
 
 void EglContext::glReadnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei bufSize, GLvoid *data)
@@ -611,7 +626,11 @@ bool EglContext::isFailed() const
 
 void EglContext::setFailed()
 {
+    if (m_failed) {
+        return;
+    }
     m_failed = true;
+    Q_EMIT resetDetected();
 }
 
 bool EglContext::isCompatibleWith(EglContext *other) const
@@ -662,3 +681,5 @@ void EglContext::renderRegion(const Region &framebufferRegion, const std::functi
 }
 
 }
+
+#include "moc_eglcontext.cpp"
