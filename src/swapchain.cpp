@@ -85,6 +85,11 @@ bool Swapchain::scanout() const
     return m_options.scanout;
 }
 
+const GraphicsBufferOptions &Swapchain::options() const
+{
+    return m_options;
+}
+
 std::shared_ptr<SwapchainSlot> Swapchain::acquire()
 {
     for (const auto &slot : m_slots) {

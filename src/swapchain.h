@@ -53,6 +53,7 @@ public:
     uint32_t format() const;
     uint64_t modifier() const;
     bool scanout() const;
+    const GraphicsBufferOptions &options() const;
 
     std::shared_ptr<SwapchainSlot> acquire();
     void release(SwapchainSlot *slot, const FileDescriptor &releaseFd);
