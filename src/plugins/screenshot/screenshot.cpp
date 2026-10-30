@@ -105,8 +105,8 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
     if (!beginInfo) {
         return std::nullopt;
     }
-    sceneView.paint(*beginInfo, QPoint(), fullDamage);
-    if (!layer.endFrame(fullDamage, nullptr)) {
+    FileDescriptor sync = sceneView.paint(*beginInfo, QPoint(), fullDamage);
+    if (!layer.endFrame(fullDamage, std::move(sync), nullptr)) {
         return std::nullopt;
     }
 
@@ -175,8 +175,8 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
     if (!beginInfo) {
         return std::nullopt;
     }
-    sceneView.paint(*beginInfo, QPoint(), fullDamage);
-    if (!layer.endFrame(fullDamage, nullptr)) {
+    FileDescriptor sync = sceneView.paint(*beginInfo, QPoint(), fullDamage);
+    if (!layer.endFrame(fullDamage, std::move(sync), nullptr)) {
         return std::nullopt;
     }
 

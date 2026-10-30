@@ -11,6 +11,7 @@
 #include "core/drm_formats.h"
 #include "core/rendertarget.h"
 #include "kwin_export.h"
+#include "utils/filedescriptor.h"
 
 #include <QObject>
 #include <QPointer>
@@ -96,7 +97,7 @@ public:
     virtual bool preparePresentationTest();
 
     virtual std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame = nullptr) = 0;
-    virtual bool endFrame(const Region &damagedDeviceRegion, OutputFrame *frame) = 0;
+    virtual bool endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame) = 0;
 
     /**
      * Do checks if the current configuration of the layer could possibly work.
