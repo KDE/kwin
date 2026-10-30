@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "core/rendertarget.h"
+#include "core/outputlayer.h"
 #include "kwin_export.h"
 
 #include <QList>
@@ -50,7 +50,7 @@ public:
     virtual qreal scale() const = 0;
     virtual SurfaceItem *scanoutCandidate() const = 0;
     virtual Region collectDamage() = 0;
-    virtual void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion) = 0;
+    virtual void paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceRepaint) = 0;
     virtual bool shouldRenderItem(Item *item) const;
     virtual bool shouldRenderHole(Item *item) const;
     virtual bool presentationIsZeroCopy(Item *item) const;
@@ -122,7 +122,7 @@ public:
     SurfaceItem *scanoutCandidate() const override;
     virtual void prePaint(OutputFrame *frame = nullptr);
     Region collectDamage() override;
-    void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion) override;
+    void paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceRepaint) override;
     void postPaint();
     double desiredHdrHeadroom() const override;
 
@@ -173,7 +173,7 @@ public:
     bool isVisible() const override;
     SurfaceItem *scanoutCandidate() const override;
     Region collectDamage() override;
-    void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion) override;
+    void paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceRepaint) override;
     bool shouldRenderItem(Item *item) const override;
     void setExclusive(bool enable) override;
     void setUnderlay(bool underlay);
@@ -203,7 +203,7 @@ public:
     bool isVisible() const override;
     SurfaceItem *scanoutCandidate() const override;
     Region collectDamage() override;
-    void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &logicalRegion) override;
+    void paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceRepaint) override;
     bool shouldRenderItem(Item *item) const override;
     void setExclusive(bool enable) override;
     bool needsRepaint() override;
@@ -258,7 +258,7 @@ public:
     virtual QList<Item *> layerCandidates(ssize_t maxTotalCount) const = 0;
     virtual void prePaint(SceneView *view, OutputFrame *frame = nullptr) = 0;
     virtual Region collectDamage() = 0;
-    virtual void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion) = 0;
+    virtual void paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceRepaint) = 0;
     virtual void postPaint() = 0;
     virtual void frame(SceneView *delegate, OutputFrame *frame) = 0;
     virtual double desiredHdrHeadroom() const = 0;
