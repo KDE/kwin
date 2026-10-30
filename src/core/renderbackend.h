@@ -142,8 +142,6 @@ class KWIN_EXPORT RenderBackend : public QObject
 public:
     virtual CompositingType compositingType() const = 0;
 
-    virtual bool checkGraphicsReset();
-
     virtual QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) = 0;
 
     virtual RenderDevice *renderDevice() const;

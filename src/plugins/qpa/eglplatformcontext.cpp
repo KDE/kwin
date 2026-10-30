@@ -67,12 +67,9 @@ bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
     }
     const bool ok = m_eglContext->makeCurrent();
     if (!ok) {
-        qCWarning(KWIN_QPA) << "eglMakeCurrent failed:" << getEglErrorString();
-        return false;
-    }
-    if (m_eglContext->checkGraphicsResetStatus() != GL_NO_ERROR) {
         m_renderTargets.clear();
         m_zombieRenderTargets.clear();
+        m_current = nullptr;
         m_eglContext.reset();
         return false;
     }

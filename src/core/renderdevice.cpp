@@ -148,6 +148,11 @@ std::shared_ptr<EglContext> RenderDevice::eglContext()
             return nullptr;
         }
         ret = EglContext::create(m_display.get(), EGL_NO_CONFIG_KHR, share);
+        if (!ret) {
+            Q_EMIT resetDetected();
+            return nullptr;
+        }
+        connect(ret.get(), &EglContext::resetDetected, this, &RenderDevice::resetDetected);
         m_eglContext = ret;
     }
     return ret;
@@ -346,6 +351,7 @@ void RenderDevice::createVulkanDevice()
     m_vulkanDevice = openVulkanDevice(m_vulkanInstance, m_device.get(), m_path);
     if (m_vulkanDevice) {
         connect(m_vulkanDevice.get(), &VulkanDevice::deviceLost, this, &RenderDevice::handleVulkanDeviceLoss);
+        connect(m_vulkanDevice.get(), &VulkanDevice::deviceLost, this, &RenderDevice::resetDetected);
     }
     m_inReset = false;
 }

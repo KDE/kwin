@@ -194,11 +194,6 @@ void OutputFrame::setArtificialHdrHeadroom(double edr)
     m_artificialHdrHeadroom = edr;
 }
 
-bool RenderBackend::checkGraphicsReset()
-{
-    return false;
-}
-
 RenderDevice *RenderBackend::renderDevice() const
 {
     return nullptr;
