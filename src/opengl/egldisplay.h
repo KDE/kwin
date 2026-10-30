@@ -44,7 +44,6 @@ public:
     std::optional<dev_t> renderDevNode() const;
 
     bool isSoftwareRenderer() const;
-    bool supportsBufferAge() const;
     bool supportsNativeFence() const;
 
     const FormatModifierMap &nonExternalOnlySupportedDrmFormats() const;
@@ -88,7 +87,6 @@ private:
     DrmDevice *const m_drmDevice;
 
     const std::optional<GpuType> m_type;
-    const bool m_supportsBufferAge;
     const bool m_supportsNativeFence;
     const bool m_isSoftwareRenderer;
     FormatModifierMap m_nonExternalOnlyFormats;
