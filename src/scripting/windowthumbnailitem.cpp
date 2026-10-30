@@ -146,7 +146,7 @@ void WindowThumbnailSource::update()
         .renderTarget = RenderTarget{m_offscreenTarget.get()},
         .repaint = Region::infinite(),
     };
-    const auto newRenderInfo = renderer->beginFrame(beginInfo, nullptr);
+    const auto newRenderInfo = renderer->beginFrame(beginInfo, nullptr, nullptr);
     if (!newRenderInfo) {
         return;
     }
@@ -155,7 +155,7 @@ void WindowThumbnailSource::update()
     if (!renderer->renderItem(newRenderInfo->renderTarget, offscreenViewport, m_handle->windowItem(), mask, Region::infinite(), WindowPaintData{}, {}, {})) {
         return;
     }
-    std::ignore = renderer->endFrame(Region::infinite(), nullptr);
+    std::ignore = renderer->endFrame(Region::infinite(), nullptr, nullptr);
 
     // The fence is needed to avoid the case where qtquick renderer starts using
     // the texture while all rendering commands to it haven't completed yet.

@@ -25,7 +25,6 @@ class VirtualBackend;
 class GLFramebuffer;
 class GLTexture;
 class VirtualEglBackend;
-class GLRenderTimeQuery;
 
 class KWIN_EXPORT VirtualEglLayer : public OutputLayer
 {
@@ -45,7 +44,6 @@ private:
     VirtualEglBackend *const m_backend;
     std::shared_ptr<Swapchain> m_swapchain;
     std::shared_ptr<SwapchainSlot> m_current;
-    std::unique_ptr<GLRenderTimeQuery> m_query;
     DamageJournal m_damageJournal;
 };
 

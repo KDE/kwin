@@ -12,7 +12,6 @@
 #include "core/drmdevice.h"
 #include "core/gbmgraphicsbufferallocator.h"
 #include "core/renderdevice.h"
-#include "opengl/glrendertimequery.h"
 #include "opengl/glutils.h"
 #include "scene/surfaceitem_wayland.h"
 #include "swapchain.h"
@@ -105,7 +104,6 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame(OutputFrame
     }
     fbo->colorAttachment()->setContentTransform(contentTransform);
 
-    m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(fbo, m_color),
         .repaint = m_damageJournal.accumulate(m_buffer->age(), Region::infinite()),
@@ -114,11 +112,6 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame(OutputFrame
 
 bool WaylandEglLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
-    if (frame && m_query) {
-        m_query->end();
-        frame->addRenderTimeQuery(std::move(m_query));
-    }
-
     // The damage is where the picture changed, and the picture is composed the way the user
     // sees it. What the host reads is the buffer, which a rotated display fills turned, so
     // the region has to be turned with it - the journal stays in the picture's own
@@ -212,7 +205,6 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame(Outpu
     // to be turned as well - and on a rotated screen the cursor has to stand upright anyway.
     fbo->colorAttachment()->setContentTransform(bufferTransform().combine(OutputTransform::FlipY));
 
-    m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(fbo),
         .repaint = Region::infinite(),
@@ -221,11 +213,6 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame(Outpu
 
 bool WaylandEglCursorLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
-    if (frame && m_query) {
-        m_query->end();
-        frame->addRenderTimeQuery(std::move(m_query));
-    }
-
     wl_buffer *buffer = m_backend->backend()->importBuffer(m_buffer->buffer());
     Q_ASSERT(buffer);
 

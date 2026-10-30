@@ -54,7 +54,8 @@ public:
      * @returns a sync file
      */
     virtual FileDescriptor paint(const OutputLayerBeginFrameInfo &info,
-                                 const QPoint &deviceOffset, const Region &deviceRepaint) = 0;
+                                 const QPoint &deviceOffset, const Region &deviceRepaint,
+                                 OutputFrame *frame) = 0;
     virtual bool shouldRenderItem(Item *item) const;
     virtual bool shouldRenderHole(Item *item) const;
     virtual bool presentationIsZeroCopy(Item *item) const;
@@ -127,7 +128,8 @@ public:
     virtual void prePaint(OutputFrame *frame = nullptr);
     Region collectDamage() override;
     FileDescriptor paint(const OutputLayerBeginFrameInfo &info,
-                         const QPoint &deviceOffset, const Region &deviceRepaint) override;
+                         const QPoint &deviceOffset, const Region &deviceRepaint,
+                         OutputFrame *frame) override;
     void postPaint();
     double desiredHdrHeadroom() const override;
 
@@ -179,7 +181,8 @@ public:
     SurfaceItem *scanoutCandidate() const override;
     Region collectDamage() override;
     FileDescriptor paint(const OutputLayerBeginFrameInfo &info,
-                         const QPoint &deviceOffset, const Region &deviceRepaint) override;
+                         const QPoint &deviceOffset, const Region &deviceRepaint,
+                         OutputFrame *frame) override;
     bool shouldRenderItem(Item *item) const override;
     void setExclusive(bool enable) override;
     void setUnderlay(bool underlay);
@@ -210,7 +213,8 @@ public:
     SurfaceItem *scanoutCandidate() const override;
     Region collectDamage() override;
     FileDescriptor paint(const OutputLayerBeginFrameInfo &info,
-                         const QPoint &deviceOffset, const Region &deviceRepaint) override;
+                         const QPoint &deviceOffset, const Region &deviceRepaint,
+                         OutputFrame *frame) override;
     bool shouldRenderItem(Item *item) const override;
     void setExclusive(bool enable) override;
     bool needsRepaint() override;
@@ -266,7 +270,8 @@ public:
     virtual void prePaint(SceneView *view, OutputFrame *frame = nullptr) = 0;
     virtual Region collectDamage() = 0;
     virtual FileDescriptor paint(const OutputLayerBeginFrameInfo &info,
-                                 const QPoint &deviceOffset, const Region &deviceRepaint) = 0;
+                                 const QPoint &deviceOffset, const Region &deviceRepaint,
+                                 OutputFrame *frame) = 0;
     virtual void postPaint() = 0;
     virtual void frame(SceneView *delegate, OutputFrame *frame) = 0;
     virtual double desiredHdrHeadroom() const = 0;
