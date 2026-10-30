@@ -133,7 +133,7 @@ Region WindowScreenCastSource::render(GLFramebuffer *target, const Region &buffe
         .renderTarget = RenderTarget{target},
         .repaint = damage,
     };
-    const auto renderInfo = renderer->beginFrame(beginInfo, nullptr);
+    const auto renderInfo = renderer->beginFrame(beginInfo, nullptr, nullptr);
     if (!renderInfo) {
         return Region{};
     }
@@ -151,7 +151,7 @@ Region WindowScreenCastSource::render(GLFramebuffer *target, const Region &buffe
             return {};
         }
     }
-    renderer->endFrame(damage, nullptr);
+    renderer->endFrame(damage, nullptr, nullptr);
     return damage;
 }
 

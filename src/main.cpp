@@ -550,7 +550,7 @@ static PlatformCursorImage grabCursorOpenGL(WorkspaceScene *scene)
         .renderTarget = RenderTarget{&framebuffer},
         .repaint = Region::infinite(),
     };
-    cursorView.paint(beginInfo, QPoint(), Region::infinite());
+    cursorView.paint(beginInfo, QPoint(), Region::infinite(), nullptr);
 
     QImage image = texture->toImage();
     image.setDevicePixelRatio(output->scale());

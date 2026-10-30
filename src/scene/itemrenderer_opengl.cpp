@@ -15,6 +15,7 @@
 #include "effect/effect.h"
 #include "opengl/egldisplay.h"
 #include "opengl/eglnativefence.h"
+#include "opengl/glrendertimequery.h"
 #include "opengl/icc_shader.h"
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"
@@ -84,10 +85,16 @@ std::unique_ptr<Atlas> ItemRendererOpenGL::createAtlas(const QList<QImage> &spri
     return AtlasOpenGL::create(m_context, sprites);
 }
 
-std::optional<OutputLayerBeginFrameInfo> ItemRendererOpenGL::beginFrame(const OutputLayerBeginFrameInfo &beginInfo, RenderView *view)
+std::optional<OutputLayerBeginFrameInfo> ItemRendererOpenGL::beginFrame(const OutputLayerBeginFrameInfo &beginInfo,
+                                                                        RenderView *view,
+                                                                        OutputFrame *frame)
 {
     if (!m_context || !m_context->makeCurrent()) {
         return std::nullopt;
+    }
+
+    if (frame) {
+        m_renderTimeQuery = GLRenderTimeQuery::begin(m_context);
     }
 
     const bool needsShadow = view && view->backendOutput() && view->backendOutput()->needsShadowBuffer();
@@ -153,7 +160,7 @@ std::optional<OutputLayerBeginFrameInfo> ItemRendererOpenGL::beginFrame(const Ou
     };
 }
 
-FileDescriptor ItemRendererOpenGL::endFrame(const Region &repainted, RenderView *view)
+FileDescriptor ItemRendererOpenGL::endFrame(const Region &repainted, RenderView *view, OutputFrame *frame)
 {
     m_context->popFramebuffer();
 
@@ -202,6 +209,11 @@ FileDescriptor ItemRendererOpenGL::endFrame(const Region &repainted, RenderView 
     }
 
     m_context->streamingVbo()->endOfFrame();
+
+    if (frame) {
+        m_renderTimeQuery->end();
+        frame->addRenderTimeQuery(std::move(m_renderTimeQuery));
+    }
 
     // older versions of the NVidia proprietary driver support neither implicit sync nor EGL_ANDROID_native_fence_sync
     EGLNativeFence fence(m_renderDevice->eglDisplay());

@@ -552,7 +552,7 @@ static bool renderLayer(RenderView *view, LogicalOutput *logicalOutput, BackendO
     if (!beginInfo) {
         return false;
     }
-    FileDescriptor sync = view->paint(*beginInfo, view->renderOffset(), surfaceDamage);
+    FileDescriptor sync = view->paint(*beginInfo, view->renderOffset(), surfaceDamage, frame.get());
     return view->layer()->endFrame(surfaceDamage, std::move(sync), frame.get());
 }
 

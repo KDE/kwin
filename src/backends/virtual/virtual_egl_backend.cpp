@@ -10,7 +10,6 @@
 #include "core/drmdevice.h"
 #include "core/gbmgraphicsbufferallocator.h"
 #include "core/renderdevice.h"
-#include "opengl/glrendertimequery.h"
 #include "opengl/glutils.h"
 #include "swapchain.h"
 #include "utils/vsyncsource.h"
@@ -67,8 +66,6 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame(OutputFrame
 
     fbo->colorAttachment()->setContentTransform(bufferTransform().combine(OutputTransform::FlipY));
 
-    m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
-
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(fbo),
         .repaint = m_damageJournal.accumulate(m_current->age(), Region::infinite()),
@@ -77,10 +74,6 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame(OutputFrame
 
 bool VirtualEglLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
-    if (frame && m_query) {
-        m_query->end();
-        frame->addRenderTimeQuery(std::move(m_query));
-    }
     m_swapchain->release(m_current.get(), std::move(sync));
     m_damageJournal.add(damagedDeviceRegion);
     return true;
