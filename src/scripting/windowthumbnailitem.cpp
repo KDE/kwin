@@ -144,7 +144,9 @@ void WindowThumbnailSource::update()
     // frame, which is not ideal, but it is acceptable for things such as thumbnails.
     const int mask = Scene::PAINT_WINDOW_TRANSFORMED;
     ItemRenderer *renderer = kwinApp()->scene()->renderer(m_renderDevice);
-    renderer->beginFrame(offscreenRenderTarget, offscreenViewport);
+    if (!renderer->beginFrame(offscreenRenderTarget, offscreenViewport)) {
+        return;
+    }
     renderer->renderBackground(offscreenRenderTarget, offscreenViewport, offscreenRenderTarget.transformedRect());
     if (!renderer->renderItem(offscreenRenderTarget, offscreenViewport, m_handle->windowItem(), mask, Region::infinite(), WindowPaintData{}, {}, {})) {
         return;

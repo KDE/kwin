@@ -223,7 +223,9 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
     WorkspaceScene *scene = kwinApp()->scene();
     auto renderer = scene->renderer(device);
 
-    renderer->beginFrame(renderTarget, viewport);
+    if (!renderer->beginFrame(renderTarget, viewport)) {
+        return std::nullopt;
+    }
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
     const bool windowRender = renderer->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, Region::infinite(), WindowPaintData{}, [flags, w = window->windowItem()](Item *item) {
