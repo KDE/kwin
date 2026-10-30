@@ -54,8 +54,8 @@ public:
 
 private:
     X11WindowedEglBackend *const m_backend;
-    std::unique_ptr<GLFramebuffer> m_framebuffer;
-    std::unique_ptr<GLTexture> m_texture;
+    std::unique_ptr<Swapchain> m_swapchain;
+    std::shared_ptr<SwapchainSlot> m_slot;
 };
 
 /**
