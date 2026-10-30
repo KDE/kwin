@@ -136,22 +136,26 @@ void WindowThumbnailSource::update()
         m_offscreenTarget = std::make_unique<GLFramebuffer>(m_offscreenTexture.get());
     }
 
-    RenderTarget offscreenRenderTarget(m_offscreenTarget.get());
-    RenderViewport offscreenViewport(geometry, devicePixelRatio, offscreenRenderTarget, QPoint());
-
     // The thumbnail must be rendered using kwin's opengl context as VAOs are not
     // shared across contexts. Unfortunately, this also introduces a latency of 1
     // frame, which is not ideal, but it is acceptable for things such as thumbnails.
     const int mask = Scene::PAINT_WINDOW_TRANSFORMED;
     ItemRenderer *renderer = kwinApp()->scene()->renderer(m_renderDevice);
-    if (!renderer->beginFrame(offscreenRenderTarget, offscreenViewport)) {
+
+    OutputLayerBeginFrameInfo beginInfo{
+        .renderTarget = RenderTarget{m_offscreenTarget.get()},
+        .repaint = Region::infinite(),
+    };
+    const auto newRenderInfo = renderer->beginFrame(beginInfo, nullptr);
+    if (!newRenderInfo) {
         return;
     }
-    renderer->renderBackground(offscreenRenderTarget, offscreenViewport, offscreenRenderTarget.transformedRect());
-    if (!renderer->renderItem(offscreenRenderTarget, offscreenViewport, m_handle->windowItem(), mask, Region::infinite(), WindowPaintData{}, {}, {})) {
+    RenderViewport offscreenViewport(geometry, devicePixelRatio, newRenderInfo->renderTarget, QPoint());
+    renderer->renderBackground(newRenderInfo->renderTarget, offscreenViewport, newRenderInfo->renderTarget.transformedRect());
+    if (!renderer->renderItem(newRenderInfo->renderTarget, offscreenViewport, m_handle->windowItem(), mask, Region::infinite(), WindowPaintData{}, {}, {})) {
         return;
     }
-    renderer->endFrame();
+    renderer->endFrame(Region::infinite(), nullptr);
 
     // The fence is needed to avoid the case where qtquick renderer starts using
     // the texture while all rendering commands to it haven't completed yet.

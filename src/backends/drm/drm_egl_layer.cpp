@@ -58,14 +58,8 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame(OutputFrame *fr
     return m_surface.startRendering(targetRect().size(),
                                     drmOutput()->transform().combine(OutputTransform::FlipY),
                                     formats,
-                                    drmOutput()->blendingColor(),
                                     drmOutput()->layerBlendingColor(),
-                                    drmOutput()->needsShadowBuffer() ? pipeline()->iccProfile() : nullptr,
-                                    drmOutput()->wireColor(drmOutput()->nextState()),
-                                    drmOutput()->wireTransfer(drmOutput()->nextState()),
-                                    drmOutput()->scale(),
                                     drmOutput()->colorPowerTradeoff(),
-                                    drmOutput()->needsShadowBuffer(),
                                     m_requiredAlphaBits);
 }
 

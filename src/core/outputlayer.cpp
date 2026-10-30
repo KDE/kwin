@@ -229,6 +229,11 @@ void OutputLayer::setRequiredAlphaBits(uint32_t bits)
     m_requiredAlphaBits = bits;
 }
 
+uint32_t OutputLayer::requiredAlphaBits() const
+{
+    return m_requiredAlphaBits;
+}
+
 void OutputLayer::setZpos(int zpos)
 {
     Q_ASSERT(zpos >= m_minZpos);

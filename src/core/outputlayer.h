@@ -148,6 +148,7 @@ public:
      * Set the required bits for compositing on this plane. Direct scanout is not affected.
      */
     void setRequiredAlphaBits(uint32_t bits);
+    uint32_t requiredAlphaBits() const;
 
     void setZpos(int zpos);
     int zpos() const;
