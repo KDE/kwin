@@ -23,6 +23,7 @@ class KWIN_EXPORT VulkanTexture
 {
 public:
     static std::optional<vk::Format> qImageToVulkanFormat(QImage::Format format);
+    static std::optional<QImage::Format> vulkanToQImageFormat(vk::Format format);
     static std::unique_ptr<VulkanTexture> allocate(VulkanDevice *device, vk::Format format, const QSize &size, vk::ImageUsageFlags usage);
     static std::unique_ptr<VulkanTexture> upload(VulkanDevice *device, const QImage &image, vk::ImageUsageFlags usage);
 

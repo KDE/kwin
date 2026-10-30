@@ -95,6 +95,7 @@ public:
     bool isNvidia() const;
 
     FileDescriptor clearBuffer(GraphicsBuffer *buffer);
+    QImage download(GraphicsBuffer *buffer);
 
     static std::unique_ptr<RenderDevice> open(const QString &path, int authenticatedFd = -1);
     /**
