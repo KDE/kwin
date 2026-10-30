@@ -8,6 +8,7 @@
 */
 #pragma once
 #include "core/drm_formats.h"
+#include "core/graphicsbufferallocator.h"
 #include "core/region.h"
 #include "kwin_export.h"
 #include "utils/damagejournal.h"
@@ -21,7 +22,6 @@ namespace KWin
 
 class DrmDevice;
 class EglContext;
-class GraphicsBuffer;
 class OutputFrame;
 class RenderDevice;
 class VulkanDevice;
@@ -68,7 +68,7 @@ public:
         std::unique_ptr<MultiGpuSwapchain> swapchain;
         ModifierList importModifiers;
     };
-    static std::optional<AllocationInfo> createForScanout(RenderDevice *sourceDevice, DrmDevice *targetDevice, uint32_t format, const ModifierList &modifiers, const QSize &size, const FormatModifierMap &importFormats);
+    static std::optional<AllocationInfo> createForScanout(RenderDevice *sourceDevice, DrmDevice *targetDevice, GraphicsBufferOptions options, const FormatModifierMap &importFormats);
 
 private:
     std::optional<Ret> copyWithVulkanToCpu(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
