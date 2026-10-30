@@ -555,7 +555,7 @@ static bool renderLayer(RenderView *view, LogicalOutput *logicalOutput, BackendO
     auto &[renderTarget, repaint] = beginInfo.value();
     const Region bufferDamage = surfaceDamage.united(repaint).intersected(renderTarget.transformedRect());
     view->paint(renderTarget, view->renderOffset(), bufferDamage);
-    return view->layer()->endFrame(bufferDamage, surfaceDamage, frame.get());
+    return view->layer()->endFrame(surfaceDamage, frame.get());
 }
 
 static OutputLayer *findLayer(std::span<OutputLayer *const> layers, OutputLayerType type)

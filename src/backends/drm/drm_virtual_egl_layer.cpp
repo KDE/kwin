@@ -85,7 +85,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualDrmEglLayer::beginFrame(OutputFr
     };
 }
 
-bool VirtualDrmEglLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
+bool VirtualDrmEglLayer::endFrame(const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     if (frame && m_query) {
         m_query->end();
