@@ -558,12 +558,12 @@ Rect OffscreenQuickView::geometry() const
 
 void OffscreenQuickView::setOpacity(qreal opacity)
 {
-    d->m_view->setOpacity(opacity);
+    d->m_item->setOpacity(opacity);
 }
 
 qreal OffscreenQuickView::opacity() const
 {
-    return d->m_view->opacity();
+    return d->m_item->opacity();
 }
 
 bool OffscreenQuickView::hasAlphaChannel() const
