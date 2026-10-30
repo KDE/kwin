@@ -28,9 +28,12 @@
 #include "scene/workspacescene.h"
 #include "swapchain.h"
 #include "utils/common.h"
+#include "utils/envvar.h"
 
 namespace KWin
 {
+
+static const bool s_forcePresentSync = environmentVariableBoolValue("KWIN_DRM_FORCE_GL_FINISH_PRESENT").value_or(false);
 
 ItemRendererOpenGL::ItemRendererOpenGL(RenderDevice *device)
     : ItemRenderer(device)
@@ -200,7 +203,12 @@ void ItemRendererOpenGL::endFrame(const Region &repainted, RenderView *view)
 
     m_context->streamingVbo()->endOfFrame();
 
+    // older versions of the NVidia proprietary driver support neither implicit sync nor EGL_ANDROID_native_fence_sync
     EGLNativeFence fence(m_renderDevice->eglDisplay());
+    if (!fence.isValid() || !m_context->displayObject()->supportsNativeFence() || s_forcePresentSync) {
+        glFinish();
+    }
+
     if (fence.isValid()) {
         for (const auto &releasePoint : m_releasePoints) {
             releasePoint->addReleaseFence(fence.fileDescriptor());
