@@ -105,7 +105,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
     if (!beginInfo) {
         return std::nullopt;
     }
-    FileDescriptor sync = sceneView.paint(*beginInfo, QPoint(), fullDamage);
+    FileDescriptor sync = sceneView.paint(*beginInfo, QPoint(), fullDamage, nullptr);
     if (!layer.endFrame(fullDamage, std::move(sync), nullptr)) {
         return std::nullopt;
     }
@@ -175,7 +175,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
     if (!beginInfo) {
         return std::nullopt;
     }
-    FileDescriptor sync = sceneView.paint(*beginInfo, QPoint(), fullDamage);
+    FileDescriptor sync = sceneView.paint(*beginInfo, QPoint(), fullDamage, nullptr);
     if (!layer.endFrame(fullDamage, std::move(sync), nullptr)) {
         return std::nullopt;
     }
@@ -224,7 +224,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
         .renderTarget = RenderTarget(&offscreenTarget),
         .repaint = Region::infinite(),
     };
-    const auto renderInfo = renderer->beginFrame(beginInfo, nullptr);
+    const auto renderInfo = renderer->beginFrame(beginInfo, nullptr, nullptr);
     if (!renderInfo) {
         return std::nullopt;
     }
@@ -246,7 +246,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
             return std::nullopt;
         }
     }
-    renderer->endFrame(Region::infinite(), nullptr);
+    renderer->endFrame(Region::infinite(), nullptr, nullptr);
 
     GLFramebuffer::pushFramebuffer(&offscreenTarget);
     QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBA8888_Premultiplied);

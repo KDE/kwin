@@ -226,9 +226,11 @@ void SceneView::postPaint()
     m_scene->postPaint();
 }
 
-FileDescriptor SceneView::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceDamage)
+FileDescriptor SceneView::paint(const OutputLayerBeginFrameInfo &info,
+                                const QPoint &deviceOffset, const Region &deviceDamage,
+                                OutputFrame *frame)
 {
-    return m_scene->paint(info, deviceOffset, deviceDamage);
+    return m_scene->paint(info, deviceOffset, deviceDamage, frame);
 }
 
 double SceneView::desiredHdrHeadroom() const
@@ -444,10 +446,12 @@ Region ItemView::collectDamage()
         | m_layer->deviceRepaints();
 }
 
-FileDescriptor ItemView::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceDamage)
+FileDescriptor ItemView::paint(const OutputLayerBeginFrameInfo &info,
+                               const QPoint &deviceOffset, const Region &deviceDamage,
+                               OutputFrame *frame)
 {
     auto renderer = m_item->scene()->renderer(renderDevice());
-    const auto renderInfo = renderer->beginFrame(info, this);
+    const auto renderInfo = renderer->beginFrame(info, this, frame);
     if (!renderInfo) {
         return FileDescriptor{};
     }
@@ -463,7 +467,7 @@ FileDescriptor ItemView::paint(const OutputLayerBeginFrameInfo &info, const QPoi
     if (!success) {
         return FileDescriptor{};
     }
-    return renderer->endFrame(repaint, this);
+    return renderer->endFrame(repaint, this, frame);
 }
 
 bool ItemView::shouldRenderItem(Item *item) const
@@ -584,10 +588,12 @@ Region ItemTreeView::collectDamage()
     return ret;
 }
 
-FileDescriptor ItemTreeView::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceDamage)
+FileDescriptor ItemTreeView::paint(const OutputLayerBeginFrameInfo &info,
+                                   const QPoint &deviceOffset, const Region &deviceDamage,
+                                   OutputFrame *frame)
 {
     auto renderer = m_item->scene()->renderer(renderDevice());
-    const auto renderInfo = renderer->beginFrame(info, this);
+    const auto renderInfo = renderer->beginFrame(info, this, frame);
     if (!renderInfo) {
         return FileDescriptor{};
     }
@@ -600,7 +606,7 @@ FileDescriptor ItemTreeView::paint(const OutputLayerBeginFrameInfo &info, const 
     if (!renderer->renderItem(renderInfo->renderTarget, renderViewport, m_item, 0, repaint, data, {}, {})) {
         return FileDescriptor{};
     }
-    return renderer->endFrame(repaint, this);
+    return renderer->endFrame(repaint, this, frame);
 }
 
 bool ItemTreeView::shouldRenderItem(Item *item) const

@@ -9,7 +9,6 @@
 #include "x11_windowed_egl_backend.h"
 #include "core/gbmgraphicsbufferallocator.h"
 #include "core/renderdevice.h"
-#include "opengl/glrendertimequery.h"
 #include "swapchain.h"
 #include "x11_windowed_backend.h"
 #include "x11_windowed_logging.h"
@@ -69,7 +68,6 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
     Region repaint = Region::infinite();
     m_output->clearExposedArea();
 
-    m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(fbo),
         .repaint = repaint,
@@ -78,10 +76,6 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
 
 bool X11WindowedEglPrimaryLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
-    if (frame && m_query) {
-        m_query->end();
-        frame->addRenderTimeQuery(std::move(m_query));
-    }
     m_swapchain->release(m_buffer.get(), std::move(sync));
     m_output->setPrimaryBuffer(m_buffer->buffer());
     return true;
@@ -125,7 +119,6 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame(O
         }
         m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
     }
-    m_query = GLRenderTimeQuery::begin(m_backend->openglContextRef());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_framebuffer.get()),
         .repaint = Region::infinite(),
@@ -142,11 +135,6 @@ bool X11WindowedEglCursorLayer::endFrame(const Region &damagedDeviceRegion, File
     GLFramebuffer::popFramebuffer();
 
     static_cast<X11WindowedOutput *>(m_output.get())->cursor()->update(buffer.mirrored(false, true), hotspot());
-    if (frame && m_query) {
-        m_query->end();
-        frame->addRenderTimeQuery(std::move(m_query));
-    }
-
     return true;
 }
 

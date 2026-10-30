@@ -22,7 +22,6 @@ namespace KWin
 
 class SwapchainSlot;
 class Swapchain;
-class GLRenderTimeQuery;
 
 namespace Wayland
 {
@@ -48,7 +47,6 @@ private:
     DamageJournal m_damageJournal;
     std::shared_ptr<Swapchain> m_swapchain;
     std::shared_ptr<SwapchainSlot> m_buffer;
-    std::unique_ptr<GLRenderTimeQuery> m_query;
     WaylandEglBackend *const m_backend;
 
     friend class WaylandEglBackend;
@@ -71,7 +69,6 @@ private:
     WaylandEglBackend *m_backend;
     std::shared_ptr<Swapchain> m_swapchain;
     std::shared_ptr<SwapchainSlot> m_buffer;
-    std::unique_ptr<GLRenderTimeQuery> m_query;
 };
 
 /**

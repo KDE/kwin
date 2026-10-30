@@ -32,7 +32,6 @@ class EglGbmBackend;
 class GraphicsBuffer;
 class SurfaceItem;
 class GLTexture;
-class GLRenderTimeQuery;
 class ColorTransformation;
 class GlLookUpTable;
 class IccProfile;
@@ -88,8 +87,6 @@ private:
         OutputTransform transformation = OutputTransform::Kind::Normal;
 
         BackendOutput::ColorPowerTradeoff tradeoff = BackendOutput::ColorPowerTradeoff::PreferEfficiency;
-
-        std::unique_ptr<GLRenderTimeQuery> compositingTimeQuery;
     };
     bool checkSurface(const QSize &size, const FormatModifierMap &formats, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits);
     bool doesSurfaceFit(Surface *surface, const QSize &size, const FormatModifierMap &formats, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const;

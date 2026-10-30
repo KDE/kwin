@@ -115,7 +115,7 @@ void ScreenTransformEffect::addScreen(LogicalOutput *screen)
             .renderTarget = RenderTarget(state.m_prev.framebuffer.get(), screen->blendingColor()),
             .repaint = Region::infinite(),
         };
-        scene->paint(beginInfo, QPoint(), delegate.deviceRect());
+        scene->paint(beginInfo, QPoint(), delegate.deviceRect(), nullptr);
         scene->postPaint();
     });
 }

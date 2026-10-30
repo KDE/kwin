@@ -32,6 +32,7 @@ class ColorDescription;
 class RenderDevice;
 class FileDescriptor;
 class RenderView;
+class OutputFrame;
 
 class KWIN_EXPORT ItemRenderer
 {
@@ -56,8 +57,10 @@ public:
 
     virtual std::unique_ptr<Atlas> createAtlas(const QList<QImage> &sprites) = 0;
 
-    [[nodiscard]] virtual std::optional<OutputLayerBeginFrameInfo> beginFrame(const OutputLayerBeginFrameInfo &beginInfo, RenderView *view) = 0;
-    [[nodiscard]] virtual FileDescriptor endFrame(const Region &repainted, RenderView *view) = 0;
+    [[nodiscard]] virtual std::optional<OutputLayerBeginFrameInfo> beginFrame(const OutputLayerBeginFrameInfo &beginInfo,
+                                                                              RenderView *view,
+                                                                              OutputFrame *frame) = 0;
+    [[nodiscard]] virtual FileDescriptor endFrame(const Region &repainted, RenderView *view, OutputFrame *frame) = 0;
 
     virtual void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion) = 0;
     [[nodiscard]] virtual bool renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) = 0;

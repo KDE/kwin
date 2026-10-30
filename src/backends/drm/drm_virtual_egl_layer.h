@@ -24,7 +24,6 @@ class SwapchainSlot;
 class GLTexture;
 class EglGbmBackend;
 class DrmVirtualOutput;
-class GLRenderTimeQuery;
 class SurfaceInterface;
 
 class VirtualDrmEglLayer : public DrmOutputLayer
@@ -50,7 +49,6 @@ private:
     std::shared_ptr<Swapchain> m_swapchain;
     std::shared_ptr<Swapchain> m_oldSwapchain;
     std::shared_ptr<SwapchainSlot> m_currentSlot;
-    std::unique_ptr<GLRenderTimeQuery> m_query;
 
     EglGbmBackend *const m_eglBackend;
 };

@@ -12,7 +12,6 @@
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "drm_virtual_output.h"
-#include "opengl/glrendertimequery.h"
 #include "scene/surfaceitem_wayland.h"
 #include "swapchain.h"
 #include "utils/envvar.h"
@@ -75,8 +74,6 @@ std::optional<OutputLayerBeginFrameInfo> VirtualDrmEglLayer::beginFrame(OutputFr
 
     m_currentSlot = slot;
 
-    m_query = GLRenderTimeQuery::begin(m_eglBackend->openglContextRef());
-
     const Region repair = m_damageJournal.accumulate(slot->age(), Region::infinite());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(fbo),
@@ -86,10 +83,6 @@ std::optional<OutputLayerBeginFrameInfo> VirtualDrmEglLayer::beginFrame(OutputFr
 
 bool VirtualDrmEglLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
-    if (frame && m_query) {
-        m_query->end();
-        frame->addRenderTimeQuery(std::move(m_query));
-    }
     m_damageJournal.add(damagedDeviceRegion);
     m_swapchain->release(m_currentSlot.get(), std::move(sync));
     return true;

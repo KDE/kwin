@@ -20,6 +20,7 @@ class RenderDevice;
 class Swapchain;
 class SwapchainSlot;
 class IccShader;
+class GLRenderTimeQuery;
 
 class KWIN_EXPORT ItemRendererOpenGL : public ItemRenderer
 {
@@ -86,8 +87,10 @@ public:
 
     std::unique_ptr<Atlas> createAtlas(const QList<QImage> &sprites) override;
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame(const OutputLayerBeginFrameInfo &beginInfo, RenderView *view) override;
-    FileDescriptor endFrame(const Region &repaint, RenderView *view) override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame(const OutputLayerBeginFrameInfo &beginInfo,
+                                                        RenderView *view,
+                                                        OutputFrame *frame) override;
+    FileDescriptor endFrame(const Region &repaint, RenderView *view, OutputFrame *frame) override;
 
     void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion) override;
     bool renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) override;
@@ -104,6 +107,7 @@ private:
     const std::shared_ptr<EglContext> m_context;
     bool m_blendingEnabled = false;
     std::unordered_set<std::shared_ptr<SyncReleasePoint>> m_releasePoints;
+    std::unique_ptr<GLRenderTimeQuery> m_renderTimeQuery;
 
     struct ShadowBuffer
     {

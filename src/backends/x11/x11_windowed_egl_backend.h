@@ -20,7 +20,6 @@ class Swapchain;
 class X11WindowedBackend;
 class X11WindowedOutput;
 class X11WindowedEglBackend;
-class GLRenderTimeQuery;
 
 class X11WindowedEglPrimaryLayer : public OutputLayer
 {
@@ -36,7 +35,6 @@ public:
 private:
     std::shared_ptr<Swapchain> m_swapchain;
     std::shared_ptr<SwapchainSlot> m_buffer;
-    std::unique_ptr<GLRenderTimeQuery> m_query;
     X11WindowedOutput *const m_output;
     X11WindowedEglBackend *const m_backend;
 };
@@ -58,7 +56,6 @@ private:
     X11WindowedEglBackend *const m_backend;
     std::unique_ptr<GLFramebuffer> m_framebuffer;
     std::unique_ptr<GLTexture> m_texture;
-    std::unique_ptr<GLRenderTimeQuery> m_query;
 };
 
 /**
