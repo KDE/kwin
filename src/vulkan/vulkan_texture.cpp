@@ -53,6 +53,27 @@ std::optional<vk::Format> VulkanTexture::qImageToVulkanFormat(QImage::Format for
     }
 }
 
+std::optional<QImage::Format> VulkanTexture::vulkanToQImageFormat(vk::Format format)
+{
+    // TODO support the rest of the formats using swizzles
+    switch (format) {
+    case vk::Format::eR8Unorm:
+        return QImage::Format_Grayscale8;
+    case vk::Format::eR16Unorm:
+        return QImage::Format_Grayscale16;
+    case vk::Format::eR8G8B8A8Unorm:
+        return QImage::Format_RGBA8888_Premultiplied;
+    case vk::Format::eR16G16B16A16Unorm:
+        return QImage::Format_RGBA64_Premultiplied;
+    case vk::Format::eR16G16B16A16Sfloat:
+        return QImage::Format_RGBA16FPx4_Premultiplied;
+    case vk::Format::eR32G32B32A32Sfloat:
+        return QImage::Format_RGBA32FPx4_Premultiplied;
+    default:
+        return std::nullopt;
+    }
+}
+
 VulkanTexture::VulkanTexture(VulkanDevice *device, vk::Format format, vk::raii::Image &&image,
                              std::vector<vk::raii::DeviceMemory> &&memory, const QSize &size)
     : m_device(device)
@@ -82,35 +103,15 @@ vk::Format VulkanTexture::format() const
     return m_format;
 }
 
-static QImage::Format vulkanToQImageFormat(vk::Format format)
-{
-    switch (format) {
-    case vk::Format::eR8Unorm:
-        return QImage::Format_Grayscale8;
-    case vk::Format::eR16Unorm:
-        return QImage::Format_Grayscale16;
-    case vk::Format::eR8G8B8A8Unorm:
-        return QImage::Format_RGBA8888_Premultiplied;
-    case vk::Format::eR16G16B16A16Unorm:
-        return QImage::Format_RGBA64_Premultiplied;
-    case vk::Format::eR16G16B16A16Sfloat:
-        return QImage::Format_RGBA16FPx4_Premultiplied;
-    case vk::Format::eR32G32B32A32Sfloat:
-        return QImage::Format_RGBA32FPx4_Premultiplied;
-    default:
-        return QImage::Format_Invalid;
-    }
-}
-
 QImage VulkanTexture::download() const
 {
-    const QImage::Format qFormat = vulkanToQImageFormat(m_format);
-    if (qFormat == QImage::Format_Invalid) {
+    const auto qFormat = vulkanToQImageFormat(m_format);
+    if (!qFormat) {
         qCWarning(KWIN_VULKAN) << "Unsupported format for download:" << vk::to_string(m_format);
         return {};
     }
 
-    QImage result(m_size, qFormat);
+    QImage result(m_size, *qFormat);
     const uint32_t bytesPerPixel = result.depth() / 8;
     const vk::DeviceSize bufferSize = m_size.width() * m_size.height() * bytesPerPixel;
 
