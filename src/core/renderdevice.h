@@ -9,6 +9,7 @@
 #pragma once
 #include "core/drm_formats.h"
 #include "kwin_export.h"
+#include "utils/filedescriptor.h"
 
 #include <QHash>
 #include <QObject>
@@ -92,6 +93,8 @@ public:
 
     bool isIntel() const;
     bool isNvidia() const;
+
+    FileDescriptor clearBuffer(GraphicsBuffer *buffer);
 
     static std::unique_ptr<RenderDevice> open(const QString &path, int authenticatedFd = -1);
     /**
