@@ -892,7 +892,9 @@ void DrmOutput::resetPostBlendPipeline()
 void DrmOutput::maybeScheduleRepaints(const State &next)
 {
     // TODO move the output layers to BackendOutput, and have it take care of this when updating State
-    if (next.blendingColor != m_state.blendingColor || next.layerBlendingColor != m_state.layerBlendingColor) {
+    if (next.blendingColor != m_state.blendingColor
+        || next.layerBlendingColor != m_state.layerBlendingColor
+        || next.transform != m_state.transform) {
         const auto layers = m_pipeline->layers();
         for (const auto &layer : layers) {
             layer->addDeviceRepaint(Region::infinite());

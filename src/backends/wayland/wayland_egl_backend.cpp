@@ -47,11 +47,6 @@ WaylandEglLayer::~WaylandEglLayer()
 
 std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame(OutputFrame *frame)
 {
-    if (!m_backend->openglContext()->makeCurrent()) {
-        qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
-        return std::nullopt;
-    }
-
     if (m_color != m_previousColor) {
         // need to force a full repaint
         m_damageJournal.clear();
@@ -89,23 +84,11 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame(OutputFrame
         return std::nullopt;
     }
 
-    auto fbo = m_backend->openglContext()->importDmaBufAsFbo(m_buffer->buffer());
-    if (!fbo) {
-        return std::nullopt;
-    }
-
     // The picture is composed for the display as the user sees it, while the buffer has the
-    // size the panel is driven at, so a rotated display has to be turned on the way in. The
-    // journal is about where things changed, and after a turn its entries describe somewhere
-    // else entirely.
+    // size the panel is driven at, so a rotated display has to be turned on the way in.
     const OutputTransform contentTransform = bufferTransform().combine(OutputTransform::FlipY);
-    if (fbo->colorAttachment()->contentTransform() != contentTransform) {
-        m_damageJournal.clear();
-    }
-    fbo->colorAttachment()->setContentTransform(contentTransform);
-
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(fbo, m_color),
+        .renderTarget = RenderTarget(m_buffer->buffer(), contentTransform, m_color),
         .repaint = m_damageJournal.accumulate(m_buffer->age(), Region::infinite()),
     };
 }
@@ -155,7 +138,6 @@ WaylandEglCursorLayer::WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBa
 
 WaylandEglCursorLayer::~WaylandEglCursorLayer()
 {
-    (void)m_backend->openglContext()->makeCurrent();
 }
 
 std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame(OutputFrame *frame)
@@ -196,17 +178,8 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame(Outpu
         return std::nullopt;
     }
 
-    auto fbo = m_backend->openglContext()->importDmaBufAsFbo(m_buffer->buffer());
-    if (!fbo) {
-        return std::nullopt;
-    }
-
-    // The hotspot is handed over turned with the display, so the picture it points into has
-    // to be turned as well - and on a rotated screen the cursor has to stand upright anyway.
-    fbo->colorAttachment()->setContentTransform(bufferTransform().combine(OutputTransform::FlipY));
-
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(fbo),
+        .renderTarget = RenderTarget(m_buffer->buffer(), bufferTransform().combine(OutputTransform::FlipY)),
         .repaint = Region::infinite(),
     };
 }

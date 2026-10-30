@@ -59,25 +59,15 @@ std::optional<OutputLayerBeginFrameInfo> VirtualDrmEglLayer::beginFrame(OutputFr
         }
     }
 
-    if (!m_eglBackend->openglContext()->makeCurrent()) {
-        return std::nullopt;
-    }
-
     auto slot = m_swapchain->acquire();
     if (!slot) {
         return std::nullopt;
     }
-
-    auto fbo = m_eglBackend->openglContext()->importDmaBufAsFbo(slot->buffer());
-    if (!fbo) {
-        return std::nullopt;
-    }
-
     m_currentSlot = slot;
 
     const Region repair = m_damageJournal.accumulate(slot->age(), Region::infinite());
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(fbo),
+        .renderTarget = RenderTarget(m_currentSlot->buffer(), OutputTransform::Normal),
         .repaint = repair,
     };
 }

@@ -93,15 +93,27 @@ std::optional<OutputLayerBeginFrameInfo> ItemRendererOpenGL::beginFrame(const Ou
         return std::nullopt;
     }
 
+    GLFramebuffer *fbo = beginInfo.renderTarget.framebuffer();
+    if (!fbo) {
+        fbo = m_context->importDmaBufAsFbo(beginInfo.renderTarget.buffer());
+    }
+    if (!fbo) {
+        return std::nullopt;
+    }
+    fbo->colorAttachment()->setContentTransform(beginInfo.renderTarget.transform());
+
     if (frame) {
         m_renderTimeQuery = GLRenderTimeQuery::begin(m_context);
     }
 
     const bool needsShadow = view && view->backendOutput() && view->backendOutput()->needsShadowBuffer();
     if (!needsShadow) {
-        m_context->pushFramebuffer(beginInfo.renderTarget.framebuffer());
+        m_context->pushFramebuffer(fbo);
         m_context->streamingVbo()->beginFrame();
-        return beginInfo;
+        return OutputLayerBeginFrameInfo{
+            .renderTarget = RenderTarget(fbo),
+            .repaint = beginInfo.repaint,
+        };
     }
 
     const auto iccProfile = view->backendOutput()->currentIccProfile();
@@ -143,19 +155,19 @@ std::optional<OutputLayerBeginFrameInfo> ItemRendererOpenGL::beginFrame(const Ou
     if (!buffer.currentSlot) {
         return std::nullopt;
     }
-    const auto fbo = m_context->importDmaBufAsFbo(buffer.currentSlot->buffer());
-    if (!fbo) {
+    const auto shadowFbo = m_context->importDmaBufAsFbo(buffer.currentSlot->buffer());
+    if (!shadowFbo) {
         return std::nullopt;
     }
-    fbo->colorAttachment()->setContentTransform(beginInfo.renderTarget.texture()->contentTransform());
+    shadowFbo->colorAttachment()->setContentTransform(beginInfo.renderTarget.transform());
 
-    m_context->pushFramebuffer(fbo);
+    m_context->pushFramebuffer(shadowFbo);
     m_context->streamingVbo()->beginFrame();
 
-    buffer.lastTarget = beginInfo.renderTarget.framebuffer();
+    buffer.lastTarget = fbo;
     buffer.lastDeviceRepair = beginInfo.repaint;
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget{fbo, buffer.color},
+        .renderTarget = RenderTarget{shadowFbo, buffer.color},
         .repaint = buffer.journal.accumulate(buffer.currentSlot->age(), Region::infinite()),
     };
 }

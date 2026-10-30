@@ -75,7 +75,6 @@ private:
 
         bool needsRecreation = false;
 
-        std::shared_ptr<EglContext> context;
         std::shared_ptr<Swapchain> swapchain;
         std::shared_ptr<SwapchainSlot> currentSlot;
         DamageJournal damageJournal;
