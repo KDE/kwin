@@ -68,6 +68,7 @@ Compositor::Compositor(QObject *workspace)
     : QObject(workspace)
     , m_allowOverlaysEnv(environmentVariableBoolValue("KWIN_USE_OVERLAYS"))
     , m_renderLoopDrivenAnimationDriver(new RenderLoopDrivenQAnimationDriver(this))
+    , m_resetTimer(std::make_unique<QTimer>())
 {
     // register DBus
     new CompositorDBusInterface(this);
@@ -99,6 +100,10 @@ Compositor::Compositor(QObject *workspace)
         qCWarning(KWIN_CORE, "Switched primary GPU to %s", qPrintable(m_primaryDevice->path()));
         Q_EMIT primaryGpuChanged();
     });
+
+    m_resetTimer->setSingleShot(true);
+    m_resetTimer->setInterval(0);
+    connect(m_resetTimer.get(), &QTimer::timeout, this, &Compositor::reinitialize);
 }
 
 Compositor::~Compositor()
@@ -371,6 +376,7 @@ void Compositor::start()
     const auto &devices = GpuManager::self()->renderDevices();
     for (const auto &device : devices) {
         kwinApp()->scene()->attachRenderer(device.get(), std::make_unique<ItemRendererOpenGL>(device.get()));
+        connect(device.get(), &RenderDevice::resetDetected, this, &Compositor::gpuResetDetected);
     }
 
     handleOutputsChanged();
@@ -424,6 +430,11 @@ void Compositor::stop()
 
     m_state = State::Off;
     Q_EMIT compositingToggled(false);
+}
+
+void Compositor::gpuResetDetected()
+{
+    m_resetTimer->start();
 }
 
 static bool isTearingRequested(const Item *item)
@@ -813,12 +824,6 @@ std::pair<QList<Compositor::LayerData>, std::expected<void, OutputError>> Compos
 
 void Compositor::composite(RenderLoop *renderLoop)
 {
-    if (m_backend->checkGraphicsReset()) {
-        qCDebug(KWIN_CORE) << "Graphics reset occurred";
-        reinitialize();
-        return;
-    }
-
     WorkspaceScene *scene = kwinApp()->scene();
     BackendOutput *output = findOutput(renderLoop);
     LogicalOutput *logicalOutput = workspace()->findOutput(output);

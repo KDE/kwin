@@ -35,8 +35,10 @@ using glGetnTexImage_func = void (*)(GLenum target, GLint level, GLenum format, 
                                      GLsizei bufSize, void *pixels);
 using glGetnUniformfv_func = void (*)(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
 
-class KWIN_EXPORT EglContext : public std::enable_shared_from_this<EglContext>
+class KWIN_EXPORT EglContext : public QObject, public std::enable_shared_from_this<EglContext>
 {
+    Q_OBJECT
+
 public:
     EglContext(EglDisplay *display, EGLConfig config, ::EGLContext context, const std::shared_ptr<EglContext> &shareContext);
     ~EglContext();
@@ -95,7 +97,6 @@ public:
      */
     void setFailed();
 
-    GLenum checkGraphicsResetStatus();
     void glReadnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei bufSize, GLvoid *data);
     void glGetnTexImage(GLenum target, GLint level, GLenum format, GLenum type, GLsizei bufSize, void *pixels);
     void glGetnUniformfv(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
@@ -113,6 +114,9 @@ public:
     static EglContext *currentContext();
     static std::shared_ptr<EglContext> create(EglDisplay *display, EGLConfig config, const std::shared_ptr<EglContext> &shareContext);
 
+Q_SIGNALS:
+    void resetDetected();
+
 private:
     static ::EGLContext createContext(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext);
     bool checkTimerQuerySupport() const;
@@ -122,6 +126,7 @@ private:
     typedef void (*resolveFuncPtr)();
     void glResolveFunctions(const std::function<resolveFuncPtr(const char *)> &resolveFunction);
     void initDebugOutput();
+    bool checkGraphicsReset();
 
     static EglContext *s_currentContext;
 

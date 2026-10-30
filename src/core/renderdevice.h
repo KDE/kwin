@@ -100,6 +100,13 @@ public:
      */
     static std::unique_ptr<RenderDevice> createSoftwareDevice(dev_t deviceId);
 
+Q_SIGNALS:
+    /**
+     * Emitted when either Vulkan or EGL have detected a graphics reset
+     * and graphics resources need to be re-created
+     */
+    void resetDetected();
+
 private:
     void handleVulkanDeviceLoss();
     void createVulkanDevice();

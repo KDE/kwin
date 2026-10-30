@@ -93,6 +93,7 @@ protected Q_SLOTS:
 
 private Q_SLOTS:
     void handleFrameRequested(KWin::RenderLoop *renderLoop);
+    void gpuResetDetected();
 
 protected:
     BackendOutput *findOutput(RenderLoop *loop) const;
@@ -131,6 +132,8 @@ protected:
     std::optional<bool> m_allowOverlaysEnv;
     RenderLoopDrivenQAnimationDriver *m_renderLoopDrivenAnimationDriver;
     RenderDevice *m_primaryDevice = nullptr;
+
+    std::unique_ptr<QTimer> m_resetTimer;
 };
 
 } // namespace KWin
