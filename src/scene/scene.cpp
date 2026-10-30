@@ -446,22 +446,24 @@ Region ItemView::collectDamage()
 
 void ItemView::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceDamage)
 {
-    const Region repaint = (info.repaint | deviceDamage) & info.renderTarget.transformedRect();
-    RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), info.renderTarget, deviceOffset);
-
     auto renderer = m_item->scene()->renderer(renderDevice());
-    if (!renderer->beginFrame(info.renderTarget, renderViewport)) {
+    const auto renderInfo = renderer->beginFrame(info, this);
+    if (!renderInfo) {
         return;
     }
-    renderer->renderBackground(info.renderTarget, renderViewport, repaint);
+
+    const Region repaint = (renderInfo->repaint | deviceDamage) & renderInfo->renderTarget.transformedRect();
+    RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), renderInfo->renderTarget, deviceOffset);
     WindowPaintData data;
-    const bool success = renderer->renderItem(info.renderTarget, renderViewport, m_item, 0, repaint, data, [this](Item *toRender) {
+
+    renderer->renderBackground(renderInfo->renderTarget, renderViewport, repaint);
+    const bool success = renderer->renderItem(renderInfo->renderTarget, renderViewport, m_item, 0, repaint, data, [this](Item *toRender) {
         return toRender != m_item;
     }, {});
     if (!success) {
         return;
     }
-    renderer->endFrame();
+    renderer->endFrame(repaint, this);
 }
 
 bool ItemView::shouldRenderItem(Item *item) const
@@ -584,19 +586,21 @@ Region ItemTreeView::collectDamage()
 
 void ItemTreeView::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceDamage)
 {
-    const Region repaint = (info.repaint | deviceDamage) & info.renderTarget.transformedRect();
-    RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), info.renderTarget, deviceOffset);
-
     auto renderer = m_item->scene()->renderer(renderDevice());
-    if (!renderer->beginFrame(info.renderTarget, renderViewport)) {
+    const auto renderInfo = renderer->beginFrame(info, this);
+    if (!renderInfo) {
         return;
     }
-    renderer->renderBackground(info.renderTarget, renderViewport, repaint);
+
+    const Region repaint = (renderInfo->repaint | deviceDamage) & renderInfo->renderTarget.transformedRect();
+    RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), renderInfo->renderTarget, deviceOffset);
     WindowPaintData data;
-    if (!renderer->renderItem(info.renderTarget, renderViewport, m_item, 0, repaint, data, {}, {})) {
+
+    renderer->renderBackground(renderInfo->renderTarget, renderViewport, repaint);
+    if (!renderer->renderItem(renderInfo->renderTarget, renderViewport, m_item, 0, repaint, data, {}, {})) {
         return;
     }
-    renderer->endFrame();
+    renderer->endFrame(repaint, this);
 }
 
 bool ItemTreeView::shouldRenderItem(Item *item) const

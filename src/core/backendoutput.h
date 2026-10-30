@@ -243,9 +243,13 @@ public:
     bool highDynamicRange() const;
     uint32_t referenceLuminance() const;
     AutoRotationPolicy autoRotationPolicy() const;
-    std::shared_ptr<IccProfile> iccProfile() const;
+
     QString iccProfilePath() const;
     QString hdrIccProfilePath() const;
+    std::shared_ptr<IccProfile> currentIccProfile() const;
+    virtual Colorimetry wireColor() const;
+    virtual TransferFunction::Type wireTransfer() const;
+
     /**
      * @returns the mst path of this output. Is empty if invalid
      */
@@ -341,6 +345,12 @@ public:
      * undoes setPostBlendPipeline; does nothing if no offload is active
      */
     virtual void resetPostBlendPipeline();
+
+    /**
+     * @returns whether or not the renderer needs to render to a shadow buffer before copying
+     *          the result to the actual framebuffer with a color transformation
+     */
+    virtual bool needsShadowBuffer() const;
 
     uint32_t priority() const;
     const AutoBrightnessCurve &autoBrightnessCurve() const;
