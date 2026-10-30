@@ -131,7 +131,7 @@ QColor ColorPickerEffect::pick()
             sceneView.prePaint();
             sceneView.paint(beginInfo->renderTarget, QPoint(), pixelDamage);
             sceneView.postPaint();
-            if (!layer.endFrame(pixelDamage, pixelDamage, nullptr)) {
+            if (!layer.endFrame(pixelDamage, nullptr)) {
                 return;
             }
 

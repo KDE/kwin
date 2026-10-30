@@ -96,7 +96,7 @@ public:
     virtual bool preparePresentationTest();
 
     virtual std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame = nullptr) = 0;
-    virtual bool endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame) = 0;
+    virtual bool endFrame(const Region &damagedDeviceRegion, OutputFrame *frame) = 0;
 
     /**
      * Do checks if the current configuration of the layer could possibly work.

@@ -44,7 +44,7 @@ std::optional<OutputLayerBeginFrameInfo> ScreencastLayer::beginFrame(OutputFrame
     };
 }
 
-bool ScreencastLayer::endFrame(const Region &renderedRegion, const Region &damagedRegion, OutputFrame *frame)
+bool ScreencastLayer::endFrame(const Region &damagedRegion, OutputFrame *frame)
 {
     return true;
 }
