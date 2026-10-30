@@ -11,9 +11,12 @@
 #include "core/graphicsbufferallocator.h"
 #include "core/syncobjtimeline.h"
 #include "utils/common.h"
+#include "utils/envvar.h"
 
 namespace KWin
 {
+
+static const bool bufferAgeEnabled = environmentVariableBoolValue("KWIN_USE_BUFFER_AGE").value_or(true);
 
 SwapchainSlot::SwapchainSlot(GraphicsBuffer *buffer)
     : m_buffer(buffer)
@@ -34,7 +37,7 @@ GraphicsBuffer *SwapchainSlot::buffer() const
 
 int SwapchainSlot::age() const
 {
-    return m_age;
+    return bufferAgeEnabled ? m_age : 0;
 }
 
 bool SwapchainSlot::isBusy() const

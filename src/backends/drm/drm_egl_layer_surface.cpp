@@ -35,8 +35,6 @@
 namespace KWin
 {
 
-static const bool bufferAgeEnabled = environmentVariableBoolValue("KWIN_USE_BUFFER_AGE").value_or(true);
-
 static gbm_format_name_desc formatName(uint32_t format)
 {
     gbm_format_name_desc ret;
@@ -103,7 +101,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     m_surface->compositingTimeQuery = GLRenderTimeQuery::begin(m_surface->context);
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(fbo, layerBlendingColor),
-        .repaint = bufferAgeEnabled ? m_surface->damageJournal.accumulate(slot->age(), Region::infinite()) : Region::infinite(),
+        .repaint = m_surface->damageJournal.accumulate(slot->age(), Region::infinite()),
     };
 }
 
