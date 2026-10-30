@@ -72,7 +72,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame(OutputFrame
     };
 }
 
-bool VirtualEglLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
+bool VirtualEglLayer::endFrame(const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     if (frame && m_query) {
         m_query->end();

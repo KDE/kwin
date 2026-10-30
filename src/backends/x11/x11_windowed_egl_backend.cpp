@@ -73,7 +73,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
     };
 }
 
-bool X11WindowedEglPrimaryLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
+bool X11WindowedEglPrimaryLayer::endFrame(const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     if (frame && m_query) {
         m_query->end();
@@ -130,7 +130,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame(O
     };
 }
 
-bool X11WindowedEglCursorLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
+bool X11WindowedEglCursorLayer::endFrame(const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     EglContext *context = m_backend->openglContext();
     QImage buffer(m_framebuffer->size(), QImage::Format_RGBA8888_Premultiplied);

@@ -20,7 +20,7 @@ public:
     void releaseBuffers() override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame = nullptr) override;
-    bool endFrame(const Region &renderedRegion, const Region &damagedRegion, OutputFrame *frame) override;
+    bool endFrame(const Region &damagedRegion, OutputFrame *frame) override;
 
 private:
     const FormatModifierMap m_formats;

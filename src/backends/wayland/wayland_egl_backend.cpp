@@ -115,7 +115,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame(OutputFrame
     };
 }
 
-bool WaylandEglLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
+bool WaylandEglLayer::endFrame(const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     if (frame && m_query) {
         m_query->end();
@@ -220,7 +220,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame(Outpu
     };
 }
 
-bool WaylandEglCursorLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
+bool WaylandEglCursorLayer::endFrame(const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     if (frame && m_query) {
         m_query->end();
