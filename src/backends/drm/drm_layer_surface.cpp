@@ -6,25 +6,18 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "drm_egl_layer_surface.h"
+#include "drm_layer_surface.h"
 
 #include "config-kwin.h"
 
 #include "core/colortransformation.h"
 #include "core/drm_formats.h"
 #include "core/graphicsbufferview.h"
-#include "core/iccprofile.h"
 #include "core/renderdevice.h"
-#include "drm_egl_backend.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "multigpuswapchain.h"
-#include "opengl/eglnativefence.h"
-#include "opengl/gllut.h"
-#include "opengl/icc_shader.h"
-#include "qpainter/qpainterswapchain.h"
 #include "swapchain.h"
-#include "utils/envvar.h"
 
 #include <drm_fourcc.h>
 #include <errno.h>
@@ -34,32 +27,32 @@
 namespace KWin
 {
 
-EglGbmLayerSurface::EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target)
+DrmLayerSurface::DrmLayerSurface(DrmGpu *gpu, RenderBackend *backend, BufferTarget target)
     : m_gpu(gpu)
-    , m_eglBackend(eglBackend)
+    , m_backend(backend)
     , m_requestedBufferTarget(target)
 {
-    connect(m_gpu, &DrmGpu::renderDeviceChanged, this, &EglGbmLayerSurface::destroyResources);
+    connect(m_gpu, &DrmGpu::renderDeviceChanged, this, &DrmLayerSurface::destroyResources);
 }
 
-EglGbmLayerSurface::~EglGbmLayerSurface() = default;
+DrmLayerSurface::~DrmLayerSurface() = default;
 
-EglGbmLayerSurface::Surface::~Surface()
+DrmLayerSurface::Surface::~Surface()
 {
     importSwapchain.reset();
 }
 
-void EglGbmLayerSurface::destroyResources()
+void DrmLayerSurface::destroyResources()
 {
     m_surface = {};
     m_oldSurface = {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation,
-                                                                            const FormatModifierMap &formats,
-                                                                            const std::shared_ptr<ColorDescription> &layerBlendingColor,
-                                                                            BackendOutput::ColorPowerTradeoff tradeoff,
-                                                                            uint32_t requiredAlphaBits)
+std::optional<OutputLayerBeginFrameInfo> DrmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation,
+                                                                         const FormatModifierMap &formats,
+                                                                         const std::shared_ptr<ColorDescription> &layerBlendingColor,
+                                                                         BackendOutput::ColorPowerTradeoff tradeoff,
+                                                                         uint32_t requiredAlphaBits)
 {
     if (!checkSurface(bufferSize, formats, tradeoff, requiredAlphaBits)) {
         return std::nullopt;
@@ -80,7 +73,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     };
 }
 
-bool EglGbmLayerSurface::endRendering(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
+bool DrmLayerSurface::endRendering(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
     m_surface->damageJournal.add(damagedDeviceRegion);
     m_surface->swapchain->release(m_surface->currentSlot.get(), sync.duplicate());
@@ -93,17 +86,12 @@ bool EglGbmLayerSurface::endRendering(const Region &damagedDeviceRegion, FileDes
     }
 }
 
-EglGbmBackend *EglGbmLayerSurface::eglBackend() const
-{
-    return m_eglBackend;
-}
-
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::currentBuffer() const
+std::shared_ptr<DrmFramebuffer> DrmLayerSurface::currentBuffer() const
 {
     return m_surface ? m_surface->currentFramebuffer : nullptr;
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const FormatModifierMap &formats, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits)
+std::shared_ptr<DrmFramebuffer> DrmLayerSurface::renderTestBuffer(const QSize &bufferSize, const FormatModifierMap &formats, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits)
 {
     if (checkSurface(bufferSize, formats, tradeoff, requiredAlphaBits)) {
         return m_surface->currentFramebuffer;
@@ -112,14 +100,14 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize
     }
 }
 
-void EglGbmLayerSurface::forgetDamage()
+void DrmLayerSurface::forgetDamage()
 {
     if (m_surface) {
         m_surface->damageJournal.clear();
     }
 }
 
-bool EglGbmLayerSurface::checkSurface(const QSize &size, const FormatModifierMap &formats, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits)
+bool DrmLayerSurface::checkSurface(const QSize &size, const FormatModifierMap &formats, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits)
 {
     if (doesSurfaceFit(m_surface.get(), size, formats, tradeoff, requiredAlphaBits)) {
         return true;
@@ -128,7 +116,7 @@ bool EglGbmLayerSurface::checkSurface(const QSize &size, const FormatModifierMap
         m_surface = std::move(m_oldSurface);
         return true;
     }
-    if (m_gpu->renderDevice() && m_gpu->renderDevice() != m_eglBackend->renderDevice() && m_gpu->renderDevice()->isInReset()) {
+    if (m_gpu->renderDevice() && m_gpu->renderDevice() != m_backend->renderDevice() && m_gpu->renderDevice()->isInReset()) {
         // avoid creating a suboptimal swapchain until the reset is complete
         return false;
     }
@@ -148,7 +136,7 @@ bool EglGbmLayerSurface::checkSurface(const QSize &size, const FormatModifierMap
     return false;
 }
 
-bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, const FormatModifierMap &formats, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
+bool DrmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, const FormatModifierMap &formats, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
 {
     if (!surface || surface->needsRecreation || !surface->swapchain || surface->swapchain->size() != size) {
         return false;
@@ -165,13 +153,13 @@ bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, con
     }
 }
 
-std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, const FormatModifierMap &formats, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
+std::unique_ptr<DrmLayerSurface::Surface> DrmLayerSurface::createSurface(const QSize &size, const FormatModifierMap &formats, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
 {
     const QList<FormatInfo> sortedFormats = OutputLayer::filterAndSortFormats(formats, requiredAlphaBits, tradeoff);
 
     // special case: the cursor plane needs linear, but not all GPUs (NVidia) can render to linear
     auto bufferTarget = m_requestedBufferTarget;
-    if (m_gpu->renderDevice() == m_eglBackend->renderDevice()) {
+    if (m_gpu->renderDevice() == m_backend->renderDevice()) {
         const bool needsLinear = std::ranges::all_of(sortedFormats, [&formats](const FormatInfo &fmt) {
             const auto &mods = formats[fmt.drmFormat];
             return std::ranges::all_of(mods, [](uint64_t mod) {
@@ -179,7 +167,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
             });
         });
         if (needsLinear) {
-            const auto renderFormats = m_eglBackend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats();
+            const auto renderFormats = m_backend->supportedFormats();
             const bool noLinearSupport = std::ranges::none_of(sortedFormats, [&renderFormats](const auto &formatInfo) {
                 return renderFormats.containsFormat(formatInfo.drmFormat, DRM_FORMAT_MOD_LINEAR);
             });
@@ -198,20 +186,20 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
         }
         return nullptr;
     };
-    if (m_gpu->renderDevice() == m_eglBackend->renderDevice()) {
+    if (m_gpu->renderDevice() == m_backend->renderDevice()) {
         return doTestFormats(sortedFormats, MultiGpuImportMode::None);
     } else {
         return doTestFormats(sortedFormats, MultiGpuImportMode::GpuCopy);
     }
 }
 
-std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, uint32_t format, const ModifierList &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
+std::unique_ptr<DrmLayerSurface::Surface> DrmLayerSurface::createSurface(const QSize &size, uint32_t format, const ModifierList &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
 {
     auto ret = std::make_unique<Surface>();
-    ModifierList renderModifiers = m_eglBackend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats()[format];
+    ModifierList renderModifiers = m_backend->supportedFormats()[format];
 
     if (bufferTarget == BufferTarget::Dumb || importMode == MultiGpuImportMode::GpuCopy) {
-        if (!m_eglBackend->renderDevice() || !m_gpu->renderDevice()) {
+        if (!m_backend->renderDevice() || !m_gpu->renderDevice()) {
             return nullptr;
         }
         GraphicsBufferOptions options{
@@ -221,7 +209,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
             .software = bufferTarget == BufferTarget::Dumb,
             .scanout = true,
         };
-        auto copy = MultiGpuSwapchain::createForScanout(m_eglBackend->renderDevice(), m_gpu->drmDevice(), options, FormatModifierMap{{format, modifiers}});
+        auto copy = MultiGpuSwapchain::createForScanout(m_backend->renderDevice(), m_gpu->drmDevice(), options, FormatModifierMap{{format, modifiers}});
         if (!copy) {
             return nullptr;
         }
@@ -245,7 +233,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     if (importMode == MultiGpuImportMode::None && bufferTarget == BufferTarget::Normal) {
         ret->swapchain = Swapchain::create(m_gpu->drmDevice()->allocator(), options);
     } else {
-        ret->swapchain = Swapchain::create(m_eglBackend->renderDevice()->allocator(), options);
+        ret->swapchain = Swapchain::create(m_backend->renderDevice()->allocator(), options);
     }
     ret->tradeoff = tradeoff;
     ret->requiredAlphaBits = requiredAlphaBits;
@@ -258,7 +246,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     return ret;
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *surface) const
+std::shared_ptr<DrmFramebuffer> DrmLayerSurface::doRenderTestBuffer(Surface *surface) const
 {
     auto slot = surface->swapchain->acquire();
     if (!slot) {
@@ -281,7 +269,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *
     }
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surface, SwapchainSlot *slot, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const
+std::shared_ptr<DrmFramebuffer> DrmLayerSurface::importBuffer(Surface *surface, SwapchainSlot *slot, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const
 {
     if (surface->importSwapchain) {
         // The source texture transform looks as follows: output transform + flip-y transform. The
@@ -316,4 +304,4 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surfac
 
 }
 
-#include "moc_drm_egl_layer_surface.cpp"
+#include "moc_drm_layer_surface.cpp"

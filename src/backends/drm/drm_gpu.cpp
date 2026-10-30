@@ -25,6 +25,7 @@
 #include "drm_output.h"
 #include "drm_pipeline.h"
 #include "drm_plane.h"
+#include "drm_virtual_layer.h"
 #include "drm_virtual_output.h"
 #include "utils/envvar.h"
 

@@ -25,7 +25,7 @@ class DrmOutput;
 class DumbSwapchain;
 class DrmBackend;
 class DrmGpu;
-class EglGbmLayer;
+class DrmPipelineLayer;
 class DrmOutputLayer;
 class DrmPipeline;
 class EglContext;
@@ -47,7 +47,7 @@ public:
     bool init() override;
     std::unique_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmPlane *plane) override;
     std::unique_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmGpu *gpu, DrmPlane::TypeIndex type) override;
-    std::unique_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
+    std::unique_ptr<VirtualDrmLayer> createLayer(DrmVirtualOutput *output) override;
 
 private:
     DrmBackend *m_backend;

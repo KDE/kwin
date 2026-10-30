@@ -19,7 +19,7 @@ namespace KWin
 class VsyncSource;
 class VirtualBackend;
 class DrmBackend;
-class DrmOutputLayer;
+class VirtualDrmLayer;
 
 class DrmVirtualOutput : public BackendOutput
 {
@@ -33,7 +33,7 @@ public:
     std::expected<void, OutputError> present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
     void applyChanges(const OutputConfiguration &config) override;
 
-    DrmOutputLayer *primaryLayer() const;
+    VirtualDrmLayer *primaryLayer() const;
     void recreateLayer();
     void releaseLayer();
 
@@ -44,7 +44,7 @@ private:
     void vblank(std::chrono::nanoseconds timestamp);
 
     DrmBackend *const m_backend;
-    std::unique_ptr<DrmOutputLayer> m_layer;
+    std::unique_ptr<VirtualDrmLayer> m_layer;
     std::shared_ptr<OutputFrame> m_frame;
     std::unique_ptr<VsyncSource> m_vsyncMonitor;
 };

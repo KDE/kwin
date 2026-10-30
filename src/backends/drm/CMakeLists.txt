@@ -8,10 +8,9 @@ target_sources(kwin PRIVATE
     drm_connector.cpp
     drm_crtc.cpp
     drm_egl_backend.cpp
-    drm_egl_layer.cpp
-    drm_egl_layer_surface.cpp
     drm_gpu.cpp
     drm_layer.cpp
+    drm_layer_surface.cpp
     drm_logging.cpp
     drm_object.cpp
     drm_output.cpp
@@ -19,7 +18,7 @@ target_sources(kwin PRIVATE
     drm_pipeline_legacy.cpp
     drm_plane.cpp
     drm_property.cpp
-    drm_virtual_egl_layer.cpp
+    drm_virtual_layer.cpp
     drm_virtual_output.cpp
 )
 
