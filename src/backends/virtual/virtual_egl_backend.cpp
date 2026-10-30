@@ -30,15 +30,10 @@ VirtualEglLayer::VirtualEglLayer(BackendOutput *output, VirtualEglBackend *backe
 
 VirtualEglLayer::~VirtualEglLayer()
 {
-    (void)m_backend->openglContext()->makeCurrent();
 }
 
 std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame(OutputFrame *frame)
 {
-    if (!m_backend->openglContext()->makeCurrent()) {
-        return std::nullopt;
-    }
-
     const QSize nativeSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
         GraphicsBufferOptions options{
@@ -59,15 +54,8 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame(OutputFrame
         return std::nullopt;
     }
 
-    auto fbo = m_backend->openglContext()->importDmaBufAsFbo(m_current->buffer());
-    if (!fbo) {
-        return std::nullopt;
-    }
-
-    fbo->colorAttachment()->setContentTransform(bufferTransform().combine(OutputTransform::FlipY));
-
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(fbo),
+        .renderTarget = RenderTarget(m_current->buffer(), bufferTransform().combine(OutputTransform::FlipY)),
         .repaint = m_damageJournal.accumulate(m_current->age(), Region::infinite()),
     };
 }

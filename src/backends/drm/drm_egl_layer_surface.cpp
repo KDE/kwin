@@ -47,9 +47,6 @@ EglGbmLayerSurface::~EglGbmLayerSurface() = default;
 EglGbmLayerSurface::Surface::~Surface()
 {
     importSwapchain.reset();
-    if (context) {
-        (void)context->makeCurrent();
-    }
 }
 
 void EglGbmLayerSurface::destroyResources()
@@ -69,29 +66,16 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     }
     m_oldSurface.reset();
 
-    if (!m_eglBackend->openglContext()->makeCurrent()) {
-        return std::nullopt;
-    }
-
     auto slot = m_surface->swapchain->acquire();
     if (!slot) {
         return std::nullopt;
     }
 
-    auto fbo = m_surface->context->importDmaBufAsFbo(slot->buffer());
-    if (!fbo) {
-        return std::nullopt;
-    }
-
-    if (fbo->colorAttachment()->contentTransform() != transformation) {
-        m_surface->damageJournal.clear();
-    }
-    fbo->colorAttachment()->setContentTransform(transformation);
     m_surface->currentSlot = slot;
     m_surface->transformation = transformation;
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(fbo, layerBlendingColor),
+        .renderTarget = RenderTarget(slot->buffer(), transformation, layerBlendingColor),
         .repaint = m_surface->damageJournal.accumulate(slot->age(), Region::infinite()),
     };
 }
@@ -121,12 +105,6 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::currentBuffer() const
 
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const FormatModifierMap &formats, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits)
 {
-    EglContext *context = m_eglBackend->openglContext();
-    if (!context->makeCurrent()) {
-        qCWarning(KWIN_DRM) << "EglGbmLayerSurface::renderTestBuffer: failed to make opengl context current";
-        return nullptr;
-    }
-
     if (checkSurface(bufferSize, formats, tradeoff, requiredAlphaBits)) {
         return m_surface->currentFramebuffer;
     } else {
@@ -255,7 +233,6 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     if (renderModifiers.empty()) {
         return nullptr;
     }
-    ret->context = m_eglBackend->openglContextRef();
     ret->bufferTarget = bufferTarget;
     ret->importMode = importMode;
     GraphicsBufferOptions options{
