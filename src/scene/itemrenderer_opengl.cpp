@@ -5,6 +5,7 @@
 */
 
 #include "scene/itemrenderer_opengl.h"
+#include "core/backendoutput.h"
 #include "core/colorpipeline.h"
 #include "core/pixelgrid.h"
 #include "core/renderdevice.h"
@@ -12,16 +13,20 @@
 #include "core/renderviewport.h"
 #include "core/syncobjtimeline.h"
 #include "effect/effect.h"
+#include "opengl/egldisplay.h"
 #include "opengl/eglnativefence.h"
+#include "opengl/icc_shader.h"
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"
 #include "scene/opengl/atlas.h"
 #include "scene/opengl/ninepatch.h"
 #include "scene/opengl/texture.h"
 #include "scene/outlinedborderitem.h"
+#include "scene/scene.h"
 #include "scene/shadowitem.h"
 #include "scene/surfaceitem.h"
 #include "scene/workspacescene.h"
+#include "swapchain.h"
 #include "utils/common.h"
 
 namespace KWin
@@ -36,6 +41,10 @@ ItemRendererOpenGL::ItemRendererOpenGL(RenderDevice *device)
         const QStringList visualizeOptions = visualizeOptionsString.split(';');
         m_debug.fractionalEnabled = visualizeOptions.contains(QLatin1StringView("fractional"));
     }
+}
+
+ItemRendererOpenGL::~ItemRendererOpenGL()
+{
 }
 
 std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(GraphicsBuffer *buffer, const FileDescriptor &sync,
@@ -72,22 +81,124 @@ std::unique_ptr<Atlas> ItemRendererOpenGL::createAtlas(const QList<QImage> &spri
     return AtlasOpenGL::create(m_context, sprites);
 }
 
-bool ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)
+std::optional<OutputLayerBeginFrameInfo> ItemRendererOpenGL::beginFrame(const OutputLayerBeginFrameInfo &beginInfo, RenderView *view)
 {
     if (!m_context || !m_context->makeCurrent()) {
-        return false;
+        return std::nullopt;
     }
-    GLFramebuffer *fbo = renderTarget.framebuffer();
-    m_context->pushFramebuffer(fbo);
 
+    const bool needsShadow = view && view->backendOutput() && view->backendOutput()->needsShadowBuffer();
+    if (!needsShadow) {
+        m_context->pushFramebuffer(beginInfo.renderTarget.framebuffer());
+        m_context->streamingVbo()->beginFrame();
+        return beginInfo;
+    }
+
+    const auto iccProfile = view->backendOutput()->currentIccProfile();
+
+    auto it = m_shadowBuffers.find(view);
+    if (it == m_shadowBuffers.end() || it->second.swapchain->size() != beginInfo.renderTarget.size() || bool(it->second.iccShader) != bool(iccProfile)) {
+        GraphicsBufferOptions options{
+            .size = beginInfo.renderTarget.size(),
+            .format = DRM_FORMAT_ABGR16161616, // FIXME actually select something here
+            .modifiers = m_renderDevice->eglDisplay()->nonExternalOnlySupportedDrmFormats()[DRM_FORMAT_ABGR16161616],
+            .software = false,
+            .scanout = false,
+            .render = true,
+        };
+        auto swapchain = Swapchain::create(m_renderDevice->allocator(), options);
+        if (!swapchain) {
+            return std::nullopt;
+        }
+        std::unique_ptr<IccShader> shader;
+        if (iccProfile) {
+            shader = IccShader::create();
+            if (!shader) {
+                return std::nullopt;
+            }
+        }
+        it = m_shadowBuffers.insert_or_assign(it, view, ShadowBuffer{
+                                                            .swapchain = std::move(swapchain),
+                                                            .iccShader = std::move(shader),
+                                                        });
+    }
+
+    ShadowBuffer &buffer = it->second;
+    if (buffer.color != view->backendOutput()->blendingColor()) {
+        buffer.color = view->backendOutput()->blendingColor();
+        buffer.journal.clear();
+    }
+
+    buffer.currentSlot = buffer.swapchain->acquire();
+    if (!buffer.currentSlot) {
+        return std::nullopt;
+    }
+    const auto fbo = m_context->importDmaBufAsFbo(buffer.currentSlot->buffer());
+    if (!fbo) {
+        return std::nullopt;
+    }
+    fbo->colorAttachment()->setContentTransform(beginInfo.renderTarget.texture()->contentTransform());
+
+    m_context->pushFramebuffer(fbo);
     m_context->streamingVbo()->beginFrame();
-    return true;
+
+    buffer.lastTarget = beginInfo.renderTarget.framebuffer();
+    buffer.lastDeviceRepair = beginInfo.repaint;
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget{fbo, buffer.color},
+        .repaint = buffer.journal.accumulate(buffer.currentSlot->age(), Region::infinite()),
+    };
 }
 
-void ItemRendererOpenGL::endFrame()
+void ItemRendererOpenGL::endFrame(const Region &repainted, RenderView *view)
 {
-    m_context->streamingVbo()->endOfFrame();
     m_context->popFramebuffer();
+
+    const auto it = m_shadowBuffers.find(view);
+    if (it != m_shadowBuffers.end()) {
+        ShadowBuffer &buffer = it->second;
+        const auto source = m_context->importDmaBufAsTexture(buffer.currentSlot->buffer());
+
+        ShaderBinder binder = buffer.iccShader ? ShaderBinder(buffer.iccShader->shader()) : ShaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+        if (!binder.shader()) {
+            return;
+        }
+        if (buffer.iccShader) {
+            buffer.iccShader->setUniforms(view->backendOutput()->currentIccProfile(),
+                                          buffer.color,
+                                          view->backendOutput()->wireColor(),
+                                          view->backendOutput()->wireTransfer(),
+                                          RenderingIntent::AbsoluteColorimetricNoAdaptation);
+        } else {
+            binder.shader()->setColorspaceUniforms(view->backendOutput()->blendingColor(),
+                                                   view->backendOutput()->layerBlendingColor(),
+                                                   RenderingIntent::AbsoluteColorimetricNoAdaptation);
+        }
+
+        QMatrix4x4 mat;
+        mat.scale(1, -1);
+        mat.ortho(QRectF(QPointF(), source->size()));
+        binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
+        glDisable(GL_BLEND);
+
+        const auto mapping = source->contentTransform();
+        const QSize rotatedSize = mapping.map(source->size());
+        const Region repaint = mapping.map((repainted | buffer.lastDeviceRepair) & Rect(QPoint(), rotatedSize), rotatedSize);
+
+        m_context->pushFramebuffer(buffer.lastTarget);
+        m_context->renderRegion(repaint, [&]() {
+            source->render(source->size());
+        });
+        m_context->popFramebuffer();
+
+        EGLNativeFence fence(m_context->displayObject());
+        buffer.swapchain->release(buffer.currentSlot.get(), fence.takeFileDescriptor());
+        buffer.currentSlot.reset();
+
+        buffer.journal.add(repainted);
+    }
+
+    m_context->streamingVbo()->endOfFrame();
 
     EGLNativeFence fence(m_renderDevice->eglDisplay());
     if (fence.isValid()) {

@@ -67,10 +67,7 @@ public:
     bool setPostBlendPipeline(const ColorPipeline &pipeline, const std::shared_ptr<ColorDescription> &newLayerBlendColor) override;
     void resetPostBlendPipeline() override;
 
-    /**
-     * @returns whether or not the renderer should apply channel factors
-     */
-    bool needsShadowBuffer() const;
+    bool needsShadowBuffer() const override;
 
     void removePipeline();
     void maybeUpdateDpmsState();
@@ -78,6 +75,9 @@ public:
     const State &nextState() const;
     Colorimetry wireColor(const State &next) const;
     TransferFunction::Type wireTransfer(const State &next) const;
+
+    Colorimetry wireColor() const override;
+    TransferFunction::Type wireTransfer() const override;
 
 private:
     void tryKmsColorOffloading(State &next);

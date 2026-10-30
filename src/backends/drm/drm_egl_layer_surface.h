@@ -53,12 +53,9 @@ public:
     ~EglGbmLayerSurface();
 
     std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const FormatModifierMap &formats,
-                                                            const std::shared_ptr<ColorDescription> &blendingColor,
                                                             const std::shared_ptr<ColorDescription> &layerBlendingColor,
-                                                            const std::shared_ptr<IccProfile> &iccProfile,
-                                                            const Colorimetry &wireColor, const TransferFunction::Type &wireTransfer,
-                                                            double scale, BackendOutput::ColorPowerTradeoff tradeoff,
-                                                            bool useShadowBuffer, uint32_t requiredAlphaBits);
+                                                            BackendOutput::ColorPowerTradeoff tradeoff,
+                                                            uint32_t requiredAlphaBits);
     bool endRendering(const Region &damagedDeviceRegion, OutputFrame *frame);
 
     void destroyResources();
@@ -67,7 +64,6 @@ public:
     void forgetDamage();
 
     std::shared_ptr<DrmFramebuffer> currentBuffer() const;
-    const std::shared_ptr<ColorDescription> &colorDescription() const;
 
 private:
     enum class MultiGpuImportMode {
@@ -91,22 +87,9 @@ private:
         MultiGpuImportMode importMode;
         std::shared_ptr<DrmFramebuffer> currentFramebuffer;
         BufferTarget bufferTarget;
-        double scale = 1;
         uint32_t requiredAlphaBits = 0;
         OutputTransform transformation = OutputTransform::Kind::Normal;
 
-        // for color management
-        bool needsShadowBuffer = false;
-        std::shared_ptr<Swapchain> shadowSwapchain;
-        std::shared_ptr<SwapchainSlot> currentShadowSlot;
-        std::shared_ptr<ColorDescription> layerBlendingColor = ColorDescription::sRGB;
-        std::shared_ptr<ColorDescription> blendingColor = ColorDescription::sRGB;
-        double brightness = 1.0;
-        std::unique_ptr<IccShader> iccShader;
-        std::shared_ptr<IccProfile> iccProfile;
-        Colorimetry wireColor = Colorimetry::BT709;
-        TransferFunction::Type wireTransfer = TransferFunction::Type::gamma22;
-        DamageJournal shadowDamageJournal;
         BackendOutput::ColorPowerTradeoff tradeoff = BackendOutput::ColorPowerTradeoff::PreferEfficiency;
 
         std::unique_ptr<GLRenderTimeQuery> compositingTimeQuery;

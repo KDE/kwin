@@ -707,23 +707,23 @@ void WorkspaceScene::postPaint()
     clearStackingOrder();
 }
 
-void WorkspaceScene::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceDamage)
+void WorkspaceScene::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceRepaint)
 {
-    const Region repaint = (info.repaint | deviceDamage) & info.renderTarget.transformedRect();
-
-    RenderViewport viewport(painted_delegate->viewport(), painted_delegate->scale(), info.renderTarget, deviceOffset);
     auto &renderer = m_renderers[painted_delegate->renderDevice()];
 
-    if (!renderer->beginFrame(info.renderTarget, viewport)) {
+    auto renderInfo = renderer->beginFrame(info, painted_delegate);
+    if (!renderInfo) {
         return;
     }
 
-    if (!effects->paintScreen(info.renderTarget, viewport, m_paintContext.mask, repaint, painted_screen)) {
+    RenderViewport viewport(painted_delegate->viewport(), painted_delegate->scale(), renderInfo->renderTarget, deviceOffset);
+    const Region repaint = (renderInfo->repaint | deviceRepaint) & renderInfo->renderTarget.transformedRect();
+    if (!effects->paintScreen(renderInfo->renderTarget, viewport, m_paintContext.mask, repaint, painted_screen)) {
         return;
     }
 
     Q_EMIT frameRendered();
-    renderer->endFrame();
+    renderer->endFrame(repaint, painted_delegate);
 }
 
 // the function that'll be eventually called by paintScreen() above

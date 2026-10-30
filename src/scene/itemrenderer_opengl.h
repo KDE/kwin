@@ -9,6 +9,7 @@
 #include "opengl/glutils.h"
 #include "scene/itemrenderer.h"
 #include "scene/surfaceitem.h"
+#include "utils/damagejournal.h"
 
 #include <unordered_set>
 
@@ -16,6 +17,9 @@ namespace KWin
 {
 
 class RenderDevice;
+class Swapchain;
+class SwapchainSlot;
+class IccShader;
 
 class KWIN_EXPORT ItemRendererOpenGL : public ItemRenderer
 {
@@ -63,6 +67,7 @@ public:
     };
 
     explicit ItemRendererOpenGL(RenderDevice *device);
+    ~ItemRendererOpenGL() override;
 
     std::unique_ptr<Texture> createTexture(GraphicsBuffer *buffer, const FileDescriptor &sync,
                                            const std::shared_ptr<SyncReleasePoint> &releasePoint,
@@ -81,8 +86,8 @@ public:
 
     std::unique_ptr<Atlas> createAtlas(const QList<QImage> &sprites) override;
 
-    bool beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport) override;
-    void endFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame(const OutputLayerBeginFrameInfo &beginInfo, RenderView *view) override;
+    void endFrame(const Region &repaint, RenderView *view) override;
 
     void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion) override;
     bool renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) override;
@@ -99,6 +104,19 @@ private:
     const std::shared_ptr<EglContext> m_context;
     bool m_blendingEnabled = false;
     std::unordered_set<std::shared_ptr<SyncReleasePoint>> m_releasePoints;
+
+    struct ShadowBuffer
+    {
+        std::unique_ptr<Swapchain> swapchain;
+        DamageJournal journal;
+        std::shared_ptr<ColorDescription> color;
+        std::unique_ptr<IccShader> iccShader;
+
+        std::shared_ptr<SwapchainSlot> currentSlot;
+        GLFramebuffer *lastTarget = nullptr;
+        Region lastDeviceRepair;
+    };
+    std::unordered_map<RenderView *, ShadowBuffer> m_shadowBuffers;
 
     struct
     {

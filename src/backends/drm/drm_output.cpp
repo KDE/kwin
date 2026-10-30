@@ -959,6 +959,16 @@ TransferFunction::Type DrmOutput::wireTransfer(const State &next) const
     }
 }
 
+Colorimetry DrmOutput::wireColor() const
+{
+    return wireColor(m_state);
+}
+
+TransferFunction::Type DrmOutput::wireTransfer() const
+{
+    return wireTransfer(m_state);
+}
+
 }
 
 #include "moc_drm_output.cpp"

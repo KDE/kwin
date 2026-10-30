@@ -217,18 +217,22 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
 
     GLFramebuffer offscreenTarget(offscreenTexture.get());
 
-    RenderTarget renderTarget(&offscreenTarget);
-    RenderViewport viewport(geometry, scale, renderTarget, QPoint());
-
     WorkspaceScene *scene = kwinApp()->scene();
     auto renderer = scene->renderer(device);
 
-    if (!renderer->beginFrame(renderTarget, viewport)) {
+    OutputLayerBeginFrameInfo beginInfo{
+        .renderTarget = RenderTarget(&offscreenTarget),
+        .repaint = Region::infinite(),
+    };
+    const auto renderInfo = renderer->beginFrame(beginInfo, nullptr);
+    if (!renderInfo) {
         return std::nullopt;
     }
+    RenderViewport viewport(geometry, scale, renderInfo->renderTarget, QPoint());
+
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    const bool windowRender = renderer->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, Region::infinite(), WindowPaintData{}, [flags, w = window->windowItem()](Item *item) {
+    const bool windowRender = renderer->renderItem(renderInfo->renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, Region::infinite(), WindowPaintData{}, [flags, w = window->windowItem()](Item *item) {
         const bool deco = flags & ScreenShotFlag::ScreenShotIncludeDecoration;
         const bool shadow = deco && (flags & ScreenShotFlag::ScreenShotIncludeShadow);
         return (!deco && item == w->decorationItem())
@@ -238,11 +242,11 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
         return std::nullopt;
     }
     if ((flags & ScreenShotFlag::ScreenShotIncludeCursor) && scene->cursorItem()->isVisible()) {
-        if (!renderer->renderItem(renderTarget, viewport, scene->cursorItem(), 0, Region::infinite(), WindowPaintData{}, {}, {})) {
+        if (!renderer->renderItem(renderInfo->renderTarget, viewport, scene->cursorItem(), 0, Region::infinite(), WindowPaintData{}, {}, {})) {
             return std::nullopt;
         }
     }
-    renderer->endFrame();
+    renderer->endFrame(Region::infinite(), nullptr);
 
     GLFramebuffer::pushFramebuffer(&offscreenTarget);
     QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBA8888_Premultiplied);

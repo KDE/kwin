@@ -144,14 +144,20 @@ void WindowThumbnailSource::update()
     // frame, which is not ideal, but it is acceptable for things such as thumbnails.
     const int mask = Scene::PAINT_WINDOW_TRANSFORMED;
     ItemRenderer *renderer = kwinApp()->scene()->renderer(m_renderDevice);
-    if (!renderer->beginFrame(offscreenRenderTarget, offscreenViewport)) {
+
+    OutputLayerBeginFrameInfo beginInfo{
+        .renderTarget = offscreenRenderTarget,
+        .repaint = Region::infinite(),
+    };
+    const auto newRenderTarget = renderer->beginFrame(beginInfo, nullptr);
+    if (!newRenderTarget) {
         return;
     }
-    renderer->renderBackground(offscreenRenderTarget, offscreenViewport, offscreenRenderTarget.transformedRect());
-    if (!renderer->renderItem(offscreenRenderTarget, offscreenViewport, m_handle->windowItem(), mask, Region::infinite(), WindowPaintData{}, {}, {})) {
+    renderer->renderBackground(beginInfo.renderTarget, offscreenViewport, offscreenRenderTarget.transformedRect());
+    if (!renderer->renderItem(beginInfo.renderTarget, offscreenViewport, m_handle->windowItem(), mask, Region::infinite(), WindowPaintData{}, {}, {})) {
         return;
     }
-    renderer->endFrame();
+    renderer->endFrame(Region::infinite(), nullptr);
 
     // The fence is needed to avoid the case where qtquick renderer starts using
     // the texture while all rendering commands to it haven't completed yet.

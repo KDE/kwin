@@ -125,29 +125,34 @@ Region WindowScreenCastSource::render(QImage *target, const Region &bufferDamage
 
 Region WindowScreenCastSource::render(GLFramebuffer *target, const Region &bufferDamage)
 {
-    RenderTarget renderTarget(target);
-    RenderViewport viewport(boundingRect(), devicePixelRatio(), renderTarget, QPoint());
-
     WorkspaceScene *scene = kwinApp()->scene();
     auto renderer = scene->renderer(m_renderDevice);
+    const Rect damage(QPoint(), target->size());
 
-    if (!renderer->beginFrame(renderTarget, viewport)) {
-        return {};
+    OutputLayerBeginFrameInfo beginInfo{
+        .renderTarget = RenderTarget{target},
+        .repaint = damage,
+    };
+    const auto renderInfo = renderer->beginFrame(beginInfo, nullptr);
+    if (!renderInfo) {
+        return Region{};
     }
+    RenderViewport viewport(boundingRect(), devicePixelRatio(), renderInfo->renderTarget, QPoint());
+
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
     for (const auto &window : m_windows) {
-        if (!renderer->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, Region::infinite(), WindowPaintData{}, {}, {})) {
+        if (!renderer->renderItem(renderInfo->renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, Region::infinite(), WindowPaintData{}, {}, {})) {
             return {};
         }
     }
     if (m_renderCursor && scene->cursorItem()->isVisible()) {
-        if (!renderer->renderItem(renderTarget, viewport, scene->cursorItem(), 0, Region::infinite(), WindowPaintData{}, {}, {})) {
+        if (!renderer->renderItem(renderInfo->renderTarget, viewport, scene->cursorItem(), 0, Region::infinite(), WindowPaintData{}, {}, {})) {
             return {};
         }
     }
-    renderer->endFrame();
-    return Rect(QPoint(), target->size());
+    renderer->endFrame(damage, nullptr);
+    return damage;
 }
 
 uint WindowScreenCastSource::refreshRate() const
