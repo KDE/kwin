@@ -707,11 +707,13 @@ void WorkspaceScene::postPaint()
     clearStackingOrder();
 }
 
-FileDescriptor WorkspaceScene::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceRepaint)
+FileDescriptor WorkspaceScene::paint(const OutputLayerBeginFrameInfo &info,
+                                     const QPoint &deviceOffset, const Region &deviceRepaint,
+                                     OutputFrame *frame)
 {
     auto &renderer = m_renderers[painted_delegate->renderDevice()];
 
-    auto renderInfo = renderer->beginFrame(info, painted_delegate);
+    auto renderInfo = renderer->beginFrame(info, painted_delegate, frame);
     if (!renderInfo) {
         return FileDescriptor{};
     }
@@ -723,7 +725,7 @@ FileDescriptor WorkspaceScene::paint(const OutputLayerBeginFrameInfo &info, cons
     }
 
     Q_EMIT frameRendered();
-    return renderer->endFrame(repaint, painted_delegate);
+    return renderer->endFrame(repaint, painted_delegate, frame);
 }
 
 // the function that'll be eventually called by paintScreen() above

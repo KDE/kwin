@@ -21,7 +21,6 @@
 #include "multigpuswapchain.h"
 #include "opengl/eglnativefence.h"
 #include "opengl/gllut.h"
-#include "opengl/glrendertimequery.h"
 #include "opengl/icc_shader.h"
 #include "qpainter/qpainterswapchain.h"
 #include "swapchain.h"
@@ -91,7 +90,6 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     m_surface->currentSlot = slot;
     m_surface->transformation = transformation;
 
-    m_surface->compositingTimeQuery = GLRenderTimeQuery::begin(m_surface->context);
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(fbo, layerBlendingColor),
         .repaint = m_surface->damageJournal.accumulate(slot->age(), Region::infinite()),
@@ -101,10 +99,6 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
 bool EglGbmLayerSurface::endRendering(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
     m_surface->damageJournal.add(damagedDeviceRegion);
-    if (frame && m_surface->compositingTimeQuery) {
-        m_surface->compositingTimeQuery->end();
-        frame->addRenderTimeQuery(std::move(m_surface->compositingTimeQuery));
-    }
     m_surface->swapchain->release(m_surface->currentSlot.get(), sync.duplicate());
     const auto buffer = importBuffer(m_surface.get(), m_surface->currentSlot.get(), std::move(sync), frame, damagedDeviceRegion);
     if (buffer) {
