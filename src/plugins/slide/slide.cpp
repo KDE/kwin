@@ -422,7 +422,6 @@ void SlideEffect::finishedSwitching()
     m_slideEffectScreens.clear();
     const QList<EffectWindow *> windows = effects->stackingOrder();
     for (EffectWindow *w : windows) {
-        w->setData(WindowForceBackgroundContrastRole, QVariant());
         w->setData(WindowForceBlurRole, QVariant());
     }
     effects->setActiveFullScreenEffect(nullptr);
@@ -452,7 +451,6 @@ void SlideEffect::desktopChanged(VirtualDesktop *old, VirtualDesktop *current, E
     if (!isActive()) {
         const QList<EffectWindow *> windows = effects->stackingOrder();
         for (EffectWindow *w : windows) {
-            w->setData(WindowForceBackgroundContrastRole, QVariant(true));
             w->setData(WindowForceBlurRole, QVariant(true));
         }
     }
@@ -492,7 +490,6 @@ void SlideEffect::desktopChanging(VirtualDesktop *old, QPointF desktopOffset, Ef
     if (!isActive()) {
         const QList<EffectWindow *> windows = effects->stackingOrder();
         for (EffectWindow *w : windows) {
-            w->setData(WindowForceBackgroundContrastRole, QVariant(true));
             w->setData(WindowForceBlurRole, QVariant(true));
         }
     }
@@ -566,7 +563,6 @@ void SlideEffect::windowAdded(EffectWindow *w)
         slideScreen->windowAdded(w);
     }
     if (isActive()) {
-        w->setData(WindowForceBackgroundContrastRole, QVariant(true));
         w->setData(WindowForceBlurRole, QVariant(true));
     }
 }
