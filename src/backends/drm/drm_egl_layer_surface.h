@@ -69,7 +69,6 @@ private:
     enum class MultiGpuImportMode {
         None,
         GpuCopy,
-        DumbBuffer,
     };
     struct Surface
     {

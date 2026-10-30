@@ -35,13 +35,6 @@
 namespace KWin
 {
 
-static gbm_format_name_desc formatName(uint32_t format)
-{
-    gbm_format_name_desc ret;
-    gbm_format_get_name(format, &ret);
-    return ret;
-}
-
 EglGbmLayerSurface::EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target)
     : m_gpu(gpu)
     , m_eglBackend(eglBackend)
@@ -244,15 +237,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
             return surface;
         }
     }
-    if (auto surface = doTestFormats(sortedFormats, MultiGpuImportMode::GpuCopy)) {
-        // qCDebug(KWIN_DRM) << "chose egl import with format" << formatName(surface->gbmSwapchain->format()).name << "and modifier" << surface->gbmSwapchain->modifier();
-        return surface;
-    }
-    if (auto surface = doTestFormats(sortedFormats, MultiGpuImportMode::DumbBuffer)) {
-        qCDebug(KWIN_DRM) << "chose cpu import with format" << formatName(surface->swapchain->format()).name << "and modifier" << surface->swapchain->modifier();
-        return surface;
-    }
-    return nullptr;
+    return doTestFormats(sortedFormats, MultiGpuImportMode::GpuCopy);
 }
 
 std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, uint32_t format, const ModifierList &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
@@ -260,8 +245,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     auto ret = std::make_unique<Surface>();
     ModifierList renderModifiers = m_eglBackend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats()[format];
 
-    const bool cpuCopy = importMode == MultiGpuImportMode::DumbBuffer || bufferTarget == BufferTarget::Dumb;
-    if (cpuCopy || importMode == MultiGpuImportMode::GpuCopy) {
+    if (bufferTarget == BufferTarget::Dumb || importMode == MultiGpuImportMode::GpuCopy) {
         if (!m_eglBackend->renderDevice() || !m_gpu->renderDevice()) {
             return nullptr;
         }
@@ -269,7 +253,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
             .size = size,
             .format = format,
             .modifiers = renderModifiers,
-            .software = cpuCopy,
+            .software = bufferTarget == BufferTarget::Dumb,
             .scanout = true,
         };
         auto copy = MultiGpuSwapchain::createForScanout(m_eglBackend->renderDevice(), m_gpu->drmDevice(), options, FormatModifierMap{{format, modifiers}});
