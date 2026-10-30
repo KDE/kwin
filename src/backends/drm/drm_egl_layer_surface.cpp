@@ -36,8 +36,6 @@ namespace KWin
 {
 
 static const bool bufferAgeEnabled = environmentVariableBoolValue("KWIN_USE_BUFFER_AGE").value_or(true);
-static const bool s_forceMGPUSync = environmentVariableBoolValue("KWIN_DRM_FORCE_GL_FINISH_MGPU_COPY").value_or(false);
-static const bool s_forcePresentSync = environmentVariableBoolValue("KWIN_DRM_FORCE_GL_FINISH_PRESENT").value_or(false);
 
 static gbm_format_name_desc formatName(uint32_t format)
 {
@@ -116,13 +114,7 @@ bool EglGbmLayerSurface::endRendering(const Region &damagedDeviceRegion, OutputF
         m_surface->compositingTimeQuery->end();
         frame->addRenderTimeQuery(std::move(m_surface->compositingTimeQuery));
     }
-    glFlush();
     EGLNativeFence sourceFence(m_eglBackend->eglDisplayObject());
-    if (!sourceFence.isValid() || s_forcePresentSync) {
-        // llvmpipe doesn't do synchronization properly: https://gitlab.freedesktop.org/mesa/mesa/-/issues/9375
-        // and NVidia doesn't support implicit sync
-        glFinish();
-    }
     m_surface->swapchain->release(m_surface->currentSlot.get(), sourceFence.fileDescriptor().duplicate());
     const auto buffer = importBuffer(m_surface.get(), m_surface->currentSlot.get(), sourceFence.takeFileDescriptor(), frame, damagedDeviceRegion);
     if (buffer) {
@@ -346,12 +338,6 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surface, SwapchainSlot *slot, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const
 {
     if (surface->importSwapchain) {
-        const auto renderDevice = m_gpu->renderDevice();
-        // older versions of the NVidia proprietary driver support neither implicit sync nor EGL_ANDROID_native_fence_sync
-        if (!readFence.isValid() || !renderDevice->eglDisplay()->supportsNativeFence() || s_forceMGPUSync) {
-            glFinish();
-        }
-
         // The source texture transform looks as follows: output transform + flip-y transform. The
         // flip-y transform is added by the render backend to handle the OpenGL render target origin
         // being in the bottom-left corner.
