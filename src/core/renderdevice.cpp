@@ -488,4 +488,23 @@ FileDescriptor RenderDevice::clearBuffer(GraphicsBuffer *buffer)
     }
 }
 
+QImage RenderDevice::download(GraphicsBuffer *buffer)
+{
+    if (m_vulkanDevice && m_vulkanDevice->transferFormats().containsFormat(buffer->format(), buffer->modifier())) {
+        auto texture = m_vulkanDevice->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_DST_BIT);
+        if (!texture) {
+            return QImage{};
+        }
+        return texture->download();
+    } else if (auto context = eglContext()) {
+        auto texture = context->importDmaBufAsTexture(buffer);
+        if (!texture) {
+            return QImage{};
+        }
+        return texture->toImage();
+    } else {
+        return QImage{};
+    }
+}
+
 }
