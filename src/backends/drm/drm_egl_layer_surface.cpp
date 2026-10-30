@@ -76,12 +76,9 @@ void EglGbmLayerSurface::destroyResources()
 
 std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation,
                                                                             const FormatModifierMap &formats,
-                                                                            const std::shared_ptr<ColorDescription> &blendingColor,
                                                                             const std::shared_ptr<ColorDescription> &layerBlendingColor,
-                                                                            const std::shared_ptr<IccProfile> &iccProfile,
-                                                                            const Colorimetry &wireColor, const TransferFunction::Type &wireTransfer,
-                                                                            double scale, BackendOutput::ColorPowerTradeoff tradeoff,
-                                                                            bool useShadowBuffer, uint32_t requiredAlphaBits)
+                                                                            BackendOutput::ColorPowerTradeoff tradeoff,
+                                                                            uint32_t requiredAlphaBits)
 {
     if (!checkSurface(bufferSize, formats, tradeoff, requiredAlphaBits)) {
         return std::nullopt;
@@ -107,126 +104,18 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     }
     fbo->colorAttachment()->setContentTransform(transformation);
     m_surface->currentSlot = slot;
-    m_surface->scale = scale;
     m_surface->transformation = transformation;
 
-    if (m_surface->blendingColor != blendingColor
-        || m_surface->layerBlendingColor != layerBlendingColor
-        || m_surface->iccProfile != iccProfile
-        || m_surface->wireColor != wireColor
-        || m_surface->wireTransfer != wireTransfer) {
-        m_surface->damageJournal.clear();
-        m_surface->shadowDamageJournal.clear();
-        m_surface->needsShadowBuffer = useShadowBuffer;
-        m_surface->blendingColor = blendingColor;
-        m_surface->layerBlendingColor = layerBlendingColor;
-        m_surface->iccProfile = iccProfile;
-        m_surface->wireColor = wireColor;
-        m_surface->wireTransfer = wireTransfer;
-        if (iccProfile) {
-            if (!m_surface->iccShader) {
-                m_surface->iccShader = IccShader::create();
-                if (!m_surface->iccShader) {
-                    qCWarning(KWIN_DRM) << "Failed to load the ICC shader.";
-                }
-            }
-        } else {
-            m_surface->iccShader.reset();
-        }
-    }
-
     m_surface->compositingTimeQuery = GLRenderTimeQuery::begin(m_surface->context);
-    if (m_surface->needsShadowBuffer) {
-        if (!m_surface->shadowSwapchain || m_surface->shadowSwapchain->size() != m_surface->swapchain->size()) {
-            const auto formats = m_eglBackend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats();
-            const QList<FormatInfo> sortedFormats = OutputLayer::filterAndSortFormats(formats, requiredAlphaBits, tradeoff);
-            for (const auto format : sortedFormats) {
-                GraphicsBufferOptions options{
-                    .size = m_surface->swapchain->size(),
-                    .format = format.drmFormat,
-                    .modifiers = formats[format.drmFormat],
-                    .software = false,
-                    .scanout = false,
-                };
-                m_surface->shadowSwapchain = Swapchain::create(m_eglBackend->renderDevice()->allocator(), options);
-                if (m_surface->shadowSwapchain) {
-                    break;
-                }
-            }
-        }
-        if (!m_surface->shadowSwapchain) {
-            qCCritical(KWIN_DRM) << "Failed to create shadow swapchain!";
-            return std::nullopt;
-        }
-        m_surface->currentShadowSlot = m_surface->shadowSwapchain->acquire();
-        if (!m_surface->currentShadowSlot) {
-            return std::nullopt;
-        }
-
-        auto shadowFbo = m_surface->context->importDmaBufAsFbo(slot->buffer());
-        if (!shadowFbo) {
-            return std::nullopt;
-        }
-
-        shadowFbo->colorAttachment()->setContentTransform(transformation);
-        return OutputLayerBeginFrameInfo{
-            .renderTarget = RenderTarget(shadowFbo, m_surface->blendingColor),
-            .repaint = bufferAgeEnabled ? m_surface->shadowDamageJournal.accumulate(m_surface->currentShadowSlot->age(), Region::infinite()) : Region::infinite(),
-        };
-    } else {
-        m_surface->shadowSwapchain.reset();
-        m_surface->currentShadowSlot.reset();
-        return OutputLayerBeginFrameInfo{
-            .renderTarget = RenderTarget(fbo, m_surface->blendingColor),
-            .repaint = bufferAgeEnabled ? m_surface->damageJournal.accumulate(slot->age(), Region::infinite()) : Region::infinite(),
-        };
-    }
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(fbo, layerBlendingColor),
+        .repaint = bufferAgeEnabled ? m_surface->damageJournal.accumulate(slot->age(), Region::infinite()) : Region::infinite(),
+    };
 }
 
 bool EglGbmLayerSurface::endRendering(const Region &damagedDeviceRegion, OutputFrame *frame)
 {
-    if (m_surface->needsShadowBuffer) {
-        const Region deviceRepaint = damagedDeviceRegion | m_surface->damageJournal.accumulate(m_surface->currentSlot->age(), Region::infinite());
-        m_surface->damageJournal.add(damagedDeviceRegion);
-        m_surface->shadowDamageJournal.add(damagedDeviceRegion);
-
-        auto fbo = m_surface->context->importDmaBufAsFbo(m_surface->currentSlot->buffer());
-        auto shadowFbo = m_surface->context->importDmaBufAsFbo(m_surface->currentShadowSlot->buffer());
-
-        const auto mapping = shadowFbo->colorAttachment()->contentTransform();
-        const QSize rotatedSize = mapping.map(m_surface->swapchain->size());
-        const Region repaint = mapping.map(deviceRepaint & Rect(QPoint(), rotatedSize), rotatedSize);
-
-        GLFramebuffer::pushFramebuffer(fbo);
-
-        ShaderBinder binder = m_surface->iccShader ? ShaderBinder(m_surface->iccShader->shader()) : ShaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
-        // this transform is absolute colorimetric, whitepoint adjustment is done in compositing already
-        if (m_surface->iccShader) {
-            m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->blendingColor,
-                                              m_surface->wireColor, m_surface->wireTransfer,
-                                              RenderingIntent::AbsoluteColorimetricNoAdaptation);
-        } else {
-            binder.shader()->setColorspaceUniforms(m_surface->blendingColor, m_surface->layerBlendingColor, RenderingIntent::AbsoluteColorimetricNoAdaptation);
-        }
-        QMatrix4x4 mat;
-        mat.scale(1, -1);
-        mat.ortho(QRectF(QPointF(), fbo->size()));
-        binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
-        glDisable(GL_BLEND);
-
-        shadowFbo->colorAttachment()->bind();
-        m_surface->context->renderRegion(repaint, [&]() {
-            shadowFbo->colorAttachment()->render(fbo->size());
-        });
-        shadowFbo->colorAttachment()->unbind();
-
-        EGLNativeFence fence(m_surface->context->displayObject());
-        m_surface->shadowSwapchain->release(m_surface->currentShadowSlot.get(), fence.takeFileDescriptor());
-
-        GLFramebuffer::popFramebuffer();
-    } else {
-        m_surface->damageJournal.add(damagedDeviceRegion);
-    }
+    m_surface->damageJournal.add(damagedDeviceRegion);
     if (frame && m_surface->compositingTimeQuery) {
         m_surface->compositingTimeQuery->end();
         frame->addRenderTimeQuery(std::move(m_surface->compositingTimeQuery));
@@ -258,15 +147,6 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::currentBuffer() const
     return m_surface ? m_surface->currentFramebuffer : nullptr;
 }
 
-const std::shared_ptr<ColorDescription> &EglGbmLayerSurface::colorDescription() const
-{
-    if (m_surface) {
-        return m_surface->blendingColor;
-    } else {
-        return ColorDescription::sRGB;
-    }
-}
-
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const FormatModifierMap &formats, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits)
 {
     EglContext *context = m_eglBackend->openglContext();
@@ -286,7 +166,6 @@ void EglGbmLayerSurface::forgetDamage()
 {
     if (m_surface) {
         m_surface->damageJournal.clear();
-        m_surface->shadowDamageJournal.clear();
     }
 }
 
@@ -308,11 +187,7 @@ bool EglGbmLayerSurface::checkSurface(const QSize &size, const FormatModifierMap
         if (m_oldSurface) {
             // FIXME: Use absolute frame sequence numbers for indexing the DamageJournal
             m_oldSurface->damageJournal.clear();
-            m_oldSurface->shadowDamageJournal.clear();
             m_oldSurface->swapchain->resetBufferAge();
-            if (m_oldSurface->shadowSwapchain) {
-                m_oldSurface->shadowSwapchain->resetBufferAge();
-            }
             if (m_oldSurface->importSwapchain) {
                 m_oldSurface->importSwapchain->resetDamageTracking();
             }
