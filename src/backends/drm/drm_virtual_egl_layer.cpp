@@ -85,17 +85,14 @@ std::optional<OutputLayerBeginFrameInfo> VirtualDrmEglLayer::beginFrame(OutputFr
     };
 }
 
-bool VirtualDrmEglLayer::endFrame(const Region &damagedDeviceRegion, OutputFrame *frame)
+bool VirtualDrmEglLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
     if (frame && m_query) {
         m_query->end();
         frame->addRenderTimeQuery(std::move(m_query));
     }
-    glFlush();
     m_damageJournal.add(damagedDeviceRegion);
-
-    EGLNativeFence releaseFence{m_eglBackend->eglDisplayObject()};
-    m_swapchain->release(m_currentSlot.get(), releaseFence.takeFileDescriptor());
+    m_swapchain->release(m_currentSlot.get(), std::move(sync));
     return true;
 }
 

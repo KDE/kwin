@@ -29,7 +29,7 @@ public:
     explicit EglGbmLayer(EglGbmBackend *eglBackend, DrmGpu *gpu, DrmPlane::TypeIndex type);
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
-    bool endFrame(const Region &damagedDeviceRegion, OutputFrame *frame) override;
+    bool endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame) override;
     bool preparePresentationTest() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
     void releaseBuffers() override;

@@ -98,16 +98,15 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     };
 }
 
-bool EglGbmLayerSurface::endRendering(const Region &damagedDeviceRegion, OutputFrame *frame)
+bool EglGbmLayerSurface::endRendering(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
     m_surface->damageJournal.add(damagedDeviceRegion);
     if (frame && m_surface->compositingTimeQuery) {
         m_surface->compositingTimeQuery->end();
         frame->addRenderTimeQuery(std::move(m_surface->compositingTimeQuery));
     }
-    EGLNativeFence sourceFence(m_eglBackend->eglDisplayObject());
-    m_surface->swapchain->release(m_surface->currentSlot.get(), sourceFence.fileDescriptor().duplicate());
-    const auto buffer = importBuffer(m_surface.get(), m_surface->currentSlot.get(), sourceFence.takeFileDescriptor(), frame, damagedDeviceRegion);
+    m_surface->swapchain->release(m_surface->currentSlot.get(), sync.duplicate());
+    const auto buffer = importBuffer(m_surface.get(), m_surface->currentSlot.get(), std::move(sync), frame, damagedDeviceRegion);
     if (buffer) {
         m_surface->currentFramebuffer = buffer;
         return true;

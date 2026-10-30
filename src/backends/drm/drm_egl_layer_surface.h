@@ -56,7 +56,7 @@ public:
                                                             const std::shared_ptr<ColorDescription> &layerBlendingColor,
                                                             BackendOutput::ColorPowerTradeoff tradeoff,
                                                             uint32_t requiredAlphaBits);
-    bool endRendering(const Region &damagedDeviceRegion, OutputFrame *frame);
+    bool endRendering(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame);
 
     void destroyResources();
     EglGbmBackend *eglBackend() const;

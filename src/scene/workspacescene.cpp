@@ -707,23 +707,23 @@ void WorkspaceScene::postPaint()
     clearStackingOrder();
 }
 
-void WorkspaceScene::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceRepaint)
+FileDescriptor WorkspaceScene::paint(const OutputLayerBeginFrameInfo &info, const QPoint &deviceOffset, const Region &deviceRepaint)
 {
     auto &renderer = m_renderers[painted_delegate->renderDevice()];
 
     auto renderInfo = renderer->beginFrame(info, painted_delegate);
     if (!renderInfo) {
-        return;
+        return FileDescriptor{};
     }
 
     RenderViewport viewport(painted_delegate->viewport(), painted_delegate->scale(), renderInfo->renderTarget, deviceOffset);
     const Region repaint = (renderInfo->repaint | deviceRepaint) & renderInfo->renderTarget.transformedRect();
     if (!effects->paintScreen(renderInfo->renderTarget, viewport, m_paintContext.mask, repaint, painted_screen)) {
-        return;
+        return FileDescriptor{};
     }
 
     Q_EMIT frameRendered();
-    renderer->endFrame(repaint, painted_delegate);
+    return renderer->endFrame(repaint, painted_delegate);
 }
 
 // the function that'll be eventually called by paintScreen() above

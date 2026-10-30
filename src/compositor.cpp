@@ -552,8 +552,8 @@ static bool renderLayer(RenderView *view, LogicalOutput *logicalOutput, BackendO
     if (!beginInfo) {
         return false;
     }
-    view->paint(*beginInfo, view->renderOffset(), surfaceDamage);
-    return view->layer()->endFrame(surfaceDamage, frame.get());
+    FileDescriptor sync = view->paint(*beginInfo, view->renderOffset(), surfaceDamage);
+    return view->layer()->endFrame(surfaceDamage, std::move(sync), frame.get());
 }
 
 static OutputLayer *findLayer(std::span<OutputLayer *const> layers, OutputLayerType type)

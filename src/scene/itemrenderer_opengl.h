@@ -87,7 +87,7 @@ public:
     std::unique_ptr<Atlas> createAtlas(const QList<QImage> &sprites) override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame(const OutputLayerBeginFrameInfo &beginInfo, RenderView *view) override;
-    void endFrame(const Region &repaint, RenderView *view) override;
+    FileDescriptor endFrame(const Region &repaint, RenderView *view) override;
 
     void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion) override;
     bool renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) override;
