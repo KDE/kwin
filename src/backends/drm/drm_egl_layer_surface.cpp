@@ -46,9 +46,6 @@ EglGbmLayerSurface::~EglGbmLayerSurface() = default;
 EglGbmLayerSurface::Surface::~Surface()
 {
     importSwapchain.reset();
-    if (context) {
-        (void)context->makeCurrent();
-    }
 }
 
 void EglGbmLayerSurface::destroyResources()
@@ -68,29 +65,16 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     }
     m_oldSurface.reset();
 
-    if (!m_eglBackend->openglContext()->makeCurrent()) {
-        return std::nullopt;
-    }
-
     auto slot = m_surface->swapchain->acquire();
     if (!slot) {
         return std::nullopt;
     }
 
-    auto fbo = m_surface->context->importDmaBufAsFbo(slot->buffer());
-    if (!fbo) {
-        return std::nullopt;
-    }
-
-    if (fbo->colorAttachment()->contentTransform() != transformation) {
-        m_surface->damageJournal.clear();
-    }
-    fbo->colorAttachment()->setContentTransform(transformation);
     m_surface->currentSlot = slot;
     m_surface->transformation = transformation;
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(fbo, layerBlendingColor),
+        .renderTarget = RenderTarget(slot->buffer(), transformation, layerBlendingColor),
         .repaint = m_surface->damageJournal.accumulate(slot->age(), Region::infinite()),
     };
 }
@@ -120,12 +104,6 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::currentBuffer() const
 
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const FormatModifierMap &formats, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits)
 {
-    EglContext *context = m_eglBackend->openglContext();
-    if (!context->makeCurrent()) {
-        qCWarning(KWIN_DRM) << "EglGbmLayerSurface::renderTestBuffer: failed to make opengl context current";
-        return nullptr;
-    }
-
     if (checkSurface(bufferSize, formats, tradeoff, requiredAlphaBits)) {
         return m_surface->currentFramebuffer;
     } else {
@@ -254,7 +232,6 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     if (renderModifiers.empty()) {
         return nullptr;
     }
-    ret->context = m_eglBackend->openglContextRef();
     ret->bufferTarget = bufferTarget;
     ret->importMode = importMode;
     GraphicsBufferOptions options{
@@ -307,19 +284,8 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surface, SwapchainSlot *slot, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const
 {
     if (surface->importSwapchain) {
-        // The source texture transform looks as follows: output transform + flip-y transform. The
-        // flip-y transform is added by the render backend to handle the OpenGL render target origin
-        // being in the bottom-left corner.
-        //
-        // As is, without the flip-y transform, the top-left corner of the graphics buffer will
-        // map to the bottom-left corner of the render target and the final image will look upside down.
-        //
-        // .combine(FlipY) undoes the flip-y transform in "output transform + flip-y" so we only end
-        // with the output transform and the bufferDamage has its origin in the top-left corner rather
-        // than in the bottom-left corner.
-        const OutputTransform mapping = surface->transformation.combine(OutputTransform::FlipY);
-        const QSize orientedSize = mapping.map(slot->buffer()->size());
-        const Region bufferDamage = mapping.map(damagedDeviceRegion, orientedSize);
+        const QSize orientedSize = surface->transformation.map(slot->buffer()->size());
+        const Region bufferDamage = surface->transformation.map(damagedDeviceRegion, orientedSize);
 
         auto imported = surface->importSwapchain->copyRgbBuffer(slot->buffer(), bufferDamage, std::move(readFence), frame, slot->releasePoint());
         if (!imported) {

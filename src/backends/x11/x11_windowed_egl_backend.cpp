@@ -32,10 +32,6 @@ X11WindowedEglPrimaryLayer::~X11WindowedEglPrimaryLayer()
 
 std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(OutputFrame *frame)
 {
-    if (!m_backend->openglContext()->makeCurrent()) {
-        return std::nullopt;
-    }
-
     const QSize bufferSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
         const uint32_t format = DRM_FORMAT_XRGB8888;
@@ -60,16 +56,12 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
     if (!m_buffer) {
         return std::nullopt;
     }
-    auto fbo = m_backend->openglContext()->importDmaBufAsFbo(m_buffer->buffer());
-    if (!fbo) {
-        return std::nullopt;
-    }
 
     Region repaint = Region::infinite();
     m_output->clearExposedArea();
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(fbo),
+        .renderTarget = RenderTarget(m_buffer->buffer(), m_bufferTransform),
         .repaint = repaint,
     };
 }
@@ -104,10 +96,6 @@ X11WindowedEglCursorLayer::~X11WindowedEglCursorLayer()
 
 std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame(OutputFrame *frame)
 {
-    if (!m_backend->openglContext()->makeCurrent()) {
-        return std::nullopt;
-    }
-
     const auto bufferSize = targetRect().size();
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
         GraphicsBufferOptions options{
@@ -129,13 +117,8 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame(O
         return std::nullopt;
     }
 
-    auto fbo = m_backend->openglContext()->importDmaBufAsFbo(m_slot->buffer());
-    if (!fbo) {
-        return std::nullopt;
-    }
-
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(fbo),
+        .renderTarget = RenderTarget(m_slot->buffer(), OutputTransform::Normal),
         .repaint = Region::infinite(),
     };
 }

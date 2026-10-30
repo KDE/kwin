@@ -56,7 +56,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame(OutputFrame *fr
     const bool tearing = frame && (frame->presentationMode() == PresentationMode::Async || frame->presentationMode() == PresentationMode::AdaptiveAsync);
     const auto formats = tearing && !supportedAsyncDrmFormats().isEmpty() ? supportedAsyncDrmFormats() : supportedDrmFormats();
     return m_surface.startRendering(targetRect().size(),
-                                    drmOutput()->transform().combine(OutputTransform::FlipY),
+                                    drmOutput()->transform(),
                                     formats,
                                     drmOutput()->layerBlendingColor(),
                                     drmOutput()->colorPowerTradeoff(),

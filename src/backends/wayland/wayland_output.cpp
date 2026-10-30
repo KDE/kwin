@@ -394,6 +394,11 @@ void WaylandOutput::applyChanges(const OutputConfiguration &config)
         }
     }
     next.priority = props->priority.value_or(m_state.priority);
+    if (next.transform != m_state.transform) {
+        for (auto &layer : m_layers) {
+            layer->addDeviceRepaint(Region::infinite());
+        }
+    }
     setState(next);
 }
 

@@ -7,6 +7,7 @@
 #pragma once
 
 #include "core/colorspace.h"
+#include "core/graphicsbuffer.h"
 #include "core/output.h"
 
 #include <QImage>
@@ -21,6 +22,9 @@ class KWIN_EXPORT RenderTarget
 {
 public:
     explicit RenderTarget(GLFramebuffer *fbo, const std::shared_ptr<ColorDescription> &colorDescription = ColorDescription::sRGB);
+    explicit RenderTarget(GraphicsBuffer *buffer,
+                          OutputTransform transform,
+                          const std::shared_ptr<ColorDescription> &colorDescription = ColorDescription::sRGB);
 
     QSize transformedSize() const;
     Rect transformedRect() const;
@@ -31,8 +35,10 @@ public:
 
     GLFramebuffer *framebuffer() const;
     GLTexture *texture() const;
+    GraphicsBuffer *buffer() const;
 
 private:
+    GraphicsBufferRef m_buffer;
     GLFramebuffer *m_framebuffer = nullptr;
     const OutputTransform m_transform;
     const std::shared_ptr<ColorDescription> m_colorDescription;
