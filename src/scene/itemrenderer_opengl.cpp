@@ -29,6 +29,7 @@ namespace KWin
 
 ItemRendererOpenGL::ItemRendererOpenGL(RenderDevice *device)
     : ItemRenderer(device)
+    , m_context(device->eglContext())
 {
     const QString visualizeOptionsString = qEnvironmentVariable("KWIN_SCENE_VISUALIZE");
     if (!visualizeOptionsString.isEmpty()) {
@@ -46,12 +47,12 @@ std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(GraphicsBuffer *buffe
 
 std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(const QImage &image)
 {
-    return ImageTextureOpenGL::create(m_renderDevice->eglContext(), image);
+    return ImageTextureOpenGL::create(m_context, image);
 }
 
 std::unique_ptr<NinePatch> ItemRendererOpenGL::createNinePatch(const QImage &image)
 {
-    return NinePatchOpenGL::create(m_renderDevice->eglContext(), image);
+    return NinePatchOpenGL::create(m_context, image);
 }
 
 std::unique_ptr<NinePatch> ItemRendererOpenGL::createNinePatch(const QImage &topLeftPatch,
@@ -63,26 +64,30 @@ std::unique_ptr<NinePatch> ItemRendererOpenGL::createNinePatch(const QImage &top
                                                                const QImage &bottomLeftPatch,
                                                                const QImage &leftPatch)
 {
-    return NinePatchOpenGL::create(m_renderDevice->eglContext(), topLeftPatch, topPatch, topRightPatch, rightPatch, bottomRightPatch, bottomPatch, bottomLeftPatch, leftPatch);
+    return NinePatchOpenGL::create(m_context, topLeftPatch, topPatch, topRightPatch, rightPatch, bottomRightPatch, bottomPatch, bottomLeftPatch, leftPatch);
 }
 
 std::unique_ptr<Atlas> ItemRendererOpenGL::createAtlas(const QList<QImage> &sprites)
 {
-    return AtlasOpenGL::create(m_renderDevice->eglContext(), sprites);
+    return AtlasOpenGL::create(m_context, sprites);
 }
 
-void ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)
+bool ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)
 {
+    if (!m_context || !m_context->makeCurrent()) {
+        return false;
+    }
     GLFramebuffer *fbo = renderTarget.framebuffer();
-    GLFramebuffer::pushFramebuffer(fbo);
+    m_context->pushFramebuffer(fbo);
 
-    GLVertexBuffer::streamingBuffer()->beginFrame();
+    m_context->streamingVbo()->beginFrame();
+    return true;
 }
 
 void ItemRendererOpenGL::endFrame()
 {
-    GLVertexBuffer::streamingBuffer()->endOfFrame();
-    GLFramebuffer::popFramebuffer();
+    m_context->streamingVbo()->endOfFrame();
+    m_context->popFramebuffer();
 
     EGLNativeFence fence(m_renderDevice->eglDisplay());
     if (fence.isValid()) {

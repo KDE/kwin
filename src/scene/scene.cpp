@@ -448,8 +448,11 @@ void ItemView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffse
 {
     const Region globalRegion = region == Region::infinite() ? Region::infinite() : region.translated(viewport().topLeft().toPoint());
     RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), renderTarget, deviceOffset);
+
     auto renderer = m_item->scene()->renderer(renderDevice());
-    renderer->beginFrame(renderTarget, renderViewport);
+    if (!renderer->beginFrame(renderTarget, renderViewport)) {
+        return;
+    }
     renderer->renderBackground(renderTarget, renderViewport, globalRegion);
     WindowPaintData data;
     const bool success = renderer->renderItem(renderTarget, renderViewport, m_item, 0, globalRegion, data, [this](Item *toRender) {
@@ -582,8 +585,11 @@ Region ItemTreeView::collectDamage()
 void ItemTreeView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion)
 {
     RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), renderTarget, deviceOffset);
+
     auto renderer = m_item->scene()->renderer(renderDevice());
-    renderer->beginFrame(renderTarget, renderViewport);
+    if (!renderer->beginFrame(renderTarget, renderViewport)) {
+        return;
+    }
     renderer->renderBackground(renderTarget, renderViewport, deviceRegion);
     WindowPaintData data;
     if (!renderer->renderItem(renderTarget, renderViewport, m_item, 0, deviceRegion, data, {}, {})) {

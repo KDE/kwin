@@ -54,8 +54,8 @@ public:
 
     virtual std::unique_ptr<Atlas> createAtlas(const QList<QImage> &sprites) = 0;
 
-    virtual void beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport);
-    virtual void endFrame();
+    [[nodiscard]] virtual bool beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport) = 0;
+    virtual void endFrame() = 0;
 
     virtual void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion) = 0;
     [[nodiscard]] virtual bool renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) = 0;

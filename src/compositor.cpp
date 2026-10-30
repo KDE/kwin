@@ -86,6 +86,7 @@ Compositor::Compositor(QObject *workspace)
 
     connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, [this](RenderDevice *device) {
         if (m_primaryDevice != device) {
+            kwinApp()->scene()->detachRenderer(device);
             return;
         }
         if (GpuManager::self()->renderDevices().empty()) {
