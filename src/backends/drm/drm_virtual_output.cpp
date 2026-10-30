@@ -15,6 +15,7 @@
 #include "drm_gpu.h"
 #include "drm_layer.h"
 #include "drm_render_backend.h"
+#include "drm_virtual_layer.h"
 #include "utils/vsyncsource.h"
 
 namespace KWin
@@ -71,7 +72,7 @@ void DrmVirtualOutput::vblank(std::chrono::nanoseconds timestamp)
     }
 }
 
-DrmOutputLayer *DrmVirtualOutput::primaryLayer() const
+VirtualDrmLayer *DrmVirtualOutput::primaryLayer() const
 {
     return m_layer.get();
 }

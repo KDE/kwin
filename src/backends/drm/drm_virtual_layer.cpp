@@ -6,17 +6,14 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "drm_virtual_egl_layer.h"
+#include "drm_virtual_layer.h"
+#include "core/renderbackend.h"
 #include "core/renderdevice.h"
-#include "drm_egl_backend.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "drm_virtual_output.h"
-#include "opengl/eglnativefence.h"
-#include "scene/surfaceitem_wayland.h"
 #include "swapchain.h"
 #include "utils/envvar.h"
-#include "wayland/surface.h"
 
 #include <drm_fourcc.h>
 #include <errno.h>
@@ -25,18 +22,18 @@
 namespace KWin
 {
 
-VirtualDrmEglLayer::VirtualDrmEglLayer(EglGbmBackend *eglBackend, DrmVirtualOutput *output)
-    : DrmOutputLayer(output, OutputLayerType::Primary)
-    , m_eglBackend(eglBackend)
+VirtualDrmLayer::VirtualDrmLayer(RenderBackend *backend, DrmVirtualOutput *output)
+    : OutputLayer(output, OutputLayerType::Primary)
+    , m_backend(backend)
 {
 }
 
-VirtualDrmEglLayer::~VirtualDrmEglLayer()
+VirtualDrmLayer::~VirtualDrmLayer()
 {
     releaseBuffers();
 }
 
-std::optional<OutputLayerBeginFrameInfo> VirtualDrmEglLayer::beginFrame(OutputFrame *frame)
+std::optional<OutputLayerBeginFrameInfo> VirtualDrmLayer::beginFrame(OutputFrame *frame)
 {
     m_scanoutBuffer.reset();
 
@@ -72,59 +69,56 @@ std::optional<OutputLayerBeginFrameInfo> VirtualDrmEglLayer::beginFrame(OutputFr
     };
 }
 
-bool VirtualDrmEglLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
+bool VirtualDrmLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
     m_damageJournal.add(damagedDeviceRegion);
     m_swapchain->release(m_currentSlot.get(), std::move(sync));
     return true;
 }
 
-std::shared_ptr<Swapchain> VirtualDrmEglLayer::createSwapchain() const
+std::shared_ptr<Swapchain> VirtualDrmLayer::createSwapchain() const
 {
     static bool modifiersEnvSet = false;
     static const bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
     const bool allowModifiers = !modifiersEnvSet || modifiersEnv;
 
-    const auto tranches = m_eglBackend->tranches();
-    for (const auto &tranche : tranches) {
-        for (auto it = tranche.formatTable.constBegin(); it != tranche.formatTable.constEnd(); it++) {
-            const auto size = m_output->modeSize();
-            const auto format = it.key();
-            const auto modifiers = it.value();
+    const auto allFormats = m_backend->supportedFormats();
+    const auto formats = OutputLayer::filterAndSortFormats(allFormats, 0, m_output->colorPowerTradeoff());
+    for (const auto &format : formats) {
+        const auto size = m_output->modeSize();
 
-            GraphicsBufferOptions options{
-                .size = size,
-                .format = format,
-                .modifiers = allowModifiers ? modifiers : ModifierList{DRM_FORMAT_MOD_INVALID},
-                .software = false,
-                .scanout = false,
-            };
-            if (auto swapchain = Swapchain::create(m_eglBackend->renderDevice()->allocator(), options)) {
-                return swapchain;
-            }
+        GraphicsBufferOptions options{
+            .size = size,
+            .format = format.drmFormat,
+            .modifiers = allowModifiers ? allFormats[format.drmFormat] : ModifierList{DRM_FORMAT_MOD_INVALID},
+            .software = false,
+            .scanout = false,
+        };
+        if (auto swapchain = Swapchain::create(m_backend->renderDevice()->allocator(), options)) {
+            return swapchain;
         }
     }
     qCWarning(KWIN_DRM) << "couldn't create a swapchain for a virtual output!";
     return nullptr;
 }
 
-bool VirtualDrmEglLayer::doesSwapchainFit(Swapchain *swapchain) const
+bool VirtualDrmLayer::doesSwapchainFit(Swapchain *swapchain) const
 {
     return swapchain && swapchain->size() == m_output->modeSize();
 }
 
-bool VirtualDrmEglLayer::earlyScanoutChecks()
+bool VirtualDrmLayer::earlyScanoutChecks()
 {
     return true;
 }
 
-bool VirtualDrmEglLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
+bool VirtualDrmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
 {
     m_scanoutBuffer = buffer;
     return true;
 }
 
-void VirtualDrmEglLayer::releaseBuffers()
+void VirtualDrmLayer::releaseBuffers()
 {
     m_swapchain.reset();
     m_oldSwapchain.reset();
@@ -132,9 +126,9 @@ void VirtualDrmEglLayer::releaseBuffers()
     m_scanoutBuffer.reset();
 }
 
-FormatModifierMap VirtualDrmEglLayer::supportedDrmFormats() const
+FormatModifierMap VirtualDrmLayer::supportedDrmFormats() const
 {
-    return m_eglBackend->supportedFormats();
+    return m_backend->supportedFormats();
 }
 
 }
