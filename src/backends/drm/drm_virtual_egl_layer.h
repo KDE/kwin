@@ -34,7 +34,7 @@ public:
     ~VirtualDrmEglLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
-    bool endFrame(const Region &damagedDeviceRegion, OutputFrame *frame) override;
+    bool endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame) override;
     void releaseBuffers() override;
     FormatModifierMap supportedDrmFormats() const override;
 
