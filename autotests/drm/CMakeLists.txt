@@ -9,10 +9,9 @@ set(mockDRM_SRCS
     ../../src/backends/drm/drm_connector.cpp
     ../../src/backends/drm/drm_crtc.cpp
     ../../src/backends/drm/drm_egl_backend.cpp
-    ../../src/backends/drm/drm_egl_layer.cpp
-    ../../src/backends/drm/drm_egl_layer_surface.cpp
     ../../src/backends/drm/drm_gpu.cpp
     ../../src/backends/drm/drm_layer.cpp
+    ../../src/backends/drm/drm_layer_surface.cpp
     ../../src/backends/drm/drm_logging.cpp
     ../../src/backends/drm/drm_object.cpp
     ../../src/backends/drm/drm_output.cpp
@@ -20,7 +19,7 @@ set(mockDRM_SRCS
     ../../src/backends/drm/drm_pipeline_legacy.cpp
     ../../src/backends/drm/drm_plane.cpp
     ../../src/backends/drm/drm_property.cpp
-    ../../src/backends/drm/drm_virtual_egl_layer.cpp
+    ../../src/backends/drm/drm_virtual_layer.cpp
     ../../src/backends/drm/drm_virtual_output.cpp
     ../../src/wayland/drmlease_v1.cpp
 )
