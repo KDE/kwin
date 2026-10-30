@@ -494,14 +494,31 @@ BackendOutput::AutoRotationPolicy BackendOutput::autoRotationPolicy() const
     return m_state.autoRotatePolicy;
 }
 
-std::shared_ptr<IccProfile> BackendOutput::iccProfile() const
-{
-    return m_state.iccProfile;
-}
-
 QString BackendOutput::iccProfilePath() const
 {
     return m_state.iccProfilePath;
+}
+
+std::shared_ptr<IccProfile> BackendOutput::currentIccProfile() const
+{
+    if (m_state.highDynamicRange) {
+        if (m_state.hdrColorProfileSource == ColorProfileSource::ICC) {
+            return m_state.hdrIccProfile;
+        }
+    } else if (m_state.colorProfileSource == ColorProfileSource::ICC) {
+        return m_state.iccProfile;
+    }
+    return nullptr;
+}
+
+Colorimetry BackendOutput::wireColor() const
+{
+    return m_state.originalColorDescription->containerColorimetry();
+}
+
+TransferFunction::Type BackendOutput::wireTransfer() const
+{
+    return m_state.originalColorDescription->transferFunction().type;
 }
 
 QString BackendOutput::hdrIccProfilePath() const
@@ -767,6 +784,11 @@ RenderLoop *BackendOutput::renderLoop() const
 DrmDevice *BackendOutput::scanoutDevice() const
 {
     return m_scanoutDevice;
+}
+
+bool BackendOutput::needsShadowBuffer() const
+{
+    return false;
 }
 
 } // namespace KWin
