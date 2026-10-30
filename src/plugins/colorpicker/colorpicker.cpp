@@ -129,9 +129,9 @@ QColor ColorPickerEffect::pick()
             const Rect pixelDamage = Rect(QPoint(), QSize(1, 1));
             sceneView.setViewport(RectF(p, QSizeF(1, 1)));
             sceneView.prePaint();
-            sceneView.paint(*beginInfo, QPoint(), pixelDamage);
+            FileDescriptor sync = sceneView.paint(*beginInfo, QPoint(), pixelDamage);
             sceneView.postPaint();
-            if (!layer.endFrame(pixelDamage, nullptr)) {
+            if (!layer.endFrame(pixelDamage, std::move(sync), nullptr)) {
                 return;
             }
 

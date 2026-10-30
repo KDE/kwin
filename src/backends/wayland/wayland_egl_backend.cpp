@@ -112,15 +112,12 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame(OutputFrame
     };
 }
 
-bool WaylandEglLayer::endFrame(const Region &damagedDeviceRegion, OutputFrame *frame)
+bool WaylandEglLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
     if (frame && m_query) {
         m_query->end();
         frame->addRenderTimeQuery(std::move(m_query));
     }
-    // Flush rendering commands to the dmabuf.
-    glFlush();
-    EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
 
     // The damage is where the picture changed, and the picture is composed the way the user
     // sees it. What the host reads is the buffer, which a rotated display fills turned, so
@@ -129,7 +126,7 @@ bool WaylandEglLayer::endFrame(const Region &damagedDeviceRegion, OutputFrame *f
     const auto mapping = bufferTransform();
     const QSize pictureSize = mapping.map(m_swapchain->size());
     setBuffer(m_buffer->buffer(), mapping.map(damagedDeviceRegion & Rect(QPoint(), pictureSize), pictureSize));
-    m_swapchain->release(m_buffer.get(), releaseFence.takeFileDescriptor());
+    m_swapchain->release(m_buffer.get(), std::move(sync));
 
     m_damageJournal.add(damagedDeviceRegion);
     return true;
@@ -222,22 +219,19 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame(Outpu
     };
 }
 
-bool WaylandEglCursorLayer::endFrame(const Region &damagedDeviceRegion, OutputFrame *frame)
+bool WaylandEglCursorLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
     if (frame && m_query) {
         m_query->end();
         frame->addRenderTimeQuery(std::move(m_query));
     }
-    // Flush rendering commands to the dmabuf.
-    glFlush();
 
     wl_buffer *buffer = m_backend->backend()->importBuffer(m_buffer->buffer());
     Q_ASSERT(buffer);
 
     static_cast<WaylandOutput *>(m_output.get())->cursor()->update(buffer, m_buffer->buffer()->size() / m_output->scale(), (hotspot() / m_output->scale()).toPoint());
 
-    EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
-    m_swapchain->release(m_buffer.get(), releaseFence.takeFileDescriptor());
+    m_swapchain->release(m_buffer.get(), std::move(sync));
     return true;
 }
 

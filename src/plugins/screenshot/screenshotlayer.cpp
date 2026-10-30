@@ -33,7 +33,7 @@ std::optional<OutputLayerBeginFrameInfo> ScreenshotLayer::beginFrame(OutputFrame
     };
 }
 
-bool ScreenshotLayer::endFrame(const Region &damagedRegion, OutputFrame *frame)
+bool ScreenshotLayer::endFrame(const Region &damagedRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
     return true;
 }

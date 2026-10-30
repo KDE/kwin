@@ -9,7 +9,6 @@
 #include "x11_windowed_egl_backend.h"
 #include "core/gbmgraphicsbufferallocator.h"
 #include "core/renderdevice.h"
-#include "opengl/eglnativefence.h"
 #include "opengl/glrendertimequery.h"
 #include "swapchain.h"
 #include "x11_windowed_backend.h"
@@ -77,14 +76,13 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
     };
 }
 
-bool X11WindowedEglPrimaryLayer::endFrame(const Region &damagedDeviceRegion, OutputFrame *frame)
+bool X11WindowedEglPrimaryLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
     if (frame && m_query) {
         m_query->end();
         frame->addRenderTimeQuery(std::move(m_query));
     }
-    EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
-    m_swapchain->release(m_buffer.get(), releaseFence.fileDescriptor().duplicate());
+    m_swapchain->release(m_buffer.get(), std::move(sync));
     m_output->setPrimaryBuffer(m_buffer->buffer());
     return true;
 }
@@ -134,7 +132,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame(O
     };
 }
 
-bool X11WindowedEglCursorLayer::endFrame(const Region &damagedDeviceRegion, OutputFrame *frame)
+bool X11WindowedEglCursorLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
     EglContext *context = m_backend->openglContext();
     QImage buffer(m_framebuffer->size(), QImage::Format_RGBA8888_Premultiplied);

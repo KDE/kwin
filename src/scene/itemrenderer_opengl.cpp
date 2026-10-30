@@ -163,7 +163,7 @@ std::optional<OutputLayerBeginFrameInfo> ItemRendererOpenGL::beginFrame(const Ou
     };
 }
 
-void ItemRendererOpenGL::endFrame(const Region &repainted, RenderView *view)
+FileDescriptor ItemRendererOpenGL::endFrame(const Region &repainted, RenderView *view)
 {
     m_context->popFramebuffer();
 
@@ -174,7 +174,7 @@ void ItemRendererOpenGL::endFrame(const Region &repainted, RenderView *view)
 
         ShaderBinder binder = buffer.iccShader ? ShaderBinder(buffer.iccShader->shader()) : ShaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
         if (!binder.shader()) {
-            return;
+            return FileDescriptor{};
         }
         if (buffer.iccShader) {
             buffer.iccShader->setUniforms(view->backendOutput()->currentIccProfile(),
@@ -225,6 +225,8 @@ void ItemRendererOpenGL::endFrame(const Region &repainted, RenderView *view)
         }
     }
     m_releasePoints.clear();
+
+    return fence.takeFileDescriptor();
 }
 
 QVector4D ItemRendererOpenGL::modulate(float opacity, float brightness) const
