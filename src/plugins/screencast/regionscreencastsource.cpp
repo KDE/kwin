@@ -94,7 +94,7 @@ Region RegionScreenCastSource::render(GLFramebuffer *target, const Region &buffe
     }
     const auto bufferDamage = m_sceneView->collectDamage() & Rect(QPoint(), target->size());
     m_layer->resetRepaints();
-    FileDescriptor sync = m_sceneView->paint(*beginInfo, QPoint(), bufferDamage);
+    FileDescriptor sync = m_sceneView->paint(*beginInfo, QPoint(), bufferDamage, nullptr);
     if (!m_layer->endFrame(bufferDamage, std::move(sync), nullptr)) {
         return Region{};
     }
