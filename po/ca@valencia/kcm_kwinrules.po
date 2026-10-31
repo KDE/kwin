@@ -199,7 +199,7 @@ msgid ""
 "window becomes invisible."
 msgstr ""
 "La llegibilitat es pot veure afectada amb valors d'opacitat extremadament "
-"baixos. Al 0%, la finestra es torna invisible."
+"baixos. Al 0 %, la finestra es torna invisible."
 
 #: rulesmodel.cpp:388
 #, kde-format

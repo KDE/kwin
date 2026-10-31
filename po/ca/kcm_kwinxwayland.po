@@ -211,11 +211,3 @@ msgstr "Aplicacions permeses a controlar el punter i el teclat"
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
 msgstr "No permetis que %1 controli el punter i el teclat sense preguntar"
-
-#~ msgctxt "@info"
-#~ msgid "Changes will take effect the next time you log in."
-#~ msgstr "Els canvis tindran efecte la pròxima vegada que us connecteu."
-
-#~ msgctxt "@action:button"
-#~ msgid "Log Out Now"
-#~ msgstr "Surt ara"
