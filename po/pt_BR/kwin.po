@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-29 00:55+0000\n"
-"PO-Revision-Date: 2026-10-20 07:28-0300\n"
+"POT-Creation-Date: 2026-10-31 00:53+0000\n"
+"PO-Revision-Date: 2026-10-30 16:35-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -1424,7 +1424,7 @@ msgid ""
 msgstr ""
 "<para>\"%1\" de <application>%2</application> não está respondendo. Deseja "
 "encerrar este aplicativo?</para><para><emphasis strong='true'>Encerrar este "
-"aplicativo fechará todas as suas janelas.Todos os dados não salvos serão "
+"aplicativo fechará todas as suas janelas. Todos os dados não salvos serão "
 "perdidos.</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
@@ -4451,8 +4451,9 @@ msgid "More displays are enabled than are supported by the graphics card."
 msgstr "Há mais telas ativadas do que a placa de vídeo suporta."
 
 #: wayland/outputmanagement_v2.cpp:750
-#, kde-format
-msgid "The driver rejected the output configuration: %s"
+#, fuzzy, kde-format
+#| msgid "The driver rejected the output configuration: %s"
+msgid "The driver rejected the output configuration: %1"
 msgstr "O driver rejeitou a configuração de saída: %s"
 
 #: window.cpp:3182
