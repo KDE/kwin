@@ -1,11 +1,11 @@
-# SPDX-FileCopyrightText: 2021, 2022, 2023, 2024, 2025, 2026 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
+# SPDX-FileCopyrightText: 2021-2026 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
 # Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-31 00:53+0000\n"
-"PO-Revision-Date: 2026-09-09 18:10+0400\n"
+"PO-Revision-Date: 2026-10-31 21:09+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Lokalize 25.12.3\n"
+"X-Generator: Lokalize 26.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1847,25 +1847,15 @@ msgid "<application>%1</application> is asking to control input devices"
 msgstr "<application>%1</application> يطلب التحكم في أجهزة الإدخال"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check, %1 is the application name. This option always allow apps "
-#| "claiming to be a given application name to control input devices"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option remembers the "
 "selection for apps claiming to be a given application name"
 msgid "Remember for apps claiming to be %1"
-msgstr "اسمح دائمًا للتطبيقات التي تدعي أنها %1"
+msgstr "تذكّر للتطبيقات التي تدّعي أنها %1"
 
 #: plugins/eis/eisprompter.cpp:66
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Identities of legacy X11 apps cannot be verified. Any app claiming to be "
-#| "<application>%1</application> will be able to control input devices. You "
-#| "can revoke this permission later on <application>System Settings</"
-#| "application>’ “Legacy X11 App Support” page."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Identities of legacy X11 apps cannot be verified. If permitted any app "
@@ -1873,9 +1863,9 @@ msgid ""
 "devices. You can change this setting later on <application>System Settings</"
 "application>’ “Legacy X11 App Support” page."
 msgstr ""
-"لا يمكن التحقق من هويات تطبيقات X11 القديمة. سيتمكن أي تطبيق يدعي أنه "
-"<application>%1</application> من التحكم في أجهزة الإدخال. يمكنك إلغاء هذا "
-"الإذن لاحقًا من صفحة «دعم تطبيقات X11 القديمة» في <application>إعدادات "
+"لا يمكن التحقق من هويات تطبيقات X11 القديمة. إذا سُمح، فسيتمكن أي تطبيق يدّعي "
+"أنه <application>%1</application> من التحكم في أجهزة الإدخال. يمكنك تغيير "
+"هذا الإعداد لاحقًا في صفحة «دعم تطبيقات X11 القديمة» في <application>إعدادات "
 "النظام</application>."
 
 #: plugins/eis/eisprompter.cpp:69
@@ -2492,6 +2482,10 @@ msgid ""
 "temporarily active.\n"
 "            "
 msgstr ""
+"\n"
+"                يحدد التاريخ والوقت اللذين يجب أن يظل فيهما وضع الإضاءة "
+"الليلية نشطًا مؤقتًا.\n"
+"            "
 
 #. i18n: ectx: label, entry (ActivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:28
@@ -2501,6 +2495,9 @@ msgid ""
 "                Night Light is activated until manually disabled.\n"
 "            "
 msgstr ""
+"\n"
+"                يظل الضوء الليلي قيد التشغيل حتى يعطل يدويًا.\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedUntil), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:35
@@ -2511,6 +2508,10 @@ msgid ""
 "temporarily inactive.\n"
 "            "
 msgstr ""
+"\n"
+"                يحدد التاريخ والوقت اللذين يجب أن يظل فيهما وضع الإضاءة "
+"الليلية معطلاً مؤقتًا.\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:42
@@ -2520,6 +2521,9 @@ msgid ""
 "                Night Light is suspended until manually turned back on.\n"
 "            "
 msgstr ""
+"\n"
+"              يُعلق ضوء الليل حتى يعاد تشغيله يدويًّا.\n"
+"            "
 
 #: plugins/outputlocator/outputlocator.cpp:26
 #, kde-format

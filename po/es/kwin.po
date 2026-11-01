@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-31 00:53+0000\n"
-"PO-Revision-Date: 2026-10-20 12:25+0100\n"
+"PO-Revision-Date: 2026-10-31 12:41+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -4458,10 +4458,9 @@ msgstr ""
 "Existen más pantallas activadas que las que permite la tarjeta gráfica."
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration: %s"
+#, kde-format
 msgid "The driver rejected the output configuration: %1"
-msgstr "El controlador ha rechazado la configuración de salida: %s"
+msgstr "El controlador ha rechazado la configuración de salida: %1"
 
 #: window.cpp:3182
 #, kde-format

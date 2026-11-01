@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-31 00:53+0000\n"
-"PO-Revision-Date: 2026-10-20 09:18+0300\n"
+"PO-Revision-Date: 2026-10-31 16:19+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -4441,10 +4441,9 @@ msgid "More displays are enabled than are supported by the graphics card."
 msgstr "Увімкнено більше дисплеїв, ніж може обробити графічна картка."
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration: %s"
+#, kde-format
 msgid "The driver rejected the output configuration: %1"
-msgstr "Драйвером відмовлено у налаштовування виведення: %s"
+msgstr "Драйвером відмовлено у налаштовування виведення: %1"
 
 #: window.cpp:3182
 #, kde-format

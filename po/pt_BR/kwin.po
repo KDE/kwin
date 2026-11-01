@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-31 00:53+0000\n"
-"PO-Revision-Date: 2026-10-30 16:35-0300\n"
+"PO-Revision-Date: 2026-10-31 12:34-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -1906,11 +1906,11 @@ msgid ""
 "devices. You can change this setting later on <application>System Settings</"
 "application>’ “Legacy X11 App Support” page."
 msgstr ""
-"Não é possível verificar a identidade de aplicativos X11 legados. Se "
+"Não é possível verificar a identidade de aplicativos legados do X11. Se "
 "permitido, qualquer aplicativo que se declare como <application>%1</"
 "application> poderá controlar dispositivos de entrada. Você pode alterar "
-"essa configuração posteriormente na página \"Suporte a aplicativos X11 "
-"legados\" das <application>Configurações do sistema</application>."
+"essa configuração posteriormente na página \"Suporte a aplicativos legados "
+"do X11\" das <application>Configurações do sistema</application>."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
@@ -4451,10 +4451,9 @@ msgid "More displays are enabled than are supported by the graphics card."
 msgstr "Há mais telas ativadas do que a placa de vídeo suporta."
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration: %s"
+#, kde-format
 msgid "The driver rejected the output configuration: %1"
-msgstr "O driver rejeitou a configuração de saída: %s"
+msgstr "O driver rejeitou a configuração de saída: %1"
 
 #: window.cpp:3182
 #, kde-format
