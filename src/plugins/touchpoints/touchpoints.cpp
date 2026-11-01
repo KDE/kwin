@@ -10,16 +10,10 @@
 
 #include "touchpoints.h"
 
-#include "core/rendertarget.h"
-#include "core/renderviewport.h"
+#include "core/output.h"
 #include "effect/effecthandler.h"
-#include "opengl/glutils.h"
-#include <QAction>
-
-#include <KConfigGroup>
-#include <KGlobalAccel>
-
-#include <cmath>
+#include "scene/outlinedborderitem.h"
+#include "scene/workspacescene.h"
 
 namespace KWin
 {
@@ -55,27 +49,60 @@ Qt::GlobalColor TouchPointsEffect::colorForId(quint32 id)
     return s_colors[s_colorIndex];
 }
 
-bool TouchPointsEffect::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
+void TouchPointsEffect::addPoint(quint32 id, const QPointF &pos, bool press)
 {
     TouchPoint point;
     point.pos = pos;
-    point.press = true;
+    point.press = press;
     point.color = colorForId(id);
-    m_points << point;
-    m_latestPositions.insert(id, pos);
+    for (int i = 0; i < m_ringCount; ++i) {
+        if (m_freeRings.empty()) {
+            point.rings.push_back(std::make_unique<OutlinedBorderItem>(RectF(), BorderOutline(), effects->scene()->overlayItem()));
+        } else {
+            point.rings.push_back(std::move(m_freeRings.back()));
+            m_freeRings.pop_back();
+        }
+    }
+    updateRings(point);
+    m_points.push_back(std::move(point));
     repaint();
+}
+
+void TouchPointsEffect::updateRings(TouchPoint &point)
+{
+    LogicalOutput *output = effects->screenAt(point.pos.toPoint());
+    // The line width is in device pixels
+    const qreal lineWidth = m_lineWidth / (output ? output->scale() : 1.0);
+    for (int i = 0; i < m_ringCount; ++i) {
+        OutlinedBorderItem *ring = point.rings[i].get();
+        const float alpha = computeAlpha(point.time, i);
+        const float radius = computeRadius(point.time, point.press, i);
+        if (radius <= 0 || alpha <= 0) {
+            ring->setVisible(false);
+            continue;
+        }
+        // The line is centered on the circle of this radius. A circle smaller than the line is
+        // drawn as a dot, with an inner radius just above zero.
+        const qreal outerRadius = radius + lineWidth / 2;
+        const qreal innerRadius = std::max<qreal>(radius - lineWidth / 2, 0.01);
+        ring->setOutline(BorderOutline(outerRadius - innerRadius, point.color, BorderRadius(innerRadius)));
+        ring->setInnerRect(RectF(point.pos.x() - innerRadius, point.pos.y() - innerRadius, 2 * innerRadius, 2 * innerRadius));
+        ring->setOpacity(alpha);
+        ring->setVisible(true);
+    }
+}
+
+bool TouchPointsEffect::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
+{
+    addPoint(id, pos, true);
+    m_latestPositions.insert(id, pos);
     return false;
 }
 
 bool TouchPointsEffect::touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
-    TouchPoint point;
-    point.pos = pos;
-    point.press = true;
-    point.color = colorForId(id);
-    m_points << point;
+    addPoint(id, pos, true);
     m_latestPositions.insert(id, pos);
-    repaint();
     return false;
 }
 
@@ -83,11 +110,7 @@ bool TouchPointsEffect::touchUp(qint32 id, std::chrono::microseconds time)
 {
     auto it = m_latestPositions.constFind(id);
     if (it != m_latestPositions.constEnd()) {
-        TouchPoint point;
-        point.pos = it.value();
-        point.press = false;
-        point.color = colorForId(id);
-        m_points << point;
+        addPoint(id, it.value(), false);
         m_latestPositions.erase(it);
     }
     return false;
@@ -97,49 +120,57 @@ void TouchPointsEffect::prePaintScreen(ScreenPrePaintData &data)
 {
     const int time = m_clock.tickMs(data.view).count();
 
-    auto it = m_points.begin();
-    while (it != m_points.end()) {
-        it->time += time;
-        if (it->time > m_ringLife) {
-            it = m_points.erase(it);
-        } else {
-            it++;
+    std::erase_if(m_points, [this, time](TouchPoint &point) {
+        point.time += time;
+        if (point.time <= m_ringLife) {
+            return false;
         }
+        // Keep the rings for the next points, which come with every touch motion
+        for (auto &ring : point.rings) {
+            ring->setVisible(false);
+            m_freeRings.push_back(std::move(ring));
+        }
+        return true;
+    });
+    for (TouchPoint &point : m_points) {
+        updateRings(point);
     }
 
-    if (m_points.isEmpty()) {
+    if (m_points.empty()) {
         m_clock.reset();
     }
 
     effects->prePaintScreen(data);
 }
 
-bool TouchPointsEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
-{
-    if (!effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen)) {
-        return false;
-    }
-
-    paintScreenSetupGl(renderTarget, viewport.projectionMatrix());
-    for (auto it = m_points.constBegin(), end = m_points.constEnd(); it != end; ++it) {
-        for (int i = 0; i < m_ringCount; ++i) {
-            float alpha = computeAlpha(it->time, i);
-            float size = computeRadius(it->time, it->press, i);
-            if (size > 0 && alpha > 0) {
-                QColor color = it->color;
-                color.setAlphaF(alpha);
-                drawCircle(viewport, color, it->pos.x(), it->pos.y(), size);
-            }
-        }
-    }
-    paintScreenFinishGl();
-    return true;
-}
-
 void TouchPointsEffect::postPaintScreen()
 {
     effects->postPaintScreen();
     repaint();
+}
+
+void TouchPointsEffect::repaint()
+{
+    if (m_points.empty()) {
+        return;
+    }
+    // The rings of a press start with a radius of 0 and are hidden, so the area is repainted to
+    // get the next frame. A single bounding rect keeps the dirty Region to one rectangle, avoiding
+    // the superlinear Region::unite() cost while many touch points are moving.
+    const int radius = m_ringMaxSize + m_lineWidth;
+    qreal minX = m_points.front().pos.x();
+    qreal maxX = minX;
+    qreal minY = m_points.front().pos.y();
+    qreal maxY = minY;
+    for (const TouchPoint &point : m_points) {
+        minX = qMin(minX, point.pos.x());
+        maxX = qMax(maxX, point.pos.x());
+        minY = qMin(minY, point.pos.y());
+        maxY = qMax(maxY, point.pos.y());
+    }
+    effects->addRepaint(RectF(QPointF(minX, minY), QPointF(maxX, maxY))
+                            .roundedOut()
+                            .grownBy(QMargins(radius, radius, radius, radius)));
 }
 
 float TouchPointsEffect::computeRadius(int time, bool press, int ring)
@@ -157,87 +188,9 @@ float TouchPointsEffect::computeAlpha(int time, int ring)
     return (m_ringLife - (float)time - ringDistance * (ring)) / m_ringLife;
 }
 
-void TouchPointsEffect::repaint()
-{
-    if (m_points.isEmpty()) {
-        return;
-    }
-    // A single bounding rect keeps the dirty Region to one rectangle, avoiding
-    // the superlinear Region::unite() cost that otherwise dominates the
-    // compositor thread while many touch points are moving.
-    const int radius = m_ringMaxSize + m_lineWidth;
-    qreal minX = m_points.constFirst().pos.x();
-    qreal maxX = minX;
-    qreal minY = m_points.constFirst().pos.y();
-    qreal maxY = minY;
-    for (auto it = m_points.constBegin(), end = m_points.constEnd(); it != end; ++it) {
-        minX = qMin(minX, it->pos.x());
-        maxX = qMax(maxX, it->pos.x());
-        minY = qMin(minY, it->pos.y());
-        maxY = qMax(maxY, it->pos.y());
-    }
-    effects->addRepaint(RectF(QPointF(minX, minY), QPointF(maxX, maxY))
-                            .roundedOut()
-                            .grownBy(QMargins(radius, radius, radius, radius)));
-}
-
 bool TouchPointsEffect::isActive() const
 {
-    return !m_points.isEmpty();
-}
-
-void TouchPointsEffect::drawCircle(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r)
-{
-    if (effects->isOpenGLCompositing()) {
-        drawCircleGl(viewport, color, cx, cy, r);
-    }
-}
-
-void TouchPointsEffect::drawCircleGl(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r)
-{
-    static const int num_segments = 80;
-    static const float theta = 2 * 3.1415926 / float(num_segments);
-    static const float c = cosf(theta); // precalculate the sine and cosine
-    static const float s = sinf(theta);
-    const auto scale = viewport.scale();
-    float t;
-
-    float x = r; // we start at angle = 0
-    float y = 0;
-
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->reset();
-    ShaderManager::instance()->getBoundShader()->setUniform(GLShader::ColorUniform::Color, color);
-    QList<QVector2D> verts;
-    verts.reserve(num_segments);
-
-    for (int ii = 0; ii < num_segments; ++ii) {
-        verts.push_back(QVector2D((x + cx) * scale, (y + cy) * scale));
-        // apply the rotation matrix
-        t = x;
-        x = c * x - s * y;
-        y = s * t + c * y;
-    }
-    vbo->setVertices(verts);
-    vbo->render(GL_LINE_LOOP);
-}
-
-void TouchPointsEffect::paintScreenSetupGl(const RenderTarget &renderTarget, const QMatrix4x4 &projectionMatrix)
-{
-    GLShader *shader = ShaderManager::instance()->pushShader(ShaderTrait::UniformColor | ShaderTrait::TransformColorspace);
-    shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
-    shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
-
-    glLineWidth(m_lineWidth);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-}
-
-void TouchPointsEffect::paintScreenFinishGl()
-{
-    glDisable(GL_BLEND);
-
-    ShaderManager::instance()->popShader();
+    return !m_points.empty();
 }
 
 } // namespace

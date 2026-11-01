@@ -13,8 +13,13 @@
 #include "effect/effect.h"
 #include "effect/timeline.h"
 
+#include <memory>
+#include <vector>
+
 namespace KWin
 {
+
+class OutlinedBorderItem;
 
 class TouchPointsEffect
     : public Effect
@@ -29,7 +34,6 @@ public:
     TouchPointsEffect();
     ~TouchPointsEffect() override;
     void prePaintScreen(ScreenPrePaintData &data) override;
-    bool paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
     void postPaintScreen() override;
     bool isActive() const override;
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;
@@ -55,15 +59,13 @@ public:
     }
 
 private:
-    inline void drawCircle(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r);
+    struct TouchPoint;
 
+    void addPoint(quint32 id, const QPointF &pos, bool press);
     void repaint();
-
+    void updateRings(TouchPoint &point);
     float computeAlpha(int time, int ring);
     float computeRadius(int time, bool press, int ring);
-    void drawCircleGl(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r);
-    void paintScreenSetupGl(const RenderTarget &renderTarget, const QMatrix4x4 &projectionMatrix);
-    void paintScreenFinishGl();
 
     Qt::GlobalColor colorForId(quint32 id);
 
@@ -78,8 +80,11 @@ private:
         int time = 0;
         bool press;
         QColor color;
+        std::vector<std::unique_ptr<OutlinedBorderItem>> rings;
     };
-    QList<TouchPoint> m_points;
+    std::vector<TouchPoint> m_points;
+    // Hidden ring items of expired points, used again by the next points
+    std::vector<std::unique_ptr<OutlinedBorderItem>> m_freeRings;
     QHash<quint32, QPointF> m_latestPositions;
     QHash<quint32, Qt::GlobalColor> m_colors;
     AnimationClock m_clock;
