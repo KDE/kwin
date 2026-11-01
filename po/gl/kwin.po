@@ -60,14 +60,12 @@ msgid "KDE Wayland Compositor %1"
 msgstr "Compositor de Wayland de KDE %1"
 
 #: backends/wayland/wayland_output.cpp:495
-#, fuzzy, kde-format
-#| msgid "- Output disabled"
+#, kde-format
 msgid "- Output disabled"
 msgstr "- Desactivouse a saída"
 
 #: backends/wayland/wayland_output.cpp:497
-#, fuzzy, kde-format
-#| msgid "- Output dimmed"
+#, kde-format
 msgid "- Output dimmed"
 msgstr "- Escureceuse a saída"
 
