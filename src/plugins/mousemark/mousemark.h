@@ -11,10 +11,19 @@
 #pragma once
 
 #include "effect/effect.h"
-#include "opengl/glutils.h"
+
+#include <QMap>
+#include <QSet>
+
+#include <map>
+#include <memory>
+#include <vector>
 
 namespace KWin
 {
+
+class Item;
+class MarkItem;
 
 class MouseMarkEffect
     : public Effect
@@ -34,7 +43,6 @@ public:
     MouseMarkEffect();
     ~MouseMarkEffect() override;
     void reconfigure(ReconfigureFlags) override;
-    bool paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
     bool isActive() const override;
     int requestedEffectChainPosition() const override;
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;
@@ -66,6 +74,7 @@ private:
     typedef QList<QPointF> Mark;
     static Mark createArrow(QPointF arrow_head, QPointF arrow_tail);
 
+    std::unique_ptr<MarkItem> createMarkItem(const Mark &mark) const;
     void setState(State newState);
     void processPoint(qint32 channel, const QPointF &point); // ch0 is mouse, ch1+ is touch
     void endDraw(qint32 channel);
@@ -73,6 +82,11 @@ private:
 
     QList<Mark> marks; // marks on screen
     QMap<qint32, Mark> drawings; // marks currently being drawn
+    // The parent of all the mark items, hidden while the screen is locked
+    std::unique_ptr<Item> rootItem;
+    // The items that show the marks, in the order of marks, and the items of drawings, by channel
+    std::vector<std::unique_ptr<MarkItem>> markItems;
+    std::map<qint32, std::unique_ptr<MarkItem>> drawingItems;
     State state;
 
     QSet<qint32> touchPoints; // touch points currently being consumed

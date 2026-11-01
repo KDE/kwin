@@ -15,18 +15,146 @@
 // KConfigSkeleton
 #include "mousemarkconfig.h"
 
-#include "core/rendertarget.h"
-#include "core/renderviewport.h"
+#include "core/output.h"
 #include "effect/effecthandler.h"
-#include "opengl/glplatform.h"
+#include "scene/imageitem.h"
+#include "scene/workspacescene.h"
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <QAction>
+#include <QPainter>
 
 #include <cmath>
 
 namespace KWin
 {
+
+/**
+ * The lines of one mark, with a width in device pixels. Short segments are painted into square
+ * tiles, one image per tile. A segment longer than a quarter of a tile is a one pixel image of the
+ * mark color, stretched to the length of the segment and turned along it.
+ */
+class MarkItem : public Item
+{
+public:
+    MarkItem(const QColor &color, int width, Item *parent)
+        : Item(parent)
+        , m_color(color)
+        , m_width(width)
+        , m_pixel(1, 1, QImage::Format_ARGB32_Premultiplied)
+    {
+        m_pixel.fill(color);
+    }
+
+    void addSegment(const QPointF &from, const QPointF &to)
+    {
+        const qreal scale = scaleAt(from);
+        const qreal width = m_width / scale;
+        const QLineF line(from, to);
+        // A new tile is centered on the segment, so a short segment and its line width fit in it
+        const qreal margin = width / 2 + 1;
+        if (line.length() > TileSize / 4 || margin > TileSize / 4) {
+            addLine(line, width);
+            return;
+        }
+
+        if (m_tiles.empty() || m_tiles.back().scale != scale
+            || !m_tiles.back().rect.adjusted(margin, margin, -margin, -margin).contains(from)
+            || !m_tiles.back().rect.adjusted(margin, margin, -margin, -margin).contains(to)) {
+            addTile(line.center(), scale);
+        }
+        Tile &tile = m_tiles.back();
+        QPainter painter(&tile.image);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setPen(QPen(m_color, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        painter.drawLine(line.translated(-tile.rect.topLeft()));
+        painter.end();
+        tile.item->setImage(tile.image);
+    }
+
+    void setMark(const QList<QPointF> &mark)
+    {
+        // An arrow keeps its number of segments, so its stretched lines are moved where they are
+        const qsizetype count = std::max<qsizetype>(mark.size() - 1, 0);
+        if (m_tiles.empty() && qsizetype(m_lines.size()) == count) {
+            bool allLong = true;
+            for (qsizetype i = 0; i < count && allLong; ++i) {
+                allLong = QLineF(mark[i], mark[i + 1]).length() > TileSize / 4;
+            }
+            if (allLong) {
+                for (qsizetype i = 0; i < count; ++i) {
+                    const QLineF line(mark[i], mark[i + 1]);
+                    setLineGeometry(m_lines[i].get(), line, lineWidthAt(line.p1()));
+                }
+                return;
+            }
+        }
+
+        m_tiles.clear();
+        m_lines.clear();
+        for (qsizetype i = 0; i < count; ++i) {
+            addSegment(mark[i], mark[i + 1]);
+        }
+    }
+
+private:
+    static constexpr qreal TileSize = 128;
+
+    struct Tile
+    {
+        RectF rect;
+        qreal scale;
+        QImage image;
+        std::unique_ptr<ImageItem> item;
+    };
+
+    void addTile(const QPointF &center, qreal scale)
+    {
+        Tile tile{
+            .rect = RectF(center.x() - TileSize / 2, center.y() - TileSize / 2, TileSize, TileSize),
+            .scale = scale,
+            .image = QImage(QSize(TileSize, TileSize) * scale, QImage::Format_ARGB32_Premultiplied),
+            .item = std::make_unique<ImageItem>(this),
+        };
+        tile.image.setDevicePixelRatio(scale);
+        tile.image.fill(Qt::transparent);
+        tile.item->setPosition(tile.rect.topLeft());
+        tile.item->setSize(tile.rect.size());
+        m_tiles.push_back(std::move(tile));
+    }
+
+    static qreal scaleAt(const QPointF &point)
+    {
+        LogicalOutput *output = effects->screenAt(point.toPoint());
+        return output ? output->scale() : 1.0;
+    }
+
+    qreal lineWidthAt(const QPointF &point) const
+    {
+        return m_width / scaleAt(point);
+    }
+
+    void addLine(const QLineF &line, qreal width)
+    {
+        auto item = std::make_unique<ImageItem>(this);
+        item->setImage(m_pixel);
+        setLineGeometry(item.get(), line, width);
+        m_lines.push_back(std::move(item));
+    }
+
+    static void setLineGeometry(ImageItem *item, const QLineF &line, qreal width)
+    {
+        item->setPosition(line.p1());
+        item->setSize(QSizeF(line.length(), width));
+        item->setTransform(QTransform().rotate(-line.angle()).translate(0, -width / 2));
+    }
+
+    QColor m_color;
+    int m_width;
+    QImage m_pixel;
+    std::vector<Tile> m_tiles;
+    std::vector<std::unique_ptr<ImageItem>> m_lines;
+};
 
 MouseMarkEffect::MouseMarkEffect()
 {
@@ -41,6 +169,9 @@ MouseMarkEffect::MouseMarkEffect()
     a->setText(i18n("Clear Last Mouse Mark"));
     KGlobalAccel::self()->setGlobalShortcut(a, QKeySequence(Qt::SHIFT | Qt::META | Qt::Key_F12));
     connect(a, &QAction::triggered, this, &MouseMarkEffect::clearLast);
+
+    rootItem = std::make_unique<Item>(effects->scene()->overlayItem());
+    rootItem->setVisible(!effects->isScreenLocked());
 
     connect(effects, &EffectsHandler::mouseChanged, this, &MouseMarkEffect::slotMouseChanged);
     connect(effects, &EffectsHandler::screenLockingChanged, this, &MouseMarkEffect::screenLockingChanged);
@@ -86,6 +217,14 @@ void MouseMarkEffect::reconfigure(ReconfigureFlags)
     if (MouseMarkConfig::arrowdrawmeta()) {
         m_arrowdraw_modifiers |= Qt::MetaModifier;
     }
+
+    // Show the marks on screen with the new color and width
+    for (qsizetype i = 0; i < marks.size(); ++i) {
+        markItems[i] = createMarkItem(marks[i]);
+    }
+    for (auto it = drawings.cbegin(); it != drawings.cend(); ++it) {
+        drawingItems[it.key()] = createMarkItem(it.value());
+    }
 }
 
 void MouseMarkEffect::setState(State newState)
@@ -103,10 +242,13 @@ void MouseMarkEffect::setState(State newState)
     case State::ARROW:
     case State::FREEHAND:
         // Flush drawings, and continue new marks from there
-        for (Mark &mark : drawings) {
+        for (auto it = drawings.begin(); it != drawings.end(); ++it) {
+            Mark &mark = it.value();
             if (mark.size() >= 2) {
                 marks.append(mark);
+                markItems.push_back(std::move(drawingItems[it.key()]));
                 mark = {mark.last()};
+                drawingItems[it.key()] = createMarkItem(mark);
             }
         }
         break;
@@ -119,6 +261,10 @@ void MouseMarkEffect::processPoint(qint32 id, const QPointF &pos)
         return;
     }
     Mark &drawing = drawings[id];
+    std::unique_ptr<MarkItem> &drawingItem = drawingItems[id];
+    if (!drawingItem) {
+        drawingItem = createMarkItem(drawing);
+    }
     switch (state) {
     case State::NONE:
         return;
@@ -129,12 +275,8 @@ void MouseMarkEffect::processPoint(qint32 id, const QPointF &pos)
         if (drawing.last() == pos) {
             return;
         }
-        QPointF pos2 = drawing.last();
+        drawingItem->addSegment(drawing.last(), pos);
         drawing.append(pos);
-        Rect repaint = Rect(std::min(pos.x(), pos2.x()), std::min(pos.y(), pos2.y()),
-                            std::max(pos.x(), pos2.x()), std::max(pos.y(), pos2.y()));
-        repaint.adjust(-width, -width, width, width);
-        effects->addRepaint(repaint);
         break;
     }
     case State::ARROW: {
@@ -145,7 +287,7 @@ void MouseMarkEffect::processPoint(qint32 id, const QPointF &pos)
             // update existing arrow
             QPointF tail = drawing.front();
             drawing = createArrow(pos, tail);
-            effects->addRepaintFull();
+            drawingItem->setMark(drawing);
         }
         break;
     }
@@ -161,64 +303,32 @@ void MouseMarkEffect::endDraw(qint32 channel)
 
     if (it->size() >= 2) {
         marks.append(std::move(*it));
-        effects->addRepaintFull();
+        markItems.push_back(std::move(drawingItems[channel]));
     }
 
     drawings.erase(it);
+    drawingItems.erase(channel);
 }
 
 void MouseMarkEffect::endDrawings()
 {
-    for (Mark &drawing : drawings) {
-        if (drawing.size() >= 2) {
-            marks.append(std::move(drawing));
+    for (auto it = drawings.begin(); it != drawings.end(); ++it) {
+        if (it->size() >= 2) {
+            marks.append(std::move(it.value()));
+            markItems.push_back(std::move(drawingItems[it.key()]));
         }
     }
     drawings.clear();
-    effects->addRepaintFull();
+    drawingItems.clear();
 }
 
-bool MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
+std::unique_ptr<MarkItem> MouseMarkEffect::createMarkItem(const Mark &mark) const
 {
-    if (!effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen)) { // paint normal screen
-        return false;
+    auto item = std::make_unique<MarkItem>(color, width, rootItem.get());
+    for (qsizetype i = 1; i < mark.size(); ++i) {
+        item->addSegment(mark[i - 1], mark[i]);
     }
-    if (marks.isEmpty() && drawings.isEmpty()) {
-        return true;
-    }
-    if (effects->openglContext()) {
-        glLineWidth(width);
-        GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-        vbo->reset();
-        const auto scale = viewport.scale();
-        ShaderBinder binder(ShaderTrait::UniformColor | ShaderTrait::TransformColorspace);
-        binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix());
-        binder.shader()->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
-        binder.shader()->setUniform(GLShader::ColorUniform::Color, color);
-        QList<QVector2D> verts;
-        for (const Mark &mark : std::as_const(marks)) {
-            verts.clear();
-            verts.reserve(mark.size());
-            for (const QPointF &p : std::as_const(mark)) {
-                verts.push_back(QVector2D(p.x() * scale, p.y() * scale));
-            }
-            vbo->setVertices(verts);
-            vbo->render(GL_LINE_STRIP);
-        }
-        for (const Mark &drawing : std::as_const(drawings)) {
-            if (!drawing.isEmpty()) {
-                verts.clear();
-                verts.reserve(drawing.size());
-                for (const QPointF &p : std::as_const(drawing)) {
-                    verts.push_back(QVector2D(p.x() * scale, p.y() * scale));
-                }
-                vbo->setVertices(verts);
-                vbo->render(GL_LINE_STRIP);
-            }
-        }
-        glLineWidth(1.0);
-    }
-    return true;
+    return item;
 }
 
 bool MouseMarkEffect::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
@@ -291,18 +401,19 @@ void MouseMarkEffect::slotMouseChanged(const QPointF &pos, const QPointF &,
 void MouseMarkEffect::clear()
 {
     drawings.clear();
+    drawingItems.clear();
     marks.clear();
-    effects->addRepaintFull();
+    markItems.clear();
 }
 
 void MouseMarkEffect::clearLast()
 {
     if (drawings.size() >= 1) { // clear anything currently being drawn first
         drawings.clear();
-        effects->addRepaintFull();
+        drawingItems.clear();
     } else if (!marks.isEmpty()) {
         marks.pop_back();
-        effects->addRepaintFull();
+        markItems.pop_back();
     }
 }
 
@@ -325,9 +436,7 @@ MouseMarkEffect::Mark MouseMarkEffect::createArrow(QPointF arrow_head, QPointF a
 
 void MouseMarkEffect::screenLockingChanged(bool locked)
 {
-    if (!marks.isEmpty() || !drawings.isEmpty()) {
-        effects->addRepaintFull();
-    }
+    rootItem->setVisible(!locked);
 }
 
 bool MouseMarkEffect::isActive() const
