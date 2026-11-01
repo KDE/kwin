@@ -304,6 +304,11 @@ void EffectFrame::setPosition(const QPoint &point)
 
 void EffectFrame::render(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion, double opacity, double frameOpacity)
 {
+    show(opacity, frameOpacity);
+}
+
+void EffectFrame::show(double opacity, double frameOpacity)
+{
     if (!m_view->rootItem()) {
         return;
     }

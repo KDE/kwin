@@ -127,9 +127,15 @@ public:
     void free();
 
     /**
-     * Render the frame.
+     * Show the frame, like show(). The frame is a scene item, so @p renderTarget, @p viewport and
+     * @p deviceRegion are not used.
      */
     void render(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion = Region::infinite(), double opacity = 1.0, double frameOpacity = 1.0);
+    /**
+     * Show the frame in the scene, with @p opacity for the contents and @p frameOpacity for the
+     * frame around them.
+     */
+    void show(double opacity = 1.0, double frameOpacity = 1.0);
 
     void setPosition(const QPoint &point);
     /**
