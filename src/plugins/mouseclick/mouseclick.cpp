@@ -12,13 +12,11 @@
 #include "mouseclickconfig.h"
 
 #include "core/inputdevice.h"
-#include "core/rendertarget.h"
-#include "core/renderviewport.h"
+#include "core/output.h"
 #include "effect/effecthandler.h"
 #include "input_event.h"
-#include "opengl/glshader.h"
-#include "opengl/glshadermanager.h"
-#include "opengl/glvertexbuffer.h"
+#include "scene/outlinedborderitem.h"
+#include "scene/workspacescene.h"
 
 #include <QAction>
 
@@ -86,6 +84,9 @@ void MouseClickEffect::prePaintScreen(ScreenPrePaintData &data)
         }
         m_clicks.pop_front();
     }
+    for (const auto &click : m_clicks) {
+        updateClick(click.get());
+    }
 
     if (!isActive()) {
         m_clock.reset();
@@ -94,44 +95,79 @@ void MouseClickEffect::prePaintScreen(ScreenPrePaintData &data)
     effects->prePaintScreen(data);
 }
 
-bool MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
+void MouseClickEffect::updateClick(MouseClickMouseEvent *click)
 {
-    if (!effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen)) {
-        return false;
+    for (int i = 0; i < m_ringCount; ++i) {
+        const float alpha = computeAlpha(click, i);
+        const float radius = computeRadius(click, i);
+        OutlinedBorderItem *ring = click->m_rings[i].get();
+        if (radius <= 0 || alpha <= 0) {
+            ring->setVisible(false);
+            continue;
+        }
+        setRing(ring, click->m_pos, radius, m_colors[click->m_button]);
+        ring->setOpacity(alpha);
     }
 
-    paintScreenSetupGl(renderTarget, viewport.projectionMatrix());
-    for (const auto &click : m_clicks) {
-        for (int i = 0; i < m_ringCount; ++i) {
-            float alpha = computeAlpha(click.get(), i);
-            float size = computeRadius(click.get(), i);
-            if (size > 0 && alpha > 0) {
-                QColor color = m_colors[click->m_button];
-                color.setAlphaF(alpha);
-                drawCircle(viewport, color, click->m_pos.x(), click->m_pos.y(), size);
-            }
-        }
+    if (m_showText && click->m_frame) {
+        float frameAlpha = (click->m_time * 2.0f - m_ringLife) / m_ringLife;
+        frameAlpha = frameAlpha < 0 ? 1 : -(frameAlpha * frameAlpha) + 1;
+        click->m_frame->show(frameAlpha, frameAlpha);
+    }
+}
 
-        if (m_showText && click->m_frame) {
-            float frameAlpha = (click->m_time * 2.0f - m_ringLife) / m_ringLife;
-            frameAlpha = frameAlpha < 0 ? 1 : -(frameAlpha * frameAlpha) + 1;
-            click->m_frame->render(renderTarget, viewport, Region::infinite(), frameAlpha, frameAlpha);
-        }
+void MouseClickEffect::updateTabletTool(TabletToolEvent &tool)
+{
+    // One ring at the full size, then one more for each step, so a harder press draws more rings
+    const int step = m_ringMaxSize * (1. - tool.m_pressure);
+    const size_t count = step > 0 ? std::ceil(m_ringMaxSize / step) : 1;
+    while (tool.m_rings.size() > count) {
+        tool.m_rings.pop_back();
     }
-    for (const auto &tool : std::as_const(m_tabletTools)) {
-        const int step = m_ringMaxSize * (1. - tool.m_pressure);
-        for (qreal size = m_ringMaxSize; size > 0; size -= step) {
-            drawCircle(viewport, tool.m_color, tool.m_globalPosition.x(), tool.m_globalPosition.y(), size);
-        }
+    while (tool.m_rings.size() < count) {
+        tool.m_rings.push_back(std::make_unique<OutlinedBorderItem>(RectF(), BorderOutline(), effects->scene()->overlayItem()));
     }
-    paintScreenFinishGl();
-    return true;
+    for (size_t i = 0; i < count; ++i) {
+        setRing(tool.m_rings[i].get(), tool.m_globalPosition, m_ringMaxSize - i * step, tool.m_color);
+    }
+}
+
+void MouseClickEffect::setRing(OutlinedBorderItem *ring, const QPointF &center, float radius, const QColor &color)
+{
+    if (radius <= 0) {
+        ring->setVisible(false);
+        return;
+    }
+    LogicalOutput *output = effects->screenAt(center.toPoint());
+    // The line width is in device pixels
+    const qreal lineWidth = m_lineWidth / (output ? output->scale() : 1.0);
+    // The line is centered on the circle of this radius. A circle smaller than the line is drawn
+    // as a dot, with an inner radius just above zero.
+    const qreal outerRadius = radius + lineWidth / 2;
+    const qreal innerRadius = std::max<qreal>(radius - lineWidth / 2, 0.01);
+    ring->setOutline(BorderOutline(outerRadius - innerRadius, color, BorderRadius(innerRadius)));
+    ring->setInnerRect(RectF(center.x() - innerRadius, center.y() - innerRadius, 2 * innerRadius, 2 * innerRadius));
+    ring->setVisible(true);
 }
 
 void MouseClickEffect::postPaintScreen()
 {
     effects->postPaintScreen();
     repaint();
+}
+
+void MouseClickEffect::repaint()
+{
+    // The rings of a press start with a radius of 0 and are hidden, so the area is repainted to
+    // get the next frame
+    Region dirtyRegion;
+    const int radius = m_ringMaxSize + m_lineWidth;
+    for (const auto &click : m_clicks) {
+        dirtyRegion += Rect(click->m_pos.x() - radius, click->m_pos.y() - radius, 2 * radius, 2 * radius);
+    }
+    if (!dirtyRegion.isEmpty()) {
+        effects->addRepaint(dirtyRegion);
+    }
 }
 
 float MouseClickEffect::computeRadius(const MouseClickMouseEvent *click, int ring)
@@ -173,6 +209,10 @@ void MouseClickEffect::slotMouseChanged(const QPointF &pos, const QPointF &,
     }
 
     if (m) {
+        for (int ring = 0; ring < m_ringCount; ++ring) {
+            m->m_rings.push_back(std::make_unique<OutlinedBorderItem>(RectF(), BorderOutline(), effects->scene()->overlayItem()));
+        }
+        updateClick(m.get());
         m_clicks.push_back(std::move(m));
     }
     repaint();
@@ -188,29 +228,6 @@ std::unique_ptr<EffectFrame> MouseClickEffect::createEffectFrame(const QPoint &p
     frame->setFont(m_font);
     frame->setText(text);
     return frame;
-}
-
-void MouseClickEffect::repaint()
-{
-    if (m_clicks.size() > 0) {
-        Region dirtyRegion;
-        const int radius = m_ringMaxSize + m_lineWidth;
-        for (auto &click : m_clicks) {
-            dirtyRegion += Rect(click->m_pos.x() - radius, click->m_pos.y() - radius, 2 * radius, 2 * radius);
-            if (click->m_frame) {
-                dirtyRegion += click->m_frame->geometry();
-            }
-        }
-        effects->addRepaint(dirtyRegion);
-    }
-    if (!m_tabletTools.isEmpty()) {
-        Region dirtyRegion;
-        const int radius = m_ringMaxSize + m_lineWidth;
-        for (const auto &event : std::as_const(m_tabletTools)) {
-            dirtyRegion += Rect(event.m_globalPosition.x() - radius, event.m_globalPosition.y() - radius, 2 * radius, 2 * radius);
-        }
-        effects->addRepaint(dirtyRegion);
-    }
 }
 
 bool MouseClickEffect::isReleased(Qt::MouseButtons button, Qt::MouseButtons buttons, Qt::MouseButtons oldButtons)
@@ -244,59 +261,7 @@ void MouseClickEffect::toggleEnabled()
 
 bool MouseClickEffect::isActive() const
 {
-    return m_enabled && (m_clicks.size() != 0 || !m_tabletTools.isEmpty());
-}
-
-void MouseClickEffect::drawCircle(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r)
-{
-    drawCircleGl(viewport, color, cx, cy, r);
-}
-
-void MouseClickEffect::drawCircleGl(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r)
-{
-    static const int num_segments = 80;
-    static const float theta = 2 * 3.1415926 / float(num_segments);
-    static const float c = cosf(theta); // precalculate the sine and cosine
-    static const float s = sinf(theta);
-    const float scale = viewport.scale();
-    float t;
-
-    float x = r; // we start at angle = 0
-    float y = 0;
-
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->reset();
-    QList<QVector2D> verts;
-    verts.reserve(num_segments * 2);
-
-    for (int ii = 0; ii < num_segments; ++ii) {
-        verts.push_back(QVector2D((x + cx) * scale, (y + cy) * scale)); // output vertex
-        // apply the rotation matrix
-        t = x;
-        x = c * x - s * y;
-        y = s * t + c * y;
-    }
-    vbo->setVertices(verts);
-    ShaderManager::instance()->getBoundShader()->setUniform(GLShader::ColorUniform::Color, color);
-    vbo->render(GL_LINE_LOOP);
-}
-
-void MouseClickEffect::paintScreenSetupGl(const RenderTarget &renderTarget, const QMatrix4x4 &projectionMatrix)
-{
-    GLShader *shader = ShaderManager::instance()->pushShader(ShaderTrait::UniformColor | ShaderTrait::TransformColorspace);
-    shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
-    shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
-
-    glLineWidth(m_lineWidth);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-}
-
-void MouseClickEffect::paintScreenFinishGl()
-{
-    glDisable(GL_BLEND);
-
-    ShaderManager::instance()->popShader();
+    return m_enabled && (m_clicks.size() != 0 || !m_tabletTools.empty());
 }
 
 TabletToolEvent &MouseClickEffect::getOrCreateTabletPoint(InputDeviceTabletTool *tool)
@@ -328,25 +293,33 @@ TabletToolEvent &MouseClickEffect::getOrCreateTabletPoint(InputDeviceTabletTool 
 bool MouseClickEffect::tabletToolProximity(TabletToolProximityEvent *event)
 {
     if (event->type == TabletToolProximityEvent::LeaveProximity) {
-        m_tabletTools.remove(event->tool);
+        m_tabletTools.erase(event->tool);
     }
     return false;
 }
 
 bool MouseClickEffect::tabletToolAxis(TabletToolAxisEvent *event)
 {
+    if (!m_enabled) {
+        return false;
+    }
     auto &point = getOrCreateTabletPoint(event->tool);
     point.m_globalPosition = event->position;
     point.m_pressure = event->pressure;
+    updateTabletTool(point);
     return false;
 }
 
 bool MouseClickEffect::tabletToolTip(TabletToolTipEvent *event)
 {
+    if (!m_enabled) {
+        return false;
+    }
     auto &point = getOrCreateTabletPoint(event->tool);
     point.m_pressed = event->type == TabletToolTipEvent::Press;
     point.m_pressure = event->pressure;
     point.m_globalPosition = event->position;
+    updateTabletTool(point);
     return false;
 }
 

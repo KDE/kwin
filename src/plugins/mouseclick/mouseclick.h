@@ -12,10 +12,14 @@
 #include "effect/effect.h"
 #include "effect/effectframe.h"
 #include "effect/timeline.h"
+#include "scene/outlinedborderitem.h"
 #include <KLocalizedString>
 #include <QFont>
 #include <QHash>
 #include <deque>
+#include <memory>
+#include <unordered_map>
+#include <vector>
 
 namespace KWin
 {
@@ -42,6 +46,7 @@ public:
     int m_time;
     std::unique_ptr<EffectFrame> m_frame;
     bool m_press;
+    std::vector<std::unique_ptr<OutlinedBorderItem>> m_rings;
 };
 
 class TabletToolEvent
@@ -51,6 +56,7 @@ public:
     bool m_pressed = false;
     qreal m_pressure = 0;
     QColor m_color;
+    std::vector<std::unique_ptr<OutlinedBorderItem>> m_rings;
 };
 
 class MouseButton
@@ -104,7 +110,6 @@ public:
     ~MouseClickEffect() override;
     void reconfigure(ReconfigureFlags) override;
     void prePaintScreen(ScreenPrePaintData &data) override;
-    bool paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
     void postPaintScreen() override;
     bool isActive() const override;
 
@@ -132,19 +137,16 @@ private Q_SLOTS:
 
 private:
     std::unique_ptr<EffectFrame> createEffectFrame(const QPoint &pos, const QString &text);
-    inline void drawCircle(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r);
+    void updateClick(MouseClickMouseEvent *click);
+    void updateTabletTool(TabletToolEvent &tool);
+    void setRing(OutlinedBorderItem *ring, const QPointF &center, float radius, const QColor &color);
+    void repaint();
 
     inline bool isReleased(Qt::MouseButtons button, Qt::MouseButtons buttons, Qt::MouseButtons oldButtons);
     inline bool isPressed(Qt::MouseButtons button, Qt::MouseButtons buttons, Qt::MouseButtons oldButtons);
 
     inline float computeRadius(const MouseClickMouseEvent *click, int ring);
     inline float computeAlpha(const MouseClickMouseEvent *click, int ring);
-
-    void repaint();
-
-    void drawCircleGl(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r);
-    void paintScreenSetupGl(const RenderTarget &renderTarget, const QMatrix4x4 &projectionMatrix);
-    void paintScreenFinishGl();
 
     TabletToolEvent &getOrCreateTabletPoint(InputDeviceTabletTool *tool);
 
@@ -159,7 +161,7 @@ private:
 
     std::deque<std::unique_ptr<MouseClickMouseEvent>> m_clicks;
     std::unique_ptr<MouseButton> m_buttons[BUTTON_COUNT];
-    QHash<InputDeviceTabletTool *, TabletToolEvent> m_tabletTools;
+    std::unordered_map<InputDeviceTabletTool *, TabletToolEvent> m_tabletTools;
 
     bool m_enabled;
 };
