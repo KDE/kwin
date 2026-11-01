@@ -56,9 +56,9 @@ public:
     QPointingDevice *qtPointingDeviceForKWinDevice(InputDevice *device) const
     {
         if (device && device->isTouchpad()) {
-            return touchpadDevice;
+            return touchpadDevice.get();
         } else {
-            return mouseDevice;
+            return mouseDevice.get();
         }
     }
 
@@ -89,12 +89,12 @@ public:
 
     std::optional<qreal> m_explicitDpr;
 
-    QPointingDevice *mouseDevice;
-    QPointingDevice *touchpadDevice;
+    std::unique_ptr<QPointingDevice> mouseDevice;
+    std::unique_ptr<QPointingDevice> touchpadDevice;
 
     QList<QEventPoint> touchPoints;
     QSet<uint32_t> acceptedTouchPoints;
-    QPointingDevice *touchDevice;
+    std::unique_ptr<QPointingDevice> touchDevice;
 
     ulong lastMousePressTime = 0;
     Qt::MouseButton lastMousePressButton = Qt::NoButton;
@@ -222,9 +222,9 @@ OffscreenQuickView::OffscreenQuickView(ExportMode exportMode, bool alpha)
     connect(d->m_renderControl.get(), &QQuickRenderControl::renderRequested, this, &OffscreenQuickView::handleRenderRequested);
     connect(d->m_renderControl.get(), &QQuickRenderControl::sceneChanged, this, &OffscreenQuickView::handleSceneChanged);
 
-    d->mouseDevice = new QPointingDevice(QStringLiteral("ForwardingMouseDevice"), {}, QInputDevice::DeviceType::Mouse, QPointingDevice::PointerType::Generic, QInputDevice::Capability::Position, 1, 0);
-    d->touchpadDevice = new QPointingDevice(QStringLiteral("ForwardingTouchpadDevice"), {}, QInputDevice::DeviceType::TouchPad, QPointingDevice::PointerType::Finger, QInputDevice::Capability::Position, 10, 3);
-    d->touchDevice = new QPointingDevice(QStringLiteral("ForwardingTouchDevice"), {}, QInputDevice::DeviceType::TouchScreen, QPointingDevice::PointerType::Finger, QInputDevice::Capability::Position, 10, {});
+    d->mouseDevice = std::make_unique<QPointingDevice>(QStringLiteral("ForwardingMouseDevice"), 0, QInputDevice::DeviceType::Mouse, QPointingDevice::PointerType::Generic, QInputDevice::Capability::Position, 1, 0);
+    d->touchpadDevice = std::make_unique<QPointingDevice>(QStringLiteral("ForwardingTouchpadDevice"), 0, QInputDevice::DeviceType::TouchPad, QPointingDevice::PointerType::Finger, QInputDevice::Capability::Position, 10, 3);
+    d->touchDevice = std::make_unique<QPointingDevice>(QStringLiteral("ForwardingTouchDevice"), 0, QInputDevice::DeviceType::TouchScreen, QPointingDevice::PointerType::Finger, QInputDevice::Capability::Position, 10, 0);
 }
 
 OffscreenQuickView::~OffscreenQuickView()
@@ -495,7 +495,7 @@ bool OffscreenQuickView::forwardTouchDown(qint32 id, const QPointF &pos, std::ch
 {
     d->updateTouchState(Qt::TouchPointPressed, id, pos);
 
-    QTouchEvent event(QEvent::TouchBegin, d->touchDevice, Qt::NoModifier, d->touchPoints);
+    QTouchEvent event(QEvent::TouchBegin, d->touchDevice.get(), Qt::NoModifier, d->touchPoints);
     event.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
     event.setAccepted(false);
     QCoreApplication::sendEvent(d->m_view.get(), &event);
@@ -515,7 +515,7 @@ bool OffscreenQuickView::forwardTouchMotion(qint32 id, const QPointF &pos, std::
         return false;
     }
 
-    QTouchEvent event(QEvent::TouchUpdate, d->touchDevice, Qt::NoModifier, d->touchPoints);
+    QTouchEvent event(QEvent::TouchUpdate, d->touchDevice.get(), Qt::NoModifier, d->touchPoints);
     event.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
     event.setAccepted(false);
     QCoreApplication::sendEvent(d->m_view.get(), &event);
@@ -531,7 +531,7 @@ bool OffscreenQuickView::forwardTouchUp(qint32 id, std::chrono::microseconds tim
         return false;
     }
 
-    QTouchEvent event(QEvent::TouchEnd, d->touchDevice, Qt::NoModifier, d->touchPoints);
+    QTouchEvent event(QEvent::TouchEnd, d->touchDevice.get(), Qt::NoModifier, d->touchPoints);
     event.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
     event.setAccepted(false);
     QCoreApplication::sendEvent(d->m_view.get(), &event);
@@ -545,7 +545,7 @@ void OffscreenQuickView::forwardTouchCancel()
 {
     d->acceptedTouchPoints.clear();
     d->touchPoints.clear();
-    QTouchEvent event(QEvent::TouchCancel, d->touchDevice, Qt::NoModifier, d->touchPoints);
+    QTouchEvent event(QEvent::TouchCancel, d->touchDevice.get(), Qt::NoModifier, d->touchPoints);
     event.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
     event.setAccepted(false);
     QCoreApplication::sendEvent(d->m_view.get(), &event);
