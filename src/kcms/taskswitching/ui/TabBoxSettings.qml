@@ -92,6 +92,28 @@ Kirigami.Form {
                 }
             }
         }
+
+        Kirigami.FormSeparator {}
+
+        Kirigami.FormEntry {
+            title: i18nc("@label", "Show on screen:")
+            contentItem: QQC2.ComboBox {
+                id: showScreenModeComboBox
+
+                Layout.preferredWidth: switchingModeComboBox.Layout.preferredWidth
+
+                // NOTE: Must match enums in tabbox/tabboxconfig.h
+                model: [i18nc("@item:inlistbox 'Show on screen:'", "Active screen"), i18nc("@item:inlistbox 'Show on screen:'", "Primary screen")]
+
+                currentIndex: root.tabBoxSettings.showScreenMode
+                onActivated: root.tabBoxSettings.showScreenMode = currentIndex
+
+                KCM.SettingStateBinding {
+                    configObject: root.tabBoxSettings
+                    settingName: "ShowScreenMode"
+                }
+            }
+        }
     }
 
     Kirigami.FormGroup {
