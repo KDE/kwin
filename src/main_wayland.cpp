@@ -448,21 +448,19 @@ int main(int argc, char *argv[])
     QCommandLineOption screenLockerOption(QStringLiteral("lockscreen"),
                                           i18n("Starts the session in locked mode."));
     parser.addOption(screenLockerOption);
+#endif
 
     QCommandLineOption noScreenLockerOption(QStringLiteral("no-lockscreen"),
                                             i18n("Starts the session without lock screen support."));
     parser.addOption(noScreenLockerOption);
-#endif
 
     QCommandLineOption noGlobalShortcutsOption(QStringLiteral("no-global-shortcuts"),
                                                i18n("Starts the session without global shortcuts support."));
     parser.addOption(noGlobalShortcutsOption);
 
-#if KWIN_BUILD_ACTIVITIES
     QCommandLineOption noActivitiesOption(QStringLiteral("no-kactivities"),
                                           i18n("Disable KActivities integration."));
     parser.addOption(noActivitiesOption);
-#endif
 
     QCommandLineOption exitWithSessionOption(QStringLiteral("exit-with-session"),
                                              i18n("Exit after the session application, which is started by KWin, closed."),
