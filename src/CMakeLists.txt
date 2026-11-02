@@ -698,7 +698,7 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/vulkan COMPONENT Devel
 )
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+if(KWIN_BUILD_SET_CAP_SYS_NICE)
     install(
         CODE "execute_process(
         COMMAND ${SETCAP_EXECUTABLE}

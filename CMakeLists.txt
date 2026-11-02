@@ -146,7 +146,8 @@ set_package_properties(KWayland PROPERTIES
     TYPE REQUIRED
 )
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+cmake_dependent_option(KWIN_BUILD_SET_CAP_SYS_NICE "Set CAP_SYS_NICE during build (Linux default: ON)" ON LINUX OFF)
+if(KWIN_BUILD_SET_CAP_SYS_NICE)
     find_package(Libcap)
     set_package_properties(Libcap PROPERTIES
         PURPOSE "Needed for setting CAP_SYS_NICE on kwin_wayland."
