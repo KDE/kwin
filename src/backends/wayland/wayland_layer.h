@@ -9,6 +9,7 @@
 #pragma once
 #include "core/graphicsbuffer.h"
 #include "core/outputlayer.h"
+#include "utils/damagejournal.h"
 
 namespace KWayland
 {
@@ -30,6 +31,11 @@ struct wp_fractional_scale_v1_listener;
 
 namespace KWin
 {
+
+class SwapchainSlot;
+class Swapchain;
+class RenderBackend;
+
 namespace WaylandClient
 {
 
@@ -41,12 +47,20 @@ namespace Wayland
 {
 
 class WaylandOutput;
+class WaylandDisplay;
 
 class WaylandLayer : public OutputLayer
 {
 public:
-    explicit WaylandLayer(WaylandOutput *output, OutputLayerType type, int zpos);
+    explicit WaylandLayer(WaylandOutput *output, RenderBackend *backend, WaylandDisplay *display, OutputLayerType type, int zpos);
     ~WaylandLayer() override;
+
+    std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
+    bool endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame) override;
+    bool earlyScanoutChecks() override;
+    bool importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame) override;
+    FormatModifierMap supportedDrmFormats() const override;
+    void releaseBuffers() override;
 
     bool test() const;
     void setBuffer(GraphicsBuffer *buffer, const Region &deviceDamagedRegion);
@@ -56,6 +70,12 @@ public:
     KWayland::Client::SubSurface *subSurface() const;
 
 protected:
+    RenderBackend *const m_backend;
+    WaylandDisplay *const m_display;
+    DamageJournal m_damageJournal;
+    std::shared_ptr<Swapchain> m_swapchain;
+    std::shared_ptr<SwapchainSlot> m_currentSlot;
+
     std::unique_ptr<KWayland::Client::Surface> m_surface;
     std::unique_ptr<KWayland::Client::SubSurface> m_subSurface;
     wp_presentation_feedback *m_presentationFeedback = nullptr;
