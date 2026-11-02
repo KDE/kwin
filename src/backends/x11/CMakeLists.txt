@@ -1,6 +1,7 @@
 target_sources(kwin PRIVATE
     x11_windowed_backend.cpp
     x11_windowed_egl_backend.cpp
+    x11_windowed_layers.cpp
     x11_windowed_logging.cpp
     x11_windowed_output.cpp
 )
