@@ -40,7 +40,7 @@ public:
     Q_INVOKABLE void showPreview(const QString &pluginId, bool showDesktop);
 
 private:
-    TaskSwitchingData *m_data;
+    const TaskSwitchingData *const m_data;
     TabBoxLayoutsModel *m_tabBoxLayouts;
 };
 
