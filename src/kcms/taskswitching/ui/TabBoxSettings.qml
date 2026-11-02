@@ -114,6 +114,43 @@ Kirigami.Form {
                 }
             }
         }
+
+        Kirigami.FormEntry {
+            visible: !root.isAlternative
+
+            title: i18nc("@label:spinbox", "Show delay:")
+            subtitle: i18nc("@info", "Time to wait before showing the task switcher. Also applies to the alternative task switcher.")
+            contentItem: QQC2.SpinBox {
+                id: delayTimeSpinBox
+
+                Layout.preferredWidth: switchingModeComboBox.Layout.preferredWidth
+
+                from: 0
+                to: 5000
+                stepSize: 10
+
+                value: root.tabBoxSettings.delayTime
+                onValueModified: root.tabBoxSettings.delayTime = value
+
+                validator: IntValidator {
+                    bottom: delayTimeSpinBox.from
+                    top: delayTimeSpinBox.to
+                }
+
+                textFromValue: (value, locale) => {
+                    return i18nc("@spinbox:value Task switcher show delay", "%1 ms", value);
+                }
+
+                valueFromText: (text, locale) => {
+                    return Number.fromLocaleString(locale, text.replace(i18nc("@spinbox:value Task switcher show delay", "ms"), ""));
+                }
+
+                KCM.SettingStateBinding {
+                    configObject: root.tabBoxSettings
+                    settingName: "DelayTime"
+                }
+            }
+        }
     }
 
     Kirigami.FormGroup {
