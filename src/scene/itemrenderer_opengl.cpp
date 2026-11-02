@@ -129,7 +129,7 @@ static RenderGeometry createGeometry(ItemRenderer *renderer, const Item *item, c
 bool ItemRendererOpenGL::maybeCreateSingleRenderNode(Item *item, RenderContext *context, bool hole)
 {
     const Rect deviceBounds = RectF(context->transformStack.top().mapRect(item->rect().scaled(context->renderTargetScale)))
-                                  .translated(-context->viewportOrigin)
+                                  .translated(context->renderOffset - context->viewportOrigin)
                                   .rounded();
     if (deviceBounds.isEmpty()) {
         return true;
