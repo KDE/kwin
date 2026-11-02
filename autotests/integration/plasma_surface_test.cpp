@@ -41,6 +41,8 @@ private Q_SLOTS:
     void testAcceptsFocus();
     void testOSDPlacement();
     void testOSDPlacementManualPosition();
+    void testOSDPlacementPositions_data();
+    void testOSDPlacementPositions();
     void testPanelActivate_data();
     void testPanelActivate();
     void testMovable_data();
@@ -223,6 +225,53 @@ void PlasmaSurfaceTest::testOSDPlacementManualPosition()
     QCOMPARE(window->windowType(), WindowType::OnScreenDisplay);
     QVERIFY(window->isOnScreenDisplay());
     QCOMPARE(window->frameGeometry(), RectF(50, 70, 100, 50));
+}
+
+void PlasmaSurfaceTest::testOSDPlacementPositions_data()
+{
+    QTest::addColumn<QString>("position");
+    QTest::addColumn<QPointF>("expectedPos");
+
+    // the screen is 1280x1024, the window 100x50 and the margin 20
+    QTest::newRow("LowerCenter") << QStringLiteral("LowerCenter") << QPointF(1280 / 2 - 100 / 2, 2 * 1024 / 3 - 50 / 2);
+    QTest::newRow("TopLeft") << QStringLiteral("TopLeft") << QPointF(20, 20);
+    QTest::newRow("TopCenter") << QStringLiteral("TopCenter") << QPointF(590, 20);
+    QTest::newRow("TopRight") << QStringLiteral("TopRight") << QPointF(1160, 20);
+    QTest::newRow("CenterLeft") << QStringLiteral("CenterLeft") << QPointF(20, 487);
+    QTest::newRow("Center") << QStringLiteral("Center") << QPointF(590, 487);
+    QTest::newRow("CenterRight") << QStringLiteral("CenterRight") << QPointF(1160, 487);
+    QTest::newRow("BottomLeft") << QStringLiteral("BottomLeft") << QPointF(20, 954);
+    QTest::newRow("BottomCenter") << QStringLiteral("BottomCenter") << QPointF(590, 954);
+    QTest::newRow("BottomRight") << QStringLiteral("BottomRight") << QPointF(1160, 954);
+}
+
+void PlasmaSurfaceTest::testOSDPlacementPositions()
+{
+    // This test verifies that the OnScreenDisplayPosition option is applied
+    // when placing OSD windows.
+    QFETCH(QString, position);
+    QFETCH(QPointF, expectedPos);
+
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("Windows"));
+    group.writeEntry("OnScreenDisplayPosition", position);
+    group.sync();
+    workspace()->slotReconfigure();
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    QVERIFY(surface != nullptr);
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    QVERIFY(shellSurface != nullptr);
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.get()));
+    QVERIFY(plasmaSurface != nullptr);
+    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::OnScreenDisplay);
+
+    // now render and map the window
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+
+    QVERIFY(window);
+    QCOMPARE(window->windowType(), WindowType::OnScreenDisplay);
+    QVERIFY(window->isOnScreenDisplay());
+    QCOMPARE(window->frameGeometry(), RectF(expectedPos.x(), expectedPos.y(), 100, 50));
 }
 
 void PlasmaSurfaceTest::testPanelActivate_data()

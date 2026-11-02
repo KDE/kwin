@@ -146,10 +146,25 @@ Kirigami.Form {
 
 
     Kirigami.FormGroup {
-        title: i18ndc("kcmkwm", "@title:group", "Picture-in-picture Placement")
-        visible: kcm.isPiPEnabled
+        title: i18ndc("kcmkwm", "@title:group", "Overlay Positioning")
         Kirigami.FormEntry {
-            title: i18nd("kcmkwm", "Open in screen corner:")
+            id: osdPositionEntry
+            title: i18ndc("kcmkwm", "@label:chooser", "OSD popups:")
+            contentItem: OnScreenDisplayPositionSelector {
+                Accessible.name: osdPositionEntry.title
+
+                selectedPosition: kcm.kwinSettings.onScreenDisplayPosition
+                onPositionPicked: position => kcm.kwinSettings.onScreenDisplayPosition = position
+
+                KCM.SettingStateBinding {
+                    configObject: kcm.kwinSettings
+                    settingName: "OnScreenDisplayPosition"
+                }
+            }
+        }
+        Kirigami.FormEntry {
+            visible: kcm.isPiPEnabled
+            title: i18ndc("kcmkwm", "@label:chooser", "Picture-in-picture:")
             contentItem: QQC2.ComboBox {
                 textRole: "text"
                 valueRole: "value"
@@ -170,6 +185,7 @@ Kirigami.Form {
         }
         Kirigami.FormEntry {
             id: marginSpinboxLabel
+            visible: kcm.isPiPEnabled
             title: i18nd("kcmkwm", "Margin:")
             contentItem: QQC2.SpinBox {
                 id: marginSpinbox

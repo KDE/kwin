@@ -144,6 +144,22 @@
         <default>20</default>
     </entry>
 
+    <entry name="OnScreenDisplayPosition" type="Enum">
+        <choices name="OnScreenDisplayPositionChoices">
+            <choice name="LowerCenter"></choice>
+            <choice name="TopLeft"></choice>
+            <choice name="TopCenter"></choice>
+            <choice name="TopRight"></choice>
+            <choice name="CenterLeft"></choice>
+            <choice name="Center"></choice>
+            <choice name="CenterRight"></choice>
+            <choice name="BottomLeft"></choice>
+            <choice name="BottomCenter"></choice>
+            <choice name="BottomRight"></choice>
+        </choices>
+        <default>LowerCenter</default>
+    </entry>
+
     </group>
 
     <group name="MouseBindings">

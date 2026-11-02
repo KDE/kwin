@@ -390,11 +390,43 @@ std::optional<PlacementCommand> Placement::placeOnScreenDisplay(const Window *c,
         return std::nullopt;
     }
 
-    // place at lower area of the screen
-    const int x = area.left() + (area.width() - size.width()) / 2;
-    const int y = area.top() + 2 * area.height() / 3 - size.height() / 2;
+    // the same distance the picture-in-picture placement keeps from the screen edges
+    static constexpr int margin = 20;
 
-    return QPointF(x, y);
+    const qreal left = area.left() + margin;
+    const qreal horizontallyCentered = area.left() + (area.width() - size.width()) / 2;
+    const qreal right = area.left() + area.width() - size.width() - margin;
+    const qreal top = area.top() + margin;
+    const qreal verticallyCentered = area.top() + (area.height() - size.height()) / 2;
+    const qreal bottom = area.top() + area.height() - size.height() - margin;
+
+    switch (options->onScreenDisplayPosition()) {
+    case Options::OnScreenDisplayPosition::LowerCenter: {
+        const int x = area.left() + (area.width() - size.width()) / 2;
+        const int y = area.top() + 2 * area.height() / 3 - size.height() / 2;
+        return QPointF(x, y);
+    }
+    case Options::OnScreenDisplayPosition::TopLeft:
+        return QPointF(left, top);
+    case Options::OnScreenDisplayPosition::TopCenter:
+        return QPointF(horizontallyCentered, top);
+    case Options::OnScreenDisplayPosition::TopRight:
+        return QPointF(right, top);
+    case Options::OnScreenDisplayPosition::CenterLeft:
+        return QPointF(left, verticallyCentered);
+    case Options::OnScreenDisplayPosition::Center:
+        return QPointF(horizontallyCentered, verticallyCentered);
+    case Options::OnScreenDisplayPosition::CenterRight:
+        return QPointF(right, verticallyCentered);
+    case Options::OnScreenDisplayPosition::BottomLeft:
+        return QPointF(left, bottom);
+    case Options::OnScreenDisplayPosition::BottomCenter:
+        return QPointF(horizontallyCentered, bottom);
+    case Options::OnScreenDisplayPosition::BottomRight:
+        return QPointF(right, bottom);
+    }
+
+    Q_UNREACHABLE_RETURN(QPointF(left, top));
 }
 
 std::optional<PlacementCommand> Placement::placeDialog(const Window *c, const Rect &area, PlacementPolicy nextPlacement)

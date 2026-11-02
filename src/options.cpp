@@ -653,6 +653,19 @@ void Options::setPictureInPictureMargin(int margin)
     }
 }
 
+Options::OnScreenDisplayPosition Options::onScreenDisplayPosition() const
+{
+    return m_onScreenDisplayPosition;
+}
+
+void Options::setOnScreenDisplayPosition(OnScreenDisplayPosition position)
+{
+    if (m_onScreenDisplayPosition != position) {
+        m_onScreenDisplayPosition = position;
+        Q_EMIT onScreenDisplayPositionChanged();
+    }
+}
+
 bool Options::overlayVirtualKeyboardOnWindows() const
 {
     return m_overlayVirtualKeyboardOnWindows;
@@ -776,6 +789,7 @@ void Options::syncFromKcfgc()
     setDoubleClickBorderToMaximize(m_settings->doubleClickBorderToMaximize());
     setPictureInPictureHomeCorner(m_settings->pictureInPictureHomeCorner());
     setPictureInPictureMargin(m_settings->pictureInPictureMargin());
+    setOnScreenDisplayPosition(m_settings->onScreenDisplayPosition());
 }
 
 // restricted should be true for operations that the user may not be able to repeat

@@ -196,6 +196,7 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(bool interactiveWindowMoveEnabled READ interactiveWindowMoveEnabled WRITE setInteractiveWindowMoveEnabled NOTIFY interactiveWindowMoveEnabledChanged)
     Q_PROPERTY(Qt::Corner pictureInPictureHomeCorner READ pictureInPictureHomeCorner WRITE setPictureInPictureHomeCorner NOTIFY pictureInPictureHomeCornerChanged)
     Q_PROPERTY(int pictureInPictureMargin READ pictureInPictureMargin WRITE setPictureInPictureMargin NOTIFY pictureInPictureMarginChanged)
+    Q_PROPERTY(OnScreenDisplayPosition onScreenDisplayPosition READ onScreenDisplayPosition WRITE setOnScreenDisplayPosition NOTIFY onScreenDisplayPositionChanged)
     Q_PROPERTY(bool overlayVirtualKeyboardOnWindows READ overlayVirtualKeyboardOnWindows WRITE setOverlayVirtualKeyboardOnWindows NOTIFY overlayVirtualKeyboardOnWindowsChanged)
 
 public:
@@ -234,6 +235,28 @@ public:
         FocusUnderMouse,
     };
     Q_ENUM(FocusPolicy)
+
+    /**
+     * This enum type specifies where on-screen-display windows
+     * (e.g. the volume or brightness feedback) are placed on the screen.
+     */
+    enum class OnScreenDisplayPosition {
+        /**
+         * The traditional position: horizontally centered, in the lower
+         * third of the screen. This is the default.
+         */
+        LowerCenter,
+        TopLeft,
+        TopCenter,
+        TopRight,
+        CenterLeft,
+        Center,
+        CenterRight,
+        BottomLeft,
+        BottomCenter,
+        BottomRight,
+    };
+    Q_ENUM(OnScreenDisplayPosition)
 
     FocusPolicy focusPolicy() const
     {
@@ -661,6 +684,9 @@ public:
     int pictureInPictureMargin() const;
     void setPictureInPictureMargin(int margin);
 
+    OnScreenDisplayPosition onScreenDisplayPosition() const;
+    void setOnScreenDisplayPosition(OnScreenDisplayPosition position);
+
     // setters
     void setFocusPolicy(FocusPolicy focusPolicy);
     void setXwaylandCrashPolicy(XwaylandCrashPolicy crashPolicy);
@@ -903,6 +929,7 @@ Q_SIGNALS:
     void interactiveWindowMoveEnabledChanged();
     void pictureInPictureHomeCornerChanged();
     void pictureInPictureMarginChanged();
+    void onScreenDisplayPositionChanged();
     void overlayVirtualKeyboardOnWindowsChanged();
 
 private:
@@ -976,6 +1003,8 @@ private:
 
     Qt::Corner m_pictureInPictureHomeCorner = Qt::BottomRightCorner;
     int m_pictureInPictureMargin = 20;
+
+    OnScreenDisplayPosition m_onScreenDisplayPosition = OnScreenDisplayPosition::LowerCenter;
 
     MouseCommand wheelToMouseCommand(MouseWheelCommand com, qreal delta) const;
 };

@@ -234,6 +234,21 @@
         <entry name="PictureInPictureMargin" type="Int">
             <default>20</default>
         </entry>
+        <entry name="OnScreenDisplayPosition" type="Enum">
+            <choices name="KWin::Options::OnScreenDisplayPosition">
+                <choice name="LowerCenter"/>
+                <choice name="TopLeft"/>
+                <choice name="TopCenter"/>
+                <choice name="TopRight"/>
+                <choice name="CenterLeft"/>
+                <choice name="Center"/>
+                <choice name="CenterRight"/>
+                <choice name="BottomLeft"/>
+                <choice name="BottomCenter"/>
+                <choice name="BottomRight"/>
+            </choices>
+            <default>Options::OnScreenDisplayPosition::LowerCenter</default>
+        </entry>
         <entry name="OverlayVirtualKeyboardOnWindows" type="Bool">
             <default>false</default>
         </entry>
