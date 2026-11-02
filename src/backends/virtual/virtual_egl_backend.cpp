@@ -22,7 +22,7 @@
 namespace KWin
 {
 
-VirtualEglLayer::VirtualEglLayer(BackendOutput *output, VirtualEglBackend *backend)
+VirtualEglLayer::VirtualEglLayer(BackendOutput *output, RenderBackend *backend)
     : OutputLayer(output, OutputLayerType::Primary)
     , m_backend(backend)
 {
@@ -78,12 +78,12 @@ void VirtualEglLayer::releaseBuffers()
     m_swapchain.reset();
 }
 
-GLTexture *VirtualEglLayer::texture() const
+QImage VirtualEglLayer::download() const
 {
     if (!m_current) {
-        return nullptr;
+        return QImage{};
     }
-    return m_backend->openglContext()->importDmaBufAsTexture(m_current->buffer());
+    return m_backend->renderDevice()->download(m_current->buffer());
 }
 
 VirtualEglBackend::VirtualEglBackend(VirtualBackend *b, RenderDevice *renderDevice)
