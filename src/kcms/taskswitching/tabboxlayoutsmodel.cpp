@@ -111,7 +111,7 @@ int TabBoxLayoutsModel::rowCount(const QModelIndex &parent) const
 
 QVariant TabBoxLayoutsModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid()) {
+    if (!checkIndex(index, CheckIndexOption::IndexIsValid | CheckIndexOption::ParentIsInvalid)) {
         return {};
     }
 
