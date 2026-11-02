@@ -119,7 +119,7 @@ public:
         FocusChainSwitching, ///< Sort by recently used. Most recently used Window is the first
         StackingOrderSwitching, ///< Sort by current stacking order
     };
-    Q_ENUM(ClientSwitchingMode);
+    Q_ENUM(ClientSwitchingMode)
     /**
      * ShowScreenMode defines on which screen the TabBox should be shown.
      */
