@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include <QProcess>
-
 #include <KQuickManagedConfigModule>
 
 #include "tabboxlayoutsmodel.h"
@@ -44,9 +42,6 @@ public:
 private:
     TaskSwitchingData *m_data;
     TabBoxLayoutsModel *m_tabBoxLayouts;
-    std::unique_ptr<QProcess> m_tabBoxLayoutPreviewProcess;
-
-    Q_DISABLE_COPY(TaskSwitchingKCM)
 };
 
 } // namespace KWin
