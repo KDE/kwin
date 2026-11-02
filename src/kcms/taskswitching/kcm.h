@@ -39,7 +39,7 @@ public:
     Q_INVOKABLE void configureTabBoxShortcuts(const bool showAlternative);
     Q_INVOKABLE void configureOverviewShortcuts();
     Q_INVOKABLE void ghnsEntryChanged();
-    Q_INVOKABLE void showPreview(const QString &pluginId);
+    Q_INVOKABLE void showPreview(const QString &pluginId, bool showDesktop);
 
 private:
     TaskSwitchingData *m_data;
