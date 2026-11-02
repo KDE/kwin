@@ -8,6 +8,7 @@
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDir>
+#include <QKeySequence>
 #include <QWindow>
 #include <qqml.h>
 
@@ -66,6 +67,17 @@ TabBoxLayoutsModel *TaskSwitchingKCM::tabBoxLayouts() const
 OverviewSettings *TaskSwitchingKCM::overviewSettings() const
 {
     return m_data->overviewSettings();
+}
+
+QStringList TaskSwitchingKCM::overviewShortcuts() const
+{
+    QStringList texts;
+    for (const QKeySequence &shortcut : KGlobalAccel::self()->globalShortcut(u"kwin"_s, u"Overview"_s)) {
+        if (!shortcut.isEmpty()) {
+            texts.append(shortcut.toString(QKeySequence::NativeText));
+        }
+    }
+    return texts;
 }
 
 bool TaskSwitchingKCM::isDefaults() const
@@ -225,6 +237,8 @@ void TaskSwitchingKCM::configureOverviewShortcuts()
     dialog->winId();
     dialog->windowHandle()->setTransientParent(QGuiApplication::focusWindow());
     dialog->setWindowModality(Qt::WindowModal);
+
+    connect(dialog, &QDialog::accepted, this, &TaskSwitchingKCM::overviewShortcutsChanged);
 
     dialog->configure();
 }

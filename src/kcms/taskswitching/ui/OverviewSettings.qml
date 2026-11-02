@@ -17,10 +17,16 @@ Kirigami.Form {
     Kirigami.FormGroup {
         Kirigami.FormEntry {
             title: i18nc("@label", "Overview:")
-            subtitle: i18nc("@label Hint for overview effect enable button", "Use shortcuts or hot corners to toggle the overview")
+            subtitle: {
+                if (kcm.overviewShortcuts.length === 0) {
+                    return i18nc("@label Hint for overview effect enable button", "Swipe up with four fingers on a touchpad or three on a touchscreen, or use screen edge gestures to toggle the overview");
+                } else if (kcm.overviewShortcuts.length === 1) {
+                    return i18nc("@label Hint for overview effect enable button, %1 is a keyboard shortcut", "Press %1, swipe up with four fingers on a touchpad or three on a touchscreen, or use screen edge gestures to toggle the overview", kcm.overviewShortcuts[0]);
+                }
+                return i18nc("@label Hint for overview effect enable button, %1 and %2 are alternative keyboard shortcuts", "Press %1 or %2, swipe up with four fingers on a touchpad or three on a touchscreen, or use screen edge gestures to toggle the overview", kcm.overviewShortcuts[0], kcm.overviewShortcuts[1]);
+            }
             contentItem: QQC2.CheckBox {
                 id: overviewBox
-
                 text: i18nc("@option:check, Enable overview effect", "Enable")
 
                 checked: kcm.overviewSettings.overview
@@ -88,6 +94,30 @@ Kirigami.Form {
                 icon.name: "preferences-desktop-keyboard-shortcut"
                 enabled: overviewBox.checked
                 onTriggered: kcm.configureOverviewShortcuts()
+            }
+        }
+
+        Kirigami.FormSeparator {}
+
+        Kirigami.FormAction {
+            enabled: action.enabled
+            action: QQC2.Action {
+                text: i18nc("@action:button", "Configure Screen Edges…")
+                icon.name: "preferences-desktop-gestures-screenedges"
+                enabled: overviewBox.checked
+                onTriggered: KCM.KCMLauncher.openSystemSettings("kcm_kwinscreenedges")
+            }
+        }
+
+        Kirigami.FormSeparator {}
+
+        Kirigami.FormAction {
+            enabled: action.enabled
+            action: QQC2.Action {
+                text: i18nc("@action:button", "Configure Touchscreen Gestures…")
+                icon.name: "preferences-desktop-gestures-touch"
+                enabled: overviewBox.checked
+                onTriggered: KCM.KCMLauncher.openSystemSettings("kcm_kwintouchscreen")
             }
         }
     }

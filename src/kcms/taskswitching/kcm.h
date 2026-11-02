@@ -21,6 +21,7 @@ class TaskSwitchingKCM : public KQuickManagedConfigModule
     Q_PROPERTY(TabBoxSettings *tabBoxAlternativeSettings READ tabBoxAlternativeSettings CONSTANT)
     Q_PROPERTY(TabBoxLayoutsModel *tabBoxLayouts READ tabBoxLayouts CONSTANT)
     Q_PROPERTY(OverviewSettings *overviewSettings READ overviewSettings CONSTANT)
+    Q_PROPERTY(QStringList overviewShortcuts READ overviewShortcuts NOTIFY overviewShortcutsChanged)
 
 public:
     TaskSwitchingKCM(QObject *parent, const KPluginMetaData &metaData);
@@ -30,6 +31,7 @@ public:
     TabBoxSettings *tabBoxAlternativeSettings() const;
     TabBoxLayoutsModel *tabBoxLayouts() const;
     OverviewSettings *overviewSettings() const;
+    QStringList overviewShortcuts() const;
 
     bool isDefaults() const override;
     void save() override;
@@ -38,6 +40,9 @@ public:
     Q_INVOKABLE void configureOverviewShortcuts();
     Q_INVOKABLE void ghnsEntryChanged();
     Q_INVOKABLE void showPreview(const QString &pluginId, bool showDesktop);
+
+Q_SIGNALS:
+    void overviewShortcutsChanged();
 
 private:
     const TaskSwitchingData *const m_data;
