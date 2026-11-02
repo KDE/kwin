@@ -395,11 +395,19 @@ bool CrossFadeEffect::drawWindow(const RenderTarget &renderTarget, const RenderV
 
     // paint old snapshot on top
     WindowPaintData previousWindowData = data;
-    previousWindowData.setOpacity((1.0 - data.crossFadeProgress()) * data.opacity());
+    previousWindowData.multiplyOpacity(1.0 - data.crossFadeProgress());
 
     const RectF frameGeometry = snapToPixels(window->frameGeometry(), viewport.scale());
     const RectF capturedFrameGeometry = snapToPixels(offscreenData->frameGeometryAtCapture, viewport.scale());
     const RectF capturedExpandedGeometry = snapToPixels(offscreenData->expandedGeometryAtCapture, viewport.scale());
+
+    // calculate the scale and offset to render the snapshot with
+    const RectF containerSceneRect = window->windowItem()->effectContainer()->mapToScene(window->rect());
+    const RectF windowSceneRect = window->windowItem()->mapToScene(window->rect());
+    const QPointF offset = containerSceneRect.topLeft() - windowSceneRect.topLeft();
+    previousWindowData.translate(offset.x(), offset.y());
+    previousWindowData.setXScale(previousWindowData.xScale() * containerSceneRect.width() / windowSceneRect.width());
+    previousWindowData.setYScale(previousWindowData.yScale() * containerSceneRect.height() / windowSceneRect.height());
 
     // This is for the case of *non* live effect, when the window buffer we saved has a different size
     // compared to the size the window has now. The "old" window will be rendered scaled to the current
