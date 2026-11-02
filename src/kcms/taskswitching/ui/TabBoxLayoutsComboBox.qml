@@ -26,10 +26,10 @@ QQC2.ComboBox {
 
     Connections {
         target: tabBoxSettings
-        function onLayoutNameChanged() {
+        function onLayoutNameChanged(): void {
             updateCurrentIndex();
         }
-        function onShowTabBoxChanged() {
+        function onShowTabBoxChanged(): void {
             updateCurrentIndex();
         }
     }
@@ -44,7 +44,7 @@ QQC2.ComboBox {
 
     onActivated: changeCurrentIndex()
 
-    function updateModel() {
+    function updateModel(): void {
         model.clear();
         model.append({
             "name": i18nc("@item:inlistbox", "None"),
