@@ -61,10 +61,7 @@ KCM.AbstractKCM {
             Item {
                 width: scrollView.availableWidth
                 height: Math.max(implicitHeight, scrollView.availableHeight)
-                // NOTE: No need to calculate implicitWidth, as we don't use it for sizing and
-                //       if present, the ScrollView will use it to show horizontal scroll bars
-                //implicitWidth: stackLayout.implicitWidth + Kirigami.Units.gridUnit * 2
-                implicitHeight: stackLayout.implicitHeight + Kirigami.Units.gridUnit * 2
+                implicitHeight: (stackLayout.children[stackLayout.currentIndex]?.implicitHeight ?? 0) + Kirigami.Units.gridUnit * 2
 
                 StackLayout {
                     id: stackLayout
@@ -95,6 +92,8 @@ KCM.AbstractKCM {
                         }
 
                         TabBoxSettings {
+                            Layout.fillWidth: true
+
                             isAlternative: true
                         }
                     }

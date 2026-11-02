@@ -13,84 +13,82 @@ import org.kde.kcmutils as KCM
 
 import org.kde.kwin.kcmtaskswitching
 
-Kirigami.FormLayout {
+Kirigami.Form {
+    Kirigami.FormGroup {
+        Kirigami.FormEntry {
+            title: i18nc("@label", "Overview:")
+            subtitle: i18nc("@label Hint for overview effect enable button", "Use shortcuts or hot corners to toggle the overview")
+            contentItem: QQC2.CheckBox {
+                id: overviewBox
 
-    QQC2.CheckBox {
-        id: overviewBox
-        Kirigami.FormData.label: i18nc("@label", "Overview:")
+                text: i18nc("@option:check, Enable overview effect", "Enable")
 
-        text: i18nc("@option:check, Enable overview effect", "Enable")
+                checked: kcm.overviewSettings.overview
+                onToggled: kcm.overviewSettings.overview = checked
 
-        checked: kcm.overviewSettings.overview
-        onToggled: kcm.overviewSettings.overview = checked
-
-        KCM.SettingStateBinding {
-            configObject: kcm.overviewSettings
-            settingName: "Overview"
+                KCM.SettingStateBinding {
+                    configObject: kcm.overviewSettings
+                    settingName: "Overview"
+                }
+            }
         }
     }
 
-    QQC2.Label {
-        leftPadding: overviewBox.contentItem.leftPadding
-        enabled: overviewBox.checked
-        text: i18nc("@label Hint for overview effect enable button", "Use shortcuts or hot corners to toggle the overview")
-        textFormat: Text.PlainText
-        wrapMode: Text.Wrap
-        font: Kirigami.Theme.smallFont
-    }
+    Kirigami.FormGroup {
+        Kirigami.FormEntry {
+            contentItem: QQC2.CheckBox {
+                text: i18nc("@option:check", "Show minimized windows")
 
-    Item {
-        Kirigami.FormData.isSection: true
-    }
+                // Intentionally inverted, so the unchecked state is not a double negative
 
-    QQC2.CheckBox {
-        text: i18nc("@option:check", "Show minimized windows")
+                checked: !kcm.overviewSettings.ignoreMinimized
+                onToggled: kcm.overviewSettings.ignoreMinimized = !checked
 
-        // Intentionally inverted, so the unchecked state is not a double negative
+                KCM.SettingStateBinding {
+                    configObject: kcm.overviewSettings
+                    settingName: "IgnoreMinimized"
+                }
+            }
+        }
 
-        checked: !kcm.overviewSettings.ignoreMinimized
-        onToggled: kcm.overviewSettings.ignoreMinimized = !checked
+        Kirigami.FormEntry {
+            contentItem: QQC2.CheckBox {
+                text: i18nc("@option:check", "Search results include windows")
 
-        KCM.SettingStateBinding {
-            configObject: kcm.overviewSettings
-            settingName: "IgnoreMinimized"
+                checked: kcm.overviewSettings.filterWindows
+                onToggled: kcm.overviewSettings.filterWindows = checked
+
+                KCM.SettingStateBinding {
+                    configObject: kcm.overviewSettings
+                    settingName: "FilterWindows"
+                }
+            }
+        }
+
+        Kirigami.FormEntry {
+            contentItem: QQC2.CheckBox {
+                text: i18nc("@option:check", "Organize windows in the Grid view")
+
+                checked: kcm.overviewSettings.organizedGrid
+                onToggled: kcm.overviewSettings.organizedGrid = checked
+
+                KCM.SettingStateBinding {
+                    configObject: kcm.overviewSettings
+                    settingName: "OrganizedGrid"
+                }
+            }
         }
     }
 
-    QQC2.CheckBox {
-        text: i18nc("@option:check", "Search results include windows")
-
-        checked: kcm.overviewSettings.filterWindows
-        onToggled: kcm.overviewSettings.filterWindows = checked
-
-        KCM.SettingStateBinding {
-            configObject: kcm.overviewSettings
-            settingName: "FilterWindows"
+    Kirigami.FormGroup {
+        Kirigami.FormAction {
+            enabled: action.enabled
+            action: QQC2.Action {
+                text: i18nc("@action:button", "Configure Shortcuts…")
+                icon.name: "preferences-desktop-keyboard-shortcut"
+                enabled: overviewBox.checked
+                onTriggered: kcm.configureOverviewShortcuts()
+            }
         }
-    }
-
-    QQC2.CheckBox {
-        text: i18nc("@option:check", "Organize windows in the Grid view")
-
-        checked: kcm.overviewSettings.organizedGrid
-        onToggled: kcm.overviewSettings.organizedGrid = checked
-
-        KCM.SettingStateBinding {
-            configObject: kcm.overviewSettings
-            settingName: "OrganizedGrid"
-        }
-    }
-
-    Item {
-        Kirigami.FormData.isSection: true
-    }
-
-    QQC2.Button {
-        text: i18nc("@action:button", "Configure Shortcuts…")
-        icon.name: "preferences-desktop-keyboard-shortcut"
-
-        enabled: overviewBox.checked
-
-        onClicked: kcm.configureOverviewShortcuts()
     }
 }
