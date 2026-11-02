@@ -7,10 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-
-#include "core/outputlayer.h"
 #include "opengl/eglbackend.h"
-#include "utils/damagejournal.h"
 
 #include <chrono>
 #include <memory>
@@ -18,32 +15,7 @@
 namespace KWin
 {
 
-class SwapchainSlot;
-class Swapchain;
-class GraphicsBufferAllocator;
 class VirtualBackend;
-class VirtualEglBackend;
-
-class KWIN_EXPORT VirtualEglLayer : public OutputLayer
-{
-public:
-    VirtualEglLayer(BackendOutput *output, RenderBackend *backend);
-    ~VirtualEglLayer() override;
-
-    std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
-    bool endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame) override;
-
-    FormatModifierMap supportedDrmFormats() const override;
-    void releaseBuffers() override;
-
-    QImage download() const;
-
-private:
-    RenderBackend *const m_backend;
-    std::shared_ptr<Swapchain> m_swapchain;
-    std::shared_ptr<SwapchainSlot> m_current;
-    DamageJournal m_damageJournal;
-};
 
 /**
  * @brief OpenGL Backend using Egl on a GBM surface.
