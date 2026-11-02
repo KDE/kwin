@@ -63,7 +63,7 @@ QQC2.ComboBox {
         updateCurrentIndex();
     }
 
-    function changeCurrentIndex() {
+    function changeCurrentIndex(): void {
         // Make settings changes for user index change
         let chosenModelIndex = currentIndex - 1; // account for extra 'None' item
         if (chosenModelIndex >= 0) {
@@ -77,7 +77,7 @@ QQC2.ComboBox {
         }
     }
 
-    function updateCurrentIndex() {
+    function updateCurrentIndex(): void {
         // Update index for settings changes
         if (tabBoxSettings.showTabBox) {
             // Find plugin id in model
