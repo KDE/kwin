@@ -326,6 +326,7 @@ if (KWIN_BUILD_X11)
             XCB::XCB
             XCB::XFIXES
             XCB::XINERAMA
+            XCB::XKB
     )
 endif()
 

@@ -11,4 +11,5 @@ target_link_libraries(systembell PRIVATE
     KF6::GlobalAccel
     KF6::I18n
     Canberra::Canberra
+    XCB::XKB
 )

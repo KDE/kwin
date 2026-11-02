@@ -24,6 +24,9 @@
 #include <xcb/shape.h>
 #include <xcb/sync.h>
 #include <xcb/xfixes.h>
+#define explicit dont_use_cxx_explicit
+#include <xcb/xkb.h>
+#undef explicit
 // system
 #include <sys/shm.h>
 #include <sys/types.h>
@@ -269,6 +272,8 @@ void Extensions::initVersion(T cookie, F f, ExtensionData *dataToFill)
         dataToFill->version = version->major_version * 0x10 + version->minor_version;
     } else if constexpr (requires(reply version) {version.server_major; version.server_minor; }) {
         dataToFill->version = version->server_major * 0x10 + version->server_minor;
+    } else if constexpr (requires(reply version) {version.serverMajor; version.serverMinor; }) {
+        dataToFill->version = version->serverMajor * 0x10 + version->serverMinor;
     } else {
         static_assert(false);
     }
@@ -310,6 +315,7 @@ void Extensions::init()
     xcb_prefetch_extension_data(c, &xcb_render_id);
     xcb_prefetch_extension_data(c, &xcb_sync_id);
     xcb_prefetch_extension_data(c, &xcb_res_id);
+    xcb_prefetch_extension_data(c, &xcb_xkb_id);
 
     m_shape.name = QByteArray("SHAPE");
     m_randr.name = QByteArray("RANDR");
@@ -318,6 +324,7 @@ void Extensions::init()
     m_render.name = QByteArray("RENDER");
     m_sync.name = QByteArray("SYNC");
     m_res.name = QByteArray("RES");
+    m_xkb.name = QByteArray("XKB");
 
     m_shape.opCodes = shapeOpCodes();
     m_randr.opCodes = randrOpCodes();
@@ -337,6 +344,7 @@ void Extensions::init()
     extensionQueryReply(xcb_get_extension_data(c, &xcb_render_id), &m_render);
     extensionQueryReply(xcb_get_extension_data(c, &xcb_sync_id), &m_sync);
     extensionQueryReply(xcb_get_extension_data(c, &xcb_res_id), &m_res);
+    extensionQueryReply(xcb_get_extension_data(c, &xcb_xkb_id), &m_xkb);
 
     // extension specific queries
     xcb_shape_query_version_cookie_t shapeVersion;
@@ -346,6 +354,7 @@ void Extensions::init()
     xcb_render_query_version_cookie_t renderVersion;
     xcb_sync_initialize_cookie_t syncVersion;
     xcb_res_query_version_cookie_t resVersion;
+    xcb_xkb_use_extension_cookie_t xkbVersion;
     if (m_shape.present) {
         shapeVersion = xcb_shape_query_version_unchecked(c);
     }
@@ -367,6 +376,9 @@ void Extensions::init()
     }
     if (m_res.present) {
         resVersion = xcb_res_query_version(c, XCB_RES_MAJOR_VERSION, XCB_RES_MINOR_VERSION);
+    }
+    if (m_xkb.present) {
+        xkbVersion = xcb_xkb_use_extension(c, XCB_XKB_MAJOR_VERSION, XCB_XKB_MINOR_VERSION);
     }
     // handle replies
     if (m_shape.present) {
@@ -390,13 +402,17 @@ void Extensions::init()
     if (m_res.present) {
         initVersion<xcb_res_query_version_reply_t>(resVersion, &xcb_res_query_version_reply, &m_res);
     }
+    if (m_xkb.present) {
+        initVersion<xcb_xkb_use_extension_reply_t>(xkbVersion, &xcb_xkb_use_extension_reply, &m_xkb);
+    }
     qCDebug(KWIN_CORE) << "Extensions: shape: 0x" << QString::number(m_shape.version, 16)
                        << " composite: 0x" << QString::number(m_composite.version, 16)
                        << " render: 0x" << QString::number(m_render.version, 16)
                        << " fixes: 0x" << QString::number(m_fixes.version, 16)
                        << " randr: 0x" << QString::number(m_randr.version, 16)
                        << " sync: 0x" << QString::number(m_sync.version, 16)
-                       << " res: 0x" << QString::number(m_res.version, 16);
+                       << " res: 0x" << QString::number(m_res.version, 16)
+                       << " xkb: 0x" << QString::number(m_xkb.version, 16);
 }
 
 void Extensions::extensionQueryReply(const xcb_query_extension_reply_t *extension, ExtensionData *dataToFill)
@@ -461,6 +477,11 @@ int Extensions::shapeNotifyEvent() const
 int Extensions::syncAlarmNotifyEvent() const
 {
     return m_sync.eventBase + XCB_SYNC_ALARM_NOTIFY;
+}
+
+int Extensions::xkbEvent() const
+{
+    return m_xkb.eventBase;
 }
 
 QList<ExtensionData> Extensions::extensions() const

@@ -23,6 +23,7 @@ namespace KWin
 
 class GLShader;
 class XdgSystemBellV1Interface;
+class XkbBellFilter;
 
 class SystemBellEffect : public OffscreenEffect
 {
@@ -43,6 +44,7 @@ public:
 public Q_SLOTS:
     void triggerScreen();
     void triggerWindow();
+    void triggerWindow(EffectWindow *window);
 
 private Q_SLOTS:
     void slotWindowClosed(KWin::EffectWindow *w);
@@ -56,7 +58,6 @@ private:
         Color,
     };
 
-    void triggerWindow(EffectWindow *window);
     void flash(EffectWindow *window);
     void unflash(EffectWindow *window);
     void loadConfig(const KConfigGroup &group);
@@ -77,6 +78,7 @@ private:
     QString m_customBellFile;
     KConfigWatcher::Ptr m_configWatcher;
     KConfigGroup m_bellConfig;
+    std::unique_ptr<XkbBellFilter> m_xkbBellFilter;
 
     static QTimer *s_systemBellRemoveTimer;
     QTimer m_audioThrottleTimer;
