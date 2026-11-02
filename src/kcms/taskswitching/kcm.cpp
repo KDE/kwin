@@ -194,7 +194,6 @@ void TaskSwitchingKCM::configureOverviewShortcuts()
     actionCollection->setComponentDisplayName(i18n("KWin"));
 
     QAction *a;
-    KLocalizedString name;
 
     a = actionCollection->addAction(QStringLiteral("Cycle Overview"));
     a->setText(i18nc("@action Overview and Grid View are the name of KWin effects", "Cycle through Overview and Grid View"));
