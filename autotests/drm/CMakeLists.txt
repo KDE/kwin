@@ -11,7 +11,6 @@ set(mockDRM_SRCS
     ../../src/backends/drm/drm_egl_backend.cpp
     ../../src/backends/drm/drm_gpu.cpp
     ../../src/backends/drm/drm_layer.cpp
-    ../../src/backends/drm/drm_layer_surface.cpp
     ../../src/backends/drm/drm_logging.cpp
     ../../src/backends/drm/drm_object.cpp
     ../../src/backends/drm/drm_output.cpp
