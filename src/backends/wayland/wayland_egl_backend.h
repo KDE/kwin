@@ -29,12 +29,12 @@ namespace Wayland
 
 class WaylandBackend;
 class WaylandOutput;
-class WaylandEglBackend;
+class WaylandDisplay;
 
 class WaylandEglLayer : public WaylandLayer
 {
 public:
-    WaylandEglLayer(WaylandOutput *output, WaylandEglBackend *backend, OutputLayerType type, int zpos);
+    WaylandEglLayer(WaylandOutput *output, RenderBackend *backend, WaylandDisplay *display, OutputLayerType type, int zpos);
     ~WaylandEglLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
@@ -48,7 +48,8 @@ private:
     DamageJournal m_damageJournal;
     std::shared_ptr<Swapchain> m_swapchain;
     std::shared_ptr<SwapchainSlot> m_buffer;
-    WaylandEglBackend *const m_backend;
+    RenderBackend *const m_backend;
+    WaylandDisplay *const m_display;
 
     friend class WaylandEglBackend;
 };
@@ -58,7 +59,7 @@ class WaylandEglCursorLayer : public OutputLayer
     Q_OBJECT
 
 public:
-    WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBackend *backend);
+    WaylandEglCursorLayer(WaylandOutput *output, RenderBackend *backend, WaylandDisplay *display);
     ~WaylandEglCursorLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
@@ -67,7 +68,9 @@ public:
     void releaseBuffers() override;
 
 private:
-    WaylandEglBackend *m_backend;
+    WaylandBackend *const m_outputBackend;
+    RenderBackend *const m_renderBackend;
+    WaylandDisplay *const m_display;
     std::shared_ptr<Swapchain> m_swapchain;
     std::shared_ptr<SwapchainSlot> m_buffer;
 };
