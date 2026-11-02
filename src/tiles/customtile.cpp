@@ -277,7 +277,6 @@ void CustomTile::remove()
 
     parentT->removeChild(this);
     m_parentTile = nullptr;
-    manager()->tileRemoved(this);
 
     if (parentT->layoutDirection() == LayoutDirection::Horizontal) {
         if (prev && next) {

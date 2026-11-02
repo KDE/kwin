@@ -56,7 +56,6 @@ public:
     void forgetWindow(Window *window, VirtualDesktop *desktop);
 
 Q_SIGNALS:
-    void tileRemoved(KWin::Tile *tile);
     void rootTileChanged(KWin::CustomTile *rootTile);
 
 private:
