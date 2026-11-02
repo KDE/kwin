@@ -21,6 +21,8 @@ class RectF;
  * \class KWin::Rect
  * \inmodule KWin
  * \inheaderfile core/rect.h
+ * \qmltype Rect
+ * \inqmlmodule org.kde.kwin
  *
  * \brief The Rect type represents a rectangle with integer coordinates.
  *
@@ -33,6 +35,7 @@ class KWIN_EXPORT Rect
 
     /*!
      * \property KWin::Rect::x
+     * \qmlproperty int KWin::Rect::x
      *
      * The x coordinate of the top left corner
      */
@@ -40,6 +43,7 @@ class KWIN_EXPORT Rect
 
     /*!
      * \property KWin::Rect::y
+     * \qmlproperty int KWin::Rect::y
      *
      * The y coordinate of the top left corner
      */
@@ -47,6 +51,7 @@ class KWIN_EXPORT Rect
 
     /*!
      * \property KWin::Rect::width
+     * \qmlproperty int KWin::Rect::width
      *
      * The width of the rectangle
      */
@@ -54,6 +59,7 @@ class KWIN_EXPORT Rect
 
     /*!
      * \property KWin::Rect::height
+     * \qmlproperty int KWin::Rect::height
      *
      * The height of the rectangle
      */
@@ -61,6 +67,7 @@ class KWIN_EXPORT Rect
 
     /*!
      * \property KWin::Rect::left
+     * \qmlproperty int KWin::Rect::left
      *
      * The x coordinate of the left edge
      */
@@ -68,6 +75,7 @@ class KWIN_EXPORT Rect
 
     /*!
      * \property KWin::Rect::top
+     * \qmlproperty int KWin::Rect::top
      *
      * The y coordinate of the top edge
      */
@@ -75,6 +83,7 @@ class KWIN_EXPORT Rect
 
     /*!
      * \property KWin::Rect::right
+     * \qmlproperty int KWin::Rect::right
      *
      * The x coordinate of the right edge, equal to \c{x + width}
      */
@@ -82,6 +91,7 @@ class KWIN_EXPORT Rect
 
     /*!
      * \property KWin::Rect::bottom
+     * \qmlproperty int KWin::Rect::bottom
      *
      * The y coordinate of the bottom edge, equal to \c{y + height}
      */
@@ -727,6 +737,8 @@ private:
  * \class KWin::RectF
  * \inmodule KWin
  * \inheaderfile core/rect.h
+ * \qmltype RectF
+ * \inqmlmodule org.kde.kwin
  *
  * \brief The RectF type represents a rectangle with floating point coordinates.
  */
@@ -736,6 +748,7 @@ class KWIN_EXPORT RectF
 
     /*!
      * \property KWin::RectF::x
+     * \qmlproperty real KWin::RectF::x
      *
      * The x coordinate of the top left corner
      */
@@ -743,6 +756,7 @@ class KWIN_EXPORT RectF
 
     /*!
      * \property KWin::RectF::y
+     * \qmlproperty real KWin::RectF::y
      *
      * The y coordinate of the top left corner
      */
@@ -750,6 +764,7 @@ class KWIN_EXPORT RectF
 
     /*!
      * \property KWin::RectF::width
+     * \qmlproperty real KWin::RectF::width
      *
      * The width of the rectangle
      */
@@ -757,6 +772,7 @@ class KWIN_EXPORT RectF
 
     /*!
      * \property KWin::RectF::height
+     * \qmlproperty real KWin::RectF::height
      *
      * The height of the rectangle
      */
@@ -764,6 +780,7 @@ class KWIN_EXPORT RectF
 
     /*!
      * \property KWin::RectF::left
+     * \qmlproperty real KWin::RectF::left
      *
      * The x coordinate of the left edge
      */
@@ -771,6 +788,7 @@ class KWIN_EXPORT RectF
 
     /*!
      * \property KWin::RectF::top
+     * \qmlproperty real KWin::RectF::top
      *
      * The y coordinate of the top edge
      */
@@ -778,6 +796,7 @@ class KWIN_EXPORT RectF
 
     /*!
      * \property KWin::RectF::right
+     * \qmlproperty real KWin::RectF::right
      *
      * The x coordinate of the right edge, equal to \c{x + width}
      */
@@ -785,6 +804,7 @@ class KWIN_EXPORT RectF
 
     /*!
      * \property KWin::RectF::bottom
+     * \qmlproperty real KWin::RectF::bottom
      *
      * The y coordinate of the bottom edge, equal to \c{y + height}
      */
