@@ -234,6 +234,14 @@ void TaskSwitchingKCM::ghnsEntryChanged()
     m_tabBoxLayouts->load();
 }
 
+void TaskSwitchingKCM::showPreview(const QString &pluginId)
+{
+    const bool showDesktop = true; // TODO form->config()->showDesktopMode();
+    QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KWin"), QStringLiteral("/TabBox"), QStringLiteral("org.kde.kwin.TabBox"), QStringLiteral("preview"));
+    message.setArguments({pluginId, showDesktop});
+    QDBusConnection::sessionBus().call(message, QDBus::NoBlock);
+}
+
 } // namespace Kwin
 
 #include "kcm.moc"

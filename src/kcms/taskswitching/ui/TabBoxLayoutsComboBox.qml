@@ -12,6 +12,7 @@ import org.kde.kirigami as Kirigami
 import org.kde.kwin.kcmtaskswitching
 
 QQC2.ComboBox {
+    id: root
 
     required property var tabBoxSettings
     readonly property var tabBoxLayouts: kcm.tabBoxLayouts

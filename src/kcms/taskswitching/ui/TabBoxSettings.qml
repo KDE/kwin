@@ -66,6 +66,15 @@ Kirigami.FormLayout {
                 }
             }
         }
+        QQC2.Button {
+            text: i18nc("@action:button", "Show Preview")
+            icon.name: "fileview-preview"
+            display: QQC2.Button.IconOnly
+            onClicked: kcm.showPreview(root.tabBoxSettings.layoutName)
+            QQC2.ToolTip.text: text
+            QQC2.ToolTip.visible: hovered || activeFocus
+            QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
+        }
     }
 
     Item {
