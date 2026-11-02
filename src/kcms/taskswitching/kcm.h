@@ -36,8 +36,8 @@ public:
     bool isDefaults() const override;
     void save() override;
 
-    Q_INVOKABLE void configureTabBoxShortcuts(const bool showAlternative);
-    Q_INVOKABLE void configureOverviewShortcuts();
+    Q_INVOKABLE void configureTabBoxShortcuts(const bool showAlternative, QQuickItem *context);
+    Q_INVOKABLE void configureOverviewShortcuts(QQuickItem *context);
     Q_INVOKABLE void ghnsEntryChanged();
     Q_INVOKABLE void showPreview(const QString &pluginId, bool showDesktop);
 

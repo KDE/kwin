@@ -255,7 +255,7 @@ Kirigami.Form {
             action: QQC2.Action {
                 text: i18nc("@action:button", "Configure Shortcuts…")
                 icon.name: "preferences-desktop-keyboard-shortcut"
-                onTriggered: kcm.configureTabBoxShortcuts(root.isAlternative)
+                onTriggered: kcm.configureTabBoxShortcuts(root.isAlternative, root)
             }
         }
     }

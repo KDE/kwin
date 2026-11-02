@@ -9,6 +9,8 @@
 #include <QDBusMessage>
 #include <QDir>
 #include <QKeySequence>
+#include <QQuickItem>
+#include <QQuickRenderControl>
 #include <QWindow>
 #include <qqml.h>
 
@@ -125,7 +127,7 @@ void TaskSwitchingKCM::save()
     }
 }
 
-void TaskSwitchingKCM::configureTabBoxShortcuts(const bool showAlternative)
+void TaskSwitchingKCM::configureTabBoxShortcuts(const bool showAlternative, QQuickItem *context)
 {
     KShortcutsDialog *dialog = new KShortcutsDialog(KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
     KActionCollection *actionCollection = new KActionCollection(dialog, u"kwin"_s);
@@ -194,13 +196,13 @@ void TaskSwitchingKCM::configureTabBoxShortcuts(const bool showAlternative)
     dialog->addCollection(actionCollection);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->winId();
-    dialog->windowHandle()->setTransientParent(QGuiApplication::focusWindow());
+    dialog->windowHandle()->setTransientParent(QQuickRenderControl::renderWindowFor(context->window()));
     dialog->setWindowModality(Qt::WindowModal);
 
     dialog->configure();
 }
 
-void TaskSwitchingKCM::configureOverviewShortcuts()
+void TaskSwitchingKCM::configureOverviewShortcuts(QQuickItem *context)
 {
     KShortcutsDialog *dialog = new KShortcutsDialog(KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
     KActionCollection *actionCollection = new KActionCollection(dialog, u"kwin"_s);
@@ -235,7 +237,7 @@ void TaskSwitchingKCM::configureOverviewShortcuts()
     dialog->addCollection(actionCollection);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->winId();
-    dialog->windowHandle()->setTransientParent(QGuiApplication::focusWindow());
+    dialog->windowHandle()->setTransientParent(QQuickRenderControl::renderWindowFor(context->window()));
     dialog->setWindowModality(Qt::WindowModal);
 
     connect(dialog, &QDialog::accepted, this, &TaskSwitchingKCM::overviewShortcutsChanged);

@@ -14,6 +14,7 @@ import org.kde.kcmutils as KCM
 import org.kde.kwin.kcmtaskswitching
 
 Kirigami.Form {
+    id: root
     Kirigami.FormGroup {
         Kirigami.FormEntry {
             title: i18nc("@label", "Overview:")
@@ -93,7 +94,7 @@ Kirigami.Form {
                 text: i18nc("@action:button", "Configure Shortcuts…")
                 icon.name: "preferences-desktop-keyboard-shortcut"
                 enabled: overviewBox.checked
-                onTriggered: kcm.configureOverviewShortcuts()
+                onTriggered: kcm.configureOverviewShortcuts(root)
             }
         }
 
