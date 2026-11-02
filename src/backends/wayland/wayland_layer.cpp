@@ -224,5 +224,78 @@ void WaylandLayer::releaseBuffers()
     m_swapchain.reset();
 }
 
+WaylandCursorLayer::WaylandCursorLayer(WaylandOutput *output, RenderBackend *backend, WaylandDisplay *display)
+    : OutputLayer(output, OutputLayerType::CursorOnly, 255, 255, 255)
+    , m_outputBackend(output->backend())
+    , m_renderBackend(backend)
+    , m_display(display)
+{
+}
+
+WaylandCursorLayer::~WaylandCursorLayer()
+{
+}
+
+std::optional<OutputLayerBeginFrameInfo> WaylandCursorLayer::beginFrame(OutputFrame *frame)
+{
+    const auto bufferSize = targetRect().size();
+    if (!m_swapchain || m_swapchain->size() != bufferSize) {
+        const FormatModifierMap formatTable = m_display->linuxDmabuf()->formats().intersected(m_renderBackend->supportedFormats());
+        const auto suitableFormats = filterAndSortFormats(formatTable, m_requiredAlphaBits, m_output->colorPowerTradeoff());
+        for (const auto &candidate : suitableFormats) {
+            auto it = formatTable.constFind(candidate.drmFormat);
+            if (it == formatTable.constEnd()) {
+                continue;
+            }
+            GraphicsBufferOptions options{
+                .size = bufferSize,
+                .format = it.key(),
+                .modifiers = it.value(),
+                .software = false,
+                .scanout = false,
+            };
+            m_swapchain = Swapchain::create(m_renderBackend->renderDevice()->allocator(), options);
+            if (m_swapchain) {
+                break;
+            }
+        }
+        if (!m_swapchain) {
+            return std::nullopt;
+        }
+    }
+
+    m_buffer = m_swapchain->acquire();
+    if (!m_buffer) {
+        return std::nullopt;
+    }
+
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(m_buffer->buffer(), bufferTransform().combine(OutputTransform::FlipY)),
+        .repaint = Region::infinite(),
+    };
+}
+
+bool WaylandCursorLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
+{
+    wl_buffer *buffer = m_outputBackend->importBuffer(m_buffer->buffer());
+    Q_ASSERT(buffer);
+
+    static_cast<WaylandOutput *>(m_output.get())->cursor()->update(buffer, m_buffer->buffer()->size() / m_output->scale(), (hotspot() / m_output->scale()).toPoint());
+
+    m_swapchain->release(m_buffer.get(), std::move(sync));
+    return true;
+}
+
+FormatModifierMap WaylandCursorLayer::supportedDrmFormats() const
+{
+    return m_renderBackend->supportedFormats();
+}
+
+void WaylandCursorLayer::releaseBuffers()
+{
+    m_buffer.reset();
+    m_swapchain.reset();
+}
+
 }
 }

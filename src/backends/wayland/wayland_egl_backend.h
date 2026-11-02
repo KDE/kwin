@@ -28,29 +28,6 @@ namespace Wayland
 {
 
 class WaylandBackend;
-class WaylandOutput;
-class WaylandDisplay;
-
-class WaylandEglCursorLayer : public OutputLayer
-{
-    Q_OBJECT
-
-public:
-    WaylandEglCursorLayer(WaylandOutput *output, RenderBackend *backend, WaylandDisplay *display);
-    ~WaylandEglCursorLayer() override;
-
-    std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
-    bool endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame) override;
-    FormatModifierMap supportedDrmFormats() const override;
-    void releaseBuffers() override;
-
-private:
-    WaylandBackend *const m_outputBackend;
-    RenderBackend *const m_renderBackend;
-    WaylandDisplay *const m_display;
-    std::shared_ptr<Swapchain> m_swapchain;
-    std::shared_ptr<SwapchainSlot> m_buffer;
-};
 
 /**
  * @brief OpenGL Backend using Egl on a Wayland surface.
