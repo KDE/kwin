@@ -34,9 +34,7 @@ QQC2.ComboBox {
         }
     }
 
-    Component.onCompleted: {
-        updateModel();
-    }
+    Component.onCompleted: updateModel()
 
     model: ListModel {}
     delegate: itemDelegate
