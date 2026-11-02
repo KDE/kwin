@@ -86,7 +86,7 @@ Kirigami.FormLayout {
     }
 
     QQC2.Button {
-        text: i18n("Configure Shortcuts…")
+        text: i18nc("@action:button", "Configure Shortcuts…")
         icon.name: "preferences-desktop-keyboard-shortcut"
 
         enabled: overviewBox.checked
