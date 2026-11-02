@@ -7,13 +7,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "virtual_egl_backend.h"
-#include "core/drmdevice.h"
-#include "core/gbmgraphicsbufferallocator.h"
-#include "core/renderdevice.h"
-#include "opengl/glutils.h"
-#include "swapchain.h"
 #include "utils/vsyncsource.h"
 #include "virtual_backend.h"
+#include "virtual_layer.h"
 #include "virtual_logging.h"
 #include "virtual_output.h"
 
@@ -21,70 +17,6 @@
 
 namespace KWin
 {
-
-VirtualEglLayer::VirtualEglLayer(BackendOutput *output, RenderBackend *backend)
-    : OutputLayer(output, OutputLayerType::Primary)
-    , m_backend(backend)
-{
-}
-
-VirtualEglLayer::~VirtualEglLayer()
-{
-}
-
-std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame(OutputFrame *frame)
-{
-    const QSize nativeSize = m_output->modeSize();
-    if (!m_swapchain || m_swapchain->size() != nativeSize) {
-        GraphicsBufferOptions options{
-            .size = nativeSize,
-            .format = DRM_FORMAT_XRGB8888,
-            .modifiers = m_backend->supportedFormats()[DRM_FORMAT_XRGB8888],
-            .software = false,
-            .scanout = false,
-        };
-        m_swapchain = Swapchain::create(m_backend->renderDevice()->allocator(), options);
-        if (!m_swapchain) {
-            return std::nullopt;
-        }
-    }
-
-    m_current = m_swapchain->acquire();
-    if (!m_current) {
-        return std::nullopt;
-    }
-
-    return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_current->buffer(), bufferTransform().combine(OutputTransform::FlipY)),
-        .repaint = m_damageJournal.accumulate(m_current->age(), Region::infinite()),
-    };
-}
-
-bool VirtualEglLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
-{
-    m_swapchain->release(m_current.get(), std::move(sync));
-    m_damageJournal.add(damagedDeviceRegion);
-    return true;
-}
-
-FormatModifierMap VirtualEglLayer::supportedDrmFormats() const
-{
-    return m_backend->supportedFormats();
-}
-
-void VirtualEglLayer::releaseBuffers()
-{
-    m_current.reset();
-    m_swapchain.reset();
-}
-
-QImage VirtualEglLayer::download() const
-{
-    if (!m_current) {
-        return QImage{};
-    }
-    return m_backend->renderDevice()->download(m_current->buffer());
-}
 
 VirtualEglBackend::VirtualEglBackend(VirtualBackend *b, RenderDevice *renderDevice)
     : EglBackend(renderDevice)
@@ -129,7 +61,7 @@ bool VirtualEglBackend::init()
 
 void VirtualEglBackend::addOutput(BackendOutput *output)
 {
-    static_cast<VirtualOutput *>(output)->setOutputLayer(std::make_unique<VirtualEglLayer>(output, this));
+    static_cast<VirtualOutput *>(output)->setOutputLayer(std::make_unique<VirtualLayer>(output, this));
 }
 
 QList<OutputLayer *> VirtualEglBackend::compatibleOutputLayers(BackendOutput *output)
