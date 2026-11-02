@@ -21,8 +21,6 @@
 #include <xcb/xcb_icccm.h>
 #endif
 
-#include <QAbstractItemModelTester>
-
 Q_DECLARE_METATYPE(KWin::QuickTileMode)
 Q_DECLARE_METATYPE(KWin::MaximizeMode)
 
@@ -116,7 +114,6 @@ void TilesTest::init()
     m_output = workspace()->activeOutput();
     m_tileManager = workspace()->tileManager(m_output);
     m_rootTile = workspace()->rootTile(m_output);
-    QAbstractItemModelTester(m_tileManager->model(), QAbstractItemModelTester::FailureReportingMode::QtTest);
 
     VirtualDesktopManager::self()->setCount(3);
     VirtualDesktopManager::self()->setCurrent(1);

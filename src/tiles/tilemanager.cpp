@@ -91,7 +91,6 @@ TileManager::TileManager(LogicalOutput *parent)
             return;
         }
         Q_EMIT rootTileChanged(rootTile());
-        Q_EMIT modelChanged(model());
     });
 }
 
@@ -138,11 +137,6 @@ QuickRootTile *TileManager::quickRootTile(VirtualDesktop *desktop) const
 Tile *TileManager::quickTile(QuickTileMode mode) const
 {
     return quickRootTile()->tileForMode(mode);
-}
-
-TileModel *TileManager::model() const
-{
-    return rootTile()->model();
 }
 
 Tile *TileManager::tileForWindow(Window *window, VirtualDesktop *desktop)

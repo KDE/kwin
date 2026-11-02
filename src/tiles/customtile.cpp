@@ -45,10 +45,7 @@ CustomTile *CustomTile::createChildAt(const RectF &relativeGeometry, LayoutDirec
     connect(tile, &CustomTile::layoutModified, this, &CustomTile::layoutModified);
     tile->setRelativeGeometry(relativeGeometry);
     tile->setLayoutDirection(layoutDirection);
-    TileModel *model = static_cast<RootTile *>(rootTile())->model();
-    model->beginInsertTile(tile, position);
     insertChild(position, tile);
-    model->endInsertTile();
     return tile;
 }
 
@@ -278,11 +275,8 @@ void CustomTile::remove()
     auto *prev = previousSibling();
     auto *next = nextSibling();
 
-    TileModel *model = static_cast<RootTile *>(rootTile())->model();
-    model->beginRemoveTile(this);
     parentT->removeChild(this);
     m_parentTile = nullptr;
-    model->endRemoveTile();
     manager()->tileRemoved(this);
 
     if (parentT->layoutDirection() == LayoutDirection::Horizontal) {
@@ -428,7 +422,6 @@ Tile::LayoutDirection CustomTile::layoutDirection() const
 
 RootTile::RootTile(TileManager *tiling, VirtualDesktop *desktop)
     : CustomTile(tiling, nullptr)
-    , m_tileModel(new TileModel(this))
 {
     m_desktop = desktop;
     setParent(tiling);
@@ -448,11 +441,6 @@ Tile *RootTile::tileForWindow(Window *window)
     }
 
     return nullptr;
-}
-
-TileModel *RootTile::model() const
-{
-    return m_tileModel.get();
 }
 
 Tile *RootTile::pick(const QPointF &point) const
