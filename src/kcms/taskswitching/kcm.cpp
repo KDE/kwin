@@ -16,7 +16,6 @@
 #include <KLocalizedString>
 #include <KShortcutsDialog>
 
-#include "config-kwin.h"
 #include "tabbox/tabboxconfig.h"
 
 #include "tabboxlayoutsmodel.h"
