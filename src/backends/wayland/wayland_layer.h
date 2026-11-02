@@ -48,6 +48,7 @@ namespace Wayland
 
 class WaylandOutput;
 class WaylandDisplay;
+class WaylandBackend;
 
 class WaylandLayer : public OutputLayer
 {
@@ -86,6 +87,27 @@ protected:
     std::shared_ptr<ColorDescription> m_previousColor;
     GraphicsBufferRef m_pendingBuffer;
     Region m_pendingDamage;
+};
+
+class WaylandCursorLayer : public OutputLayer
+{
+    Q_OBJECT
+
+public:
+    WaylandCursorLayer(WaylandOutput *output, RenderBackend *backend, WaylandDisplay *display);
+    ~WaylandCursorLayer() override;
+
+    std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
+    bool endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame) override;
+    FormatModifierMap supportedDrmFormats() const override;
+    void releaseBuffers() override;
+
+private:
+    WaylandBackend *const m_outputBackend;
+    RenderBackend *const m_renderBackend;
+    WaylandDisplay *const m_display;
+    std::shared_ptr<Swapchain> m_swapchain;
+    std::shared_ptr<SwapchainSlot> m_buffer;
 };
 
 }
