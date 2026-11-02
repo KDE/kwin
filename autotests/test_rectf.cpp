@@ -133,6 +133,7 @@ private Q_SLOTS:
     void roundedOut_data();
     void roundedOut();
     void implicitConversions();
+    void gadgetProperties();
 };
 
 void TestRectF::equals_data()
@@ -1540,6 +1541,24 @@ void TestRectF::implicitConversions()
         qrect &= RectF(1, 1, 3, 3);
         QCOMPARE(qrect, QRectF(1, 1, 2, 2));
     }
+}
+
+void TestRectF::gadgetProperties()
+{
+    const RectF rect(1.5, 2.5, 3, 4);
+    const auto read = [&rect](const char *name) {
+        const QMetaObject &metaObject = RectF::staticMetaObject;
+        return metaObject.property(metaObject.indexOfProperty(name)).readOnGadget(&rect).value<qreal>();
+    };
+
+    QCOMPARE(read("x"), 1.5);
+    QCOMPARE(read("y"), 2.5);
+    QCOMPARE(read("width"), 3);
+    QCOMPARE(read("height"), 4);
+    QCOMPARE(read("left"), 1.5);
+    QCOMPARE(read("top"), 2.5);
+    QCOMPARE(read("right"), 4.5);
+    QCOMPARE(read("bottom"), 6.5);
 }
 
 QTEST_MAIN(TestRectF)
