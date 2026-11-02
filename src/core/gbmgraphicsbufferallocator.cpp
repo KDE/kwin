@@ -121,7 +121,7 @@ GbmGraphicsBufferAllocator::~GbmGraphicsBufferAllocator()
 
 static GraphicsBuffer *allocateDumb(gbm_device *device, dev_t deviceId, const GraphicsBufferOptions &options)
 {
-    if (!options.modifiers.empty()) {
+    if (!options.modifiers.empty() && options.modifiers.size() != 1 && options.modifiers.front() != DRM_FORMAT_MOD_LINEAR) {
         return nullptr;
     }
 
