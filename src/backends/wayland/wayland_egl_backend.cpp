@@ -35,102 +35,6 @@ namespace KWin
 namespace Wayland
 {
 
-WaylandEglLayer::WaylandEglLayer(WaylandOutput *output, RenderBackend *backend, WaylandDisplay *display, OutputLayerType type, int zpos)
-    : WaylandLayer(output, type, zpos)
-    , m_backend(backend)
-    , m_display(display)
-{
-}
-
-WaylandEglLayer::~WaylandEglLayer()
-{
-}
-
-std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::beginFrame(OutputFrame *frame)
-{
-    if (m_color != m_previousColor) {
-        // need to force a full repaint
-        m_damageJournal.clear();
-    }
-
-    const QSize nativeSize = targetRect().size();
-    if (!m_swapchain || m_swapchain->size() != nativeSize) {
-        const FormatModifierMap formatTable = m_display->linuxDmabuf()->formats().intersected(m_backend->supportedFormats());
-        const auto suitableFormats = filterAndSortFormats(formatTable, m_requiredAlphaBits, m_output->colorPowerTradeoff());
-        for (const auto &candidate : suitableFormats) {
-            auto it = formatTable.constFind(candidate.drmFormat);
-            if (it == formatTable.constEnd()) {
-                continue;
-            }
-            GraphicsBufferOptions options{
-                .size = nativeSize,
-                .format = it.key(),
-                .modifiers = it.value(),
-                .software = false,
-                .scanout = false,
-            };
-            m_swapchain = Swapchain::create(m_backend->renderDevice()->allocator(), options);
-            if (m_swapchain) {
-                break;
-            }
-        }
-        if (!m_swapchain) {
-            qCWarning(KWIN_WAYLAND_BACKEND) << "Could not find a suitable render format";
-            return std::nullopt;
-        }
-    }
-
-    m_buffer = m_swapchain->acquire();
-    if (!m_buffer) {
-        return std::nullopt;
-    }
-
-    // The picture is composed for the display as the user sees it, while the buffer has the
-    // size the panel is driven at, so a rotated display has to be turned on the way in.
-    const OutputTransform contentTransform = bufferTransform().combine(OutputTransform::FlipY);
-    return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_buffer->buffer(), contentTransform, m_color),
-        .repaint = m_damageJournal.accumulate(m_buffer->age(), Region::infinite()),
-    };
-}
-
-bool WaylandEglLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
-{
-    // The damage is where the picture changed, and the picture is composed the way the user
-    // sees it. What the host reads is the buffer, which a rotated display fills turned, so
-    // the region has to be turned with it - the journal stays in the picture's own
-    // coordinates, because that is what it is compared against next time.
-    const auto mapping = bufferTransform();
-    const QSize pictureSize = mapping.map(m_swapchain->size());
-    setBuffer(m_buffer->buffer(), mapping.map(damagedDeviceRegion & Rect(QPoint(), pictureSize), pictureSize));
-    m_swapchain->release(m_buffer.get(), std::move(sync));
-
-    m_damageJournal.add(damagedDeviceRegion);
-    return true;
-}
-
-bool WaylandEglLayer::earlyScanoutChecks()
-{
-    return test();
-}
-
-bool WaylandEglLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
-{
-    setBuffer(buffer, Region::infinite());
-    return true;
-}
-
-FormatModifierMap WaylandEglLayer::supportedDrmFormats() const
-{
-    return m_display->linuxDmabuf()->formats();
-}
-
-void WaylandEglLayer::releaseBuffers()
-{
-    m_buffer.reset();
-    m_swapchain.reset();
-}
-
 WaylandEglCursorLayer::WaylandEglCursorLayer(WaylandOutput *output, RenderBackend *backend, WaylandDisplay *display)
     : OutputLayer(output, OutputLayerType::CursorOnly, 255, 255, 255)
     , m_outputBackend(output->backend())
@@ -231,12 +135,12 @@ void WaylandEglBackend::createOutputLayers(BackendOutput *output)
 {
     const auto waylandOutput = static_cast<WaylandOutput *>(output);
     std::vector<std::unique_ptr<OutputLayer>> layers;
-    auto primary = std::make_unique<WaylandEglLayer>(waylandOutput, this, backend()->display(), OutputLayerType::Primary, 0);
+    auto primary = std::make_unique<WaylandLayer>(waylandOutput, this, backend()->display(), OutputLayerType::Primary, 0);
     primary->subSurface()->placeAbove(waylandOutput->surface());
     layers.push_back(std::move(primary));
     for (int z = 1; z < 5; z++) {
-        auto layer = std::make_unique<WaylandEglLayer>(waylandOutput, this, backend()->display(), OutputLayerType::GenericLayer, z);
-        layer->subSurface()->placeAbove(static_cast<WaylandEglLayer *>(layers.back().get())->surface());
+        auto layer = std::make_unique<WaylandLayer>(waylandOutput, this, backend()->display(), OutputLayerType::GenericLayer, z);
+        layer->subSurface()->placeAbove(static_cast<WaylandLayer *>(layers.back().get())->surface());
         layers.push_back(std::move(layer));
     }
     layers.push_back(std::make_unique<WaylandEglCursorLayer>(waylandOutput, this, backend()->display()));

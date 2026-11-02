@@ -8,9 +8,14 @@
 */
 #include "wayland_layer.h"
 #include "color_manager.h"
+#include "core/renderbackend.h"
+#include "core/renderdevice.h"
+#include "swapchain.h"
+#include "wayland-client/linuxdmabuf.h"
 #include "wayland-client/viewporter.h"
 #include "wayland_backend.h"
 #include "wayland_display.h"
+#include "wayland_logging.h"
 #include "wayland_output.h"
 
 #include <KWayland/Client/compositor.h>
@@ -26,14 +31,15 @@ namespace KWin
 namespace Wayland
 {
 
-WaylandLayer::WaylandLayer(WaylandOutput *output, OutputLayerType type, int zpos)
+WaylandLayer::WaylandLayer(WaylandOutput *output, RenderBackend *backend, WaylandDisplay *display, OutputLayerType type, int zpos)
     : OutputLayer(output, type, zpos, zpos, zpos)
-    , m_surface(output->backend()->display()->compositor()->createSurface())
-    , m_subSurface(output->backend()->display()->subCompositor()->createSubSurface(m_surface.get(), output->surface()))
+    , m_backend(backend)
+    , m_display(display)
+    , m_surface(m_display->compositor()->createSurface())
+    , m_subSurface(m_display->subCompositor()->createSubSurface(m_surface.get(), output->surface()))
 {
     // make presentation atomic with WaylandOutput::present
     m_subSurface->setMode(KWayland::Client::SubSurface::Mode::Synchronized);
-    const auto display = output->backend()->display();
     if (auto manager = display->tearingControl()) {
         m_tearingControl = wp_tearing_control_manager_v1_get_tearing_control(manager, *m_surface);
     }
@@ -102,7 +108,7 @@ void WaylandLayer::commit(PresentationMode presentationMode)
     }
     m_subSurface->setPosition(logicalTarget.topLeft());
     if (m_colorSurface && m_color != m_previousColor) {
-        const auto imageDescription = output->backend()->display()->colorManager()->createImageDescription(*m_color);
+        const auto imageDescription = m_display->colorManager()->createImageDescription(*m_color);
         wp_color_management_surface_v1_set_image_description(m_colorSurface, imageDescription, WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL);
         wp_image_description_v1_destroy(imageDescription);
         m_previousColor = m_color;
@@ -131,6 +137,91 @@ KWayland::Client::Surface *WaylandLayer::surface() const
 KWayland::Client::SubSurface *WaylandLayer::subSurface() const
 {
     return m_subSurface.get();
+}
+
+std::optional<OutputLayerBeginFrameInfo> WaylandLayer::beginFrame(OutputFrame *frame)
+{
+    if (m_color != m_previousColor) {
+        // need to force a full repaint
+        m_damageJournal.clear();
+    }
+
+    const QSize nativeSize = targetRect().size();
+    if (!m_swapchain || m_swapchain->size() != nativeSize) {
+        const FormatModifierMap formatTable = m_display->linuxDmabuf()->formats().intersected(m_backend->supportedFormats());
+        const auto suitableFormats = filterAndSortFormats(formatTable, m_requiredAlphaBits, m_output->colorPowerTradeoff());
+        for (const auto &candidate : suitableFormats) {
+            auto it = formatTable.constFind(candidate.drmFormat);
+            if (it == formatTable.constEnd()) {
+                continue;
+            }
+            GraphicsBufferOptions options{
+                .size = nativeSize,
+                .format = it.key(),
+                .modifiers = it.value(),
+                .software = false,
+                .scanout = false,
+            };
+            m_swapchain = Swapchain::create(m_backend->renderDevice()->allocator(), options);
+            if (m_swapchain) {
+                break;
+            }
+        }
+        if (!m_swapchain) {
+            qCWarning(KWIN_WAYLAND_BACKEND) << "Could not find a suitable render format";
+            return std::nullopt;
+        }
+    }
+
+    m_currentSlot = m_swapchain->acquire();
+    if (!m_currentSlot) {
+        return std::nullopt;
+    }
+
+    // The picture is composed for the display as the user sees it, while the buffer has the
+    // size the panel is driven at, so a rotated display has to be turned on the way in.
+    const OutputTransform contentTransform = bufferTransform().combine(OutputTransform::FlipY);
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(m_currentSlot->buffer(), contentTransform, m_color),
+        .repaint = m_damageJournal.accumulate(m_currentSlot->age(), Region::infinite()),
+    };
+}
+
+bool WaylandLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
+{
+    // The damage is where the picture changed, and the picture is composed the way the user
+    // sees it. What the host reads is the buffer, which a rotated display fills turned, so
+    // the region has to be turned with it - the journal stays in the picture's own
+    // coordinates, because that is what it is compared against next time.
+    const auto mapping = bufferTransform();
+    const QSize pictureSize = mapping.map(m_swapchain->size());
+    setBuffer(m_currentSlot->buffer(), mapping.map(damagedDeviceRegion & Rect(QPoint(), pictureSize), pictureSize));
+    m_swapchain->release(m_currentSlot.get(), std::move(sync));
+
+    m_damageJournal.add(damagedDeviceRegion);
+    return true;
+}
+
+bool WaylandLayer::earlyScanoutChecks()
+{
+    return test();
+}
+
+bool WaylandLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
+{
+    setBuffer(buffer, Region::infinite());
+    return true;
+}
+
+FormatModifierMap WaylandLayer::supportedDrmFormats() const
+{
+    return m_display->linuxDmabuf()->formats();
+}
+
+void WaylandLayer::releaseBuffers()
+{
+    m_currentSlot.reset();
+    m_swapchain.reset();
 }
 
 }
