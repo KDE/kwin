@@ -97,7 +97,6 @@ KCM.AbstractKCM {
                         TabBoxSettings {
                             isAlternative: true
                         }
-
                     }
 
                     // "Overview"

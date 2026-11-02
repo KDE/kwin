@@ -19,16 +19,24 @@ QQC2.ComboBox {
 
     Connections {
         target: tabBoxLayouts
-        function onModelReset() { updateModel(); }
+        function onModelReset() {
+            updateModel();
+        }
     }
 
     Connections {
         target: tabBoxSettings
-        function onLayoutNameChanged() { updateCurrentIndex(); }
-        function onShowTabBoxChanged() { updateCurrentIndex(); }
+        function onLayoutNameChanged() {
+            updateCurrentIndex();
+        }
+        function onShowTabBoxChanged() {
+            updateCurrentIndex();
+        }
     }
 
-    Component.onCompleted: { updateModel(); }
+    Component.onCompleted: {
+        updateModel();
+    }
 
     model: ListModel {}
     delegate: itemDelegate
@@ -38,12 +46,18 @@ QQC2.ComboBox {
 
     function updateModel() {
         model.clear();
-        model.append({ "name": i18nc("@item:inlistbox", "None"), "description": "" }); // We must add a 'None' option because we're using a combobox
+        model.append({
+            "name": i18nc("@item:inlistbox", "None"),
+            "description": ""
+        }); // We must add a 'None' option because we're using a combobox
         for (let i = 0; i < tabBoxLayouts.rowCount(); ++i) {
             let index = tabBoxLayouts.index(i, 0);
             let name = tabBoxLayouts.data(index, TabBoxLayoutsModel.NameRole);
             let description = tabBoxLayouts.data(index, TabBoxLayoutsModel.DescriptionRole);
-            model.append({ "name": name, "description": description })
+            model.append({
+                "name": name,
+                "description": description
+            });
         }
 
         updateCurrentIndex();

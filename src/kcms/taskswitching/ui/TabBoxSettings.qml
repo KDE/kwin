@@ -122,15 +122,10 @@ Kirigami.FormLayout {
         id: switchingModeComboBox
         Kirigami.FormData.label: i18n("Sort windows by:")
 
-        Layout.preferredWidth: Math.max(switchingModeComboBox.implicitWidth,
-                                        desktopModeComboBox.implicitWidth,
-                                        activitiesModeComboBox.implicitWidth,
-                                        multiScreenModeComboBox.implicitWidth,
-                                        minimizedModeComboBox.implicitWidth)
+        Layout.preferredWidth: Math.max(switchingModeComboBox.implicitWidth, desktopModeComboBox.implicitWidth, activitiesModeComboBox.implicitWidth, multiScreenModeComboBox.implicitWidth, minimizedModeComboBox.implicitWidth)
 
         // NOTE: Must match enums in tabbox/tabboxconfig.h
-        model: [i18nc("@item:inlistbox 'Sort windows by:'", "Recently used" ),
-                i18nc("@item:inlistbox 'Sort windows by:'", "Stacking order")]
+        model: [i18nc("@item:inlistbox 'Sort windows by:'", "Recently used"), i18nc("@item:inlistbox 'Sort windows by:'", "Stacking order")]
 
         currentIndex: root.tabBoxSettings.switchingMode
         onActivated: root.tabBoxSettings.switchingMode = currentIndex
@@ -163,16 +158,10 @@ Kirigami.FormLayout {
         id: desktopModeComboBox
         Kirigami.FormData.label: i18nc("As in, 'Show windows: From all desktops'", "Show windows:")
 
-        Layout.preferredWidth: Math.max(switchingModeComboBox.implicitWidth,
-                                        desktopModeComboBox.implicitWidth,
-                                        activitiesModeComboBox.implicitWidth,
-                                        multiScreenModeComboBox.implicitWidth,
-                                        minimizedModeComboBox.implicitWidth)
+        Layout.preferredWidth: Math.max(switchingModeComboBox.implicitWidth, desktopModeComboBox.implicitWidth, activitiesModeComboBox.implicitWidth, multiScreenModeComboBox.implicitWidth, minimizedModeComboBox.implicitWidth)
 
         // NOTE: Must match enums in tabbox/tabboxconfig.h
-        model: [i18nc("@item:inlistbox 'Show windows:'", "From all desktops"       ),
-                i18nc("@item:inlistbox 'Show windows:'", "From the current desktop"),
-                i18nc("@item:inlistbox 'Show windows:'", "From all other desktops" )]
+        model: [i18nc("@item:inlistbox 'Show windows:'", "From all desktops"), i18nc("@item:inlistbox 'Show windows:'", "From the current desktop"), i18nc("@item:inlistbox 'Show windows:'", "From all other desktops")]
 
         currentIndex: root.tabBoxSettings.desktopMode
         onActivated: root.tabBoxSettings.desktopMode = currentIndex
@@ -186,16 +175,10 @@ Kirigami.FormLayout {
     QQC2.ComboBox {
         id: activitiesModeComboBox
 
-        Layout.preferredWidth: Math.max(switchingModeComboBox.implicitWidth,
-                                        desktopModeComboBox.implicitWidth,
-                                        activitiesModeComboBox.implicitWidth,
-                                        multiScreenModeComboBox.implicitWidth,
-                                        minimizedModeComboBox.implicitWidth)
+        Layout.preferredWidth: Math.max(switchingModeComboBox.implicitWidth, desktopModeComboBox.implicitWidth, activitiesModeComboBox.implicitWidth, multiScreenModeComboBox.implicitWidth, minimizedModeComboBox.implicitWidth)
 
         // NOTE: Must match enums in tabbox/tabboxconfig.h
-        model: [i18nc("@item:inlistbox 'Show windows:'", "From all activities"      ),
-                i18nc("@item:inlistbox 'Show windows:'", "From the current activity"),
-                i18nc("@item:inlistbox 'Show windows:'", "From all other activities")]
+        model: [i18nc("@item:inlistbox 'Show windows:'", "From all activities"), i18nc("@item:inlistbox 'Show windows:'", "From the current activity"), i18nc("@item:inlistbox 'Show windows:'", "From all other activities"),]
 
         currentIndex: root.tabBoxSettings.activitiesMode
         onActivated: root.tabBoxSettings.activitiesMode = currentIndex
@@ -209,16 +192,10 @@ Kirigami.FormLayout {
     QQC2.ComboBox {
         id: multiScreenModeComboBox
 
-        Layout.preferredWidth: Math.max(switchingModeComboBox.implicitWidth,
-                                        desktopModeComboBox.implicitWidth,
-                                        activitiesModeComboBox.implicitWidth,
-                                        multiScreenModeComboBox.implicitWidth,
-                                        minimizedModeComboBox.implicitWidth)
+        Layout.preferredWidth: Math.max(switchingModeComboBox.implicitWidth, desktopModeComboBox.implicitWidth, activitiesModeComboBox.implicitWidth, multiScreenModeComboBox.implicitWidth, minimizedModeComboBox.implicitWidth)
 
         // NOTE: Must match enums in tabbox/tabboxconfig.h
-        model: [i18nc("@item:inlistbox 'Show windows:'", "From all screens"       ),
-                i18nc("@item:inlistbox 'Show windows:'", "From the current screen"),
-                i18nc("@item:inlistbox 'Show windows:'", "From all other screens" )]
+        model: [i18nc("@item:inlistbox 'Show windows:'", "From all screens"), i18nc("@item:inlistbox 'Show windows:'", "From the current screen"), i18nc("@item:inlistbox 'Show windows:'", "From all other screens")]
 
         currentIndex: root.tabBoxSettings.multiScreenMode
         onActivated: root.tabBoxSettings.multiScreenMode = currentIndex
@@ -232,16 +209,10 @@ Kirigami.FormLayout {
     QQC2.ComboBox {
         id: minimizedModeComboBox
 
-        Layout.preferredWidth: Math.max(switchingModeComboBox.implicitWidth,
-                                        desktopModeComboBox.implicitWidth,
-                                        activitiesModeComboBox.implicitWidth,
-                                        multiScreenModeComboBox.implicitWidth,
-                                        minimizedModeComboBox.implicitWidth)
+        Layout.preferredWidth: Math.max(switchingModeComboBox.implicitWidth, desktopModeComboBox.implicitWidth, activitiesModeComboBox.implicitWidth, multiScreenModeComboBox.implicitWidth, minimizedModeComboBox.implicitWidth)
 
         // NOTE: Must match enums in tabbox/tabboxconfig.h
-        model: [i18nc("@item:inlistbox 'Show windows:'", "Regardless of minimization state"),
-                i18nc("@item:inlistbox 'Show windows:'", "That are unminimized"  ),
-                i18nc("@item:inlistbox 'Show windows:'", "That are minimized"    )]
+        model: [i18nc("@item:inlistbox 'Show windows:'", "Regardless of minimization state"), i18nc("@item:inlistbox 'Show windows:'", "That are unminimized"), i18nc("@item:inlistbox 'Show windows:'", "That are minimized")]
 
         currentIndex: root.tabBoxSettings.minimizedMode
         onActivated: root.tabBoxSettings.minimizedMode = currentIndex
