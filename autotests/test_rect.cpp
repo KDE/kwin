@@ -123,6 +123,7 @@ private Q_SLOTS:
     void span_data();
     void span();
     void implicitConversions();
+    void gadgetProperties();
 };
 
 void TestRect::equals_data()
@@ -1395,6 +1396,24 @@ void TestRect::implicitConversions()
         qrect &= Rect(1, 1, 3, 3);
         QCOMPARE(qrect, QRect(1, 1, 2, 2));
     }
+}
+
+void TestRect::gadgetProperties()
+{
+    const Rect rect(1, 2, 3, 4);
+    const auto read = [&rect](const char *name) {
+        const QMetaObject &metaObject = Rect::staticMetaObject;
+        return metaObject.property(metaObject.indexOfProperty(name)).readOnGadget(&rect).value<int>();
+    };
+
+    QCOMPARE(read("x"), 1);
+    QCOMPARE(read("y"), 2);
+    QCOMPARE(read("width"), 3);
+    QCOMPARE(read("height"), 4);
+    QCOMPARE(read("left"), 1);
+    QCOMPARE(read("top"), 2);
+    QCOMPARE(read("right"), 4);
+    QCOMPARE(read("bottom"), 6);
 }
 
 QTEST_MAIN(TestRect)

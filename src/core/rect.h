@@ -59,6 +59,34 @@ class KWIN_EXPORT Rect
      */
     Q_PROPERTY(int height READ height WRITE setHeight)
 
+    /*!
+     * \property KWin::Rect::left
+     *
+     * The x coordinate of the left edge
+     */
+    Q_PROPERTY(int left READ left)
+
+    /*!
+     * \property KWin::Rect::top
+     *
+     * The y coordinate of the top edge
+     */
+    Q_PROPERTY(int top READ top)
+
+    /*!
+     * \property KWin::Rect::right
+     *
+     * The x coordinate of the right edge, equal to \c{x + width}
+     */
+    Q_PROPERTY(int right READ right)
+
+    /*!
+     * \property KWin::Rect::bottom
+     *
+     * The y coordinate of the bottom edge, equal to \c{y + height}
+     */
+    Q_PROPERTY(int bottom READ bottom)
+
 public:
     /*!
      * Constructs an empty rectangle.
@@ -719,6 +747,34 @@ class KWIN_EXPORT RectF
      * The height of the rectangle
      */
     Q_PROPERTY(qreal height READ height WRITE setHeight)
+
+    /*!
+     * \property KWin::RectF::left
+     *
+     * The x coordinate of the left edge
+     */
+    Q_PROPERTY(qreal left READ left)
+
+    /*!
+     * \property KWin::RectF::top
+     *
+     * The y coordinate of the top edge
+     */
+    Q_PROPERTY(qreal top READ top)
+
+    /*!
+     * \property KWin::RectF::right
+     *
+     * The x coordinate of the right edge, equal to \c{x + width}
+     */
+    Q_PROPERTY(qreal right READ right)
+
+    /*!
+     * \property KWin::RectF::bottom
+     *
+     * The y coordinate of the bottom edge, equal to \c{y + height}
+     */
+    Q_PROPERTY(qreal bottom READ bottom)
 
 public:
     /*!
