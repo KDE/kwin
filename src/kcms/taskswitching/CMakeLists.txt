@@ -1,13 +1,15 @@
+# SPDX-FileCopyrightText: 2025 Oliver Beard <olib141@outlook.com>
+# SPDX-FileCopyrightText: 2026 Tobias Fella <tobias.fella@kde.org>
+# SPDX-License-Identifier: BSD-2-Clause
+
 add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kwin_taskswitching\")
 
-set(kcm_kwin_taskswitching_PART_SRCS
+kcmutils_add_qml_kcm(kcm_kwin_taskswitching SOURCES
     ${CMAKE_SOURCE_DIR}/src/tabbox/tabboxconfig.cpp
     kcm.cpp
     taskswitchingdata.cpp
     tabboxlayoutsmodel.cpp
 )
-
-kcmutils_add_qml_kcm(kcm_kwin_taskswitching SOURCES ${kcm_kwin_taskswitching_PART_SRCS})
 
 kconfig_target_kcfg_file(kcm_kwin_taskswitching
     FILE tabboxsettings.kcfg
