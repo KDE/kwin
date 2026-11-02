@@ -195,35 +195,44 @@
       <bool>false</bool>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Less</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QSlider" name="kcfg_WobblynessLevel">
-        <property name="minimumSize">
-         <size>
-          <width>120</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximum">
-         <number>4</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>More</string>
-        </property>
-       </widget>
+      <item row="0" column="0" colspan="3">
+        <widget class="QComboBox" name="kcfg_WobblynessLevel">
+          <item>
+            <property name="text">
+              <string>Cloth</string>
+            </property>
+          </item>
+          <item>
+            <property name="text">
+              <string>Gelatin</string>
+            </property>
+          </item>
+          <item>
+            <property name="text">
+              <string>Water</string>
+            </property>
+          </item>
+          <item>
+            <property name="text">
+              <string>Pudding</string>
+            </property>
+          </item>
+          <item>
+            <property name="text">
+              <string>Molasses</string>
+            </property>
+          </item>
+          <item>
+            <property name="text">
+              <string>Nitroglycerin</string>
+            </property>
+          </item>
+          <item>
+            <property name="text">
+              <string>Custom</string>
+            </property>
+          </item>
+        </widget>
       </item>
       <item row="1" column="1">
        <spacer name="verticalSpacer_2">

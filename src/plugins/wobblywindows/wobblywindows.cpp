@@ -48,65 +48,9 @@ struct ParameterSet
     qreal stopAcceleration;
 };
 
-static const ParameterSet set_0 = {
-    0.15,
-    0.80,
-    0.10,
-    20.0,
-    20.0,
-    0.0,
-    1000.0,
-    0.5,
-    0.0,
-    1000.0,
-    0.5,
-};
-
-static const ParameterSet set_1 = {
-    0.10,
-    0.85,
-    0.10,
-    20.0,
-    20.0,
-    0.0,
-    1000.0,
-    0.5,
-    0.0,
-    1000.0,
-    0.5,
-};
-
-static const ParameterSet set_2 = {
-    0.06,
-    0.90,
-    0.10,
-    20.0,
-    20.0,
-    0.0,
-    1000.0,
-    0.5,
-    0.0,
-    1000.0,
-    0.5,
-};
-
-static const ParameterSet set_3 = {
-    0.03,
-    0.92,
-    0.20,
-    20.0,
-    20.0,
-    0.0,
-    1000.0,
-    0.5,
-    0.0,
-    1000.0,
-    0.5,
-};
-
-static const ParameterSet set_4 = {
-    0.01,
-    0.97,
+static const ParameterSet cloth = {
+    0.16,
+    0.50,
     0.25,
     20.0,
     20.0,
@@ -118,7 +62,77 @@ static const ParameterSet set_4 = {
     0.5,
 };
 
-static const ParameterSet pset[5] = {set_0, set_1, set_2, set_3, set_4};
+static const ParameterSet gelatin = {
+    0.20,
+    0.90,
+    0.25,
+    20.0,
+    20.0,
+    0.0,
+    1000.0,
+    0.5,
+    0.0,
+    1000.0,
+    0.5,
+};
+
+static const ParameterSet water = {
+    0.02,
+    0.88,
+    0.18,
+    20.0,
+    20.0,
+    0.0,
+    1000.0,
+    0.5,
+    0.0,
+    1000.0,
+    0.5,
+};
+
+static const ParameterSet pudding = {
+    0.10,
+    0.98,
+    0.8,
+    20.0,
+    20.0,
+    0.0,
+    1000.0,
+    0.5,
+    0.0,
+    1000.0,
+    0.5,
+};
+
+static const ParameterSet molasses = {
+    0.04,
+    0.71,
+    0.13,
+    20.0,
+    20.0,
+    0.0,
+    1000.0,
+    0.5,
+    0.0,
+    1000.0,
+    0.5,
+};
+
+static const ParameterSet nitroglycerin = {
+    0.44,
+    0.96,
+    0.18,
+    20.0,
+    20.0,
+    0.0,
+    1000.0,
+    0.5,
+    0.0,
+    1000.0,
+    0.5,
+};
+
+static const std::array pset = {cloth, gelatin, water, pudding, molasses, nitroglycerin};
 
 WobblyWindowsEffect::WobblyWindowsEffect()
 {
@@ -147,9 +161,9 @@ void WobblyWindowsEffect::reconfigure(ReconfigureFlags)
     QString settingsMode = WobblyWindowsConfig::settings();
     if (settingsMode != QStringLiteral("Custom")) {
         unsigned int wobblynessLevel = WobblyWindowsConfig::wobblynessLevel();
-        if (wobblynessLevel > 4) {
+        if (wobblynessLevel >= pset.size()) {
             qCDebug(KWIN_WOBBLYWINDOWS) << "Wrong value for \"WobblynessLevel\" : " << wobblynessLevel;
-            wobblynessLevel = 4;
+            wobblynessLevel = pset.size() - 1;
         }
         setParameterSet(pset[wobblynessLevel]);
 
