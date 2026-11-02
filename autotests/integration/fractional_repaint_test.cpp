@@ -78,7 +78,7 @@ void FractionalRepaintTest::testBottomRow()
 
     QImage img(QSize(1080, 2280), QImage::Format::Format_RGBA8888_Premultiplied);
     img.fill(Qt::red);
-    QCOMPARE(layer->texture()->toImage(), img);
+    QCOMPARE(layer->download(), img);
 
     // maximize the window
     window.m_window->maximize(MaximizeMode::MaximizeFull);
@@ -90,7 +90,7 @@ void FractionalRepaintTest::testBottomRow()
     for (int i = 0; i < img.width(); i++) {
         img.setPixel(i, 2279, qRgba(0, 0, 0, 255));
     }
-    QCOMPARE(layer->texture()->toImage(), img);
+    QCOMPARE(layer->download(), img);
 }
 
 }

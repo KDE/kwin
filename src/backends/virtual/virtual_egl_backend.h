@@ -22,14 +22,12 @@ class SwapchainSlot;
 class Swapchain;
 class GraphicsBufferAllocator;
 class VirtualBackend;
-class GLFramebuffer;
-class GLTexture;
 class VirtualEglBackend;
 
 class KWIN_EXPORT VirtualEglLayer : public OutputLayer
 {
 public:
-    VirtualEglLayer(BackendOutput *output, VirtualEglBackend *backend);
+    VirtualEglLayer(BackendOutput *output, RenderBackend *backend);
     ~VirtualEglLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
@@ -38,10 +36,10 @@ public:
     FormatModifierMap supportedDrmFormats() const override;
     void releaseBuffers() override;
 
-    GLTexture *texture() const;
+    QImage download() const;
 
 private:
-    VirtualEglBackend *const m_backend;
+    RenderBackend *const m_backend;
     std::shared_ptr<Swapchain> m_swapchain;
     std::shared_ptr<SwapchainSlot> m_current;
     DamageJournal m_damageJournal;
