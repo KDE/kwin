@@ -82,7 +82,7 @@ Kirigami.FormLayout {
     }
 
     QQC2.CheckBox {
-        Kirigami.FormData.label: i18n("Selecting a window:")
+        Kirigami.FormData.label: i18nc("@label", "Selecting a window:")
 
         text: i18nc("@option:check", "Hides other windows")
 
@@ -121,7 +121,7 @@ Kirigami.FormLayout {
 
     QQC2.ComboBox {
         id: switchingModeComboBox
-        Kirigami.FormData.label: i18n("Sort windows by:")
+        Kirigami.FormData.label: i18nc("@label", "Sort windows by:")
 
         Layout.preferredWidth: Math.max(switchingModeComboBox.implicitWidth, desktopModeComboBox.implicitWidth, activitiesModeComboBox.implicitWidth, multiScreenModeComboBox.implicitWidth, minimizedModeComboBox.implicitWidth)
 
@@ -245,7 +245,7 @@ Kirigami.FormLayout {
     }
 
     QQC2.Button {
-        text: i18n("Configure Shortcuts…")
+        text: i18nc("@action:button", "Configure Shortcuts…")
         icon.name: "preferences-desktop-keyboard-shortcut"
         onClicked: kcm.configureTabBoxShortcuts(root.isAlternative)
     }
