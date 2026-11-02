@@ -9,13 +9,23 @@
 
 #include "systembell.h"
 
+#include "config-kwin.h"
 #include "effect/effecthandler.h"
+#include "main.h"
 #include "opengl/glshader.h"
 #include "opengl/glshadermanager.h"
 #include "wayland/surface.h"
 #include "wayland/xdgsystembell_v1.h"
 #include "wayland_server.h"
 #include "window.h"
+
+#if KWIN_BUILD_X11
+#include "utils/xcbutils.h"
+#include "x11eventfilter.h"
+#define explicit dont_use_cxx_explicit
+#include <xcb/xkb.h>
+#undef explicit
+#endif
 
 #include <QDBusConnection>
 #include <QFile>
@@ -38,6 +48,103 @@ static void ensureResources()
 
 namespace KWin
 {
+
+#if KWIN_BUILD_X11
+class XkbBellFilter : public X11EventFilter
+{
+public:
+    XkbBellFilter(int event, SystemBellEffect *systemBell)
+        : X11EventFilter(event)
+        , m_systemBell(systemBell)
+    {
+    }
+
+    bool event(xcb_generic_event_t *event) override
+    {
+        auto bellEvent = reinterpret_cast<xcb_xkb_bell_notify_event_t *>(event);
+        if (bellEvent->xkbType != XCB_XKB_BELL_NOTIFY) {
+            return false;
+        }
+        if (auto window = effects->findWindow(bellEvent->window)) {
+            m_systemBell->triggerWindow(window);
+        } else if (effects->activeWindow()->isX11Client()) {
+            m_systemBell->triggerWindow();
+        }
+        return false;
+    }
+
+private:
+    SystemBellEffect *const m_systemBell;
+};
+
+struct xcb_xkb_set_controls_params
+{
+    xcb_xkb_device_spec_t deviceSpec = XCB_XKB_ID_USE_CORE_KBD;
+    uint8_t affectInternalRealMods = 0;
+    uint8_t internalRealMods = 0;
+    uint8_t affectIgnoreLockRealMods = 0;
+    uint8_t ignoreLockRealMods = 0;
+    uint16_t affectInternalVirtualMods = 0;
+    uint16_t internalVirtualMods = 0;
+    uint16_t affectIgnoreLockVirtualMods = 0;
+    uint16_t ignoreLockVirtualMods = 0;
+    uint8_t mouseKeysDfltBtn = 0;
+    uint8_t groupsWrap = 0;
+    uint16_t accessXOptions = 0;
+    uint32_t affectEnabledControls = 0;
+    uint32_t enabledControls = 0;
+    uint32_t changeControls = 0;
+    uint16_t repeatDelay = 0;
+    uint16_t repeatInterval = 0;
+    uint16_t slowKeysDelay = 0;
+    uint16_t debounceDelay = 0;
+    uint16_t mouseKeysDelay = 0;
+    uint16_t mouseKeysInterval = 0;
+    uint16_t mouseKeysTimeToMax = 0;
+    uint16_t mouseKeysMaxSpeed = 0;
+    int16_t mouseKeysCurve = 0;
+    uint16_t accessXTimeout = 0;
+    uint32_t accessXTimeoutMask = 0;
+    uint32_t accessXTimeoutValues = 0;
+    uint16_t accessXTimeoutOptionsMask = 0;
+    uint16_t accessXTimeoutOptionsValues = 0;
+    uint8_t perKeyRepeat[32] = {};
+};
+
+xcb_void_cookie_t xcb_xkb_set_controls(xcb_connection_t *c, const xcb_xkb_set_controls_params &p)
+{
+    return xcb_xkb_set_controls(c, p.deviceSpec,
+                                p.affectInternalRealMods,
+                                p.internalRealMods,
+                                p.affectIgnoreLockRealMods,
+                                p.ignoreLockRealMods,
+                                p.affectInternalVirtualMods,
+                                p.internalVirtualMods,
+                                p.affectIgnoreLockVirtualMods,
+                                p.ignoreLockVirtualMods,
+                                p.mouseKeysDfltBtn,
+                                p.groupsWrap,
+                                p.accessXOptions,
+                                p.affectEnabledControls,
+                                p.enabledControls,
+                                p.changeControls,
+                                p.repeatDelay,
+                                p.repeatInterval,
+                                p.slowKeysDelay,
+                                p.debounceDelay,
+                                p.mouseKeysDelay,
+                                p.mouseKeysInterval,
+                                p.mouseKeysTimeToMax,
+                                p.mouseKeysMaxSpeed,
+                                p.mouseKeysCurve,
+                                p.accessXTimeout,
+                                p.accessXTimeoutMask,
+                                p.accessXTimeoutValues,
+                                p.accessXTimeoutOptionsMask,
+                                p.accessXTimeoutOptionsValues, p.perKeyRepeat);
+}
+
+#endif
 
 QTimer *SystemBellEffect::s_systemBellRemoveTimer = nullptr;
 XdgSystemBellV1Interface *SystemBellEffect::s_systemBell = nullptr;
@@ -100,6 +207,26 @@ SystemBellEffect::SystemBellEffect()
             }
         });
     }
+
+#if KWIN_BUILD_X11
+    auto setupX11Filter = [this] {
+        if (auto connection = kwinApp()->x11Connection()) {
+            auto extensions = Xcb::Extensions::self();
+            if (extensions->hasXkb()) {
+                xcb_xkb_select_events(connection, XCB_XKB_ID_USE_CORE_KBD, XCB_XKB_EVENT_TYPE_BELL_NOTIFY, 0, XCB_XKB_EVENT_TYPE_BELL_NOTIFY, 0, 0, nullptr);
+                xcb_xkb_set_controls(connection, {
+                                                     .affectEnabledControls = XCB_XKB_BOOL_CTRL_AUDIBLE_BELL_MASK,
+                                                     .enabledControls = XCB_XKB_BOOL_CTRL_AUDIBLE_BELL_MASK,
+                                                 });
+                m_xkbBellFilter = std::make_unique<XkbBellFilter>(extensions->xkbEvent(), this);
+            }
+        } else {
+            m_xkbBellFilter.reset();
+        }
+    };
+    connect(kwinApp(), &Application::x11ConnectionChanged, this, setupX11Filter);
+    setupX11Filter();
+#endif
 
     m_audioThrottleTimer.setInterval(100ms);
     m_audioThrottleTimer.setSingleShot(true);

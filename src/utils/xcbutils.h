@@ -1474,6 +1474,11 @@ public:
     {
         return m_res.present;
     }
+    bool hasXkb() const
+    {
+        return m_xkb.present;
+    }
+    int xkbEvent() const;
 
     static Extensions *self();
     static void destroy();
@@ -1493,6 +1498,7 @@ private:
     ExtensionData m_render;
     ExtensionData m_fixes;
     ExtensionData m_sync;
+    ExtensionData m_xkb;
 
     static Extensions *s_self;
 };

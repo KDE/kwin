@@ -12,3 +12,7 @@ target_link_libraries(systembell PRIVATE
     KF6::I18n
     Canberra::Canberra
 )
+
+if (KWIN_BUILD_X11)
+    target_link_libraries(systembell PRIVATE XCB::XKB)
+endif()

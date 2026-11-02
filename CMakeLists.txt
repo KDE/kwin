@@ -270,6 +270,7 @@ if (KWIN_BUILD_X11)
         XFIXES
         XINERAMA
         XINPUT
+        XKB
     )
     set_package_properties(XCB PROPERTIES TYPE REQUIRED)
 
