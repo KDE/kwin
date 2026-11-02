@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2022 Marco Martin <mart@kde.org>
+    SPDX-FileCopyrightText: 2026 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -540,6 +541,8 @@ QList<KWin::Window *> Tile::windows() const
 
 void Tile::insertChild(int position, Tile *item)
 {
+    Q_EMIT aboutToInsertChildTile(item, position);
+
     Q_ASSERT(position >= 0);
     const bool wasEmpty = m_children.isEmpty();
     item->setParent(this);
@@ -558,6 +561,7 @@ void Tile::insertChild(int position, Tile *item)
         }
     }
 
+    Q_EMIT childTileInserted();
     Q_EMIT childTilesChanged();
 }
 
@@ -569,6 +573,8 @@ void Tile::destroyChild(Tile *tile)
 
 void Tile::removeChild(Tile *child)
 {
+    Q_EMIT aboutToRemoveChildTile(child);
+
     const bool wasEmpty = m_children.isEmpty();
     const int idx = m_children.indexOf(child);
     m_children.removeAll(child);
@@ -580,6 +586,8 @@ void Tile::removeChild(Tile *child)
             Q_EMIT m_children[i]->rowChanged(i);
         }
     }
+
+    Q_EMIT childTileRemoved();
     Q_EMIT childTilesChanged();
 }
 

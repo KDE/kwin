@@ -11,12 +11,10 @@
 
 #include "customtile.h"
 #include "quicktile.h"
-#include "scripting/tilemodel.h"
 #include "tile.h"
 #include "utils/common.h"
 #include <kwin_export.h>
 
-#include <QAbstractItemModel>
 #include <QObject>
 
 #include <QJsonValue>
@@ -28,7 +26,6 @@ namespace KWin
 
 class LogicalOutput;
 class Tile;
-class TileModel;
 
 /**
  * Custom tiling zones management per output.
@@ -39,7 +36,6 @@ class KWIN_EXPORT TileManager : public QObject
     QML_ANONYMOUS
 
     Q_PROPERTY(KWin::Tile *rootTile READ rootTile NOTIFY rootTileChanged)
-    Q_PROPERTY(TileModel *model READ model NOTIFY modelChanged)
 
 public:
     explicit TileManager(LogicalOutput *parent = nullptr);
@@ -56,15 +52,12 @@ public:
     QuickRootTile *quickRootTile() const;
     KWin::Tile *quickTile(QuickTileMode mode) const;
 
-    TileModel *model() const;
-
     Tile *tileForWindow(Window *window, VirtualDesktop *desktop);
     void forgetWindow(Window *window, VirtualDesktop *desktop);
 
 Q_SIGNALS:
     void tileRemoved(KWin::Tile *tile);
     void rootTileChanged(KWin::CustomTile *rootTile);
-    void modelChanged(KWin::TileModel *model);
 
 private:
     void readSettings(RootTile *rootTile);

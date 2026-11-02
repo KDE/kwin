@@ -121,7 +121,9 @@ FocusScope {
         Repeater {
             id: tilesRepeater
             model: KitemModels.KDescendantsProxyModel {
-                model: rootTile.model
+                model: KWinComponents.TileModel {
+                    tile: rootTile
+                }
             }
             delegate: TileDelegate {}
         }

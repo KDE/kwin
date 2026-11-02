@@ -8,29 +8,47 @@
 */
 
 #include "tilemodel.h"
-#include "tiles/tilemanager.h"
-#include "workspace.h"
-
-#include <KConfigGroup>
-#include <KLocalizedString>
-#include <KSharedConfig>
-
-#include <QJsonArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QTimer>
+#include "tiles/tile.h"
 
 namespace KWin
 {
 
-TileModel::TileModel(Tile *parent)
+TileModel::TileModel(QObject *parent)
     : QAbstractItemModel(parent)
-    , m_rootTile(parent)
 {
 }
 
-TileModel::~TileModel()
+Tile *TileModel::tile() const
 {
+    return m_rootTile;
+}
+
+void TileModel::setTile(Tile *tile)
+{
+    if (m_rootTile == tile) {
+        return;
+    }
+
+    beginResetModel();
+
+    if (m_rootTile) {
+        unwatchTree(m_rootTile);
+    }
+
+    m_rootTile = tile;
+
+    if (m_rootTile) {
+        watchTree(m_rootTile);
+    }
+
+    endResetModel();
+
+    Q_EMIT tileChanged();
+}
+
+Tile *TileModel::tileFromModelIndex(const QModelIndex &index) const
+{
+    return static_cast<Tile *>(index.internalPointer());
 }
 
 QHash<int, QByteArray> TileModel::roleNames() const
@@ -47,7 +65,7 @@ QVariant TileModel::data(const QModelIndex &index, int role) const
     }
 
     if (role == TileRole) {
-        return QVariant::fromValue(static_cast<CustomTile *>(index.internalPointer()));
+        return QVariant::fromValue(tileFromModelIndex(index));
     }
 
     return QVariant();
@@ -68,15 +86,18 @@ QModelIndex TileModel::index(int row, int column, const QModelIndex &parent) con
         return QModelIndex();
     }
 
-    CustomTile *parentItem;
+    Tile *parentItem;
 
     if (!parent.isValid()) {
-        parentItem = static_cast<CustomTile *>(m_rootTile);
+        if (!m_rootTile) {
+            return QModelIndex();
+        }
+        parentItem = m_rootTile;
     } else {
-        parentItem = static_cast<CustomTile *>(parent.internalPointer());
+        parentItem = static_cast<Tile *>(parent.internalPointer());
     }
 
-    CustomTile *childItem = static_cast<CustomTile *>(parentItem->childTile(row));
+    Tile *childItem = parentItem->childTile(row);
     if (childItem) {
         return createIndex(row, column, childItem);
     }
@@ -89,10 +110,10 @@ QModelIndex TileModel::parent(const QModelIndex &index) const
         return QModelIndex();
     }
 
-    CustomTile *childItem = static_cast<CustomTile *>(index.internalPointer());
-    CustomTile *parentItem = static_cast<CustomTile *>(childItem->parentTile());
+    const Tile *childItem = tileFromModelIndex(index);
+    const Tile *parentItem = childItem->parentTile();
 
-    if (!parentItem || parentItem == static_cast<CustomTile *>(m_rootTile)) {
+    if (!parentItem || parentItem == m_rootTile) {
         return QModelIndex();
     }
 
@@ -102,14 +123,14 @@ QModelIndex TileModel::parent(const QModelIndex &index) const
 int TileModel::rowCount(const QModelIndex &parent) const
 {
     Tile *parentItem;
-    if (parent.column() > 0) {
+    if (parent.column() > 0 || !m_rootTile) {
         return 0;
     }
 
     if (!parent.isValid()) {
-        parentItem = static_cast<CustomTile *>(m_rootTile);
+        parentItem = m_rootTile;
     } else {
-        parentItem = static_cast<CustomTile *>(parent.internalPointer());
+        parentItem = static_cast<Tile *>(parent.internalPointer());
     }
 
     return parentItem->childCount();
@@ -120,10 +141,12 @@ int TileModel::columnCount(const QModelIndex &parent) const
     return 1;
 }
 
-void TileModel::beginInsertTile(CustomTile *tile, int position)
+void TileModel::beginInsertTile(Tile *tile, int position)
 {
+    watchTree(tile);
+
     Q_ASSERT(position >= 0);
-    CustomTile *parentTile = static_cast<CustomTile *>(tile->parentTile());
+    Tile *parentTile = static_cast<Tile *>(tile->parentTile());
     Q_ASSERT(parentTile);
 
     auto index = parentTile == tile->rootTile() ? QModelIndex() : createIndex(parentTile->row(), 0, parentTile);
@@ -137,21 +160,58 @@ void TileModel::endInsertTile()
     endInsertRows();
 }
 
-void TileModel::beginRemoveTile(CustomTile *tile)
+void TileModel::beginRemoveTile(Tile *tile)
 {
-    const auto parentTile = static_cast<CustomTile *>(tile->parentTile());
+    const auto parentTile = static_cast<Tile *>(tile->parentTile());
     if (!parentTile) {
-        qCWarning(KWIN_CORE) << "Can't remove the root tile";
         return;
     }
 
-    QModelIndex parentIndex = parentTile == static_cast<CustomTile *>(m_rootTile) ? QModelIndex() : createIndex(parentTile->row(), 0, parentTile);
+    unwatchTree(tile);
+
+    QModelIndex parentIndex = parentTile == static_cast<Tile *>(m_rootTile) ? QModelIndex() : createIndex(parentTile->row(), 0, parentTile);
     beginRemoveRows(parentIndex, tile->row(), tile->row());
 }
 
 void TileModel::endRemoveTile()
 {
     endRemoveRows();
+}
+
+void TileModel::watch(Tile *tile)
+{
+    connect(tile, &Tile::aboutToInsertChildTile, this, &TileModel::beginInsertTile);
+    connect(tile, &Tile::childTileInserted, this, &TileModel::endInsertTile);
+
+    connect(tile, &Tile::aboutToRemoveChildTile, this, &TileModel::beginRemoveTile);
+    connect(tile, &Tile::childTileRemoved, this, &TileModel::endRemoveTile);
+}
+
+void TileModel::watchTree(Tile *tile)
+{
+    watch(tile);
+
+    for (const auto children = tile->childTiles(); const auto &child : children) {
+        watch(child);
+    }
+}
+
+void TileModel::unwatch(Tile *tile)
+{
+    disconnect(tile, &Tile::aboutToInsertChildTile, this, &TileModel::beginInsertTile);
+    disconnect(tile, &Tile::childTileInserted, this, &TileModel::endInsertTile);
+
+    disconnect(tile, &Tile::aboutToRemoveChildTile, this, &TileModel::beginRemoveTile);
+    disconnect(tile, &Tile::childTileRemoved, this, &TileModel::endRemoveTile);
+}
+
+void TileModel::unwatchTree(Tile *tile)
+{
+    unwatch(tile);
+
+    for (const auto children = tile->childTiles(); const auto &child : children) {
+        unwatch(child);
+    }
 }
 
 } // namespace KWin
