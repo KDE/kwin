@@ -117,7 +117,7 @@ QVariant TabBoxLayoutsModel::data(const QModelIndex &index, int role) const
         return {};
     }
 
-    const LayoutData data = m_layouts.at(index.row());
+    const auto &data = m_layouts.at(index.row());
     switch (role) {
     case NameRole:
         return data.name;

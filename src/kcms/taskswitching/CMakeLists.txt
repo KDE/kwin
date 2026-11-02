@@ -1,7 +1,7 @@
 add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kwin_taskswitching\")
 
 set(kcm_kwin_taskswitching_PART_SRCS
-    ${KWin_SOURCE_DIR}/src/tabbox/tabboxconfig.cpp
+    ${CMAKE_SOURCE_DIR}/src/tabbox/tabboxconfig.cpp
     kcm.cpp
     taskswitchingdata.cpp
     tabboxlayoutsmodel.cpp
