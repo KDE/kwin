@@ -20,23 +20,24 @@
 namespace KWin
 {
 
-X11WindowedEglPrimaryLayer::X11WindowedEglPrimaryLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output)
+X11WindowedPrimaryLayer::X11WindowedPrimaryLayer(X11WindowedBackend *outputBackend, RenderBackend *renderBackend, X11WindowedOutput *output)
     : OutputLayer(output, OutputLayerType::Primary)
     , m_output(output)
-    , m_backend(backend)
+    , m_outputBackend(outputBackend)
+    , m_renderBackend(renderBackend)
 {
 }
 
-X11WindowedEglPrimaryLayer::~X11WindowedEglPrimaryLayer()
+X11WindowedPrimaryLayer::~X11WindowedPrimaryLayer()
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(OutputFrame *frame)
+std::optional<OutputLayerBeginFrameInfo> X11WindowedPrimaryLayer::beginFrame(OutputFrame *frame)
 {
     const QSize bufferSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
         const uint32_t format = DRM_FORMAT_XRGB8888;
-        const FormatModifierMap formatTable = m_backend->backend()->driFormats();
+        const FormatModifierMap formatTable = m_outputBackend->driFormats();
         if (!formatTable.contains(format)) {
             return std::nullopt;
         }
@@ -47,7 +48,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
             .software = false,
             .scanout = false,
         };
-        m_swapchain = Swapchain::create(m_backend->renderDevice()->allocator(), options);
+        m_swapchain = Swapchain::create(m_renderBackend->renderDevice()->allocator(), options);
         if (!m_swapchain) {
             return std::nullopt;
         }
@@ -67,47 +68,48 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
     };
 }
 
-bool X11WindowedEglPrimaryLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
+bool X11WindowedPrimaryLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
     m_swapchain->release(m_buffer.get(), std::move(sync));
     m_output->setPrimaryBuffer(m_buffer->buffer());
     return true;
 }
 
-FormatModifierMap X11WindowedEglPrimaryLayer::supportedDrmFormats() const
+FormatModifierMap X11WindowedPrimaryLayer::supportedDrmFormats() const
 {
-    return m_backend->backend()->driFormats();
+    return m_outputBackend->driFormats();
 }
 
-void X11WindowedEglPrimaryLayer::releaseBuffers()
+void X11WindowedPrimaryLayer::releaseBuffers()
 {
     m_buffer.reset();
     m_swapchain.reset();
 }
 
-X11WindowedEglCursorLayer::X11WindowedEglCursorLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output)
+X11WindowedCursorLayer::X11WindowedCursorLayer(X11WindowedBackend *outputBackend, RenderBackend *renderBackend, X11WindowedOutput *output)
     : OutputLayer(output, OutputLayerType::CursorOnly)
-    , m_backend(backend)
+    , m_outputBackend(outputBackend)
+    , m_renderBackend(renderBackend)
 {
 }
 
-X11WindowedEglCursorLayer::~X11WindowedEglCursorLayer()
+X11WindowedCursorLayer::~X11WindowedCursorLayer()
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame(OutputFrame *frame)
+std::optional<OutputLayerBeginFrameInfo> X11WindowedCursorLayer::beginFrame(OutputFrame *frame)
 {
     const auto bufferSize = targetRect().size();
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
         GraphicsBufferOptions options{
             .size = bufferSize,
             .format = DRM_FORMAT_ARGB8888,
-            .modifiers = m_backend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats()[DRM_FORMAT_ARGB8888],
+            .modifiers = m_renderBackend->supportedFormats()[DRM_FORMAT_ARGB8888],
             .software = false,
             .scanout = false,
             .render = true,
         };
-        m_swapchain = Swapchain::create(m_backend->renderDevice()->allocator(), options);
+        m_swapchain = Swapchain::create(m_renderBackend->renderDevice()->allocator(), options);
         if (!m_swapchain) {
             return std::nullopt;
         }
@@ -124,9 +126,9 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame(O
     };
 }
 
-bool X11WindowedEglCursorLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
+bool X11WindowedCursorLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
-    const QImage buffer = m_backend->renderDevice()->download(m_slot->buffer());
+    const QImage buffer = m_renderBackend->renderDevice()->download(m_slot->buffer());
     m_slot.reset();
     if (buffer.isNull()) {
         return false;
@@ -136,12 +138,12 @@ bool X11WindowedEglCursorLayer::endFrame(const Region &damagedDeviceRegion, File
     return true;
 }
 
-FormatModifierMap X11WindowedEglCursorLayer::supportedDrmFormats() const
+FormatModifierMap X11WindowedCursorLayer::supportedDrmFormats() const
 {
-    return m_backend->supportedFormats();
+    return m_renderBackend->supportedFormats();
 }
 
-void X11WindowedEglCursorLayer::releaseBuffers()
+void X11WindowedCursorLayer::releaseBuffers()
 {
 }
 
@@ -184,8 +186,8 @@ bool X11WindowedEglBackend::init()
     for (const auto &output : outputs) {
         X11WindowedOutput *x11Output = static_cast<X11WindowedOutput *>(output);
         std::vector<std::unique_ptr<OutputLayer>> layers;
-        layers.push_back(std::make_unique<X11WindowedEglPrimaryLayer>(this, x11Output));
-        layers.push_back(std::make_unique<X11WindowedEglCursorLayer>(this, x11Output));
+        layers.push_back(std::make_unique<X11WindowedPrimaryLayer>(backend(), this, x11Output));
+        layers.push_back(std::make_unique<X11WindowedCursorLayer>(backend(), this, x11Output));
         x11Output->setOutputLayers(std::move(layers));
     }
     return true;
