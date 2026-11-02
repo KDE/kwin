@@ -31,29 +31,6 @@ class WaylandBackend;
 class WaylandOutput;
 class WaylandDisplay;
 
-class WaylandEglLayer : public WaylandLayer
-{
-public:
-    WaylandEglLayer(WaylandOutput *output, RenderBackend *backend, WaylandDisplay *display, OutputLayerType type, int zpos);
-    ~WaylandEglLayer() override;
-
-    std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
-    bool endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame) override;
-    bool earlyScanoutChecks() override;
-    bool importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame) override;
-    FormatModifierMap supportedDrmFormats() const override;
-    void releaseBuffers() override;
-
-private:
-    DamageJournal m_damageJournal;
-    std::shared_ptr<Swapchain> m_swapchain;
-    std::shared_ptr<SwapchainSlot> m_buffer;
-    RenderBackend *const m_backend;
-    WaylandDisplay *const m_display;
-
-    friend class WaylandEglBackend;
-};
-
 class WaylandEglCursorLayer : public OutputLayer
 {
     Q_OBJECT
