@@ -10,7 +10,6 @@ target_sources(kwin PRIVATE
     drm_egl_backend.cpp
     drm_gpu.cpp
     drm_layer.cpp
-    drm_layer_surface.cpp
     drm_logging.cpp
     drm_object.cpp
     drm_output.cpp
