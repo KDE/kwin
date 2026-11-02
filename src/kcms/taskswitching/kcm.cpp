@@ -182,7 +182,7 @@ void TaskSwitchingKCM::configureTabBoxShortcuts(const bool showAlternative)
     dialog->addCollection(actionCollection);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->winId();
-    dialog->windowHandle()->setTransientParent(QApplication::activeWindow()->windowHandle());
+    dialog->windowHandle()->setTransientParent(QGuiApplication::focusWindow());
     dialog->setWindowModality(Qt::WindowModal);
 
     dialog->configure();
@@ -223,7 +223,7 @@ void TaskSwitchingKCM::configureOverviewShortcuts()
     dialog->addCollection(actionCollection);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->winId();
-    dialog->windowHandle()->setTransientParent(QApplication::activeWindow()->windowHandle());
+    dialog->windowHandle()->setTransientParent(QGuiApplication::focusWindow());
     dialog->setWindowModality(Qt::WindowModal);
 
     dialog->configure();

@@ -94,12 +94,12 @@ void TabBoxLayoutsModel::load()
 
 QHash<int, QByteArray> TabBoxLayoutsModel::roleNames() const
 {
-    QHash<int, QByteArray> roleNames;
-    roleNames[NameRole] = "name";
-    roleNames[DescriptionRole] = "description";
-    roleNames[PluginIdRole] = "pluginId";
-    roleNames[PathRole] = "path";
-    return roleNames;
+    return {
+        {NameRole, "name"},
+        {DescriptionRole, "description"},
+        {PluginIdRole, "pluginId"},
+        {PathRole, "path"},
+    };
 }
 
 int TabBoxLayoutsModel::rowCount(const QModelIndex &parent) const
@@ -119,7 +119,6 @@ QVariant TabBoxLayoutsModel::data(const QModelIndex &index, int role) const
 
     const LayoutData data = m_layouts.at(index.row());
     switch (role) {
-    case Qt::DisplayRole:
     case NameRole:
         return data.name;
     case DescriptionRole:
