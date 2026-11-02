@@ -11,6 +11,7 @@
 #include <KPackage/Package>
 #include <KPackage/PackageLoader>
 #include <KSharedConfig>
+#include <qnamespace.h>
 
 #include "tabboxlayoutsmodel.h"
 
@@ -83,6 +84,7 @@ void TabBoxLayoutsModel::load()
 
     // Sort
     QCollator collator;
+    collator.setCaseSensitivity(Qt::CaseInsensitive);
     std::sort(m_layouts.begin(), m_layouts.end(), [&collator](const LayoutData &a, const LayoutData &b) {
         return collator.compare(a.name, b.name) < 0;
     });
