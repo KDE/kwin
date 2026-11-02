@@ -17,10 +17,10 @@ class TabBoxLayoutsModel : public QAbstractListModel
 
 public:
     enum AdditionalRoles {
-        NameRole = Qt::UserRole + 1,
+        NameRole = Qt::DisplayRole,
         DescriptionRole,
         PluginIdRole,
-        PathRole
+        PathRole,
     };
     Q_ENUM(AdditionalRoles)
 
