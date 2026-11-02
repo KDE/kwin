@@ -28,6 +28,16 @@ class Window;
  * \qmluncreatabletype Tile
  * \inqmlmodule org.kde.kwin
  *
+ * \brief The Tile represents an area on the screen that can contain windows.
+ *
+ * A tile may contain zero, one, or more windows. When a window is placed in a tile, it will fill
+ * the entire tile.
+ *
+ * A tile may contain other tiles as children, in which case, the children sub-divide the space of
+ * the parent tile. Every screen per virtual desktop has a tile tree associated with it.
+ *
+ * There are several types of tiles: QuickTile, a quick tiling implementation detail, and CustomTile.
+ * Tiling scripts operate with CustomTile tiles.
  */
 class KWIN_EXPORT Tile : public QObject
 {
@@ -37,56 +47,83 @@ class KWIN_EXPORT Tile : public QObject
 
     /*!
      * \qmlproperty RectF Tile::relativeGeometry
+     *
+     * The geometry of the tile relative to the size of the associated output. The relative geometry
+     * is normalized. \c{relativeGeometry.width} of 1 corresponds to the width of the output.
      */
     Q_PROPERTY(KWin::RectF relativeGeometry READ relativeGeometry WRITE setRelativeGeometry NOTIFY relativeGeometryChanged)
 
     /*!
      * \qmlproperty RectF Tile::absoluteGeometry
+     *
+     * The geometry of the tile in pixels in the global coordinate space, i.e. \c{0,0} corresponds
+     * to the top-left corner of the bounding rectangle of all outputs.
      */
     Q_PROPERTY(KWin::RectF absoluteGeometry READ absoluteGeometry NOTIFY absoluteGeometryChanged)
 
     /*!
      * \qmlproperty RectF Tile::absoluteGeometryInScreen
+     *
+     * The geometry of the tile in pixels in the output-local coordinate space, i.e. \c{0,0}
+     * corresponds to the top-left corner of the output.
      */
     Q_PROPERTY(KWin::RectF absoluteGeometryInScreen READ absoluteGeometryInScreen NOTIFY absoluteGeometryChanged)
 
     /*!
      * \qmlproperty real Tile::padding
+     *
+     * The distance that should be maintained between tiles as well as away from the screen edges.
+     * The padding is specified in the logical pixels.
      */
     Q_PROPERTY(qreal padding READ padding WRITE setPadding NOTIFY paddingChanged)
 
     /*!
      * \qmlproperty size Tile::minimumSize
+     *
+     * The minimum size that the windows in this Tile can be resized to. In the logical pixels.
      */
     Q_PROPERTY(QSizeF minimumSize READ minimumSize WRITE setMinimumSize NOTIFY minimumSizeChanged)
 
     /*!
      * \qmlproperty int Tile::positionInLayout
+     *
+     * If this Tile is a child of a layout Tile, this property specifies the child index of this Tile.
      */
     Q_PROPERTY(int positionInLayout READ row NOTIFY rowChanged)
 
     /*!
      * \qmlproperty Tile Tile::parent
+     *
+     * The parent Tile of this Tile. This property can be \c null if this is the root Tile.
      */
     Q_PROPERTY(KWin::Tile *parent READ parentTile CONSTANT)
 
     /*!
      * \qmlproperty list<Tile> Tile::tiles
+     *
+     * The child tiles.
      */
     Q_PROPERTY(QList<KWin::Tile *> tiles READ childTiles NOTIFY childTilesChanged)
 
     /*!
      * \qmlproperty list<Window> Tile::windows
+     *
+     * The managed windows.
      */
     Q_PROPERTY(QList<KWin::Window *> windows READ windows NOTIFY windowsChanged)
 
     /*!
      * \qmlproperty bool Tile::isLayout
+     *
+     * Whether this Tile is a layout Tile. In other words, a Tile that arranges its child Tiles
+     * in a special manner, e.g. from left to right, or top to bottom, etc.
      */
     Q_PROPERTY(bool isLayout READ isLayout NOTIFY isLayoutChanged)
 
     /*!
      * \qmlproperty bool Tile::canBeRemoved
+     *
+     * Whether this Tile can be removed.
      */
     Q_PROPERTY(bool canBeRemoved READ canBeRemoved CONSTANT)
 
@@ -182,18 +219,30 @@ public:
 
     /*!
      * \qmlmethod void Tile::resizeByPixels(real delta, enumeration edge)
+     *
+     * Resize this tile by the given \a delta pixels along the specified \a edge. The tile size
+     * may be left unchanged due to size constraints, etc.
      */
     Q_INVOKABLE void resizeByPixels(qreal delta, Qt::Edge edge);
 
     /*!
      * \qmlmethod void Tile::manage(Window window)
+     *
+     * Put the specified \a window to this tile. The window will be resized to match this tile.
+     *
+     * If the window is in another tile, it will be evacuated from that tile before getting moved
+     * to this tile.
      */
     Q_INVOKABLE bool manage(KWin::Window *window);
 
     /*!
      * \qmlmethod void Tile::unmanage(Window window)
+     *
+     * Remove the specified \a window from this tile. The window will be resized to match its size
+     * before it was put in the tile.
      */
     Q_INVOKABLE bool unmanage(KWin::Window *window);
+
     void forget(Window *window);
     QList<KWin::Window *> windows() const;
 
@@ -230,11 +279,19 @@ Q_SIGNALS:
 
     /*!
      * \qmlsignal windowAdded(Window window)
+     *
+     * This signal is emitted when the Tile starts managing a window.
+     *
+     * \sa manage()
      */
     void windowAdded(KWin::Window *window);
 
     /*!
      * \qmlsignal windowRemoved(Window window)
+     *
+     * This signal is emitted when the Tile no longer manages a window.
+     *
+     * \sa unmanage()
      */
     void windowRemoved(KWin::Window *window);
 
