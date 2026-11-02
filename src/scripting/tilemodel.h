@@ -9,36 +9,31 @@
 
 #pragma once
 
-#include "tiles/tile.h"
-#include <kwin_export.h>
+#include <qqmlregistration.h>
 
 #include <QAbstractItemModel>
-#include <QObject>
-
-#include <QJsonValue>
-
-class QTimer;
+#include <QPointer>
 
 namespace KWin
 {
 
-class LogicalOutput;
-class CustomTile;
-class TileManager;
+class Tile;
 
-/**
- * Custom tiling zones management per output.
- */
-class KWIN_EXPORT TileModel : public QAbstractItemModel
+class TileModel : public QAbstractItemModel
 {
     Q_OBJECT
+    QML_ELEMENT
+
+    Q_PROPERTY(KWin::Tile *tile READ tile WRITE setTile NOTIFY tileChanged)
 
 public:
     enum Roles {
         TileRole = Qt::UserRole + 1,
     };
-    explicit TileModel(Tile *parent = nullptr);
-    ~TileModel() override;
+    explicit TileModel(QObject *parent = nullptr);
+
+    Tile *tile() const;
+    void setTile(Tile *tile);
 
     // QAbstractItemModel overrides
     QHash<int, QByteArray> roleNames() const override;
@@ -50,17 +45,24 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
+Q_SIGNALS:
+    void tileChanged();
+
 private:
-    void beginInsertTile(CustomTile *tile, int position);
+    void beginInsertTile(Tile *childTile, int position);
     void endInsertTile();
-    void beginRemoveTile(CustomTile *tile);
+    void beginRemoveTile(Tile *childTile);
     void endRemoveTile();
 
-    // Not an uinique_pointer as the model is child of the manager so would cause a cyclic delete
-    Tile *m_rootTile;
-    friend class CustomTile;
+    Tile *tileFromModelIndex(const QModelIndex &index) const;
 
-    Q_DISABLE_COPY(TileModel)
+    void watch(Tile *tile);
+    void unwatch(Tile *tile);
+
+    void watchTree(Tile *tile);
+    void unwatchTree(Tile *tile);
+
+    QPointer<Tile> m_rootTile;
 };
 
 } // namespace KWin

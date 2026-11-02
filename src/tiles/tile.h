@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2022 Marco Martin <mart@kde.org>
+    SPDX-FileCopyrightText: 2026 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -294,6 +295,11 @@ Q_SIGNALS:
      * \sa unmanage()
      */
     void windowRemoved(KWin::Window *window);
+
+    void aboutToInsertChildTile(KWin::Tile *child, int index);
+    void childTileInserted();
+    void aboutToRemoveChildTile(KWin::Tile *child);
+    void childTileRemoved();
 
 protected:
     void insertChild(int position, Tile *item);
