@@ -7,6 +7,7 @@
 #pragma once
 
 #include <QAbstractListModel>
+#include <QConcatenateTablesProxyModel>
 
 namespace KWin
 {
@@ -18,7 +19,7 @@ class TabBoxLayoutsModel : public QAbstractListModel
 public:
     enum AdditionalRoles {
         NameRole = Qt::DisplayRole,
-        DescriptionRole,
+        DescriptionRole = Qt::UserRole,
         PluginIdRole,
         PathRole,
     };
@@ -42,6 +43,14 @@ private:
     };
 
     QList<LayoutData> m_layouts;
+};
+
+class TabBoxLayoutsProxyModel : public QConcatenateTablesProxyModel
+{
+    Q_OBJECT
+
+public:
+    explicit TabBoxLayoutsProxyModel(TabBoxLayoutsModel *layouts, QObject *parent = nullptr);
 };
 
 } // namespace KWin

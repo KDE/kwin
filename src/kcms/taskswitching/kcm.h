@@ -19,7 +19,7 @@ class TaskSwitchingKCM : public KQuickManagedConfigModule
     Q_OBJECT
     Q_PROPERTY(TabBoxSettings *tabBoxSettings READ tabBoxSettings CONSTANT)
     Q_PROPERTY(TabBoxSettings *tabBoxAlternativeSettings READ tabBoxAlternativeSettings CONSTANT)
-    Q_PROPERTY(TabBoxLayoutsModel *tabBoxLayouts READ tabBoxLayouts CONSTANT)
+    Q_PROPERTY(QAbstractItemModel *tabBoxLayouts READ tabBoxLayouts CONSTANT)
     Q_PROPERTY(OverviewSettings *overviewSettings READ overviewSettings CONSTANT)
     Q_PROPERTY(QStringList overviewShortcuts READ overviewShortcuts NOTIFY overviewShortcutsChanged)
 
@@ -29,7 +29,7 @@ public:
 
     TabBoxSettings *tabBoxSettings() const;
     TabBoxSettings *tabBoxAlternativeSettings() const;
-    TabBoxLayoutsModel *tabBoxLayouts() const;
+    QAbstractItemModel *tabBoxLayouts() const;
     OverviewSettings *overviewSettings() const;
     QStringList overviewShortcuts() const;
 
@@ -47,6 +47,7 @@ Q_SIGNALS:
 private:
     const TaskSwitchingData *const m_data;
     TabBoxLayoutsModel *m_tabBoxLayouts;
+    TabBoxLayoutsProxyModel *m_tabBoxLayoutsProxy;
 };
 
 } // namespace KWin

@@ -37,11 +37,11 @@ TaskSwitchingKCM::TaskSwitchingKCM(QObject *parent, const KPluginMetaData &metaD
     : KQuickManagedConfigModule(parent, metaData)
     , m_data(new TaskSwitchingData(this))
     , m_tabBoxLayouts(new TabBoxLayoutsModel(this))
+    , m_tabBoxLayoutsProxy(new TabBoxLayoutsProxyModel(m_tabBoxLayouts, this))
 {
     qmlRegisterAnonymousType<TabBoxSettings>("org.kde.kwin.kcmtaskswitching", 0);
     qmlRegisterAnonymousType<OverviewSettings>("org.kde.kwin.kcmtaskswitching", 0);
 
-    qmlRegisterUncreatableType<TabBoxLayoutsModel>("org.kde.kwin.kcmtaskswitching", 0, 0, "TabBoxLayoutsModel", "Role enums only");
     qmlRegisterUncreatableType<TabBox::TabBoxConfig>("org.kde.kwin.kcmtaskswitching", 0, 0, "tabBoxConfig", "Settings enums only");
 
     setButtons(Apply | Default | Help);
@@ -61,9 +61,9 @@ TabBoxSettings *TaskSwitchingKCM::tabBoxAlternativeSettings() const
     return m_data->tabBoxAlternativeSettings();
 }
 
-TabBoxLayoutsModel *TaskSwitchingKCM::tabBoxLayouts() const
+QAbstractItemModel *TaskSwitchingKCM::tabBoxLayouts() const
 {
-    return m_tabBoxLayouts;
+    return m_tabBoxLayoutsProxy;
 }
 
 OverviewSettings *TaskSwitchingKCM::overviewSettings() const

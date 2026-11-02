@@ -9,92 +9,24 @@ import QtQuick.Controls as QQC2
 
 import org.kde.kirigami as Kirigami
 
-import org.kde.kwin.kcmtaskswitching
-
 QQC2.ComboBox {
     id: root
 
     required property var tabBoxSettings
-    readonly property var tabBoxLayouts: kcm.tabBoxLayouts
 
-    Connections {
-        target: tabBoxLayouts
-        function onModelReset() {
-            updateModel();
-        }
-    }
-
-    Connections {
-        target: tabBoxSettings
-        function onLayoutNameChanged(): void {
-            updateCurrentIndex();
-        }
-        function onShowTabBoxChanged(): void {
-            updateCurrentIndex();
-        }
-    }
-
-    Component.onCompleted: updateModel()
-
-    model: ListModel {}
+    model: kcm.tabBoxLayouts
     delegate: itemDelegate
     textRole: "name"
+    valueRole: "pluginId"
 
-    onActivated: changeCurrentIndex()
-
-    function updateModel(): void {
-        model.clear();
-        model.append({
-            "name": i18nc("@item:inlistbox", "None"),
-            "description": ""
-        }); // We must add a 'None' option because we're using a combobox
-        for (let i = 0; i < tabBoxLayouts.rowCount(); ++i) {
-            let index = tabBoxLayouts.index(i, 0);
-            let name = tabBoxLayouts.data(index, TabBoxLayoutsModel.NameRole);
-            let description = tabBoxLayouts.data(index, TabBoxLayoutsModel.DescriptionRole);
-            model.append({
-                "name": name,
-                "description": description
-            });
-        }
-
-        updateCurrentIndex();
+    currentIndex: {
+        const pluginId = tabBoxSettings.showTabBox ? tabBoxSettings.layoutName : "";
+        return count > 0 ? Math.max(indexOfValue(pluginId), 0) : -1;
     }
 
-    function changeCurrentIndex(): void {
-        // Make settings changes for user index change
-        let chosenModelIndex = currentIndex - 1; // account for extra 'None' item
-        if (chosenModelIndex >= 0) {
-            // Chosen a layout in our model
-            let index = tabBoxLayouts.index(chosenModelIndex, 0);
-            tabBoxSettings.showTabBox = true;
-            tabBoxSettings.layoutName = tabBoxLayouts.data(index, TabBoxLayoutsModel.PluginIdRole);
-        } else {
-            // We've chosen 'none'
-            tabBoxSettings.showTabBox = false;
-        }
-    }
-
-    function updateCurrentIndex(): void {
-        // Update index for settings changes
-        if (tabBoxSettings.showTabBox) {
-            // Find plugin id in model
-            let foundLayout = false;
-            for (let i = 0; i < tabBoxLayouts.rowCount(); ++i) {
-                let index = tabBoxLayouts.index(i, 0);
-                if (tabBoxLayouts.data(index, TabBoxLayoutsModel.PluginIdRole) == tabBoxSettings.layoutName) {
-                    currentIndex = i + 1; // Account for 'None'
-                    foundLayout = true;
-                    break;
-                }
-            }
-
-            if (!foundLayout) {
-                currentIndex = 0; // 'None'
-            }
-        } else {
-            currentIndex = 0; // 'None'
-        }
+    onActivated: {
+        tabBoxSettings.layoutName = currentValue;
+        tabBoxSettings.showTabBox = currentValue !== "";
     }
 
     Component {

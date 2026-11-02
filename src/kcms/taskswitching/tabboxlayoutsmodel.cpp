@@ -6,8 +6,10 @@
 
 #include <QCollator>
 #include <QDir>
+#include <QStandardItemModel>
 
 #include <KConfigGroup>
+#include <KLocalizedString>
 #include <KPackage/Package>
 #include <KPackage/PackageLoader>
 #include <KSharedConfig>
@@ -130,6 +132,22 @@ QVariant TabBoxLayoutsModel::data(const QModelIndex &index, int role) const
     default:
         return {};
     }
+}
+
+TabBoxLayoutsProxyModel::TabBoxLayoutsProxyModel(TabBoxLayoutsModel *layouts, QObject *parent)
+    : QConcatenateTablesProxyModel(parent)
+{
+    auto none = new QStandardItem(i18nc("@item:inlistbox", "None"));
+    none->setData(QString(), TabBoxLayoutsModel::DescriptionRole);
+    none->setData(QString(), TabBoxLayoutsModel::PluginIdRole);
+    none->setData(QString(), TabBoxLayoutsModel::PathRole);
+
+    auto noneModel = new QStandardItemModel(this);
+    noneModel->setItemRoleNames(layouts->roleNames());
+    noneModel->appendRow(none);
+
+    addSourceModel(noneModel);
+    addSourceModel(layouts);
 }
 
 } // namespace KWin
