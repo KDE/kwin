@@ -546,7 +546,7 @@ pw_buffer *ScreenCastStream::dequeueBuffer()
                 static_cast<spa_meta_sync_timeline *>(spa_buffer_find_meta_data(spaBuffer,
                                                                                 SPA_META_SyncTimeline,
                                                                                 sizeof(spa_meta_sync_timeline)));
-            return dmabuf->synctimeline->isMaterialized(synctmeta->release_point);
+            return dmabuf->synctimeline->isSignaled(synctmeta->release_point);
         }
 
         return true;
@@ -560,25 +560,28 @@ pw_buffer *ScreenCastStream::dequeueBuffer()
         return pwBuffer;
     }
 
-    // If we do not have a usable dequeued buffer, fetch a new one from the stream
-    pw_buffer *pwBuffer = pw_stream_dequeue_buffer(m_pwStream);
-    if (!pwBuffer) {
-        return nullptr;
+    // If we do not have a usable dequeued buffer, fetch a new one from the stream.
+    while (pw_buffer *pwBuffer = pw_stream_dequeue_buffer(m_pwStream)) {
+        if (!pwBuffer) {
+            return nullptr;
+        }
+
+        if (!pwBuffer->user_data) {
+            qCWarning(KWIN_SCREENCAST) << objectName() << "Received stream buffer that does not contain user data";
+            corruptHeader(pwBuffer->buffer);
+            pw_stream_queue_buffer(m_pwStream, pwBuffer);
+            return nullptr;
+        }
+
+        if (!isBufferUsable(pwBuffer)) {
+            m_dequeuedBuffers.append(pwBuffer);
+            continue;
+        }
+
+        return pwBuffer;
     }
 
-    if (!pwBuffer->user_data) {
-        qCWarning(KWIN_SCREENCAST) << objectName() << "Received stream buffer that does not contain user data";
-        corruptHeader(pwBuffer->buffer);
-        pw_stream_queue_buffer(m_pwStream, pwBuffer);
-        return nullptr;
-    }
-
-    if (!isBufferUsable(pwBuffer)) {
-        m_dequeuedBuffers.append(pwBuffer);
-        return nullptr;
-    }
-
-    return pwBuffer;
+    return nullptr;
 }
 
 void ScreenCastStream::record(std::chrono::nanoseconds timestamp, Contents contents)
@@ -628,17 +631,6 @@ void ScreenCastStream::record(std::chrono::nanoseconds timestamp, Contents conte
             damage = m_source->render(memfd->view.image(), m_damageJournal.accumulate(memfd->m_age, Region::infinite()));
             bumpBufferAge(memfd);
         } else if (auto dmabuf = dynamic_cast<DmaBufScreenCastBuffer *>(buffer)) {
-            if (dmabuf->synctimeline) {
-                synctmeta = static_cast<spa_meta_sync_timeline *>(spa_buffer_find_meta_data(spa_buffer,
-                                                                                            SPA_META_SyncTimeline,
-                                                                                            sizeof(spa_meta_sync_timeline)));
-                FileDescriptor syncFileFd = dmabuf->synctimeline->exportSyncFile(synctmeta->release_point);
-                EGLNativeFence fence = EGLNativeFence::importFence(m_source->renderDevice()->eglDisplay(), std::move(syncFileFd));
-                if (fence.waitSync() != EGL_TRUE) {
-                    qCWarning(KWIN_SCREENCAST) << objectName() << "Failed to wait on a fence, recording may be corrupted";
-                }
-            }
-
             damage = m_source->render(dmabuf->framebuffer.get(), m_damageJournal.accumulate(dmabuf->m_age, Region::infinite()));
             bumpBufferAge(dmabuf);
         }
