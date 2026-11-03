@@ -285,6 +285,7 @@ if (KWIN_BUILD_X11)
         TYPE RUNTIME
         PURPOSE "Needed for running kwin_wayland"
     )
+    set(HAVE_XWAYLAND_TERMINATE_DELAY ${Xwayland_HAVE_TERMINATE_DELAY})
 
     # for kwin internal things
     set(HAVE_X11_XCB ${X11_XCB_FOUND})
