@@ -9,6 +9,7 @@
 #pragma once
 #include "core/region.h"
 #include "kwin_export.h"
+#include "utils/filedescriptor.h"
 
 #include <QImage>
 #include <QSize>
@@ -42,6 +43,7 @@ public:
      */
     bool update(const QImage &img);
 
+    bool downloadTo(QImage &target, FileDescriptor &&sync) const;
     QImage download() const;
 
     const vk::raii::Image &handle() const;

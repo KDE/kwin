@@ -14,6 +14,7 @@
 #include "opengl/eglcontext.h"
 #include "opengl/egldisplay.h"
 #include "opengl/eglnativefence.h"
+#include "opengl/glframebuffer.h"
 #include "opengl/glplatform.h"
 #include "udmabufallocator.h"
 #include "utils/common.h"
@@ -507,6 +508,55 @@ QImage RenderDevice::download(GraphicsBuffer *buffer)
     } else {
         return QImage{};
     }
+}
+
+static std::optional<GLenum> closestGLType(QImage::Format format)
+{
+    switch (format) {
+    case QImage::Format_ARGB32:
+    case QImage::Format_ARGB32_Premultiplied:
+    case QImage::Format_RGB32:
+        return GL_BGRA;
+    case QImage::Format_RGBX8888:
+    case QImage::Format_RGBA8888:
+    case QImage::Format_RGBA8888_Premultiplied:
+        return GL_RGBA;
+    default:
+        return std::nullopt;
+    }
+}
+
+bool RenderDevice::download(GraphicsBuffer *source, FileDescriptor &&sync, QImage &target)
+{
+    if (m_vulkanDevice
+        && m_vulkanDevice->transferFormats().containsFormat(source->format(), source->modifier())
+        && VulkanTexture::qImageToVulkanFormat(target.format())) {
+        const auto texture = m_vulkanDevice->importBuffer(source, VK_IMAGE_USAGE_TRANSFER_DST_BIT);
+        if (!texture) {
+            return false;
+        }
+        return texture->downloadTo(target, std::move(sync));
+    }
+    const auto glFormat = closestGLType(target.format());
+    if (!glFormat) {
+        qCWarning(KWIN_CORE, "Can't download buffer format %s", qPrintable(FormatInfo::drmFormatName(source->format())));
+        return false;
+    }
+    const auto context = eglContext();
+    if (!context) {
+        return false;
+    }
+    const auto fbo = context->importDmaBufAsFbo(source);
+    if (!fbo) {
+        return false;
+    }
+    auto fence = EGLNativeFence::importFence(m_display.get(), std::move(sync));
+    fence.waitSync();
+
+    context->pushFramebuffer(fbo);
+    context->glReadnPixels(0, 0, fbo->size().width(), fbo->size().height(), *glFormat, GL_UNSIGNED_BYTE, target.sizeInBytes(), target.bits());
+    context->popFramebuffer();
+    return true;
 }
 
 }
