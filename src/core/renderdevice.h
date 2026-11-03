@@ -96,6 +96,12 @@ public:
 
     FileDescriptor clearBuffer(GraphicsBuffer *buffer);
     QImage download(GraphicsBuffer *buffer);
+    /**
+     * @param source a dmabuf containing the contents to be downloaded
+     * @param sync a sync file, which needs to be waited on before accessing @p source
+     * @param target the image to download the source into
+     */
+    bool download(GraphicsBuffer *source, FileDescriptor &&sync, QImage &target);
 
     static std::unique_ptr<RenderDevice> open(const QString &path, int authenticatedFd = -1);
     /**
