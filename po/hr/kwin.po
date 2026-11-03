@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin 0\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-28 03:17+0000\n"
+"POT-Creation-Date: 2026-11-03 03:01+0000\n"
 "PO-Revision-Date: 2026-10-27 09:23+0100\n"
 "Last-Translator: Igor Dobrača <igor.dobraca@gmail.com>\n"
 "Language-Team: Croatian < kde-l10n-hr@kde.org>\n"
@@ -1703,7 +1703,7 @@ msgstr "Način unosa koji KWin pokreće."
 msgid "Starts the session in locked mode."
 msgstr "Pokreće sesiju u zaključanom načinu."
 
-#: main_wayland.cpp:453
+#: main_wayland.cpp:454
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Pokreće sesiju bez podrške za zaključni zaslon."
@@ -1713,17 +1713,17 @@ msgstr "Pokreće sesiju bez podrške za zaključni zaslon."
 msgid "Starts the session without global shortcuts support."
 msgstr "Pokreće sesiju bez podrške za globalne prečace."
 
-#: main_wayland.cpp:463
+#: main_wayland.cpp:462
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Onemogući KActivities integracije."
 
-#: main_wayland.cpp:468
+#: main_wayland.cpp:466
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Izađi nakon što se aplikacija sesije, koju je pokrenuo KWin, zatvori."
 
-#: main_wayland.cpp:473
+#: main_wayland.cpp:471
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Aplikacije za pokrenuti s početkom Wayland i Xwaylanda"

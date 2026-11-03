@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-28 03:17+0000\n"
+"POT-Creation-Date: 2026-11-03 03:01+0000\n"
 "PO-Revision-Date: 2026-05-31 20:05-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -1690,7 +1690,7 @@ msgstr "KWin قوزغىتىدىغان كىرگۈزگۈچ."
 msgid "Starts the session in locked mode."
 msgstr "قۇلۇپلاش ھالىتىدە جەريانچاقنى قوزغىتىدۇ."
 
-#: main_wayland.cpp:453
+#: main_wayland.cpp:454
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "قۇلۇپ ئېكرانىنىڭ قوللىشى بولمىغان ھالەتتە جەريانچاقنى قوزغىتىدۇ."
@@ -1700,17 +1700,17 @@ msgstr "قۇلۇپ ئېكرانىنىڭ قوللىشى بولمىغان ھالە
 msgid "Starts the session without global shortcuts support."
 msgstr "ئومۇمىيەت تېزلەتمىنىڭ قوللىشى بولمىغان ھالەتتە جەريانچاقنى قوزغىتىدۇ."
 
-#: main_wayland.cpp:463
+#: main_wayland.cpp:462
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivities توپلاشتۇرۇشنى چەكلەيدۇ."
 
-#: main_wayland.cpp:468
+#: main_wayland.cpp:466
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "KWin قوزغاتقان جەريانچاق پىروگرامما  يېپىلغاندىن كېيىن چېكىنىدۇ."
 
-#: main_wayland.cpp:473
+#: main_wayland.cpp:471
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-28 03:17+0000\n"
+"POT-Creation-Date: 2026-11-03 03:01+0000\n"
 "PO-Revision-Date: 2026-09-03 11:57+0200\n"
 "Last-Translator: Libor Filipek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -1703,7 +1703,7 @@ msgstr "Vstupní metoda, kterou spouští KWin."
 msgid "Starts the session in locked mode."
 msgstr "Spustí sezení v uzamčeném režimu."
 
-#: main_wayland.cpp:453
+#: main_wayland.cpp:454
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Spustí sezení bez podpory uzamčené obrazovky."
@@ -1713,17 +1713,17 @@ msgstr "Spustí sezení bez podpory uzamčené obrazovky."
 msgid "Starts the session without global shortcuts support."
 msgstr "Spustí sezení bez podpory globálních klávesových zkratek."
 
-#: main_wayland.cpp:463
+#: main_wayland.cpp:462
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Zakázat integraci KActivities."
 
-#: main_wayland.cpp:468
+#: main_wayland.cpp:466
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Ukončit po zavření aplikace pro správu sezení, kterou spustil KWin."
 
-#: main_wayland.cpp:473
+#: main_wayland.cpp:471
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Aplikace se spustí, jakmile budou spuštěny servery Wayland a Xwayland"
