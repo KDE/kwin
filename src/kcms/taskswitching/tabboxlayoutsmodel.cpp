@@ -67,21 +67,17 @@ void TabBoxLayoutsModel::load()
     }
 
     // Check packages
-    const QStringList packageRoots{QStringLiteral("kwin-wayland/tabbox"), QStringLiteral("kwin/tabbox")};
-
-    for (const QString &packageRoot : packageRoots) {
-        const QList<KPluginMetaData> offers = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/WindowSwitcher"), packageRoot);
-        for (const auto &offer : offers) {
-            const QString pluginName = offer.pluginId();
-            const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                              packageRoot + QLatin1Char('/') + pluginName + QLatin1String("/contents/ui/main.qml"));
-            if (scriptFile.isEmpty()) {
-                qWarning() << "scriptfile is null" << pluginName;
-                continue;
-            }
-
-            m_layouts << LayoutData{offer.name(), offer.description(), pluginName, scriptFile};
+    const QList<KPluginMetaData> offers = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/WindowSwitcher"));
+    for (const auto &offer : offers) {
+        const QString pluginName = offer.pluginId();
+        const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                                          u"kwin/tabbox/" + pluginName + QLatin1String("/contents/ui/main.qml"));
+        if (scriptFile.isEmpty()) {
+            qWarning() << "scriptfile is null" << pluginName;
+            continue;
         }
+
+        m_layouts << LayoutData{offer.name(), offer.description(), pluginName, scriptFile};
     }
 
     // Sort
