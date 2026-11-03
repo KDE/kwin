@@ -17,15 +17,12 @@
 #include "cursor.h"
 #include "kwinscreencast_logging.h"
 #include "main.h"
-#include "opengl/eglcontext.h"
-#include "opengl/eglnativefence.h"
-#include "opengl/glframebuffer.h"
-#include "opengl/glplatform.h"
-#include "opengl/gltexture.h"
 #include "pipewirecore.h"
+#include "scene/itemrenderer.h"
 #include "scene/workspacescene.h"
 #include "screencastbuffer.h"
 #include "screencastsource.h"
+#include "swapchain.h"
 
 #include <KLocalizedString>
 
@@ -393,10 +390,6 @@ bool ScreenCastStream::init()
         return false;
     }
 
-    if (!Compositor::self()->primaryDevice()->eglContext()) {
-        return false;
-    }
-
     connect(m_pwCore.get(), &PipeWireCore::pipewireFailed, this, &ScreenCastStream::coreFailed);
 
     if (!createStream()) {
@@ -616,47 +609,59 @@ void ScreenCastStream::record(std::chrono::nanoseconds timestamp, Contents conte
         break;
     }
 
-    const auto &context = m_source->eglContext();
-    if (!context || !context->makeCurrent()) {
-        pw_stream_return_buffer(m_pwStream, pwBuffer);
-        // TODO maybe re-allocate buffers and deal with this better?
-        close();
-        return;
-    }
-
     spa_meta_sync_timeline *synctmeta = nullptr;
-    Region damage;
+    std::optional<ScreenCastSource::RenderResult> result;
     if (effectiveContents & Content::Video) {
         if (auto memfd = dynamic_cast<MemFdScreenCastBuffer *>(buffer)) {
-            damage = m_source->render(memfd->view.image(), m_damageJournal.accumulate(memfd->m_age, Region::infinite()));
+            if (!m_shadowSwapchain || m_shadowSwapchain->size() != memfd->m_buffer->size()) {
+                GraphicsBufferOptions options{
+                    .size = memfd->m_buffer->size(),
+                    .format = DRM_FORMAT_ARGB8888,
+                    .modifiers = Compositor::self()->backend()->supportedFormats()[DRM_FORMAT_ARGB8888],
+                    .software = false,
+                    .scanout = false,
+                    .render = true,
+                };
+                m_shadowSwapchain = Swapchain::create(m_source->renderDevice()->allocator(), options);
+            }
+            if (!m_shadowSwapchain) {
+                pw_stream_return_buffer(m_pwStream, pwBuffer);
+                close();
+                return;
+            }
+            auto slot = m_shadowSwapchain->acquire();
+            if (!slot) {
+                pw_stream_return_buffer(m_pwStream, pwBuffer);
+                close();
+                return;
+            }
+            result = m_source->render(slot->buffer(), m_damageJournal.accumulate(memfd->m_age, Region::infinite()));
             bumpBufferAge(memfd);
+            if (result) {
+                m_source->renderDevice()->download(slot->buffer(), result->sync.duplicate(), *memfd->view.image());
+                m_shadowSwapchain->release(slot.get(), std::move(result->sync));
+            }
         } else if (auto dmabuf = dynamic_cast<DmaBufScreenCastBuffer *>(buffer)) {
-            damage = m_source->render(dmabuf->framebuffer.get(), m_damageJournal.accumulate(dmabuf->m_age, Region::infinite()));
+            result = m_source->render(dmabuf->m_buffer, m_damageJournal.accumulate(dmabuf->m_age, Region::infinite()));
             bumpBufferAge(dmabuf);
         }
-        m_damageJournal.add(damage);
-    }
-
-    if (spa_data[0].type == SPA_DATA_DmaBuf) {
-        if (synctmeta) {
-            EGLNativeFence fence(m_source->renderDevice()->eglDisplay());
-
-            synctmeta->acquire_point = synctmeta->release_point + 1;
-            synctmeta->release_point = synctmeta->acquire_point + 1;
-
-            auto dmabuf = static_cast<DmaBufScreenCastBuffer *>(buffer);
-            dmabuf->synctimeline->moveInto(synctmeta->acquire_point, fence.takeFileDescriptor());
-        } else {
-            // Implicit sync is broken on Nvidia and with llvmpipe
-            if (context->glPlatform()->isNvidia() || context->isSoftwareRenderer()) {
-                glFinish();
-            } else {
-                glFlush();
-            }
+        if (!result) {
+            pw_stream_return_buffer(m_pwStream, pwBuffer);
+            close();
+            return;
         }
+        m_damageJournal.add(result->region);
     }
 
-    addDamage(spa_buffer, damage);
+    if (spa_data[0].type == SPA_DATA_DmaBuf && synctmeta) {
+        synctmeta->acquire_point = synctmeta->release_point + 1;
+        synctmeta->release_point = synctmeta->acquire_point + 1;
+
+        auto dmabuf = static_cast<DmaBufScreenCastBuffer *>(buffer);
+        dmabuf->synctimeline->moveInto(synctmeta->acquire_point, std::move(result->sync));
+    }
+
+    addDamage(spa_buffer, result->region);
     addHeader(spa_buffer, timestamp);
 
     if (effectiveContents & Content::Video) {
@@ -910,17 +915,7 @@ std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(
     // Also test if we can actually create the framebuffer,
     // since this may fail on some drivers with some modifiers
     // (namely Nvidia with the implicit modifier)
-    const auto context = device->eglContext();
-    if (!context || !context->makeCurrent()) {
-        return std::nullopt;
-    }
-
-    auto texture = context->importDmaBufAsTexture(*attrs);
-    if (!texture) {
-        return std::nullopt;
-    }
-    auto framebuffer = std::make_unique<GLFramebuffer>(texture.get());
-    if (!framebuffer->valid()) {
+    if (!kwinApp()->scene()->renderer(m_source->renderDevice())->testRenderTargetImport(buffer)) {
         return std::nullopt;
     }
 

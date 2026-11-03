@@ -27,9 +27,7 @@ public:
     virtual ~ScreenCastBuffer();
 
     int m_age = 0;
-
-private:
-    GraphicsBuffer *m_buffer;
+    GraphicsBuffer *const m_buffer;
 };
 
 class DmaBufScreenCastBuffer : public ScreenCastBuffer
@@ -37,12 +35,9 @@ class DmaBufScreenCastBuffer : public ScreenCastBuffer
 public:
     static DmaBufScreenCastBuffer *create(RenderDevice *renderDevice, pw_buffer *pwBuffer, const GraphicsBufferOptions &options);
 
-    std::shared_ptr<GLTexture> texture;
-    std::unique_ptr<GLFramebuffer> framebuffer;
-    std::unique_ptr<SyncTimeline> synctimeline;
+    explicit DmaBufScreenCastBuffer(GraphicsBuffer *buffer, std::unique_ptr<SyncTimeline> &&synctimeline);
 
-private:
-    DmaBufScreenCastBuffer(GraphicsBuffer *buffer, std::shared_ptr<GLTexture> &&texture, std::unique_ptr<GLFramebuffer> &&framebuffer, std::unique_ptr<SyncTimeline> &&synctimeline);
+    std::unique_ptr<SyncTimeline> synctimeline;
 };
 
 class MemFdScreenCastBuffer : public ScreenCastBuffer
@@ -50,10 +45,9 @@ class MemFdScreenCastBuffer : public ScreenCastBuffer
 public:
     static MemFdScreenCastBuffer *create(pw_buffer *pwBuffer, const GraphicsBufferOptions &options);
 
-    GraphicsBufferView view;
+    explicit MemFdScreenCastBuffer(GraphicsBuffer *buffer, GraphicsBufferView &&view);
 
-private:
-    MemFdScreenCastBuffer(GraphicsBuffer *buffer, GraphicsBufferView &&view);
+    GraphicsBufferView view;
 };
 
 } // namespace KWin

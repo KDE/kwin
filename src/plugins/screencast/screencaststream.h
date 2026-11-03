@@ -34,6 +34,7 @@ class Region;
 class ScreenCastBuffer;
 class ScreenCastSource;
 class RenderDevice;
+class Swapchain;
 
 struct ScreenCastDmaBufTextureParams
 {
@@ -148,6 +149,8 @@ private:
 
     QList<ScreenCastBuffer *> m_allBuffers;
     DamageJournal m_damageJournal;
+
+    std::unique_ptr<Swapchain> m_shadowSwapchain;
 };
 
 } // namespace KWin

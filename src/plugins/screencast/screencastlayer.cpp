@@ -4,8 +4,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "screencastlayer.h"
-#include "opengl/eglcontext.h"
-#include "opengl/glframebuffer.h"
 
 namespace KWin
 {
@@ -18,7 +16,7 @@ ScreencastLayer::ScreencastLayer(LogicalOutput *output, const FormatModifierMap 
     setRenderLoop(nullptr);
 }
 
-void ScreencastLayer::setFramebuffer(GLFramebuffer *buffer, const Region &bufferDamage)
+void ScreencastLayer::setFramebuffer(GraphicsBuffer *buffer, const Region &bufferDamage)
 {
     // TODO is there a better way to deal with this?
     m_buffer = buffer;
@@ -34,12 +32,8 @@ std::optional<OutputLayerBeginFrameInfo> ScreencastLayer::beginFrame(OutputFrame
 {
     Q_ASSERT(m_buffer);
 
-    if (!m_buffer->context()->makeCurrent()) {
-        return std::nullopt;
-    }
-
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_buffer),
+        .renderTarget = RenderTarget(m_buffer.get(), OutputTransform::FlipY),
         .repaint = m_bufferDamage,
     };
 }
