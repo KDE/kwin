@@ -30,12 +30,13 @@ enum ScreenShotFlag {
 };
 Q_DECLARE_FLAGS(ScreenShotFlags, ScreenShotFlag)
 
-class GLFramebuffer;
 class LogicalOutput;
 class Rect;
 class ScreenShotDBusInterface2;
 class ScreenShotDBusInterface3;
 class Window;
+class RenderDevice;
+class GraphicsBuffer;
 
 struct ScreenShotBuffer
 {
@@ -47,7 +48,7 @@ struct ScreenShotBuffer
     QImage::Format format;
     qreal devicePixelRatio;
 
-    static std::optional<ScreenShotBuffer> from(GLFramebuffer *fbo, qreal devicePixelRatio, QImage::Format format);
+    static std::optional<ScreenShotBuffer> from(RenderDevice *device, GraphicsBuffer *buffer, FileDescriptor &&sync, qreal devicePixelRatio, QImage::Format format);
 };
 
 /**
