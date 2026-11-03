@@ -207,6 +207,11 @@ bool XwaylandLauncher::start()
 
     arguments << QStringLiteral("-rootless");
 
+    arguments << QStringLiteral("-terminate");
+#if HAVE_XWAYLAND_TERMINATE_DELAY
+    arguments << QStringLiteral("10");
+#endif
+
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
     env.insert("WAYLAND_SOCKET", QByteArray::number(waylandSocket.get()));
@@ -318,6 +323,10 @@ void XwaylandLauncher::stop()
 void XwaylandLauncher::handleXwaylandFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
     qCDebug(KWIN_XWL) << "Xwayland process has quit with exit status:" << exitStatus << "exit code:" << exitCode;
+
+    if (exitCode == 0) {
+        return;
+    }
 
 #if KWIN_BUILD_NOTIFICATIONS
     KNotification::event(QStringLiteral("xwaylandcrash"), i18n("Xwayland has crashed"));
