@@ -6,15 +6,12 @@
 */
 
 #include "windowscreencastsource.h"
-#include "screencastutils.h"
 
 #include "compositor.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effect.h"
 #include "input.h"
-#include "opengl/glframebuffer.h"
-#include "opengl/gltexture.h"
 #include "scene/itemrenderer.h"
 #include "scene/windowitem.h"
 #include "scene/workspacescene.h"
@@ -109,50 +106,34 @@ void WindowScreenCastSource::setNextPresentationTimestamp(std::chrono::nanosecon
     // TODO use the timestamp for rendering, once we have a SceneView to do that with
 }
 
-Region WindowScreenCastSource::render(QImage *target, const Region &bufferDamage)
-{
-    const auto offscreenTexture = GLTexture::allocate(GL_RGBA8, target->size());
-    if (!offscreenTexture) {
-        return Region{};
-    }
-    offscreenTexture->setContentTransform(OutputTransform::FlipY);
-
-    GLFramebuffer offscreenTarget(offscreenTexture.get());
-    render(&offscreenTarget, Region::infinite());
-    grabTexture(offscreenTexture.get(), target);
-    return Rect(QPoint(), target->size());
-}
-
-Region WindowScreenCastSource::render(GLFramebuffer *target, const Region &bufferDamage)
+std::optional<ScreenCastSource::RenderResult> WindowScreenCastSource::render(GraphicsBuffer *buffer, const Region &bufferDamage)
 {
     WorkspaceScene *scene = kwinApp()->scene();
     auto renderer = scene->renderer(m_renderDevice);
-    const Rect damage(QPoint(), target->size());
+    const Rect damage(QPoint(), buffer->size());
 
     OutputLayerBeginFrameInfo beginInfo{
-        .renderTarget = RenderTarget{target},
+        .renderTarget = RenderTarget{buffer, OutputTransform::FlipY},
         .repaint = damage,
     };
     const auto renderInfo = renderer->beginFrame(beginInfo, nullptr, nullptr);
     if (!renderInfo) {
-        return Region{};
+        return std::nullopt;
     }
     RenderViewport viewport(boundingRect(), devicePixelRatio(), renderInfo->renderTarget, QPoint());
 
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT);
+    renderer->renderBackground(renderInfo->renderTarget, viewport, Region::infinite());
     for (const auto &window : m_windows) {
         if (!renderer->renderItem(renderInfo->renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, Region::infinite(), WindowPaintData{}, {}, {})) {
-            return {};
+            return std::nullopt;
         }
     }
     if (m_renderCursor && scene->cursorItem()->isVisible()) {
         if (!renderer->renderItem(renderInfo->renderTarget, viewport, scene->cursorItem(), 0, Region::infinite(), WindowPaintData{}, {}, {})) {
-            return {};
+            return std::nullopt;
         }
     }
-    renderer->endFrame(damage, nullptr, nullptr);
-    return damage;
+    return RenderResult{damage, renderer->endFrame(damage, nullptr, nullptr)};
 }
 
 uint WindowScreenCastSource::refreshRate() const

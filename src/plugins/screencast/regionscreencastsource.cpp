@@ -7,15 +7,12 @@
 #include "regionscreencastsource.h"
 #include "filteredsceneview.h"
 #include "screencastlayer.h"
-#include "screencastutils.h"
 
 #include "compositor.h"
 #include "core/output.h"
+#include "core/renderbackend.h"
 #include "core/renderdevice.h"
 #include "cursor.h"
-#include "opengl/eglbackend.h"
-#include "opengl/glframebuffer.h"
-#include "opengl/gltexture.h"
 #include "scene/workspacescene.h"
 #include "workspace.h"
 
@@ -77,42 +74,29 @@ void RegionScreenCastSource::setNextPresentationTimestamp(std::chrono::nanosecon
     m_sceneView->setNextPresentationTimestamp(timestamp, refreshRate, nullptr);
 }
 
-Region RegionScreenCastSource::render(GLFramebuffer *target, const Region &bufferRepair)
+std::optional<ScreenCastSource::RenderResult> RegionScreenCastSource::render(GraphicsBuffer *buffer, const Region &bufferRepair)
 {
     m_sceneView->prePaint();
     const auto _ = qScopeGuard([this]() {
         m_sceneView->postPaint();
     });
 
-    m_layer->setFramebuffer(target, bufferRepair & Rect(QPoint(), target->size()));
+    m_layer->setFramebuffer(buffer, bufferRepair & Rect(QPoint(), buffer->size()));
     if (!m_layer->preparePresentationTest()) {
-        return Region{};
+        return std::nullopt;
     }
     const auto beginInfo = m_layer->beginFrame();
     if (!beginInfo) {
-        return Region{};
+        return std::nullopt;
     }
-    const auto bufferDamage = m_sceneView->collectDamage() & Rect(QPoint(), target->size());
+    const auto bufferDamage = m_sceneView->collectDamage() & Rect(QPoint(), buffer->size());
     m_layer->resetRepaints();
     FileDescriptor sync = m_sceneView->paint(*beginInfo, QPoint(), bufferDamage, nullptr);
-    if (!m_layer->endFrame(bufferDamage, std::move(sync), nullptr)) {
-        return Region{};
+    if (!m_layer->endFrame(bufferDamage, sync.duplicate(), nullptr)) {
+        return std::nullopt;
     }
 
-    return bufferDamage;
-}
-
-Region RegionScreenCastSource::render(QImage *target, const Region &bufferRepair)
-{
-    auto texture = GLTexture::allocate(GL_RGBA8, target->size());
-    if (!texture) {
-        return Region{};
-    }
-    texture->setContentTransform(OutputTransform::FlipY);
-    GLFramebuffer buffer(texture.get());
-    const Region ret = render(&buffer, Region::infinite());
-    grabTexture(texture.get(), target);
-    return ret;
+    return RenderResult{bufferDamage, std::move(sync)};
 }
 
 uint RegionScreenCastSource::refreshRate() const
@@ -155,7 +139,7 @@ void RegionScreenCastSource::resume()
         return;
     }
 
-    m_layer = std::make_unique<ScreencastLayer>(workspace()->outputs().front(), m_renderDevice->eglDisplay()->nonExternalOnlySupportedDrmFormats());
+    m_layer = std::make_unique<ScreencastLayer>(workspace()->outputs().front(), Compositor::self()->backend()->supportedFormats());
 
     m_sceneView = std::make_unique<FilteredSceneView>(kwinApp()->scene(), workspace()->outputs().front(), m_layer.get(), m_renderDevice, m_pidToHide);
     m_sceneView->setViewport(m_region);

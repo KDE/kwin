@@ -757,4 +757,9 @@ void ItemRendererOpenGL::setLayerDebugging(bool enable)
     m_debug.layerEnabled = enable;
 }
 
+bool ItemRendererOpenGL::testRenderTargetImport(GraphicsBuffer *buffer)
+{
+    return m_context->importDmaBufAsFbo(buffer) != nullptr;
+}
+
 } // namespace KWin

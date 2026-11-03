@@ -9,8 +9,9 @@
 #include "core/drmdevice.h"
 #include "core/renderdevice.h"
 #include "core/shmgraphicsbufferallocator.h"
-#include "opengl/eglbackend.h"
-#include "opengl/glframebuffer.h"
+#include "main.h"
+#include "scene/itemrenderer.h"
+#include "scene/workspacescene.h"
 
 namespace KWin
 {
@@ -25,10 +26,8 @@ ScreenCastBuffer::~ScreenCastBuffer()
     m_buffer->drop();
 }
 
-DmaBufScreenCastBuffer::DmaBufScreenCastBuffer(GraphicsBuffer *buffer, std::shared_ptr<GLTexture> &&texture, std::unique_ptr<GLFramebuffer> &&framebuffer, std::unique_ptr<SyncTimeline> &&synctimeline)
+DmaBufScreenCastBuffer::DmaBufScreenCastBuffer(GraphicsBuffer *buffer, std::unique_ptr<SyncTimeline> &&synctimeline)
     : ScreenCastBuffer(buffer)
-    , texture(std::move(texture))
-    , framebuffer(std::move(framebuffer))
     , synctimeline(std::move(synctimeline))
 {
 }
@@ -52,20 +51,8 @@ DmaBufScreenCastBuffer *DmaBufScreenCastBuffer::create(RenderDevice *renderDevic
         return nullptr;
     }
 
-    auto context = renderDevice->eglContext();
-    if (!context->makeCurrent()) {
-        buffer->drop();
-        return nullptr;
-    }
-
-    auto texture = context->importDmaBufAsTexture(*attrs);
-    if (!texture) {
-        buffer->drop();
-        return nullptr;
-    }
-
-    auto framebuffer = std::make_unique<GLFramebuffer>(texture.get());
-    if (!framebuffer->valid()) {
+    ItemRenderer *renderer = kwinApp()->scene()->renderer(renderDevice);
+    if (!renderer->testRenderTargetImport(buffer)) {
         buffer->drop();
         return nullptr;
     }
@@ -107,7 +94,7 @@ DmaBufScreenCastBuffer *DmaBufScreenCastBuffer::create(RenderDevice *renderDevic
         releaseData.fd = syncobjfd.get();
     }
 
-    return new DmaBufScreenCastBuffer(buffer, std::move(texture), std::move(framebuffer), std::move(synctimeline));
+    return new DmaBufScreenCastBuffer(buffer, std::move(synctimeline));
 }
 
 MemFdScreenCastBuffer::MemFdScreenCastBuffer(GraphicsBuffer *buffer, GraphicsBufferView &&view)
