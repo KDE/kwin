@@ -341,7 +341,7 @@ set_tests_properties(kcm_kwin_scripts_smoketest PROPERTIES
     ENVIRONMENT_MODIFICATION QT_PLUGIN_PATH=path_list_prepend:${CMAKE_BINARY_DIR}/bin
 )
 
-add_test(NAME kcm_kwintabbox_smoketest COMMAND kcmshell6 --smoke-test kcm_kwintabbox)
+add_test(NAME kcm_kwin_taskswitching_smoketest COMMAND kcmshell6 --smoke-test kcm_kwintaskswitching)
 set_tests_properties(kcm_kwintabbox_smoketest PROPERTIES
     ENVIRONMENT_MODIFICATION QT_PLUGIN_PATH=path_list_prepend:${CMAKE_BINARY_DIR}/bin
 )
