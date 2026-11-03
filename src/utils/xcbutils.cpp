@@ -42,7 +42,7 @@ static const int RANDR_MAX_MAJOR = 1;
 static const int RANDR_MAX_MINOR = 4;
 static const int RENDER_MAX_MAJOR = 0;
 static const int RENDER_MAX_MINOR = 11;
-static const int XFIXES_MAX_MAJOR = 5;
+static const int XFIXES_MAX_MAJOR = 6;
 static const int XFIXES_MAX_MINOR = 0;
 
 QList<QByteArray> resOpCodes()
