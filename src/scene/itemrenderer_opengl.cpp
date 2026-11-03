@@ -463,6 +463,9 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
                 ShaderManager::instance()->popShader();
             }
             shader = ShaderManager::instance()->pushShader(traits);
+            if (!shader) {
+                continue;
+            }
             if (traits & ShaderTrait::AdjustSaturation) {
                 const auto toXYZ = renderTarget.colorDescription()->containerColorimetry().toXYZ();
                 shader->setUniform(GLShader::FloatUniform::Saturation, data.saturation());
