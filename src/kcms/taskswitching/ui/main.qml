@@ -88,7 +88,7 @@ KCM.AbstractKCM {
                             textFormat: Text.PlainText
                             wrapMode: Text.Wrap
 
-                            text: i18n("The alternative task switcher is a second switcher with its own separate shortcut, appearance, and behavior settings.")
+                            text: i18nc("@info", "The alternative task switcher is a second switcher with its own separate shortcut, appearance, and behavior settings.")
                         }
 
                         TabBoxSettings {

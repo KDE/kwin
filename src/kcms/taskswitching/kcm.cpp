@@ -131,7 +131,7 @@ void TaskSwitchingKCM::configureTabBoxShortcuts(const bool showAlternative, QQui
 {
     KShortcutsDialog *dialog = new KShortcutsDialog(KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
     KActionCollection *actionCollection = new KActionCollection(dialog, u"kwin"_s);
-    actionCollection->setComponentDisplayName(i18n("KWin"));
+    actionCollection->setComponentDisplayName(i18nc("@title", "KWin"));
 
     QAction *a;
     KLocalizedString name;
