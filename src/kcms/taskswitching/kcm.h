@@ -22,6 +22,7 @@ class TaskSwitchingKCM : public KQuickManagedConfigModule
     Q_PROPERTY(QAbstractItemModel *tabBoxLayouts READ tabBoxLayouts CONSTANT)
     Q_PROPERTY(OverviewSettings *overviewSettings READ overviewSettings CONSTANT)
     Q_PROPERTY(QStringList overviewShortcuts READ overviewShortcuts NOTIFY overviewShortcutsChanged)
+    Q_PROPERTY(bool tabBoxLimitedByFocusPolicy READ tabBoxLimitedByFocusPolicy CONSTANT)
 
 public:
     TaskSwitchingKCM(QObject *parent, const KPluginMetaData &metaData);
@@ -32,6 +33,7 @@ public:
     QAbstractItemModel *tabBoxLayouts() const;
     OverviewSettings *overviewSettings() const;
     QStringList overviewShortcuts() const;
+    bool tabBoxLimitedByFocusPolicy() const;
 
     bool isDefaults() const override;
     void save() override;

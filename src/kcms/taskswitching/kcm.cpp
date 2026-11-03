@@ -15,8 +15,10 @@
 #include <qqml.h>
 
 #include <KActionCollection>
+#include <KConfigGroup>
 #include <KGlobalAccel>
 #include <KLocalizedString>
+#include <KSharedConfig>
 #include <KShortcutsDialog>
 
 #include "tabbox/tabboxconfig.h"
@@ -80,6 +82,11 @@ QStringList TaskSwitchingKCM::overviewShortcuts() const
         }
     }
     return texts;
+}
+
+bool TaskSwitchingKCM::tabBoxLimitedByFocusPolicy() const
+{
+    return KConfigGroup(KSharedConfig::openConfig(u"kwinrc"_s), u"Windows"_s).readEntry("FocusPolicy", u"ClickToFocus"_s) == "FocusUnderMouse"_L1;
 }
 
 bool TaskSwitchingKCM::isDefaults() const

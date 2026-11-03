@@ -53,6 +53,15 @@ KCM.AbstractKCM {
             ]
         }
 
+        Kirigami.InlineMessage {
+            Layout.fillWidth: true
+
+            position: Kirigami.InlineMessage.Position.Header
+            type: Kirigami.MessageType.Information
+            visible: kcm.tabBoxLimitedByFocusPolicy && stackLayout.currentIndex !== 2
+            text: i18nc("@info", "Focus policy settings limit the functionality of navigating through windows.")
+        }
+
         QQC2.ScrollView {
             id: scrollView
             Layout.fillWidth: true
@@ -72,11 +81,13 @@ KCM.AbstractKCM {
 
                     // "Task Switcher"
                     TabBoxSettings {
+                        enabled: !kcm.tabBoxLimitedByFocusPolicy
                         isAlternative: false
                     }
 
                     // "Task Switcher (Alternative)"
                     ColumnLayout {
+                        enabled: !kcm.tabBoxLimitedByFocusPolicy
                         spacing: Kirigami.Units.largeSpacing
 
                         QQC2.Label {
