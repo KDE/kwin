@@ -109,6 +109,7 @@ public:
     void moveInto(uint64_t timelinePoint, const FileDescriptor &fd);
     FileDescriptor exportSyncFile(uint64_t timelinePoint);
     bool isMaterialized(uint64_t timelinePoint);
+    bool isSignaled(uint64_t timelinePoint);
 
 private:
     const int32_t m_drmFd;
