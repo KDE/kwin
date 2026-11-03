@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-14 00:45+0000\n"
+"POT-Creation-Date: 2026-11-03 00:56+0000\n"
 "PO-Revision-Date: 2026-07-14 20:45+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -236,14 +236,14 @@ msgid "Screen &edge snap zone:"
 msgstr "Ekran &kenarı tutturma bölgesi:"
 
 #: ui/MovementAndPlacement.qml:30 ui/MovementAndPlacement.qml:58
-#: ui/MovementAndPlacement.qml:87 ui/MovementAndPlacement.qml:183
+#: ui/MovementAndPlacement.qml:87 ui/MovementAndPlacement.qml:199
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "%1 px"
 msgstr "%1 pks"
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
-#: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
+#: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:203
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "px"
@@ -313,38 +313,116 @@ msgstr "Farenin altında"
 #: ui/MovementAndPlacement.qml:149
 #, kde-format
 msgctxt "@title:group"
-msgid "Picture-in-picture Placement"
-msgstr "&Resim İçinde Resim yerleşimi"
+msgid "Overlay Positioning"
+msgstr ""
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
-msgid "Open in screen corner:"
-msgstr "Ekranın şu köşesinde aç:"
+msgctxt "@label:chooser"
+msgid "OSD popups:"
+msgstr ""
 
-#: ui/MovementAndPlacement.qml:157
+#: ui/MovementAndPlacement.qml:167
+#, fuzzy, kde-format
+#| msgctxt "@title:group"
+#| msgid "Picture-in-picture Placement"
+msgctxt "@label:chooser"
+msgid "Picture-in-picture:"
+msgstr "&Resim İçinde Resim yerleşimi"
+
+#: ui/MovementAndPlacement.qml:172
 #, kde-format
 msgid "Top-left"
 msgstr "Sol üst"
 
-#: ui/MovementAndPlacement.qml:158
+#: ui/MovementAndPlacement.qml:173
 #, kde-format
 msgid "Top-right"
 msgstr "Sağ üst"
 
-#: ui/MovementAndPlacement.qml:159
+#: ui/MovementAndPlacement.qml:174
 #, kde-format
 msgid "Bottom-left"
 msgstr "Sol alt"
 
-#: ui/MovementAndPlacement.qml:160
+#: ui/MovementAndPlacement.qml:175
 #, kde-format
 msgid "Bottom-right"
 msgstr "Sağ alt"
 
-#: ui/MovementAndPlacement.qml:173
+#: ui/MovementAndPlacement.qml:189
 #, kde-format
 msgid "Margin:"
 msgstr "Kenar boşluğu:"
+
+#: ui/OnScreenDisplayPositionSelector.qml:80
+#, fuzzy, kde-format
+#| msgid "Top-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Top-left"
+msgstr "Sol üst"
+
+#: ui/OnScreenDisplayPositionSelector.qml:85
+#, fuzzy, kde-format
+#| msgid "Top-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Top-center"
+msgstr "Sol üst"
+
+#: ui/OnScreenDisplayPositionSelector.qml:90
+#, fuzzy, kde-format
+#| msgid "Top-right"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Top-right"
+msgstr "Sağ üst"
+
+#: ui/OnScreenDisplayPositionSelector.qml:95
+#, fuzzy, kde-format
+#| msgid "Centered"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Center-left"
+msgstr "Ortalanmış"
+
+#: ui/OnScreenDisplayPositionSelector.qml:100
+#, fuzzy, kde-format
+#| msgid "Centered"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Center"
+msgstr "Ortalanmış"
+
+#: ui/OnScreenDisplayPositionSelector.qml:105
+#, fuzzy, kde-format
+#| msgid "Centered"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Center-right"
+msgstr "Ortalanmış"
+
+#: ui/OnScreenDisplayPositionSelector.qml:110
+#, fuzzy, kde-format
+#| msgid "Bottom-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Bottom-left"
+msgstr "Sol alt"
+
+#: ui/OnScreenDisplayPositionSelector.qml:115
+#, fuzzy, kde-format
+#| msgid "Bottom-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Bottom-center"
+msgstr "Sol alt"
+
+#: ui/OnScreenDisplayPositionSelector.qml:120
+#, fuzzy, kde-format
+#| msgid "Bottom-right"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Bottom-right"
+msgstr "Sağ alt"
+
+#: ui/OnScreenDisplayPositionSelector.qml:141
+#, kde-format
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Lower center"
+msgstr ""
 
 #: ui/TitlebarActions.qml:20 ui/TitlebarActions.qml:33 ui/WindowActions.qml:31
 #, kde-format
@@ -641,6 +719,9 @@ msgstr "O&rta tık:"
 #, kde-format
 msgid "Mo&use wheel:"
 msgstr "&Fare tekerleği:"
+
+#~ msgid "Open in screen corner:"
+#~ msgstr "Ekranın şu köşesinde aç:"
 
 #~ msgid ""
 #~ "In this row you can customize left click behavior when clicking into an "

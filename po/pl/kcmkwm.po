@@ -1,6 +1,6 @@
 # translation of kcmkwm.po to Polish
 # translation of kcmkwm.po to
-# Version: $Revision: 1741297 $
+# Version: $Revision: 1751851 $
 # SPDX-FileCopyrightText: 2011-2015, 2019, 2021-2022, 2024-2026 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 # Previous translations Piotr Roszatycki <dexter@debian.org>
 # Michał Rudolf <mrudolf@kdewebdev.org>, 2002.
@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-14 00:45+0000\n"
+"POT-Creation-Date: 2026-11-03 00:56+0000\n"
 "PO-Revision-Date: 2026-06-27 12:28+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -237,14 +237,14 @@ msgid "Screen &edge snap zone:"
 msgstr "Obszar przyciągania na brzegu &ekranu:"
 
 #: ui/MovementAndPlacement.qml:30 ui/MovementAndPlacement.qml:58
-#: ui/MovementAndPlacement.qml:87 ui/MovementAndPlacement.qml:183
+#: ui/MovementAndPlacement.qml:87 ui/MovementAndPlacement.qml:199
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "%1 px"
 msgstr ""
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
-#: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
+#: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:203
 #, fuzzy, kde-format
 #| msgid " px"
 msgctxt "short for pixel(s)"
@@ -313,41 +313,117 @@ msgid "Under mouse"
 msgstr "Pod myszą"
 
 #: ui/MovementAndPlacement.qml:149
-#, fuzzy, kde-format
-#| msgid "&Picture-in-picture"
+#, kde-format
 msgctxt "@title:group"
-msgid "Picture-in-picture Placement"
-msgstr "&Obraz w Obrazie"
+msgid "Overlay Positioning"
+msgstr ""
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
-msgid "Open in screen corner:"
-msgstr "Otwórz w narożniku ekranu:"
+msgctxt "@label:chooser"
+msgid "OSD popups:"
+msgstr ""
 
-#: ui/MovementAndPlacement.qml:157
+#: ui/MovementAndPlacement.qml:167
+#, fuzzy, kde-format
+#| msgid "&Picture-in-picture"
+msgctxt "@label:chooser"
+msgid "Picture-in-picture:"
+msgstr "&Obraz w Obrazie"
+
+#: ui/MovementAndPlacement.qml:172
 #, kde-format
 msgid "Top-left"
 msgstr "Lewym górnym"
 
-#: ui/MovementAndPlacement.qml:158
+#: ui/MovementAndPlacement.qml:173
 #, kde-format
 msgid "Top-right"
 msgstr "Prawym górnym"
 
-#: ui/MovementAndPlacement.qml:159
+#: ui/MovementAndPlacement.qml:174
 #, kde-format
 msgid "Bottom-left"
 msgstr "Lewym dolnym"
 
-#: ui/MovementAndPlacement.qml:160
+#: ui/MovementAndPlacement.qml:175
 #, kde-format
 msgid "Bottom-right"
 msgstr "Prawym dolnym"
 
-#: ui/MovementAndPlacement.qml:173
+#: ui/MovementAndPlacement.qml:189
 #, kde-format
 msgid "Margin:"
 msgstr "Margines:"
+
+#: ui/OnScreenDisplayPositionSelector.qml:80
+#, fuzzy, kde-format
+#| msgid "Top-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Top-left"
+msgstr "Lewym górnym"
+
+#: ui/OnScreenDisplayPositionSelector.qml:85
+#, fuzzy, kde-format
+#| msgid "Top-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Top-center"
+msgstr "Lewym górnym"
+
+#: ui/OnScreenDisplayPositionSelector.qml:90
+#, fuzzy, kde-format
+#| msgid "Top-right"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Top-right"
+msgstr "Prawym górnym"
+
+#: ui/OnScreenDisplayPositionSelector.qml:95
+#, fuzzy, kde-format
+#| msgid "Centered"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Center-left"
+msgstr "Wyśrodkowane"
+
+#: ui/OnScreenDisplayPositionSelector.qml:100
+#, fuzzy, kde-format
+#| msgid "Centered"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Center"
+msgstr "Wyśrodkowane"
+
+#: ui/OnScreenDisplayPositionSelector.qml:105
+#, fuzzy, kde-format
+#| msgid "Centered"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Center-right"
+msgstr "Wyśrodkowane"
+
+#: ui/OnScreenDisplayPositionSelector.qml:110
+#, fuzzy, kde-format
+#| msgid "Bottom-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Bottom-left"
+msgstr "Lewym dolnym"
+
+#: ui/OnScreenDisplayPositionSelector.qml:115
+#, fuzzy, kde-format
+#| msgid "Bottom-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Bottom-center"
+msgstr "Lewym dolnym"
+
+#: ui/OnScreenDisplayPositionSelector.qml:120
+#, fuzzy, kde-format
+#| msgid "Bottom-right"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Bottom-right"
+msgstr "Prawym dolnym"
+
+#: ui/OnScreenDisplayPositionSelector.qml:141
+#, kde-format
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Lower center"
+msgstr ""
 
 #: ui/TitlebarActions.qml:20 ui/TitlebarActions.qml:33 ui/WindowActions.qml:31
 #, kde-format
@@ -655,6 +731,9 @@ msgstr "Kliknię&cie środkowym:"
 #, kde-format
 msgid "Mo&use wheel:"
 msgstr "&Rolka myszy:"
+
+#~ msgid "Open in screen corner:"
+#~ msgstr "Otwórz w narożniku ekranu:"
 
 #~ msgid ""
 #~ "In this row you can customize left click behavior when clicking into an "

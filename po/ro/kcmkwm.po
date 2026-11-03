@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-14 00:45+0000\n"
+"POT-Creation-Date: 2026-11-03 00:56+0000\n"
 "PO-Revision-Date: 2026-02-09 10:41+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -234,14 +234,14 @@ msgid "Screen &edge snap zone:"
 msgstr "Zona magn&etică a marginii ecranului:"
 
 #: ui/MovementAndPlacement.qml:30 ui/MovementAndPlacement.qml:58
-#: ui/MovementAndPlacement.qml:87 ui/MovementAndPlacement.qml:183
+#: ui/MovementAndPlacement.qml:87 ui/MovementAndPlacement.qml:199
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "%1 px"
 msgstr ""
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
-#: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
+#: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:203
 #, fuzzy, kde-format
 #| msgid " px"
 msgctxt "short for pixel(s)"
@@ -310,41 +310,117 @@ msgid "Under mouse"
 msgstr "Sub maus"
 
 #: ui/MovementAndPlacement.qml:149
-#, fuzzy, kde-format
-#| msgid "&Picture-in-picture"
+#, kde-format
 msgctxt "@title:group"
-msgid "Picture-in-picture Placement"
-msgstr "&Imagine-în-imagine"
+msgid "Overlay Positioning"
+msgstr ""
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
-msgid "Open in screen corner:"
-msgstr "Deschide în colțul ecranului:"
+msgctxt "@label:chooser"
+msgid "OSD popups:"
+msgstr ""
 
-#: ui/MovementAndPlacement.qml:157
+#: ui/MovementAndPlacement.qml:167
+#, fuzzy, kde-format
+#| msgid "&Picture-in-picture"
+msgctxt "@label:chooser"
+msgid "Picture-in-picture:"
+msgstr "&Imagine-în-imagine"
+
+#: ui/MovementAndPlacement.qml:172
 #, kde-format
 msgid "Top-left"
 msgstr "Stânga-sus"
 
-#: ui/MovementAndPlacement.qml:158
+#: ui/MovementAndPlacement.qml:173
 #, kde-format
 msgid "Top-right"
 msgstr "Drepta-sus"
 
-#: ui/MovementAndPlacement.qml:159
+#: ui/MovementAndPlacement.qml:174
 #, kde-format
 msgid "Bottom-left"
 msgstr "Stânga-jos"
 
-#: ui/MovementAndPlacement.qml:160
+#: ui/MovementAndPlacement.qml:175
 #, kde-format
 msgid "Bottom-right"
 msgstr "Dreapta-jos"
 
-#: ui/MovementAndPlacement.qml:173
+#: ui/MovementAndPlacement.qml:189
 #, kde-format
 msgid "Margin:"
 msgstr "Margine:"
+
+#: ui/OnScreenDisplayPositionSelector.qml:80
+#, fuzzy, kde-format
+#| msgid "Top-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Top-left"
+msgstr "Stânga-sus"
+
+#: ui/OnScreenDisplayPositionSelector.qml:85
+#, fuzzy, kde-format
+#| msgid "Top-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Top-center"
+msgstr "Stânga-sus"
+
+#: ui/OnScreenDisplayPositionSelector.qml:90
+#, fuzzy, kde-format
+#| msgid "Top-right"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Top-right"
+msgstr "Drepta-sus"
+
+#: ui/OnScreenDisplayPositionSelector.qml:95
+#, fuzzy, kde-format
+#| msgid "Centered"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Center-left"
+msgstr "Centrată"
+
+#: ui/OnScreenDisplayPositionSelector.qml:100
+#, fuzzy, kde-format
+#| msgid "Centered"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Center"
+msgstr "Centrată"
+
+#: ui/OnScreenDisplayPositionSelector.qml:105
+#, fuzzy, kde-format
+#| msgid "Centered"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Center-right"
+msgstr "Centrată"
+
+#: ui/OnScreenDisplayPositionSelector.qml:110
+#, fuzzy, kde-format
+#| msgid "Bottom-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Bottom-left"
+msgstr "Stânga-jos"
+
+#: ui/OnScreenDisplayPositionSelector.qml:115
+#, fuzzy, kde-format
+#| msgid "Bottom-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Bottom-center"
+msgstr "Stânga-jos"
+
+#: ui/OnScreenDisplayPositionSelector.qml:120
+#, fuzzy, kde-format
+#| msgid "Bottom-right"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Bottom-right"
+msgstr "Dreapta-jos"
+
+#: ui/OnScreenDisplayPositionSelector.qml:141
+#, kde-format
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Lower center"
+msgstr ""
 
 #: ui/TitlebarActions.qml:20 ui/TitlebarActions.qml:33 ui/WindowActions.qml:31
 #, kde-format
@@ -651,6 +727,9 @@ msgstr "&Clic mijlociu:"
 #, kde-format
 msgid "Mo&use wheel:"
 msgstr "Rotița ma&usului:"
+
+#~ msgid "Open in screen corner:"
+#~ msgstr "Deschide în colțul ecranului:"
 
 #~ msgid ""
 #~ "In this row you can customize left click behavior when clicking into an "

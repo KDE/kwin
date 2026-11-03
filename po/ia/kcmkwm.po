@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-14 00:45+0000\n"
+"POT-Creation-Date: 2026-11-03 00:56+0000\n"
 "PO-Revision-Date: 2026-07-17 15:42+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -223,14 +223,14 @@ msgid "Screen &edge snap zone:"
 msgstr "Zona de salto al limit&e o bordo de schermo:"
 
 #: ui/MovementAndPlacement.qml:30 ui/MovementAndPlacement.qml:58
-#: ui/MovementAndPlacement.qml:87 ui/MovementAndPlacement.qml:183
+#: ui/MovementAndPlacement.qml:87 ui/MovementAndPlacement.qml:199
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "%1 px"
 msgstr "%1 px"
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
-#: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
+#: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:203
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "px"
@@ -300,38 +300,116 @@ msgstr "Infra mus"
 #: ui/MovementAndPlacement.qml:149
 #, kde-format
 msgctxt "@title:group"
-msgid "Picture-in-picture Placement"
-msgstr "Placiamento de Imagine in Imagine"
+msgid "Overlay Positioning"
+msgstr ""
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
-msgid "Open in screen corner:"
-msgstr "Aperi in angulo de schermo:"
+msgctxt "@label:chooser"
+msgid "OSD popups:"
+msgstr ""
 
-#: ui/MovementAndPlacement.qml:157
+#: ui/MovementAndPlacement.qml:167
+#, fuzzy, kde-format
+#| msgctxt "@title:group"
+#| msgid "Picture-in-picture Placement"
+msgctxt "@label:chooser"
+msgid "Picture-in-picture:"
+msgstr "Placiamento de Imagine in Imagine"
+
+#: ui/MovementAndPlacement.qml:172
 #, kde-format
 msgid "Top-left"
 msgstr "Culmine a sinistra"
 
-#: ui/MovementAndPlacement.qml:158
+#: ui/MovementAndPlacement.qml:173
 #, kde-format
 msgid "Top-right"
 msgstr "Culmine a dextera"
 
-#: ui/MovementAndPlacement.qml:159
+#: ui/MovementAndPlacement.qml:174
 #, kde-format
 msgid "Bottom-left"
 msgstr "Basso a sinistra"
 
-#: ui/MovementAndPlacement.qml:160
+#: ui/MovementAndPlacement.qml:175
 #, kde-format
 msgid "Bottom-right"
 msgstr "Basso a dextera"
 
-#: ui/MovementAndPlacement.qml:173
+#: ui/MovementAndPlacement.qml:189
 #, kde-format
 msgid "Margin:"
 msgstr "Margine:"
+
+#: ui/OnScreenDisplayPositionSelector.qml:80
+#, fuzzy, kde-format
+#| msgid "Top-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Top-left"
+msgstr "Culmine a sinistra"
+
+#: ui/OnScreenDisplayPositionSelector.qml:85
+#, fuzzy, kde-format
+#| msgid "Top-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Top-center"
+msgstr "Culmine a sinistra"
+
+#: ui/OnScreenDisplayPositionSelector.qml:90
+#, fuzzy, kde-format
+#| msgid "Top-right"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Top-right"
+msgstr "Culmine a dextera"
+
+#: ui/OnScreenDisplayPositionSelector.qml:95
+#, fuzzy, kde-format
+#| msgid "Centered"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Center-left"
+msgstr "Centrate"
+
+#: ui/OnScreenDisplayPositionSelector.qml:100
+#, fuzzy, kde-format
+#| msgid "Centered"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Center"
+msgstr "Centrate"
+
+#: ui/OnScreenDisplayPositionSelector.qml:105
+#, fuzzy, kde-format
+#| msgid "Centered"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Center-right"
+msgstr "Centrate"
+
+#: ui/OnScreenDisplayPositionSelector.qml:110
+#, fuzzy, kde-format
+#| msgid "Bottom-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Bottom-left"
+msgstr "Basso a sinistra"
+
+#: ui/OnScreenDisplayPositionSelector.qml:115
+#, fuzzy, kde-format
+#| msgid "Bottom-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Bottom-center"
+msgstr "Basso a sinistra"
+
+#: ui/OnScreenDisplayPositionSelector.qml:120
+#, fuzzy, kde-format
+#| msgid "Bottom-right"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Bottom-right"
+msgstr "Basso a dextera"
+
+#: ui/OnScreenDisplayPositionSelector.qml:141
+#, kde-format
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Lower center"
+msgstr ""
 
 #: ui/TitlebarActions.qml:20 ui/TitlebarActions.qml:33 ui/WindowActions.qml:31
 #, kde-format
@@ -628,6 +706,9 @@ msgstr "&Click in medio:"
 #, kde-format
 msgid "Mo&use wheel:"
 msgstr "Rota de m&us:"
+
+#~ msgid "Open in screen corner:"
+#~ msgstr "Aperi in angulo de schermo:"
 
 #~ msgid ""
 #~ "In this row you can customize left click behavior when clicking into an "

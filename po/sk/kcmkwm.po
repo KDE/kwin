@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-14 00:45+0000\n"
+"POT-Creation-Date: 2026-11-03 00:56+0000\n"
 "PO-Revision-Date: 2023-05-14 16:06+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -226,14 +226,14 @@ msgid "Screen &edge snap zone:"
 msgstr "Zóna priťahovania ok&rajov:"
 
 #: ui/MovementAndPlacement.qml:30 ui/MovementAndPlacement.qml:58
-#: ui/MovementAndPlacement.qml:87 ui/MovementAndPlacement.qml:183
+#: ui/MovementAndPlacement.qml:87 ui/MovementAndPlacement.qml:199
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "%1 px"
 msgstr "%1 px"
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
-#: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
+#: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:203
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "px"
@@ -303,38 +303,116 @@ msgstr "Pod myšou"
 #: ui/MovementAndPlacement.qml:149
 #, kde-format
 msgctxt "@title:group"
-msgid "Picture-in-picture Placement"
-msgstr "Umiestnenie obrazu v obraze"
+msgid "Overlay Positioning"
+msgstr ""
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
-msgid "Open in screen corner:"
-msgstr "Otvoriť v rohu obrazovky:"
+msgctxt "@label:chooser"
+msgid "OSD popups:"
+msgstr ""
 
-#: ui/MovementAndPlacement.qml:157
+#: ui/MovementAndPlacement.qml:167
+#, fuzzy, kde-format
+#| msgctxt "@title:group"
+#| msgid "Picture-in-picture Placement"
+msgctxt "@label:chooser"
+msgid "Picture-in-picture:"
+msgstr "Umiestnenie obrazu v obraze"
+
+#: ui/MovementAndPlacement.qml:172
 #, kde-format
 msgid "Top-left"
 msgstr "Vľavo hore"
 
-#: ui/MovementAndPlacement.qml:158
+#: ui/MovementAndPlacement.qml:173
 #, kde-format
 msgid "Top-right"
 msgstr "Vpravo hore"
 
-#: ui/MovementAndPlacement.qml:159
+#: ui/MovementAndPlacement.qml:174
 #, kde-format
 msgid "Bottom-left"
 msgstr "Vľavo dole"
 
-#: ui/MovementAndPlacement.qml:160
+#: ui/MovementAndPlacement.qml:175
 #, kde-format
 msgid "Bottom-right"
 msgstr "Vpravo dole"
 
-#: ui/MovementAndPlacement.qml:173
+#: ui/MovementAndPlacement.qml:189
 #, kde-format
 msgid "Margin:"
 msgstr "Okraj:"
+
+#: ui/OnScreenDisplayPositionSelector.qml:80
+#, fuzzy, kde-format
+#| msgid "Top-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Top-left"
+msgstr "Vľavo hore"
+
+#: ui/OnScreenDisplayPositionSelector.qml:85
+#, fuzzy, kde-format
+#| msgid "Top-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Top-center"
+msgstr "Vľavo hore"
+
+#: ui/OnScreenDisplayPositionSelector.qml:90
+#, fuzzy, kde-format
+#| msgid "Top-right"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Top-right"
+msgstr "Vpravo hore"
+
+#: ui/OnScreenDisplayPositionSelector.qml:95
+#, fuzzy, kde-format
+#| msgid "Centered"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Center-left"
+msgstr "V strede"
+
+#: ui/OnScreenDisplayPositionSelector.qml:100
+#, fuzzy, kde-format
+#| msgid "Centered"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Center"
+msgstr "V strede"
+
+#: ui/OnScreenDisplayPositionSelector.qml:105
+#, fuzzy, kde-format
+#| msgid "Centered"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Center-right"
+msgstr "V strede"
+
+#: ui/OnScreenDisplayPositionSelector.qml:110
+#, fuzzy, kde-format
+#| msgid "Bottom-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Bottom-left"
+msgstr "Vľavo dole"
+
+#: ui/OnScreenDisplayPositionSelector.qml:115
+#, fuzzy, kde-format
+#| msgid "Bottom-left"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Bottom-center"
+msgstr "Vľavo dole"
+
+#: ui/OnScreenDisplayPositionSelector.qml:120
+#, fuzzy, kde-format
+#| msgid "Bottom-right"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Bottom-right"
+msgstr "Vpravo dole"
+
+#: ui/OnScreenDisplayPositionSelector.qml:141
+#, kde-format
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Lower center"
+msgstr ""
 
 #: ui/TitlebarActions.qml:20 ui/TitlebarActions.qml:33 ui/WindowActions.qml:31
 #, kde-format
@@ -631,6 +709,9 @@ msgstr "Stredné kliknutie:"
 #, kde-format
 msgid "Mo&use wheel:"
 msgstr "Koliesko myši:"
+
+#~ msgid "Open in screen corner:"
+#~ msgstr "Otvoriť v rohu obrazovky:"
 
 #~ msgid ""
 #~ "In this row you can customize left click behavior when clicking into an "

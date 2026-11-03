@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-31 00:53+0000\n"
+"POT-Creation-Date: 2026-11-03 00:56+0000\n"
 "PO-Revision-Date: 2026-10-07 11:45+0200\n"
 "Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -1785,7 +1785,7 @@ msgstr "Метод уноса који К‑вин покреће."
 msgid "Starts the session in locked mode."
 msgstr "Покреће сесију у закључаном режиму."
 
-#: main_wayland.cpp:453
+#: main_wayland.cpp:454
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Покреће сесију без подршке за закључавање екрана."
@@ -1796,17 +1796,17 @@ msgid "Starts the session without global shortcuts support."
 msgstr "Покреће сесију без подршке за глобалне пречице."
 
 # rewrite-msgid: /KActivities/activities/
-#: main_wayland.cpp:463
+#: main_wayland.cpp:462
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Искључи уклапање са активностима."
 
-#: main_wayland.cpp:468
+#: main_wayland.cpp:466
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Излазак пошто се програм сесије, који покрене К‑вин, затвори."
 
-#: main_wayland.cpp:473
+#: main_wayland.cpp:471
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
@@ -4551,7 +4551,7 @@ msgstr "Укључено је више екрана него што графич
 msgid "The driver rejected the output configuration: %1"
 msgstr "Драјвер је одбио поставу излаза: %s"
 
-#: window.cpp:3182
+#: window.cpp:3181
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

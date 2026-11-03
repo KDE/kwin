@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-14 00:45+0000\n"
+"POT-Creation-Date: 2026-11-03 00:56+0000\n"
 "PO-Revision-Date: 2019-12-12 22:45+0000\n"
 "Last-Translator: Vivek KJ Pazhedath <vivekkj2004@gmail.com>\n"
 "Language-Team: Swathanthra|സ്വതന്ത്ര Malayalam|മലയാളം Computing|കമ്പ്യൂട്ടിങ്ങ് <smc-"
@@ -228,14 +228,14 @@ msgid "Screen &edge snap zone:"
 msgstr ""
 
 #: ui/MovementAndPlacement.qml:30 ui/MovementAndPlacement.qml:58
-#: ui/MovementAndPlacement.qml:87 ui/MovementAndPlacement.qml:183
+#: ui/MovementAndPlacement.qml:87 ui/MovementAndPlacement.qml:199
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "%1 px"
 msgstr ""
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
-#: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:187
+#: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:203
 #, fuzzy, kde-format
 msgctxt "short for pixel(s)"
 msgid "px"
@@ -307,37 +307,107 @@ msgstr "കേന്ദ്രീകരണം മൌസിന്റെ താഴ�
 #: ui/MovementAndPlacement.qml:149
 #, kde-format
 msgctxt "@title:group"
-msgid "Picture-in-picture Placement"
+msgid "Overlay Positioning"
 msgstr ""
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
-msgid "Open in screen corner:"
+msgctxt "@label:chooser"
+msgid "OSD popups:"
 msgstr ""
 
-#: ui/MovementAndPlacement.qml:157
+#: ui/MovementAndPlacement.qml:167
+#, kde-format
+msgctxt "@label:chooser"
+msgid "Picture-in-picture:"
+msgstr ""
+
+#: ui/MovementAndPlacement.qml:172
 #, kde-format
 msgid "Top-left"
 msgstr ""
 
-#: ui/MovementAndPlacement.qml:158
+#: ui/MovementAndPlacement.qml:173
 #, kde-format
 msgid "Top-right"
 msgstr ""
 
-#: ui/MovementAndPlacement.qml:159
+#: ui/MovementAndPlacement.qml:174
 #, kde-format
 msgid "Bottom-left"
 msgstr ""
 
-#: ui/MovementAndPlacement.qml:160
+#: ui/MovementAndPlacement.qml:175
 #, kde-format
 msgid "Bottom-right"
 msgstr ""
 
-#: ui/MovementAndPlacement.qml:173
+#: ui/MovementAndPlacement.qml:189
 #, kde-format
 msgid "Margin:"
+msgstr ""
+
+#: ui/OnScreenDisplayPositionSelector.qml:80
+#, kde-format
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Top-left"
+msgstr ""
+
+#: ui/OnScreenDisplayPositionSelector.qml:85
+#, kde-format
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Top-center"
+msgstr ""
+
+#: ui/OnScreenDisplayPositionSelector.qml:90
+#, kde-format
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Top-right"
+msgstr ""
+
+#: ui/OnScreenDisplayPositionSelector.qml:95
+#, fuzzy, kde-format
+#| msgid "Centered"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Center-left"
+msgstr "നടുവില്‍"
+
+#: ui/OnScreenDisplayPositionSelector.qml:100
+#, fuzzy, kde-format
+#| msgid "Centered"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Center"
+msgstr "നടുവില്‍"
+
+#: ui/OnScreenDisplayPositionSelector.qml:105
+#, fuzzy, kde-format
+#| msgid "Centered"
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Center-right"
+msgstr "നടുവില്‍"
+
+#: ui/OnScreenDisplayPositionSelector.qml:110
+#, kde-format
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Bottom-left"
+msgstr ""
+
+#: ui/OnScreenDisplayPositionSelector.qml:115
+#, kde-format
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Bottom-center"
+msgstr ""
+
+#: ui/OnScreenDisplayPositionSelector.qml:120
+#, kde-format
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Bottom-right"
+msgstr ""
+
+#: ui/OnScreenDisplayPositionSelector.qml:141
+#, kde-format
+msgctxt "@option:radio Position of on-screen displays"
+msgid "Lower center"
 msgstr ""
 
 #: ui/TitlebarActions.qml:20 ui/TitlebarActions.qml:33 ui/WindowActions.qml:31
