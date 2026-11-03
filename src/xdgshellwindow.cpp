@@ -1427,8 +1427,8 @@ DecorationMode XdgToplevelWindow::preferredDecorationMode() const
     }
 
     DecorationMode serverStyle = DecorationMode::Server;
-    if (handlesCutouts() && Decoration::DecorationBridge::supportedStyles().contains(KDecoration3::Style::Overlay)) {
-        serverStyle = DecorationMode::Overlay;
+    if (handlesCutouts() && Decoration::DecorationBridge::supportedStyles().contains(KDecoration3::Style::SimplifiedOverlay)) {
+        serverStyle = DecorationMode::SimplifiedOverlay;
     }
 
     switch (m_decorationPolicy) {
