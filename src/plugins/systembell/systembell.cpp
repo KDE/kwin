@@ -27,7 +27,6 @@
 #undef explicit
 #endif
 
-#include <QDBusConnection>
 #include <QFile>
 #include <QGuiApplication>
 #include <QTimer>
@@ -152,11 +151,6 @@ XdgSystemBellV1Interface *SystemBellEffect::s_systemBell = nullptr;
 SystemBellEffect::SystemBellEffect()
     : m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kaccessrc")))
 {
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/Effect/SystemBell1"),
-                                                 QStringLiteral("org.kde.KWin.Effect.SystemBell1"),
-                                                 this,
-                                                 QDBusConnection::ExportAllSlots);
-
     connect(effects, &EffectsHandler::windowClosed, this, &SystemBellEffect::slotWindowClosed);
 
     const QLatin1StringView groupName("Bell");
