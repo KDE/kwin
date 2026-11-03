@@ -209,4 +209,11 @@ bool SyncTimeline::isMaterialized(uint64_t timelinePoint)
             == 0);
 }
 
+bool SyncTimeline::isSignaled(uint64_t timelinePoint)
+{
+    uint64_t point = 0;
+    return drmSyncobjQuery(m_drmFd, &m_handle, &point, 1) == 0
+        && point >= timelinePoint;
+}
+
 }
