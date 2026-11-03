@@ -14,6 +14,7 @@
 #include "opengl/eglcontext.h"
 #include "opengl/egldisplay.h"
 #include "opengl/eglnativefence.h"
+#include "opengl/glframebuffer.h"
 #include "opengl/glplatform.h"
 #include "udmabufallocator.h"
 #include "utils/common.h"
@@ -506,6 +507,46 @@ QImage RenderDevice::download(GraphicsBuffer *buffer)
         return texture->toImage();
     } else {
         return QImage{};
+    }
+}
+
+static GLenum closestGLType(QImage::Format format)
+{
+    switch (format) {
+    case QImage::Format_ARGB32:
+    case QImage::Format_ARGB32_Premultiplied:
+    case QImage::Format_RGB32:
+        return GL_BGRA;
+    default:
+        qDebug() << "unknown format" << format;
+        return GL_RGBA;
+    }
+}
+
+bool RenderDevice::download(GraphicsBuffer *source, FileDescriptor &&sync, QImage &target)
+{
+    if (m_vulkanDevice
+        && m_vulkanDevice->transferFormats().containsFormat(source->format(), source->modifier())
+        && VulkanTexture::qImageToVulkanFormat(target.format())) {
+        const auto texture = m_vulkanDevice->importBuffer(source, VK_IMAGE_USAGE_TRANSFER_DST_BIT);
+        if (!texture) {
+            return false;
+        }
+        return texture->downloadTo(target, std::move(sync));
+    } else if (auto context = eglContext()) {
+        const auto fbo = context->importDmaBufAsFbo(source);
+        if (!fbo) {
+            return false;
+        }
+        auto fence = EGLNativeFence::importFence(m_display.get(), std::move(sync));
+        fence.waitSync();
+
+        context->pushFramebuffer(fbo);
+        context->glReadnPixels(0, 0, fbo->size().width(), fbo->size().height(), closestGLType(target.format()), GL_UNSIGNED_BYTE, target.sizeInBytes(), target.bits());
+        context->popFramebuffer();
+        return true;
+    } else {
+        return false;
     }
 }
 
