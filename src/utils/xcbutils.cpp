@@ -265,7 +265,13 @@ template<typename reply, typename T, typename F>
 void Extensions::initVersion(T cookie, F f, ExtensionData *dataToFill)
 {
     UniqueCPtr<reply> version(f(connection(), cookie, nullptr));
-    dataToFill->version = version->major_version * 0x10 + version->minor_version;
+    if constexpr (requires(reply version) {version.major_version; version.minor_version; }) {
+        dataToFill->version = version->major_version * 0x10 + version->minor_version;
+    } else if constexpr (requires(reply version) {version.server_major; version.server_minor; }) {
+        dataToFill->version = version->server_major * 0x10 + version->server_minor;
+    } else {
+        static_assert(false);
+    }
 }
 
 Extensions *Extensions::s_self = nullptr;
@@ -382,10 +388,7 @@ void Extensions::init()
         initVersion<xcb_sync_initialize_reply_t>(syncVersion, &xcb_sync_initialize_reply, &m_sync);
     }
     if (m_res.present) {
-        if (auto reply = xcb_res_query_version_reply(c, resVersion, nullptr)) {
-            m_res.version = reply->server_major * 0x10 + reply->server_minor;
-            free(reply);
-        }
+        initVersion<xcb_res_query_version_reply_t>(resVersion, &xcb_res_query_version_reply, &m_res);
     }
     qCDebug(KWIN_CORE) << "Extensions: shape: 0x" << QString::number(m_shape.version, 16)
                        << " composite: 0x" << QString::number(m_composite.version, 16)
