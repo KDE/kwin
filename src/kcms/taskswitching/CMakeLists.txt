@@ -44,8 +44,7 @@ target_link_libraries(kcm_kwin_taskswitching PRIVATE
     KF6::GlobalAccel
     KF6::I18n
     KF6::Package
-    KF6::XmlGui # For kkeysequencewidget
+    KF6::XmlGui
 )
 
-# KNewStuff
 install(FILES kwinswitcher.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})
