@@ -10,7 +10,7 @@
 namespace KWin
 {
 
-ScreenshotLayer::ScreenshotLayer(LogicalOutput *output, GLFramebuffer *buffer)
+ScreenshotLayer::ScreenshotLayer(LogicalOutput *output, GraphicsBuffer *buffer)
     : OutputLayer(output->backendOutput(), OutputLayerType::Primary)
     , m_buffer(buffer)
 {
@@ -23,12 +23,8 @@ FormatModifierMap ScreenshotLayer::supportedDrmFormats() const
 
 std::optional<OutputLayerBeginFrameInfo> ScreenshotLayer::beginFrame(OutputFrame *frame)
 {
-    if (!m_buffer->context()->makeCurrent()) {
-        return std::nullopt;
-    }
-
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_buffer),
+        .renderTarget = RenderTarget(m_buffer.get(), OutputTransform::FlipY),
         .repaint = Region::infinite(),
     };
 }

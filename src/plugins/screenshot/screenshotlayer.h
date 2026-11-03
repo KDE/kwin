@@ -14,7 +14,7 @@ class GLFramebuffer;
 class ScreenshotLayer : public OutputLayer
 {
 public:
-    explicit ScreenshotLayer(LogicalOutput *output, GLFramebuffer *buffer);
+    explicit ScreenshotLayer(LogicalOutput *output, GraphicsBuffer *buffer);
 
     FormatModifierMap supportedDrmFormats() const override;
     void releaseBuffers() override;
@@ -23,7 +23,7 @@ public:
     bool endFrame(const Region &damagedRegion, FileDescriptor &&sync, OutputFrame *frame) override;
 
 private:
-    GLFramebuffer *const m_buffer;
+    const GraphicsBufferRef m_buffer;
 };
 
 }
