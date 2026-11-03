@@ -17,6 +17,8 @@
 
 #include "tabboxlayoutsmodel.h"
 
+using namespace Qt::StringLiterals;
+
 namespace KWin
 {
 
@@ -42,13 +44,13 @@ void TabBoxLayoutsModel::load()
     }
 
     for (const QString &path : lnfPaths) {
-        KPackage::Package pkg = KPackage::PackageLoader::self()->loadPackage(QStringLiteral("Plasma/LookAndFeel"));
+        KPackage::Package pkg = KPackage::PackageLoader::self()->loadPackage(u"Plasma/LookAndFeel"_s);
         pkg.setPath(path);
         pkg.setFallbackPackage(KPackage::Package());
         if (!pkg.filePath("defaults").isEmpty()) {
             KSharedConfigPtr conf = KSharedConfig::openConfig(pkg.filePath("defaults"));
-            KConfigGroup cg = KConfigGroup(conf, QStringLiteral("kwinrc"));
-            cg = KConfigGroup(&cg, QStringLiteral("WindowSwitcher"));
+            KConfigGroup cg = KConfigGroup(conf, u"kwinrc"_s);
+            cg = KConfigGroup(&cg, u"WindowSwitcher"_s);
             if (!cg.readEntry("LayoutName", QString()).isEmpty()) {
                 lnfPackages << pkg;
             }
@@ -57,7 +59,7 @@ void TabBoxLayoutsModel::load()
 
     for (const auto &package : lnfPackages) {
         const auto &metaData = package.metadata();
-        const QString switcherFile = package.filePath("windowswitcher", QStringLiteral("WindowSwitcher.qml"));
+        const QString switcherFile = package.filePath("windowswitcher", u"WindowSwitcher.qml"_s);
         if (switcherFile.isEmpty()) {
             // Skip lnfs that don't actually ship a switcher
             continue;
@@ -67,7 +69,7 @@ void TabBoxLayoutsModel::load()
     }
 
     // Check packages
-    const QList<KPluginMetaData> offers = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/WindowSwitcher"));
+    const QList<KPluginMetaData> offers = KPackage::PackageLoader::self()->listPackages(u"KWin/WindowSwitcher"_s);
     for (const auto &offer : offers) {
         const QString pluginName = offer.pluginId();
         const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,

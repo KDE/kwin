@@ -6,13 +6,15 @@
 
 #include "taskswitchingdata.h"
 
+using namespace Qt::StringLiterals;
+
 namespace KWin
 {
 
 TaskSwitchingData::TaskSwitchingData(QObject *parent)
     : KCModuleData(parent)
-    , m_tabBoxSettings(new TabBoxSettings(QStringLiteral("TabBox"), this))
-    , m_tabBoxAlternativeSettings(new TabBoxSettings(QStringLiteral("TabBoxAlternative"), this))
+    , m_tabBoxSettings(new TabBoxSettings(u"TabBox"_s, this))
+    , m_tabBoxAlternativeSettings(new TabBoxSettings(u"TabBoxAlternative"_s, this))
     , m_overviewSettings(new OverviewSettings(this))
 {
     registerSkeleton(m_tabBoxSettings);
