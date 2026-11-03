@@ -103,16 +103,13 @@ vk::Format VulkanTexture::format() const
     return m_format;
 }
 
-QImage VulkanTexture::download() const
+bool VulkanTexture::downloadTo(QImage &target, FileDescriptor &&sync) const
 {
-    const auto qFormat = vulkanToQImageFormat(m_format);
-    if (!qFormat) {
-        qCWarning(KWIN_VULKAN) << "Unsupported format for download:" << vk::to_string(m_format);
-        return {};
+    if (target.format() != vulkanToQImageFormat(m_format)) {
+        return false;
     }
 
-    QImage result(m_size, *qFormat);
-    const uint32_t bytesPerPixel = result.depth() / 8;
+    const uint32_t bytesPerPixel = target.depth() / 8;
     const vk::DeviceSize bufferSize = m_size.width() * m_size.height() * bytesPerPixel;
 
     m_device->waitIdle();
@@ -124,11 +121,11 @@ QImage VulkanTexture::download() const
     };
     auto stagingMemory = m_device->allocateMemory(bufferInfo, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent);
     if (!*stagingMemory) {
-        return {};
+        return false;
     }
     auto [bufResult, stagingBuffer] = m_device->logicalDevice().createBuffer(bufferInfo);
     if (bufResult != vk::Result::eSuccess) {
-        return {};
+        return false;
     }
     stagingBuffer.bindMemory(stagingMemory, 0);
 
@@ -155,19 +152,34 @@ QImage VulkanTexture::download() const
     });
     commandBuffer.end();
 
-    m_device->graphicsQueue()->submit(std::move(commandBuffer), FileDescriptor{}, {});
+    m_device->graphicsQueue()->submit(std::move(commandBuffer), std::move(sync), {});
     m_device->graphicsQueue()->waitIdle();
 
     // use mapMemory/unmapMemory (Vulkan 1.0) instead of mapMemory2/unmapMemory2 (Vulkan 1.4)
     // for compatibility with lavapipe and other drivers that don't support 1.4
     auto [mapResult, dataPtr] = stagingMemory.mapMemory(0, bufferSize);
     if (mapResult != vk::Result::eSuccess) {
-        return {};
+        return false;
     }
 
-    std::memcpy(result.bits(), dataPtr, bufferSize);
+    std::memcpy(target.bits(), dataPtr, bufferSize);
     stagingMemory.unmapMemory();
 
+    return true;
+}
+
+QImage VulkanTexture::download() const
+{
+    const auto qFormat = vulkanToQImageFormat(m_format);
+    if (!qFormat) {
+        qCWarning(KWIN_VULKAN) << "Unsupported format for download:" << vk::to_string(m_format);
+        return {};
+    }
+    m_device->waitIdle();
+    QImage result(m_size, *qFormat);
+    if (!downloadTo(result, FileDescriptor{})) {
+        return QImage{};
+    }
     return result;
 }
 
