@@ -13,3 +13,4 @@ target_sources(KeyNotificationPlugin PRIVATE
 )
 target_link_libraries(KeyNotificationPlugin PRIVATE kwin KF6::Notifications KF6::I18n XKB::XKB)
 
+install(FILES kaccess.notifyrc  DESTINATION  ${KDE_INSTALL_KNOTIFYRCDIR})
