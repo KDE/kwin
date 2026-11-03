@@ -22,7 +22,6 @@ KWin.TabBoxSwitcher {
     Instantiator {
         active: tabBox.visible
         delegate: PlasmaCore.Window {
-            visible: true
             flags: Qt.ToolTip | Qt.X11BypassWindowManagerHint
             x: tabBox.screenGeometry.x + tabBox.screenGeometry.width * 0.5 - dialogMainItem.width * 0.5
             y: tabBox.screenGeometry.y + tabBox.screenGeometry.height * 0.5 - dialogMainItem.height * 0.5
@@ -230,6 +229,13 @@ KWin.TabBoxSwitcher {
 
             onSceneGraphError: () => {
                 // This slot is intentionally left blank, otherwise QtQuick may post a qFatal() message on a graphics reset.
+            }
+
+            Component.onCompleted: {
+                // The visibility is changed here to ensure that the flags and other properties
+                // are set when the window is mapped. With "visible: true", the window can be mapped
+                // before other properties are initialized.
+                visible = true;
             }
         } // Dialog
     } // Instantiator
