@@ -425,6 +425,8 @@ void Workspace::initializeX11()
     // first initialize the extensions
     Xcb::Extensions::self();
 
+    xcb_xfixes_set_client_disconnect_mode(connection(), XCB_XFIXES_CLIENT_DISCONNECT_FLAGS_TERMINATE);
+
     // Call this before XSelectInput() on the root window
     m_startup = std::make_unique<KStartupInfo>(KStartupInfo::DisableKWinModule | KStartupInfo::AnnounceSilenceChanges, this);
 
