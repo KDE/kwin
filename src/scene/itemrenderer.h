@@ -66,6 +66,7 @@ public:
     [[nodiscard]] virtual bool renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) = 0;
 
     virtual void setLayerDebugging(bool enable);
+    virtual bool testRenderTargetImport(GraphicsBuffer *buffer) = 0;
 
     RenderDevice *renderDevice() const;
 

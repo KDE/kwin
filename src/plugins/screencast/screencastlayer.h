@@ -14,7 +14,7 @@ class ScreencastLayer : public OutputLayer
 public:
     explicit ScreencastLayer(LogicalOutput *output, const FormatModifierMap &formats);
 
-    void setFramebuffer(GLFramebuffer *buffer, const Region &bufferDamage);
+    void setFramebuffer(GraphicsBuffer *buffer, const Region &bufferDamage);
 
     FormatModifierMap supportedDrmFormats() const override;
     void releaseBuffers() override;
@@ -24,7 +24,7 @@ public:
 
 private:
     const FormatModifierMap m_formats;
-    GLFramebuffer *m_buffer = nullptr;
+    GraphicsBufferRef m_buffer;
     Region m_bufferDamage;
 };
 
