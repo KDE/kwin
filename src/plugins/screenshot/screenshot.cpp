@@ -11,15 +11,15 @@
 #include "screenshotdbusinterface2.h"
 
 #include "compositor.h"
+#include "core/gpumanager.h"
+#include "core/graphicsbufferallocator.h"
 #include "core/output.h"
 #include "core/pixelgrid.h"
+#include "core/renderbackend.h"
 #include "core/renderdevice.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effect.h"
-#include "opengl/eglbackend.h"
-#include "opengl/glplatform.h"
-#include "opengl/glutils.h"
 #include "scene/decorationitem.h"
 #include "scene/item.h"
 #include "scene/itemrenderer.h"
@@ -55,10 +55,7 @@ ScreenShotManager::~ScreenShotManager()
 std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, ScreenShotFlags flags, std::optional<pid_t> pidToHide)
 {
     RenderDevice *device = Compositor::self()->primaryDevice();
-    const auto context = device->eglContext();
-    if (!context || !context->makeCurrent()) {
-        return std::nullopt;
-    }
+    RenderBackend *backend = Compositor::self()->backend();
 
     qreal scale = 1.0;
     if (flags & ScreenShotNativeResolution) {
@@ -66,19 +63,22 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
     }
     const QSize nativeSize = (screen->geometryF().size() * scale).toSize();
 
-    const auto offscreenTexture = GLTexture::allocate(GL_RGBA8, nativeSize);
-    if (!offscreenTexture) {
+    GraphicsBuffer *buffer = device->allocator()->allocate(GraphicsBufferOptions{
+        .size = nativeSize,
+        .format = DRM_FORMAT_ARGB8888,
+        .modifiers = backend->supportedFormats()[DRM_FORMAT_ARGB8888],
+        .software = false,
+        .scanout = false,
+        .render = true,
+    });
+    if (!buffer) {
         return std::nullopt;
     }
-    offscreenTexture->setContentTransform(OutputTransform::FlipY);
-    offscreenTexture->setFilter(GL_LINEAR);
-    offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-    const auto target = std::make_unique<GLFramebuffer>(offscreenTexture.get());
-    if (!target->valid()) {
-        return std::nullopt;
-    }
+    auto dropBuffer = qScopeGuard([buffer]() {
+        buffer->drop();
+    });
 
-    ScreenshotLayer layer(screen, target.get());
+    ScreenshotLayer layer(screen, buffer);
     if (!layer.preparePresentationTest()) {
         return std::nullopt;
     }
@@ -92,7 +92,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
     sceneView.addWindowFilter([pidToHide](Window *window) {
         return shouldFilterWindowFromCapture(window, pidToHide);
     });
-    const Rect fullDamage = Rect(QPoint(), target->size());
+    const Rect fullDamage = Rect(QPoint(), buffer->size());
     sceneView.setViewport(screen->geometryF());
     sceneView.setScale(scale);
 
@@ -110,11 +110,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
         return std::nullopt;
     }
 
-    GLFramebuffer::pushFramebuffer(target.get());
-    QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBX8888);
-    context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
-    GLFramebuffer::popFramebuffer();
-
+    QImage snapshot = device->download(buffer);
     snapshot.setDevicePixelRatio(scale);
     return snapshot;
 }
@@ -122,10 +118,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
 std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, ScreenShotFlags flags, std::optional<pid_t> pidToHide)
 {
     RenderDevice *device = Compositor::self()->primaryDevice();
-    const auto context = device->eglContext();
-    if (!context || !context->makeCurrent()) {
-        return std::nullopt;
-    }
+    RenderBackend *backend = Compositor::self()->backend();
 
     qreal scale = 1.0;
     if (flags & ScreenShotNativeResolution) {
@@ -136,19 +129,22 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
     }
     const QSize nativeSize = area.size() * scale;
 
-    const auto offscreenTexture = GLTexture::allocate(GL_RGBA8, nativeSize);
-    if (!offscreenTexture) {
+    GraphicsBuffer *buffer = device->allocator()->allocate(GraphicsBufferOptions{
+        .size = nativeSize,
+        .format = DRM_FORMAT_ARGB8888,
+        .modifiers = backend->supportedFormats()[DRM_FORMAT_ARGB8888],
+        .software = false,
+        .scanout = false,
+        .render = true,
+    });
+    if (!buffer) {
         return std::nullopt;
     }
-    offscreenTexture->setContentTransform(OutputTransform::FlipY);
-    offscreenTexture->setFilter(GL_LINEAR);
-    offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-    const auto target = std::make_unique<GLFramebuffer>(offscreenTexture.get());
-    if (!target->valid()) {
-        return std::nullopt;
-    }
+    auto dropBuffer = qScopeGuard([buffer]() {
+        buffer->drop();
+    });
 
-    ScreenshotLayer layer(workspace()->outputs().front(), target.get());
+    ScreenshotLayer layer(workspace()->outputs().front(), buffer);
     if (!layer.preparePresentationTest()) {
         return std::nullopt;
     }
@@ -162,7 +158,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
     sceneView.addWindowFilter([pidToHide](Window *window) {
         return shouldFilterWindowFromCapture(window, pidToHide);
     });
-    const Rect fullDamage = Rect(QPoint(), target->size());
+    const Rect fullDamage = Rect(QPoint(), buffer->size());
     sceneView.setViewport(area);
     sceneView.setScale(scale);
 
@@ -180,11 +176,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
         return std::nullopt;
     }
 
-    GLFramebuffer::pushFramebuffer(target.get());
-    QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBX8888);
-    context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
-    GLFramebuffer::popFramebuffer();
-
+    QImage snapshot = device->download(buffer);
     snapshot.setDevicePixelRatio(scale);
     return snapshot;
 }
@@ -196,10 +188,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
     }
 
     RenderDevice *device = Compositor::self()->primaryDevice();
-    const auto context = device->eglContext();
-    if (!context || !context->makeCurrent()) {
-        return std::nullopt;
-    }
+    RenderBackend *backend = Compositor::self()->backend();
 
     const qreal scale = window->targetScale();
     RectF geometry = window->visibleGeometry();
@@ -209,19 +198,27 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
         geometry = window->frameGeometry();
     }
     const QSize nativeSize = (geometry.size() * scale).toSize();
-    const auto offscreenTexture = GLTexture::allocate(GL_RGBA8, nativeSize);
-    if (!offscreenTexture) {
+
+    GraphicsBuffer *buffer = device->allocator()->allocate(GraphicsBufferOptions{
+        .size = nativeSize,
+        .format = DRM_FORMAT_ARGB8888,
+        .modifiers = backend->supportedFormats()[DRM_FORMAT_ARGB8888],
+        .software = false,
+        .scanout = false,
+        .render = true,
+    });
+    if (!buffer) {
         return std::nullopt;
     }
-    offscreenTexture->setContentTransform(OutputTransform::FlipY);
-
-    GLFramebuffer offscreenTarget(offscreenTexture.get());
+    auto dropBuffer = qScopeGuard([buffer]() {
+        buffer->drop();
+    });
 
     WorkspaceScene *scene = kwinApp()->scene();
     auto renderer = scene->renderer(device);
 
     OutputLayerBeginFrameInfo beginInfo{
-        .renderTarget = RenderTarget(&offscreenTarget),
+        .renderTarget = RenderTarget(buffer, OutputTransform::FlipY),
         .repaint = Region::infinite(),
     };
     const auto renderInfo = renderer->beginFrame(beginInfo, nullptr, nullptr);
@@ -230,8 +227,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
     }
     RenderViewport viewport(geometry, scale, renderInfo->renderTarget, QPoint());
 
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT);
+    renderer->renderBackground(renderInfo->renderTarget, viewport, Region::infinite());
     const bool windowRender = renderer->renderItem(renderInfo->renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, Region::infinite(), WindowPaintData{}, [flags, w = window->windowItem()](Item *item) {
         const bool deco = flags & ScreenShotFlag::ScreenShotIncludeDecoration;
         const bool shadow = deco && (flags & ScreenShotFlag::ScreenShotIncludeShadow);
@@ -246,13 +242,9 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
             return std::nullopt;
         }
     }
-    renderer->endFrame(Region::infinite(), nullptr, nullptr);
+    std::ignore = renderer->endFrame(Region::infinite(), nullptr, nullptr);
 
-    GLFramebuffer::pushFramebuffer(&offscreenTarget);
-    QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBA8888_Premultiplied);
-    context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
-    GLFramebuffer::popFramebuffer();
-
+    QImage snapshot = device->download(buffer);
     snapshot.setDevicePixelRatio(scale);
     return snapshot;
 }
