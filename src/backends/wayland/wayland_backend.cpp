@@ -615,10 +615,10 @@ QList<CompositingType> WaylandBackend::supportedCompositors() const
 {
     QList<CompositingType> ret;
     if (m_display->linuxDmabuf() && m_renderDevice) {
-        ret.append(OpenGLCompositing);
         if (m_renderDevice->vulkanDevice()) {
             ret.append(VulkanCompositing);
         }
+        ret.append(OpenGLCompositing);
     }
     return ret;
 }

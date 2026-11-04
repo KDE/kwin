@@ -326,24 +326,7 @@ bool Compositor::attemptVulkanCompositing()
 
 void Compositor::createRenderer()
 {
-    // If compositing has been restarted, try to use the last used compositing type.
-    const QList<CompositingType> availableCompositors = kwinApp()->outputBackend()->supportedCompositors();
-    QList<CompositingType> candidateCompositors;
-
-    if (m_selectedCompositor != NoCompositing) {
-        candidateCompositors.append(m_selectedCompositor);
-    } else {
-        candidateCompositors = availableCompositors;
-
-        const auto userConfigIt = std::find(candidateCompositors.begin(), candidateCompositors.end(), options->compositingMode());
-        if (userConfigIt != candidateCompositors.end()) {
-            candidateCompositors.erase(userConfigIt);
-            candidateCompositors.prepend(options->compositingMode());
-        } else {
-            qCWarning(KWIN_CORE) << "Configured compositor not supported by Platform. Falling back to defaults";
-        }
-    }
-
+    const auto candidateCompositors = kwinApp()->outputBackend()->supportedCompositors();
     for (auto type : std::as_const(candidateCompositors)) {
         bool stop = false;
         switch (type) {
@@ -366,8 +349,6 @@ void Compositor::createRenderer()
 
         if (stop) {
             break;
-        } else if (qEnvironmentVariableIsSet("KWIN_COMPOSE")) {
-            qCFatal(KWIN_CORE) << "Could not fulfill the requested compositing mode in KWIN_COMPOSE:" << type << ". Exiting.";
         }
     }
 
