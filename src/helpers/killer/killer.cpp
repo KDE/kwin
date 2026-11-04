@@ -123,7 +123,6 @@ int main(int argc, char *argv[])
 {
     KLocalizedString::setApplicationDomain(QByteArrayLiteral("kwin"));
     QApplication app(argc, argv);
-    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("tools-report-bug")));
     QCoreApplication::setApplicationName(QStringLiteral("kwin_killer_helper"));
     QCoreApplication::setOrganizationDomain(QStringLiteral("kde.org"));
     QApplication::setApplicationDisplayName(i18n("Window Manager"));

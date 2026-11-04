@@ -80,5 +80,5 @@ Comment[zh_TW]=為使用者動作提供回饋
 Exec=@KWIN_DIALOGHELPER_BIN@
 Terminal=false
 NoDisplay=true
-Icon=dialog-information
+Icon=kwin
 StartupNotify=false
