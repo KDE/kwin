@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-03 00:56+0000\n"
-"PO-Revision-Date: 2026-09-21 22:06+0900\n"
+"PO-Revision-Date: 2026-11-03 21:06+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -1857,25 +1857,15 @@ msgid "<application>%1</application> is asking to control input devices"
 msgstr "<application>%1</application> 希望控制輸入裝置"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check, %1 is the application name. This option always allow apps "
-#| "claiming to be a given application name to control input devices"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option remembers the "
 "selection for apps claiming to be a given application name"
 msgid "Remember for apps claiming to be %1"
-msgstr "總是允許宣稱是 %1 的應用程式"
+msgstr "為宣稱是 %1 的應用程式記住"
 
 #: plugins/eis/eisprompter.cpp:66
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Identities of legacy X11 apps cannot be verified. Any app claiming to be "
-#| "<application>%1</application> will be able to control input devices. You "
-#| "can revoke this permission later on <application>System Settings</"
-#| "application>’ “Legacy X11 App Support” page."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Identities of legacy X11 apps cannot be verified. If permitted any app "
@@ -1883,9 +1873,9 @@ msgid ""
 "devices. You can change this setting later on <application>System Settings</"
 "application>’ “Legacy X11 App Support” page."
 msgstr ""
-"舊式 X11 應用程式的身份不能被驗證。任何宣稱是 <application>%1</application> "
-"的應用程式都將能夠控制輸入裝置。之後可以到 <application>系統設定</"
-"application> 的「舊式 X11 應用程式支援」頁面撤銷這個權限。"
+"舊式 X11 應用程式的身份不能被驗證。如果允許，任何宣稱是 <application>%1</"
+"application> 的應用程式都將能夠控制輸入裝置。之後可以到 <application>系統設定"
+"</application> 的「舊式 X11 應用程式支援」頁面撤銷這個權限。"
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
@@ -2491,6 +2481,9 @@ msgid ""
 "temporarily active.\n"
 "            "
 msgstr ""
+"\n"
+"                指定夜光模式要暫時啟用到什麼日期與時間。\n"
+"            "
 
 #. i18n: ectx: label, entry (ActivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:28
@@ -2500,6 +2493,9 @@ msgid ""
 "                Night Light is activated until manually disabled.\n"
 "            "
 msgstr ""
+"\n"
+"                夜光模式已暫時啟用，到手動停用前不會自動停用。\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedUntil), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:35
@@ -2510,6 +2506,9 @@ msgid ""
 "temporarily inactive.\n"
 "            "
 msgstr ""
+"\n"
+"                指定夜光模式要暫時停用到什麼日期與時間。\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:42
@@ -2519,6 +2518,8 @@ msgid ""
 "                Night Light is suspended until manually turned back on.\n"
 "            "
 msgstr ""
+"\n"
+"                夜光模式已暫時停用，到手動啟用前不會自動啟用。            "
 
 #: plugins/outputlocator/outputlocator.cpp:26
 #, kde-format
@@ -4389,10 +4390,9 @@ msgid "More displays are enabled than are supported by the graphics card."
 msgstr "啟用的顯示器數量比顯示卡所支援的還要多。"
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration: %s"
+#, kde-format
 msgid "The driver rejected the output configuration: %1"
-msgstr "驅動程式回絕了提供的輸出配置：%s"
+msgstr "驅動程式回絕了提供的輸出配置：%1"
 
 #: window.cpp:3181
 #, kde-format

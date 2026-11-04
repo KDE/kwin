@@ -711,6 +711,3 @@ msgstr "&Midtklikk:"
 #, kde-format
 msgid "Mo&use wheel:"
 msgstr "M&usehjul:"
-
-#~ msgid "Open in screen corner:"
-#~ msgstr "Opna i skjermhjørne:"

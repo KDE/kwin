@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-03 00:56+0000\n"
-"PO-Revision-Date: 2026-10-20 19:44+0300\n"
+"PO-Revision-Date: 2026-11-03 22:18+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -4422,10 +4422,9 @@ msgid "More displays are enabled than are supported by the graphics card."
 msgstr "Grafik kartının desteklediğinden fazla görüntü etkinleştirilmiş."
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration: %s"
+#, kde-format
 msgid "The driver rejected the output configuration: %1"
-msgstr "Sürücü, çıkış yapılandırmasını reddetti: %s"
+msgstr "Sürücü, çıkış yapılandırmasını reddetti: %1"
 
 #: window.cpp:3181
 #, kde-format
