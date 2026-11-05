@@ -689,10 +689,8 @@ public:
         if (!window) {
             return false;
         }
-        if (event->state == PointerButtonState::Released) {
-            if (event->buttons == Qt::NoButton) {
-                window->endInteractiveMoveResize();
-            }
+        if (event->button == Qt::LeftButton && event->state == PointerButtonState::Released) {
+            window->endInteractiveMoveResize();
         }
         return true;
     }
