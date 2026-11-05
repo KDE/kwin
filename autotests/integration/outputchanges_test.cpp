@@ -42,6 +42,7 @@ enum class DeviceType {
     Desktop,
     Laptop,
     Phone,
+    Handheld,
 };
 
 class LidSwitch : public InputDevice
@@ -1419,6 +1420,7 @@ void OutputChangesTest::testGenerateConfigs_data()
            }
         << OutputModeline(QSize(3840, 2400), 60000, OutputModeline::Flag::Preferred) << 2.60 << true;
 
+    // the Steam Deck is considered a laptop because it has a (virtual) lid switch device
     QTest::addRow("SteamDeck OLED")
         << DeviceType::Laptop
         << Test::OutputInfo{
@@ -1429,6 +1431,16 @@ void OutputChangesTest::testGenerateConfigs_data()
                .panelOrientation = OutputTransform::Kind::Rotate90,
            }
         << OutputModeline(QSize(800, 1280), 90000ul, OutputModeline::Flag::Preferred) << 1.0 << true;
+
+    QTest::addRow("Legion Go S")
+        << DeviceType::Handheld
+        << Test::OutputInfo{
+               .geometry = Rect(0, 0, 1920, 1080),
+               .internal = true,
+               .physicalSizeInMM = QSize(172, 107),
+               .modes = {OutputModeline(QSize(1920, 1080), 60000, OutputModeline::Flag::Preferred)},
+           }
+        << OutputModeline(QSize(1920, 1080), 60000ul, OutputModeline::Flag::Preferred) << 1.5 << true;
 
     QTest::addRow("Pixel 3a")
         << DeviceType::Phone
