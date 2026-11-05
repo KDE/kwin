@@ -901,6 +901,10 @@ double OutputConfigurationStore::chooseScale(BackendOutput *output, const QSize 
             // laptop screens: usually closer to the face than desktop monitors
             targetDpi = 125;
             minSize = 800;
+        } else if (std::min(output->physicalSize().width(), output->physicalSize().height()) > 90) {
+            // tablets and handhelds: closer than laptops, but need a larger minimum size than phones
+            targetDpi = 130;
+            minSize = 720;
         } else {
             // phone screens: even closer than laptops
             targetDpi = 150;
