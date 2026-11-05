@@ -800,7 +800,7 @@ double TransferFunction::sRGBinverseEOTF(double nits) const
 {
     const double normalized = normalize(nits);
     if (normalized < 0.0031308) {
-        return std::max(normalized / 12.92, 0.0);
+        return std::max(normalized * 12.92, 0.0);
     } else {
         return std::clamp(std::pow(normalized, 5.0 / 12.0) * 1.055 - 0.055, 0.0, 1.0);
     }
