@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-03 00:56+0000\n"
+"POT-Creation-Date: 2026-11-05 00:57+0000\n"
 "PO-Revision-Date: 2007-07-31 19:27+0330\n"
 "Last-Translator: Nazanin Kazemi <kazemi@itland.ir>\n"
 "Language-Team: Persian <kde-i18n-fa@kde.org>\n"
@@ -1261,49 +1261,49 @@ msgstr ""
 msgid "Primary Selection"
 msgstr ""
 
-#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:129
+#: helpers/dialoghelper/dialoghelper.cpp:37 helpers/killer/killer.cpp:128
 #, fuzzy, kde-format
 #| msgid "KDE window manager"
 msgid "Window Manager"
 msgstr "مدیر پنجره KDE"
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:42 helpers/killer/killer.cpp:141
 #, fuzzy, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "شناسه منبع متعلق به کاربرد."
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:42 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "id"
 msgstr ""
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:144
+#: helpers/dialoghelper/dialoghelper.cpp:44 helpers/killer/killer.cpp:143
 #, fuzzy, kde-format
 msgid "Time of user action causing termination"
 msgstr "زمان کنش کاربر که موجب کشتن می‌شود."
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:144
+#: helpers/dialoghelper/dialoghelper.cpp:44 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "time"
 msgstr ""
 
-#: helpers/dialoghelper/dialoghelper.cpp:46
+#: helpers/dialoghelper/dialoghelper.cpp:45
 #, kde-format
 msgid "The message to show (fullscreen, noborder)"
 msgstr ""
 
-#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:146
+#: helpers/dialoghelper/dialoghelper.cpp:47 helpers/killer/killer.cpp:145
 #, kde-format
 msgid "KWin helper utility"
 msgstr "برنامه سودمند کمک‌کننده KWin"
 
-#: helpers/dialoghelper/dialoghelper.cpp:72
-#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
+#: helpers/dialoghelper/dialoghelper.cpp:71
+#: helpers/dialoghelper/dialoghelper.cpp:121 helpers/killer/killer.cpp:176
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "این برنامه سودمند کمک‌کننده برای فراخوانی مستقیم فرض نمی‌شود."
 
-#: helpers/dialoghelper/dialoghelper.cpp:83
+#: helpers/dialoghelper/dialoghelper.cpp:82
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1322,7 +1322,7 @@ msgstr ""
 "قادر به غیرفعال‌سازی آن با استفاده از موشی نمی‌باشید: به جای استفاده فعال از "
 "میان‌بر %1 صفحه کلید، از گزینگان عملیات پنجره استفاده کنید."
 
-#: helpers/dialoghelper/dialoghelper.cpp:89
+#: helpers/dialoghelper/dialoghelper.cpp:88
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1341,7 +1341,7 @@ msgstr ""
 "قادر به غیرفعال‌سازی آن با استفاده از موشی نمی‌باشید: به جای استفاده فعال از "
 "میان‌بر %1 صفحه کلید، از گزینگان عملیات پنجره استفاده کنید."
 
-#: helpers/dialoghelper/dialoghelper.cpp:97
+#: helpers/dialoghelper/dialoghelper.cpp:96
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -1359,14 +1359,14 @@ msgstr ""
 "قادر به غیرفعال‌سازی آن با استفاده از موشی نمی‌باشید: به جای استفاده فعال از "
 "میان‌بر %1 صفحه کلید، از گزینگان عملیات پنجره استفاده کنید."
 
-#: helpers/dialoghelper/dialoghelper.cpp:102
+#: helpers/dialoghelper/dialoghelper.cpp:101
 #, fuzzy, kde-format
 #| msgid "&Fullscreen"
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "&تمام پرده‌"
 
-#: helpers/dialoghelper/dialoghelper.cpp:105
+#: helpers/dialoghelper/dialoghelper.cpp:104
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1382,7 +1382,7 @@ msgstr ""
 "بدون لبه، دوباره قادر به فعال‌سازی لبه با استفاده از موشی نمی‌باشید: به جای "
 "استفاده فعال از میان‌بر %1 صفحه کلید، از گزینگان عملیات پنجره استفاده کنید."
 
-#: helpers/dialoghelper/dialoghelper.cpp:110
+#: helpers/dialoghelper/dialoghelper.cpp:109
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1399,7 +1399,7 @@ msgstr ""
 "بدون لبه، دوباره قادر به فعال‌سازی لبه با استفاده از موشی نمی‌باشید: به جای "
 "استفاده فعال از میان‌بر %1 صفحه کلید، از گزینگان عملیات پنجره استفاده کنید."
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:115
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -1415,14 +1415,14 @@ msgstr ""
 "بدون لبه، دوباره قادر به فعال‌سازی لبه با استفاده از موشی نمی‌باشید: به جای "
 "استفاده فعال از میان‌بر %1 صفحه کلید، از گزینگان عملیات پنجره استفاده کنید."
 
-#: helpers/dialoghelper/dialoghelper.cpp:120
+#: helpers/dialoghelper/dialoghelper.cpp:119
 #, fuzzy, kde-format
 #| msgid "&No Border"
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "&بدون لبه‌"
 
-#: helpers/dialoghelper/dialoghelper.cpp:139
+#: helpers/dialoghelper/dialoghelper.cpp:138
 #, kde-format
 msgid "Do not show again"
 msgstr ""
@@ -1491,42 +1491,42 @@ msgstr ""
 msgid "&Details"
 msgstr ""
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:133
 #, fuzzy, kde-format
 msgid "PID of the application to terminate"
 msgstr "شناسه فرآیند کاربرد برای پایان دادن."
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "pid"
 msgstr ""
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:135
 #, fuzzy, kde-format
 msgid "Hostname on which the application is running"
 msgstr "نام میزبانی که کاربرد روی آن در حال اجراست."
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "hostname"
 msgstr ""
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:137
 #, fuzzy, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "عنوان پنجره‌ای که باید پایان داده شود."
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "caption"
 msgstr ""
 
-#: helpers/killer/killer.cpp:140
+#: helpers/killer/killer.cpp:139
 #, fuzzy, kde-format
 msgid "Name of the application to be terminated"
 msgstr "نام کاربردی که باید پایان داده شود."
 
-#: helpers/killer/killer.cpp:140
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "name"
 msgstr ""

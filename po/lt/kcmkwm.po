@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-03 00:56+0000\n"
-"PO-Revision-Date: 2026-07-22 00:28+0300\n"
+"PO-Revision-Date: 2026-11-04 16:11+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 3.9\n"
+"X-Generator: Poedit 3.10\n"
 
 #: ui/Focus.qml:22
 #, kde-format
@@ -306,21 +306,19 @@ msgstr "Po pele"
 #, kde-format
 msgctxt "@title:group"
 msgid "Overlay Positioning"
-msgstr ""
+msgstr "Perdangos išdėstymas"
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
 msgctxt "@label:chooser"
 msgid "OSD popups:"
-msgstr ""
+msgstr "Iškylantieji pranešimai ekrane:"
 
 #: ui/MovementAndPlacement.qml:167
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Picture-in-picture Placement"
+#, kde-format
 msgctxt "@label:chooser"
 msgid "Picture-in-picture:"
-msgstr "Vaizdo vaizde išdėstymas"
+msgstr "Vaizdas vaizde:"
 
 #: ui/MovementAndPlacement.qml:172
 #, kde-format
@@ -348,73 +346,64 @@ msgid "Margin:"
 msgstr "Paraštė:"
 
 #: ui/OnScreenDisplayPositionSelector.qml:80
-#, fuzzy, kde-format
-#| msgid "Top-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Top-left"
-msgstr "Viršutiniame kairiajame"
+msgstr "Viršuje kairėje"
 
 #: ui/OnScreenDisplayPositionSelector.qml:85
-#, fuzzy, kde-format
-#| msgid "Top-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Top-center"
-msgstr "Viršutiniame kairiajame"
+msgstr "Viršuje viduryje"
 
 #: ui/OnScreenDisplayPositionSelector.qml:90
-#, fuzzy, kde-format
-#| msgid "Top-right"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Top-right"
-msgstr "Viršutiniame dešiniajame"
+msgstr "Viršuje dešinėje"
 
 #: ui/OnScreenDisplayPositionSelector.qml:95
-#, fuzzy, kde-format
-#| msgid "Centered"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Center-left"
-msgstr "Centre"
+msgstr "Viduryje kairėje"
 
 #: ui/OnScreenDisplayPositionSelector.qml:100
-#, fuzzy, kde-format
-#| msgid "Centered"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Center"
-msgstr "Centre"
+msgstr "Viduryje"
 
 #: ui/OnScreenDisplayPositionSelector.qml:105
-#, fuzzy, kde-format
-#| msgid "Centered"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Center-right"
-msgstr "Centre"
+msgstr "Viduryje dešinėje"
 
 #: ui/OnScreenDisplayPositionSelector.qml:110
-#, fuzzy, kde-format
-#| msgid "Bottom-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Bottom-left"
-msgstr "Apatiniame kairiajame"
+msgstr "Apačioje kairėje"
 
 #: ui/OnScreenDisplayPositionSelector.qml:115
-#, fuzzy, kde-format
-#| msgid "Bottom-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Bottom-center"
-msgstr "Apatiniame kairiajame"
+msgstr "Apačioje viduryje"
 
 #: ui/OnScreenDisplayPositionSelector.qml:120
-#, fuzzy, kde-format
-#| msgid "Bottom-right"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Bottom-right"
-msgstr "Apatiniame dešiniajame"
+msgstr "Apačioje dešinėje"
 
 #: ui/OnScreenDisplayPositionSelector.qml:141
 #, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Lower center"
-msgstr ""
+msgstr "Apatiniame viduryje"
 
 #: ui/TitlebarActions.qml:20 ui/TitlebarActions.qml:33 ui/WindowActions.qml:31
 #, kde-format

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin 0\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-03 00:56+0000\n"
+"POT-Creation-Date: 2026-11-05 00:57+0000\n"
 "PO-Revision-Date: 2026-10-27 09:23+0100\n"
 "Last-Translator: Igor Dobrača <igor.dobraca@gmail.com>\n"
 "Language-Team: Croatian < kde-l10n-hr@kde.org>\n"
@@ -1260,49 +1260,49 @@ msgstr "Međuspremnik"
 msgid "Primary Selection"
 msgstr "Glavni odabir"
 
-#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:129
+#: helpers/dialoghelper/dialoghelper.cpp:37 helpers/killer/killer.cpp:128
 #, kde-format
 msgid "Window Manager"
 msgstr "Upravitelj prozora"
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:42 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "ID od resursa koji pripadaju aplikaciji"
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:42 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "id"
 msgstr "id"
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:144
+#: helpers/dialoghelper/dialoghelper.cpp:44 helpers/killer/killer.cpp:143
 #, fuzzy, kde-format
 #| msgid "Time of user action causing termination"
 msgid "Time of user action causing termination"
 msgstr "Vrijeme korisnikove akcije koja je prouzročila prekid"
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:144
+#: helpers/dialoghelper/dialoghelper.cpp:44 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "time"
 msgstr "time"
 
-#: helpers/dialoghelper/dialoghelper.cpp:46
+#: helpers/dialoghelper/dialoghelper.cpp:45
 #, kde-format
 msgid "The message to show (fullscreen, noborder)"
 msgstr "Poruka za prikaz (cijeli zaslon, bez obruba)"
 
-#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:146
+#: helpers/dialoghelper/dialoghelper.cpp:47 helpers/killer/killer.cpp:145
 #, kde-format
 msgid "KWin helper utility"
 msgstr "KWin alat za pomoć"
 
-#: helpers/dialoghelper/dialoghelper.cpp:72
-#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
+#: helpers/dialoghelper/dialoghelper.cpp:71
+#: helpers/dialoghelper/dialoghelper.cpp:121 helpers/killer/killer.cpp:176
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Ova pomoćna alatka nije namijenjena za direktno pozivanje."
 
-#: helpers/dialoghelper/dialoghelper.cpp:83
+#: helpers/dialoghelper/dialoghelper.cpp:82
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1315,7 +1315,7 @@ msgstr ""
 "nećete ga moći isključiti upotrebom miša. Umjesto toga pritisnite %1 na "
 "tipkovnici."
 
-#: helpers/dialoghelper/dialoghelper.cpp:89
+#: helpers/dialoghelper/dialoghelper.cpp:88
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1328,7 +1328,7 @@ msgstr ""
 "nećete ga moći isključiti upotrebom miša. Umjesto toga koristite izbornik "
 "prozora, koji se aktivira prečacom tipkovnice %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:97
+#: helpers/dialoghelper/dialoghelper.cpp:96
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1339,13 +1339,13 @@ msgstr ""
 "Ako program nema opciju da se način rada preko cijelog zaslona isključi, "
 "nećete ga moći isključiti miša."
 
-#: helpers/dialoghelper/dialoghelper.cpp:102
+#: helpers/dialoghelper/dialoghelper.cpp:101
 #, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "Prekini prikaz preko cijelog zaslona"
 
-#: helpers/dialoghelper/dialoghelper.cpp:105
+#: helpers/dialoghelper/dialoghelper.cpp:104
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1356,7 +1356,7 @@ msgstr ""
 "Bez obruba, nećete ga moći ponovo uključiti mišem. Umjesto toga pritisnite "
 "%1 na tipkovnici."
 
-#: helpers/dialoghelper/dialoghelper.cpp:110
+#: helpers/dialoghelper/dialoghelper.cpp:109
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1368,7 +1368,7 @@ msgstr ""
 "Bez obruba, nećete ga moći ponovo uključiti mišem. Umjesto toga pritisnite "
 "%1 na tipkovnici."
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:115
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1378,13 +1378,13 @@ msgstr ""
 "Odabrali ste prikazivanje prozora bez njegovog obruba.\n"
 "Bez obruba, nećete ga moći ponovo uključiti mišem."
 
-#: helpers/dialoghelper/dialoghelper.cpp:120
+#: helpers/dialoghelper/dialoghelper.cpp:119
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "Vrati obrub"
 
-#: helpers/dialoghelper/dialoghelper.cpp:139
+#: helpers/dialoghelper/dialoghelper.cpp:138
 #, kde-format
 msgid "Do not show again"
 msgstr "Ne prikazuj ponovno"
@@ -1458,42 +1458,42 @@ msgstr "Ne reagira"
 msgid "&Details"
 msgstr "&Detalji"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "PID aplikacije koja će biti zaustavljena"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "pid"
 msgstr "pid"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "Ime računala na kojem se pokreće aplikacija"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "hostname"
 msgstr "ime računala"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "Naslov prozora koji će biti zaustavljen"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "caption"
 msgstr "naslov"
 
-#: helpers/killer/killer.cpp:140
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "Ime aplikacije koja će biti zaustavljena"
 
-#: helpers/killer/killer.cpp:140
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "name"
 msgstr "ime"

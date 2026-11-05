@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-03 00:56+0000\n"
+"POT-Creation-Date: 2026-11-05 00:57+0000\n"
 "PO-Revision-Date: 2026-05-10 16:23+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -1273,48 +1273,48 @@ msgstr "பிடிப்புப்பலகை"
 msgid "Primary Selection"
 msgstr "முதன்மையான தேர்வு"
 
-#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:129
+#: helpers/dialoghelper/dialoghelper.cpp:37 helpers/killer/killer.cpp:128
 #, kde-format
 msgid "Window Manager"
 msgstr "சாளர மேலாளர்"
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:42 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr ""
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:42 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "id"
 msgstr ""
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:144
+#: helpers/dialoghelper/dialoghelper.cpp:44 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "நிறுத்துமாறு பயனர் கோரிய நேரம்"
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:144
+#: helpers/dialoghelper/dialoghelper.cpp:44 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "time"
 msgstr "நேரம்"
 
-#: helpers/dialoghelper/dialoghelper.cpp:46
+#: helpers/dialoghelper/dialoghelper.cpp:45
 #, kde-format
 msgid "The message to show (fullscreen, noborder)"
 msgstr ""
 
-#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:146
+#: helpers/dialoghelper/dialoghelper.cpp:47 helpers/killer/killer.cpp:145
 #, kde-format
 msgid "KWin helper utility"
 msgstr "கேவின் உதவி செயலி"
 
-#: helpers/dialoghelper/dialoghelper.cpp:72
-#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
+#: helpers/dialoghelper/dialoghelper.cpp:71
+#: helpers/dialoghelper/dialoghelper.cpp:121 helpers/killer/killer.cpp:176
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "இச்செயலி, நேரடியாக இயக்கப்படக்கூடாத‍து."
 
-#: helpers/dialoghelper/dialoghelper.cpp:83
+#: helpers/dialoghelper/dialoghelper.cpp:82
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1327,7 +1327,7 @@ msgstr ""
 "கொண்டு முழுத்திரை பயன்முறையை முடக்க முடியாது. பதிலாக, %1 என்ற சுருக்குவழியைப் "
 "பயன்படுத்தவும்."
 
-#: helpers/dialoghelper/dialoghelper.cpp:89
+#: helpers/dialoghelper/dialoghelper.cpp:88
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1340,7 +1340,7 @@ msgstr ""
 "கொண்டு முழுத்திரை பயன்முறையை முடக்க முடியாது. பதிலாக, %1 என்ற சுருக்குவழியை "
 "அழுத்தும்போது காட்டப்படும் பட்டியை பயன்படுத்தவும்."
 
-#: helpers/dialoghelper/dialoghelper.cpp:97
+#: helpers/dialoghelper/dialoghelper.cpp:96
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1351,13 +1351,13 @@ msgstr ""
 "முழுத்திரை முறையை முடக்கும் வசதி அச்செயலியிலேயே இல்லாத பட்சத்தில், சுட்டியை மட்டும் "
 "கொண்டு முழுத்திரை பயன்முறையை முடக்க முடியாது."
 
-#: helpers/dialoghelper/dialoghelper.cpp:102
+#: helpers/dialoghelper/dialoghelper.cpp:101
 #, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "முழுத்திரை முறையை செயல்நீக்கு"
 
-#: helpers/dialoghelper/dialoghelper.cpp:105
+#: helpers/dialoghelper/dialoghelper.cpp:104
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1368,7 +1368,7 @@ msgstr ""
 "விளிம்பு இல்லாதபோது, சுட்டியை மட்டும் கொண்டு அதனை மறுபடியும் காட்ட முடியாது. பதிலாக, "
 "%1 என்ற சுருக்குவழியைப் பயன்படுத்தவும்."
 
-#: helpers/dialoghelper/dialoghelper.cpp:110
+#: helpers/dialoghelper/dialoghelper.cpp:109
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1380,7 +1380,7 @@ msgstr ""
 "விளிம்பு இல்லாதபோது, சுட்டியை மட்டும் கொண்டு அதனை மறுபடியும் காட்ட முடியாது. பதிலாக, "
 "%1 என்ற சுருக்குவழியை அழுத்தும்போது காட்டப்படும் பட்டியை பயன்படுத்தவும்."
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:115
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1390,13 +1390,13 @@ msgstr ""
 "ஒரு சாளரத்தை விளிம்பு இல்லாமல் காட்டுமாறு கோரியுள்ளீர்.\n"
 "விளிம்பு இல்லாதபோது, சுட்டியை மட்டும் கொண்டு அதனை மறுபடியும் காட்ட முடியாது."
 
-#: helpers/dialoghelper/dialoghelper.cpp:120
+#: helpers/dialoghelper/dialoghelper.cpp:119
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "விளிம்பை திரும்பப்பெறு"
 
-#: helpers/dialoghelper/dialoghelper.cpp:139
+#: helpers/dialoghelper/dialoghelper.cpp:138
 #, kde-format
 msgid "Do not show again"
 msgstr "மீண்டும் காட்டாதே"
@@ -1470,43 +1470,43 @@ msgstr "பதிலளிக்கவில்லை"
 msgid "&Details"
 msgstr "&விவரங்கள்"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "நிறுத்த வேண்டிய செயலியின் பணி எண் (PID)"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "pid"
 msgstr "பணியெண்"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "செயலி இயங்கும் கணினியின் புரவன் பெயர்"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "hostname"
 msgstr "புரவன்பெயர்"
 
 # Caption = title?
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "நிறுத்த வேண்டிய சாளரத்தின் தலைப்பு"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "caption"
 msgstr "தலைப்பு"
 
-#: helpers/killer/killer.cpp:140
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "நிறுத்த வேண்டிய செயலியின் பெயர்"
 
-#: helpers/killer/killer.cpp:140
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "name"
 msgstr "பெயர்"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-03 00:56+0000\n"
+"POT-Creation-Date: 2026-11-05 00:57+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1244,48 +1244,48 @@ msgstr "剪贴板"
 msgid "Primary Selection"
 msgstr "主要选择"
 
-#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:129
+#: helpers/dialoghelper/dialoghelper.cpp:37 helpers/killer/killer.cpp:128
 #, kde-format
 msgid "Window Manager"
 msgstr "窗口管理器"
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:42 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "属于应用程序的资源的 ID"
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:42 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "id"
 msgstr "ID"
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:144
+#: helpers/dialoghelper/dialoghelper.cpp:44 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "触发进程终止信号的用户操作时间"
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:144
+#: helpers/dialoghelper/dialoghelper.cpp:44 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "time"
 msgstr "时间"
 
-#: helpers/dialoghelper/dialoghelper.cpp:46
+#: helpers/dialoghelper/dialoghelper.cpp:45
 #, kde-format
 msgid "The message to show (fullscreen, noborder)"
 msgstr "要显示的消息 (全屏，无边框)"
 
-#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:146
+#: helpers/dialoghelper/dialoghelper.cpp:47 helpers/killer/killer.cpp:145
 #, kde-format
 msgid "KWin helper utility"
 msgstr "KWin 辅助工具程序"
 
-#: helpers/dialoghelper/dialoghelper.cpp:72
-#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
+#: helpers/dialoghelper/dialoghelper.cpp:71
+#: helpers/dialoghelper/dialoghelper.cpp:121 helpers/killer/killer.cpp:176
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "这一辅助工具程序不应被直接调用。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:83
+#: helpers/dialoghelper/dialoghelper.cpp:82
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1297,7 +1297,7 @@ msgstr ""
 "如果应用程序本身没有关闭全屏模式的选项，您将无法使用鼠标退出全屏模式。\n"
 "请使用快捷键 %1 来退出全屏。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:89
+#: helpers/dialoghelper/dialoghelper.cpp:88
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1309,7 +1309,7 @@ msgstr ""
 "如果应用程序本身没有关闭全屏模式的选项，您将无法使用鼠标退出全屏模式。\n"
 "请使用快捷键 %1 激活窗口菜单来退出全屏。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:97
+#: helpers/dialoghelper/dialoghelper.cpp:96
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1319,13 +1319,13 @@ msgstr ""
 "您已选择以全屏模式显示窗口。\n"
 "如果应用程序本身没有关闭全屏模式的选项，您将无法使用鼠标退出全屏模式。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:102
+#: helpers/dialoghelper/dialoghelper.cpp:101
 #, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "退出全屏"
 
-#: helpers/dialoghelper/dialoghelper.cpp:105
+#: helpers/dialoghelper/dialoghelper.cpp:104
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1336,7 +1336,7 @@ msgstr ""
 "如果窗口没有边框，您将无法使用鼠标再次显示边框。\n"
 "请使用快捷键 %1 来显示窗口边框。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:110
+#: helpers/dialoghelper/dialoghelper.cpp:109
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1348,7 +1348,7 @@ msgstr ""
 "如果窗口没有边框，您将无法使用鼠标再次显示边框。\n"
 "你可以使用快捷键 %1 激活窗口菜单来显示窗口边框。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:115
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1358,13 +1358,13 @@ msgstr ""
 "您选择了显示没有边框的窗口。\n"
 "如果窗口没有边框，您将无法使用鼠标再次显示边框。"
 
-#: helpers/dialoghelper/dialoghelper.cpp:120
+#: helpers/dialoghelper/dialoghelper.cpp:119
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "恢复显示边框"
 
-#: helpers/dialoghelper/dialoghelper.cpp:139
+#: helpers/dialoghelper/dialoghelper.cpp:138
 #, kde-format
 msgid "Do not show again"
 msgstr "不再显示"
@@ -1437,42 +1437,42 @@ msgstr "没有响应"
 msgid "&Details"
 msgstr "详细信息(&D)"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "要终止的应用程序的进程 ID (PID)"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "pid"
 msgstr "PID"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "应用程序所运行主机的主机名"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "hostname"
 msgstr "主机名"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "要终止的窗口的标题"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "caption"
 msgstr "标题"
 
-#: helpers/killer/killer.cpp:140
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "要终止的应用程序的名称"
 
-#: helpers/killer/killer.cpp:140
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "name"
 msgstr "名称"

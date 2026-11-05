@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-03 00:56+0000\n"
+"POT-Creation-Date: 2026-11-05 00:57+0000\n"
 "PO-Revision-Date: 2026-06-01 10:08+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
@@ -1258,48 +1258,48 @@ msgstr "Klippispjald"
 msgid "Primary Selection"
 msgstr "Aðalval"
 
-#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:129
+#: helpers/dialoghelper/dialoghelper.cpp:37 helpers/killer/killer.cpp:128
 #, kde-format
 msgid "Window Manager"
 msgstr "Gluggastjóri"
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:42 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "Auðkenni tilfangs sem tilheyrir forritinu"
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:42 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "id"
 msgstr "auðkenni"
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:144
+#: helpers/dialoghelper/dialoghelper.cpp:44 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "Tímasetning notandaaðgerðar sem olli stöðvuninni"
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:144
+#: helpers/dialoghelper/dialoghelper.cpp:44 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "time"
 msgstr "tímasetning"
 
-#: helpers/dialoghelper/dialoghelper.cpp:46
+#: helpers/dialoghelper/dialoghelper.cpp:45
 #, kde-format
 msgid "The message to show (fullscreen, noborder)"
 msgstr "Skilaboðin sem á að birta (fullscreen, noborder)"
 
-#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:146
+#: helpers/dialoghelper/dialoghelper.cpp:47 helpers/killer/killer.cpp:145
 #, kde-format
 msgid "KWin helper utility"
 msgstr "KWin-hjálparverkfæri"
 
-#: helpers/dialoghelper/dialoghelper.cpp:72
-#: helpers/dialoghelper/dialoghelper.cpp:122 helpers/killer/killer.cpp:177
+#: helpers/dialoghelper/dialoghelper.cpp:71
+#: helpers/dialoghelper/dialoghelper.cpp:121 helpers/killer/killer.cpp:176
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Það á ekki að ræsa þetta hjálparverkfæri handvirkt."
 
-#: helpers/dialoghelper/dialoghelper.cpp:83
+#: helpers/dialoghelper/dialoghelper.cpp:82
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1312,7 +1312,7 @@ msgstr ""
 "hægt að gera hana óvirka aftur með músinni: notaðu í staðinn %1 "
 "flýtilykilinn."
 
-#: helpers/dialoghelper/dialoghelper.cpp:89
+#: helpers/dialoghelper/dialoghelper.cpp:88
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1325,7 +1325,7 @@ msgstr ""
 "hægt að gera hana óvirka aftur með músinni: notaðu aðgerðavalmynd gluggans í "
 "staðinn, sem hægt er að opna með flýtilyklinum %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:97
+#: helpers/dialoghelper/dialoghelper.cpp:96
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -1336,13 +1336,13 @@ msgstr ""
 "Ef sjálft forritið er ekki með þann valkost að slökkva á fullstækkun verður "
 "ekki hægt að gera hana óvirka aftur með músinni."
 
-#: helpers/dialoghelper/dialoghelper.cpp:102
+#: helpers/dialoghelper/dialoghelper.cpp:101
 #, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "Afturkalla að fylla skjá"
 
-#: helpers/dialoghelper/dialoghelper.cpp:105
+#: helpers/dialoghelper/dialoghelper.cpp:104
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1353,7 +1353,7 @@ msgstr ""
 "Án rammans getur þú ekki virkjað rammann aftur með músinni: notaðu í staðinn "
 "%1 flýtilykilinn."
 
-#: helpers/dialoghelper/dialoghelper.cpp:110
+#: helpers/dialoghelper/dialoghelper.cpp:109
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1365,7 +1365,7 @@ msgstr ""
 "Án ramma getur þú ekki virkjað rammann aftur með músinni: notaðu "
 "aðgerðavalmynd gluggans í staðinn sem hægt er að opna með flýtilyklinum %1."
 
-#: helpers/dialoghelper/dialoghelper.cpp:116
+#: helpers/dialoghelper/dialoghelper.cpp:115
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -1375,13 +1375,13 @@ msgstr ""
 "Þú hefur valið að birta gluggann án rammans.\n"
 "Án rammans getur þú ekki virkjað rammann aftur með músinni."
 
-#: helpers/dialoghelper/dialoghelper.cpp:120
+#: helpers/dialoghelper/dialoghelper.cpp:119
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
 msgstr "Endurheimta ramma"
 
-#: helpers/dialoghelper/dialoghelper.cpp:139
+#: helpers/dialoghelper/dialoghelper.cpp:138
 #, kde-format
 msgid "Do not show again"
 msgstr "Ekki sýna aftur"
@@ -1455,42 +1455,42 @@ msgstr "Svarar ekki"
 msgid "&Details"
 msgstr "&Nánar"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "PID-auðkenni forrits sem á að loka"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "pid"
 msgstr "pid"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "Heiti vélar þar sem forritið er í keyrslu"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "hostname"
 msgstr "vélarheiti"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "Skýringartexti glugga sem á að loka"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "caption"
 msgstr "skýringartexti"
 
-#: helpers/killer/killer.cpp:140
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "Heiti forrits sem á að loka"
 
-#: helpers/killer/killer.cpp:140
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "name"
 msgstr "heiti"
