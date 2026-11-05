@@ -192,7 +192,7 @@ bool EglGbmLayerSurface::endRendering(const Region &damagedDeviceRegion, OutputF
         } else {
             binder.shader()->setColorspaceUniforms(m_surface->blendingColor, m_surface->layerBlendingColor, RenderingIntent::AbsoluteColorimetricNoAdaptation);
         }
-        QMatrix4x4 mat;
+        QMatrix4x4 mat = mapping.combine(OutputTransform::Kind::FlipY).toMatrix();
         mat.scale(1, -1);
         mat.ortho(QRectF(QPointF(), fbo->size()));
         binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
