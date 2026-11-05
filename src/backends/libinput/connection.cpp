@@ -134,7 +134,10 @@ Connection::~Connection()
 
 void Connection::setup()
 {
-    QMetaObject::invokeMethod(this, &Connection::doSetup, Qt::QueuedConnection);
+    // NOTE We need the initial device list for the startup of other parts of KWin,
+    // like tablet mode and output configuration
+    QMetaObject::invokeMethod(this, &Connection::doSetup, Qt::BlockingQueuedConnection);
+    processEvents();
 }
 
 void Connection::doSetup()
