@@ -162,6 +162,9 @@ std::expected<int, Session::Error> ConsoleKitSession::openRestricted(const QStri
                 qPrintable(fileName), qPrintable(reply.errorMessage()));
         if (reply.errorName() == "System.Error.EBUSY") {
             return std::unexpected(Error::EBusy);
+        } else if (reply.errorName() == "System.Error.EACCES"
+            || reply.errorName() == "org.freedesktop.DBus.Error.AccessDenied") {
+            return std::unexpected(Error::EAccess);
         } else {
             return std::unexpected(Error::Other);
         }

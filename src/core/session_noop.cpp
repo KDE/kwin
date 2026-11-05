@@ -49,6 +49,8 @@ std::expected<int, Session::Error> NoopSession::openRestricted(const QString &fi
     } else {
         if (errno == EBUSY) {
             return std::unexpected(Error::EBusy);
+        } else if (errno == EACCES) {
+            return std::unexpected(Error::EAccess);
         } else {
             return std::unexpected(Error::Other);
         }

@@ -47,6 +47,8 @@ Session::Error Session::errorFromErrno()
 {
     if (errno == EBUSY) {
         return Error::EBusy;
+    } else if (errno == EACCES) {
+        return Error::EAccess;
     } else {
         return Error::Other;
     }

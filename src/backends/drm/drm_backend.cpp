@@ -61,7 +61,8 @@ public:
         timer.start();
         // Switching between sessions / drm masters seems to be racy in some situations.
         // Lacking a proper solution for that, retry opening the node for up to 5s.
-        while (!fd.has_value() && fd.error() == Session::Error::EBusy && timer.durationElapsed() < 5s) {
+        // The session may not be active yet either, which fails as EACCES, not EBusy.
+        while (!fd.has_value() && (fd.error() == Session::Error::EBusy || fd.error() == Session::Error::EAccess) && timer.durationElapsed() < 5s) {
             qCDebug(KWIN_DRM, "Retrying openRestricted(%s)", qPrintable(filePath));
             std::this_thread::sleep_for(100ms);
             fd = m_session->openRestricted(filePath);
