@@ -460,12 +460,18 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_set_master
         wl_resource_post_error(resource->handle, error::error_already_set, "mastering display primaries are already set");
         return;
     }
-    m_masteringColorimetry = Colorimetry{
-        xy{r_x * s_primaryUnit, r_y * s_primaryUnit},
-        xy{g_x * s_primaryUnit, g_y * s_primaryUnit},
-        xy{b_x * s_primaryUnit, b_y * s_primaryUnit},
-        xy{w_x * s_primaryUnit, w_y * s_primaryUnit},
-    };
+    const xy red{r_x * s_primaryUnit, r_y * s_primaryUnit};
+    const xy green{g_x * s_primaryUnit, g_y * s_primaryUnit};
+    const xy blue{b_x * s_primaryUnit, b_y * s_primaryUnit};
+    const xy white{w_x * s_primaryUnit, w_y * s_primaryUnit};
+    if (!Colorimetry::isValid(red, green, blue, white)) {
+        // There's no protocol error for invalid mastering primaries,
+        // and failing the image description will break some clients.
+        // Since this case is mostly to cover the case where all values
+        // are zero, just ignore the invalid colorimetry.
+        return;
+    }
+    m_masteringColorimetry = Colorimetry{red, green, blue, white};
 }
 
 void ColorParametricCreatorV1::wp_image_description_creator_params_v1_set_mastering_luminance(Resource *resource, uint32_t min_lum, uint32_t max_lum)
