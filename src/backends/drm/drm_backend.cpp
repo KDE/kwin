@@ -323,10 +323,23 @@ QString DrmBackend::supportInformation() const
     QString supportInfo;
     QDebug s(&supportInfo);
     s.nospace();
-    s << "Name: "
-      << "DRM" << Qt::endl;
-    for (size_t g = 0; g < m_gpus.size(); g++) {
-        s << "Atomic Mode Setting on GPU " << g << ": " << m_gpus.at(g)->atomicModeSetting() << Qt::endl;
+    s << "Name: DRM\n";
+    s << "GPUs:\n";
+    for (const auto &gpu : m_gpus) {
+        s << "- " << gpu->drmDevice()->path() << ":\n";
+        s << "  - Driver: " << gpu->drmDevice()->driverName() << "\n";
+        s << "  - Render device: ";
+        if (gpu->renderDevice()) {
+            s << gpu->renderDevice()->path() << ", " << gpu->renderDevice()->name() << "\n";
+        } else {
+            s << "None\n";
+        }
+        s << "  - Modesetting: " << (gpu->atomicModeSetting() ? "atomic\n" : "legacy\n");
+        s << "  - Virtual: " << gpu->drmDevice()->isVirtualMachine() << "\n";
+        s << "  - Modifiers: " << gpu->addFB2ModifiersSupported() << "\n";
+        s << "  - Color pipelines: " << gpu->colorPipelineSupported() << "\n";
+        s << "  - Async pageflips: " << gpu->asyncPageflipSupported() << "\n";
+        s << "\n";
     }
     return supportInfo;
 }
