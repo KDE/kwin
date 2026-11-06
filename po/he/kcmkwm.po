@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-03 00:56+0000\n"
-"PO-Revision-Date: 2026-07-14 09:17+0300\n"
+"PO-Revision-Date: 2026-11-05 13:13+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 26.04.1\n"
+"X-Generator: Lokalize 26.08.1\n"
 
 #: ui/Focus.qml:22
 #, kde-format
@@ -312,21 +312,19 @@ msgstr "מתחת לעכבר"
 #, kde-format
 msgctxt "@title:group"
 msgid "Overlay Positioning"
-msgstr ""
+msgstr "הצבת שכבת על"
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
 msgctxt "@label:chooser"
 msgid "OSD popups:"
-msgstr ""
+msgstr "חלוניות חיווי מסך צצות:"
 
 #: ui/MovementAndPlacement.qml:167
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Picture-in-picture Placement"
+#, kde-format
 msgctxt "@label:chooser"
 msgid "Picture-in-picture:"
-msgstr "הצבת תמונה בתוך תמונה"
+msgstr "תמונה בתוך תמונה:"
 
 #: ui/MovementAndPlacement.qml:172
 #, kde-format
@@ -354,73 +352,64 @@ msgid "Margin:"
 msgstr "גבול:"
 
 #: ui/OnScreenDisplayPositionSelector.qml:80
-#, fuzzy, kde-format
-#| msgid "Top-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Top-left"
-msgstr "שמאלית עליונה"
+msgstr "שמאל למעלה"
 
 #: ui/OnScreenDisplayPositionSelector.qml:85
-#, fuzzy, kde-format
-#| msgid "Top-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Top-center"
-msgstr "שמאלית עליונה"
+msgstr "מרכז למעלה"
 
 #: ui/OnScreenDisplayPositionSelector.qml:90
-#, fuzzy, kde-format
-#| msgid "Top-right"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Top-right"
-msgstr "ימנית עליונה"
+msgstr "ימין למעלה"
 
 #: ui/OnScreenDisplayPositionSelector.qml:95
-#, fuzzy, kde-format
-#| msgid "Centered"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Center-left"
-msgstr "ממורכזת"
+msgstr "מרכז שמאלה"
 
 #: ui/OnScreenDisplayPositionSelector.qml:100
-#, fuzzy, kde-format
-#| msgid "Centered"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Center"
-msgstr "ממורכזת"
+msgstr "מרכז"
 
 #: ui/OnScreenDisplayPositionSelector.qml:105
-#, fuzzy, kde-format
-#| msgid "Centered"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Center-right"
-msgstr "ממורכזת"
+msgstr "מרכז ימינה"
 
 #: ui/OnScreenDisplayPositionSelector.qml:110
-#, fuzzy, kde-format
-#| msgid "Bottom-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Bottom-left"
-msgstr "שמאלית תחתונה"
+msgstr "שמאל למטה"
 
 #: ui/OnScreenDisplayPositionSelector.qml:115
-#, fuzzy, kde-format
-#| msgid "Bottom-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Bottom-center"
-msgstr "שמאלית תחתונה"
+msgstr "מרכז למטה"
 
 #: ui/OnScreenDisplayPositionSelector.qml:120
-#, fuzzy, kde-format
-#| msgid "Bottom-right"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Bottom-right"
-msgstr "ימנית תחתונה"
+msgstr "ימין למטה"
 
 #: ui/OnScreenDisplayPositionSelector.qml:141
 #, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Lower center"
-msgstr ""
+msgstr "מרכז נמוך"
 
 #: ui/TitlebarActions.qml:20 ui/TitlebarActions.qml:33 ui/WindowActions.qml:31
 #, kde-format

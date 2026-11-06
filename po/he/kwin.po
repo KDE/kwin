@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-05 00:57+0000\n"
-"PO-Revision-Date: 2026-09-04 08:45+0300\n"
+"PO-Revision-Date: 2026-11-05 13:20+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 26.08.0\n"
+"X-Generator: Lokalize 26.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1863,25 +1863,15 @@ msgid "<application>%1</application> is asking to control input devices"
 msgstr "<application>%1</application> מבקש לשלוט בהתקני הקלט שלך"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check, %1 is the application name. This option always allow apps "
-#| "claiming to be a given application name to control input devices"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option remembers the "
 "selection for apps claiming to be a given application name"
 msgid "Remember for apps claiming to be %1"
-msgstr "תמיד להרשות ליישומים שטוענים שהם %1"
+msgstr "לזכור ליישומים שטוענים שהם %1"
 
 #: plugins/eis/eisprompter.cpp:66
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Identities of legacy X11 apps cannot be verified. Any app claiming to be "
-#| "<application>%1</application> will be able to control input devices. You "
-#| "can revoke this permission later on <application>System Settings</"
-#| "application>’ “Legacy X11 App Support” page."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Identities of legacy X11 apps cannot be verified. If permitted any app "
@@ -1889,10 +1879,10 @@ msgid ""
 "devices. You can change this setting later on <application>System Settings</"
 "application>’ “Legacy X11 App Support” page."
 msgstr ""
-"לא ניתן לאמת זהויות של יישומי X11 מיושנים. כל יישום שטוען שהוא <application>"
-"%1</application> יוכל לשלוט בהתקני הקלט שלך. אפשר לשלול את ההרשאה הזאת בהמשך "
-"דרך עמוד „תמיכה ביישומי X11 מיושנים” ב<application>הגדרות המערכת</"
-"application>"
+"לא ניתן לאמת זהויות של יישומי X11 מיושנים. אם ניתנת הרשאה כל יישום שטוען "
+"שהוא <application>%1</application> יוכל לשלוט בהתקני קלט. אפשר לשנות את "
+"ההגדרה הזאת בהמשך דרך עמוד „תמיכה ביישומי X11 מיושנים” ב<application>הגדרות "
+"המערכת</application>"
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
@@ -2504,6 +2494,9 @@ msgid ""
 "temporarily active.\n"
 "            "
 msgstr ""
+"\n"
+"                ציון התאריך והשעה עד הפעלת תאורת הלילה זמנית.\n"
+"            "
 
 #. i18n: ectx: label, entry (ActivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:28
@@ -2513,6 +2506,9 @@ msgid ""
 "                Night Light is activated until manually disabled.\n"
 "            "
 msgstr ""
+"\n"
+"                תאורת הלילה מופעלת עד שתכבה ידנית.\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedUntil), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:35
@@ -2523,6 +2519,9 @@ msgid ""
 "temporarily inactive.\n"
 "            "
 msgstr ""
+"\n"
+"                ציון התאריך והשעה עד כיבוי תאורת הלילה זמנית.\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:42
@@ -2532,6 +2531,9 @@ msgid ""
 "                Night Light is suspended until manually turned back on.\n"
 "            "
 msgstr ""
+"\n"
+"                תאורת לילה מושהית עד שתופעל ידנית בחזרה.\n"
+"            "
 
 #: plugins/outputlocator/outputlocator.cpp:26
 #, kde-format
@@ -4404,10 +4406,9 @@ msgid "More displays are enabled than are supported by the graphics card."
 msgstr "יש יותר תצוגות פעילות מהכמות שהכרטיס הגרפי תומך."
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration: %s"
+#, kde-format
 msgid "The driver rejected the output configuration: %1"
-msgstr "מנהל ההתקן דחה את הגדרות הפלט: %s"
+msgstr "מנהל ההתקן דחה את הגדרות הפלט: %1"
 
 #: window.cpp:3181
 #, kde-format

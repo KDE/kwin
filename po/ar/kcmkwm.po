@@ -6,14 +6,14 @@
 # محمد سعد  Mohamed SAAD <metehyi@free.fr>, 2006.
 # AbdulAziz AlSharif <a.a-a.s@hotmail.com>, 2007.
 # Youssef Chahibi <chahibi@gmail.com>, 2007.
-# SPDX-FileCopyrightText: 2008, 2024, 2025, 2026 zayed <zayed.alsaidi@gmail.com>
+# SPDX-FileCopyrightText: 2008, 2024-2026 zayed <zayed.alsaidi@gmail.com>
 # Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2010, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-03 00:56+0000\n"
-"PO-Revision-Date: 2026-07-15 22:01+0400\n"
+"PO-Revision-Date: 2026-11-05 09:12+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Lokalize 25.12.3\n"
+"X-Generator: Lokalize 26.08.1\n"
 
 #: ui/Focus.qml:22
 #, kde-format
@@ -305,21 +305,19 @@ msgstr "تحت الفأرة"
 #, kde-format
 msgctxt "@title:group"
 msgid "Overlay Positioning"
-msgstr ""
+msgstr "تحديد موضع التراكب"
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
 msgctxt "@label:chooser"
 msgid "OSD popups:"
-msgstr ""
+msgstr "النوافذ المنبثقة في شاشة العرض:"
 
 #: ui/MovementAndPlacement.qml:167
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Picture-in-picture Placement"
+#, kde-format
 msgctxt "@label:chooser"
 msgid "Picture-in-picture:"
-msgstr "موضع الصورة داخل الصورة"
+msgstr "صورة في صورة:"
 
 #: ui/MovementAndPlacement.qml:172
 #, kde-format
@@ -347,64 +345,55 @@ msgid "Margin:"
 msgstr "الهامش:"
 
 #: ui/OnScreenDisplayPositionSelector.qml:80
-#, fuzzy, kde-format
-#| msgid "Top-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Top-left"
 msgstr "أعلى يسار"
 
 #: ui/OnScreenDisplayPositionSelector.qml:85
-#, fuzzy, kde-format
-#| msgid "Top-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Top-center"
-msgstr "أعلى يسار"
+msgstr "أعلى الوسط"
 
 #: ui/OnScreenDisplayPositionSelector.qml:90
-#, fuzzy, kde-format
-#| msgid "Top-right"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Top-right"
 msgstr "أعلى يمين"
 
 #: ui/OnScreenDisplayPositionSelector.qml:95
-#, fuzzy, kde-format
-#| msgid "Centered"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Center-left"
-msgstr "في الوسط"
+msgstr "يسار الوسط"
 
 #: ui/OnScreenDisplayPositionSelector.qml:100
-#, fuzzy, kde-format
-#| msgid "Centered"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Center"
-msgstr "في الوسط"
+msgstr "وسط"
 
 #: ui/OnScreenDisplayPositionSelector.qml:105
-#, fuzzy, kde-format
-#| msgid "Centered"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Center-right"
-msgstr "في الوسط"
+msgstr "وسط اليمين"
 
 #: ui/OnScreenDisplayPositionSelector.qml:110
-#, fuzzy, kde-format
-#| msgid "Bottom-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Bottom-left"
 msgstr "أسفل يسار"
 
 #: ui/OnScreenDisplayPositionSelector.qml:115
-#, fuzzy, kde-format
-#| msgid "Bottom-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Bottom-center"
-msgstr "أسفل يسار"
+msgstr "أسفل الوسط"
 
 #: ui/OnScreenDisplayPositionSelector.qml:120
-#, fuzzy, kde-format
-#| msgid "Bottom-right"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Bottom-right"
 msgstr "أسفل يمين"
@@ -413,7 +402,7 @@ msgstr "أسفل يمين"
 #, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Lower center"
-msgstr ""
+msgstr "أسفل الوسط"
 
 #: ui/TitlebarActions.qml:20 ui/TitlebarActions.qml:33 ui/WindowActions.qml:31
 #, kde-format
