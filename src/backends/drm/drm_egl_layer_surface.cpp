@@ -512,6 +512,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *
         if (surface->importSwapchain) {
             surface->importSwapchain->resetDamageTracking();
         }
+        surface->gbmSwapchain->resetBufferAge();
         surface->currentSlot = slot;
         surface->currentFramebuffer = ret;
         return ret;
