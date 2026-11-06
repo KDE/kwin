@@ -181,6 +181,13 @@ static GraphicsBuffer *allocateDmaBuf(gbm_device *device, dev_t deviceId, const 
             if (!attributes.has_value()) {
                 return nullptr;
             }
+            if (!options.modifiers.contains(attributes->modifier)) {
+                // some modifier-aware drivers pick an explicit modifier (that isn't in the list)
+                // when the list contains DRM_FORMAT_MOD_INVALID.
+                // Override the modifier here, so the rest of KWin can still assume allocation
+                // to pick a modifier that's actually in the list.
+                attributes->modifier = DRM_FORMAT_MOD_INVALID;
+            }
             return new GbmGraphicsBuffer(std::move(attributes.value()));
         }
     }
