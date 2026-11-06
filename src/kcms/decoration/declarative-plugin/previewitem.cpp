@@ -58,6 +58,9 @@ void PreviewItem::componentComplete()
         m_decoration->create();
         m_decoration->init();
         m_decoration->apply(m_decoration->nextState()->clone());
+        connect(m_decoration, &KDecoration3::Decoration::nextStateChanged, m_decoration, [decoration = m_decoration](auto state) {
+            decoration->apply(state->clone());
+        });
         syncSize();
     }
 }
