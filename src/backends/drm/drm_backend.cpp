@@ -50,6 +50,19 @@ using namespace std::chrono_literals;
 namespace KWin
 {
 
+static const char *sessionErrorName(Session::Error error)
+{
+    switch (error) {
+    case Session::Error::EBusy:
+        return "EBusy";
+    case Session::Error::EAccess:
+        return "EAccess";
+    case Session::Error::Other:
+        return "Other";
+    }
+    return "Unknown";
+}
+
 class DrmAuthHandle
 {
 public:
@@ -68,7 +81,7 @@ public:
             fd = m_session->openRestricted(filePath);
         }
         if (!fd.has_value()) {
-            qCWarning(KWIN_DRM, "Failed to open drm device %s: %s", qPrintable(filePath), strerror(errno));
+            qCWarning(KWIN_DRM, "Failed to open drm device %s: %s", qPrintable(filePath), sessionErrorName(fd.error()));
             return;
         }
         m_fd = *fd;
