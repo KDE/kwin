@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-04 03:16+0000\n"
-"PO-Revision-Date: 2026-10-02 20:33+0300\n"
+"PO-Revision-Date: 2026-10-05 15:29+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -1830,39 +1830,37 @@ msgstr "Koko ruudun ikkunat"
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:9
 #, kde-format
 msgid "Delay Time"
-msgstr ""
+msgstr "Viiveaika"
 
 #. i18n: ectx: label, entry (DwellTime), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:13
 #, kde-format
 msgid "Dwell Time"
-msgstr ""
+msgstr "Paikallaanoloaika"
 
 #. i18n: ectx: label, entry (MotionThreshold), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:17
 #, kde-format
 msgid "Motion Threshold"
-msgstr ""
+msgstr "Liikekynnys"
 
 #. i18n: ectx: label, entry (DefaultButton), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:21
-#, fuzzy, kde-format
-#| msgid "Default"
+#, kde-format
 msgid "Default Button"
-msgstr "Oletus"
+msgstr "Oletuspainike"
 
 #. i18n: ectx: label, entry (ButtonLocked), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:33
-#, fuzzy, kde-format
-#| msgid "Button"
+#, kde-format
 msgid "Lock Button"
-msgstr "Painike"
+msgstr "Lukituspainike"
 
 #. i18n: ectx: label, entry (DwellColor), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:37
 #, kde-format
 msgid "Dwell Color"
-msgstr ""
+msgstr "Paikallaanoloväri"
 
 #: plugins/eis/eisinputcapturemanager.cpp:140
 #, kde-format
@@ -4388,13 +4386,12 @@ msgstr "Istunto ei ole aktiivinen"
 #: wayland/outputmanagement_v2.cpp:747
 #, kde-format
 msgid "More displays are enabled than are supported by the graphics card."
-msgstr ""
+msgstr "Käytössä on enemmän värejä kuin näytönohjain tukee."
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration"
+#, kde-format
 msgid "The driver rejected the output configuration: %s"
-msgstr "Ajuri hylkäsi ulostulomäärityksen"
+msgstr "Ajuri hylkäsi ulostulomäärityksen: %s"
 
 #: window.cpp:3178
 #, kde-format

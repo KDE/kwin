@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-09-15 02:47+0000\n"
-"PO-Revision-Date: 2026-08-25 15:01+0300\n"
+"PO-Revision-Date: 2026-10-05 13:04+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -66,7 +66,7 @@ msgstr "Lisää työpöytä"
 #, kde-kuit-format
 msgctxt "@label/rich"
 msgid "%1"
-msgstr ""
+msgstr "%1"
 
 #: ui/main.qml:90
 #, kde-format
