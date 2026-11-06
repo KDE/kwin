@@ -19,6 +19,8 @@
 #include "activities.h"
 #endif
 #include "appmenu.h"
+#include "core/drmdevice.h"
+#include "core/gpumanager.h"
 #include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
 #include "cursor.h"
@@ -2008,6 +2010,7 @@ QString Workspace::supportInformation() const
         support.append(QStringLiteral("---------\n"));
         support.append(QStringLiteral("Name: %1\n").arg(output->name()));
         support.append(QStringLiteral("Enabled: %1\n").arg(output->isEnabled()));
+        support.append(QStringLiteral("Scanout Device: %1\n").arg(output->scanoutDevice() ? output->scanoutDevice()->path() : QString()));
         if (output->isEnabled()) {
             support.append(QStringLiteral("Geometry: %1,%2,%3x%4\n")
                                .arg(geo.x())
@@ -2133,6 +2136,21 @@ QString Workspace::supportInformation() const
     } else {
         support.append(QStringLiteral("Compositing is not active\n"));
     }
+
+    const auto &gpus = GpuManager::self()->renderDevices();
+    QDebug debug(&support);
+    debug.nospace();
+    debug << "\nRender devices:\n";
+    debug << "===============\n";
+    for (const auto &gpu : gpus) {
+        debug << "- " << gpu->path() << "\n";
+        debug << "  - Name: " << gpu->name() << "\n";
+        debug << "  - EGL: " << bool(gpu->eglDisplay()) << "\n";
+        debug << "  - Vulkan: " << bool(gpu->vulkanDevice()) << "\n";
+        debug << "  - Software: " << gpu->isSoftwareDevice() << "\n";
+        debug << "\n";
+    }
+
     return support;
 }
 
