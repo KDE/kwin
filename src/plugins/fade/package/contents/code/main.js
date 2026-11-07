@@ -11,13 +11,13 @@
 
 const blacklist = {
     // The logout screen has to be animated only by the logout effect.
-    "ksmserver ksmserver": [],
-    "ksmserver-logout-greeter ksmserver-logout-greeter": [],
+    "ksmserver": [],
+    "ksmserver-logout-greeter": [],
 
     // KDE Plasma splash screen has to be animated only by the login effect.
-    "ksplashqml ksplashqml": [],
+    "ksplashqml": [],
 
-    "spectacle org.kde.spectacle": ["region-editor"],
+    "spectacle": ["region-editor"],
 };
 
 class FadeEffect {
@@ -36,7 +36,7 @@ class FadeEffect {
     }
 
     static isFadeWindow(w) {
-        const blacklistedTags = blacklist[w.windowClass];
+        const blacklistedTags = blacklist[w.executableName];
         if (blacklistedTags && (blacklistedTags.length === 0 || blacklistedTags.includes(w.tag))) {
             return false;
         }

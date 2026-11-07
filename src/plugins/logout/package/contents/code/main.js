@@ -13,7 +13,7 @@
 
 var logoutEffect = {
     isLogoutWindow: function (window) {
-        if (window.windowClass === "ksmserver-logout-greeter ksmserver-logout-greeter") {
+        if (window.executableName === "ksmserver-logout-greeter") {
             return true;
         }
         return false;

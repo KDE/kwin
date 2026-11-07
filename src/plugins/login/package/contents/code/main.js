@@ -17,7 +17,7 @@ var loginEffect = {
         loginEffect.isFadeToBlack = effect.readConfig("FadeToBlack", false);
     },
     isLoginSplash: function (window) {
-        return window.windowClass === "ksplashqml ksplashqml";
+        return window.executableName === "ksplashqml";
     },
     fadeOut: function (window) {
         animate({

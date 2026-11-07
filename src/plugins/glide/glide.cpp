@@ -34,9 +34,9 @@ namespace KWin
 {
 
 static const QSet<QString> s_blacklist{
-    QStringLiteral("ksmserver ksmserver"),
-    QStringLiteral("ksmserver-logout-greeter ksmserver-logout-greeter"),
-    QStringLiteral("ksplashqml ksplashqml"),
+    QStringLiteral("ksmserver"),
+    QStringLiteral("ksmserver-logout-greeter"),
+    QStringLiteral("ksplashqml"),
 };
 
 GlideEffect::GlideEffect()
@@ -260,17 +260,16 @@ bool GlideEffect::isGlideWindow(EffectWindow *w) const
     // So, the only way to decide whether a window should be animated is
     // to use a heuristic: if a window has decoration, then it's most
     // likely a dialog or a settings window so we have to animate it.
-    if (w->windowClass() == QLatin1StringView("plasmashell plasmashell")
-        || w->windowClass() == QLatin1StringView("plasmashell org.kde.plasmashell")) {
+    if (w->executableName() == QLatin1StringView("plasmashell")) {
         return w->hasDecoration();
     }
 
-    if (w->windowClass() == QLatin1StringView("spectacle org.kde.spectacle")
+    if (w->executableName() == QLatin1StringView("spectacle")
         && w->tag() == QLatin1StringView("region-editor")) {
         return false;
     }
 
-    if (s_blacklist.contains(w->windowClass())) {
+    if (s_blacklist.contains(w->executableName())) {
         return false;
     }
 
