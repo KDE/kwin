@@ -333,6 +333,11 @@ QString EffectWindow::windowClass() const
     return d->m_window->resourceName() + QLatin1Char(' ') + d->m_window->resourceClass();
 }
 
+QString EffectWindow::executableName() const
+{
+    return d->m_window->executableName();
+}
+
 RectF EffectWindow::contentsRect() const
 {
     return d->m_window->clientGeometry().translated(-d->m_window->frameGeometry().topLeft());

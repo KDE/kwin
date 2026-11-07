@@ -11,13 +11,13 @@
 
 const blacklist = {
     // The logout screen has to be animated only by the logout effect.
-    "ksmserver ksmserver": [],
-    "ksmserver-logout-greeter ksmserver-logout-greeter": [],
+    "ksmserver": [],
+    "ksmserver-logout-greeter": [],
 
     // KDE Plasma splash screen has to be animated only by the login effect.
-    "ksplashqml ksplashqml": [],
+    "ksplashqml": [],
 
-    "spectacle org.kde.spectacle": ["region-editor"],
+    "spectacle": ["region-editor"],
 };
 
 class ScaleEffect {
@@ -46,12 +46,11 @@ class ScaleEffect {
         // So, the only way to decide whether a window should be animated is
         // to use a heuristic: if a window has decoration, then it's most
         // likely a dialog or a settings window so we have to animate it.
-        if (window.windowClass == "plasmashell plasmashell"
-                || window.windowClass == "plasmashell org.kde.plasmashell") {
+        if (window.executableName == "plasmashell") {
             return window.hasDecoration;
         }
 
-        const blacklistedTags = blacklist[window.windowClass];
+        const blacklistedTags = blacklist[window.executableName];
         if (blacklistedTags && (blacklistedTags.length === 0 || blacklistedTags.includes(window.tag))) {
             return false;
         }
