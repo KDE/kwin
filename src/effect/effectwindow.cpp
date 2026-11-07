@@ -333,6 +333,11 @@ QString EffectWindow::windowClass() const
     return d->m_window->resourceName() + QLatin1Char(' ') + d->m_window->resourceClass();
 }
 
+QString EffectWindow::executableName() const
+{
+    return d->m_window->executableName();
+}
+
 RectF EffectWindow::contentsRect() const
 {
     return d->m_window->clientGeometry().translated(-d->m_window->frameGeometry().topLeft());
@@ -449,16 +454,16 @@ bool EffectWindow::isX11Client() const
     return d->m_x11Window;
 }
 
-// The key is the window class, the value is excluded toplevel tags (an empty list means exclude all windows).
+// The key is the executable name, the value is excluded toplevel tags (an empty list means exclude all windows).
 static const QHash<QString, QStringList> s_toplevelAnimationDenyList{
-    {QStringLiteral("ksmserver-logout-greeter ksmserver-logout-greeter"), {}},
-    {QStringLiteral("ksplashqml ksplashqml"), {}},
-    {QStringLiteral("spectacle org.kde.spectacle"), {QStringLiteral("region-editor")}},
+    {QStringLiteral("ksmserver-logout-greeter"), {}},
+    {QStringLiteral("ksplashqml"), {}},
+    {QStringLiteral("spectacle"), {QStringLiteral("region-editor")}},
 };
 
 bool EffectWindow::canBeAnimatedByToplevelOpenCloseEffect() const
 {
-    if (const auto it = s_toplevelAnimationDenyList.find(windowClass()); it != s_toplevelAnimationDenyList.end()) {
+    if (const auto it = s_toplevelAnimationDenyList.find(executableName()); it != s_toplevelAnimationDenyList.end()) {
         if (it->isEmpty() || it->contains(tag())) {
             return false;
         }
@@ -493,7 +498,7 @@ bool EffectWindow::canBeAnimatedByPopupOpenCloseEffect() const
         return true;
     }
 
-    return windowClass() == QLatin1StringView("spectacle org.kde.spectacle") && tag() == QLatin1StringView("region-editor");
+    return executableName() == QLatin1StringView("spectacle") && tag() == QLatin1StringView("region-editor");
 }
 
 //****************************************

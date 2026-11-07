@@ -341,6 +341,11 @@ class KWIN_EXPORT EffectWindow : public QObject
     Q_PROPERTY(bool canBeAnimatedByToplevelOpenCloseEffect READ canBeAnimatedByToplevelOpenCloseEffect CONSTANT);
     Q_PROPERTY(bool canBeAnimatedByPopupOpenCloseEffect READ canBeAnimatedByPopupOpenCloseEffect CONSTANT);
 
+    /**
+     * The name of the executable this window belongs to.
+     */
+    Q_PROPERTY(QString executableName READ executableName)
+
 public:
     /**  Flags explaining why painting should be disabled  */
     enum {
@@ -440,6 +445,7 @@ public:
     QString caption() const;
     QIcon icon() const;
     QString windowClass() const;
+    QString executableName() const;
     QString windowRole() const;
     QString tag() const;
     const EffectWindowGroup *group() const;
