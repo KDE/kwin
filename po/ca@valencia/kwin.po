@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-05 00:57+0000\n"
-"PO-Revision-Date: 2026-10-20 09:21+0200\n"
+"PO-Revision-Date: 2026-10-31 10:04+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -4453,10 +4453,9 @@ msgstr ""
 "Hi ha més pantalles habilitades que les admeses per la targeta gràfica."
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration: %s"
+#, kde-format
 msgid "The driver rejected the output configuration: %1"
-msgstr "El controlador ha rebutjat la configuració de l'eixida: %s"
+msgstr "El controlador ha rebutjat la configuració de l'eixida: %1"
 
 #: window.cpp:3181
 #, kde-format
