@@ -27,6 +27,7 @@
 #include "scene/windowitem.h"
 #include "shadow.h"
 #include "utils/envvar.h"
+#include "utils/executable_path.h"
 #include "virtualdesktops.h"
 #include "wayland/surface.h"
 #include "wayland/xwaylandshell_v1.h"
@@ -39,6 +40,7 @@
 #include <KStartupInfo>
 #include <KX11Extras>
 // Qt
+#include <QFileInfo>
 #include <QProcess>
 #include <QScopeGuard>
 // xcb
@@ -2950,6 +2952,13 @@ void X11Window::readPid(xcb_res_query_client_ids_cookie_t cookie)
         while (it.rem > 0) {
             if ((it.data->spec.mask & XCB_RES_CLIENT_ID_MASK_LOCAL_CLIENT_PID) && xcb_res_client_id_value_value_length(it.data) > 0) {
                 m_pid = *xcb_res_client_id_value_value(it.data);
+
+                const QFileInfo fileInfo(executablePathFromPid(m_pid));
+                if (fileInfo.exists()) {
+                    const QString executableFileName = fileInfo.fileName();
+                    setExecutableName(executableFileName);
+                }
+
                 break;
             }
         }

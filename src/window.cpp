@@ -4652,6 +4652,19 @@ void Window::setExcludeFromCapture(bool newExcludeFromCapture)
     Q_EMIT excludeFromCaptureChanged();
 }
 
+QString Window::executableName() const
+{
+    return m_executableName;
+}
+
+void Window::setExecutableName(const QString &name)
+{
+    if (name != m_executableName) {
+        m_executableName = name;
+        Q_EMIT executableNameChanged();
+    }
+}
+
 } // namespace KWin
 
 #include "moc_window.cpp"

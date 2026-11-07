@@ -798,6 +798,15 @@ class KWIN_EXPORT Window : public QObject
      */
     Q_PROPERTY(bool excludeFromCapture READ excludeFromCapture WRITE setExcludeFromCapture NOTIFY excludeFromCaptureChanged FINAL)
 
+    /*!
+     * \qmlproperty string Window::executableName
+     *
+     * The name of the executable this window belongs to.
+     *
+     * \since 6.9
+     */
+    Q_PROPERTY(QString executableName READ executableName NOTIFY executableNameChanged)
+
 public:
     ~Window() override;
 
@@ -1588,6 +1597,8 @@ public:
     bool excludeFromCapture() const;
     void setExcludeFromCapture(bool newExcludeFromCapture);
 
+    QString executableName() const;
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
@@ -1706,6 +1717,7 @@ Q_SIGNALS:
     void borderRadiusChanged();
     void excludeFromCaptureChanged();
     void decorationPolicyChanged();
+    void executableNameChanged();
 
 protected:
     Window();
@@ -1713,6 +1725,7 @@ protected:
     virtual std::unique_ptr<WindowItem> createItem(Item *parentItem) = 0;
 
     void setResourceClass(const QString &name, const QString &className = QString());
+    void setExecutableName(const QString &name);
     void setIcon(const QIcon &icon);
     void startAutoRaise();
     void autoRaise();
@@ -2105,6 +2118,7 @@ protected:
     QString m_description;
 
     QString m_activationToken;
+    QString m_executableName;
 };
 
 inline RectF Window::bufferGeometry() const
