@@ -478,6 +478,10 @@ void Xwayland::handleXwaylandReady()
 
 void Xwayland::registerReady()
 {
+    if (!kwinApp()->x11Connection()) {
+        return;
+    }
+
     // Helper window to claim _NET_WM_CM_S0 and WM_S0 selections. It will be destroyed together with our connection.
     const xcb_window_t selectionOwner = xcb_generate_id(kwinApp()->x11Connection());
     xcb_create_window(kwinApp()->x11Connection(), XCB_COPY_FROM_PARENT, selectionOwner, kwinApp()->x11RootWindow(), 0, 0, 1, 1, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
