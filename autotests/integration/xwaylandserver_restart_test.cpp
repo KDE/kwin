@@ -61,7 +61,7 @@ void XwaylandServerRestartTest::testRestart()
     QSignalSpy startedSpy(xwayland, &Xwl::Xwayland::started);
     QSignalSpy stoppedSpy(xwayland, &Xwl::Xwayland::errorOccurred);
 
-    Test::createX11Connection(); // trigger an X11 start
+    Test::XcbConnectionPtr c = Test::createX11Connection(); // trigger an X11 start
     QTRY_COMPARE(startedSpy.count(), 1);
 
     // Pretend that the Xwayland process has crashed by sending a SIGKILL to it.
@@ -70,7 +70,7 @@ void XwaylandServerRestartTest::testRestart()
     QTRY_COMPARE(stoppedSpy.count(), 1);
 
     // Check that the compositor still accepts new X11 clients.
-    Test::XcbConnectionPtr c = Test::createX11Connection();
+    c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
 
     QTRY_COMPARE(startedSpy.count(), 2);
