@@ -339,13 +339,6 @@ void Application::applyXwaylandScale()
         xwaylandGroup.deleteEntry("Scale", KConfig::Notify);
     }
     xwaylandGroup.sync();
-
-#if KWIN_BUILD_X11
-    if (x11Connection()) {
-        // rerun the script that runs xrdb with the new settings
-        QProcess::startDetached(QString(LIBEXEC_DIR) + QStringLiteral("/plasma-setup-xwayland"));
-    }
-#endif
 }
 
 #if KWIN_BUILD_X11
