@@ -6,3 +6,5 @@ PartOf=graphical-session.target
 ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/kwin_wayland_wrapper --xwayland
 BusName=org.kde.KWinWrapper
 Slice=session.slice
+OOMScoreAdjust=100
+ManagedOOMPreference=avoid
