@@ -216,8 +216,13 @@ void DebugConsoleTest::testX11Unmanaged()
 
     // let's create an override redirect window
     const uint32_t values[] = {true};
-    Xcb::Window window(Rect(0, 0, 10, 10), XCB_CW_OVERRIDE_REDIRECT, values);
-    window.map();
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    xcb_window_t windowId = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+                      0, 0, 10, 10, 0,
+                      XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, XCB_CW_OVERRIDE_REDIRECT, values);
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     QVERIFY(rowsInsertedSpy.wait());
     QCOMPARE(rowsInsertedSpy.count(), 1);
@@ -238,7 +243,7 @@ void DebugConsoleTest::testX11Unmanaged()
     QVERIFY(!model.index(0, 2, unmanagedTopLevelIndex).isValid());
     QVERIFY(!model.index(1, 0, unmanagedTopLevelIndex).isValid());
 
-    QCOMPARE(model.data(windowIndex, Qt::DisplayRole).toString(), QStringLiteral("0x%1").arg(static_cast<xcb_window_t>(window), 0, 16));
+    QCOMPARE(model.data(windowIndex, Qt::DisplayRole).toString(), QStringLiteral("0x%1").arg(windowId, 0, 16));
 
     // the windowIndex has children and those are properties
     for (int i = 0; i < model.rowCount(windowIndex); i++) {
@@ -271,7 +276,8 @@ void DebugConsoleTest::testX11Unmanaged()
     // now close the window again, it should be removed from the model
     QSignalSpy rowsRemovedSpy(&model, &QAbstractItemModel::rowsRemoved);
 
-    window.unmap();
+    xcb_unmap_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     QVERIFY(rowsRemovedSpy.wait());
     QCOMPARE(rowsRemovedSpy.count(), 1);
