@@ -52,7 +52,6 @@ Options::Options(QObject *parent)
     , m_perOutputVirtualDesktops(false)
     , m_focusStealingPreventionLevel(FocusStealingPreventionLevel::None)
     , m_killPingTimeout(0)
-    , m_xwaylandCrashPolicy(Options::defaultXwaylandCrashPolicy())
     , m_xwaylandMaxCrashCount(Options::defaultXwaylandMaxCrashCount())
     , m_xwaylandEavesdrops(Options::defaultXwaylandEavesdrops())
     , m_xwaylandEavesdropsMouse(Options::defaultXwaylandEavesdropsMouse())
@@ -129,15 +128,6 @@ void Options::setNextFocusPrefersMouse(bool nextFocusPrefersMouse)
     }
     m_nextFocusPrefersMouse = nextFocusPrefersMouse;
     Q_EMIT nextFocusPrefersMouseChanged();
-}
-
-void Options::setXwaylandCrashPolicy(XwaylandCrashPolicy crashPolicy)
-{
-    if (m_xwaylandCrashPolicy == crashPolicy) {
-        return;
-    }
-    m_xwaylandCrashPolicy = crashPolicy;
-    Q_EMIT xwaylandCrashPolicyChanged();
 }
 
 void Options::setXwaylandMaxCrashCount(int maxCrashCount)
@@ -759,7 +749,6 @@ void Options::syncFromKcfgc()
     setPerOutputVirtualDesktops(m_settings->perOutputVirtualDesktops());
     setFocusStealingPreventionLevel(FocusStealingPreventionLevel(m_settings->focusStealingPreventionLevel()));
     setActivationDesktopPolicy(m_settings->activationDesktopPolicy());
-    setXwaylandCrashPolicy(m_settings->xwaylandCrashPolicy());
     setXwaylandMaxCrashCount(m_settings->xwaylandMaxCrashCount());
     setXwaylandEavesdrops(XwaylandEavesdropsMode(m_settings->xwaylandEavesdrops()));
     setXwaylandEavesdropsMouse(m_settings->xwaylandEavesdropsMouse());

@@ -33,11 +33,7 @@ void XwaylandServerRestartTest::initTestCase()
 {
     QVERIFY(waylandServer()->init(qAppName()));
 
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    KConfigGroup xwaylandGroup = config->group(QStringLiteral("Xwayland"));
-    xwaylandGroup.writeEntry(QStringLiteral("XwaylandCrashPolicy"), QStringLiteral("Restart"));
-    xwaylandGroup.sync();
-    kwinApp()->setConfig(config);
+    kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
     kwinApp()->start();
     Test::setOutputConfig({

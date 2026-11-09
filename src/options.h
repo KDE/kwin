@@ -34,14 +34,6 @@ enum XwaylandEavesdropsMode {
 };
 
 /**
- * This enum type specifies whether the Xwayland server must be restarted after a crash.
- */
-enum XwaylandCrashPolicy {
-    Stop,
-    Restart,
-};
-
-/**
  * Placement policies. How workspace decides the way windows get positioned
  * on the screen. The better the policy, the heavier the resource use.
  * Normally you don't have to worry. What the WM adds to the startup time
@@ -76,10 +68,8 @@ class KWIN_EXPORT Options : public QObject
     QML_ELEMENT
     QML_SINGLETON
 
-    Q_ENUM(XwaylandCrashPolicy)
     Q_ENUM(PlacementPolicy)
     Q_PROPERTY(FocusPolicy focusPolicy READ focusPolicy WRITE setFocusPolicy NOTIFY focusPolicyChanged)
-    Q_PROPERTY(XwaylandCrashPolicy xwaylandCrashPolicy READ xwaylandCrashPolicy WRITE setXwaylandCrashPolicy NOTIFY xwaylandCrashPolicyChanged)
     Q_PROPERTY(int xwaylandMaxCrashCount READ xwaylandMaxCrashCount WRITE setXwaylandMaxCrashCount NOTIFY xwaylandMaxCrashCountChanged)
     Q_PROPERTY(bool nextFocusPrefersMouse READ isNextFocusPrefersMouse WRITE setNextFocusPrefersMouse NOTIFY nextFocusPrefersMouseChanged)
     /**
@@ -267,10 +257,6 @@ public:
         return m_nextFocusPrefersMouse;
     }
 
-    XwaylandCrashPolicy xwaylandCrashPolicy() const
-    {
-        return m_xwaylandCrashPolicy;
-    }
     int xwaylandMaxCrashCount() const
     {
         return m_xwaylandMaxCrashCount;
@@ -689,7 +675,6 @@ public:
 
     // setters
     void setFocusPolicy(FocusPolicy focusPolicy);
-    void setXwaylandCrashPolicy(XwaylandCrashPolicy crashPolicy);
     void setXwaylandMaxCrashCount(int maxCrashCount);
     void setXwaylandEavesdrops(XwaylandEavesdropsMode mode);
     void setXwaylandEavesdropsMouse(bool eavesdropsMouse);
@@ -829,10 +814,6 @@ public:
     {
         return OpenGLCompositing;
     }
-    static XwaylandCrashPolicy defaultXwaylandCrashPolicy()
-    {
-        return XwaylandCrashPolicy::Restart;
-    }
     static int defaultXwaylandMaxCrashCount()
     {
         return 3;
@@ -872,7 +853,6 @@ Q_SIGNALS:
     // for properties
     void focusPolicyChanged();
     void focusPolicyIsResonableChanged();
-    void xwaylandCrashPolicyChanged();
     void xwaylandMaxCrashCountChanged();
     void xwaylandEavesdropsChanged();
     void xwaylandEavesdropsMouseChanged();
@@ -957,7 +937,6 @@ private:
     bool m_perOutputVirtualDesktops;
     FocusStealingPreventionLevel m_focusStealingPreventionLevel;
     int m_killPingTimeout;
-    XwaylandCrashPolicy m_xwaylandCrashPolicy;
     int m_xwaylandMaxCrashCount;
     XwaylandEavesdropsMode m_xwaylandEavesdrops;
     bool m_xwaylandEavesdropsMouse;

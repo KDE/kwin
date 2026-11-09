@@ -333,21 +333,12 @@ void XwaylandLauncher::handleXwaylandFinished(int exitCode, QProcess::ExitStatus
 #endif
     m_resetCrashCountTimer->stop();
 
-    switch (options->xwaylandCrashPolicy()) {
-    case XwaylandCrashPolicy::Restart:
-        if (++m_crashCount <= options->xwaylandMaxCrashCount()) {
-            stop();
-            m_resetCrashCountTimer->start(std::chrono::minutes(10));
-        } else {
-            qCWarning(KWIN_XWL, "Stopping Xwayland server because it has crashed %d times "
-                                "over the past 10 minutes",
-                      m_crashCount);
-            disable();
-        }
-        break;
-    case XwaylandCrashPolicy::Stop:
+    if (++m_crashCount <= options->xwaylandMaxCrashCount()) {
+        stop();
+        m_resetCrashCountTimer->start(std::chrono::minutes(10));
+    } else {
+        qCWarning(KWIN_XWL, "Stopping Xwayland server because it has crashed %d times over the past 10 minutes", m_crashCount);
         disable();
-        break;
     }
 }
 
