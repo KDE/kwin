@@ -335,6 +335,13 @@ std::expected<void, OutputError> DrmOutput::present(const QList<OutputLayer *> &
         m_pipeline->setPresentationMode(PresentationMode::VSync);
         m_pipeline->setContentType(DrmConnector::DrmContentType::Graphics);
         m_pipeline->maybeModeset(frame);
+    } else if (!m_pipeline->gpu()->atomicModeSetting()) {
+        // testPresent no-ops on legacy, so this needs an additional fallback
+        ret = m_pipeline->present(layersToUpdate, frame);
+        if (!ret && m_pipeline->presentationMode() != PresentationMode::VSync) {
+            m_pipeline->setPresentationMode(PresentationMode::VSync);
+            ret = m_pipeline->present(layersToUpdate, frame);
+        }
     } else {
         // the presentation mode of the pipeline is already set in testPresentation
         ret = m_pipeline->present(layersToUpdate, frame);
