@@ -482,7 +482,7 @@ add_definitions(
 )
 
 ecm_set_disabled_deprecation_versions(QT 5.15
-    KF 6.9.0
+    KF 6.32.0
 )
 
 ecm_setup_version(${PROJECT_VERSION}
