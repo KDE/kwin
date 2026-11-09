@@ -602,7 +602,7 @@ void Xwayland::runXWaylandStartupScripts()
 
     QDir scriptDir(XWAYLAND_SESSION_SCRIPTS);
     QStringList scripts = scriptDir.entryList(QStringList(), QDir::Files, QDir::Name);
-    scripts << QString(LIBEXEC_DIR) + QStringLiteral("/plasma-setup-xwayland");
+    scripts << LIBEXEC_DIR + QStringLiteral("/plasma-kded6-x11");
 
     for (const QString &script : std::as_const(scripts)) {
         const QString path = scriptDir.filePath(script);
