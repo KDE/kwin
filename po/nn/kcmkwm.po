@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 16:18+0000\n"
+"POT-Creation-Date: 2026-11-08 06:31+0000\n"
 "PO-Revision-Date: 2026-08-07 23:49+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
@@ -48,12 +48,8 @@ msgstr "&Venstreklikk:"
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow1)
 #: actions.ui:39
 #, kde-format
-msgid ""
-"In this row you can customize left click behavior when clicking into an "
-"inactive inner window ('inner' means: not titlebar, not frame)."
-msgstr ""
-"I denne rada kan du tilpassa åtferd ved venstreklikk i eit inaktivt indre "
-"vindauge («indre» tyder: ikkje tittellinja eller ramma)."
+msgid "In this row you can customize left click behavior when clicking into an inactive inner window ('inner' means: not titlebar, not frame)."
+msgstr "I denne rada kan du tilpassa åtferd ved venstreklikk i eit inaktivt indre vindauge («indre» tyder: ikkje tittellinja eller ramma)."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -105,12 +101,8 @@ msgstr "&Midtklikk:"
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
 #: actions.ui:79
 #, kde-format
-msgid ""
-"In this row you can customize middle click behavior when clicking into an "
-"inactive inner window ('inner' means: not titlebar, not frame)."
-msgstr ""
-"I denne rada kan du tilpassa åtferd ved klikk med midtknappen i eit inaktivt "
-"indre vindauge («indre» tyder: ikkje tittellinja eller ramma)."
+msgid "In this row you can customize middle click behavior when clicking into an inactive inner window ('inner' means: not titlebar, not frame)."
+msgstr "I denne rada kan du tilpassa åtferd ved klikk med midtknappen i eit inaktivt indre vindauge («indre» tyder: ikkje tittellinja eller ramma)."
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -122,12 +114,8 @@ msgstr "&Høgreklikk:"
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow3)
 #: actions.ui:119
 #, kde-format
-msgid ""
-"In this row you can customize right click behavior when clicking into an "
-"inactive inner window ('inner' means: not titlebar, not frame)."
-msgstr ""
-"I denne rada kan du tilpassa åtferd ved høgreklikk i eit inaktivt indre "
-"vindauge («indre» tyder: ikkje tittellinja eller ramma)."
+msgid "In this row you can customize right click behavior when clicking into an inactive inner window ('inner' means: not titlebar, not frame)."
+msgstr "I denne rada kan du tilpassa åtferd ved høgreklikk i eit inaktivt indre vindauge («indre» tyder: ikkje tittellinja eller ramma)."
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -139,12 +127,8 @@ msgstr "M&usehjul:"
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindowWheel)
 #: actions.ui:159
 #, kde-format
-msgid ""
-"In this row you can customize behavior when scrolling into an inactive inner "
-"window ('inner' means: not titlebar, not frame)."
-msgstr ""
-"I denne rada kan du tilpassa åtferd ved klikk i eit inaktivt indre vindauge "
-"(«indre» tyder: ikkje tittellinja eller ramma)."
+msgid "In this row you can customize behavior when scrolling into an inactive inner window ('inner' means: not titlebar, not frame)."
+msgstr "I denne rada kan du tilpassa åtferd ved klikk i eit inaktivt indre vindauge («indre» tyder: ikkje tittellinja eller ramma)."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
 #: actions.ui:163
@@ -179,12 +163,8 @@ msgstr "Val&tast:"
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllKey)
 #: actions.ui:205
 #, kde-format
-msgid ""
-"Here you select whether holding the Meta key or Alt key will allow you to "
-"perform the following actions."
-msgstr ""
-"Her kan du velja om dei følgjande handlingane skal utførast når du trykkjer "
-"Alt eller Meta."
+msgid "Here you select whether holding the Meta key or Alt key will allow you to perform the following actions."
+msgstr "Her kan du velja om dei følgjande handlingane skal utførast når du trykkjer Alt eller Meta."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
 #: actions.ui:209
@@ -214,12 +194,8 @@ msgstr "&Venstreklikk:"
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll1)
 #: actions.ui:261
 #, kde-format
-msgid ""
-"In this row you can customize left click behavior when clicking into the "
-"titlebar or the frame."
-msgstr ""
-"I denne rada kan du tilpassa åtferd ved venstreklikk i tittellinja eller "
-"ramma."
+msgid "In this row you can customize left click behavior when clicking into the titlebar or the frame."
+msgstr "I denne rada kan du tilpassa åtferd ved venstreklikk i tittellinja eller ramma."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -354,12 +330,8 @@ msgstr "&Midtklikk:"
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
 #: actions.ui:331
 #, kde-format
-msgid ""
-"In this row you can customize middle click behavior when clicking into the "
-"titlebar or the frame."
-msgstr ""
-"I denne rada kan du tilpassa åtferd ved klikk med midtknappen i tittellinja "
-"eller ramma."
+msgid "In this row you can customize middle click behavior when clicking into the titlebar or the frame."
+msgstr "I denne rada kan du tilpassa åtferd ved klikk med midtknappen i tittellinja eller ramma."
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
@@ -371,11 +343,8 @@ msgstr "&Høgreklikk:"
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
 #: actions.ui:401
 #, kde-format
-msgid ""
-"In this row you can customize right click behavior when clicking into the "
-"titlebar or the frame."
-msgstr ""
-"I denne rada kan du tilpassa åtferd ved høgreklikk i tittellinja eller ramma."
+msgid "In this row you can customize right click behavior when clicking into the titlebar or the frame."
+msgstr "I denne rada kan du tilpassa åtferd ved høgreklikk i tittellinja eller ramma."
 
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 #: actions.ui:458
@@ -386,12 +355,8 @@ msgstr "M&usehjul:"
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
 #: actions.ui:471
 #, kde-format
-msgid ""
-"Here you can customize KDE's behavior when scrolling with the mouse wheel in "
-"a window while pressing the modifier key."
-msgstr ""
-"Her kan du tilpassa åtferda ved musrulling i eit vindauge samtidig som ein "
-"valtast vert trykka."
+msgid "Here you can customize KDE's behavior when scrolling with the mouse wheel in a window while pressing the modifier key."
+msgstr "Her kan du tilpassa åtferda ved musrulling i eit vindauge samtidig som ein valtast vert trykka."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
@@ -445,13 +410,13 @@ msgstr "Vindaugs&nedrulling:"
 #: advanced.ui:32
 #, kde-format
 msgid ""
-"<html><head/><body><p>If this option is enabled, a shaded window will "
-"unshade automatically when the mouse pointer has been over the titlebar for "
-"some time.</p></body></html>"
+"<html><head/><body>"
+"<p>If this option is enabled, a shaded window will unshade automatically when the mouse pointer has been over the titlebar for some time.</p>"
+"</body></html>"
 msgstr ""
-"<html><head/><body><p>Viss det er kryssa av her, vil eit opprulla vindauge "
-"automatisk rullast ned når musepeikaren har lege over tittellinja ei viss "
-"tid.</p></body></html>"
+"<html><head/><body>"
+"<p>Viss det er kryssa av her, vil eit opprulla vindauge automatisk rullast ned når musepeikaren har lege over tittellinja ei viss tid.</p>"
+"</body></html>"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:35
@@ -462,12 +427,8 @@ msgstr "Når peikaren er over tittellinja i:"
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_ShadeHoverInterval)
 #: advanced.ui:42
 #, kde-format
-msgid ""
-"Sets the time in milliseconds before the window unshades when the mouse "
-"pointer goes over the shaded window."
-msgstr ""
-"Vel kor lenge musepeikaren skal liggja over tittellinja før vindauget vert "
-"rulla ned. Verdien er i millisekund."
+msgid "Sets the time in milliseconds before the window unshades when the mouse pointer goes over the shaded window."
+msgstr "Vel kor lenge musepeikaren skal liggja over tittellinja før vindauget vert rulla ned. Verdien er i millisekund."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
@@ -487,53 +448,29 @@ msgstr "Vindaugs&plassering:"
 #: advanced.ui:76
 #, kde-format
 msgid ""
-"<html><head/><body><p>The placement policy determines where a new window "
-"will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-bottom: "
-"0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" "
-"margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-"\">Smart</span> will try to achieve a minimum overlap of windows</li><li "
-"style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-"style:italic;\">Maximizing</span> will try to maximize every window to fill "
-"the whole screen. It might be useful to selectively affect placement of some "
-"windows using the window-specific settings.</li><li style=\" margin-top:0px; "
-"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
-"text-indent:0px;\"><span style=\" font-style:italic;\">Random</span> will "
-"use a random position</li><li style=\" margin-top:0px; margin-bottom:0px; "
-"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
-"\"><span style=\" font-style:italic;\">Centered</span> will place the window "
-"centered</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">Zero-cornered</span> will place the window in "
-"the top-left corner</li><li style=\" margin-top:0px; margin-bottom:12px; "
-"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
-"\"><span style=\" font-style:italic;\">Under mouse</span> will place the "
-"window under the pointer</li></ul></body></html>"
+"<html><head/><body>"
+"<p>The placement policy determines where a new window will appear on the desktop.</p>"
+"<ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\">"
+"<li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Smart</span> will try to achieve a minimum overlap of windows</li>"
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Maximizing</span> will try to maximize every window to fill the whole screen. It might be useful to selectively affect placement of some windows using the window-specific settings.</li>"
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Random</span> will use a random position</li>"
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Centered</span> will place the window centered</li>"
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Zero-cornered</span> will place the window in the top-left corner</li>"
+"<li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Under mouse</span> will place the window under the pointer</li>"
+"</ul>"
+"</body></html>"
 msgstr ""
-"<html><head/><body><p>Plasseringsreglene fastset kor eit nytt vindauge vil "
-"dukka opp på skrivebordet.</p><ul style=\"margin-top: 0px; margin-bottom: "
-"0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" "
-"margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-"\">Smart</span> vil prøva å få minst mogleg overlapping av vindauge.</li><li "
-"style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-"style:italic;\">Maksimert</span> vil prøva å maksimera alle vindauga slik at "
-"dei fyllar heile skjermen. Det kan vera nyttig å endra dette for enkelt­"
-"vindauge ved å bruka innstillingar for enkelt­vindauge.</li><li style=\" "
-"margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-"\">Tilfeldig</span> vil bruka tilfeldige plasseringar.</li><li style=\" "
-"margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Midt "
-"på</span> vil plassera vindauga i midten.</li><li style=\" margin-top:0px; "
-"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
-"text-indent:0px;\"><span style=\" font-style:italic;\">Oppe til venstre</"
-"span> vil plassera vindauga øvst i venstre hjørne.</li><li style=\" margin-"
-"top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-"
-"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Under musa</"
-"span> vil plassera vindauga under musepeikaren.</li></ul></body></html>"
+"<html><head/><body>"
+"<p>Plasseringsreglene fastset kor eit nytt vindauge vil dukka opp på skrivebordet.</p>"
+"<ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\">"
+"<li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Smart</span> vil prøva å få minst mogleg overlapping av vindauge.</li>"
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Maksimert</span> vil prøva å maksimera alle vindauga slik at dei fyllar heile skjermen. Det kan vera nyttig å endra dette for enkelt­vindauge ved å bruka innstillingar for enkelt­vindauge.</li>"
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Tilfeldig</span> vil bruka tilfeldige plasseringar.</li>"
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Midt på</span> vil plassera vindauga i midten.</li>"
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Oppe til venstre</span> vil plassera vindauga øvst i venstre hjørne.</li>"
+"<li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Under musa</span> vil plassera vindauga under musepeikaren.</li>"
+"</ul>"
+"</body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:80
@@ -574,22 +511,14 @@ msgstr "Under peikaren"
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:113
 #, kde-format
-msgid ""
-"When turned on, apps which are able to remember the positions of their "
-"windows are allowed to do so. This will override the window placement mode "
-"defined above."
-msgstr ""
-"Viss det er kryssa av her, får program som kan hugsa deira siste plassering "
-"på skjermen, løyve til å gjera dette. Dette vil overstyra vindaugs­plasserings­"
-"modusen definert ovanfor."
+msgid "When turned on, apps which are able to remember the positions of their windows are allowed to do so. This will override the window placement mode defined above."
+msgstr "Viss det er kryssa av her, får program som kan hugsa deira siste plassering på skjermen, løyve til å gjera dette. Dette vil overstyra vindaugs­plasserings­modusen definert ovanfor."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:116
 #, kde-format
-msgid ""
-"Allow apps to remember the positions of their own windows, if they support it"
-msgstr ""
-"Tillèt program å hugsa siste vindaugsplassering dersom dei støttar dette"
+msgid "Allow apps to remember the positions of their own windows, if they support it"
+msgstr "Tillèt program å hugsa siste vindaugsplassering dersom dei støttar dette"
 
 #. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
 #: advanced.ui:123
@@ -600,16 +529,8 @@ msgstr "&Spesialvindauge:"
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
 #: advanced.ui:133
 #, kde-format
-msgid ""
-"When turned on, utility windows (tool windows, torn-off menus,...) of "
-"inactive applications will be hidden and will be shown only when the "
-"application becomes active. Note that applications have to mark the windows "
-"with the proper window type for this feature to work."
-msgstr ""
-"Her kan du velja om verktøyvindauge (verktøypalettar, lause menyar, osv.) "
-"som høyrer til program som ikkje er i bruk skal gøymast og berre visast når "
-"programmet vert teke i bruk. Legg merke til at programma må markera vindauga "
-"med rett vindaugstype for at denne funksjonen skal verka."
+msgid "When turned on, utility windows (tool windows, torn-off menus,...) of inactive applications will be hidden and will be shown only when the application becomes active. Note that applications have to mark the windows with the proper window type for this feature to work."
+msgstr "Her kan du velja om verktøyvindauge (verktøypalettar, lause menyar, osv.) som høyrer til program som ikkje er i bruk skal gøymast og berre visast når programmet vert teke i bruk. Legg merke til at programma må markera vindauga med rett vindaugstype for at denne funksjonen skal verka."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
 #: advanced.ui:136
@@ -633,21 +554,17 @@ msgstr "Ved aktivering av vindauge på eit anna virtuelt skrivebord:"
 #: advanced.ui:160
 #, kde-format
 msgid ""
-"<html><head/><body><p>This setting controls what happens when an open window "
-"located on a Virtual Desktop other than the current one is activated. </"
-"p><p><span style=\" font-style:italic;\">Switch to that Virtual Desktop</"
-"span> will switch to the Virtual Desktop where the window is currently "
-"located. </p><p><span style=\" font-style:italic;\">Bring window to current "
-"Virtual Desktop</span> will cause the window to jump to the active Virtual "
-"Desktop. </p></body></html>"
+"<html><head/><body>"
+"<p>This setting controls what happens when an open window located on a Virtual Desktop other than the current one is activated. </p>"
+"<p><span style=\" font-style:italic;\">Switch to that Virtual Desktop</span> will switch to the Virtual Desktop where the window is currently located. </p>"
+"<p><span style=\" font-style:italic;\">Bring window to current Virtual Desktop</span> will cause the window to jump to the active Virtual Desktop. </p>"
+"</body></html>"
 msgstr ""
-"<html><head/><body><p>Med denne innstillinga kan du velja kva som skal skje "
-"når eit ope vindauge på eit anna virtuelt skrivebord enn gjeldande vert "
-"aktivert.</p><p><span style=\" font-style:italic;\">Byt til det virtuelle "
-"skrivebordet</span> vil byta til det virtuelle skrivebordet som inneheld "
-"vindauget. </p><p><span style=\" font-style:italic;\">Flytt vindauget til "
-"det gjeldande skrivebordet</span> gjer at vindauget dukkar opp på det "
-"gjeldande skrivebordet. </p></body></html>"
+"<html><head/><body>"
+"<p>Med denne innstillinga kan du velja kva som skal skje når eit ope vindauge på eit anna virtuelt skrivebord enn gjeldande vert aktivert.</p>"
+"<p><span style=\" font-style:italic;\">Byt til det virtuelle skrivebordet</span> vil byta til det virtuelle skrivebordet som inneheld vindauget. </p>"
+"<p><span style=\" font-style:italic;\">Flytt vindauget til det gjeldande skrivebordet</span> gjer at vindauget dukkar opp på det gjeldande skrivebordet. </p>"
+"</body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:164
@@ -719,11 +636,8 @@ msgstr "&Forseinka fokus med:"
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_DelayFocusInterval)
 #: focus.ui:82
 #, kde-format
-msgid ""
-"This is the delay after which the window the mouse pointer is over will "
-"automatically receive focus."
-msgstr ""
-"Vel kor lenge peikaren må liggja over vindauget før det automatisk får fokus."
+msgid "This is the delay after which the window the mouse pointer is over will automatically receive focus."
+msgstr "Vel kor lenge peikaren må liggja over vindauget før det automatisk får fokus."
 
 #. i18n: ectx: property (text), widget (QLabel, focusStealingLabel)
 #: focus.ui:101
@@ -735,68 +649,29 @@ msgstr "&Hindra fokusssteling:"
 #: focus.ui:114
 #, kde-format
 msgid ""
-"<html><head/><body><p>This option specifies how much KWin will try to "
-"prevent unwanted focus stealing caused by unexpected activation of new "
-"windows. (Note: This feature does not work with the <span style=\" font-"
-"style:italic;\">Focus under mouse</span> or <span style=\" font-style:italic;"
-"\">Focus strictly under mouse</span> focus policies.) </p><ul style=\"margin-"
-"top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-"
-"indent: 1;\"><li style=\" margin-top:12px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">None:</span> Prevention is turned off and new "
-"windows always become activated.</li><li style=\" margin-top:0px; margin-"
-"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">Low:</span> Prevention is "
-"enabled; when some window does not have support for the underlying mechanism "
-"and KWin cannot reliably decide whether to activate the window or not, it "
-"will be activated. This setting may have both worse and better results than "
-"the medium level, depending on the applications.</li><li style=\" margin-"
-"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Medium:</"
-"span> Prevention is enabled.</li><li style=\" margin-top:0px; margin-"
-"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">High:</span> New windows "
-"get activated only if no window is currently active or if they belong to the "
-"currently active application. This setting is probably not really usable "
-"when not using mouse focus policy.</li><li style=\" margin-top:0px; margin-"
-"bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">Extreme:</span> All "
-"windows must be explicitly activated by the user.</li></ul><p>Windows that "
-"are prevented from stealing focus are marked as demanding attention, which "
-"by default means their taskbar entry will be highlighted. This can be "
-"changed in the Notifications control module.</p></body></html>"
+"<html><head/><body>"
+"<p>This option specifies how much KWin will try to prevent unwanted focus stealing caused by unexpected activation of new windows. (Note: This feature does not work with the <span style=\" font-style:italic;\">Focus under mouse</span> or <span style=\" font-style:italic;\">Focus strictly under mouse</span> focus policies.) </p>"
+"<ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\">"
+"<li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">None:</span> Prevention is turned off and new windows always become activated.</li>"
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Low:</span> Prevention is enabled; when some window does not have support for the underlying mechanism and KWin cannot reliably decide whether to activate the window or not, it will be activated. This setting may have both worse and better results than the medium level, depending on the applications.</li>"
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Medium:</span> Prevention is enabled.</li>"
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">High:</span> New windows get activated only if no window is currently active or if they belong to the currently active application. This setting is probably not really usable when not using mouse focus policy.</li>"
+"<li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Extreme:</span> All windows must be explicitly activated by the user.</li>"
+"</ul>"
+"<p>Windows that are prevented from stealing focus are marked as demanding attention, which by default means their taskbar entry will be highlighted. This can be changed in the Notifications control module.</p>"
+"</body></html>"
 msgstr ""
-"<html><head/><body><p>Med denne funksjonen kan du velja kor mykje KWin skal "
-"prøva å hindra uønskt fokus­steling frå vindauge som dukkar uventa opp. "
-"(Merk at denne funksjonen ikkje fungerer med <span style=\" font-"
-"style:italic;\">Fokus under peikaren</span> og <span style=\" font-"
-"style:italic;\">Fokus strengt under peikaren</span>.) </p><ul style=\"margin-"
-"top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-"
-"indent: 1;\"><li style=\" margin-top:12px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">Inga:</span> Fokussteling vert ikkje hindra, "
-"og nye vindauge vert alltid verksame.</li><li style=\" margin-top:0px; "
-"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
-"text-indent:0px;\"><span style=\" font-style:italic;\">Låg:</span> "
-"Fokussteling vert hindra. Eit vindauge vert verksamt dersom det ikkje "
-"støttar den underliggjande mekanismen, slik at KWin ikkje klarar å avgjera "
-"om vindauget skal gjerast verksamt. Avhengig av programmet kan denne "
-"innstillinga gje dårlegare eller betre resultat enn middelsnivået.</li><li "
-"style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-"style:italic;\">Middels:</span> Fokussteling vert hindra.</li><li style=\" "
-"margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Høg:</"
-"span> Nye vindauge vert berre verksame dersom ingen andre vindauge er "
-"verksame, eller dersom dei høyrer til det aktive programmet. Denne "
-"innstillinga er truleg ikkje særleg nyttig dersom du ikkje brukar musa til "
-"fokusering.</li><li style=\" margin-top:0px; margin-bottom:12px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">Ekstrem:</span> Alle vindauge må gjerast "
-"verksame av brukaren.</li></ul><p>Vindauge som vert hindra i å stela fokus, "
-"vil visa at dei påkallar merksemd. Det skjer vanlegvis ved at dei vert "
-"markerte i oppgåvelinja. Du kan endra på dette i kontrollmodulen <span "
-"style=\" font-style:italic;\">Varslingar</span>.</p></body></html>"
+"<html><head/><body>"
+"<p>Med denne funksjonen kan du velja kor mykje KWin skal prøva å hindra uønskt fokus­steling frå vindauge som dukkar uventa opp. (Merk at denne funksjonen ikkje fungerer med <span style=\" font-style:italic;\">Fokus under peikaren</span> og <span style=\" font-style:italic;\">Fokus strengt under peikaren</span>.) </p>"
+"<ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\">"
+"<li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Inga:</span> Fokussteling vert ikkje hindra, og nye vindauge vert alltid verksame.</li>"
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Låg:</span> Fokussteling vert hindra. Eit vindauge vert verksamt dersom det ikkje støttar den underliggjande mekanismen, slik at KWin ikkje klarar å avgjera om vindauget skal gjerast verksamt. Avhengig av programmet kan denne innstillinga gje dårlegare eller betre resultat enn middelsnivået.</li>"
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Middels:</span> Fokussteling vert hindra.</li>"
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Høg:</span> Nye vindauge vert berre verksame dersom ingen andre vindauge er verksame, eller dersom dei høyrer til det aktive programmet. Denne innstillinga er truleg ikkje særleg nyttig dersom du ikkje brukar musa til fokusering.</li>"
+"<li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Ekstrem:</span> Alle vindauge må gjerast verksame av brukaren.</li>"
+"</ul>"
+"<p>Vindauge som vert hindra i å stela fokus, vil visa at dei påkallar merksemd. Det skjer vanlegvis ved at dei vert markerte i oppgåvelinja. Du kan endra på dette i kontrollmodulen <span style=\" font-style:italic;\">Varslingar</span>.</p>"
+"</body></html>"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
@@ -845,14 +720,8 @@ msgstr "Hev vindauge:"
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ClickRaise)
 #: focus.ui:153
 #, kde-format
-msgid ""
-"When this option is enabled, the active window will be brought to the front "
-"when you click somewhere into the window contents. To change it for inactive "
-"windows, you need to change the settings in the Actions tab."
-msgstr ""
-"Med dette alternativet kan du velja om det aktive vindauget skal flyttast "
-"fremst når du klikkar i det med musa. Dersom du vil endra innstillinga for "
-"inaktive vindauge, må du endra dette på fana «Handlingar»."
+msgid "When this option is enabled, the active window will be brought to the front when you click somewhere into the window contents. To change it for inactive windows, you need to change the settings in the Actions tab."
+msgstr "Med dette alternativet kan du velja om det aktive vindauget skal flyttast fremst når du klikkar i det med musa. Dersom du vil endra innstillinga for inaktive vindauge, må du endra dette på fana «Handlingar»."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ClickRaise)
 #: focus.ui:156
@@ -863,12 +732,8 @@ msgstr "&Klikk for å heva aktivt vindauge"
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AutoRaise)
 #: focus.ui:165
 #, kde-format
-msgid ""
-"When this option is enabled, a window in the background will automatically "
-"come to the front when the mouse pointer has been over it for some time."
-msgstr ""
-"Dersom auto-hev er i bruk, vil eit vindauge i bakgrunnen automatisk komma "
-"til framgrunnen når musepeikaren ligg over det ei viss tid."
+msgid "When this option is enabled, a window in the background will automatically come to the front when the mouse pointer has been over it for some time."
+msgstr "Dersom auto-hev er i bruk, vil eit vindauge i bakgrunnen automatisk komma til framgrunnen når musepeikaren ligg over det ei viss tid."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AutoRaise)
 #: focus.ui:168
@@ -879,12 +744,8 @@ msgstr "&Hev ved peikar over, forseinka med:"
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_AutoRaiseInterval)
 #: focus.ui:175
 #, kde-format
-msgid ""
-"This is the delay after which the window that the mouse pointer is over will "
-"automatically come to the front."
-msgstr ""
-"Peikaren ligg så lenge over eit vindauge før det automatisk kjem til "
-"framgrunnen."
+msgid "This is the delay after which the window that the mouse pointer is over will automatically come to the front."
+msgstr "Peikaren ligg så lenge over eit vindauge før det automatisk kjem til framgrunnen."
 
 #. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
 #: focus.ui:196
@@ -895,14 +756,8 @@ msgstr "Fleirskjermsåtferd:"
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
 #: focus.ui:203
 #, kde-format
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"Når dette valet er på, er den aktive skjermen (der for eksempel eit nytt "
-"vindauge kjem til syne) den skjermen der musepeikaren er. Når valet er av, "
-"er den aktive skjermen den skjermen som har eit vindauge i fokus."
+msgid "When this option is enabled, the active screen (where new windows appear, for example) is the screen containing the mouse pointer. When disabled, the active screen is the screen containing the focused window."
+msgstr "Når dette valet er på, er den aktive skjermen (der for eksempel eit nytt vindauge kjem til syne) den skjermen der musepeikaren er. Når valet er av, er den aktive skjermen den skjermen som har eit vindauge i fokus."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
 #: focus.ui:206
@@ -913,11 +768,8 @@ msgstr "Aktiv skjerm følgjer &peikaren"
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:213
 #, kde-format
-msgid ""
-"When this option is enabled, focus operations are limited only to the active "
-"screen"
-msgstr ""
-"Når dette valet er på, gjeld fokusoperasjonar berre skjermen som vert brukt."
+msgid "When this option is enabled, focus operations are limited only to the active screen"
+msgstr "Når dette valet er på, gjeld fokusoperasjonar berre skjermen som vert brukt."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:216
@@ -1015,19 +867,15 @@ msgstr "Matthias Hoelzer-Kluepfel"
 #: main.cpp:161
 #, kde-format
 msgid ""
-"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-"when being moved, resized or clicked on. You can also specify a focus policy "
-"as well as a placement policy for new windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
+"<p>"
+"<h1>Window Behavior</h1>"
+" Here you can customize the way windows behave when being moved, resized or clicked on. You can also specify a focus policy as well as a placement policy for new windows.</p>"
+" "
+"<p>Please note that this configuration will not take effect if you do not use KWin as your window manager. If you do use a different window manager, please refer to its documentation for how to customize window behavior.</p>"
 msgstr ""
-"<h1>Vindaugsåtferd</h1><p>Her kan du tilpassa måten vindauga oppfører seg "
-"når du flyttar dei, endrar storleiken på dei eller klikkar i dei med musa. "
-"Du kan òg velja ein fokuspraksis og ein plasseringspraksis for nye vindauge."
-"</p><p>Legg merke til at dette oppsettet ikkje vil ha nokon verknad om du "
-"brukar ein annan vindaugshandsamar enn KWin. I så fall finn du informasjon i "
-"bruksrettleiinga til den vindaugshandsamaren du brukar.</p>"
+"<h1>Vindaugsåtferd</h1>"
+"<p>Her kan du tilpassa måten vindauga oppfører seg når du flyttar dei, endrar storleiken på dei eller klikkar i dei med musa. Du kan òg velja ein fokuspraksis og ein plasseringspraksis for nye vindauge.</p>"
+"<p>Legg merke til at dette oppsettet ikkje vil ha nokon verknad om du brukar ein annan vindaugshandsamar enn KWin. I så fall finn du informasjon i bruksrettleiinga til den vindaugshandsamaren du brukar.</p>"
 
 #: main.cpp:202
 #, kde-format
@@ -1095,8 +943,8 @@ msgstr "Maksimer vassrett"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:60 mouse.ui:256 mouse.ui:318 mouse.ui:371 mouse.ui:433 mouse.ui:486
-#: mouse.ui:548
+#: mouse.ui:60 mouse.ui:256 mouse.ui:318 mouse.ui:371 mouse.ui:433
+#: mouse.ui:486 mouse.ui:548
 #, kde-format
 msgid "Shade"
 msgstr "Rull opp"
@@ -1109,8 +957,8 @@ msgstr "Rull opp"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:70 mouse.ui:261 mouse.ui:323 mouse.ui:376 mouse.ui:438 mouse.ui:491
-#: mouse.ui:553
+#: mouse.ui:70 mouse.ui:261 mouse.ui:323 mouse.ui:376 mouse.ui:438
+#: mouse.ui:491 mouse.ui:553
 #, kde-format
 msgid "Close"
 msgstr "Lukk"
@@ -1151,12 +999,8 @@ msgstr "Inaktivt"
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #: mouse.ui:232 mouse.ui:347 mouse.ui:462
 #, kde-format
-msgid ""
-"Behavior on <em>left</em> click into the titlebar or frame of an <em>active</"
-"em> window."
-msgstr ""
-"Åtferd ved <em>venstreklikk</em> på tittellinja eller ramma til eit "
-"<em>aktivt</em> vindauge."
+msgid "Behavior on <em>left</em> click into the titlebar or frame of an <em>active</em> window."
+msgstr "Åtferd ved <em>venstreklikk</em> på tittellinja eller ramma til eit <em>aktivt</em> vindauge."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
@@ -1175,12 +1019,8 @@ msgstr "Vis handlingsmeny"
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: mouse.ui:279 mouse.ui:394 mouse.ui:509
 #, kde-format
-msgid ""
-"Behavior on <em>left</em> click into the titlebar or frame of an "
-"<em>inactive</em> window."
-msgstr ""
-"Åtferd ved <em>venstreklikk</em> på tittellinja eller ramma til eit "
-"<em>inaktivt</em> vindauge."
+msgid "Behavior on <em>left</em> click into the titlebar or frame of an <em>inactive</em> window."
+msgstr "Åtferd ved <em>venstreklikk</em> på tittellinja eller ramma til eit <em>inaktivt</em> vindauge."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
@@ -1232,12 +1072,8 @@ msgstr "Låsesone for skjerm&kant:"
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_BorderSnapZone)
 #: moving.ui:30
 #, kde-format
-msgid ""
-"Here you can set the snap zone for screen edges, i.e. the 'strength' of the "
-"magnetic field which will make windows snap to the border when moved near it."
-msgstr ""
-"Her kan du velja låsesona for skjermkantar, altså styrken på «magnetfeltet» "
-"som gjer at vindauga legg seg inntil kantane når dei vert flytta nær dei."
+msgid "Here you can set the snap zone for screen edges, i.e. the 'strength' of the magnetic field which will make windows snap to the border when moved near it."
+msgstr "Her kan du velja låsesona for skjermkantar, altså styrken på «magnetfeltet» som gjer at vindauga legg seg inntil kantane når dei vert flytta nær dei."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
@@ -1256,13 +1092,8 @@ msgstr "V&indaugslåsesone:"
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_WindowSnapZone)
 #: moving.ui:62
 #, kde-format
-msgid ""
-"Here you can set the snap zone for windows, i.e. the 'strength' of the "
-"magnetic field which will make windows snap to each other when they are "
-"moved near another window."
-msgstr ""
-"Her kan du velja låsesona for vindauge, altså styrken på «magnetfeltet» som "
-"gjer at vindauga legg seg inntil kvarandre når dei vert flytta nær kvarandre."
+msgid "Here you can set the snap zone for windows, i.e. the 'strength' of the magnetic field which will make windows snap to each other when they are moved near another window."
+msgstr "Her kan du velja låsesona for vindauge, altså styrken på «magnetfeltet» som gjer at vindauga legg seg inntil kvarandre når dei vert flytta nær kvarandre."
 
 #. i18n: ectx: property (text), widget (QLabel, centerSnaplabel)
 #: moving.ui:84
@@ -1273,14 +1104,8 @@ msgstr "&Midtlåsesone:"
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_CenterSnapZone)
 #: moving.ui:94
 #, kde-format
-msgid ""
-"Here you can set the snap zone for the screen center, i.e. the 'strength' of "
-"the magnetic field which will make windows snap to the center of the screen "
-"when moved near it."
-msgstr ""
-"Her kan du velja låsesona for midten av skjermen, altså styrken på "
-"«magnetfeltet» som gjer at vindauga legg seg midt på skjermen når dei vert "
-"flytta nær midten."
+msgid "Here you can set the snap zone for the screen center, i.e. the 'strength' of the magnetic field which will make windows snap to the center of the screen when moved near it."
+msgstr "Her kan du velja låsesona for midten av skjermen, altså styrken på «magnetfeltet» som gjer at vindauga legg seg midt på skjermen når dei vert flytta nær midten."
 
 #. i18n: ectx: property (text), widget (QLabel, OverlapSnapLabel)
 #: moving.ui:113
@@ -1291,14 +1116,8 @@ msgstr "&Lås vindauga til soner:"
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
 #: moving.ui:123
 #, kde-format
-msgid ""
-"Here you can set that windows will be only snapped if you try to overlap "
-"them, i.e. they will not be snapped if the windows comes only near another "
-"window or border."
-msgstr ""
-"Her kan du velja at vindauge berre vert låste dersom du prøver å overlappa "
-"dei. Vindauga legg seg då ikkje inntil andre dersom dei berre kjem nær andre "
-"vindauge eller ein kant."
+msgid "Here you can set that windows will be only snapped if you try to overlap them, i.e. they will not be snapped if the windows comes only near another window or border."
+msgstr "Her kan du velja at vindauge berre vert låste dersom du prøver å overlappa dei. Vindauga legg seg då ikkje inntil andre dersom dei berre kjem nær andre vindauge eller ein kant."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
 #: moving.ui:126
@@ -1308,85 +1127,38 @@ msgstr "Berre ved overlapp"
 
 #: windows.cpp:97
 #, kde-format
-msgid ""
-"<em>Click to focus:</em> A window becomes active when you click into it. "
-"This behavior is common on other operating systems and likely what you want."
-msgstr ""
-"<em>Trykk for fokus:</em> Eit vindauge vert aktivt når du trykkjer på muse­"
-"knappen når muse­peikaren er over det. Denne åtferda er vanleg i andre "
-"operativ­system og er truleg det du vil ha."
+msgid "<em>Click to focus:</em> A window becomes active when you click into it. This behavior is common on other operating systems and likely what you want."
+msgstr "<em>Trykk for fokus:</em> Eit vindauge vert aktivt når du trykkjer på muse­knappen når muse­peikaren er over det. Denne åtferda er vanleg i andre operativ­system og er truleg det du vil ha."
 
 #: windows.cpp:101
 #, kde-format
-msgid ""
-"<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
-"focus</em>. If an active window has to be chosen by the system (eg. because "
-"the currently active one was closed) the window under the mouse is the "
-"preferred candidate. Unusual, but possible variant of <em>Click to focus</"
-"em>."
-msgstr ""
-"<em>Trykk for fokus (musprioritet):</em> Dette er stort sett det same som "
-"<em>Trykk for fokus</em>. Viss systemet må velja eit nytt aktivt vindauge "
-"(for eksempel fordi det gjeldande vart lukka), så er vindauget under muse­"
-"peikaren den føretrekte kandidaten. Uvanleg, men mogleg variant av <em>Trykk "
-"for fokus</em>."
+msgid "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to focus</em>. If an active window has to be chosen by the system (eg. because the currently active one was closed) the window under the mouse is the preferred candidate. Unusual, but possible variant of <em>Click to focus</em>."
+msgstr "<em>Trykk for fokus (musprioritet):</em> Dette er stort sett det same som <em>Trykk for fokus</em>. Viss systemet må velja eit nytt aktivt vindauge (for eksempel fordi det gjeldande vart lukka), så er vindauget under muse­peikaren den føretrekte kandidaten. Uvanleg, men mogleg variant av <em>Trykk for fokus</em>."
 
 #: windows.cpp:106
 #, kde-format
-msgid ""
-"<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
-"it. Eg. windows randomly appearing under the mouse will not gain the focus. "
-"<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
-"to focus</em> just without having to actually click."
-msgstr ""
-"<em>Fokuset følgjer peikaren:</em> Eit vindauge vert aktivt når "
-"muse­peikaren vert flytta inn i det. Vindauge som tilfeldigvis dukkar opp "
-"under muse­peikaren, får ikkje fokus. Fokus­steling vert førebygd på vanleg "
-"måte. Tenk på dette som <em>Trykk for fokus</em>, men utan at det er "
-"nødvendig å trykkja."
+msgid "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate it. Eg. windows randomly appearing under the mouse will not gain the focus. <em>Focus stealing prevention</em> takes place as usual. Think as <em>Click to focus</em> just without having to actually click."
+msgstr "<em>Fokuset følgjer peikaren:</em> Eit vindauge vert aktivt når muse­peikaren vert flytta inn i det. Vindauge som tilfeldigvis dukkar opp under muse­peikaren, får ikkje fokus. Fokus­steling vert førebygd på vanleg måte. Tenk på dette som <em>Trykk for fokus</em>, men utan at det er nødvendig å trykkja."
 
 #: windows.cpp:110
 #, kde-format
-msgid ""
-"This is mostly the same as <em>Focus follows mouse</em>. If an active window "
-"has to be chosen by the system (eg. because the currently active one was "
-"closed) the window under the mouse is the preferred candidate. Choose this, "
-"if you want a hover controlled focus."
-msgstr ""
-"<em>Fokuset følgjer peikaren (musprioritet):</em> Dette er stort sett det "
-"same som <em>Fokuset følgjer peikaren</em>. Viss systemet må velja eit nytt "
-"aktivt vindauge (for eksempel fordi det gjeldande vart lukka), så er "
-"vindauget under muse­peikaren den føretrekte kandidaten. Vel dette viss du "
-"ønskjer fokus styrt av plasseringa til musepeikaren."
+msgid "This is mostly the same as <em>Focus follows mouse</em>. If an active window has to be chosen by the system (eg. because the currently active one was closed) the window under the mouse is the preferred candidate. Choose this, if you want a hover controlled focus."
+msgstr "<em>Fokuset følgjer peikaren (musprioritet):</em> Dette er stort sett det same som <em>Fokuset følgjer peikaren</em>. Viss systemet må velja eit nytt aktivt vindauge (for eksempel fordi det gjeldande vart lukka), så er vindauget under muse­peikaren den føretrekte kandidaten. Vel dette viss du ønskjer fokus styrt av plasseringa til musepeikaren."
 
 #: windows.cpp:115
 #, kde-format
 msgid ""
-"<em>Focus under mouse:</em> The focus always remains on the window under the "
-"mouse.<br/><strong>Warning:</strong> <em>Focus stealing prevention</em> and "
-"the <em>tabbox ('Alt+Tab')</em> contradict the activation policy and will "
-"not work. You very likely want to use <em>Focus follows mouse (mouse "
-"precedence)</em> instead!"
+"<em>Focus under mouse:</em> The focus always remains on the window under the mouse.<br/>"
+"<strong>Warning:</strong> <em>Focus stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> contradict the activation policy and will not work. You very likely want to use <em>Focus follows mouse (mouse precedence)</em> instead!"
 msgstr ""
-"<em>Fokus under peikaren:</em> Fokus er alltid på vindauget under "
-"muse­peikaren.<br/><strong>Merk:</strong> <em>Hindring av fokus­steling</em> "
-"og <em>programbyte­vindauget («Alt+Tab»)</em> er mot denne praksisen og vil "
-"ikkje verka. Du vil truleg heller vilja bruka <em>Fokus følgjer peikaren – "
-"musprioritet</em> i staden."
+"<em>Fokus under peikaren:</em> Fokus er alltid på vindauget under muse­peikaren.<br/>"
+"<strong>Merk:</strong> <em>Hindring av fokus­steling</em> og <em>programbyte­vindauget («Alt+Tab»)</em> er mot denne praksisen og vil ikkje verka. Du vil truleg heller vilja bruka <em>Fokus følgjer peikaren – musprioritet</em> i staden."
 
 #: windows.cpp:119
 #, kde-format
 msgid ""
-"<em>Focus strictly under mouse:</em> The focus is always on the window under "
-"the mouse (in doubt nowhere) very much like the focus behavior in an "
-"unmanaged legacy X11 environment.<br/><strong>Warning:</strong> <em>Focus "
-"stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> contradict the "
-"activation policy and will not work. You very likely want to use <em>Focus "
-"follows mouse (mouse precedence)</em> instead!"
+"<em>Focus strictly under mouse:</em> The focus is always on the window under the mouse (in doubt nowhere) very much like the focus behavior in an unmanaged legacy X11 environment.<br/>"
+"<strong>Warning:</strong> <em>Focus stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> contradict the activation policy and will not work. You very likely want to use <em>Focus follows mouse (mouse precedence)</em> instead!"
 msgstr ""
-"<em>Hald fokuset alltid under peikaren:</em> Fokus er alltid på vindauget "
-"under muse­peikaren (viss tvil, ingen stadar), svært likt fokus­åtferda i "
-"eit gammaldags X11-miljø utan vindaugs­handsamar.<br/><strong>Merk:</strong> "
-"<em>Hindring av fokus­steling</em> og <em>programbyte­vindauget («Alt+Tab»)</"
-"em> er mot denne praksisen og vil ikkje verka. Du vil truleg heller vilja "
-"bruka <em>Fokuset følgjer peikaren – musprioritet</em> i staden."
+"<em>Hald fokuset alltid under peikaren:</em> Fokus er alltid på vindauget under muse­peikaren (viss tvil, ingen stadar), svært likt fokus­åtferda i eit gammaldags X11-miljø utan vindaugs­handsamar.<br/>"
+"<strong>Merk:</strong> <em>Hindring av fokus­steling</em> og <em>programbyte­vindauget («Alt+Tab»)</em> er mot denne praksisen og vil ikkje verka. Du vil truleg heller vilja bruka <em>Fokuset følgjer peikaren – musprioritet</em> i staden."
