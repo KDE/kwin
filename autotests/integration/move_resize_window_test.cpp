@@ -47,8 +47,6 @@ private Q_SLOTS:
     void testPackAgainstClient();
     void testGrowShrink_data();
     void testGrowShrink();
-    void testPointerMoveEnd_data();
-    void testPointerMoveEnd();
     void testClientSideMove();
     void testResizeForVirtualKeyboard_data();
     void testResizeForVirtualKeyboard();
@@ -444,60 +442,6 @@ void MoveResizeWindowTest::testGrowShrink()
     QTEST(window->frameGeometry(), "expectedGeometry");
 }
 
-void MoveResizeWindowTest::testPointerMoveEnd_data()
-{
-    QTest::addColumn<int>("additionalButton");
-
-    QTest::newRow("BTN_RIGHT") << BTN_RIGHT;
-    QTest::newRow("BTN_MIDDLE") << BTN_MIDDLE;
-    QTest::newRow("BTN_SIDE") << BTN_SIDE;
-    QTest::newRow("BTN_EXTRA") << BTN_EXTRA;
-    QTest::newRow("BTN_FORWARD") << BTN_FORWARD;
-    QTest::newRow("BTN_BACK") << BTN_BACK;
-    QTest::newRow("BTN_TASK") << BTN_TASK;
-    for (int i = BTN_TASK + 1; i < BTN_JOYSTICK; i++) {
-        QTest::newRow(QByteArray::number(i, 16).constData()) << i;
-    }
-}
-
-void MoveResizeWindowTest::testPointerMoveEnd()
-{
-    // this test verifies that moving a window through pointer only ends if all buttons are released
-
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    QVERIFY(surface != nullptr);
-
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    QVERIFY(shellSurface != nullptr);
-    // let's render
-    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
-
-    QVERIFY(window);
-    QCOMPARE(window, workspace()->activeWindow());
-    QVERIFY(!window->isInteractiveMove());
-
-    // let's trigger the left button
-    quint32 timestamp = 1;
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
-    QVERIFY(!window->isInteractiveMove());
-    workspace()->slotWindowMove();
-    QVERIFY(window->isInteractiveMove());
-
-    // let's press another button
-    QFETCH(int, additionalButton);
-    Test::pointerButtonPressed(additionalButton, timestamp++);
-    QVERIFY(window->isInteractiveMove());
-
-    // release the left button, should still have the window moving
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
-    QVERIFY(window->isInteractiveMove());
-
-    // but releasing the other button should now end moving
-    Test::pointerButtonReleased(additionalButton, timestamp++);
-    QVERIFY(!window->isInteractiveMove());
-    surface.reset();
-    QVERIFY(Test::waitForWindowClosed(window));
-}
 void MoveResizeWindowTest::testClientSideMove()
 {
     input()->pointer()->warp(QPointF(640, 512));

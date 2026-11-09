@@ -690,7 +690,7 @@ public:
             return false;
         }
         if (event->state == PointerButtonState::Released) {
-            if (event->buttons == Qt::NoButton) {
+            if ((event->buttons & (Qt::MouseButton::LeftButton | Qt::MouseButton::RightButton)) == 0) {
                 window->endInteractiveMoveResize();
             }
         }
