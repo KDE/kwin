@@ -167,11 +167,10 @@ void WobblyWindowsEffect::reconfigure(ReconfigureFlags)
         }
         setParameterSet(pset[wobblynessLevel]);
 
-        if (WobblyWindowsConfig::advancedMode()) {
-            m_stiffness = WobblyWindowsConfig::stiffness() / 100.0;
-            m_drag = WobblyWindowsConfig::drag() / 100.0;
-            m_move_factor = WobblyWindowsConfig::moveFactor() / 100.0;
-        }
+        m_stiffness = WobblyWindowsConfig::stiffness() / 100.0;
+        m_drag = WobblyWindowsConfig::drag() / 100.0;
+        m_move_factor = WobblyWindowsConfig::moveFactor() / 100.0;
+
     } else { // Custom method, read all values from config file.
         m_stiffness = WobblyWindowsConfig::stiffness() / 100.0;
         m_drag = WobblyWindowsConfig::drag() / 100.0;
