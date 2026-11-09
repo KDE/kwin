@@ -19,6 +19,7 @@
 
 #include "xwayland_interface.h"
 
+class QProcessEnvironment;
 class QSocketNotifier;
 
 namespace KWin
@@ -34,6 +35,25 @@ class XrandrEventFilter;
 class XwaylandInputFilter;
 class XwaylandLauncher;
 class DataBridge;
+
+class XwaylandStartupScripts : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit XwaylandStartupScripts();
+    ~XwaylandStartupScripts() override;
+
+    void run(const QStringList &scripts, const QProcessEnvironment &environment);
+
+Q_SIGNALS:
+    void done();
+
+private:
+    void remove(QProcess *process);
+
+    QList<QProcess *> m_processes;
+};
 
 class KWIN_EXPORT Xwayland : public QObject, public XwaylandInterface
 {
@@ -92,6 +112,7 @@ private:
 
     std::unique_ptr<XrandrEventFilter> m_xrandrEventsFilter;
     std::unique_ptr<XwaylandLauncher> m_launcher;
+    std::unique_ptr<XwaylandStartupScripts> m_startupScripts;
     std::unique_ptr<XwaylandInputFilter> m_inputFilter;
 
     Q_DISABLE_COPY(Xwayland)
