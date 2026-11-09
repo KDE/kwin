@@ -348,6 +348,47 @@ public:
     bool m_filterMouse = false;
 };
 
+XwaylandStartupScripts::XwaylandStartupScripts()
+{
+}
+
+XwaylandStartupScripts::~XwaylandStartupScripts()
+{
+    while (!m_processes.isEmpty()) {
+        QProcess *process = m_processes.takeLast();
+        process->disconnect(this);
+        delete process;
+    }
+}
+
+void XwaylandStartupScripts::remove(QProcess *process)
+{
+    m_processes.removeOne(process);
+    process->deleteLater();
+
+    if (m_processes.isEmpty()) {
+        Q_EMIT done();
+    }
+}
+
+void XwaylandStartupScripts::run(const QStringList &scripts, const QProcessEnvironment &environment)
+{
+    for (const QString &script : scripts) {
+        auto &process = m_processes.emplaceBack(new QProcess());
+        process->setProcessEnvironment(environment);
+
+        connect(process, &QProcess::finished, this, [this, process]() {
+            remove(process);
+        }, Qt::QueuedConnection);
+
+        connect(process, &QProcess::errorOccurred, this, [this, process]() {
+            remove(process);
+        }, Qt::QueuedConnection);
+
+        process->start(script);
+    }
+}
+
 Xwayland::Xwayland(Application *app)
     : m_app(app)
     , m_launcher(std::make_unique<XwaylandLauncher>())
@@ -442,8 +483,8 @@ void Xwayland::handleXwaylandFinished()
     // events will be dispatched before blocking; otherwise we will simply hang...
     uninstallSocketNotifier();
 
+    m_startupScripts.reset();
     m_dataBridge.reset();
-
     m_inputFilter.reset();
     disconnect(options, &Options::xwaylandEavesdropsChanged, this, &Xwayland::refreshEavesdropping);
     disconnect(options, &Options::xwaylandEavesdropsMouseChanged, this, &Xwayland::refreshEavesdropping);
@@ -478,10 +519,6 @@ void Xwayland::handleXwaylandReady()
 
 void Xwayland::registerReady()
 {
-    if (!kwinApp()->x11Connection()) {
-        return;
-    }
-
     xcb_xfixes_set_client_disconnect_mode(kwinApp()->x11Connection(), XCB_XFIXES_CLIENT_DISCONNECT_FLAGS_TERMINATE);
 
     // Helper window to claim _NET_WM_CM_S0 and WM_S0 selections. It will be destroyed together with our connection.
@@ -591,36 +628,20 @@ void Xwayland::destroyX11Connection()
 
 void Xwayland::runXWaylandStartupScripts()
 {
-    QProcessEnvironment setupEnv = kwinApp()->processStartupEnvironment();
-    setupEnv.insert("DISPLAY", m_launcher->initDisplayName());
-
-    std::shared_ptr<QObject> readyGuard(new QObject());
-    // captured by every process, then out of scope when finished
-    connect(readyGuard.get(), &QObject::destroyed, this, [this]() {
+    m_startupScripts = std::make_unique<XwaylandStartupScripts>();
+    connect(m_startupScripts.get(), &XwaylandStartupScripts::done, this, [this]() {
+        m_startupScripts.reset();
         registerReady();
     });
+
+    QProcessEnvironment setupEnv = kwinApp()->processStartupEnvironment();
+    setupEnv.insert("DISPLAY", m_launcher->initDisplayName());
 
     QDir scriptDir(XWAYLAND_SESSION_SCRIPTS);
     QStringList scripts = scriptDir.entryList(QStringList(), QDir::Files, QDir::Name);
     scripts << LIBEXEC_DIR + QStringLiteral("/plasma-kded6-x11");
 
-    for (const QString &script : std::as_const(scripts)) {
-        const QString path = scriptDir.filePath(script);
-        qCDebug(KWIN_XWL) << "Running Xwayland startup script" << path;
-
-        auto *process = new QProcess;
-        process->setProcessEnvironment(setupEnv);
-        connect(process, &QProcess::finished, process, [process, path, readyGuard]() {
-            qCDebug(KWIN_XWL) << "Finished Xwayland startup script" << path;
-            process->deleteLater();
-        });
-        // if the script fails to start entirely (bad intepreter, dead symlink, etc), don't block forever
-        connect(process, &QProcess::errorOccurred, process, [process, path, readyGuard]() {
-            qCWarning(KWIN_XWL) << "Failed to start Xwayland startup script" << path;
-            process->deleteLater();
-        });
-        process->start(path);
-    }
+    m_startupScripts->run(scripts, setupEnv);
 }
 
 bool Xwayland::dragMoveFilter(Window *target, const QPointF &position)
