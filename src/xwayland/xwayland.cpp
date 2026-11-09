@@ -12,47 +12,31 @@
 
 #include "config-kwin.h"
 
-#include "databridge.h"
-#include "dnd.h"
-#include "window.h"
-#include "xwaylandlauncher.h"
-#include "xwldrophandler.h"
-
 #include "atoms.h"
-#include "core/backendoutput.h"
+#include "input_event.h"
 #include "keyboard_input.h"
 #include "main_wayland.h"
-#include "utils/common.h"
 #include "utils/xcbutils.h"
 #include "wayland/display.h"
+#include "wayland/keyboard.h"
+#include "wayland/pointer.h"
+#include "wayland/seat.h"
+#include "wayland/surface.h"
 #include "wayland_server.h"
-#include "waylandwindow.h"
+#include "window.h"
 #include "workspace.h"
 #include "x11eventfilter.h"
 #include "xkb.h"
+#include "xwayland/databridge.h"
+#include "xwayland/dnd.h"
+#include "xwayland/xwaylandlauncher.h"
+#include "xwayland/xwldrophandler.h"
 #include "xwayland_logging.h"
 
-#include <wayland/keyboard.h>
-#include <wayland/pointer.h>
-#include <wayland/seat.h>
-#include <wayland/surface.h>
-
 #include <QAbstractEventDispatcher>
-#include <QDataStream>
 #include <QDir>
-#include <QFile>
-#include <QRandomGenerator>
 #include <QScopeGuard>
 #include <QSocketNotifier>
-#include <QTimer>
-#include <QtConcurrentRun>
-
-#include <cerrno>
-#include <cstring>
-#include <input_event.h>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <xkbcommon/xkbcommon-keysyms.h>
 
 namespace KWin
 {
