@@ -862,6 +862,7 @@ void ScreenCastStream::addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor)
     const QImage image = kwinApp()->cursorImage().image();
     if (!image.isNull()) {
         QPainter painter(&dest);
+        painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
         painter.drawImage(Rect({0, 0}, targetSize), image);
     }
 }
