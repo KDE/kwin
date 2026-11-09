@@ -20,7 +20,6 @@
 #include "logging_p.h"
 #include "opengl/eglcontext.h"
 #include "opengl/eglnativefence.h"
-#include "opengl/eglswapchain.h"
 #include "opengl/glrendertimequery.h"
 #include "opengl/glutils.h"
 #include "scene/imageitem.h"
@@ -28,6 +27,7 @@
 #include "scene/surfaceitem.h"
 #include "scene/texture.h"
 #include "scene/workspacescene.h"
+#include "swapchain.h"
 
 #include <QGuiApplication>
 #include <QQmlComponent>
@@ -67,8 +67,8 @@ public:
     std::unique_ptr<QQuickRenderControl> m_renderControl;
     std::unique_ptr<QOffscreenSurface> m_offscreenSurface;
     std::unique_ptr<QOpenGLContext> m_glcontext;
-    std::shared_ptr<EglSwapchain> m_swapchain;
-    std::shared_ptr<EglSwapchainSlot> m_currentSlot;
+    std::shared_ptr<Swapchain> m_swapchain;
+    std::shared_ptr<SwapchainSlot> m_currentSlot;
     std::unique_ptr<ImageItem> m_imageItem;
     std::unique_ptr<SurfaceItem> m_surfaceItem;
     Item *m_item = nullptr;
@@ -342,7 +342,7 @@ void OffscreenQuickView::update(OutputFrame *frame)
                     .software = false,
                     .scanout = true,
                 };
-                d->m_swapchain = EglSwapchain::create(d->m_scanoutDevice->allocator(), EglContext::currentContext()->shared_from_this(), options);
+                d->m_swapchain = Swapchain::create(d->m_scanoutDevice->allocator(), options);
             }
             if (!d->m_swapchain) {
                 // TODO add non-scanout feedback on the item for this?
@@ -353,7 +353,7 @@ void OffscreenQuickView::update(OutputFrame *frame)
                     .software = false,
                     .scanout = false,
                 };
-                d->m_swapchain = EglSwapchain::create(Compositor::self()->backend()->renderDevice(), options);
+                d->m_swapchain = Swapchain::create(Compositor::self()->backend()->renderDevice()->allocator(), options);
             }
             if (!d->m_swapchain) {
                 d->m_glcontext->doneCurrent();
@@ -368,8 +368,14 @@ void OffscreenQuickView::update(OutputFrame *frame)
             qCWarning(LIBKWINEFFECTS, "Acquire for OffscreenQuickView failed!");
             return;
         }
+        auto texture = EglContext::currentContext()->importDmaBufAsTexture(d->m_currentSlot->buffer());
+        if (!texture) {
+            d->m_glcontext->doneCurrent();
+            qCWarning(LIBKWINEFFECTS, "Acquire for OffscreenQuickView failed!");
+            return;
+        }
 
-        QQuickRenderTarget renderTarget = QQuickRenderTarget::fromOpenGLTexture(d->m_currentSlot->texture()->texture(), d->m_swapchain->size());
+        QQuickRenderTarget renderTarget = QQuickRenderTarget::fromOpenGLTexture(texture->texture(), d->m_swapchain->size());
         renderTarget.setDevicePixelRatio(dpr);
         renderTarget.setMirrorVertically(true);
         d->m_view->setRenderTarget(renderTarget);
@@ -405,7 +411,7 @@ void OffscreenQuickView::update(OutputFrame *frame)
 
     if (usingGl) {
         EGLNativeFence fence(EglContext::currentContext()->displayObject());
-        d->m_swapchain->release(d->m_currentSlot, fence.takeFileDescriptor());
+        d->m_swapchain->release(d->m_currentSlot.get(), fence.takeFileDescriptor());
         QOpenGLFramebufferObject::bindDefault();
         if (frame && renderTime) {
             renderTime->end();
