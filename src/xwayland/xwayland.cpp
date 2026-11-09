@@ -476,8 +476,8 @@ void Xwayland::uninstallSocketNotifier()
 void Xwayland::handleXwaylandFinished()
 {
     disconnect(workspace(), &Workspace::outputOrderChanged, this, &Xwayland::updatePrimary);
-
-    m_xrandrEventsFilter.reset();
+    disconnect(options, &Options::xwaylandEavesdropsChanged, this, &Xwayland::refreshEavesdropping);
+    disconnect(options, &Options::xwaylandEavesdropsMouseChanged, this, &Xwayland::refreshEavesdropping);
 
     // If Xwayland has crashed, we must deactivate the socket notifier and ensure that no X11
     // events will be dispatched before blocking; otherwise we will simply hang...
@@ -486,8 +486,7 @@ void Xwayland::handleXwaylandFinished()
     m_startupScripts.reset();
     m_dataBridge.reset();
     m_inputFilter.reset();
-    disconnect(options, &Options::xwaylandEavesdropsChanged, this, &Xwayland::refreshEavesdropping);
-    disconnect(options, &Options::xwaylandEavesdropsMouseChanged, this, &Xwayland::refreshEavesdropping);
+    m_xrandrEventsFilter.reset();
 
     destroyX11Connection();
 }
