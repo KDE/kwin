@@ -602,4 +602,9 @@ void ItemRendererOpenGL::setLayerDebugging(bool enable)
     m_debug.layerEnabled = enable;
 }
 
+EglContext *ItemRendererOpenGL::context() const
+{
+    return m_context.get();
+}
+
 } // namespace KWin
