@@ -97,6 +97,7 @@ public:
 
     void setLayerDebugging(bool enable) override;
     bool testRenderTargetImport(GraphicsBuffer *buffer) override;
+    EglContext *context() const override;
 
 private:
     QVector4D modulate(float opacity, float brightness) const;

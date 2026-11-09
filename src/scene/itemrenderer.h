@@ -33,6 +33,7 @@ class RenderDevice;
 class FileDescriptor;
 class RenderView;
 class OutputFrame;
+class EglContext;
 
 class KWIN_EXPORT ItemRenderer
 {
@@ -69,6 +70,7 @@ public:
     virtual bool testRenderTargetImport(GraphicsBuffer *buffer) = 0;
 
     RenderDevice *renderDevice() const;
+    virtual EglContext *context() const;
 
 protected:
     RenderDevice *const m_renderDevice;

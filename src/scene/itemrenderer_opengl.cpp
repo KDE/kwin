@@ -764,4 +764,9 @@ bool ItemRendererOpenGL::testRenderTargetImport(GraphicsBuffer *buffer)
     return m_context->importDmaBufAsFbo(buffer) != nullptr;
 }
 
+EglContext *ItemRendererOpenGL::context() const
+{
+    return m_context.get();
+}
+
 } // namespace KWin
