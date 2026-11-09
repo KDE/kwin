@@ -284,7 +284,7 @@ if (KWIN_BUILD_X11)
     set_package_properties(Xwayland PROPERTIES
         URL "https://x.org"
         DESCRIPTION "Xwayland X server"
-        TYPE RUNTIME
+        TYPE REQUIRED
         PURPOSE "Needed for running kwin_wayland"
     )
     set(HAVE_XWAYLAND_TERMINATE_DELAY ${Xwayland_HAVE_TERMINATE_DELAY})
