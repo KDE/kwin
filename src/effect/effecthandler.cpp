@@ -308,7 +308,7 @@ bool EffectsHandler::isOpenGLCompositing() const
 
 EglContext *EffectsHandler::openglContext() const
 {
-    return Compositor::self()->primaryDevice()->eglContext().get();
+    return kwinApp()->scene()->renderer(Compositor::self()->primaryDevice())->context();
 }
 
 void EffectsHandler::unloadAllEffects()
@@ -1392,12 +1392,18 @@ QString EffectsHandler::debug(const QString &name, const QString &parameter) con
 
 bool EffectsHandler::makeOpenGLContextCurrent()
 {
-    return openglContext()->makeCurrent();
+    if (auto context = openglContext()) {
+        return context->makeCurrent();
+    } else {
+        return false;
+    }
 }
 
 void EffectsHandler::doneOpenGLContextCurrent()
 {
-    openglContext()->doneCurrent();
+    if (auto context = openglContext()) {
+        context->doneCurrent();
+    }
 }
 
 bool EffectsHandler::animationsSupported() const

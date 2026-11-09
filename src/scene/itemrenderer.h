@@ -33,6 +33,7 @@ class RenderDevice;
 class FileDescriptor;
 class RenderView;
 class OutputFrame;
+class EglContext;
 
 class KWIN_EXPORT ItemRenderer
 {
@@ -68,6 +69,7 @@ public:
     virtual void setLayerDebugging(bool enable);
 
     RenderDevice *renderDevice() const;
+    virtual EglContext *context() const;
 
 protected:
     RenderDevice *const m_renderDevice;

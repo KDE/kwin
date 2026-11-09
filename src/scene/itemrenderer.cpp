@@ -27,4 +27,9 @@ RenderDevice *ItemRenderer::renderDevice() const
     return m_renderDevice;
 }
 
+EglContext *ItemRenderer::context() const
+{
+    return nullptr;
+}
+
 } // namespace KWin
