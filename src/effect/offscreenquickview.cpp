@@ -12,6 +12,7 @@
 
 #include "compositor.h"
 #include "core/drmdevice.h"
+#include "core/gpumanager.h"
 #include "core/inputdevice.h"
 #include "core/renderbackend.h"
 #include "core/renderdevice.h"
@@ -333,7 +334,7 @@ void OffscreenQuickView::update(OutputFrame *frame)
             fboFormat.setInternalTextureFormat(GL_RGBA8);
 
             const uint32_t format = d->m_hasAlphaChannel ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888;
-            if (d->m_scanoutDevice) {
+            if (d->m_scanoutDevice && GpuManager::self()->compatibleRenderDevice(d->m_scanoutDevice) == Compositor::self()->backend()->renderDevice()) {
                 GraphicsBufferOptions options{
                     .size = nativeSize,
                     .format = format,
