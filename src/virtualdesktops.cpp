@@ -782,16 +782,16 @@ void VirtualDesktopManager::initShortcuts()
     KGlobalAccel::setInverseShortcutActions(upAction, downAction);
 
     // Gestures
-    ConfigurableGesture *switchRightGesture = input()->registerGesture(rightAction);
-    ConfigurableGesture *switchLeftGesture = input()->registerGesture(leftAction);
-    ConfigurableGesture *switchDownGesture = input()->registerGesture(downAction);
-    ConfigurableGesture *switchUpGesture = input()->registerGesture(upAction);
+    m_switchRightGesture = input()->registerGesture(rightAction);
+    m_switchLeftGesture = input()->registerGesture(leftAction);
+    m_switchDownGesture = input()->registerGesture(downAction);
+    m_switchUpGesture = input()->registerGesture(upAction);
 
     // These connections decide which desktop to end on after gesture ends
-    connect(switchRightGesture, &ConfigurableGesture::released, this, &VirtualDesktopManager::gestureReleasedX);
-    connect(switchLeftGesture, &ConfigurableGesture::released, this, &VirtualDesktopManager::gestureReleasedX);
-    connect(switchDownGesture, &ConfigurableGesture::released, this, &VirtualDesktopManager::gestureReleasedY);
-    connect(switchUpGesture, &ConfigurableGesture::released, this, &VirtualDesktopManager::gestureReleasedY);
+    connect(m_switchRightGesture.get(), &ConfigurableGesture::released, this, &VirtualDesktopManager::gestureReleasedX);
+    connect(m_switchLeftGesture.get(), &ConfigurableGesture::released, this, &VirtualDesktopManager::gestureReleasedX);
+    connect(m_switchDownGesture.get(), &ConfigurableGesture::released, this, &VirtualDesktopManager::gestureReleasedY);
+    connect(m_switchUpGesture.get(), &ConfigurableGesture::released, this, &VirtualDesktopManager::gestureReleasedY);
 
     const auto emitCurrentChanging = [this]() {
         if (m_perOutputVirtualDesktops) {
@@ -805,25 +805,25 @@ void VirtualDesktopManager::initShortcuts()
         }
     };
 
-    connect(switchRightGesture, &ConfigurableGesture::progress, this, [this, emitCurrentChanging](qreal cb) -> void {
+    connect(m_switchRightGesture.get(), &ConfigurableGesture::progress, this, [this, emitCurrentChanging](qreal cb) -> void {
         if (grid().width() > 1) {
             m_currentDesktopOffset.setX(cb);
             emitCurrentChanging();
         }
     });
-    connect(switchLeftGesture, &ConfigurableGesture::progress, this, [this, emitCurrentChanging](qreal cb) -> void {
+    connect(m_switchLeftGesture.get(), &ConfigurableGesture::progress, this, [this, emitCurrentChanging](qreal cb) -> void {
         if (grid().width() > 1) {
             m_currentDesktopOffset.setX(-cb);
             emitCurrentChanging();
         }
     });
-    connect(switchDownGesture, &ConfigurableGesture::progress, this, [this, emitCurrentChanging](qreal cb) -> void {
+    connect(m_switchDownGesture.get(), &ConfigurableGesture::progress, this, [this, emitCurrentChanging](qreal cb) -> void {
         if (grid().height() > 1) {
             m_currentDesktopOffset.setY(cb);
             emitCurrentChanging();
         }
     });
-    connect(switchUpGesture, &ConfigurableGesture::progress, this, [this, emitCurrentChanging](qreal cb) -> void {
+    connect(m_switchUpGesture.get(), &ConfigurableGesture::progress, this, [this, emitCurrentChanging](qreal cb) -> void {
         if (grid().height() > 1) {
             m_currentDesktopOffset.setY(-cb);
             emitCurrentChanging();

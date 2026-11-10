@@ -21,6 +21,7 @@ using namespace std::chrono_literals;
 
 namespace KWin
 {
+
 OverviewEffect::OverviewEffect()
     // manages the transition between inactive -> overview
     : m_overviewState(new EffectTogglableState(this))
@@ -137,11 +138,11 @@ OverviewEffect::OverviewEffect()
 
     KGlobalAccel::setInverseShortcutActions(cycleAction, reverseCycleAction);
 
-    ConfigurableGesture *forwardGesture = effects->registerGesture(cycleAction);
-    ConfigurableGesture *backwardGesture = effects->registerGesture(reverseCycleAction);
-    m_overviewState->addGesture(forwardGesture, backwardGesture);
-    m_transitionState->addGesture(forwardGesture, backwardGesture);
-    m_gridState->addGesture(backwardGesture, forwardGesture);
+    m_forwardGesture = effects->registerGesture(cycleAction);
+    m_backwardGesture = effects->registerGesture(reverseCycleAction);
+    m_overviewState->addGesture(m_forwardGesture.get(), m_backwardGesture.get());
+    m_transitionState->addGesture(m_forwardGesture.get(), m_backwardGesture.get());
+    m_gridState->addGesture(m_backwardGesture.get(), m_forwardGesture.get());
 
     auto overviewAction = m_overviewState->toggleAction();
     overviewAction->setObjectName(QStringLiteral("Overview"));

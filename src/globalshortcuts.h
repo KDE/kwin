@@ -85,7 +85,7 @@ public:
     // autotest helper
     void forceRegisterTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {}, std::function<void()> cancelledCallback = {});
 
-    ConfigurableGesture *registerGesture(QAction *shortcutAction);
+    std::unique_ptr<ConfigurableGesture> registerGesture(QAction *shortcutAction);
     void unregisterGesture(ConfigurableGesture *gesture); //< automatically called by ConfigurableGesture destructor
 
     /**

@@ -12,6 +12,8 @@
 #include <QObject>
 #include <QPointer>
 
+#include <memory>
+
 class QAction;
 
 namespace KWin
@@ -24,12 +26,12 @@ class KWIN_EXPORT ConfigurableGesture : public QObject
     Q_OBJECT
 
 public:
-    explicit ConfigurableGesture(GlobalShortcutsManager *manager, QObject *parent = nullptr);
+    explicit ConfigurableGesture(GlobalShortcutsManager *manager);
     ~ConfigurableGesture();
 
     // for internal use by GlobalShortcutsManager
     size_t triggerActionCount() const;
-    QAction *makeAutoCountingTriggerAction();
+    std::unique_ptr<QAction> makeAutoCountingTriggerAction();
     void setAutoCreated();
     bool isAutoCreated() const;
 

@@ -74,16 +74,16 @@ ZoomEffect::ZoomEffect()
         }
         m_lastPinchProgress = 0;
     });
-    ConfigurableGesture *zoomInGesture = effects->registerGesture(zoomInAction);
-    ConfigurableGesture *zoomOutGesture = effects->registerGesture(zoomOutAction);
-    connect(zoomInGesture, &ConfigurableGesture::released, m_touchpadAction.get(), &QAction::triggered);
-    connect(zoomOutGesture, &ConfigurableGesture::released, m_touchpadAction.get(), &QAction::triggered);
-    connect(zoomInGesture, &ConfigurableGesture::progress, this, [this](qreal progress) {
+    m_zoomInGesture = effects->registerGesture(zoomInAction);
+    m_zoomOutGesture = effects->registerGesture(zoomOutAction);
+    connect(m_zoomInGesture.get(), &ConfigurableGesture::released, m_touchpadAction.get(), &QAction::triggered);
+    connect(m_zoomOutGesture.get(), &ConfigurableGesture::released, m_touchpadAction.get(), &QAction::triggered);
+    connect(m_zoomInGesture.get(), &ConfigurableGesture::progress, this, [this](qreal progress) {
         const qreal delta = progress - m_lastPinchProgress;
         m_lastPinchProgress = progress;
         realtimeZoom(delta);
     });
-    connect(zoomOutGesture, &ConfigurableGesture::progress, this, [this](qreal progress) {
+    connect(m_zoomOutGesture.get(), &ConfigurableGesture::progress, this, [this](qreal progress) {
         const qreal delta = progress - m_lastPinchProgress;
         m_lastPinchProgress = progress;
         realtimeZoom(-delta);
@@ -286,7 +286,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
         const int screenLeft = currScreen.left();
         const int screenRight = currScreen.right();
         const int screenBottom = currScreen.bottom();
-        
+
         // figure out whether we have adjacent displays in all 4 directions
         // We pan within the screen in directions where there are no adjacent screens.
         const bool adjacentLeft = screenExistsAt(QPoint(screenLeft - 1, y));
