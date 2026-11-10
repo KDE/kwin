@@ -17,10 +17,10 @@
 #include "opengl/eglcontext.h"
 #include "opengl/egldisplay.h"
 #include "opengl/eglnativefence.h"
-#include "opengl/eglswapchain.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
 #include "scene/windowitem.h"
+#include "swapchain.h"
 
 namespace KWin
 {
@@ -38,8 +38,8 @@ public:
 
     [[nodiscard]] bool maybeRender(EffectWindow *window);
 
-    std::shared_ptr<EglSwapchain> m_swapchain;
-    std::shared_ptr<EglSwapchainSlot> m_slot;
+    std::shared_ptr<Swapchain> m_swapchain;
+    std::shared_ptr<SwapchainSlot> m_slot;
     std::shared_ptr<SyncReleasePoint> m_releasePoint;
     std::shared_ptr<ColorDescription> m_colorDescription = ColorDescription::sRGB;
     bool m_isDirty = true;
@@ -154,7 +154,7 @@ bool OffscreenData::maybeRender(EffectWindow *window)
             .software = device->isSoftwareDevice(),
             .scanout = false,
         };
-        m_swapchain = EglSwapchain::create(device, options);
+        m_swapchain = Swapchain::create(device->allocator(), options);
         if (!m_swapchain) {
             return false;
         }
@@ -172,9 +172,15 @@ bool OffscreenData::maybeRender(EffectWindow *window)
     if (!m_slot) {
         return false;
     }
-    RenderTarget renderTarget(m_slot->framebuffer(), m_colorDescription);
+    auto fbo = EglContext::currentContext()->importDmaBufAsFbo(m_slot->buffer());
+    if (!fbo) {
+        m_slot.reset();
+        return false;
+    }
+
+    RenderTarget renderTarget(fbo, m_colorDescription);
     RenderViewport viewport(logicalGeometry, scale, renderTarget, QPoint());
-    GLFramebuffer::pushFramebuffer(m_slot->framebuffer());
+    GLFramebuffer::pushFramebuffer(fbo);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -194,8 +200,8 @@ bool OffscreenData::maybeRender(EffectWindow *window)
     m_recursionGuard = false;
 
     GLFramebuffer::popFramebuffer();
-    EGLNativeFence fence(m_swapchain->context()->displayObject());
-    m_swapchain->release(m_slot, fence.takeFileDescriptor());
+    EGLNativeFence fence(EglContext::currentContext()->displayObject());
+    m_swapchain->release(m_slot.get(), fence.takeFileDescriptor());
     m_releasePoint = m_slot->releasePoint();
 
     m_isDirty = false;
@@ -229,6 +235,8 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     if (!m_slot) {
         return;
     }
+    auto texture = EglContext::currentContext()->importDmaBufAsTexture(m_slot->buffer());
+
     GLShader *shader = m_shader ? m_shader : ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation | ShaderTrait::TransformColorspace);
     ShaderBinder binder(shader);
 
@@ -244,7 +252,7 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     for (auto &quad : quads) {
         geometry.appendWindowQuad(quad, scale);
     }
-    geometry.postProcessTextureCoordinates(m_slot->texture()->matrix(NormalizedCoordinates));
+    geometry.postProcessTextureCoordinates(texture->matrix(NormalizedCoordinates));
 
     const auto map = vbo->map<GLVertex2D>(geometry.size());
     if (!map) {
@@ -266,8 +274,8 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
     shader->setUniform(GLShader::FloatUniform::Saturation, data.saturation());
     shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
-    shader->setUniform(GLShader::IntUniform::TextureWidth, m_slot->texture()->width());
-    shader->setUniform(GLShader::IntUniform::TextureHeight, m_slot->texture()->height());
+    shader->setUniform(GLShader::IntUniform::TextureWidth, texture->width());
+    shader->setUniform(GLShader::IntUniform::TextureHeight, texture->height());
     shader->setColorspaceUniforms(m_colorDescription, renderTarget.colorDescription(), RenderingIntent::Perceptual);
 
     const bool clipping = deviceRegion != Region::infinite();
@@ -276,14 +284,14 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-    m_slot->texture()->bind();
+    texture->bind();
     vbo->draw(clipRegion, GL_TRIANGLES, 0, geometry.count());
-    m_slot->texture()->unbind();
+    texture->unbind();
 
     glDisable(GL_BLEND);
     vbo->unbindArrays();
 
-    EGLNativeFence fence(m_swapchain->context()->displayObject());
+    EGLNativeFence fence(EglContext::currentContext()->displayObject());
     m_releasePoint->addReleaseFence(fence.takeFileDescriptor());
 }
 
