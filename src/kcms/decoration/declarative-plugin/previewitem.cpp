@@ -14,6 +14,7 @@
 #include <QCoreApplication>
 #include <QCursor>
 #include <QPainter>
+#include <QPainterPath>
 #include <QQmlContext>
 #include <QQmlEngine>
 
@@ -112,6 +113,40 @@ void PreviewItem::setWindowColor(const QColor &color)
     update();
 }
 
+// QPainter::drawRoundedRect does not support different radii per corner.
+static QPainterPath roundedRectangle(const QRectF &rect, const BorderRadius &radius)
+{
+    QPainterPath path;
+    path.moveTo(rect.left() + radius.topLeft(), rect.top());
+
+    // Top Right.
+    path.lineTo(rect.right() - radius.topRight(), rect.top());
+    if (radius.topRight() > 0) {
+        path.arcTo(QRectF(rect.right() - 2 * radius.topRight(), rect.top(), 2 * radius.topRight(), 2 * radius.topRight()), 90, -90);
+    }
+
+    // Bottom Right.
+    path.lineTo(rect.right(), rect.bottom() - radius.bottomRight());
+    if (radius.bottomRight() > 0) {
+        path.arcTo(QRectF(rect.right() - 2 * radius.bottomRight(), rect.bottom() - 2 * radius.bottomRight(), 2 * radius.bottomRight(), 2 * radius.bottomRight()), 0, -90);
+    }
+
+    // Bottom Left.
+    path.lineTo(rect.left() + radius.bottomLeft(), rect.bottom());
+    if (radius.bottomLeft() > 0) {
+        path.arcTo(QRectF(rect.left(), rect.bottom() - 2 * radius.bottomLeft(), 2 * radius.bottomLeft(), 2 * radius.bottomLeft()), 270, -90);
+    }
+
+    // Top Left.
+    path.lineTo(rect.left(), rect.top() + radius.topLeft());
+    if (radius.topLeft() > 0) {
+        path.arcTo(QRectF(rect.left(), rect.top(), 2 * radius.topLeft(), 2 * radius.topLeft()), 180, -90);
+    }
+
+    path.closeSubpath();
+    return path;
+}
+
 void PreviewItem::paint(QPainter *painter)
 {
     if (!m_decoration) {
@@ -122,12 +157,33 @@ void PreviewItem::paint(QPainter *painter)
     int paddingRight = 0;
     int paddingBottom = 0;
     paintShadow(painter, paddingLeft, paddingRight, paddingTop, paddingBottom);
+
+    const bool hasRadius = m_decoration->borderRadius().topLeft() || m_decoration->borderRadius().topRight()
+        || m_decoration->borderRadius().bottomLeft() || m_decoration->borderRadius().bottomRight();
+    if (hasRadius) {
+        painter->save();
+        painter->setClipPath(roundedRectangle(m_decoration->rect(), m_decoration->borderRadius()));
+    }
+
     m_decoration->paint(painter, QRect(0, 0, width(), height()));
     if (m_drawBackground) {
         painter->fillRect(m_decoration->borderLeft(), m_decoration->borderTop(),
                           width() - m_decoration->borderLeft() - m_decoration->borderRight() - paddingLeft - paddingRight,
                           height() - m_decoration->borderTop() - m_decoration->borderBottom() - paddingTop - paddingBottom,
                           m_windowColor);
+    }
+
+    if (hasRadius) {
+        painter->restore();
+    }
+
+    if (!m_decoration->borderOutline().isNull()) {
+        QPen outlinePen{m_decoration->borderOutline().color()};
+        outlinePen.setWidth(m_decoration->borderOutline().thickness());
+        painter->setPen(outlinePen);
+
+        painter->setRenderHint(QPainter::Antialiasing);
+        painter->drawPath(roundedRectangle(m_decoration->rect(), m_decoration->borderOutline().radius()));
     }
 }
 
