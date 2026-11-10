@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-05 00:57+0000\n"
-"PO-Revision-Date: 2026-10-20 15:21+0200\n"
+"POT-Creation-Date: 2026-11-10 00:59+0000\n"
+"PO-Revision-Date: 2026-11-03 15:54+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.10\n"
+"X-Generator: Lokalize 26.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -4465,10 +4465,9 @@ msgstr ""
 "dalla scheda grafica."
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration: %s"
+#, kde-format
 msgid "The driver rejected the output configuration: %1"
-msgstr "Il driver ha rifiutato la configurazione dell'uscita: %s"
+msgstr "Il driver ha rifiutato la configurazione dell'uscita: %1"
 
 #: window.cpp:3181
 #, kde-format
@@ -4524,7 +4523,7 @@ msgstr ""
 "come https://paste.kde.org invece di incollarlo nella conversazione di "
 "supporto.\n"
 
-#: xwayland/xwaylandlauncher.cpp:323
+#: xwayland/xwaylandlauncher.cpp:332
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland è stato terminato in modo inatteso"

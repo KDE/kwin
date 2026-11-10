@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-05 00:57+0000\n"
+"POT-Creation-Date: 2026-11-10 00:59+0000\n"
 "PO-Revision-Date: 2025-04-05 11:59+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@nuug.no>\n"
@@ -4543,7 +4543,7 @@ msgstr ""
 "tjeneste,\n"
 "for eksempel http://paste.kde.org og ikke limes inn i hjelpemeldingene.\n"
 
-#: xwayland/xwaylandlauncher.cpp:323
+#: xwayland/xwaylandlauncher.cpp:332
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland krasjet"

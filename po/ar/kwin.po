@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-05 00:57+0000\n"
+"POT-Creation-Date: 2026-11-10 00:59+0000\n"
 "PO-Revision-Date: 2026-11-05 09:11+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -4452,7 +4452,7 @@ msgstr ""
 "اللصق \n"
 "مثل https://paste.kde.org بدلًا من اللصق في موضوع الدعم. \n"
 
-#: xwayland/xwaylandlauncher.cpp:323
+#: xwayland/xwaylandlauncher.cpp:332
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "إنهار ويلاند_اكس"
