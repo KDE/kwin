@@ -34,7 +34,11 @@ function isPopupWindow(window) {
         return true;
     }
 
-    return window.splash || window.toolbar || window.onScreenDisplay || window.appletPopup;
+    if (window.splash || window.toolbar || window.onScreenDisplay || window.appletPopup) {
+        return true;
+    }
+
+    return window.windowClass === "spectacle org.kde.spectacle" && window.tag === "region-editor";
 }
 
 var fadingPopupsEffect = {
