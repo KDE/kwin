@@ -282,7 +282,7 @@ if (KWIN_BUILD_X11)
     set_package_properties(Xwayland PROPERTIES
         URL "https://x.org"
         DESCRIPTION "Xwayland X server"
-        TYPE RUNTIME
+        TYPE REQUIRED
         PURPOSE "Needed for running kwin_wayland"
     )
 
