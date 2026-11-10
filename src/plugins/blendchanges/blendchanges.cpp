@@ -83,12 +83,6 @@ void BlendChanges::postPaintScreen()
     effects->addRepaintFull();
 }
 
-bool BlendChanges::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
-{
-    data.setCrossFadeProgress(m_timeline.value());
-    return effects->paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
-}
-
 void BlendChanges::prePaintScreen(ScreenPrePaintData &data)
 {
     if (m_state == Off) {
@@ -96,6 +90,7 @@ void BlendChanges::prePaintScreen(ScreenPrePaintData &data)
     }
     if (m_state == Blending) {
         m_timeline.advance(data.view);
+        setAllCrossfadeProgress(m_timeline.value());
     }
 
     effects->prePaintScreen(data);

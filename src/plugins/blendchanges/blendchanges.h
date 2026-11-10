@@ -27,7 +27,6 @@ public:
     // Effect interface
     void prePaintScreen(ScreenPrePaintData &data) override;
     void postPaintScreen() override;
-    bool paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data) override;
 
     bool isActive() const override;
 

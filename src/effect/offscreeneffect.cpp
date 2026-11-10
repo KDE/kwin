@@ -20,6 +20,7 @@
 #include "opengl/eglswapchain.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
+#include "scene/surfaceitem.h"
 #include "scene/windowitem.h"
 
 namespace KWin
@@ -40,6 +41,7 @@ public:
 
     std::shared_ptr<EglSwapchain> m_swapchain;
     std::shared_ptr<EglSwapchainSlot> m_slot;
+    FileDescriptor m_sync;
     std::shared_ptr<SyncReleasePoint> m_releasePoint;
     std::shared_ptr<ColorDescription> m_colorDescription = ColorDescription::sRGB;
     bool m_isDirty = true;
@@ -195,6 +197,7 @@ bool OffscreenData::maybeRender(EffectWindow *window)
 
     GLFramebuffer::popFramebuffer();
     EGLNativeFence fence(m_swapchain->context()->displayObject());
+    m_sync = fence.fileDescriptor().duplicate();
     m_swapchain->release(m_slot, fence.takeFileDescriptor());
     m_releasePoint = m_slot->releasePoint();
 
@@ -355,11 +358,31 @@ bool OffscreenEffect::blocksDirectScanout() const
     return false;
 }
 
+class CrossfadeItem : public SurfaceItem
+{
+public:
+    explicit CrossfadeItem(Item *parentItem)
+        : SurfaceItem(parentItem)
+    {
+    }
+
+    RegionF shape() const override
+    {
+        return rect();
+    }
+    RegionF opaque() const override
+    {
+        return hasAlphaChannel() ? RegionF{} : rect();
+    }
+};
+
 class CrossFadeWindowData : public OffscreenData
 {
 public:
     RectF frameGeometryAtCapture;
     RectF expandedGeometryAtCapture;
+    std::unique_ptr<CrossfadeItem> m_item;
+    double m_progress = 0;
 };
 
 class CrossFadeEffectPrivate
@@ -377,37 +400,11 @@ CrossFadeEffect::CrossFadeEffect(QObject *parent)
 
 CrossFadeEffect::~CrossFadeEffect() = default;
 
-bool CrossFadeEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data)
+static void updateWindow(EffectWindow *window, CrossFadeWindowData *data)
 {
-    const auto it = d->windows.find(window);
-
-    // paint the new window (if applicable) underneath
-    if (data.crossFadeProgress() > 0 || it == d->windows.end()) {
-        if (!Effect::drawWindow(renderTarget, viewport, window, mask, deviceRegion, data)) {
-            return false;
-        }
-    }
-
-    if (it == d->windows.end() || it->second->m_recursionGuard) {
-        return true;
-    }
-    CrossFadeWindowData *offscreenData = it->second.get();
-
-    // paint old snapshot on top
-    WindowPaintData previousWindowData = data;
-    previousWindowData.multiplyOpacity(1.0 - data.crossFadeProgress());
-
-    const RectF frameGeometry = snapToPixels(window->frameGeometry(), viewport.scale());
-    const RectF capturedFrameGeometry = snapToPixels(offscreenData->frameGeometryAtCapture, viewport.scale());
-    const RectF capturedExpandedGeometry = snapToPixels(offscreenData->expandedGeometryAtCapture, viewport.scale());
-
-    // calculate the scale and offset to render the snapshot with
-    const RectF containerSceneRect = window->windowItem()->effectContainer()->mapToScene(window->rect());
-    const RectF windowSceneRect = window->windowItem()->mapToScene(window->rect());
-    const QPointF offset = containerSceneRect.topLeft() - windowSceneRect.topLeft();
-    previousWindowData.translate(offset.x(), offset.y());
-    previousWindowData.setXScale(previousWindowData.xScale() * containerSceneRect.width() / windowSceneRect.width());
-    previousWindowData.setYScale(previousWindowData.yScale() * containerSceneRect.height() / windowSceneRect.height());
+    const RectF frameGeometry = window->frameGeometry();
+    const RectF &capturedFrameGeometry = data->frameGeometryAtCapture;
+    const RectF &capturedExpandedGeometry = data->expandedGeometryAtCapture;
 
     // This is for the case of *non* live effect, when the window buffer we saved has a different size
     // compared to the size the window has now. The "old" window will be rendered scaled to the current
@@ -419,24 +416,23 @@ bool CrossFadeEffect::drawWindow(const RenderTarget &renderTarget, const RenderV
     const qreal widthRatio = capturedFrameGeometry.width() / frameGeometry.width();
     const qreal heightRatio = capturedFrameGeometry.height() / frameGeometry.height();
 
-    const QMarginsF margins(
+    const QMarginsF margins{
         (capturedExpandedGeometry.x() - capturedFrameGeometry.x()) / widthRatio,
         (capturedExpandedGeometry.y() - capturedFrameGeometry.y()) / heightRatio,
         (capturedFrameGeometry.right() - capturedExpandedGeometry.right()) / widthRatio,
-        (capturedFrameGeometry.bottom() - capturedExpandedGeometry.bottom()) / heightRatio);
+        (capturedFrameGeometry.bottom() - capturedExpandedGeometry.bottom()) / heightRatio,
+    };
 
-    RectF visibleRect = RectF(QPointF(0, 0), frameGeometry.size()) - margins;
+    const RectF geometry = RectF(QPointF(0, 0), frameGeometry.size()) - margins;
+    data->m_item->setDestinationSize(geometry.size());
+    data->m_item->setPosition(geometry.topLeft());
+}
 
-    WindowQuad quad;
-    quad[0] = WindowVertex(visibleRect.topLeft(), QPointF(0, 0));
-    quad[1] = WindowVertex(visibleRect.topRight(), QPointF(1, 0));
-    quad[2] = WindowVertex(visibleRect.bottomRight(), QPointF(1, 1));
-    quad[3] = WindowVertex(visibleRect.bottomLeft(), QPointF(0, 1));
-
-    WindowQuadList quads;
-    quads.append(quad);
-    offscreenData->paint(renderTarget, viewport, window, deviceRegion, previousWindowData, quads);
-    return true;
+void CrossFadeEffect::prePaintScreen(ScreenPrePaintData &data)
+{
+    for (const auto &[window, data] : d->windows) {
+        updateWindow(window, data.get());
+    }
 }
 
 void CrossFadeEffect::redirect(EffectWindow *window)
@@ -451,6 +447,8 @@ void CrossFadeEffect::redirect(EffectWindow *window)
     }
     offscreenData = std::make_unique<CrossFadeWindowData>();
     offscreenData->m_windowEffect = ItemEffect(window->windowItem());
+    offscreenData->m_item = std::make_unique<CrossfadeItem>(window->windowItem()->effectContainer());
+    offscreenData->m_item->setZ(100);
 
     // Avoid including blur and contrast effects. During a normal painting cycle they
     // won't be included, but since we call effects->drawWindow() outside usual compositing
@@ -462,6 +460,13 @@ void CrossFadeEffect::redirect(EffectWindow *window)
     (void)offscreenData->maybeRender(window);
     offscreenData->frameGeometryAtCapture = window->frameGeometry();
     offscreenData->expandedGeometryAtCapture = window->expandedGeometry();
+    if (offscreenData->m_slot) {
+        offscreenData->m_item->setBuffer(offscreenData->m_slot->buffer(), offscreenData->m_sync.duplicate());
+        offscreenData->m_item->setBufferReleasePoint(offscreenData->m_releasePoint);
+        offscreenData->m_item->setBufferSourceBox(Rect(QPoint(), offscreenData->m_slot->buffer()->size()));
+        offscreenData->m_item->addDamage(Rect(QPoint(), offscreenData->m_slot->buffer()->size()));
+        updateWindow(window, offscreenData.get());
+    }
 
     window->setData(WindowForceBlurRole, blurRole);
 }
@@ -486,6 +491,25 @@ void CrossFadeEffect::unredirect(EffectWindow *window)
 void CrossFadeEffect::handleWindowDeleted(EffectWindow *window)
 {
     unredirect(window);
+}
+
+void CrossFadeEffect::setAllCrossfadeProgress(double value)
+{
+    for (const auto &[window, data] : d->windows) {
+        data->m_progress = value;
+        data->m_item->setOpacity(1 - value);
+    }
+}
+
+void CrossFadeEffect::setCrossfadeProgress(EffectWindow *window, double value)
+{
+    const auto it = d->windows.find(window);
+    if (it == d->windows.end()) {
+        return;
+    }
+    const auto &data = it->second;
+    data->m_progress = value;
+    data->m_item->setOpacity(1 - value);
 }
 
 void CrossFadeEffect::setShader(EffectWindow *window, GLShader *shader)

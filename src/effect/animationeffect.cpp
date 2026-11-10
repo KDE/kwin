@@ -644,7 +644,7 @@ bool AnimationEffect::paintWindow(const RenderTarget &renderTarget, const Render
             genericAnimation(w, data, progress(anim), anim.meta);
             break;
         case CrossFadePrevious:
-            data.setCrossFadeProgress(progress(anim));
+            setCrossfadeProgress(w, progress(anim));
             break;
         case Shader:
             if (anim.shader) {

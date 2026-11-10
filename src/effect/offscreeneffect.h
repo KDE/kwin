@@ -104,7 +104,7 @@ public:
     explicit CrossFadeEffect(QObject *parent = nullptr);
     ~CrossFadeEffect() override;
 
-    bool drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data) override;
+    void prePaintScreen(ScreenPrePaintData &data) override;
 
     /**
      * This function must be called when the effect wants to animate the specified
@@ -128,8 +128,13 @@ public:
 
     static bool supported();
 
+protected:
+    void setCrossfadeProgress(EffectWindow *window, double value);
+    void setAllCrossfadeProgress(double value);
+
 private:
     void handleWindowDeleted(EffectWindow *window);
+
     std::unique_ptr<CrossFadeEffectPrivate> d;
 };
 

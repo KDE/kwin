@@ -481,22 +481,6 @@ public:
      * \since 4.10
      */
     qreal multiplyBrightness(qreal factor);
-    /*!
-     * Sets the cross fading \a factor to fade over with previously sized window.
-     *
-     * If \c 1.0 only the current window is used, if \c 0.0 only the previous window is used.
-     *
-     * By default only the current window is used. This factor can only make any visual difference
-     * if the previous window get referenced.
-     *
-     * \a factor The cross fade factor between \c 0.0 (previous window) and \c 1.0 (current window)
-     * \sa crossFadeProgress
-     */
-    void setCrossFadeProgress(qreal factor);
-    /*!
-     * \sa setCrossFadeProgress
-     */
-    qreal crossFadeProgress() const;
 
 private:
     const std::unique_ptr<WindowPaintDataPrivate> d;
