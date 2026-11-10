@@ -97,6 +97,7 @@ private Q_SLOTS:
     void testNoTf();
     void testRenderIntentOnly();
     void testInertError();
+    void dontCrashZeroMetadata();
 };
 
 void ColorManagementTest::initTestCase()
@@ -561,6 +562,26 @@ void ColorManagementTest::testInertError()
 
     QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
     QVERIFY(error.wait());
+}
+
+void ColorManagementTest::dontCrashZeroMetadata()
+{
+    QtWayland::wp_image_description_creator_params_v1 creator(Test::colorManager()->create_parametric_creator());
+    creator.set_primaries_named(WP_COLOR_MANAGER_V1_PRIMARIES_BT2020);
+    creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_ST2084_PQ);
+    creator.set_mastering_display_primaries(0, 0, 0, 0, 0, 0, 0, 0);
+    ImageDescription imageDescr(wp_image_description_creator_params_v1_create(creator.object()));
+
+    QSignalSpy ready(&imageDescr, &ImageDescription::ready);
+    QVERIFY(ready.wait());
+
+    Test::XdgToplevelWindow window;
+    auto cmSurf = std::make_unique<ColorManagementSurface>(Test::colorManager()->get_surface(*window.m_surface));
+    cmSurf->set_image_description(imageDescr.object(), WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL);
+    QVERIFY(window.show());
+    QVERIFY(window.presentWait());
+
+    QCOMPARE(window.m_window->surface()->colorDescription()->masteringColorimetry(), Colorimetry::BT2020);
 }
 
 } // namespace KWin
