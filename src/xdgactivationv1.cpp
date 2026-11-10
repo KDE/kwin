@@ -105,7 +105,7 @@ QString XdgActivationV1Integration::requestToken(bool isPrivileged, SurfaceInter
         serial = input()->lastInteractionSerial();
     }
     workspace()->setActivationToken(newToken, serial, appId);
-    if (showNotify) {
+    if (showNotify && effects) {
         Q_EMIT effects->startupAdded(newToken, icon);
     }
     return newToken;
@@ -137,7 +137,9 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
 void XdgActivationV1Integration::clearFeedback()
 {
     if (m_activation) {
-        Q_EMIT effects->startupRemoved(m_lastToken);
+        if (effects) {
+            Q_EMIT effects->startupRemoved(m_lastToken);
+        }
         m_activation.reset();
     }
 }
