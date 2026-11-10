@@ -141,7 +141,6 @@ target_sources(kwin PRIVATE
     opengl/egldisplay.cpp
     opengl/eglimagetexture.cpp
     opengl/eglnativefence.cpp
-    opengl/eglswapchain.cpp
     opengl/glframebuffer.cpp
     opengl/gllut.cpp
     opengl/gllut3D.cpp
@@ -643,7 +642,6 @@ install(FILES
     opengl/egldisplay.h
     opengl/eglimagetexture.h
     opengl/eglnativefence.h
-    opengl/eglswapchain.h
     opengl/eglutils_p.h
     opengl/glframebuffer.h
     opengl/gllut.h
