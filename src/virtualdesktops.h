@@ -29,6 +29,7 @@ class QAction;
 namespace KWin
 {
 
+class ConfigurableGesture;
 class LogicalOutput;
 class Options;
 class PlasmaVirtualDesktopManagementInterface;
@@ -602,6 +603,10 @@ private:
     PlasmaVirtualDesktopManagementInterface *m_virtualDesktopManagement = nullptr;
     KSharedConfig::Ptr m_config;
 
+    std::unique_ptr<ConfigurableGesture> m_switchRightGesture;
+    std::unique_ptr<ConfigurableGesture> m_switchLeftGesture;
+    std::unique_ptr<ConfigurableGesture> m_switchDownGesture;
+    std::unique_ptr<ConfigurableGesture> m_switchUpGesture;
     QPointF m_currentDesktopOffset = QPointF(0, 0);
 
     KWIN_SINGLETON_VARIABLE(VirtualDesktopManager, s_manager)

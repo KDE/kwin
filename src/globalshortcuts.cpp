@@ -340,19 +340,24 @@ static QString makeShortcutActionKey(const QString &componentName, const QString
     return componentName % ":" % actionId;
 }
 
-ConfigurableGesture *GlobalShortcutsManager::registerGesture(QAction *shortcutAction)
+std::unique_ptr<ConfigurableGesture> GlobalShortcutsManager::registerGesture(QAction *shortcutAction)
 {
-    auto gesture = new ConfigurableGesture(this, shortcutAction);
+    auto gesture = std::make_unique<ConfigurableGesture>(this);
 #if KWIN_BUILD_GLOBALSHORTCUTS
+    connect(shortcutAction, &QObject::destroyed, this, [this, qptr = QPointer<ConfigurableGesture>(gesture.get())] {
+        if (ConfigurableGesture *gesture = qptr; gesture != nullptr) {
+            unregisterGesture(gesture);
+        }
+    });
     gesture->setObjectName(makeShortcutActionKey(getComponentName(shortcutAction), shortcutAction->objectName()));
 
     ConfigurableGesture *previousGesture = m_perActionGestures.value(gesture->objectName(), nullptr);
-    m_perActionGestures[gesture->objectName()] = gesture;
+    m_perActionGestures[gesture->objectName()] = gesture.get();
 
     // activate gestures that KGlobalAccel already wanted active, but are only now registered here by KWin
     for (auto &[trigger, active] : m_kglobalAccelActiveTriggers) {
         if (active.shortcutActionKey == gesture->objectName()) {
-            activateGesture(active, gesture, trigger);
+            activateGesture(active, gesture.get(), trigger);
         }
     }
 
@@ -485,7 +490,7 @@ bool GlobalShortcutsManager::activateGesture(ActiveTriggerInfo &active, Configur
 
     auto assignNewTriggerAction = [this, &active, gesture, &trigger]() -> QAction * {
         active.configurableGesture = gesture;
-        active.gestureAction.reset(gesture->makeAutoCountingTriggerAction());
+        active.gestureAction = gesture->makeAutoCountingTriggerAction();
 
         if (active.configurableGesture->isAutoCreated()) {
             auto sendTriggered = [this, trigger]() {

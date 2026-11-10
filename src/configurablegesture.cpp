@@ -14,9 +14,8 @@
 namespace KWin
 {
 
-ConfigurableGesture::ConfigurableGesture(GlobalShortcutsManager *manager, QObject *parent)
-    : QObject(parent)
-    , m_manager(manager)
+ConfigurableGesture::ConfigurableGesture(GlobalShortcutsManager *manager)
+    : m_manager(manager)
 {
     connect(this, &ConfigurableGesture::triggered, this, &ConfigurableGesture::released);
     connect(this, &ConfigurableGesture::cancelled, this, &ConfigurableGesture::released);
@@ -34,12 +33,12 @@ size_t ConfigurableGesture::triggerActionCount() const
     return m_count;
 }
 
-QAction *ConfigurableGesture::makeAutoCountingTriggerAction()
+std::unique_ptr<QAction> ConfigurableGesture::makeAutoCountingTriggerAction()
 {
-    auto action = new QAction(this);
+    auto action = std::make_unique<QAction>();
     ++m_count;
-    connect(action, &QAction::triggered, this, &ConfigurableGesture::triggered);
-    connect(action, &QObject::destroyed, this, [this] {
+    connect(action.get(), &QAction::triggered, this, &ConfigurableGesture::triggered);
+    connect(action.get(), &QObject::destroyed, this, [this] {
         --m_count;
     });
     return action;

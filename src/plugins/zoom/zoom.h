@@ -28,6 +28,7 @@ class GLVertexBuffer;
 class GLShader;
 class FocusTracker;
 class TextCaretTracker;
+class ConfigurableGesture;
 
 class ZoomEffect : public Effect
 {
@@ -126,6 +127,8 @@ private:
     std::unique_ptr<QAction> m_zoomOutAxisAction;
     Qt::KeyboardModifiers m_axisModifiers;
     std::unique_ptr<QAction> m_touchpadAction;
+    std::unique_ptr<ConfigurableGesture> m_zoomInGesture;
+    std::unique_ptr<ConfigurableGesture> m_zoomOutGesture;
     double m_lastPinchProgress = 0;
     bool m_usePatternUpscaler = true;
 
