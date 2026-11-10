@@ -11,8 +11,6 @@
 #include "ramfile.h"
 #include "common.h" // for logging
 
-#include <QScopeGuard>
-
 #include <cerrno>
 #include <fcntl.h>
 #include <sys/mman.h>
@@ -22,115 +20,84 @@
 namespace KWin
 {
 
-RamFile::RamFile(const char *name, const void *inData, int size, RamFile::Flags flags)
-    : m_size(size)
-    , m_flags(flags)
+std::optional<RamFile> RamFile::allocate(const char *name, int size, RamFile::Flags flags)
 {
-    auto guard = qScopeGuard([this] {
-        cleanup();
-    });
-
 #if HAVE_MEMFD
-    m_fd = FileDescriptor(memfd_create(name, MFD_CLOEXEC | MFD_ALLOW_SEALING));
-    if (!m_fd.isValid()) {
+    FileDescriptor fd(memfd_create(name, MFD_CLOEXEC | MFD_ALLOW_SEALING));
+    if (!fd.isValid()) {
         qCWarning(KWIN_CORE).nospace() << name << ": Can't create memfd: " << strerror(errno);
-        return;
-    }
-
-    if (ftruncate(m_fd.get(), size) < 0) {
-        qCWarning(KWIN_CORE).nospace() << name << ": Failed to ftruncate memfd: " << strerror(errno);
-        return;
-    }
-
-    void *data = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, m_fd.get(), 0);
-    if (data == MAP_FAILED) {
-        qCWarning(KWIN_CORE).nospace() << name << ": mmap failed: " << strerror(errno);
-        return;
+        return std::nullopt;
     }
 #else
-    m_tmp = std::make_unique<QTemporaryFile>();
-    if (!m_tmp->open()) {
-        qCWarning(KWIN_CORE).nospace() << name << ": Can't open temporary file";
-        return;
+    char filename[255];
+    snprintf(filename, sizeof(filename), "/tmp/%s-XXXXXX", name);
+
+    FileDescriptor fd(mkostemp(filename, O_CLOEXEC));
+    if (!fd.isValid()) {
+        qCWarning(KWIN_CORE, "mkostemp() failed: %s", strerror(errno));
+        return std::nullopt;
     }
 
-    if (unlink(m_tmp->fileName().toUtf8().constData()) != 0) {
-        qCWarning(KWIN_CORE).nospace() << name << ": Failed to remove temporary file from filesystem: " << strerror(errno);
-    }
-
-    if (!m_tmp->resize(size)) {
-        qCWarning(KWIN_CORE).nospace() << name << ": Failed to resize temporary file";
-        return;
-    }
-
-    uchar *data = m_tmp->map(0, size);
-    if (!data) {
-        qCWarning(KWIN_CORE).nospace() << name << ": map failed";
-        return;
+    if (unlink(filename) == -1) {
+        qCWarning(KWIN_CORE, "unlink() for %s failed: %s", filename, strerror(errno));
     }
 #endif
 
-    memcpy(data, inData, size);
+    if (ftruncate(fd.get(), size) < 0) {
+        qCWarning(KWIN_CORE).nospace() << name << ": Failed to ftruncate memfd: " << strerror(errno);
+        return std::nullopt;
+    }
 
 #if HAVE_MEMFD
-    munmap(data, size);
-#else
-    m_tmp->unmap(data);
-#endif
-
     int seals = F_SEAL_SHRINK | F_SEAL_GROW | F_SEAL_SEAL;
     if (flags.testFlag(RamFile::Flag::SealWrite)) {
         seals |= F_SEAL_WRITE;
     }
-    // This can fail for QTemporaryFile based on the underlying file system.
-    if (fcntl(fd(), F_ADD_SEALS, seals) != 0) {
+    if (fcntl(fd.get(), F_ADD_SEALS, seals) != 0) {
         qCDebug(KWIN_CORE).nospace() << name << ": Failed to seal RamFile: " << strerror(errno);
     }
-
-    guard.dismiss();
-}
-
-RamFile::RamFile(RamFile &&other) Q_DECL_NOEXCEPT
-    : m_size(std::exchange(other.m_size, 0))
-    , m_flags(std::exchange(other.m_flags, RamFile::Flags{}))
-#if HAVE_MEMFD
-    , m_fd(std::exchange(other.m_fd, KWin::FileDescriptor{}))
-#else
-    , m_tmp(std::exchange(other.m_tmp, {}))
 #endif
+
+    return RamFile(std::move(fd), size);
+}
+
+std::optional<RamFile> RamFile::create(const char *name, const void *inData, int size, RamFile::Flags flags)
+{
+    auto file = allocate(name, size, flags);
+    if (!file) {
+        return std::nullopt;
+    }
+
+    void *data = mmap(nullptr, file->size(), PROT_READ | PROT_WRITE, MAP_SHARED, file->fd(), 0);
+    if (data == MAP_FAILED) {
+        qCWarning(KWIN_CORE).nospace() << name << ": mmap failed: " << strerror(errno);
+        return std::nullopt;
+    }
+
+    memcpy(data, inData, file->size());
+
+    munmap(data, file->size());
+
+    return file;
+}
+
+RamFile::RamFile(FileDescriptor &&fd, int size)
+    : m_fd(std::move(fd))
+    , m_size(size)
 {
 }
 
-RamFile &RamFile::operator=(RamFile &&other) Q_DECL_NOEXCEPT
+RamFile::RamFile(RamFile &&other)
+    : m_fd(std::exchange(other.m_fd, FileDescriptor{}))
+    , m_size(std::exchange(other.m_size, 0))
 {
-    cleanup();
+}
+
+RamFile &RamFile::operator=(RamFile &&other)
+{
     m_size = std::exchange(other.m_size, 0);
-    m_flags = std::exchange(other.m_flags, RamFile::Flags{});
-#if HAVE_MEMFD
-    m_fd = std::exchange(other.m_fd, KWin::FileDescriptor{});
-#else
-    m_tmp = std::exchange(other.m_tmp, {});
-#endif
+    m_fd = std::exchange(other.m_fd, FileDescriptor{});
     return *this;
-}
-
-RamFile::~RamFile()
-{
-    cleanup();
-}
-
-void RamFile::cleanup()
-{
-#if HAVE_MEMFD
-    m_fd = KWin::FileDescriptor();
-#else
-    m_tmp.reset();
-#endif
-}
-
-bool RamFile::isValid() const
-{
-    return fd() != -1;
 }
 
 RamFile::Flags RamFile::effectiveFlags() const
@@ -149,11 +116,7 @@ RamFile::Flags RamFile::effectiveFlags() const
 
 int RamFile::fd() const
 {
-#if HAVE_MEMFD
     return m_fd.get();
-#else
-    return m_tmp->handle();
-#endif
 }
 
 int RamFile::size() const

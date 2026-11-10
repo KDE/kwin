@@ -78,14 +78,14 @@ void EisBackend::initialize()
 {
     const QByteArray keyMap = input()->keyboard()->xkb()->keymapContents();
     if (!keyMap.isEmpty()) {
-        m_keymapFile = RamFile("eis keymap", keyMap.data(), keyMap.size(), RamFile::Flag::SealWrite);
+        m_keymapFile = RamFile::create("eis keymap", keyMap.data(), keyMap.size(), RamFile::Flag::SealWrite);
     }
     connect(input()->keyboard()->keyboardLayout(), &KeyboardLayout::layoutsReconfigured, this, [this] {
         const QByteArray keyMap = input()->keyboard()->xkb()->keymapContents();
         if (!keyMap.isEmpty()) {
-            m_keymapFile = RamFile("eis keymap", keyMap.data(), keyMap.size(), RamFile::Flag::SealWrite);
+            m_keymapFile = RamFile::create("eis keymap", keyMap.data(), keyMap.size(), RamFile::Flag::SealWrite);
         } else {
-            m_keymapFile = RamFile();
+            m_keymapFile.reset();
         }
         for (const auto &context : m_contexts) {
             context->updateKeymap();
@@ -197,8 +197,8 @@ eis_device *EisBackend::createKeyboard(eis_seat *seat)
     auto device = createDevice(seat, "eis keyboard");
     eis_device_configure_capability(device, EIS_DEVICE_CAP_KEYBOARD);
 
-    if (m_keymapFile.isValid()) {
-        auto keymap = eis_device_new_keymap(device, EIS_KEYMAP_TYPE_XKB, m_keymapFile.fd(), m_keymapFile.size());
+    if (m_keymapFile) {
+        auto keymap = eis_device_new_keymap(device, EIS_KEYMAP_TYPE_XKB, m_keymapFile->fd(), m_keymapFile->size());
         eis_keymap_add(keymap);
         eis_keymap_unref(keymap);
     }

@@ -87,13 +87,13 @@ static eis_device *createAbsoluteDevice(eis_seat *seat)
     return device;
 }
 
-static eis_device *createKeyboard(eis_seat *seat, const RamFile &keymap)
+static eis_device *createKeyboard(eis_seat *seat, const std::optional<RamFile> &keymap)
 {
     auto device = createDevice(seat, "capture keyboard");
     eis_device_configure_capability(device, EIS_DEVICE_CAP_KEYBOARD);
 
-    if (keymap.isValid()) {
-        auto eisKeymap = eis_device_new_keymap(device, EIS_KEYMAP_TYPE_XKB, keymap.fd(), keymap.size());
+    if (keymap) {
+        auto eisKeymap = eis_device_new_keymap(device, EIS_KEYMAP_TYPE_XKB, keymap->fd(), keymap->size());
         eis_keymap_add(eisKeymap);
         eis_keymap_unref(eisKeymap);
     }

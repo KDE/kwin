@@ -102,14 +102,14 @@ EisInputCaptureManager::EisInputCaptureManager()
 
     const auto keymap = input()->keyboard()->xkb()->keymapContents();
     if (!keymap.isEmpty()) {
-        m_keymapFile = RamFile("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);
+        m_keymapFile = RamFile::create("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);
     }
     connect(input()->keyboard()->keyboardLayout(), &KeyboardLayout::layoutChanged, this, [this] {
         const auto keymap = input()->keyboard()->xkb()->keymapContents();
         if (!keymap.isEmpty()) {
-            m_keymapFile = RamFile("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);
+            m_keymapFile = RamFile::create("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);
         } else {
-            m_keymapFile = RamFile();
+            m_keymapFile.reset();
         }
     });
 
@@ -151,7 +151,7 @@ EisInputCaptureManager::~EisInputCaptureManager()
     }
 }
 
-const RamFile &EisInputCaptureManager::keyMap() const
+const std::optional<RamFile> &EisInputCaptureManager::keyMap() const
 {
     return m_keymapFile;
 }

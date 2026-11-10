@@ -43,7 +43,7 @@ public:
     QMetaObject::Connection destroyConnection;
     QPointer<SurfaceInterface> modifierFocusSurface;
     QByteArray keymap;
-    RamFile sharedKeymapFile;
+    std::optional<RamFile> sharedKeymapFile;
 
     struct
     {

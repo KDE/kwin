@@ -118,7 +118,7 @@ class LinuxDmaBufV1FormatTable
 public:
     LinuxDmaBufV1FormatTable(const FormatModifierMap &supportedModifiers);
 
-    RamFile file;
+    std::optional<RamFile> file;
     QMap<std::pair<uint32_t, uint64_t>, uint16_t> indices;
 };
 

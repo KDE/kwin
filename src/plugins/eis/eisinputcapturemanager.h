@@ -47,14 +47,14 @@ public:
     Q_INVOKABLE QDBusObjectPath addInputCapture(uint capabilities);
     Q_INVOKABLE void removeInputCapture(const QDBusObjectPath &capture);
 
-    const RamFile &keyMap() const;
+    const std::optional<RamFile> &keyMap() const;
 
     void barrierHit(EisInputCapture *capture, uint barrier, const QPointF &position);
     EisInputCapture *activeCapture();
     void deactivate(const std::optional<QPointF> &releasePosition = std::nullopt);
 
 private:
-    RamFile m_keymapFile;
+    std::optional<RamFile> m_keymapFile;
     QDBusServiceWatcher *m_serviceWatcher;
     std::unique_ptr<BarrierSpy> m_barrierSpy;
     std::unique_ptr<EisInputCaptureFilter> m_inputFilter;

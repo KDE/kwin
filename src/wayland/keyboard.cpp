@@ -86,14 +86,18 @@ void KeyboardInterfacePrivate::sendRepeatInfo(Resource *resource)
 
 void KeyboardInterfacePrivate::sendKeymap(Resource *resource)
 {
+    if (Q_UNLIKELY(!sharedKeymapFile)) {
+        return;
+    }
     // From version 7 on, keymaps must be mapped privately, so that
     // we can seal the fd and reuse it between clients.
-    if (resource->version() >= 7 && sharedKeymapFile.effectiveFlags().testFlag(RamFile::Flag::SealWrite)) {
-        send_keymap(resource->handle, keymap_format::keymap_format_xkb_v1, sharedKeymapFile.fd(), sharedKeymapFile.size());
+    if (resource->version() >= 7 && sharedKeymapFile->effectiveFlags().testFlag(RamFile::Flag::SealWrite)) {
+        send_keymap(resource->handle, keymap_format::keymap_format_xkb_v1, sharedKeymapFile->fd(), sharedKeymapFile->size());
         // otherwise give each client its own unsealed copy.
     } else {
-        RamFile keymapFile("kwin-xkb-keymap", keymap.constData(), keymap.size() + 1); // Include QByteArray null-terminator.
-        send_keymap(resource->handle, keymap_format::keymap_format_xkb_v1, keymapFile.fd(), keymapFile.size());
+        if (const auto keymapFile = RamFile::create("kwin-xkb-keymap", keymap.constData(), keymap.size() + 1)) { // Include QByteArray null-terminator.
+            send_keymap(resource->handle, keymap_format::keymap_format_xkb_v1, keymapFile->fd(), keymapFile->size());
+        }
     }
 }
 
@@ -105,7 +109,7 @@ void KeyboardInterface::setKeymap(const QByteArray &content)
 
     d->keymap = content;
     // +1 to include QByteArray null terminator.
-    d->sharedKeymapFile = RamFile("kwin-xkb-keymap-shared", content.constData(), content.size() + 1, RamFile::Flag::SealWrite);
+    d->sharedKeymapFile = RamFile::create("kwin-xkb-keymap-shared", content.constData(), content.size() + 1, RamFile::Flag::SealWrite);
 
     const auto keyboardResources = d->resourceMap();
     for (KeyboardInterfacePrivate::Resource *resource : keyboardResources) {

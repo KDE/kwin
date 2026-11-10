@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "config-kwin.h"
+
 #include "core/inputbackend.h"
 #include "utils/ramfile.h"
 
@@ -52,7 +54,7 @@ public:
 
 private:
     QDBusServiceWatcher *m_serviceWatcher;
-    RamFile m_keymapFile;
+    std::optional<RamFile> m_keymapFile;
 #if KWIN_BUILD_X11
     std::unique_ptr<XWaylandEisContext> m_xWaylandContext;
 #endif

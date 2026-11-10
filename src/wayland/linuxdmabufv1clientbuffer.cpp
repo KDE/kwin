@@ -560,8 +560,9 @@ LinuxDmaBufV1FeedbackPrivate::LinuxDmaBufV1FeedbackPrivate(LinuxDmaBufV1ClientBu
 
 void LinuxDmaBufV1FeedbackPrivate::send(Resource *resource)
 {
+    Q_ASSERT(m_bufferintegration->table->file);
     const dev_t mainDevice = m_bufferintegration->q->mainDevice(resource->client()).value();
-    send_format_table(resource->handle, m_bufferintegration->table->file.fd(), m_bufferintegration->table->file.size());
+    send_format_table(resource->handle, m_bufferintegration->table->file->fd(), m_bufferintegration->table->file->size());
     if (resource->version() < ZWP_LINUX_BUFFER_PARAMS_V1_SET_SAMPLING_DEVICE_SINCE_VERSION) {
         QByteArray bytes;
         bytes.append(reinterpret_cast<const char *>(&mainDevice), sizeof(dev_t));
@@ -636,8 +637,8 @@ LinuxDmaBufV1FormatTable::LinuxDmaBufV1FormatTable(const FormatModifierMap &supp
     }
 
     const auto size = data.size() * sizeof(linux_dmabuf_feedback_v1_table_entry);
-    file = RamFile("kwin-dmabuf-feedback-table", data.constData(), size, RamFile::Flag::SealWrite);
-    if (!file.isValid()) {
+    file = RamFile::create("kwin-dmabuf-feedback-table", data.constData(), size, RamFile::Flag::SealWrite);
+    if (!file) {
         qCCritical(KWIN_CORE) << "Failed to create RamFile for LinuxDmaBufV1FormatTable";
         return;
     }

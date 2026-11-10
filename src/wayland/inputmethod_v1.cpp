@@ -68,8 +68,9 @@ InputMethodGrabV1::~InputMethodGrabV1()
 
 void InputMethodGrabV1::sendKeymap(const QByteArray &keymap)
 {
-    RamFile keymapFile("kwin-xkb-input-method-grab-keymap", keymap.constData(), keymap.size() + 1); // include QByteArray null terminator
-    d->send_keymap(QtWaylandServer::wl_keyboard::keymap_format::keymap_format_xkb_v1, keymapFile.fd(), keymapFile.size());
+    if (const auto keymapFile = RamFile::create("kwin-xkb-input-method-grab-keymap", keymap.constData(), keymap.size() + 1)) { // include QByteArray null terminator
+        d->send_keymap(QtWaylandServer::wl_keyboard::keymap_format::keymap_format_xkb_v1, keymapFile->fd(), keymapFile->size());
+    }
 }
 
 void InputMethodGrabV1::sendKey(quint32 serial, quint32 timestamp, quint32 key, KeyboardKeyState state)

@@ -10,16 +10,9 @@
 
 #pragma once
 
-#include "config-kwin.h"
-
 #include <kwin_export.h>
 
-#if HAVE_MEMFD
 #include "filedescriptor.h"
-#else
-#include <QTemporaryFile>
-#include <memory>
-#endif
 
 #include <QFlag>
 
@@ -58,31 +51,12 @@ public:
     };
     Q_DECLARE_FLAGS(Flags, Flag)
 
-    RamFile() = default;
-    /**
-     * Create a file of given size with given data.
-     *
-     * @note You should call seal() after copying the data into the file.
-     *
-     * @param name The file name, useful for debugging.
-     * @param data The data to store in the file.
-     * @param size The size of the file.
-     * @param flags The flags to use when creating the file.
-     */
-    RamFile(const char *name, const void *inData, int size, Flags flags = {});
+    RamFile(RamFile &&other);
+    RamFile &operator=(RamFile &&other);
 
-    RamFile(RamFile &&other) Q_DECL_NOEXCEPT;
-    RamFile &operator=(RamFile &&other) Q_DECL_NOEXCEPT;
+    static std::optional<RamFile> allocate(const char *name, int size, Flags flags = {});
+    static std::optional<RamFile> create(const char *name, const void *inData, int size, Flags flags = {});
 
-    /**
-     * Destroys the file.
-     */
-    ~RamFile();
-
-    /**
-     * Whether this instance contains a valid file descriptor.
-     */
-    bool isValid() const;
     /**
      * The flags that are effectively applied.
      *
@@ -103,16 +77,10 @@ public:
     int size() const;
 
 private:
-    void cleanup();
+    RamFile(FileDescriptor &&fd, int size);
 
+    FileDescriptor m_fd;
     int m_size = 0;
-    Flags m_flags = {};
-
-#if HAVE_MEMFD
-    KWin::FileDescriptor m_fd;
-#else
-    std::unique_ptr<QTemporaryFile> m_tmp;
-#endif
 };
 
 } // namespace KWin
