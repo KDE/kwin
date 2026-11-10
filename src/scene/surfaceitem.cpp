@@ -204,7 +204,7 @@ void SurfaceItem::preprocess(ItemRenderer *renderer)
     }
 }
 
-WindowQuadList SurfaceItem::buildQuads(ItemRenderer *renderer) const
+WindowQuadList SurfaceItem::buildQuads(ItemRenderer *renderer)
 {
     const RegionF region = shape();
     WindowQuadList quads;

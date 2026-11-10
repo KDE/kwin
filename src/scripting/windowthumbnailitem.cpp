@@ -116,7 +116,7 @@ void WindowThumbnailSource::update()
     }
     Q_ASSERT(m_view);
 
-    const RectF geometry = m_handle->windowItem()->effectContainer()->boundingRect();
+    const RectF geometry = m_handle->windowItem()->transformContainer()->boundingRect();
     const qreal devicePixelRatio = m_view->devicePixelRatio();
     const QSize textureSize = (geometry * devicePixelRatio).size().toSize();
 
@@ -148,7 +148,7 @@ void WindowThumbnailSource::update()
         return;
     }
     renderer->renderBackground(offscreenRenderTarget, offscreenViewport, offscreenRenderTarget.transformedRect());
-    if (!renderer->renderItem(offscreenRenderTarget, offscreenViewport, m_handle->windowItem()->effectContainer(), mask, Region::infinite(), WindowPaintData{}, {}, {})) {
+    if (!renderer->renderItem(offscreenRenderTarget, offscreenViewport, m_handle->windowItem()->transformContainer(), mask, Region::infinite(), WindowPaintData{}, {}, {})) {
         return;
     }
     renderer->endFrame();

@@ -30,7 +30,7 @@ public:
     NinePatch *ninePatch(RenderDevice *device) const;
 
 protected:
-    WindowQuadList buildQuads(ItemRenderer *renderer) const override;
+    WindowQuadList buildQuads(ItemRenderer *renderer) override;
     void preprocess(ItemRenderer *renderer) override;
     void releaseResources(RenderDevice *device) override;
 

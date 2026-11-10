@@ -112,7 +112,7 @@ static inline void distributeVertically(RectF &topRect, RectF &bottomRect)
     }
 }
 
-WindowQuadList ShadowItem::buildQuads(ItemRenderer *renderer) const
+WindowQuadList ShadowItem::buildQuads(ItemRenderer *renderer)
 {
     // Do not draw shadows if window width or window height is less than 5 px. 5 is an arbitrary choice.
     if (m_window->width() < 5 || m_window->height() < 5) {

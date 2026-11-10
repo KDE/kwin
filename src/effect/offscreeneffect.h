@@ -16,6 +16,7 @@ class GLShader;
 class OffscreenEffectPrivate;
 class CrossFadeEffectPrivate;
 class ShaderEffectPrivate;
+class Item;
 
 /**
  * The OffscreenEffect class is the base class for effects that paint deformed windows.
@@ -26,23 +27,23 @@ class ShaderEffectPrivate;
  * The redirect() function must be called when the effect wants to transform a window.
  * Once the effect is no longer interested in the window, the unredirect() function
  * must be called.
- *
- * If a window is redirected into offscreen texture, the deform() function will be
- * called to transform the offscreen texture.
  */
 class KWIN_EXPORT OffscreenEffect : public Effect
 {
     Q_OBJECT
 
 public:
-    explicit OffscreenEffect(QObject *parent = nullptr);
+    /**
+     * @param applyGeometryCallback a callback to modify the geometry of the item.
+     *                              NOTE this callback should only be set if you actually modify the geometry,
+     *                              since it can interact badly with other effects.
+     */
+    explicit OffscreenEffect(const std::function<void(EffectWindow *window, Item *item, WindowQuadList &quads)> &applyGeometryCallback = {});
     ~OffscreenEffect() override;
 
     static bool supported();
 
 protected:
-    bool drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data) override;
-
     /**
      * This function must be called when the effect wants to animate the specified
      * @a window.
@@ -53,11 +54,6 @@ protected:
      * @a window. The window will be automatically unredirected if it's deleted.
      */
     void unredirect(EffectWindow *window);
-
-    /**
-     * Override this function to transform the window.
-     */
-    virtual void apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads);
 
     /**
      * Allows to specify a @p shader to draw the redirected texture for @p window.
@@ -75,13 +71,13 @@ protected:
     bool blocksDirectScanout() const override;
 
 private Q_SLOTS:
-    void handleWindowDamaged(KWin::EffectWindow *window);
     void handleWindowDeleted(KWin::EffectWindow *window);
 
 private:
     void setupConnections();
     void destroyConnections();
 
+    friend class OffscreenEffectItem;
     std::unique_ptr<OffscreenEffectPrivate> d;
 };
 

@@ -180,7 +180,7 @@ public:
     Region takeDeviceRepaints(RenderView *delegate);
     void resetRepaints(RenderView *delegate);
 
-    WindowQuadList quads(ItemRenderer *renderer) const;
+    RenderGeometry geometry(ItemRenderer *renderer, double scale);
     virtual void preprocess(ItemRenderer *renderer);
     const std::shared_ptr<ColorDescription> &colorDescription() const;
     RenderingIntent renderingIntent() const;
@@ -203,6 +203,8 @@ public:
      */
     bool hasVisibleContents() const;
 
+    void setVertexSnappingMode(RenderGeometry::VertexSnappingMode mode);
+
 Q_SIGNALS:
     void childAdded(KWin::Item *item);
     void childRemoved(KWin::Item *item);
@@ -222,9 +224,10 @@ Q_SIGNALS:
      */
     void boundingRectChanged();
     void zChanged();
+    void parentChanged();
 
 protected:
-    virtual WindowQuadList buildQuads(ItemRenderer *renderer) const;
+    virtual WindowQuadList buildQuads(ItemRenderer *renderer);
     virtual void handlePrepareFrame(SceneView *view, std::chrono::nanoseconds timestamp);
     virtual void handleFramePainted(SceneView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
     virtual void releaseResources(RenderDevice *device);
@@ -271,6 +274,7 @@ private:
     int m_effectCount = 0;
     std::optional<RectF> m_clipRect;
     QList<MirrorItem *> m_mirrors;
+    RenderGeometry::VertexSnappingMode m_vertexSnappingMode = RenderGeometry::VertexSnappingMode::Round;
 
     friend class Scene;
 };

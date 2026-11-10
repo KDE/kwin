@@ -571,7 +571,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         blurShape.translate(data.xTranslation(), data.yTranslation());
     }
 
-    for (Item *item = w->windowItem()->effectContainer(); item; item = item->parentItem()) {
+    for (Item *item = w->windowItem()->transformContainer(); item; item = item->parentItem()) {
         if (!item->transform().isIdentity()) {
             QList<RectF> rects;
             for (const RectF &rect : blurShape.rects()) {
@@ -588,7 +588,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
     const Rect deviceBackgroundRect = viewport.mapToDeviceCoordinates(backgroundRect).rounded();
 
     double opacity = data.opacity();
-    for (Item *item = w->windowItem()->effectContainer(); item; item = item->parentItem()) {
+    for (Item *item = w->windowItem()->transformContainer(); item; item = item->parentItem()) {
         opacity *= item->opacity();
     }
     if (opacity == 0) {
@@ -596,7 +596,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
     }
 
     Region effectiveDeviceRegion = deviceRegion;
-    for (Item *item = w->windowItem()->effectContainer(); item; item = item->parentItem()) {
+    for (Item *item = w->windowItem()->transformContainer(); item; item = item->parentItem()) {
         if (auto clip = item->globalClipRect()) {
             effectiveDeviceRegion &= m_currentView->mapToDeviceCoordinates(*clip).rounded();
         }

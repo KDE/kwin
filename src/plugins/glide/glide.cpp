@@ -40,6 +40,9 @@ static const QSet<QString> s_blacklist{
 };
 
 GlideEffect::GlideEffect()
+    : OffscreenEffect([this](EffectWindow *w, Item *item, WindowQuadList &quads) {
+        apply(w, item, quads);
+    })
 {
     GlideConfig::instance(effects->config());
     reconfigure(ReconfigureAll);
@@ -84,7 +87,7 @@ void GlideEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePai
     effects->prePaintWindow(view, w, data);
 }
 
-void GlideEffect::apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads)
+void GlideEffect::apply(EffectWindow *window, Item *item, WindowQuadList &quads)
 {
     auto animationIt = m_animations.find(window);
     if (animationIt == m_animations.end()) {
@@ -152,7 +155,7 @@ void GlideEffect::apply(EffectWindow *window, int mask, WindowPaintData &data, W
         }
     }
 
-    data.multiplyOpacity(interpolate(params.opacity.from, params.opacity.to, t));
+    item->setOpacity(interpolate(params.opacity.from, params.opacity.to, t));
 }
 
 void GlideEffect::postPaintScreen()

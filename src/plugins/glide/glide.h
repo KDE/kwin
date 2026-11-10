@@ -74,15 +74,13 @@ public:
     qreal outOpacity() const;
     bool blocksDirectScanout() const override;
 
-protected:
-    void apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads) override;
-
 private Q_SLOTS:
     void windowAdded(KWin::EffectWindow *w);
     void windowClosed(KWin::EffectWindow *w);
     void windowDataChanged(KWin::EffectWindow *w, int role);
 
 private:
+    void apply(EffectWindow *window, Item *item, WindowQuadList &quads);
     bool isGlideWindow(EffectWindow *w) const;
 
     std::chrono::milliseconds m_duration;

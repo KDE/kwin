@@ -26,7 +26,7 @@ public:
     ~TransformItem() override;
 
 private:
-    void updateZ();
+    // void updateZ();
 };
 
 }

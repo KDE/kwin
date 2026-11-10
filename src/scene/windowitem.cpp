@@ -26,7 +26,9 @@ namespace KWin
 
 WindowItem::WindowItem(Window *window, Item *parent)
     : Item(parent)
-    , m_effectContainer(std::make_unique<Item>(this))
+    , m_transformContainer(std::make_unique<Item>(this))
+    , m_geometryContainer(std::make_unique<Item>(m_transformContainer.get()))
+    , m_effectContainer(std::make_unique<Item>(m_geometryContainer.get()))
     , m_windowContainer(std::make_unique<Item>(m_effectContainer.get()))
     , m_window(window)
 {
@@ -100,6 +102,16 @@ EffectWindow *WindowItem::effectWindow() const
 Item *WindowItem::windowContainer() const
 {
     return m_windowContainer.get();
+}
+
+Item *WindowItem::geometryContainer() const
+{
+    return m_geometryContainer.get();
+}
+
+Item *WindowItem::transformContainer() const
+{
+    return m_transformContainer.get();
 }
 
 Item *WindowItem::effectContainer() const

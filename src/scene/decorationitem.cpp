@@ -283,7 +283,7 @@ Window *DecorationItem::window() const
     return m_window;
 }
 
-WindowQuadList DecorationItem::buildQuads(ItemRenderer *renderer) const
+WindowQuadList DecorationItem::buildQuads(ItemRenderer *renderer)
 {
     if (m_window->frameMargins().isNull()) {
         return WindowQuadList();

@@ -42,9 +42,6 @@ public:
 
     static bool supported();
 
-protected:
-    void apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads) override;
-
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
@@ -52,6 +49,8 @@ public Q_SLOTS:
     void slotWindowUnminimized(KWin::EffectWindow *w);
 
 private:
+    void apply(EffectWindow *window, Item *item, WindowQuadList &quads);
+
     std::chrono::milliseconds m_duration;
     QHash<EffectWindow *, MagicLampAnimation> m_animations;
 

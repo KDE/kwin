@@ -49,14 +49,13 @@ public:
 
     static bool supported();
 
-protected:
-    void apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads) override;
-
 public Q_SLOTS:
     void slotWindowClosed(KWin::EffectWindow *c);
     void slotWindowDataChanged(KWin::EffectWindow *w, int role);
 
 private:
+    void apply(EffectWindow *window, Item *item, WindowQuadList &quads);
+
     QHash<EffectWindow *, FallApartAnimation> windows;
     bool isRealWindow(EffectWindow *w);
     int blockSize;

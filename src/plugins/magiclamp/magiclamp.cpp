@@ -20,6 +20,9 @@ namespace KWin
 {
 
 MagicLampEffect::MagicLampEffect()
+    : OffscreenEffect([this](EffectWindow *w, Item *item, WindowQuadList &quads) {
+        apply(w, item, quads);
+    })
 {
     MagicLampConfig::instance(effects->config());
     reconfigure(ReconfigureAll);
@@ -73,7 +76,7 @@ void MagicLampEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPr
     effects->prePaintWindow(view, w, data);
 }
 
-void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads)
+void MagicLampEffect::apply(EffectWindow *w, Item *item, WindowQuadList &quads)
 {
     auto animationIt = m_animations.constFind(w);
     if (animationIt != m_animations.constEnd()) {

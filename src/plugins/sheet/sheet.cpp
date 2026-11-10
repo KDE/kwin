@@ -17,6 +17,7 @@
 
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
+#include "scene/item.h"
 
 // Qt
 #include <QMatrix4x4>
@@ -28,6 +29,9 @@ namespace KWin
 {
 
 SheetEffect::SheetEffect()
+    : OffscreenEffect([this](EffectWindow *w, Item *item, WindowQuadList &quads) {
+        apply(w, item, quads);
+    })
 {
     SheetConfig::instance(effects->config());
     reconfigure(ReconfigureAll);
@@ -57,7 +61,7 @@ void SheetEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePai
     effects->prePaintWindow(view, w, data);
 }
 
-void SheetEffect::apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads)
+void SheetEffect::apply(EffectWindow *window, Item *item, WindowQuadList &quads)
 {
     auto animationIt = m_animations.constFind(window);
     if (animationIt == m_animations.constEnd()) {
@@ -101,7 +105,7 @@ void SheetEffect::apply(EffectWindow *window, int mask, WindowPaintData &data, W
         }
     }
 
-    data.multiplyOpacity(t);
+    item->setOpacity(t);
 }
 
 void SheetEffect::postPaintScreen()

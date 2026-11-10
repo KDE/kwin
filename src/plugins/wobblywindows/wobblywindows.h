@@ -44,7 +44,6 @@ public:
 
     void reconfigure(ReconfigureFlags) override;
     void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data) override;
-    void postPaintScreen() override;
     bool isActive() const override;
 
     int requestedEffectChainPosition() const override
@@ -89,9 +88,6 @@ public:
     bool isMoveWobble() const;
     bool isResizeWobble() const;
 
-protected:
-    void apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads) override;
-
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowStartUserMovedResized(KWin::EffectWindow *w);
@@ -101,6 +97,7 @@ public Q_SLOTS:
 private:
     void startMovedResized(EffectWindow *w);
     bool updateWindowWobblyDatas(EffectWindow *w, qreal time);
+    void apply(EffectWindow *window, Item *item, WindowQuadList &quads);
 
     struct WindowWobblyInfos
     {
@@ -134,8 +131,6 @@ private:
     };
 
     QHash<const EffectWindow *, WindowWobblyInfos> windows;
-
-    Region m_updateRegion;
 
     qreal m_stiffness;
     qreal m_drag;

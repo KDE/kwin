@@ -16,6 +16,7 @@ namespace KWin
 {
 
 class RenderDevice;
+class GLShader;
 
 class KWIN_EXPORT ItemRendererOpenGL : public ItemRenderer
 {
@@ -41,6 +42,7 @@ public:
         bool hasFloatingPointColor = false;
         std::optional<RectF> layerDebugBox;
         Rect clipRect;
+        GLShader *customShader = nullptr;
     };
 
     struct RenderCorner

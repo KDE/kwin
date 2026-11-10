@@ -54,8 +54,25 @@ public:
     ShadowItem *shadowItem() const;
     Window *window() const;
     EffectWindow *effectWindow() const;
-    Item *windowContainer() const;
+    /**
+     * A container item that transforms can be stacked on top of.
+     * This contains the geometry container.
+     */
+    Item *transformContainer() const;
+    /**
+     * A container item that geometry-modify effects can be stacked on top of.
+     * This contains the effect container.
+     */
+    Item *geometryContainer() const;
+    /**
+     * A container item that effects can be stacked on top of.
+     * This contains the window container and shadow.
+     */
     Item *effectContainer() const;
+    /**
+     * Contains the window without shadows.
+     */
+    Item *windowContainer() const;
 
     void refVisible(int reason);
     void unrefVisible(int reason);
@@ -67,6 +84,8 @@ protected:
     explicit WindowItem(Window *window, Item *parent = nullptr);
     void updateSurfaceItem(std::unique_ptr<SurfaceItem> &&surfaceItem);
 
+    const std::unique_ptr<Item> m_transformContainer;
+    const std::unique_ptr<Item> m_geometryContainer;
     const std::unique_ptr<Item> m_effectContainer;
     const std::unique_ptr<Item> m_windowContainer;
 

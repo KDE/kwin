@@ -16,6 +16,7 @@
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"
 #include "scene/mirroritem.h"
+#include "scene/offscreeneffectitem.h"
 #include "scene/opengl/atlas.h"
 #include "scene/opengl/ninepatch.h"
 #include "scene/opengl/texture.h"
@@ -118,20 +119,6 @@ void ItemRendererOpenGL::setBlendEnabled(bool enabled)
     m_blendingEnabled = enabled;
 }
 
-static RenderGeometry createGeometry(ItemRenderer *renderer, const Item *item, const ItemRendererOpenGL::RenderContext *context)
-{
-    const WindowQuadList quads = item->quads(renderer);
-
-    RenderGeometry geometry;
-    geometry.reserve(quads.count() * 6);
-
-    for (const WindowQuad &quad : std::as_const(quads)) {
-        geometry.appendWindowQuad(quad, context->renderTargetScale);
-    }
-
-    return geometry;
-}
-
 bool ItemRendererOpenGL::maybeCreateSingleRenderNode(Item *item, RenderContext *context, bool hole, const Rect &deviceClip)
 {
     const Rect deviceBounds = RectF(context->transformStack.top().mapRect(item->rect().scaled(context->renderTargetScale)))
@@ -154,7 +141,7 @@ bool ItemRendererOpenGL::maybeCreateSingleRenderNode(Item *item, RenderContext *
         return false;
     }
 
-    RenderGeometry geometry = createGeometry(this, toRender, context);
+    RenderGeometry geometry = toRender->geometry(this, context->renderTargetScale);
 
     if (auto shadowItem = qobject_cast<ShadowItem *>(toRender)) {
         if (!geometry.isEmpty()) {
@@ -280,6 +267,27 @@ bool ItemRendererOpenGL::maybeCreateSingleRenderNode(Item *item, RenderContext *
                 .paintHole = hole,
                 .clipRect = deviceClip,
             });
+        }
+    } else if (auto snapshot = qobject_cast<SnapshotItem *>(toRender)) {
+        auto texture = static_cast<TextureOpenGL *>(snapshot->texture(m_renderDevice));
+        if (texture && texture->texture() && !geometry.isEmpty()) {
+            RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
+                .traits = ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation | ShaderTrait::TransformColorspace,
+                .texture = texture->texture(),
+                .geometry = std::move(geometry),
+                .transformMatrix = context->transformStack.top(),
+                .opacity = context->opacityStack.top(),
+                .hasAlpha = true,
+                .colorDescription = toRender->colorDescription(),
+                .renderingIntent = toRender->renderingIntent(),
+                .bufferReleasePoint = texture->releasePoint(),
+                .paintHole = hole,
+                .hasFloatingPointColor = texture->isFloatingPoint(),
+                .layerDebugBox = m_debug.layerEnabled ? std::optional(toRender->rect()) : std::nullopt,
+                .clipRect = deviceClip,
+                .customShader = snapshot->shader(),
+            });
+            renderNode.geometry.postProcessTextureCoordinates(texture->texture()->matrix(UnnormalizedCoordinates));
         }
     }
     return true;
@@ -455,6 +463,7 @@ bool ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
     ShaderTraits lastTraits;
     GLShader *shader = nullptr;
+    GLShader *customShader = nullptr;
     for (int i = 0; i < renderContext.renderNodes.count(); i++) {
         const RenderNode &renderNode = renderContext.renderNodes[i];
 
@@ -485,12 +494,18 @@ bool ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0);
         }
 
-        if (!shader || traits != lastTraits) {
+        if (!shader || traits != lastTraits || renderNode.customShader != customShader) {
             lastTraits = traits;
             if (shader) {
                 ShaderManager::instance()->popShader();
             }
-            shader = ShaderManager::instance()->pushShader(traits);
+            customShader = renderNode.customShader;
+            if (customShader) {
+                ShaderManager::instance()->pushShader(customShader);
+                shader = customShader;
+            } else {
+                shader = ShaderManager::instance()->pushShader(traits);
+            }
             if (!shader) {
                 continue;
             }

@@ -78,7 +78,7 @@ protected:
     Region damage(RenderDevice *device) const;
 
     void preprocess(ItemRenderer *renderer) override;
-    WindowQuadList buildQuads(ItemRenderer *renderer) const override;
+    WindowQuadList buildQuads(ItemRenderer *renderer) override;
     void releaseResources(RenderDevice *device) override;
 
     OutputTransform m_bufferToSurfaceTransform;

@@ -9,6 +9,8 @@
 
 #include "fallapart.h"
 #include "effect/effecthandler.h"
+#include "scene/item.h"
+
 // KConfigSkeleton
 #include "fallapartconfig.h"
 
@@ -29,6 +31,9 @@ bool FallApartEffect::supported()
 }
 
 FallApartEffect::FallApartEffect()
+    : OffscreenEffect([this](EffectWindow *w, Item *item, WindowQuadList &quads) {
+        apply(w, item, quads);
+    })
 {
     FallApartConfig::instance(effects->config());
     reconfigure(ReconfigureAll);
@@ -61,7 +66,7 @@ void FallApartEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPr
     effects->prePaintWindow(view, w, data);
 }
 
-void FallApartEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads)
+void FallApartEffect::apply(EffectWindow *w, Item *item, WindowQuadList &quads)
 {
     auto animationIt = windows.constFind(w);
     if (animationIt != windows.constEnd() && isRealWindow(w)) {
@@ -115,7 +120,7 @@ void FallApartEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
             }
             ++cnt;
         }
-        data.multiplyOpacity(interpolate(1.0, 0.0, t));
+        item->setOpacity(interpolate(1.0, 0.0, t));
     }
 }
 

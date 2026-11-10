@@ -11,7 +11,7 @@ namespace KWin
 {
 
 TransformItem::TransformItem(EffectWindow *toTransform)
-    : TransformItem(toTransform->windowItem()->effectContainer())
+    : TransformItem(toTransform->windowItem()->transformContainer())
 {
 }
 
@@ -19,25 +19,25 @@ TransformItem::TransformItem(Item *toTransform)
     : Item(toTransform->parentItem())
 {
     toTransform->setParentItem(this);
-    updateZ();
-    connect(toTransform, &Item::zChanged, this, &TransformItem::updateZ);
+    // updateZ();
+    // connect(toTransform, &Item::zChanged, this, &TransformItem::updateZ);
 }
 
 TransformItem::~TransformItem()
 {
     const auto children = childItems();
-    if (!children.isEmpty()) {
-        children.front()->setParentItem(parentItem());
+    for (Item *item : children) {
+        item->setParentItem(parentItem());
     }
 }
 
-void TransformItem::updateZ()
-{
-    const auto children = childItems();
-    if (!children.isEmpty()) {
-        setZ(children.front()->z());
-    }
-}
+// void TransformItem::updateZ()
+// {
+//     const auto children = childItems();
+//     if (!children.isEmpty()) {
+//         setZ(children.front()->z());
+//     }
+// }
 
 }
 

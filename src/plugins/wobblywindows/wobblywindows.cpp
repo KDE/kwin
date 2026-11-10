@@ -9,6 +9,7 @@
 
 #include "wobblywindows.h"
 #include "effect/effecthandler.h"
+#include "scene/item.h"
 #include "wobblywindowsconfig.h"
 
 #include <cmath>
@@ -135,6 +136,9 @@ static const ParameterSet nitroglycerin = {
 static const std::array pset = {cloth, gelatin, water, pudding, molasses, nitroglycerin};
 
 WobblyWindowsEffect::WobblyWindowsEffect()
+    : OffscreenEffect([this](EffectWindow *w, Item *item, WindowQuadList &quads) {
+        apply(w, item, quads);
+    })
 {
     WobblyWindowsConfig::instance(effects->config());
     reconfigure(ReconfigureAll);
@@ -265,11 +269,12 @@ void WobblyWindowsEffect::prePaintWindow(RenderView *view, EffectWindow *w, Wind
     effects->prePaintWindow(view, w, data);
 }
 
-void WobblyWindowsEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads)
+void WobblyWindowsEffect::apply(EffectWindow *w, Item *item, WindowQuadList &quads)
 {
     if (windows.contains(w)) {
         WindowWobblyInfos &wwi = windows[w];
         if (!wwi.wobblying) {
+            qWarning() << "no wobble";
             return;
         }
 
@@ -295,26 +300,18 @@ void WobblyWindowsEffect::apply(EffectWindow *w, int mask, WindowPaintData &data
             right = std::max(right, quads[i].right());
             bottom = std::max(bottom, quads[i].bottom());
         }
-        RectF dirtyRect(
-            left * data.xScale() + w->x() + data.xTranslation(),
-            top * data.yScale() + w->y() + data.yTranslation(),
-            (right - left + 1.0) * data.xScale(),
-            (bottom - top + 1.0) * data.yScale());
+        RectF dirtyRect{
+            left,
+            top,
+            right - left + 1.0,
+            bottom - top + 1.0,
+        };
         // Expand the dirty region by 1px to fix potential round/floor issues.
         dirtyRect.adjust(-1.0, -1.0, 1.0, 1.0);
-        m_updateRegion = m_updateRegion.united(dirtyRect.toAlignedRect());
+        item->scheduleRepaint(dirtyRect);
+        // item->scheduleRepaint(RegionF::infinite());
+        qWarning() << "yes?";
     }
-}
-
-void WobblyWindowsEffect::postPaintScreen()
-{
-    if (!m_updateRegion.isEmpty()) {
-        effects->addRepaint(m_updateRegion);
-        m_updateRegion = Region();
-    }
-
-    // Call the next effect.
-    effects->postPaintScreen();
 }
 
 void WobblyWindowsEffect::slotWindowAdded(EffectWindow *w)

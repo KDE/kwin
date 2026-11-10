@@ -184,6 +184,7 @@ target_sources(kwin PRIVATE
     scene/itemrenderer_opengl.cpp
     scene/mirroritem.cpp
     scene/ninepatch.cpp
+    scene/offscreeneffectitem.cpp
     scene/opengl/atlas.cpp
     scene/opengl/ninepatch.cpp
     scene/opengl/texture.cpp
@@ -676,6 +677,7 @@ install(FILES
     scene/itemrenderer_opengl.h
     scene/mirroritem.h
     scene/ninepatch.h
+    scene/offscreeneffectitem.h
     scene/opengl/atlas.h
     scene/opengl/ninepatch.h
     scene/opengl/texture.h

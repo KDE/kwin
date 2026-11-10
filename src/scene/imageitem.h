@@ -31,7 +31,7 @@ public:
 
 protected:
     void preprocess(ItemRenderer *renderer) override;
-    WindowQuadList buildQuads(ItemRenderer *renderer) const override;
+    WindowQuadList buildQuads(ItemRenderer *renderer) override;
     void releaseResources(RenderDevice *device) override;
 
     QImage m_image;

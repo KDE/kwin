@@ -39,9 +39,6 @@ public:
 
     int duration() const;
 
-protected:
-    void apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads) override;
-
 private Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowClosed(KWin::EffectWindow *w);
@@ -49,6 +46,7 @@ private Q_SLOTS:
 private:
     bool isSheetWindow(EffectWindow *w) const;
     EffectWindow *findClosestParentWindow(EffectWindow *w) const;
+    void apply(EffectWindow *window, Item *item, WindowQuadList &quads);
 
 private:
     std::chrono::milliseconds m_duration;

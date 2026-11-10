@@ -56,7 +56,7 @@ void ImageItem::preprocess(ItemRenderer *renderer)
     }
 }
 
-WindowQuadList ImageItem::buildQuads(ItemRenderer *renderer) const
+WindowQuadList ImageItem::buildQuads(ItemRenderer *renderer)
 {
     const RectF geometry = boundingRect();
     if (geometry.isEmpty()) {
