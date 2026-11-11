@@ -104,7 +104,7 @@ FocusScope {
 
     TileDelegate {
         tile: rootTile
-        visible: tilesRepeater.count === 0 || tile.layoutDirection === KWinComponents.Tile.Floating
+        visible: tilesRepeater.count === 0
     }
 
     Item {

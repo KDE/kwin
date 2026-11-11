@@ -16,8 +16,7 @@ Rectangle {
 
     required property int edge
     readonly property int orientation: edge === Qt.LeftEdge || edge === Qt.RightEdge ? Qt.Horizontal : Qt.Vertical
-    readonly property bool valid: tile !== null && tile.parent !== null && (tile.layoutDirection === KWinComponents.Tile.Floating
-        || (orientation === Qt.Horizontal && tile.parent.layoutDirection === KWinComponents.Tile.Horizontal)
+    readonly property bool valid: tile !== null && tile.parent !== null && ((orientation === Qt.Horizontal && tile.parent.layoutDirection === KWinComponents.Tile.Horizontal)
         || (orientation === Qt.Vertical && tile.parent.layoutDirection === KWinComponents.Tile.Vertical))
 
     z: 2

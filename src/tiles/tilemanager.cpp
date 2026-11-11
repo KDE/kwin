@@ -184,7 +184,7 @@ Tile::LayoutDirection strToLayoutDirection(const QString &dir)
     } else if (dir == QLatin1StringView("vertical")) {
         return Tile::LayoutDirection::Vertical;
     } else {
-        return Tile::LayoutDirection::Floating;
+        return Tile::LayoutDirection::Horizontal;
     }
 }
 
@@ -217,17 +217,6 @@ CustomTile *TileManager::parseTilingJSon(const QJsonValue &val, const RectF &ava
             if (!rect.isEmpty()) {
                 createdTile = parentTile->createChildAt(rect, parentTile->layoutDirection(), parentTile->childCount());
             }
-
-        } else if (parentTile->layoutDirection() == Tile::LayoutDirection::Floating) {
-            RectF rect(0, 0, 1, 1);
-            rect = RectF(obj.value(QStringLiteral("x")).toDouble(),
-                         obj.value(QStringLiteral("y")).toDouble(),
-                         obj.value(QStringLiteral("width")).toDouble(),
-                         obj.value(QStringLiteral("height")).toDouble());
-
-            if (!rect.isEmpty()) {
-                createdTile = parentTile->createChildAt(rect, parentTile->layoutDirection(), parentTile->childCount());
-            }
         }
 
         if (createdTile && obj.contains(QStringLiteral("tiles"))) {
@@ -256,8 +245,7 @@ CustomTile *TileManager::parseTilingJSon(const QJsonValue &val, const RectF &ava
             }
         }
         // make sure the children fill exactly the parent, eventually enlarging the last
-        if (parentTile->layoutDirection() != Tile::LayoutDirection::Floating
-            && parentTile->childCount() > 0) {
+        if (parentTile->childCount() > 0) {
             auto *last = parentTile->childTile(parentTile->childCount() - 1);
             auto geom = last->relativeGeometry();
             geom.setRight(parentTile->relativeGeometry().right());
@@ -348,7 +336,6 @@ QJsonObject TileManager::tileToJSon(CustomTile *tile)
         case Tile::LayoutDirection::Vertical:
             obj[QStringLiteral("height")] = tile->relativeGeometry().height();
             break;
-        case Tile::LayoutDirection::Floating:
         default:
             obj[QStringLiteral("x")] = tile->relativeGeometry().x();
             obj[QStringLiteral("y")] = tile->relativeGeometry().y();
@@ -365,9 +352,6 @@ QJsonObject TileManager::tileToJSon(CustomTile *tile)
         case Tile::LayoutDirection::Vertical:
             obj[QStringLiteral("layoutDirection")] = QStringLiteral("vertical");
             break;
-        case Tile::LayoutDirection::Floating:
-        default:
-            obj[QStringLiteral("layoutDirection")] = QStringLiteral("floating");
         }
 
         QJsonArray tiles;

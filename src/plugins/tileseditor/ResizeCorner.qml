@@ -27,8 +27,7 @@ Rectangle {
     color: Kirigami.Theme.highlightColor
     opacity: hoverHandler.hovered || dragHandler.active ? 0.4 : 0
     visible: tile &&
-        (tile.layoutDirection === KWinComponents.Tile.Floating ||
-         (corner === Qt.TopLeftCorner || corner === Qt.BottomLeftCorner ? tile.relativeGeometry.x > 0 : true) &&
+        ((corner === Qt.TopLeftCorner || corner === Qt.BottomLeftCorner ? tile.relativeGeometry.x > 0 : true) &&
          (corner === Qt.TopLeftCorner || corner === Qt.TopRightCorner ? tile.relativeGeometry.y > 0 : true) &&
          (corner === Qt.TopRightCorner || corner === Qt.BottomRightCorner ? tile.relativeGeometry.x +  tile.relativeGeometry.width < 1 : true) &&
          (corner === Qt.BottomLeftCorner || corner === Qt.BottomRightCorner ? tile.relativeGeometry.y + tile.relativeGeometry.height < 1 : true))
