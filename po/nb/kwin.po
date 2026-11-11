@@ -693,7 +693,7 @@ msgstr "Kniping avbrutt"
 #, kde-format
 msgctxt "A hardware switch (e.g. notebook lid) got toggled"
 msgid "Switch toggled"
-msgstr "Bryter slått av/på"
+msgstr "Bryter slått på/av"
 
 #: debug_console.cpp:515
 #, kde-format
@@ -2093,12 +2093,12 @@ msgstr "Skjul pekeren ved skriving"
 #: plugins/invert/invert.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect"
-msgstr "Slå av/på omsnuingseffekt"
+msgstr "Slå på/av omsnuingseffekt"
 
 #: plugins/invert/invert.cpp:51
 #, kde-format
 msgid "Toggle Invert Effect on Window"
-msgstr "Slå av/på omsnuingseffekt på vindu"
+msgstr "Slå på/av omsnuingseffekt på vindu"
 
 #: plugins/invert/invert.cpp:57
 #, kde-format
@@ -2284,7 +2284,7 @@ msgstr "Maksimer/gjenopprett vinduet på %1"
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:307
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
-msgstr "Slå av/på fullskjerm for vinduet på %1"
+msgstr "Slå på/av fullskjerm for vinduet på %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:310
 #, kde-format
@@ -2294,12 +2294,12 @@ msgstr "Rull opp/ned vinduet på %1"
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:313
 #, kde-format
 msgid "Toggle keep above for running window on %1"
-msgstr "Slå av/på hold vinduet over, vinduet %1"
+msgstr "Slå på/av hold vinduet over, vinduet %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:316
 #, kde-format
 msgid "Toggle keep below running window on %1"
-msgstr "Slå av/på hold vinduet under, vinduet %1"
+msgstr "Slå på/av hold vinduet under, vinduet %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:320
 #, kde-format
@@ -2323,7 +2323,7 @@ msgstr "Standard"
 #: plugins/mouseclick/mouseclick_config.cpp:43
 #, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "Slå av/på animasjon ved museklikk"
+msgstr "Slå på/av animasjon ved museklikk"
 
 #: plugins/mouseclick/mouseclick.cpp:46
 #, kde-format
@@ -2551,7 +2551,7 @@ msgstr "Kveldsfarger slått på"
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr "Kveldsfarger av/på"
+msgstr "Kveldsfarger på/av"
 
 #: plugins/nightlight/nightlightmanager.cpp:393
 #, kde-format
@@ -2597,13 +2597,13 @@ msgstr "Bla gjennom rutenett- og oversiktsvisning"
 #, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
-msgstr "Slå av/på oversikt"
+msgstr "Slå på/av oversikt"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:55
 #, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "Slå av/på rutenettvisning"
+msgstr "Slå på/av rutenettvisning"
 
 #. i18n: ectx: property (text), widget (QLabel, label_IgnoreMinimized)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
@@ -2657,13 +2657,13 @@ msgstr "Bla gjennom oversikts- og rutenettvisning"
 #, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
-msgstr "Slå av/på oversiktsvisning"
+msgstr "Slå på/av oversiktsvisning"
 
 #: plugins/overview/overvieweffect.cpp:158
 #, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "Slå av/på rutenettvisning"
+msgstr "Slå på/av rutenettvisning"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
@@ -2839,7 +2839,7 @@ msgstr ""
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:51
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
-msgstr "Slå av/på miniatyrbilde for gjeldende vindu"
+msgstr "Slå på/av miniatyrbilde for gjeldende vindu"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:23

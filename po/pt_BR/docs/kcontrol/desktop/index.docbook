@@ -99,11 +99,11 @@
 <varlistentry>
 <term
 ><guilabel
->Mostrar visualização na tela ao alternar</guilabel
+>Mostrar indicador na tela ao alternar</guilabel
 ></term>
 <listitem
 ><para
->Ative esta opção se quiser ter uma visualização da tela para a mudança de ambientes. </para
+>Ative esta opção se quiser ter um indicador da tela para a mudança de ambientes. </para
 ></listitem>
 </varlistentry>
 
