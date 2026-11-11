@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:59+0000\n"
+"POT-Creation-Date: 2026-11-11 01:04+0000\n"
 "PO-Revision-Date: 2026-11-03 15:54+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -1516,7 +1516,6 @@ msgstr ""
 
 #: main.cpp:178 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
-#: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
@@ -2589,49 +2588,6 @@ msgstr "Aggiungi desktop virtuale"
 msgid "Virtual Desktop limit reached"
 msgstr "Limite di desktop virtuali raggiunto"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:40
-#, kde-format
-msgctxt "@action Overview and Grid View are the name of KWin effects"
-msgid "Cycle through Overview and Grid View"
-msgstr "Passa dalla panoramica alla griglia"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:45
-#: plugins/overview/overvieweffect.cpp:145
-#, kde-format
-msgctxt "@action Grid View and Overview are the name of KWin effects"
-msgid "Cycle through Grid View and Overview"
-msgstr "Passa dalla griglia alla panoramica"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:50
-#, kde-format
-msgctxt "@action Overview is the name of a KWin effect"
-msgid "Toggle Overview"
-msgstr "Attiva/disattiva la panoramica"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, kde-format
-msgctxt "@action Grid View is the name of a KWin effect"
-msgid "Toggle Grid View"
-msgstr "Attiva/disattiva la griglia"
-
-#. i18n: ectx: property (text), widget (QLabel, label_IgnoreMinimized)
-#: plugins/overview/kcm/overvieweffectkcm.ui:22
-#, kde-format
-msgid "Ignore minimized windows:"
-msgstr "Ignora le finestre minimizzate:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_OrganizedGrid)
-#: plugins/overview/kcm/overvieweffectkcm.ui:36
-#, kde-format
-msgid "Organize windows in the Grid View:"
-msgstr "Organizza le finestre come nella griglia:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
-#: plugins/overview/kcm/overvieweffectkcm.ui:50
-#, kde-format
-msgid "Search results include filtered windows:"
-msgstr "I risultati della ricerca includono le finestre filtrate:"
-
 #: plugins/overview/Main.qml:428
 #, kde-format
 msgctxt "@info:placeholder"
@@ -2661,6 +2617,12 @@ msgstr "Nessuna finestra corrispondente"
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr "Passa dalla panoramica alla griglia"
+
+#: plugins/overview/overvieweffect.cpp:145
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
+msgstr "Passa dalla griglia alla panoramica"
 
 #: plugins/overview/overvieweffect.cpp:152
 #, kde-format
@@ -2737,7 +2699,7 @@ msgstr "Impossibile trovare l'uscita"
 msgid "Invalid region"
 msgstr "Regione non valida"
 
-#: plugins/screencast/screencaststream.cpp:404
+#: plugins/screencast/screencaststream.cpp:435
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Impossibile creare il flusso PipeWire"
@@ -4527,6 +4489,27 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland è stato terminato in modo inatteso"
+
+#~ msgctxt "@action Overview and Grid View are the name of KWin effects"
+#~ msgid "Cycle through Overview and Grid View"
+#~ msgstr "Passa dalla panoramica alla griglia"
+
+#~ msgctxt "@action Overview is the name of a KWin effect"
+#~ msgid "Toggle Overview"
+#~ msgstr "Attiva/disattiva la panoramica"
+
+#~ msgctxt "@action Grid View is the name of a KWin effect"
+#~ msgid "Toggle Grid View"
+#~ msgstr "Attiva/disattiva la griglia"
+
+#~ msgid "Ignore minimized windows:"
+#~ msgstr "Ignora le finestre minimizzate:"
+
+#~ msgid "Organize windows in the Grid View:"
+#~ msgstr "Organizza le finestre come nella griglia:"
+
+#~ msgid "Search results include filtered windows:"
+#~ msgstr "I risultati della ricerca includono le finestre filtrate:"
 
 #~ msgid "OpenGL compositing is required for screencasting"
 #~ msgstr ""

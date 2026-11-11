@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:59+0000\n"
+"POT-Creation-Date: 2026-11-11 01:04+0000\n"
 "PO-Revision-Date: 2026-10-31 12:41+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -1523,7 +1523,6 @@ msgstr ""
 
 #: main.cpp:178 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
-#: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
@@ -2588,49 +2587,6 @@ msgstr "Añadir escritorio virtual"
 msgid "Virtual Desktop limit reached"
 msgstr "Se ha alcanzado el límite de escritorios virtuales"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:40
-#, kde-format
-msgctxt "@action Overview and Grid View are the name of KWin effects"
-msgid "Cycle through Overview and Grid View"
-msgstr "Pasar por la vista general y la vista de cuadrícula"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:45
-#: plugins/overview/overvieweffect.cpp:145
-#, kde-format
-msgctxt "@action Grid View and Overview are the name of KWin effects"
-msgid "Cycle through Grid View and Overview"
-msgstr "Pasar por la vista de cuadrícula y la vista general"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:50
-#, kde-format
-msgctxt "@action Overview is the name of a KWin effect"
-msgid "Toggle Overview"
-msgstr "Conmutar a la vista general"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, kde-format
-msgctxt "@action Grid View is the name of a KWin effect"
-msgid "Toggle Grid View"
-msgstr "Conmutar a la vista de cuadrícula"
-
-#. i18n: ectx: property (text), widget (QLabel, label_IgnoreMinimized)
-#: plugins/overview/kcm/overvieweffectkcm.ui:22
-#, kde-format
-msgid "Ignore minimized windows:"
-msgstr "Ignorar las ventanas minimizadas:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_OrganizedGrid)
-#: plugins/overview/kcm/overvieweffectkcm.ui:36
-#, kde-format
-msgid "Organize windows in the Grid View:"
-msgstr "Organizar ventanas en la vista de cuadrícula:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
-#: plugins/overview/kcm/overvieweffectkcm.ui:50
-#, kde-format
-msgid "Search results include filtered windows:"
-msgstr "El resultado de la búsqueda incluye ventanas filtradas:"
-
 #: plugins/overview/Main.qml:428
 #, kde-format
 msgctxt "@info:placeholder"
@@ -2660,6 +2616,12 @@ msgstr "No hay ventanas coincidentes"
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr "Pasar por la vista general y la vista de cuadrícula"
+
+#: plugins/overview/overvieweffect.cpp:145
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
+msgstr "Pasar por la vista de cuadrícula y la vista general"
 
 #: plugins/overview/overvieweffect.cpp:152
 #, kde-format
@@ -2736,7 +2698,7 @@ msgstr "No se ha encontrado la salida"
 msgid "Invalid region"
 msgstr "Región no válida"
 
-#: plugins/screencast/screencaststream.cpp:404
+#: plugins/screencast/screencaststream.cpp:435
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "No se ha podido crear la emisión de PipeWire"
@@ -4520,3 +4482,24 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ha fallado"
+
+#~ msgctxt "@action Overview and Grid View are the name of KWin effects"
+#~ msgid "Cycle through Overview and Grid View"
+#~ msgstr "Pasar por la vista general y la vista de cuadrícula"
+
+#~ msgctxt "@action Overview is the name of a KWin effect"
+#~ msgid "Toggle Overview"
+#~ msgstr "Conmutar a la vista general"
+
+#~ msgctxt "@action Grid View is the name of a KWin effect"
+#~ msgid "Toggle Grid View"
+#~ msgstr "Conmutar a la vista de cuadrícula"
+
+#~ msgid "Ignore minimized windows:"
+#~ msgstr "Ignorar las ventanas minimizadas:"
+
+#~ msgid "Organize windows in the Grid View:"
+#~ msgstr "Organizar ventanas en la vista de cuadrícula:"
+
+#~ msgid "Search results include filtered windows:"
+#~ msgstr "El resultado de la búsqueda incluye ventanas filtradas:"

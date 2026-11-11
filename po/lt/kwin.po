@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:59+0000\n"
+"POT-Creation-Date: 2026-11-11 01:04+0000\n"
 "PO-Revision-Date: 2026-11-01 23:06+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -1510,7 +1510,6 @@ msgstr ""
 
 #: main.cpp:178 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
-#: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
@@ -2575,49 +2574,6 @@ msgstr "Pridėti virtualų darbalaukį"
 msgid "Virtual Desktop limit reached"
 msgstr "Pasiekta virtualių darbalaukių riba"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:40
-#, kde-format
-msgctxt "@action Overview and Grid View are the name of KWin effects"
-msgid "Cycle through Overview and Grid View"
-msgstr "Perjunginėti tarp apžvalgos ir tinklelio rodinio"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:45
-#: plugins/overview/overvieweffect.cpp:145
-#, kde-format
-msgctxt "@action Grid View and Overview are the name of KWin effects"
-msgid "Cycle through Grid View and Overview"
-msgstr "Perjunginėti tarp tinklelio rodinio ir apžvalgos"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:50
-#, kde-format
-msgctxt "@action Overview is the name of a KWin effect"
-msgid "Toggle Overview"
-msgstr "Perjungti apžvalgą"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, kde-format
-msgctxt "@action Grid View is the name of a KWin effect"
-msgid "Toggle Grid View"
-msgstr "Perjungti tinklelio rodinį"
-
-#. i18n: ectx: property (text), widget (QLabel, label_IgnoreMinimized)
-#: plugins/overview/kcm/overvieweffectkcm.ui:22
-#, kde-format
-msgid "Ignore minimized windows:"
-msgstr "Nepaisyti suskleistų langų:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_OrganizedGrid)
-#: plugins/overview/kcm/overvieweffectkcm.ui:36
-#, kde-format
-msgid "Organize windows in the Grid View:"
-msgstr "Susisteminti langus į tinklelio rodinį:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
-#: plugins/overview/kcm/overvieweffectkcm.ui:50
-#, kde-format
-msgid "Search results include filtered windows:"
-msgstr "Įtraukti filtruotus langus į paieškos rezultatus:"
-
 #: plugins/overview/Main.qml:428
 #, kde-format
 msgctxt "@info:placeholder"
@@ -2647,6 +2603,12 @@ msgstr "Nėra paiešką atitinkančių langų"
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr "Perjunginėti tarp apžvalgos ir tinklelio rodinio"
+
+#: plugins/overview/overvieweffect.cpp:145
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
+msgstr "Perjunginėti tarp tinklelio rodinio ir apžvalgos"
 
 #: plugins/overview/overvieweffect.cpp:152
 #, kde-format
@@ -2723,7 +2685,7 @@ msgstr "Nepavyko rasti išvesties"
 msgid "Invalid region"
 msgstr "Neteisinga sritis"
 
-#: plugins/screencast/screencaststream.cpp:404
+#: plugins/screencast/screencaststream.cpp:435
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Nepavyko sukurti PipeWire srauto"
@@ -4504,6 +4466,27 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland užstrigo"
+
+#~ msgctxt "@action Overview and Grid View are the name of KWin effects"
+#~ msgid "Cycle through Overview and Grid View"
+#~ msgstr "Perjunginėti tarp apžvalgos ir tinklelio rodinio"
+
+#~ msgctxt "@action Overview is the name of a KWin effect"
+#~ msgid "Toggle Overview"
+#~ msgstr "Perjungti apžvalgą"
+
+#~ msgctxt "@action Grid View is the name of a KWin effect"
+#~ msgid "Toggle Grid View"
+#~ msgstr "Perjungti tinklelio rodinį"
+
+#~ msgid "Ignore minimized windows:"
+#~ msgstr "Nepaisyti suskleistų langų:"
+
+#~ msgid "Organize windows in the Grid View:"
+#~ msgstr "Susisteminti langus į tinklelio rodinį:"
+
+#~ msgid "Search results include filtered windows:"
+#~ msgstr "Įtraukti filtruotus langus į paieškos rezultatus:"
 
 #~ msgid "OpenGL compositing is required for screencasting"
 #~ msgstr "Reikia OpenGL komponavimo, kad būtų filmuojamas ekranas"

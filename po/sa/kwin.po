@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:59+0000\n"
+"POT-Creation-Date: 2026-11-11 01:04+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -1555,7 +1555,6 @@ msgstr ""
 
 #: main.cpp:178 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
-#: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
@@ -2601,49 +2600,6 @@ msgstr "वर्चुअल् डेस्कटॉप् योजयन्�
 msgid "Virtual Desktop limit reached"
 msgstr "वर्चुअल् डेस्कटॉप् योजयन्तु"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:40
-#, kde-format
-msgctxt "@action Overview and Grid View are the name of KWin effects"
-msgid "Cycle through Overview and Grid View"
-msgstr "Overview तथा Grid View इत्येतयोः माध्यमेन चक्रं कुर्वन्तु"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:45
-#: plugins/overview/overvieweffect.cpp:145
-#, kde-format
-msgctxt "@action Grid View and Overview are the name of KWin effects"
-msgid "Cycle through Grid View and Overview"
-msgstr "Grid View तथा Overview इत्येतयोः माध्यमेन चक्रं कुर्वन्तु"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:50
-#, kde-format
-msgctxt "@action Overview is the name of a KWin effect"
-msgid "Toggle Overview"
-msgstr "Toggle अवलोकनम्"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, kde-format
-msgctxt "@action Grid View is the name of a KWin effect"
-msgid "Toggle Grid View"
-msgstr "ग्रिड् दृश्यं टॉगल कुर्वन्तु"
-
-#. i18n: ectx: property (text), widget (QLabel, label_IgnoreMinimized)
-#: plugins/overview/kcm/overvieweffectkcm.ui:22
-#, kde-format
-msgid "Ignore minimized windows:"
-msgstr "न्यूनतमविण्डोजस्य अवहेलना कुर्वन्तु :"
-
-#. i18n: ectx: property (text), widget (QLabel, label_OrganizedGrid)
-#: plugins/overview/kcm/overvieweffectkcm.ui:36
-#, kde-format
-msgid "Organize windows in the Grid View:"
-msgstr "Grid View इत्यस्मिन् विण्डोस् व्यवस्थितं कुर्वन्तु:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
-#: plugins/overview/kcm/overvieweffectkcm.ui:50
-#, kde-format
-msgid "Search results include filtered windows:"
-msgstr "अन्वेषणपरिणामेषु फ़िल्टर कृताः विण्डोः सन्ति:"
-
 #: plugins/overview/Main.qml:428
 #, kde-format
 msgctxt "@info:placeholder"
@@ -2673,6 +2629,12 @@ msgstr "न मेलयुक्ताः खिडकयः"
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr "Overview तथा Grid View इत्येतयोः माध्यमेन चक्रं कुर्वन्तु"
+
+#: plugins/overview/overvieweffect.cpp:145
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
+msgstr "Grid View तथा Overview इत्येतयोः माध्यमेन चक्रं कुर्वन्तु"
 
 #: plugins/overview/overvieweffect.cpp:152
 #, kde-format
@@ -2750,7 +2712,7 @@ msgstr "उत्पादनं न प्राप्नोत्"
 msgid "Invalid region"
 msgstr "अमान्यः प्रदेशः"
 
-#: plugins/screencast/screencaststream.cpp:404
+#: plugins/screencast/screencaststream.cpp:435
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire धारा निर्मातुं असफलम्"
@@ -4527,6 +4489,27 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland दुर्घटना अभवत्"
+
+#~ msgctxt "@action Overview and Grid View are the name of KWin effects"
+#~ msgid "Cycle through Overview and Grid View"
+#~ msgstr "Overview तथा Grid View इत्येतयोः माध्यमेन चक्रं कुर्वन्तु"
+
+#~ msgctxt "@action Overview is the name of a KWin effect"
+#~ msgid "Toggle Overview"
+#~ msgstr "Toggle अवलोकनम्"
+
+#~ msgctxt "@action Grid View is the name of a KWin effect"
+#~ msgid "Toggle Grid View"
+#~ msgstr "ग्रिड् दृश्यं टॉगल कुर्वन्तु"
+
+#~ msgid "Ignore minimized windows:"
+#~ msgstr "न्यूनतमविण्डोजस्य अवहेलना कुर्वन्तु :"
+
+#~ msgid "Organize windows in the Grid View:"
+#~ msgstr "Grid View इत्यस्मिन् विण्डोस् व्यवस्थितं कुर्वन्तु:"
+
+#~ msgid "Search results include filtered windows:"
+#~ msgstr "अन्वेषणपरिणामेषु फ़िल्टर कृताः विण्डोः सन्ति:"
 
 #~ msgid "OpenGL compositing is required for screencasting"
 #~ msgstr "स्क्रीनकास्टिंग् कृते OpenGL कम्पोजिटिङ्ग् आवश्यकम् अस्ति"

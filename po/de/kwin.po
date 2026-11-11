@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:59+0000\n"
+"POT-Creation-Date: 2026-11-11 01:04+0000\n"
 "PO-Revision-Date: 2026-09-23 11:02+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -1529,7 +1529,6 @@ msgstr ""
 
 #: main.cpp:178 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
-#: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
@@ -2591,49 +2590,6 @@ msgstr "Virtuelle Arbeitsfläche hinzufügen"
 msgid "Virtual Desktop limit reached"
 msgstr "Grenzwert für virtuelle Arbeitsflächen erreicht"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:40
-#, kde-format
-msgctxt "@action Overview and Grid View are the name of KWin effects"
-msgid "Cycle through Overview and Grid View"
-msgstr "Durch Überblick und Rasteransicht wechseln"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:45
-#: plugins/overview/overvieweffect.cpp:145
-#, kde-format
-msgctxt "@action Grid View and Overview are the name of KWin effects"
-msgid "Cycle through Grid View and Overview"
-msgstr "Durch Rasteransicht und Überblick wechseln"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:50
-#, kde-format
-msgctxt "@action Overview is the name of a KWin effect"
-msgid "Toggle Overview"
-msgstr "Übersicht umschalten"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, kde-format
-msgctxt "@action Grid View is the name of a KWin effect"
-msgid "Toggle Grid View"
-msgstr "Rasteransicht umschalten"
-
-#. i18n: ectx: property (text), widget (QLabel, label_IgnoreMinimized)
-#: plugins/overview/kcm/overvieweffectkcm.ui:22
-#, kde-format
-msgid "Ignore minimized windows:"
-msgstr "Minimierte Fenster ignorieren:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_OrganizedGrid)
-#: plugins/overview/kcm/overvieweffectkcm.ui:36
-#, kde-format
-msgid "Organize windows in the Grid View:"
-msgstr "Fenster in Rasteransicht organisieren:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
-#: plugins/overview/kcm/overvieweffectkcm.ui:50
-#, kde-format
-msgid "Search results include filtered windows:"
-msgstr "Suchergebnisse enthalten gefilterte Fenster:"
-
 #: plugins/overview/Main.qml:428
 #, kde-format
 msgctxt "@info:placeholder"
@@ -2663,6 +2619,12 @@ msgstr "Keine passenden Fenster"
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr "Durch Überblick und Rasteransicht wechseln"
+
+#: plugins/overview/overvieweffect.cpp:145
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
+msgstr "Durch Rasteransicht und Überblick wechseln"
 
 #: plugins/overview/overvieweffect.cpp:152
 #, kde-format
@@ -2739,7 +2701,7 @@ msgstr "Ausgabe kann nicht gefunden werden"
 msgid "Invalid region"
 msgstr "Ungültiger Bereich"
 
-#: plugins/screencast/screencaststream.cpp:404
+#: plugins/screencast/screencaststream.cpp:435
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire-Stream kann nicht erzeugt werden"
@@ -4525,6 +4487,27 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ist abgestürzt"
+
+#~ msgctxt "@action Overview and Grid View are the name of KWin effects"
+#~ msgid "Cycle through Overview and Grid View"
+#~ msgstr "Durch Überblick und Rasteransicht wechseln"
+
+#~ msgctxt "@action Overview is the name of a KWin effect"
+#~ msgid "Toggle Overview"
+#~ msgstr "Übersicht umschalten"
+
+#~ msgctxt "@action Grid View is the name of a KWin effect"
+#~ msgid "Toggle Grid View"
+#~ msgstr "Rasteransicht umschalten"
+
+#~ msgid "Ignore minimized windows:"
+#~ msgstr "Minimierte Fenster ignorieren:"
+
+#~ msgid "Organize windows in the Grid View:"
+#~ msgstr "Fenster in Rasteransicht organisieren:"
+
+#~ msgid "Search results include filtered windows:"
+#~ msgstr "Suchergebnisse enthalten gefilterte Fenster:"
 
 #~ msgid "OpenGL compositing is required for screencasting"
 #~ msgstr "Für Bildschirmaufnahmen wird OpenGL-Compositing benötigt"

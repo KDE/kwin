@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:59+0000\n"
+"POT-Creation-Date: 2026-11-11 01:04+0000\n"
 "PO-Revision-Date: 2026-11-02 01:40+0100\n"
 "Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -1514,7 +1514,6 @@ msgstr ""
 
 #: main.cpp:178 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
-#: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
@@ -2574,49 +2573,6 @@ msgstr "Přidat virtuální plochu"
 msgid "Virtual Desktop limit reached"
 msgstr "Dosaženo limitu virtuálních ploch"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:40
-#, kde-format
-msgctxt "@action Overview and Grid View are the name of KWin effects"
-msgid "Cycle through Overview and Grid View"
-msgstr "Přepínání mezi přehledovým zobrazením a zobrazením mřížky"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:45
-#: plugins/overview/overvieweffect.cpp:145
-#, kde-format
-msgctxt "@action Grid View and Overview are the name of KWin effects"
-msgid "Cycle through Grid View and Overview"
-msgstr "Přepínání mezi zobrazením mřížky a přehledovým zobrazením"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:50
-#, kde-format
-msgctxt "@action Overview is the name of a KWin effect"
-msgid "Toggle Overview"
-msgstr "Přepnout přehledové zobrazení"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, kde-format
-msgctxt "@action Grid View is the name of a KWin effect"
-msgid "Toggle Grid View"
-msgstr "Přepnout zobrazení mřížky"
-
-#. i18n: ectx: property (text), widget (QLabel, label_IgnoreMinimized)
-#: plugins/overview/kcm/overvieweffectkcm.ui:22
-#, kde-format
-msgid "Ignore minimized windows:"
-msgstr "Ignorovat minimalizovaná okna:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_OrganizedGrid)
-#: plugins/overview/kcm/overvieweffectkcm.ui:36
-#, kde-format
-msgid "Organize windows in the Grid View:"
-msgstr "Uspořádání oken v zobrazení mřížky:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
-#: plugins/overview/kcm/overvieweffectkcm.ui:50
-#, kde-format
-msgid "Search results include filtered windows:"
-msgstr "Výsledky hledání zahrnují filtrovaná okna:"
-
 #: plugins/overview/Main.qml:428
 #, kde-format
 msgctxt "@info:placeholder"
@@ -2646,6 +2602,12 @@ msgstr "Žádná odpovídající okna"
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr "Přepínání mezi přehledovým zobrazením a zobrazením mřížky"
+
+#: plugins/overview/overvieweffect.cpp:145
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
+msgstr "Přepínání mezi zobrazením mřížky a přehledovým zobrazením"
 
 #: plugins/overview/overvieweffect.cpp:152
 #, kde-format
@@ -2722,7 +2684,7 @@ msgstr "Výstup nebyl nalezen"
 msgid "Invalid region"
 msgstr "Neplatná oblast"
 
-#: plugins/screencast/screencaststream.cpp:404
+#: plugins/screencast/screencaststream.cpp:435
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Nepodařilo se vytvořit PipeWire stream"
@@ -4493,6 +4455,27 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland spadnul"
+
+#~ msgctxt "@action Overview and Grid View are the name of KWin effects"
+#~ msgid "Cycle through Overview and Grid View"
+#~ msgstr "Přepínání mezi přehledovým zobrazením a zobrazením mřížky"
+
+#~ msgctxt "@action Overview is the name of a KWin effect"
+#~ msgid "Toggle Overview"
+#~ msgstr "Přepnout přehledové zobrazení"
+
+#~ msgctxt "@action Grid View is the name of a KWin effect"
+#~ msgid "Toggle Grid View"
+#~ msgstr "Přepnout zobrazení mřížky"
+
+#~ msgid "Ignore minimized windows:"
+#~ msgstr "Ignorovat minimalizovaná okna:"
+
+#~ msgid "Organize windows in the Grid View:"
+#~ msgstr "Uspořádání oken v zobrazení mřížky:"
+
+#~ msgid "Search results include filtered windows:"
+#~ msgstr "Výsledky hledání zahrnují filtrovaná okna:"
 
 #~ msgid "OpenGL compositing is required for screencasting"
 #~ msgstr "Pro sdílení obrazovky je potřeba kompozitor OpenGL"

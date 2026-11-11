@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin 0\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:59+0000\n"
+"POT-Creation-Date: 2026-11-11 01:04+0000\n"
 "PO-Revision-Date: 2026-10-27 09:23+0100\n"
 "Last-Translator: Igor Dobrača <igor.dobraca@gmail.com>\n"
 "Language-Team: Croatian < kde-l10n-hr@kde.org>\n"
@@ -1515,7 +1515,6 @@ msgstr ""
 
 #: main.cpp:178 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
-#: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
@@ -2553,49 +2552,6 @@ msgstr "Dodaj virtualnu radnu površinu"
 msgid "Virtual Desktop limit reached"
 msgstr "Dosegnuto je ograničenje broja radnih površina"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:40
-#, kde-format
-msgctxt "@action Overview and Grid View are the name of KWin effects"
-msgid "Cycle through Overview and Grid View"
-msgstr "Mijenjaj između pregleda i prikaza virtualnih radnih površina"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:45
-#: plugins/overview/overvieweffect.cpp:145
-#, kde-format
-msgctxt "@action Grid View and Overview are the name of KWin effects"
-msgid "Cycle through Grid View and Overview"
-msgstr "Mijenjaj između prikaza virtualnih radnih površina i pregleda"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:50
-#, kde-format
-msgctxt "@action Overview is the name of a KWin effect"
-msgid "Toggle Overview"
-msgstr "Omogući/onemogući pregled"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, kde-format
-msgctxt "@action Grid View is the name of a KWin effect"
-msgid "Toggle Grid View"
-msgstr "Omogući/onemogući prikaz virtualnih radnih površina"
-
-#. i18n: ectx: property (text), widget (QLabel, label_IgnoreMinimized)
-#: plugins/overview/kcm/overvieweffectkcm.ui:22
-#, kde-format
-msgid "Ignore minimized windows:"
-msgstr "Ignoriraj spuštene prozore:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_OrganizedGrid)
-#: plugins/overview/kcm/overvieweffectkcm.ui:36
-#, kde-format
-msgid "Organize windows in the Grid View:"
-msgstr "Organiziraj prozore u prikazu radnih površina:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
-#: plugins/overview/kcm/overvieweffectkcm.ui:50
-#, kde-format
-msgid "Search results include filtered windows:"
-msgstr "Rezultati pretrage uključuju filtrirane prozore:"
-
 #: plugins/overview/Main.qml:428
 #, kde-format
 msgctxt "@info:placeholder"
@@ -2625,6 +2581,12 @@ msgstr "Nema prozora koji se podudaraju"
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr "Mijenjaj između pregleda i prikaza virtualnih radnih površina"
+
+#: plugins/overview/overvieweffect.cpp:145
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
+msgstr "Mijenjaj između prikaza virtualnih radnih površina i pregleda"
 
 #: plugins/overview/overvieweffect.cpp:152
 #, kde-format
@@ -2702,7 +2664,7 @@ msgstr "Nije moguće pronaći izlaz"
 msgid "Invalid region"
 msgstr "Netočna regija"
 
-#: plugins/screencast/screencaststream.cpp:404
+#: plugins/screencast/screencaststream.cpp:435
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Stvaranje PipeWire toka nije uspjelo"
@@ -4477,6 +4439,27 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland se srušio"
+
+#~ msgctxt "@action Overview and Grid View are the name of KWin effects"
+#~ msgid "Cycle through Overview and Grid View"
+#~ msgstr "Mijenjaj između pregleda i prikaza virtualnih radnih površina"
+
+#~ msgctxt "@action Overview is the name of a KWin effect"
+#~ msgid "Toggle Overview"
+#~ msgstr "Omogući/onemogući pregled"
+
+#~ msgctxt "@action Grid View is the name of a KWin effect"
+#~ msgid "Toggle Grid View"
+#~ msgstr "Omogući/onemogući prikaz virtualnih radnih površina"
+
+#~ msgid "Ignore minimized windows:"
+#~ msgstr "Ignoriraj spuštene prozore:"
+
+#~ msgid "Organize windows in the Grid View:"
+#~ msgstr "Organiziraj prozore u prikazu radnih površina:"
+
+#~ msgid "Search results include filtered windows:"
+#~ msgstr "Rezultati pretrage uključuju filtrirane prozore:"
 
 #~ msgid "Disable configuration options"
 #~ msgstr "Onemogući konfiguracijske opcije"

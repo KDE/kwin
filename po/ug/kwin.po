@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:59+0000\n"
+"POT-Creation-Date: 2026-11-11 01:04+0000\n"
 "PO-Revision-Date: 2026-10-03 19:49-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -1508,7 +1508,6 @@ msgstr ""
 
 #: main.cpp:178 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
-#: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
@@ -2558,49 +2557,6 @@ msgstr "مەۋھۇم ئۈستەلئۈستى قوش"
 msgid "Virtual Desktop limit reached"
 msgstr "مەۋھۇم ئۈستەلئۈستى چېكىگە يەتتى"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:40
-#, kde-format
-msgctxt "@action Overview and Grid View are the name of KWin effects"
-msgid "Cycle through Overview and Grid View"
-msgstr "ئىخچام كۆرۈنۈش ۋە شادا كۆرۈنۈشنى دەۋرىي ئالماشتۇر"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:45
-#: plugins/overview/overvieweffect.cpp:145
-#, kde-format
-msgctxt "@action Grid View and Overview are the name of KWin effects"
-msgid "Cycle through Grid View and Overview"
-msgstr "شادا كۆرۈنۈش بىلەن ئىخچام كۆرۈنۈشنى دەۋرىي ئالماشتۇر"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:50
-#, kde-format
-msgctxt "@action Overview is the name of a KWin effect"
-msgid "Toggle Overview"
-msgstr "ئىخچام كۆرۈنۈشنى ئالماشتۇر"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, kde-format
-msgctxt "@action Grid View is the name of a KWin effect"
-msgid "Toggle Grid View"
-msgstr "شادا كۆرۈنۈشنى ئالماشتۇر"
-
-#. i18n: ectx: property (text), widget (QLabel, label_IgnoreMinimized)
-#: plugins/overview/kcm/overvieweffectkcm.ui:22
-#, kde-format
-msgid "Ignore minimized windows:"
-msgstr "كىچىكلىتىلگەن كۆزنەككە پەرۋا قىلمايدۇ:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_OrganizedGrid)
-#: plugins/overview/kcm/overvieweffectkcm.ui:36
-#, kde-format
-msgid "Organize windows in the Grid View:"
-msgstr "شادا كۆرۈنۈشتىكى كۆزنەكنى تەشكىللەيدۇ:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
-#: plugins/overview/kcm/overvieweffectkcm.ui:50
-#, kde-format
-msgid "Search results include filtered windows:"
-msgstr "ئىزدەش نەتىجىسىدە سۈزۈلگەن كۆزنەك بار:"
-
 #: plugins/overview/Main.qml:428
 #, kde-format
 msgctxt "@info:placeholder"
@@ -2630,6 +2586,12 @@ msgstr "ماس كەلگەن كۆزنەك يوق"
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr "ئىخچام كۆرۈنۈش ۋە شادا كۆرۈنۈشنى دەۋرىي ئالماشتۇر"
+
+#: plugins/overview/overvieweffect.cpp:145
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
+msgstr "شادا كۆرۈنۈش بىلەن ئىخچام كۆرۈنۈشنى دەۋرىي ئالماشتۇر"
 
 #: plugins/overview/overvieweffect.cpp:152
 #, kde-format
@@ -2706,7 +2668,7 @@ msgstr "چىقىرىشنى تاپالمىدى"
 msgid "Invalid region"
 msgstr "ئىناۋەتسىز رايون"
 
-#: plugins/screencast/screencaststream.cpp:404
+#: plugins/screencast/screencaststream.cpp:435
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire ئېقىمىنى قۇرالمىدى"
@@ -4483,6 +4445,27 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland يىمىرىلدى"
+
+#~ msgctxt "@action Overview and Grid View are the name of KWin effects"
+#~ msgid "Cycle through Overview and Grid View"
+#~ msgstr "ئىخچام كۆرۈنۈش ۋە شادا كۆرۈنۈشنى دەۋرىي ئالماشتۇر"
+
+#~ msgctxt "@action Overview is the name of a KWin effect"
+#~ msgid "Toggle Overview"
+#~ msgstr "ئىخچام كۆرۈنۈشنى ئالماشتۇر"
+
+#~ msgctxt "@action Grid View is the name of a KWin effect"
+#~ msgid "Toggle Grid View"
+#~ msgstr "شادا كۆرۈنۈشنى ئالماشتۇر"
+
+#~ msgid "Ignore minimized windows:"
+#~ msgstr "كىچىكلىتىلگەن كۆزنەككە پەرۋا قىلمايدۇ:"
+
+#~ msgid "Organize windows in the Grid View:"
+#~ msgstr "شادا كۆرۈنۈشتىكى كۆزنەكنى تەشكىللەيدۇ:"
+
+#~ msgid "Search results include filtered windows:"
+#~ msgstr "ئىزدەش نەتىجىسىدە سۈزۈلگەن كۆزنەك بار:"
 
 #~ msgid "OpenGL compositing is required for screencasting"
 #~ msgstr "ئېكراندىن سىن تۇتۇشتا OpenGL بىرىكتۈرۈش زۆرۈر"

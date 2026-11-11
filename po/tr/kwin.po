@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:59+0000\n"
+"POT-Creation-Date: 2026-11-11 01:04+0000\n"
 "PO-Revision-Date: 2026-11-03 22:18+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -1511,7 +1511,6 @@ msgstr ""
 
 #: main.cpp:178 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
-#: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
@@ -2562,49 +2561,6 @@ msgstr "Sanal Masaüstü Ekle"
 msgid "Virtual Desktop limit reached"
 msgstr "Sanal Masaüstü Limitine Ulaşıldı"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:40
-#, kde-format
-msgctxt "@action Overview and Grid View are the name of KWin effects"
-msgid "Cycle through Overview and Grid View"
-msgstr "Genel Görünüm/Izgara Görünümü Arasında Geçiş Yap"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:45
-#: plugins/overview/overvieweffect.cpp:145
-#, kde-format
-msgctxt "@action Grid View and Overview are the name of KWin effects"
-msgid "Cycle through Grid View and Overview"
-msgstr "Izgara Görünümü/Genel Görünüm Arasında Geçiş Yap"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:50
-#, kde-format
-msgctxt "@action Overview is the name of a KWin effect"
-msgid "Toggle Overview"
-msgstr "Genel Görünümü Aç/Kapat"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, kde-format
-msgctxt "@action Grid View is the name of a KWin effect"
-msgid "Toggle Grid View"
-msgstr "Izgara Görünümünü Aç/Kapat"
-
-#. i18n: ectx: property (text), widget (QLabel, label_IgnoreMinimized)
-#: plugins/overview/kcm/overvieweffectkcm.ui:22
-#, kde-format
-msgid "Ignore minimized windows:"
-msgstr "Simge durumuna küçültülen pencereleri yok say:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_OrganizedGrid)
-#: plugins/overview/kcm/overvieweffectkcm.ui:36
-#, kde-format
-msgid "Organize windows in the Grid View:"
-msgstr "Izgara görünümünde pencereleri organize et:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
-#: plugins/overview/kcm/overvieweffectkcm.ui:50
-#, kde-format
-msgid "Search results include filtered windows:"
-msgstr "Arama sonuçları süzülmüş pencereleri içerir:"
-
 #: plugins/overview/Main.qml:428
 #, kde-format
 msgctxt "@info:placeholder"
@@ -2634,6 +2590,12 @@ msgstr "Eşleşen pencere yok"
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr "Genel Görünüm/Izgara Görünümü Arasında Geçiş Yap"
+
+#: plugins/overview/overvieweffect.cpp:145
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
+msgstr "Izgara Görünümü/Genel Görünüm Arasında Geçiş Yap"
 
 #: plugins/overview/overvieweffect.cpp:152
 #, kde-format
@@ -2710,7 +2672,7 @@ msgstr "Çıktı bulunamadı"
 msgid "Invalid region"
 msgstr "Geçersiz bölge"
 
-#: plugins/screencast/screencaststream.cpp:404
+#: plugins/screencast/screencaststream.cpp:435
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire akışı oluşturulamadı"
@@ -4481,6 +4443,27 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland çöktü"
+
+#~ msgctxt "@action Overview and Grid View are the name of KWin effects"
+#~ msgid "Cycle through Overview and Grid View"
+#~ msgstr "Genel Görünüm/Izgara Görünümü Arasında Geçiş Yap"
+
+#~ msgctxt "@action Overview is the name of a KWin effect"
+#~ msgid "Toggle Overview"
+#~ msgstr "Genel Görünümü Aç/Kapat"
+
+#~ msgctxt "@action Grid View is the name of a KWin effect"
+#~ msgid "Toggle Grid View"
+#~ msgstr "Izgara Görünümünü Aç/Kapat"
+
+#~ msgid "Ignore minimized windows:"
+#~ msgstr "Simge durumuna küçültülen pencereleri yok say:"
+
+#~ msgid "Organize windows in the Grid View:"
+#~ msgstr "Izgara görünümünde pencereleri organize et:"
+
+#~ msgid "Search results include filtered windows:"
+#~ msgstr "Arama sonuçları süzülmüş pencereleri içerir:"
 
 #~ msgid "OpenGL compositing is required for screencasting"
 #~ msgstr "Ekran yayını için OpenGL bileşikleştirmesi gerekir"

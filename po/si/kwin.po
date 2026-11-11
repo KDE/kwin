@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:59+0000\n"
+"POT-Creation-Date: 2026-11-11 01:04+0000\n"
 "PO-Revision-Date: 2009-12-23 10:11+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <danishka@gmail.com>\n"
@@ -1544,7 +1544,6 @@ msgstr ""
 
 #: main.cpp:178 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
-#: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
@@ -2624,52 +2623,6 @@ msgstr "වැඩතලය පෙන්වන්න"
 msgid "Virtual Desktop limit reached"
 msgstr "වැඩතලය පෙන්වන්න"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:40
-#, kde-format
-msgctxt "@action Overview and Grid View are the name of KWin effects"
-msgid "Cycle through Overview and Grid View"
-msgstr ""
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:45
-#: plugins/overview/overvieweffect.cpp:145
-#, kde-format
-msgctxt "@action Grid View and Overview are the name of KWin effects"
-msgid "Cycle through Grid View and Overview"
-msgstr ""
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:50
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
-msgctxt "@action Overview is the name of a KWin effect"
-msgid "Toggle Overview"
-msgstr "යටිකුරු සැරසිලි අතර මාරුවන්න"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
-msgctxt "@action Grid View is the name of a KWin effect"
-msgid "Toggle Grid View"
-msgstr "යටිකුරු සැරසිලි අතර මාරුවන්න"
-
-#. i18n: ectx: property (text), widget (QLabel, label_IgnoreMinimized)
-#: plugins/overview/kcm/overvieweffectkcm.ui:22
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
-msgid "Ignore minimized windows:"
-msgstr "කවුළුව කුඩා කරන්න"
-
-#. i18n: ectx: property (text), widget (QLabel, label_OrganizedGrid)
-#: plugins/overview/kcm/overvieweffectkcm.ui:36
-#, kde-format
-msgid "Organize windows in the Grid View:"
-msgstr ""
-
-#. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
-#: plugins/overview/kcm/overvieweffectkcm.ui:50
-#, kde-format
-msgid "Search results include filtered windows:"
-msgstr ""
-
 #: plugins/overview/Main.qml:428
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
@@ -2702,6 +2655,12 @@ msgstr "ගමන්කරන කවුළු:"
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
+msgstr ""
+
+#: plugins/overview/overvieweffect.cpp:145
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
 msgstr ""
 
 #: plugins/overview/overvieweffect.cpp:152
@@ -2785,7 +2744,7 @@ msgstr ""
 msgid "Invalid region"
 msgstr ""
 
-#: plugins/screencast/screencaststream.cpp:404
+#: plugins/screencast/screencaststream.cpp:435
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""
@@ -4644,6 +4603,23 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Toggle Invert Effect"
+#~ msgctxt "@action Overview is the name of a KWin effect"
+#~ msgid "Toggle Overview"
+#~ msgstr "යටිකුරු සැරසිලි අතර මාරුවන්න"
+
+#, fuzzy
+#~| msgid "Toggle Invert Effect"
+#~ msgctxt "@action Grid View is the name of a KWin effect"
+#~ msgid "Toggle Grid View"
+#~ msgstr "යටිකුරු සැරසිලි අතර මාරුවන්න"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Ignore minimized windows:"
+#~ msgstr "කවුළුව කුඩා කරන්න"
 
 #~ msgid "Disable configuration options"
 #~ msgstr "සැකසුම් අභිප්‍රේත අක්‍රීය කරන්න"

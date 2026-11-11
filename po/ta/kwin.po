@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 00:59+0000\n"
+"POT-Creation-Date: 2026-11-11 01:04+0000\n"
 "PO-Revision-Date: 2026-05-10 16:23+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -1527,7 +1527,6 @@ msgstr ""
 
 #: main.cpp:178 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
-#: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
@@ -2574,49 +2573,6 @@ msgstr "மெய்நிகர் பணிமேடையைச் சேர�
 msgid "Virtual Desktop limit reached"
 msgstr "மெய்நிகர் பணிமேடை வரம்பு அடையப்பட்டுள்ளது"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:40
-#, kde-format
-msgctxt "@action Overview and Grid View are the name of KWin effects"
-msgid "Cycle through Overview and Grid View"
-msgstr "மேலோட்டப் பார்வை மற்றும் கிரிட் பார்வைக்கிடையே மாறு"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:45
-#: plugins/overview/overvieweffect.cpp:145
-#, kde-format
-msgctxt "@action Grid View and Overview are the name of KWin effects"
-msgid "Cycle through Grid View and Overview"
-msgstr "கிரிட் பார்வை மற்றும் மேலோட்டப் பார்வைக்கிடையே மாறு"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:50
-#, kde-format
-msgctxt "@action Overview is the name of a KWin effect"
-msgid "Toggle Overview"
-msgstr "மேலோட்டத்தை காட்டு/மறை"
-
-#: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, kde-format
-msgctxt "@action Grid View is the name of a KWin effect"
-msgid "Toggle Grid View"
-msgstr "கிரிடை காட்டு/மறை"
-
-#. i18n: ectx: property (text), widget (QLabel, label_IgnoreMinimized)
-#: plugins/overview/kcm/overvieweffectkcm.ui:22
-#, kde-format
-msgid "Ignore minimized windows:"
-msgstr "ஒதுக்கப்பட்ட சாளரங்களை பொருட்படுத்தாதே:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_OrganizedGrid)
-#: plugins/overview/kcm/overvieweffectkcm.ui:36
-#, kde-format
-msgid "Organize windows in the Grid View:"
-msgstr "கிரிட் பார்வையில் சாளரங்களை சீரமைப்பது"
-
-#. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
-#: plugins/overview/kcm/overvieweffectkcm.ui:50
-#, kde-format
-msgid "Search results include filtered windows:"
-msgstr "தேடல் வடிகட்டப்பட்ட சாளரங்களையும் உட்படுத்துமா:"
-
 #: plugins/overview/Main.qml:428
 #, kde-format
 msgctxt "@info:placeholder"
@@ -2645,6 +2601,12 @@ msgstr "எந்த சாளரமும் பொருந்தவில்�
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
+msgstr "கிரிட் பார்வை மற்றும் மேலோட்டப் பார்வைக்கிடையே மாறு"
+
+#: plugins/overview/overvieweffect.cpp:145
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
 msgstr "கிரிட் பார்வை மற்றும் மேலோட்டப் பார்வைக்கிடையே மாறு"
 
 #: plugins/overview/overvieweffect.cpp:152
@@ -2722,7 +2684,7 @@ msgstr "திரையை கண்டுபிடிக்க முடிய�
 msgid "Invalid region"
 msgstr "செல்லுபடியாகாத பரப்பளவு"
 
-#: plugins/screencast/screencaststream.cpp:404
+#: plugins/screencast/screencaststream.cpp:435
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""
@@ -4494,6 +4456,27 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland முறிவடைந்துள்ளது"
+
+#~ msgctxt "@action Overview and Grid View are the name of KWin effects"
+#~ msgid "Cycle through Overview and Grid View"
+#~ msgstr "மேலோட்டப் பார்வை மற்றும் கிரிட் பார்வைக்கிடையே மாறு"
+
+#~ msgctxt "@action Overview is the name of a KWin effect"
+#~ msgid "Toggle Overview"
+#~ msgstr "மேலோட்டத்தை காட்டு/மறை"
+
+#~ msgctxt "@action Grid View is the name of a KWin effect"
+#~ msgid "Toggle Grid View"
+#~ msgstr "கிரிடை காட்டு/மறை"
+
+#~ msgid "Ignore minimized windows:"
+#~ msgstr "ஒதுக்கப்பட்ட சாளரங்களை பொருட்படுத்தாதே:"
+
+#~ msgid "Organize windows in the Grid View:"
+#~ msgstr "கிரிட் பார்வையில் சாளரங்களை சீரமைப்பது"
+
+#~ msgid "Search results include filtered windows:"
+#~ msgstr "தேடல் வடிகட்டப்பட்ட சாளரங்களையும் உட்படுத்துமா:"
 
 #~ msgid "OpenGL compositing is required for screencasting"
 #~ msgstr "திரைப்பகிர்வுக்கு OpenGL சாளரவரைவு தேவை"
