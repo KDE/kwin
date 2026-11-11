@@ -155,6 +155,8 @@ private Q_SLOTS:
     void testPerOutputDesktopsOutputToggle();
     void testTemporaryDpmsHotplug();
     void testDpmsWakeDuringSleep();
+
+    void testDynamicVirtualOutputResize();
 };
 
 void OutputChangesTest::initTestCase()
@@ -2507,6 +2509,59 @@ void OutputChangesTest::testDpmsWakeDuringSleep()
     Q_EMIT kwinApp()->session()->awoke();
     Test::pointerMotion(QPointF(200, 200), timestamp++);
     QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::On);
+}
+
+void OutputChangesTest::testDynamicVirtualOutputResize()
+{
+    workspace()->outputConfigureStore()->clear();
+
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = Rect(0, 0, 1024, 768),
+            .connectorName = QStringLiteral("Virtual-1"),
+        },
+    });
+
+    // Simulates an RDP client (krdp) adding a virtual monitor through the
+    // screencasting protocol, then resizing it when the client window size
+    // changes. The resize is driven by the screencast stream renegotiating
+    // its size, which ends up in BackendOutput::resize().
+    BackendOutput *virtualOutput = kwinApp()->outputBackend()->createVirtualOutput("Remote Monitor", "", QSize(1024, 768), 1.0);
+    QVERIFY(virtualOutput);
+    QVERIFY(virtualOutput->canResize());
+
+    LogicalOutput *logicalOutput = workspace()->findOutput(virtualOutput);
+    QVERIFY(logicalOutput);
+    QCOMPARE(virtualOutput->modeSize(), QSize(1024, 768));
+    QCOMPARE(logicalOutput->modeSize(), QSize(1024, 768));
+
+    // The client resizes its window; the new mode must be applied to both the
+    // backend output and the workspace's logical output. The configuration
+    // query triggered by the resize must not revert the new mode.
+    virtualOutput->resize(QSize(1920, 1080));
+    QCOMPARE(virtualOutput->modeSize(), QSize(1920, 1080));
+    QCOMPARE(logicalOutput->modeSize(), QSize(1920, 1080));
+    QCOMPARE(logicalOutput->geometry(), Rect(1024, 0, 1920, 1080));
+
+    // A second resize must keep working; the mode list must not accumulate
+    // stale modes from previous sizes.
+    virtualOutput->resize(QSize(1280, 720));
+    QCOMPARE(virtualOutput->modeSize(), QSize(1280, 720));
+    QCOMPARE(logicalOutput->modeSize(), QSize(1280, 720));
+    QCOMPARE(virtualOutput->modes().size(), 1);
+    // the configuration query must not re-apply the pre-resize mode as the
+    // desired mode
+    QVERIFY(virtualOutput->desiredMode().isEmpty());
+
+    // Invalid and no-op resizes must be ignored.
+    virtualOutput->resize(QSize(0, 0));
+    QCOMPARE(virtualOutput->modeSize(), QSize(1280, 720));
+    virtualOutput->resize(QSize(1280, 720));
+    QCOMPARE(virtualOutput->modeSize(), QSize(1280, 720));
+    QCOMPARE(logicalOutput->modeSize(), QSize(1280, 720));
+
+    kwinApp()->outputBackend()->removeVirtualOutput(virtualOutput);
+    QVERIFY(!workspace()->findOutput(QStringLiteral("Virtual-Remote Monitor")));
 }
 
 } // namespace KWin

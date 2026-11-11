@@ -17,6 +17,13 @@
 #include "drm_render_backend.h"
 #include "utils/vsyncsource.h"
 
+namespace
+{
+
+inline constexpr uint32_t DefaultRefreshRateMilliHz = 60000;
+
+}
+
 namespace KWin
 {
 
@@ -26,7 +33,7 @@ DrmVirtualOutput::DrmVirtualOutput(DrmBackend *backend, const QString &name, con
 {
     connect(m_vsyncMonitor.get(), &VsyncSource::vblankOccurred, this, &DrmVirtualOutput::vblank);
 
-    auto mode = std::make_shared<OutputMode>(OutputModeline(size, 60000, OutputModeline::Flag::Preferred));
+    auto mode = std::make_shared<OutputMode>(OutputModeline(size, DefaultRefreshRateMilliHz, OutputModeline::Flag::Preferred));
     m_renderLoop->setRefreshRate(mode->refreshRate());
 
     setInformation(Information{
@@ -152,10 +159,22 @@ bool DrmVirtualOutput::canResize() const
 
 void DrmVirtualOutput::resize(const QSize &size, std::optional<qreal> scale)
 {
-    auto mode = std::make_shared<OutputMode>(OutputModeline(size, 60000, OutputModeline::Flag::Preferred));
+    if (!size.isValid() || size.isEmpty() || (m_state.currentMode && size == m_state.currentMode->size())) {
+        return;
+    }
+
+    const uint32_t refreshRate = m_state.currentMode ? m_state.currentMode->refreshRate() : DefaultRefreshRateMilliHz;
+    auto mode = std::make_shared<OutputMode>(OutputModeline(size, refreshRate, OutputModeline::Flag::Preferred));
     auto next = m_state;
     next.modes = {mode};
     next.currentMode = mode;
+
+    // Drop stale mode selections so an old mode can't be restored on the
+    // next configuration query, e.g. when the remote client of a
+    // screencast-driven virtual output resizes again.
+    next.desiredMode = OutputModeline();
+    next.customModes = {};
+
     if (scale) {
         next.scale = *scale;
         next.scaleSetting = *scale;
@@ -166,6 +185,9 @@ void DrmVirtualOutput::resize(const QSize &size, std::optional<qreal> scale)
         }
     }
     setState(next);
+    // rebuild the rendering surface for the new mode instead of waiting for
+    // the next frame to notice the size mismatch
+    recreateLayer();
     Q_EMIT m_backend->outputsQueried();
 }
 

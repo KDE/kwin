@@ -485,9 +485,15 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
         // whoever manages the scale of these outputs sets it, not the stored configuration
         const bool externalScale = output->capabilities() & BackendOutput::Capability::ExternallyManagedScale;
         const std::optional<double> scaleSetting = externalScale ? std::optional<double>(output->scaleSetting()) : state.scaleSetting;
+
+        std::optional<OutputModeline> effectiveDesiredMode;
+        if (state.mode && effectiveMode && *effectiveMode == *state.mode) {
+            effectiveDesiredMode = *state.mode;
+        }
+
         *ret.changeSet(output) = OutputChangeSet{
             .currentMode = effectiveMode,
-            .desiredMode = state.mode,
+            .desiredMode = effectiveDesiredMode,
             .customModes = state.customModes,
             .enabled = setupState.enabled,
             .pos = setupState.position,
