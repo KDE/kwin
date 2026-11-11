@@ -573,7 +573,7 @@ void Workspace::setActivationToken(const QString &token, UInt32Serial serial, co
 
 bool Workspace::mayActivate(Window *window, const QString &token) const
 {
-    if (!m_activeWindow) {
+    if (!m_activeWindow || m_activeWindow->isDesktop()) {
         return true;
     }
 
