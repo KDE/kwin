@@ -999,7 +999,10 @@ void Workspace::addWaylandWindow(Window *window)
             // focus stealing prevention "low" should always activate new windows
             || (!window->isDesktop() && options->focusStealingPreventionLevel() <= FocusStealingPreventionLevel::Low)
             // If there's no active window, make this desktop the active one.
-            || !activeWindow());
+            || !activeWindow()
+            // the desktop window isn't considered a "normal" window by the end user,
+            // focus stealing prevention shouldn't apply to it
+            || activeWindow()->isDesktop());
     if (!window->isMinimized() && !shouldActivate && !window->isPopupWindow()) {
         // This window won't be activated, so move it out of the way
         // of the active window
