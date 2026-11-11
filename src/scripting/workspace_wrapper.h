@@ -541,7 +541,7 @@ public:
     Q_INVOKABLE void constrain(KWin::Window *below, KWin::Window *above);
 
     /*!
-     * \qmlmethod Window Workspace::unconstrain(Window below, Window above)
+     * \qmlmethod void Workspace::unconstrain(Window below, Window above)
      *
      * Breaks the constraint where a window is to remain under another
      *
