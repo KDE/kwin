@@ -1775,11 +1775,7 @@ void Window::setupWindowManagementInterface()
     w->setFullscreenable(isFullScreenable());
     w->setApplicationMenuPaths(applicationMenuServiceName(), applicationMenuObjectPath());
     w->setIcon(icon());
-    auto updateAppId = [this, w] {
-        w->setResourceName(resourceName());
-        w->setAppId(m_desktopFileName.isEmpty() ? resourceClass() : m_desktopFileName);
-    };
-    updateAppId();
+    w->setAppId(desktopFileName());
     w->setSkipTaskbar(skipTaskbar());
     w->setSkipSwitcher(skipSwitcher());
     w->setPid(pid());
@@ -1822,8 +1818,9 @@ void Window::setupWindowManagementInterface()
     connect(this, &Window::iconChanged, w, [w, this]() {
         w->setIcon(icon());
     });
-    connect(this, &Window::windowClassChanged, w, updateAppId);
-    connect(this, &Window::desktopFileNameChanged, w, updateAppId);
+    connect(this, &Window::desktopFileNameChanged, w, [w, this] {
+        w->setAppId(desktopFileName());
+    });
     connect(this, &Window::decorationPolicyChanged, w, [w, this] {
         w->setNoBorder(noBorder());
     });
