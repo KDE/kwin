@@ -1263,9 +1263,15 @@ void XdgToplevelWindow::initialize()
         sessionData = XdgToplevelSessionData::parse(m_shellSurface->session()->read());
     }
 
+    // Since we don't have a good way to track which processes got auto-started,
+    // and we need some cutoff either way, consider every window opened before the
+    // user started interacting with it as session restored (or auto-started, which
+    // should also get the same treatment).
+    const bool sessionRestore = sessionData && input()->lastInteractionSerial() == 0;
+
     // Move or resize the window only if enforced by a window rule.
     auto position = rules()->checkPositionSafe(true).or_else([&]() {
-        return initialPosition(sessionData);
+        return initialPosition(sessionRestore ? sessionData : std::nullopt);
     });
     if (position) {
         place(*position);
@@ -1278,8 +1284,8 @@ void XdgToplevelWindow::initialize()
     setOpacity(rules()->checkOpacityInactive(opacity()));
     maximize(rules()->checkMaximize(initialMaximizeMode(sessionData), true));
     setFullScreen(rules()->checkFullScreen(initialFullScreenMode(sessionData), true));
-    setOnActivities(rules()->checkActivity(initialActivities(sessionData), true));
-    setDesktops(rules()->checkDesktops(initialDesktops(sessionData), true));
+    setOnActivities(rules()->checkActivity(initialActivities(sessionRestore ? sessionData : std::nullopt), true));
+    setDesktops(rules()->checkDesktops(initialDesktops(sessionRestore ? sessionData : std::nullopt), true));
     setDesktopFileName(rules()->checkDesktopFile(desktopFileName(), true).toUtf8());
     setMinimized(rules()->checkMinimize(initialMinimizeMode(sessionData), true));
     setSkipTaskbar(rules()->checkSkipTaskbar(initialSkipTaskbar(sessionData), true));
