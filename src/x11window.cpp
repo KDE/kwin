@@ -28,6 +28,7 @@
 #include "shadow.h"
 #include "utils/envvar.h"
 #include "virtualdesktops.h"
+#include "wayland/plasmawindowmanagement.h"
 #include "wayland/surface.h"
 #include "wayland/xwaylandshell_v1.h"
 #include "wayland_server.h"
@@ -885,6 +886,15 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     updateWindowRules(Rules::All); // Was blocked while !isManaged()
 
     setupWindowManagementInterface();
+
+    m_windowManagementInterface->setResourceName(QString::fromLatin1(info->windowClassName()));
+    m_windowManagementInterface->setResourceClass(QString::fromLatin1(info->windowClassClass()));
+
+    connect(this, &Window::windowClassChanged, this, [this] {
+        m_windowManagementInterface->setResourceName(QString::fromLatin1(info->windowClassName()));
+        m_windowManagementInterface->setResourceClass(QString::fromLatin1(info->windowClassClass()));
+    });
+
     setReadyForPainting();
 
     connect(kwinApp(), &Application::xwaylandScaleChanged, this, &X11Window::handleXwaylandScaleChanged);
