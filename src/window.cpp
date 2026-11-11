@@ -1206,6 +1206,13 @@ void Window::updateInteractiveMoveResize(const QPointF &global, Qt::KeyboardModi
             Q_EMIT interactiveMoveResizeStepped(nextMoveResizeGeom);
         }
     } else if (isInteractiveMove()) {
+        RootTile *rootTile = workspace()->rootTile(workspace()->outputAt(global));
+        if (const auto operation = rootTile->interactiveTileOp(this, global)) {
+            workspace()->outline()->show(operation->outline().rounded());
+        } else {
+            workspace()->outline()->hide();
+        }
+
         if (isRequestedFullScreen()) {
             nextMoveResizeGeom = workspace()->clientArea(FullScreenArea, this, global);
         } else {
@@ -1237,7 +1244,7 @@ void Window::updateInteractiveMoveResize(const QPointF &global, Qt::KeyboardModi
             Q_EMIT interactiveMoveResizeStepped(nextMoveResizeGeom);
         }
 
-        if (!isRequestedFullScreen()) {
+        if (!isRequestedFullScreen() && false) {
             if (modifiers & Qt::ShiftModifier) {
                 resetQuickTilingMaximizationZones();
                 const auto &r = quickTileGeometry(QuickTileFlag::Custom, global);

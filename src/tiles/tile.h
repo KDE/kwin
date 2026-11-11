@@ -255,6 +255,7 @@ public:
     Tile *parentTile() const;
     TileManager *manager() const;
 
+    void adoptChildren(const QList<Tile *> &childTiles);
     void destroyChild(Tile *tile);
 
     template<class T>

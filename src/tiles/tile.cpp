@@ -546,6 +546,7 @@ void Tile::insertChild(int position, Tile *item)
     Q_ASSERT(position >= 0);
     const bool wasEmpty = m_children.isEmpty();
     item->setParent(this);
+    item->m_parentTile = this;
 
     m_children.insert(std::clamp<qsizetype>(position, 0, m_children.length()), item);
 
@@ -569,6 +570,14 @@ void Tile::destroyChild(Tile *tile)
 {
     removeChild(tile);
     delete tile;
+}
+
+void Tile::adoptChildren(const QList<Tile *> &childTiles)
+{
+    for (Tile *child : childTiles) {
+        child->parentTile()->removeChild(child);
+        insertChild(m_children.size(), child);
+    }
 }
 
 void Tile::removeChild(Tile *child)

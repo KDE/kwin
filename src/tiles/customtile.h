@@ -16,6 +16,48 @@
 namespace KWin
 {
 
+enum class TileInsertionPoint {
+    Before,
+    After,
+};
+
+struct TileOperation
+{
+    RectF outline() const;
+    void apply(Window *window);
+
+    Tile *tile;
+};
+
+struct InsertTileOperation
+{
+    RectF outline() const;
+    void apply(Window *window);
+
+    Tile *reference;
+    Tile::LayoutDirection direction;
+    TileInsertionPoint insertionPoint;
+};
+
+struct SplitTileOperation
+{
+    RectF outline() const;
+    void apply(Window *window);
+
+    Tile *reference;
+    Tile::LayoutDirection direction;
+    TileInsertionPoint insertionPoint;
+};
+
+class InteractiveTileOperation : public std::variant<TileOperation, InsertTileOperation, SplitTileOperation>
+{
+public:
+    using variant::variant;
+
+    RectF outline() const;
+    void apply(Window *window);
+};
+
 /*!
  * \qmluncreatabletype CustomTile
  * \inqmlmodule org.kde.kwin
@@ -39,6 +81,7 @@ public:
     CustomTile(TileManager *tiling, CustomTile *parentItem = nullptr);
 
     CustomTile *createChildAt(const RectF &relativeGeometry, LayoutDirection direction, int position);
+    CustomTile *createChildAt(const QSizeF &relativeSize, LayoutDirection direction, int position);
 
     void setRelativeGeometry(const RectF &geom) override;
     bool supportsResizeGravity(KWin::Gravity gravity) override;
@@ -59,6 +102,7 @@ public:
      */
     Q_INVOKABLE QList<KWin::CustomTile *> split(KWin::Tile::LayoutDirection newDirection);
 
+    void wrap(LayoutDirection direction);
     void setLayoutDirection(Tile::LayoutDirection dir);
     Tile::LayoutDirection layoutDirection() const;
 
@@ -86,6 +130,8 @@ public:
 
     Q_INVOKABLE KWin::Tile *pick(const QPointF &point) const;
     Q_INVOKABLE KWin::Tile *pick(qreal x, qreal y) const;
+
+    std::optional<InteractiveTileOperation> interactiveTileOp(const Window *window, const QPointF &point) const;
 };
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const CustomTile *tile);
