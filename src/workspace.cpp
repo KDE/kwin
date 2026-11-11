@@ -1013,8 +1013,11 @@ void Workspace::addWaylandWindow(Window *window)
     if (!window->isMinimized()) {
         if (shouldActivate) {
             activateWindow(window);
-        } else if (!window->activationToken().isEmpty() && input()->lastInteractionSerial() != 0) {
-            window->demandAttention();
+        } else {
+            m_focusChain->update(window, FocusChain::Update);
+            if (!window->activationToken().isEmpty() && input()->lastInteractionSerial() != 0) {
+                window->demandAttention();
+            }
         }
     }
     Q_EMIT windowAdded(window);
