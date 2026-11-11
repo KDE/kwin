@@ -130,7 +130,6 @@ class KWIN_EXPORT Tile : public QObject
 
 public:
     enum class LayoutDirection {
-        Floating = 0,
         Horizontal = 1,
         Vertical = 2,
     };
@@ -146,7 +145,7 @@ public:
     void setGeometryFromAbsolute(const RectF &geom);
     virtual void setRelativeGeometry(const RectF &geom);
 
-    virtual bool supportsResizeGravity(Gravity gravity);
+    bool supportsResizeGravity(Gravity gravity);
 
     /*!
      * Resolves the requested resize gravity to edges that can move this tile.

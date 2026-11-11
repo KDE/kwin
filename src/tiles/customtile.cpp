@@ -65,7 +65,7 @@ void CustomTile::setRelativeGeometry(const RectF &geom)
 
     auto *parentT = static_cast<CustomTile *>(parentTile());
 
-    if (!m_geometryLock && parentT && parentT->layoutDirection() != LayoutDirection::Floating) {
+    if (!m_geometryLock && parentT) {
         QScopedValueRollback<bool> geometryLock(m_geometryLock, true);
         if (finalGeom.left() != relativeGeometry().left()) {
             Tile *tile = nextTileAt(Qt::LeftEdge);
@@ -128,8 +128,6 @@ void CustomTile::setRelativeGeometry(const RectF &geom)
                 finalGeom.setBottom(1);
             }
         }
-    } else if (parentT && parentT->layoutDirection() == LayoutDirection::Floating) {
-        finalGeom = geom.intersected(parentT->relativeGeometry());
     }
 
     const auto childrenT = childTiles();
@@ -161,7 +159,7 @@ void CustomTile::setRelativeGeometry(const RectF &geom)
 
     // Make sure the last child item fills the area
     // TODO: ensure all children don't go below minimum size/resize all children
-    if (!m_geometryLock && !childrenT.isEmpty() && layoutDirection() != LayoutDirection::Floating) {
+    if (!m_geometryLock && !childrenT.isEmpty()) {
         auto childGeom = childrenT.last()->relativeGeometry();
         childGeom.setRight(finalGeom.right());
         childGeom.setBottom(finalGeom.bottom());
@@ -173,15 +171,6 @@ void CustomTile::setRelativeGeometry(const RectF &geom)
         Q_EMIT parentT->layoutModified();
     }
     m_geometryLock = false;
-}
-
-bool CustomTile::supportsResizeGravity(KWin::Gravity gravity)
-{
-    if (layoutDirection() == LayoutDirection::Floating) {
-        return gravity != Gravity::Center;
-    }
-
-    return Tile::supportsResizeGravity(gravity);
 }
 
 QList<CustomTile *> CustomTile::split(KWin::Tile::LayoutDirection newDirection)
@@ -196,13 +185,7 @@ QList<CustomTile *> CustomTile::split(KWin::Tile::LayoutDirection newDirection)
         setLayoutDirection(newDirection);
         parentT->setLayoutDirection(newDirection);
         RectF newGeo;
-        if (newDirection == LayoutDirection::Floating) {
-            newGeo = RectF(relativeGeometry().left() + 0.1, relativeGeometry().top() + 0.1, 0.3, 0.2);
-            newGeo.setLeft(std::max(newGeo.left(), parentT->relativeGeometry().left()));
-            newGeo.setTop(std::max(newGeo.top(), parentT->relativeGeometry().top()));
-            newGeo.setRight(std::min(newGeo.right(), parentT->relativeGeometry().right()));
-            newGeo.setBottom(std::min(newGeo.bottom(), parentT->relativeGeometry().bottom()));
-        } else if (newDirection == LayoutDirection::Horizontal) {
+        if (newDirection == LayoutDirection::Horizontal) {
             newGeo = relativeGeometry();
             newGeo.setWidth(relativeGeometry().width() / 2);
             Tile::setRelativeGeometry(newGeo);
@@ -220,19 +203,7 @@ QList<CustomTile *> CustomTile::split(KWin::Tile::LayoutDirection newDirection)
         // Do a new layout and put tiles inside
         setLayoutDirection(newDirection);
         auto newGeo = relativeGeometry();
-        if (newDirection == LayoutDirection::Floating) {
-            // Do a new layout with one floating tile inside
-            auto startGeom = relativeGeometry();
-            if (!childTiles().isEmpty()) {
-                startGeom = childTiles().last()->relativeGeometry();
-            }
-            newGeo = RectF(startGeom.left() + 0.05, startGeom.top() + 0.05, 0.3, 0.25);
-            newGeo.setLeft(std::max(newGeo.left(), relativeGeometry().left()));
-            newGeo.setTop(std::max(newGeo.top(), relativeGeometry().top()));
-            newGeo.setRight(std::min(newGeo.right(), relativeGeometry().right()));
-            newGeo.setBottom(std::min(newGeo.bottom(), relativeGeometry().bottom()));
-            splitTiles << createChildAt(newGeo, newDirection, childCount());
-        } else if (newDirection == LayoutDirection::Horizontal) {
+        if (newDirection == LayoutDirection::Horizontal) {
             // Do a new layout with 2 cells inside this one
             newGeo.setWidth(relativeGeometry().width() / 2);
             splitTiles << createChildAt(newGeo, newDirection, childCount());
@@ -248,21 +219,6 @@ QList<CustomTile *> CustomTile::split(KWin::Tile::LayoutDirection newDirection)
     }
 
     return splitTiles;
-}
-
-void CustomTile::moveByPixels(const QPointF &delta)
-{
-    const auto parent = static_cast<CustomTile *>(parentTile());
-    if (!parent || parent->layoutDirection() != LayoutDirection::Floating) {
-        return;
-    }
-
-    const auto outGeom = manager()->output()->geometry();
-    const auto relativeMove = QPointF(delta.x() / outGeom.width(), delta.y() / outGeom.height());
-    auto geom = relativeGeometry();
-    geom.moveTo(geom.topLeft() + relativeMove);
-
-    setRelativeGeometry(geom);
 }
 
 void CustomTile::remove()
@@ -315,7 +271,7 @@ void CustomTile::remove()
     }
 
     // On linear layouts remove the last one and promote the layout as leaf
-    if (!parentT->isRoot() && parentT->childCount() == 1 && parentT->layoutDirection() != Tile::LayoutDirection::Floating) {
+    if (!parentT->isRoot() && parentT->childCount() == 1) {
         auto *lastTile = static_cast<CustomTile *>(parentT->childTile(0));
         if (lastTile->childCount() == 0) {
             lastTile->remove();

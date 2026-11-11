@@ -41,12 +41,6 @@ public:
     CustomTile *createChildAt(const RectF &relativeGeometry, LayoutDirection direction, int position);
 
     void setRelativeGeometry(const RectF &geom) override;
-    bool supportsResizeGravity(KWin::Gravity gravity) override;
-
-    /*!
-     * Move a floating tile by an amount of pixels. not supported on horizontal and vertical layouts
-     */
-    Q_INVOKABLE void moveByPixels(const QPointF &delta);
 
     /*!
      * Remove this tile from the tile tree.
@@ -71,7 +65,7 @@ Q_SIGNALS:
     void layoutModified();
 
 private:
-    Tile::LayoutDirection m_layoutDirection = LayoutDirection::Floating;
+    Tile::LayoutDirection m_layoutDirection = LayoutDirection::Horizontal;
     bool m_geometryLock = false;
 };
 
