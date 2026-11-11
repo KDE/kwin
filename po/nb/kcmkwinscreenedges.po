@@ -83,12 +83,12 @@ msgstr "%1 – gjeldende program"
 #: main.cpp:144 touch.cpp:138
 #, kde-format
 msgid "Toggle window switching"
-msgstr "Slå av/på vindusbytting"
+msgstr "Slå på/av vindusbytting"
 
 #: main.cpp:145 touch.cpp:139
 #, kde-format
 msgid "Toggle alternative window switching"
-msgstr "Slå av/på alternativ vindusbytting"
+msgstr "Slå på/av alternativ vindusbytting"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23

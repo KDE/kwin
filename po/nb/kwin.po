@@ -558,7 +558,7 @@ msgstr "Draging avbrutt"
 #, kde-format
 msgctxt "A hardware switch (e.g. notebook lid) got toggled"
 msgid "Switch toggled"
-msgstr "Bryter slått av/på"
+msgstr "Bryter slått på/av"
 
 #: debug_console.cpp:477
 #, kde-format
@@ -1547,7 +1547,7 @@ msgstr "Maksimer/gjenopprett vinduet på %1"
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:305
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
-msgstr "Slå av/på fullskjerm for vinduet på %1"
+msgstr "Slå på/av fullskjerm for vinduet på %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
@@ -1557,12 +1557,12 @@ msgstr "Rull opp/ned vinduet på %1"
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
 msgid "Toggle keep above for running window on %1"
-msgstr "Slå av/på hold vinduet over, vinduet %1"
+msgstr "Slå på/av hold vinduet over, vinduet %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Toggle keep below running window on %1"
-msgstr "Slå av/på hold vinduet under, vinduet %1"
+msgstr "Slå på/av hold vinduet under, vinduet %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:318
 #, kde-format
@@ -1586,7 +1586,7 @@ msgstr "Kveldsfarger på"
 #: plugins/nightcolor/nightcolormanager.cpp:94
 #, kde-format
 msgid "Toggle Night Color"
-msgstr "Slå av/på kveldsfarger"
+msgstr "Slå på/av kveldsfarger"
 
 #: plugins/nightcolor/nightcolormanager.cpp:471
 #, kde-format

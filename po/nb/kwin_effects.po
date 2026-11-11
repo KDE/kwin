@@ -311,12 +311,12 @@ msgstr "Animasjon ved vinduslukking"
 #: invert/invert.cpp:42 invert/invert_config.cpp:38
 #, kde-format
 msgid "Toggle Invert Effect"
-msgstr "Slå av/på omsnuingseffekt"
+msgstr "Slå på/av omsnuingseffekt"
 
 #: invert/invert.cpp:49 invert/invert_config.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect on Window"
-msgstr "Slå av/på omsnuingseffekt på vindu"
+msgstr "Slå på/av omsnuingseffekt på vindu"
 
 #: invert/invert.cpp:56
 #, kde-format
@@ -377,7 +377,7 @@ msgstr "&Høyde:"
 #: mouseclick/mouseclick.cpp:34 mouseclick/mouseclick_config.cpp:51
 #, kde-format
 msgid "Toggle Mouse Click Effect"
-msgstr "Slå av/på museklikk-effekt"
+msgstr "Slå på/av museklikk-effekt"
 
 #: mouseclick/mouseclick.cpp:41
 #, kde-format
@@ -548,7 +548,7 @@ msgstr "Ukjent"
 #: overview/kcm/overvieweffectkcm.cpp:41 overview/overvieweffect.cpp:31
 #, kde-format
 msgid "Toggle Overview"
-msgstr "Slå av/på oversikt"
+msgstr "Slå på/av oversikt"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: overview/kcm/overvieweffectkcm.ui:22
@@ -702,7 +702,7 @@ msgstr "Glid skrivebordsbakgrunn"
 #: thumbnailaside/thumbnailaside_config.cpp:59
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
-msgstr "Slå av/på miniatyrbilde for gjeldende vindu"
+msgstr "Slå på/av miniatyrbilde for gjeldende vindu"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: thumbnailaside/thumbnailaside_config.ui:23
