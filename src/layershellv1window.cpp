@@ -236,12 +236,10 @@ void LayerShellV1Window::moveResizeInternal(const RectF &rect, MoveResizeMode mo
     if (!m_configureEvents.isEmpty()) {
         const LayerShellV1ConfigureEvent &lastLayerShellV1ConfigureEvent = m_configureEvents.constLast();
         if (lastLayerShellV1ConfigureEvent.size != requestedClientSize) {
-            const quint32 serial = m_shellSurface->sendConfigure(requestedClientSize);
-            m_configureEvents.append({serial, requestedClientSize});
+            sendConfigure(requestedClientSize);
         }
     } else if (requestedClientSize != clientSize()) {
-        const quint32 serial = m_shellSurface->sendConfigure(requestedClientSize);
-        m_configureEvents.append({serial, requestedClientSize});
+        sendConfigure(requestedClientSize);
     } else {
         updateGeometry(rect);
         return;
@@ -251,6 +249,13 @@ void LayerShellV1Window::moveResizeInternal(const RectF &rect, MoveResizeMode mo
     RectF updateRect = m_frameGeometry;
     updateRect.moveTopLeft(rect.topLeft());
     updateGeometry(updateRect);
+}
+
+void LayerShellV1Window::sendConfigure(const QSizeF &size)
+{
+    sendPreferredSurfaceState();
+    const quint32 serial = m_shellSurface->sendConfigure(size);
+    m_configureEvents.append({serial, size});
 }
 
 void LayerShellV1Window::doSetNextTargetScale()

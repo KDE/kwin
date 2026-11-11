@@ -568,9 +568,7 @@ void XdgToplevelWindow::closeWindow()
 
 XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure()
 {
-    surface()->setPreferredBufferScale(nextTargetScale());
-    surface()->setPreferredBufferTransform(preferredBufferTransform());
-    surface()->setPreferredColorDescription(preferredColorDescription());
+    sendPreferredSurfaceState();
 
     QSizeF framePadding(0, 0);
     if (m_nextDecoration) {
@@ -1983,9 +1981,7 @@ bool XdgPopupWindow::acceptsFocus() const
 
 XdgSurfaceConfigure *XdgPopupWindow::sendRoleConfigure()
 {
-    surface()->setPreferredBufferScale(nextTargetScale());
-    surface()->setPreferredBufferTransform(preferredBufferTransform());
-    surface()->setPreferredColorDescription(preferredColorDescription());
+    sendPreferredSurfaceState();
 
     if (m_repositionToken) {
         m_shellSurface->sendRepositioned(*m_repositionToken);

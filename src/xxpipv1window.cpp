@@ -82,9 +82,7 @@ bool XXPipV1Window::acceptsFocus() const
 
 XdgSurfaceConfigure *XXPipV1Window::sendRoleConfigure()
 {
-    surface()->setPreferredBufferScale(nextTargetScale());
-    surface()->setPreferredBufferTransform(preferredBufferTransform());
-    surface()->setPreferredColorDescription(preferredColorDescription());
+    sendPreferredSurfaceState();
 
     const RectF geometry = moveResizeGeometry();
     if (geometry.isEmpty()) {

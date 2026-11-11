@@ -158,6 +158,13 @@ void WaylandWindow::updateClientOutputs()
     surface()->setOutputs(waylandServer()->display()->outputsIntersecting(rect));
 }
 
+void WaylandWindow::sendPreferredSurfaceState()
+{
+    surface()->setPreferredBufferScale(nextTargetScale());
+    surface()->setPreferredBufferTransform(preferredBufferTransform());
+    surface()->setPreferredColorDescription(preferredColorDescription());
+}
+
 void WaylandWindow::updateResourceName()
 {
     const QFileInfo fileInfo(surface()->client()->executablePath());

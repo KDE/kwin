@@ -59,6 +59,7 @@ protected:
 
 private:
     void handleConfigureAcknowledged(quint32 serial);
+    void sendConfigure(const QSizeF &size);
     void handleSizeChanged();
     void handleUnmapped();
     void handleCommitted();

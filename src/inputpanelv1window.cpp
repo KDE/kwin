@@ -28,6 +28,7 @@ InputPanelV1Window::InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurfac
 {
     setOutput(workspace()->activeOutput());
     setMoveResizeOutput(workspace()->activeOutput());
+    sendPreferredSurfaceState();
     setSkipSwitcher(true);
     setSkipPager(true);
     setSkipTaskbar(true);

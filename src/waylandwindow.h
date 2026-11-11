@@ -37,6 +37,7 @@ protected:
     bool belongsToDesktop() const override;
     void updateCaption() override;
     void updateClientOutputs();
+    void sendPreferredSurfaceState();
     std::unique_ptr<WindowItem> createItem(Item *parentItem) override;
 
     void cleanGrouping();
