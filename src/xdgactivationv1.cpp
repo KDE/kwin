@@ -127,7 +127,7 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
 
     if (ws->mayActivate(window, token)) {
         ws->activateWindow(window);
-    } else {
+    } else if (input()->lastInteractionSerial() != 0) {
         window->demandAttention();
     }
 

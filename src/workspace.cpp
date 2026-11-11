@@ -1013,7 +1013,7 @@ void Workspace::addWaylandWindow(Window *window)
     if (!window->isMinimized()) {
         if (shouldActivate) {
             activateWindow(window);
-        } else if (!window->activationToken().isEmpty()) {
+        } else if (!window->activationToken().isEmpty() && input()->lastInteractionSerial() != 0) {
             window->demandAttention();
         }
     }
