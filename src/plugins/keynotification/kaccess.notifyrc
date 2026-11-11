@@ -1,28 +1,94 @@
 [Global]
 IconName=preferences-desktop-accessibility
 Comment=Accessibility
+Comment[cs]=Zpřístupnění
+Comment[es]=Accesibilidad
+Comment[ka]=წვდომადობა
+Comment[nl]=Toegankelijkheid
+Comment[ru]=Специальные возможности
+Comment[sl]=Dostopnost
 
 [Event/modifierkey-latched]
 Name=A modifier key has become active
+Name[cs]=Modifikátor klávesnice je aktivní
+Name[es]=Se ha activado una tecla modificadora
+Name[ka]=მოდიფიკატორი ღილაკი გააქტიურდა
+Name[nl]=Een modificatietoets is geactiveerd
+Name[ru]=Нажата клавиша-модификатор
+Name[sl]=Tipka za spremembo se je aktivirala
 Comment=A modifier key (e.g. Shift or Ctrl) has changed its state and is now active
+Comment[cs]=Modifikátor klávesnice (Shift nebo Ctrl) změnil stav a je právě aktivní
+Comment[es]=Una tecla modificadora (Mayús o Ctrl) ha cambiado su estado y está activa
+Comment[ka]=მოდიფიკატორმა ღილაკმა (მაგ: Ctrl ან Shift) მდგომარეობა შეიცვალა და ახლა აქტიურია
+Comment[nl]=Een modificatietoets (bijv. Shift of Ctrl) is van status veranderd en is nu actief
+Comment[ru]=Клавиша-модификатор (например, Shift или Ctrl) изменила своё состояние и сейчас активна
+Comment[sl]=Tipka za spremembo (npr. dvigalka ali kontrolka) je spremenila svoje stanje in je zdaj aktivna
 Sound=bell-window-system
 
 [Event/modifierkey-unlatched]
 Name=A modifier key has become inactive
+Name[cs]=Modifikátor klávesnice je neaktivní
+Name[es]=Se ha desactivado una tecla modificadora
+Name[ka]=მოდიფიკატორი ღილაკი არააქტიურია
+Name[nl]=Een modificatietoets is inactief geworden
+Name[ru]=Клавиша-модификатор отпущена
+Name[sl]=Tipka za spremembo se je deaktivirala
 Comment=A modifier key (e.g. Shift or Ctrl) has changed its state and is now inactive
+Comment[cs]=Modifikátor klávesnice (Shift nebo Ctrl) změnil stav a je právě neaktivní
+Comment[es]=Una tecla modificadora (Mayus o Ctrl) ha cambiado su estado y no está activa
+Comment[ka]=მოდიფიკატორმა ღილაკმა (მაგ: Ctrl ან Shift) მდგომარეობა შეიცვალა და ახლა არააქტიურია
+Comment[nl]=Een modificatietoets (bijv. Shift of Ctrl) is van status veranderd en is nu inactief
+Comment[ru]=Клавиша-модификатор (например, Shift или Ctrl) изменила своё состояние и сейчас неактивна
+Comment[sl]=Tipka za spremembo (npr. dvigalka ali kontrolka) je spremenila svoje stanje in je zdaj neaktivna
 Sound=bell-window-system
 
 [Event/modifierkey-locked]
 Name=A modifier key has been locked
+Name[cs]=Modifikátor klávesnice je zamčený
+Name[es]=Se ha bloqueado una tecla modificadora
+Name[ka]=მოდიფიკატორი ღილაკი დაბლოკილია
+Name[nl]=Een modificatietoets is vergrendeld
+Name[ru]=Клавиша-модификатор зафиксирована
+Name[sl]=Tipka za spremembo je zaklenjena
 Comment=A modifier key (e.g. Shift or Ctrl) has been locked and is now active for all of the following keypresses
+Comment[cs]=Modifikátor klávesnice (např. Shift nebo Ctrl) je zamčený a je nyní aktivní pro všechny následující stisknuté klávesy
+Comment[es]=Se ha bloqueado una tecla modificadora (Mayús o Ctrl) y afectará a todas las teclas que se pulsen
+Comment[ka]=მოდიფიკატორმა ღილაკმა (მაგ: Ctrl ან Shift) ჩაიკეტა და ახლა აქტიურია ღილაკების ყველა შემდეგი კომბინაციებისთვის
+Comment[nl]=Een modificatietoets (bijv. Shift of Ctrl) is vergrendeld en is nu actief voor alle daaropvolgende toetsaanslagen.
+Comment[ru]=Клавиша-модификатор (например, Shift или Ctrl) зафиксирована и активна при нажатии любых других клавиш
+Comment[sl]=Tipka za spremembo (npr. dvigalka ali kontrolka) je zaklenjena in je zdaj aktivna za vse nadaljnje pritiske tipk
 Sound=bell-window-system
 
 [Event/lockkey-locked]
 Name=A lock key has been activated
+Name[cs]=Klávesa pro přepnutí stavu byla aktivována
+Name[es]=Se ha activado una tecla de bloqueo
+Name[ka]=მოდიფიკატორი ღილაკი აქტიურია
+Name[nl]=Een vergrendelingstoets is geactiveerd
+Name[ru]=Активирована клавиша переключения режимов
+Name[sl]=Tipka za zaklepanje je bila aktivirana
 Comment=A lock key (e.g. Caps Lock or Num Lock) has changed its state and is now active
+Comment[cs]=Klávesa pro přepnutí stavu (např. CapsLock nebo NumLock) byla stisknuta a je nyní aktivní
+Comment[es]=Una tecla de bloqueo (como Bloq Mayús o Bloq Num) ha cambiado su estado y está activa
+Comment[ka]=ბლოკის ღილაკმა (მაგ: Caps Lock ან Num Lock) მდგომარეობა შეიცვალა და ახლა აქტიურია
+Comment[nl]=Een vergrendelingstoets (bijv. Caps Lock of Num Lock) is van status veranderd en is nu actief.
+Comment[ru]=Клавиша переключения режимов (например, Caps Lock или Num Lock) изменила своё состояние и сейчас активна
+Comment[sl]=Tipka za zaklepanje (npr. Caps Lock ali Num Lock) je spremenila stanje in je zdaj aktivna.
 Sound=bell-window-system
 
 [Event/lockkey-unlocked]
 Name=A lock key has been deactivated
+Name[cs]=Klávesa pro přepnutí stavu byla deaktivována
+Name[es]=Se ha desactivado una tecla de bloqueo
+Name[ka]=მოდიფიკატორი ღილაკი აქტიური აღარაა
+Name[nl]=Een vergrendelingstoets is gedeactiveerd
+Name[ru]=Деактивирована клавиша переключения режимов
+Name[sl]=Tipka za zaklepanje je bila deaktivirana
 Comment=A lock key (e.g. Caps Lock or Num Lock) has changed its state and is now inactive
+Comment[cs]=Klávesa pro přepnutí stavu (např. CapsLock nebo NumLock) byla stisknuta a je nyní neaktivní
+Comment[es]=Una tecla de bloqueo (como Bloq Mayús o Bloq Num) ha cambiado su estado y no está activa
+Comment[ka]=ბლოკის ღილაკმა (მაგ: Caps Lock ან Num Lock) მდგომარეობა შეიცვალა და ახლა არააქტიურია
+Comment[nl]=Een vergrendelingstoets (bijv. Caps Lock of Num Lock) is van status veranderd en is nu inactief.
+Comment[ru]=Клавиша переключения режимов (например, Caps Lock или Num Lock) изменила своё состояние и сейчас неактивна
+Comment[sl]=Tipka za zaklepanje (npr. Caps Lock ali Num Lock) je spremenila stanje in je zdaj neaktivna
 Sound=bell-window-system
