@@ -63,6 +63,7 @@ private Q_SLOTS:
     void testFullAreaLayerSurfaceOverlay();
     void testPartialAreaLayerSurfaceOverlay_data();
     void testPartialAreaLayerSurfaceOverlay();
+    void testDontActivateZeroSerial();
 
 private:
     void stackScreensHorizontally();
@@ -1292,6 +1293,31 @@ void ActivationTest::testPartialAreaLayerSurfaceOverlay()
     const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
     Test::renderAndWaitForShown(surface.get(), requestedSize, Qt::red);
+    QCOMPARE(workspace()->activeWindow(), window.m_window);
+}
+
+void ActivationTest::testDontActivateZeroSerial()
+{
+    options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::Medium);
+
+    // This test verifies that we don't grant activation tokens based on the
+    // serial just because the first serial is zero
+    input()->setLastInteractionSerial(0);
+
+    // Since there's no active window yet, the first one should be activated implicitly
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show());
+    QCOMPARE(workspace()->activeWindow(), window.m_window);
+
+    // the second window should not get focus
+    Test::XdgToplevelWindow window2;
+    QVERIFY(window2.show());
+    QCOMPARE(workspace()->activeWindow(), window.m_window);
+
+    // and generating an activation token from it should fail
+    const auto token = generateActivationToken(window2, QString());
+    Test::xdgActivation()->activate(token, *window2.m_surface);
+    QVERIFY(Test::waylandSync());
     QCOMPARE(workspace()->activeWindow(), window.m_window);
 }
 

@@ -760,7 +760,7 @@ private:
 
     QString m_activationToken;
     QString m_activationTokenAppId;
-    UInt32Serial m_activationTokenSerial = 0;
+    std::optional<UInt32Serial> m_activationTokenSerial;
 
     DpmsState m_dpms = DpmsState::On;
     QList<QString> m_recentlyRemovedDpmsOffOutputs;

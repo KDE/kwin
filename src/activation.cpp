@@ -599,7 +599,7 @@ bool Workspace::mayActivate(Window *window, const QString &token) const
         }
     }
 
-    if (!m_activationToken.isEmpty() && token == m_activationToken && input()->lastInteractionSerial() <= m_activationTokenSerial) {
+    if (!m_activationToken.isEmpty() && token == m_activationToken && m_activationTokenSerial && input()->lastInteractionSerial() <= m_activationTokenSerial) {
         return true;
     } else if (focusStealingPreventionLevel == FocusStealingPreventionLevel::Extreme) {
         // "Extreme" only accepts proper activation tokens
@@ -608,6 +608,7 @@ bool Workspace::mayActivate(Window *window, const QString &token) const
     // with focus stealing prevention below "Extreme"
     // also allow activation if the app id matches with the last activation token
     if (!m_activationToken.isEmpty()
+        && m_activationTokenSerial
         && input()->lastInteractionSerial() <= m_activationTokenSerial
         && m_activationTokenAppId == window->desktopFileName()) {
         return true;
