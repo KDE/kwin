@@ -36,7 +36,6 @@ CustomTile::CustomTile(TileManager *tiling, CustomTile *parentItem)
     : Tile(tiling, parentItem)
 {
     setQuickTileMode(QuickTileFlag::Custom);
-    m_geometryLock = true;
 }
 
 void CustomTile::setRelativeGeometry(const RectF &geom)
@@ -55,7 +54,7 @@ void CustomTile::setRelativeGeometry(const RectF &geom)
 
     auto *parentT = static_cast<CustomTile *>(parentTile());
 
-    if (!m_geometryLock && parentT) {
+    if (!m_geometryLock && !relativeGeometry().isEmpty() && parentT) {
         QScopedValueRollback<bool> geometryLock(m_geometryLock, true);
         if (finalGeom.left() != relativeGeometry().left()) {
             Tile *tile = nextTileAt(Qt::LeftEdge);
