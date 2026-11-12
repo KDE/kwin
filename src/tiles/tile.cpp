@@ -551,14 +551,6 @@ void Tile::insertChild(int position, Tile *item)
 
     if (wasEmpty) {
         Q_EMIT isLayoutChanged(true);
-        auto windows = m_windows;
-        for (auto *w : windows) {
-            Tile *tile = m_tiling->rootTile(m_desktop)->pick(w->moveResizeGeometry().center());
-            unmanage(w);
-            if (tile) {
-                tile->manage(w);
-            }
-        }
     }
 
     Q_EMIT childTileInserted();

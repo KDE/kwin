@@ -216,6 +216,15 @@ QList<CustomTile *> CustomTile::split(KWin::Tile::LayoutDirection newDirection)
             newGeo.moveTop(newGeo.y() + newGeo.height());
             splitTiles << createChildAt(newGeo, newDirection, childCount());
         }
+
+        const auto windows = m_windows;
+        for (auto *w : windows) {
+            Tile *tile = m_tiling->rootTile(m_desktop)->pick(w->moveResizeGeometry().center());
+            unmanage(w);
+            if (tile) {
+                tile->manage(w);
+            }
+        }
     }
 
     return splitTiles;
