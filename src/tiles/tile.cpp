@@ -670,12 +670,6 @@ void Tile::insertChild(int position, Tile *item)
     Q_EMIT childTilesChanged();
 }
 
-void Tile::destroyChild(Tile *tile)
-{
-    removeChild(tile);
-    delete tile;
-}
-
 void Tile::removeChild(Tile *child)
 {
     Q_EMIT aboutToRemoveChildTile(child);

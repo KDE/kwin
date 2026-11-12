@@ -1819,7 +1819,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktops()
     auto applyTileLayout = [](Tile *tile, qreal left, qreal right) {
         const auto previousKiddos = tile->childTiles();
         for (Tile *kiddo : previousKiddos) {
-            tile->destroyChild(kiddo);
+            kiddo->remove();
         }
 
         tile->split(Tile::LayoutDirection::Horizontal);
@@ -1946,7 +1946,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktopsX11()
     auto applyTileLayout = [](Tile *tile, qreal left, qreal right) {
         const auto previousKiddos = tile->childTiles();
         for (Tile *kiddo : previousKiddos) {
-            tile->destroyChild(kiddo);
+            kiddo->remove();
         }
 
         tile->split(Tile::LayoutDirection::Horizontal);
@@ -2324,7 +2324,7 @@ void QuickTilingTest::testDontChangeTileWhenDesktopChangesOnAnotherOutput()
     auto applyTileLayout = [](Tile *tile, qreal left, qreal right) {
         const auto previousKiddos = tile->childTiles();
         for (Tile *kiddo : previousKiddos) {
-            tile->destroyChild(kiddo);
+            kiddo->remove();
         }
 
         tile->split(Tile::LayoutDirection::Horizontal);
