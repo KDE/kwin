@@ -54,7 +54,16 @@
         "Description[zh_CN]": "配置窗口切换器选项",
         "Description[zh_TW]": "在視窗間探索",
         "Icon": "preferences-system-tabbox",
-        "Name": "Task Switching"
+        "Name": "Task Switching",
+        "Name[ar]": "تبديل المهام",
+        "Name[bg]": "Превключване на задачи",
+        "Name[ca]": "Commutació de tasques",
+        "Name[cs]": "Přepínač úloh",
+        "Name[pt_BR]": "Seleção de tarefas",
+        "Name[ru]": "Переключение окон",
+        "Name[sl]": "Preklapljanje opravil",
+        "Name[tr]": "Görev Değiştirme",
+        "Name[uk]": "Перемикання задач"
     },
     "X-DocPath": "kcontrol/kwintabbox/index.html",
     "X-KDE-Keywords": "window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab,apps changer,application changer,app,task,switch,task switcher",
