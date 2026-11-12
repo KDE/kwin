@@ -997,7 +997,7 @@ void TilesTest::splitFromSingleTileBelowRoot()
     }
 
     m_rootTile->setLayoutDirection(Tile::LayoutDirection::Horizontal);
-    auto topLevelTile = m_rootTile->createChildAt(m_rootTile->relativeGeometry(), m_rootTile->layoutDirection(), 0);
+    auto topLevelTile = m_rootTile->createChildAt<CustomTile>(m_rootTile->relativeGeometry(), m_rootTile->layoutDirection(), 0);
     auto topLevelTiles = topLevelTile->split(Tile::LayoutDirection::Vertical);
     QCOMPARE(topLevelTiles.count(), 2);
     QCOMPARE(m_rootTile->childCount(), 2);

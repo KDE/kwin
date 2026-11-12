@@ -39,16 +39,6 @@ CustomTile::CustomTile(TileManager *tiling, CustomTile *parentItem)
     m_geometryLock = true;
 }
 
-CustomTile *CustomTile::createChildAt(const RectF &relativeGeometry, LayoutDirection layoutDirection, int position)
-{
-    CustomTile *tile = new CustomTile(manager(), this);
-    connect(tile, &CustomTile::layoutModified, this, &CustomTile::layoutModified);
-    tile->setRelativeGeometry(relativeGeometry);
-    tile->setLayoutDirection(layoutDirection);
-    insertChild(position, tile);
-    return tile;
-}
-
 void CustomTile::setRelativeGeometry(const RectF &geom)
 {
     if (relativeGeometry() == geom) {
@@ -198,7 +188,7 @@ QList<CustomTile *> CustomTile::split(KWin::Tile::LayoutDirection newDirection)
         }
 
         splitTiles << this;
-        splitTiles << parentT->createChildAt(newGeo, layoutDirection(), row() + 1);
+        splitTiles << parentT->createChildAt<CustomTile>(newGeo, layoutDirection(), row() + 1);
     } else {
         // Do a new layout and put tiles inside
         setLayoutDirection(newDirection);
@@ -206,15 +196,15 @@ QList<CustomTile *> CustomTile::split(KWin::Tile::LayoutDirection newDirection)
         if (newDirection == LayoutDirection::Horizontal) {
             // Do a new layout with 2 cells inside this one
             newGeo.setWidth(relativeGeometry().width() / 2);
-            splitTiles << createChildAt(newGeo, newDirection, childCount());
+            splitTiles << createChildAt<CustomTile>(newGeo, newDirection, childCount());
             newGeo.moveLeft(newGeo.x() + newGeo.width());
-            splitTiles << createChildAt(newGeo, newDirection, childCount());
+            splitTiles << createChildAt<CustomTile>(newGeo, newDirection, childCount());
         } else if (newDirection == LayoutDirection::Vertical) {
             // Do a new layout with 2 cells inside this one
             newGeo.setHeight(relativeGeometry().height() / 2);
-            splitTiles << createChildAt(newGeo, newDirection, childCount());
+            splitTiles << createChildAt<CustomTile>(newGeo, newDirection, childCount());
             newGeo.moveTop(newGeo.y() + newGeo.height());
-            splitTiles << createChildAt(newGeo, newDirection, childCount());
+            splitTiles << createChildAt<CustomTile>(newGeo, newDirection, childCount());
         }
 
         const auto windows = m_windows;
