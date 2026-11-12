@@ -265,8 +265,6 @@ public:
     Tile *previousSibling() const;
     Tile *parentTile() const;
 
-    void destroyChild(Tile *tile);
-
     void setLayoutDirection(LayoutDirection dir);
     LayoutDirection layoutDirection() const;
 
