@@ -269,8 +269,16 @@ public:
     template<class T>
     T *createChildAt(const RectF &relativeGeometry, int position)
     {
+        return createChildAt<T>(relativeGeometry, LayoutDirection::Horizontal, position);
+    }
+
+    template<class T>
+    T *createChildAt(const RectF &relativeGeometry, LayoutDirection direction, int position)
+    {
         T *t = new T(m_tiling, static_cast<T *>(this));
+        connect(t, &Tile::layoutModified, this, &Tile::layoutModified);
         t->setRelativeGeometry(relativeGeometry);
+        t->setLayoutDirection(direction);
         insertChild(position, t);
         return t;
     }

@@ -205,7 +205,7 @@ CustomTile *TileManager::parseTilingJSon(const QJsonValue &val, const RectF &ava
                 rect.setWidth(std::min(width.toDouble(), availableArea.width()));
             }
             if (!rect.isEmpty()) {
-                createdTile = parentTile->createChildAt(rect, parentTile->layoutDirection(), parentTile->childCount());
+                createdTile = parentTile->createChildAt<CustomTile>(rect, parentTile->layoutDirection(), parentTile->childCount());
             }
 
         } else if (parentTile->layoutDirection() == Tile::LayoutDirection::Vertical) {
@@ -215,7 +215,7 @@ CustomTile *TileManager::parseTilingJSon(const QJsonValue &val, const RectF &ava
                 rect.setHeight(std::min(height.toDouble(), availableArea.height()));
             }
             if (!rect.isEmpty()) {
-                createdTile = parentTile->createChildAt(rect, parentTile->layoutDirection(), parentTile->childCount());
+                createdTile = parentTile->createChildAt<CustomTile>(rect, parentTile->layoutDirection(), parentTile->childCount());
             }
         }
 
