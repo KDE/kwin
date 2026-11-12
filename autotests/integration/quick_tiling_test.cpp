@@ -1823,7 +1823,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktops()
         }
 
         tile->split(Tile::LayoutDirection::Horizontal);
-        tile->childTiles().at(0)->setRelativeGeometry(RectF(0, 0, left, 1.0));
+        tile->childTiles().at(0)->resizeHorizontallyInPercents(left);
 
         QCOMPARE(tile->childTiles().at(0)->relativeGeometry(), RectF(0, 0, left, 1));
         QCOMPARE(tile->childTiles().at(1)->relativeGeometry(), RectF(left, 0, right, 1));
@@ -1950,7 +1950,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktopsX11()
         }
 
         tile->split(Tile::LayoutDirection::Horizontal);
-        tile->childTiles().at(0)->setRelativeGeometry(RectF(0, 0, left, 1.0));
+        tile->childTiles().at(0)->resizeHorizontallyInPercents(left);
 
         QCOMPARE(tile->childTiles().at(0)->relativeGeometry(), RectF(0, 0, left, 1));
         QCOMPARE(tile->childTiles().at(1)->relativeGeometry(), RectF(left, 0, right, 1));
@@ -2328,7 +2328,7 @@ void QuickTilingTest::testDontChangeTileWhenDesktopChangesOnAnotherOutput()
         }
 
         tile->split(Tile::LayoutDirection::Horizontal);
-        tile->childTiles().at(0)->setRelativeGeometry(RectF(0, 0, left, 1.0));
+        tile->childTiles().at(0)->resizeHorizontallyInPercents(left);
 
         QCOMPARE(tile->childTiles().at(0)->relativeGeometry(), RectF(0, 0, left, 1));
         QCOMPARE(tile->childTiles().at(1)->relativeGeometry(), RectF(left, 0, right, 1));

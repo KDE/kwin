@@ -147,7 +147,7 @@ void TilesTest::createSimpleLayout()
             QVERIFY(leftTile);
             QVERIFY(rightTile);
 
-            leftTile->setRelativeGeometry(RectF(0, 0, leftTileWidth, 1));
+            leftTile->resizeHorizontallyInPercents(leftTileWidth);
 
             QCOMPARE(leftTile->relativeGeometry(), RectF(0, 0, leftTileWidth, 1));
             QCOMPARE(rightTile->relativeGeometry(), RectF(leftTileWidth, 0, 1 - leftTileWidth, 1));
@@ -244,7 +244,7 @@ void TilesTest::testWindowInteraction()
     QCOMPARE(toplevelConfigureRequestedSpy.last().first().value<QSize>(), leftTile->windowGeometry().toRect().size());
 
     // Resize owning tile
-    leftTile->setRelativeGeometry({0, 0, 0.4, 1});
+    leftTile->resizeHorizontallyInPercents(0.4);
 
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
@@ -282,7 +282,7 @@ void TilesTest::testAssignedTileDeletion()
 
     auto leftTile = m_rootTile->childTiles().first();
     QVERIFY(leftTile);
-    leftTile->setRelativeGeometry({0, 0, 0.4, 1});
+    leftTile->resizeHorizontallyInPercents(0.4);
 
     std::unique_ptr<KWayland::Client::Surface> rootSurface(Test::createSurface());
 
@@ -367,7 +367,7 @@ void TilesTest::resizeTileFromWindow()
 
     auto leftTile = m_rootTile->childTiles().first();
     QVERIFY(leftTile);
-    leftTile->setRelativeGeometry({0, 0, 0.4, 1});
+    leftTile->resizeHorizontallyInPercents(0.4);
     QCOMPARE(leftTile->windowGeometry(), RectF(4, 4, 506, 1016));
 
     auto middleTile = m_rootTile->childTiles()[1];
