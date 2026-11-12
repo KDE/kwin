@@ -23,7 +23,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2024-02-20 17:06+0300\n"
+"PO-Revision-Date: 2026-11-11 20:45+0200\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -2630,12 +2630,12 @@ msgstr "Переключиться на окно слева"
 #: useractions.cpp:1061
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr "Увеличить непрозрачность окна на 5%"
+msgstr "Увеличить непрозрачность окна на 5 %"
 
 #: useractions.cpp:1063
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr "Уменьшить непрозрачность окна на 5%"
+msgstr "Уменьшить непрозрачность окна на 5 %"
 
 #: useractions.cpp:1066
 #, kde-format
