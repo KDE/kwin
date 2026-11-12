@@ -150,7 +150,7 @@ public:
 
     void setGeometryFromWindow(const RectF &geom);
     void setGeometryFromAbsolute(const RectF &geom);
-    virtual void setRelativeGeometry(const RectF &geom);
+    void setRelativeGeometry(const RectF &geom);
 
     bool supportsResizeGravity(Gravity gravity);
 
@@ -255,6 +255,12 @@ public:
      */
     Q_INVOKABLE void remove();
 
+    /*!
+     * Splits the current tile along the specified \a newDirection, either creating two children
+     * or a new sibling. Returns the two new tiles created by splitting this one.
+     */
+    Q_INVOKABLE QList<KWin::Tile *> split(KWin::Tile::LayoutDirection newDirection);
+
     void forget(Window *window);
     QList<KWin::Window *> windows() const;
 
@@ -275,16 +281,14 @@ public:
 
     Tile *nextNonLayoutTileAt(Qt::Edge edge) const;
 
-    template<class T>
-    T *createChildAt(const RectF &relativeGeometry, int position)
+    Tile *createChildAt(const RectF &relativeGeometry, int position)
     {
-        return createChildAt<T>(relativeGeometry, LayoutDirection::Horizontal, position);
+        return createChildAt(relativeGeometry, LayoutDirection::Horizontal, position);
     }
 
-    template<class T>
-    T *createChildAt(const RectF &relativeGeometry, LayoutDirection direction, int position)
+    Tile *createChildAt(const RectF &relativeGeometry, LayoutDirection direction, int position)
     {
-        T *t = new T(m_tiling, static_cast<T *>(this));
+        Tile *t = new Tile(m_tiling, this);
         connect(t, &Tile::layoutModified, this, &Tile::layoutModified);
         t->setRelativeGeometry(relativeGeometry);
         t->setLayoutDirection(direction);
@@ -337,6 +341,8 @@ protected:
     void add(Window *window);
     bool remove(Window *window);
 
+    void applyRelativeGeometry(const RectF &rect);
+
     QList<Tile *> m_children;
     QList<Window *> m_windows;
     Tile *m_parentTile;
@@ -346,8 +352,24 @@ protected:
     RectF m_relativeGeometry;
     QSizeF m_minimumSize = QSizeF(0.15, 0.15);
     LayoutDirection m_layoutDirection = LayoutDirection::Horizontal;
-    QuickTileMode m_quickTileMode = QuickTileFlag::None;
+    QuickTileMode m_quickTileMode = QuickTileFlag::Custom;
     qreal m_padding = 4.0;
+    bool m_geometryLock = false;
 };
+
+class KWIN_EXPORT RootTile : public Tile
+{
+    Q_OBJECT
+
+public:
+    RootTile(TileManager *tiling, VirtualDesktop *desktop);
+
+    Tile *tileForWindow(Window *window);
+
+    Q_INVOKABLE KWin::Tile *pick(const QPointF &point) const;
+    Q_INVOKABLE KWin::Tile *pick(qreal x, qreal y) const;
+};
+
+KWIN_EXPORT QDebug operator<<(QDebug debug, const Tile *tile);
 
 } // namespace KWin

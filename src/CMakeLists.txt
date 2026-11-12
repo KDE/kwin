@@ -218,7 +218,6 @@ target_sources(kwin PRIVATE
     swapchain.cpp
     tablet_input.cpp
     tabletmodemanager.cpp
-    tiles/customtile.cpp
     tiles/quicktile.cpp
     tiles/tile.cpp
     tiles/tilemanager.cpp

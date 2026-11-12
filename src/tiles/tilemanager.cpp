@@ -36,7 +36,7 @@ QDebug operator<<(QDebug debug, const TileManager *tileManager)
         while (!tiles.isEmpty()) {
             auto *tile = tiles.last();
             tiles.pop_back();
-            debug << indent << qobject_cast<CustomTile *>(tile) << '\n';
+            debug << indent << tile << '\n';
             if (tile->childCount() > 0) {
                 tiles.append(tile->childTiles());
                 tilePath.append(tile->childTiles().first());
@@ -69,8 +69,8 @@ TileManager::TileManager(LogicalOutput *parent)
         m_quickRootTiles[desk] = new QuickRootTile(this, desk);
 
         rootTile->setRelativeGeometry(RectF(0, 0, 1, 1));
-        connect(rootTile, &CustomTile::paddingChanged, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
-        connect(rootTile, &CustomTile::layoutModified, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
+        connect(rootTile, &Tile::paddingChanged, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
+        connect(rootTile, &Tile::layoutModified, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
 
         readSettings(rootTile);
     };
@@ -188,7 +188,7 @@ Tile::LayoutDirection strToLayoutDirection(const QString &dir)
     }
 }
 
-CustomTile *TileManager::parseTilingJSon(const QJsonValue &val, const RectF &availableArea, CustomTile *parentTile)
+Tile *TileManager::parseTilingJSon(const QJsonValue &val, const RectF &availableArea, Tile *parentTile)
 {
     if (availableArea.isEmpty()) {
         return nullptr;
@@ -196,7 +196,7 @@ CustomTile *TileManager::parseTilingJSon(const QJsonValue &val, const RectF &ava
 
     if (val.isObject()) {
         const auto &obj = val.toObject();
-        CustomTile *createdTile = nullptr;
+        Tile *createdTile = nullptr;
 
         if (parentTile->layoutDirection() == Tile::LayoutDirection::Horizontal) {
             RectF rect = availableArea;
@@ -205,7 +205,7 @@ CustomTile *TileManager::parseTilingJSon(const QJsonValue &val, const RectF &ava
                 rect.setWidth(std::min(width.toDouble(), availableArea.width()));
             }
             if (!rect.isEmpty()) {
-                createdTile = parentTile->createChildAt<CustomTile>(rect, parentTile->layoutDirection(), parentTile->childCount());
+                createdTile = parentTile->createChildAt(rect, parentTile->layoutDirection(), parentTile->childCount());
             }
 
         } else if (parentTile->layoutDirection() == Tile::LayoutDirection::Vertical) {
@@ -215,7 +215,7 @@ CustomTile *TileManager::parseTilingJSon(const QJsonValue &val, const RectF &ava
                 rect.setHeight(std::min(height.toDouble(), availableArea.height()));
             }
             if (!rect.isEmpty()) {
-                createdTile = parentTile->createChildAt<CustomTile>(rect, parentTile->layoutDirection(), parentTile->childCount());
+                createdTile = parentTile->createChildAt(rect, parentTile->layoutDirection(), parentTile->childCount());
             }
         }
 
@@ -284,7 +284,7 @@ void TileManager::readSettings(RootTile *rootTile)
         // If empty create an horizontal 3 columns layout
         rootTile->setLayoutDirection(Tile::LayoutDirection::Horizontal);
         rootTile->split(Tile::LayoutDirection::Horizontal);
-        static_cast<CustomTile *>(rootTile->childTile(0))->split(Tile::LayoutDirection::Horizontal);
+        rootTile->childTile(0)->split(Tile::LayoutDirection::Horizontal);
         Q_ASSERT(rootTile->childCount() == 3);
         // Resize middle column, the other two will be auto resized accordingly
         rootTile->childTile(1)->setRelativeGeometry({0.25, 0.0, 0.5, 1.0});
@@ -321,11 +321,11 @@ void TileManager::readSettings(RootTile *rootTile)
     rootTile->setPadding(padding);
 }
 
-QJsonObject TileManager::tileToJSon(CustomTile *tile)
+QJsonObject TileManager::tileToJSon(Tile *tile)
 {
     QJsonObject obj;
 
-    auto *parentTile = static_cast<CustomTile *>(tile->parentTile());
+    const auto parentTile = tile->parentTile();
 
     // Exclude the root and the two children
     if (parentTile) {
@@ -357,7 +357,7 @@ QJsonObject TileManager::tileToJSon(CustomTile *tile)
         QJsonArray tiles;
         const int nChildren = tile->childCount();
         for (int i = 0; i < nChildren; ++i) {
-            tiles.append(tileToJSon(static_cast<CustomTile *>(tile->childTile(i))));
+            tiles.append(tileToJSon(tile->childTile(i)));
         }
         obj[QStringLiteral("tiles")] = tiles;
     }

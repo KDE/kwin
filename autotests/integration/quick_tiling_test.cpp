@@ -14,6 +14,7 @@
 #include "decorations/settings.h"
 #include "pointer_input.h"
 #include "scripting/scripting.h"
+#include "tiles/quicktile.h"
 #include "tiles/tilemanager.h"
 #include "utils/common.h"
 #include "virtualdesktops.h"
@@ -1815,7 +1816,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktops()
         QVERIFY(tileChangedSpy.wait());
     };
 
-    auto applyTileLayout = [](CustomTile *tile, qreal left, qreal right) {
+    auto applyTileLayout = [](Tile *tile, qreal left, qreal right) {
         const auto previousKiddos = tile->childTiles();
         for (Tile *kiddo : previousKiddos) {
             tile->destroyChild(kiddo);
@@ -1942,7 +1943,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktopsX11()
     X11Window *window = createWindow(connection.get(), Rect(0, 0, 100, 200));
     window->setOnAllDesktops(true);
 
-    auto applyTileLayout = [](CustomTile *tile, qreal left, qreal right) {
+    auto applyTileLayout = [](Tile *tile, qreal left, qreal right) {
         const auto previousKiddos = tile->childTiles();
         for (Tile *kiddo : previousKiddos) {
             tile->destroyChild(kiddo);
@@ -2320,7 +2321,7 @@ void QuickTilingTest::testDontChangeTileWhenDesktopChangesOnAnotherOutput()
     // We have to receive a configure event when the window becomes active.
     QVERIFY(window.waitSurfaceConfigure());
 
-    auto applyTileLayout = [](CustomTile *tile, qreal left, qreal right) {
+    auto applyTileLayout = [](Tile *tile, qreal left, qreal right) {
         const auto previousKiddos = tile->childTiles();
         for (Tile *kiddo : previousKiddos) {
             tile->destroyChild(kiddo);

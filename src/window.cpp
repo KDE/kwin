@@ -29,6 +29,7 @@
 #include "scene/workspacescene.h"
 #include "screenedge.h"
 #include "shadow.h"
+#include "tiles/tile.h"
 #include "tiles/tilemanager.h"
 #include "useractions.h"
 #include "virtualdesktops.h"

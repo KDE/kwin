@@ -54,6 +54,8 @@
 #include "pointer_input.h"
 #include "scene/workspacescene.h"
 #include "tabletmodemanager.h"
+#include "tiles/quicktile.h"
+#include "tiles/tile.h"
 #include "tiles/tilemanager.h"
 #include "useractions.h"
 #include "utils/envvar.h"

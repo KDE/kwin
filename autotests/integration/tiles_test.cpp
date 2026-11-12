@@ -10,6 +10,7 @@
 
 #include "core/output.h"
 #include "pointer_input.h"
+#include "tiles/tile.h"
 #include "tiles/tilemanager.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -85,7 +86,7 @@ private:
 
     LogicalOutput *m_output;
     TileManager *m_tileManager;
-    CustomTile *m_rootTile;
+    Tile *m_rootTile;
 };
 
 void TilesTest::initTestCase()
@@ -132,17 +133,17 @@ void TilesTest::createSimpleLayout()
     for (VirtualDesktop *desk : VirtualDesktopManager::self()->desktops()) {
         for (LogicalOutput *out : workspace()->outputs()) {
             qreal leftTileWidth = leftTileWidths[i++];
-            CustomTile *rootTile = workspace()->rootTile(out, desk);
+            Tile *rootTile = workspace()->rootTile(out, desk);
             while (rootTile->childCount() > 0) {
-                static_cast<CustomTile *>(rootTile->childTile(0))->remove();
+                rootTile->childTile(0)->remove();
             }
 
             QCOMPARE(rootTile->childCount(), 0);
-            rootTile->split(CustomTile::LayoutDirection::Horizontal);
+            rootTile->split(Tile::LayoutDirection::Horizontal);
             QCOMPARE(rootTile->childCount(), 2);
 
-            auto leftTile = qobject_cast<CustomTile *>(rootTile->childTiles().first());
-            auto rightTile = qobject_cast<CustomTile *>(rootTile->childTiles().last());
+            auto leftTile = rootTile->childTiles().first();
+            auto rightTile = rootTile->childTiles().last();
             QVERIFY(leftTile);
             QVERIFY(rightTile);
 
@@ -157,15 +158,15 @@ void TilesTest::createSimpleLayout()
 void TilesTest::createComplexLayout()
 {
     while (m_rootTile->childCount() > 0) {
-        static_cast<CustomTile *>(m_rootTile->childTile(0))->remove();
+        m_rootTile->childTile(0)->remove();
     }
 
     QCOMPARE(m_rootTile->childCount(), 0);
-    m_rootTile->split(CustomTile::LayoutDirection::Horizontal);
+    m_rootTile->split(Tile::LayoutDirection::Horizontal);
     QCOMPARE(m_rootTile->childCount(), 2);
 
-    auto leftTile = qobject_cast<CustomTile *>(m_rootTile->childTiles().first());
-    auto rightTile = qobject_cast<CustomTile *>(m_rootTile->childTiles().last());
+    auto leftTile = m_rootTile->childTiles().first();
+    auto rightTile = m_rootTile->childTiles().last();
     QVERIFY(leftTile);
     QVERIFY(rightTile);
 
@@ -173,8 +174,8 @@ void TilesTest::createComplexLayout()
     QCOMPARE(rightTile->relativeGeometry(), RectF(0.5, 0, 0.5, 1));
 
     // Splitting with the same layout direction creates a sibling, not 2 children
-    rightTile->split(CustomTile::LayoutDirection::Horizontal);
-    auto newRightTile = qobject_cast<CustomTile *>(m_rootTile->childTiles().last());
+    rightTile->split(Tile::LayoutDirection::Horizontal);
+    auto newRightTile = m_rootTile->childTiles().last();
 
     QCOMPARE(m_rootTile->childCount(), 3);
     QCOMPARE(m_rootTile->relativeGeometry(), RectF(0, 0, 1, 1));
@@ -190,11 +191,11 @@ void TilesTest::createComplexLayout()
     // Splitting with a different layout direction creates 2 children in the tile
     QVERIFY(!rightTile->isLayout());
     QCOMPARE(rightTile->childCount(), 0);
-    rightTile->split(CustomTile::LayoutDirection::Vertical);
+    rightTile->split(Tile::LayoutDirection::Vertical);
     QVERIFY(rightTile->isLayout());
     QCOMPARE(rightTile->childCount(), 2);
-    auto verticalTopTile = qobject_cast<CustomTile *>(rightTile->childTiles().first());
-    auto verticalBottomTile = qobject_cast<CustomTile *>(rightTile->childTiles().last());
+    auto verticalTopTile = rightTile->childTiles().first();
+    auto verticalBottomTile = rightTile->childTiles().last();
 
     // geometry of rightTile should be the same
     QCOMPARE(m_rootTile->childCount(), 3);
@@ -227,7 +228,7 @@ void TilesTest::testWindowInteraction()
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 1);
 
-    auto leftTile = qobject_cast<CustomTile *>(m_rootTile->childTiles().first());
+    auto leftTile = m_rootTile->childTiles().first();
     QVERIFY(leftTile);
 
     leftTile->manage(rootWindow);
@@ -259,13 +260,13 @@ void TilesTest::testWindowInteraction()
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(rootWindow->frameGeometry(), RectF(leftTile->windowGeometry().toRect()));
 
-    auto middleTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[1]);
+    auto middleTile = m_rootTile->childTiles()[1];
     QVERIFY(middleTile);
-    auto rightTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[2]);
+    auto rightTile = m_rootTile->childTiles()[2];
     QVERIFY(rightTile);
-    auto verticalTopTile = qobject_cast<CustomTile *>(middleTile->childTiles().first());
+    auto verticalTopTile = middleTile->childTiles().first();
     QVERIFY(verticalTopTile);
-    auto verticalBottomTile = qobject_cast<CustomTile *>(middleTile->childTiles().last());
+    auto verticalBottomTile = middleTile->childTiles().last();
     QVERIFY(verticalBottomTile);
 
     QCOMPARE(leftTile->relativeGeometry(), RectF(0, 0, 0.4, 1));
@@ -279,7 +280,7 @@ void TilesTest::testAssignedTileDeletion()
 {
     createComplexLayout();
 
-    auto leftTile = qobject_cast<CustomTile *>(m_rootTile->childTiles().first());
+    auto leftTile = m_rootTile->childTiles().first();
     QVERIFY(leftTile);
     leftTile->setRelativeGeometry({0, 0, 0.4, 1});
 
@@ -298,9 +299,9 @@ void TilesTest::testAssignedTileDeletion()
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 1);
     root->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
 
-    auto middleTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[1]);
+    auto middleTile = m_rootTile->childTiles()[1];
     QVERIFY(middleTile);
-    auto middleBottomTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[1]->childTiles()[1]);
+    auto middleBottomTile = m_rootTile->childTiles()[1]->childTiles()[1];
     QVERIFY(middleBottomTile);
 
     middleBottomTile->manage(rootWindow);
@@ -343,7 +344,7 @@ void TilesTest::resizeTileFromWindow()
 {
     createComplexLayout();
 
-    auto middleBottomTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[1]->childTiles()[1]);
+    auto middleBottomTile = m_rootTile->childTiles()[1]->childTiles()[1];
     QVERIFY(middleBottomTile);
     middleBottomTile->remove();
 
@@ -364,21 +365,21 @@ void TilesTest::resizeTileFromWindow()
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 1);
     root->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
 
-    auto leftTile = qobject_cast<CustomTile *>(m_rootTile->childTiles().first());
+    auto leftTile = m_rootTile->childTiles().first();
     QVERIFY(leftTile);
     leftTile->setRelativeGeometry({0, 0, 0.4, 1});
     QCOMPARE(leftTile->windowGeometry(), RectF(4, 4, 506, 1016));
 
-    auto middleTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[1]);
+    auto middleTile = m_rootTile->childTiles()[1];
     QVERIFY(middleTile);
     QCOMPARE(middleTile->windowGeometry(), RectF(514, 4, 444, 1016));
 
-    leftTile->split(CustomTile::LayoutDirection::Vertical);
-    auto topLeftTile = qobject_cast<CustomTile *>(leftTile->childTiles().first());
+    leftTile->split(Tile::LayoutDirection::Vertical);
+    auto topLeftTile = leftTile->childTiles().first();
     QVERIFY(topLeftTile);
     QCOMPARE(topLeftTile->windowGeometry(), RectF(4, 4, 506, 506));
     QSignalSpy tileGeometryChangedSpy(topLeftTile, &Tile::windowGeometryChanged);
-    auto bottomLeftTile = qobject_cast<CustomTile *>(leftTile->childTiles().last());
+    auto bottomLeftTile = leftTile->childTiles().last();
     QVERIFY(bottomLeftTile);
     QCOMPARE(bottomLeftTile->windowGeometry(), RectF(4, 514, 506, 506));
 
@@ -494,9 +495,9 @@ void TilesTest::resizeTileFromWindowKeepsPointerOffset()
 {
     createComplexLayout();
 
-    auto leftTile = qobject_cast<CustomTile *>(m_rootTile->childTiles().first());
+    auto leftTile = m_rootTile->childTiles().first();
     QVERIFY(leftTile);
-    auto middleTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[1]);
+    auto middleTile = m_rootTile->childTiles()[1];
     QVERIFY(middleTile);
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -541,13 +542,13 @@ void TilesTest::resizeUnconstrainedTileEdge()
 {
     createComplexLayout();
 
-    auto verticalParentTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[1]);
+    auto verticalParentTile = m_rootTile->childTiles()[1];
     QVERIFY(verticalParentTile);
-    auto topTile = qobject_cast<CustomTile *>(verticalParentTile->childTiles().first());
+    auto topTile = verticalParentTile->childTiles().first();
     QVERIFY(topTile);
-    auto bottomTile = qobject_cast<CustomTile *>(verticalParentTile->childTiles().last());
+    auto bottomTile = verticalParentTile->childTiles().last();
     QVERIFY(bottomTile);
-    auto leftTile = qobject_cast<CustomTile *>(m_rootTile->childTiles().first());
+    auto leftTile = m_rootTile->childTiles().first();
     QVERIFY(leftTile);
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -596,11 +597,11 @@ void TilesTest::shortcuts()
     // | | | |
     // | |-| |
     // | | | |
-    auto leftTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[0]);
-    auto centerTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[1]);
-    auto rightTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[2]);
-    auto topCenterTile = qobject_cast<CustomTile *>(centerTile->childTiles()[0]);
-    auto bottomCenterTile = qobject_cast<CustomTile *>(centerTile->childTiles()[1]);
+    auto leftTile = m_rootTile->childTiles()[0];
+    auto centerTile = m_rootTile->childTiles()[1];
+    auto rightTile = m_rootTile->childTiles()[2];
+    auto topCenterTile = centerTile->childTiles()[0];
+    auto bottomCenterTile = centerTile->childTiles()[1];
 
     // Create a window, don't tile yet
     std::unique_ptr<KWayland::Client::Surface> rootSurface(Test::createSurface());
@@ -845,14 +846,14 @@ void TilesTest::tileAndMaximize()
 {
     // This tests the interaction between the tiled and maximized states
     auto rootTileD2 = m_tileManager->rootTile(VirtualDesktopManager::self()->desktops()[1]);
-    auto rightTileD2 = qobject_cast<CustomTile *>(rootTileD2->childTiles()[1]);
+    auto rightTileD2 = rootTileD2->childTiles()[1];
 
     auto leftQuickTileD1 = m_tileManager->quickTile(QuickTileFlag::Left);
 
     const QList<LogicalOutput *> outputs = workspace()->outputs();
     TileManager *out2TileMan = workspace()->tileManager(outputs[1]);
     auto rootTileD3O2 = out2TileMan->rootTile(VirtualDesktopManager::self()->desktops()[2]);
-    auto leftTileD3O2 = qobject_cast<CustomTile *>(rootTileD3O2->childTiles()[0]);
+    auto leftTileD3O2 = rootTileD3O2->childTiles()[0];
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> root(Test::createXdgToplevelSurface(surface.get()));
@@ -993,11 +994,11 @@ void TilesTest::splitFromSingleTileBelowRoot()
     // and splitting first in different direction than root and then in the same direction.
 
     while (m_rootTile->childCount() > 0) {
-        static_cast<CustomTile *>(m_rootTile->childTile(0))->remove();
+        m_rootTile->childTile(0)->remove();
     }
 
     m_rootTile->setLayoutDirection(Tile::LayoutDirection::Horizontal);
-    auto topLevelTile = m_rootTile->createChildAt<CustomTile>(m_rootTile->relativeGeometry(), m_rootTile->layoutDirection(), 0);
+    auto topLevelTile = m_rootTile->createChildAt(m_rootTile->relativeGeometry(), m_rootTile->layoutDirection(), 0);
     auto topLevelTiles = topLevelTile->split(Tile::LayoutDirection::Vertical);
     QCOMPARE(topLevelTiles.count(), 2);
     QCOMPARE(m_rootTile->childCount(), 2);

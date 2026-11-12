@@ -24,7 +24,7 @@ QuickRootTile::QuickRootTile(TileManager *tiling, VirtualDesktop *desktop)
     setQuickTileMode(QuickTileFlag::None);
 
     auto createTile = [this](const RectF &geometry, QuickTileMode tileMode) {
-        Tile *tile = createChildAt<Tile>(geometry, childCount());
+        Tile *tile = createChildAt(geometry, childCount());
         tile->setPadding(0.0);
         tile->setQuickTileMode(tileMode);
 
