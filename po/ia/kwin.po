@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-11 01:04+0000\n"
+"POT-Creation-Date: 2026-11-12 01:03+0000\n"
 "PO-Revision-Date: 2026-09-14 17:24+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -2831,17 +2831,17 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Commuta Editor de Tegulas (tiles)"
 
-#: plugins/tileseditor/Main.qml:153
+#: plugins/tileseditor/Main.qml:155
 #, kde-format
 msgid "Padding:"
 msgstr "Borrar (Padding):"
 
-#: plugins/tileseditor/Main.qml:163
+#: plugins/tileseditor/Main.qml:165
 #, kde-format
 msgid "Load Layout…"
 msgstr "Carga disposition..."
 
-#: plugins/tileseditor/Main.qml:270
+#: plugins/tileseditor/Main.qml:272
 #, kde-format
 msgid "Close"
 msgstr "Claude"

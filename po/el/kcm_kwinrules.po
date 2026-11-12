@@ -70,10 +70,10 @@ msgid "Regular expression"
 msgstr "Κανονική έκφραση"
 
 #: optionsmodel.cpp:205
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@item:inlistbox This is a noun"
 msgid "Match"
-msgstr ""
+msgstr "Αντιστοιχία"
 
 #: optionsmodel.cpp:210
 #, kde-format
@@ -260,7 +260,7 @@ msgstr "Μηχάνημα (όνομα υπολογιστή):"
 #, fuzzy, kde-format
 #| msgid "Window &Extra"
 msgid "Window tag"
-msgstr "Έ&ξτρα Παραθύρου"
+msgstr "Ετικέτα παραθύρου"
 
 #: rulesmodel.cpp:447
 #, fuzzy, kde-format
@@ -337,7 +337,7 @@ msgid "Ignore requested geometry"
 msgstr "Παράβλεψη της ζητούμενης γεωμετρίας"
 
 #: rulesmodel.cpp:544
-#, kde-kuit-format
+#, fuzzy, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some applications can set their own geometry, overriding the window manager "
@@ -347,6 +347,13 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"Ορισμένες εφαρμογές ορίζουν μόνες τους τη γεωμετρία τους, παρακάμπτοντας τις "
+"προτιμήσεις του διαχειριστή παραθύρων. Αυτή η ιδιότητα παρακάμπτει τα "
+"αιτήματα τοποθέτησής τους.<nl/><nl/>Επηρεάζει το <interface>Μέγεθος</"
+"interface> και τη <interface>Θέση</interface>, αλλά όχι τις καταστάσεις "
+"<interface>Μεγιστοποιημένο</interface> και <interface>Πλήρης οθόνη</"
+"interface>.<nl/><nl/>Η θέση μπορεί επίσης να χρησιμοποιηθεί για αντιστοίχιση "
+"σε άλλη <interface>Οθόνη</interface>"
 
 #: rulesmodel.cpp:555
 #, kde-format
@@ -359,9 +366,9 @@ msgid "Maximum Size"
 msgstr "Μέγιστο μέγεθος"
 
 #: rulesmodel.cpp:566
-#, kde-format
+#, fuzzy, kde-format
 msgid "Keep above other windows"
-msgstr ""
+msgstr "Διατήρηση πάνω από τα άλλα παράθυρα"
 
 #: rulesmodel.cpp:566 rulesmodel.cpp:571 rulesmodel.cpp:576 rulesmodel.cpp:582
 #: rulesmodel.cpp:588 rulesmodel.cpp:594
@@ -370,9 +377,9 @@ msgid "Arrangement & Access"
 msgstr "Διάταξη και πρόσβαση"
 
 #: rulesmodel.cpp:571
-#, kde-format
+#, fuzzy, kde-format
 msgid "Keep below other windows"
-msgstr ""
+msgstr "Διατήρηση κάτω από τα άλλα παράθυρα"
 
 #: rulesmodel.cpp:576
 #, kde-format
@@ -380,10 +387,10 @@ msgid "Skip taskbar"
 msgstr "Παράλειψη γραμμής εργασιών"
 
 #: rulesmodel.cpp:578
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Καθορίζει αν το παράθυρο εμφανίζεται στη γραμμή εργασιών."
 
 #: rulesmodel.cpp:582
 #, kde-format
@@ -391,11 +398,13 @@ msgid "Skip pager"
 msgstr "Παράλειψη προβολέα επιφανειών εργασίας"
 
 #: rulesmodel.cpp:584
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"Καθορίζει αν το παράθυρο εμφανίζεται στη διαχείριση εικονικών επιφανειών "
+"εργασίας."
 
 #: rulesmodel.cpp:588
 #, kde-format
@@ -403,12 +412,14 @@ msgid "Skip switcher"
 msgstr "Παράλειψη εναλλαγής"
 
 #: rulesmodel.cpp:590
-#, kde-kuit-format
+#, fuzzy, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Καθορίζει αν το παράθυρο εμφανίζεται στη λίστα παραθύρων <shortcut>Alt+Tab</"
+"shortcut>."
 
 #: rulesmodel.cpp:594
 #, kde-format
@@ -449,7 +460,7 @@ msgid "Focus stealing prevention"
 msgstr "Αποτροπή κλεψίματος εστίασης"
 
 #: rulesmodel.cpp:625
-#, kde-kuit-format
+#, fuzzy, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "KWin tries to prevent windows that were opened without direct user action "
@@ -469,6 +480,22 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"Το KWin προσπαθεί να εμποδίζει παράθυρα που άνοιξαν χωρίς άμεση ενέργειά σας "
+"να ανυψώνονται και να παίρνουν την εστίαση ενώ εργάζεστε σε άλλο παράθυρο. "
+"Αυτή η ιδιότητα αλλάζει το επίπεδο αποτροπής υποκλοπής εστίασης για "
+"μεμονωμένα παράθυρα και εφαρμογές.<nl/><nl/>Τι συμβαίνει σε ένα παράθυρο που "
+"άνοιξε χωρίς άμεση ενέργειά σας, σε κάθε επίπεδο:<nl/><list><item><emphasis "
+"strong='true'>Καμία:</emphasis> Το παράθυρο ανυψώνεται και παίρνει την "
+"εστίαση.</item><item><emphasis strong='true'>Χαμηλή:</emphasis> Εφαρμόζεται "
+"αποτροπή, αλλά σε περιπτώσεις που το KWin θεωρεί αμφίσημες, το παράθυρο "
+"ανυψώνεται και παίρνει την εστίαση.</item><item><emphasis "
+"strong='true'>Κανονική:</emphasis> Εφαρμόζεται αποτροπή, αλλά σε περιπτώσεις "
+"που το KWin θεωρεί αμφίσημες, το παράθυρο <emphasis>δεν</emphasis> "
+"ανυψώνεται ούτε παίρνει την εστίαση.</item><item><emphasis "
+"strong='true'>Υψηλή:</emphasis> Το παράθυρο ανυψώνεται και παίρνει την "
+"εστίαση μόνο αν ανήκει στην ίδια εφαρμογή με το εστιασμένο παράθυρο.</"
+"item><item><emphasis strong='true'>Ακραία:</emphasis> Το παράθυρο δεν "
+"ανυψώνεται ούτε παίρνει ποτέ την εστίαση.</item></list>"
 
 #: rulesmodel.cpp:650
 #, kde-format
@@ -476,7 +503,7 @@ msgid "Focus protection"
 msgstr "Προστασία εστίασης"
 
 #: rulesmodel.cpp:652
-#, kde-kuit-format
+#, fuzzy, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "This property controls the focus protection level of the currently active "
@@ -498,6 +525,21 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"Αυτή η ιδιότητα ελέγχει το επίπεδο προστασίας εστίασης του ενεργού "
+"παραθύρου. Παρακάμπτει την αποτροπή υποκλοπής εστίασης για νέα παράθυρα που "
+"ανοίγουν χωρίς άμεση ενέργειά σας.<nl/><nl/>Τι συμβαίνει στα νέα παράθυρα σε "
+"κάθε επίπεδο, όσο έχει την εστίαση το παράθυρο με αυτή την ιδιότητα:<nl/"
+"><list><item><emphasis strong='true'>Καμία</emphasis>: Τα νέα παράθυρα "
+"ανυψώνονται και παίρνουν πάντα την εστίαση.</item><item><emphasis "
+"strong='true'>Χαμηλή:</emphasis> Εφαρμόζεται αποτροπή στο νέο παράθυρο, αλλά "
+"σε αμφίσημες περιπτώσεις ανυψώνεται και παίρνει την εστίαση.</"
+"item><item><emphasis strong='true'>Κανονική:</emphasis> Εφαρμόζεται αποτροπή "
+"στο νέο παράθυρο, αλλά σε αμφίσημες περιπτώσεις <emphasis>δεν</emphasis> "
+"ανυψώνεται ούτε παίρνει την εστίαση.</item><item><emphasis "
+"strong='true'>Υψηλή:</emphasis> Τα νέα παράθυρα ανυψώνονται και παίρνουν την "
+"εστίαση μόνο αν ανήκουν στην ίδια εφαρμογή με το εστιασμένο παράθυρο.</"
+"item><item><emphasis strong='true'>Ακραία:</emphasis> Τα νέα παράθυρα δεν "
+"ανυψώνονται ούτε παίρνουν ποτέ την εστίαση.</item></list>"
 
 #: rulesmodel.cpp:678
 #, kde-format
@@ -505,9 +547,10 @@ msgid "Accept focus"
 msgstr "Αποδοχή εστίασης"
 
 #: rulesmodel.cpp:680
-#, kde-format
+#, fuzzy, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
 msgstr ""
+"Καθορίζει αν το παράθυρο παίρνει την εστίαση όταν κάνετε κλικ πάνω του."
 
 #: rulesmodel.cpp:684
 #, kde-format
@@ -515,7 +558,7 @@ msgid "Ignore global shortcuts"
 msgstr "Παράβλεψη καθολικών συντομεύσεων"
 
 #: rulesmodel.cpp:686
-#, kde-kuit-format
+#, fuzzy, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Use this property to prevent global keyboard shortcuts from working while "
@@ -525,6 +568,12 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Με αυτή την ιδιότητα οι καθολικές συντομεύσεις πληκτρολογίου δεν λειτουργούν "
+"όσο το παράθυρο έχει την εστίαση. Χρήσιμο για εφαρμογές όπως εξομοιωτές ή "
+"εικονικές μηχανές που χειρίζονται οι ίδιες κάποιες από αυτές τις "
+"συντομεύσεις.<nl/><nl/>Δεν θα μπορείτε να βγείτε από το παράθυρο με "
+"<shortcut>Alt+Tab</shortcut> ούτε να χρησιμοποιήσετε άλλες καθολικές "
+"συντομεύσεις, όπως το <shortcut>Alt+Space</shortcut> για το KRunner."
 
 #: rulesmodel.cpp:696
 #, kde-format
@@ -532,29 +581,29 @@ msgid "Closeable"
 msgstr "Ικανό να κλείσει"
 
 #: rulesmodel.cpp:701
-#, kde-format
+#, fuzzy, kde-format
 msgid "Desktop file name"
-msgstr ""
+msgstr "Όνομα αρχείου desktop"
 
 #: rulesmodel.cpp:706
-#, kde-format
+#, fuzzy, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Στρώση"
 
 #: rulesmodel.cpp:712
-#, kde-format
+#, fuzzy, kde-format
 msgid "Adaptive sync"
-msgstr ""
+msgstr "Προσαρμοστικός συγχρονισμός"
 
 #: rulesmodel.cpp:717
-#, kde-format
+#, fuzzy, kde-format
 msgid "Allow tearing"
-msgstr ""
+msgstr "Να επιτρέπεται σκίσιμο εικόνας"
 
 #: rulesmodel.cpp:722
-#, kde-format
+#, fuzzy, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "Απόκρυψη από στιγμιότυπα και εγγραφές οθόνης"
 
 #: rulesmodel.cpp:775
 #, kde-format
@@ -562,7 +611,7 @@ msgid "Window class not available"
 msgstr "Μη διαθέσιμη κλάση παραθύρου"
 
 #: rulesmodel.cpp:776
-#, kde-kuit-format
+#, fuzzy, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "This application is not providing a class for the window, so KWin cannot use "
@@ -570,6 +619,11 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Αυτή η εφαρμογή δεν δίνει κλάση για το παράθυρο, οπότε το KWin δεν μπορεί να "
+"τη χρησιμοποιήσει για αντιστοίχιση και εφαρμογή κανόνων. Αν θέλετε να "
+"εφαρμόσετε κανόνες, δοκιμάστε αντιστοίχιση με άλλες ιδιότητες, όπως ο τίτλος "
+"του παραθύρου.<nl/><nl/>Σκεφτείτε να αναφέρετε αυτό το σφάλμα στους "
+"προγραμματιστές της εφαρμογής."
 
 #: rulesmodel.cpp:810
 #, kde-format
@@ -633,10 +687,10 @@ msgid "All desktops"
 msgstr "Όλες οι επιφάνειες εργασίας"
 
 #: rulesmodel.cpp:833
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
-msgstr ""
+msgstr "Διαθεσιμότητα του παραθύρου σε όλες τις επιφάνειες εργασίας"
 
 #: rulesmodel.cpp:852
 #, kde-format
@@ -644,10 +698,10 @@ msgid "All activities"
 msgstr "Όλες οι δραστηριότητες"
 
 #: rulesmodel.cpp:854
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
-msgstr ""
+msgstr "Διαθεσιμότητα του παραθύρου σε όλες τις δραστηριότητες"
 
 #: rulesmodel.cpp:875
 #, kde-format
@@ -720,14 +774,14 @@ msgid "Extreme"
 msgstr "Ακραίο"
 
 #: rulesmodel.cpp:920
-#, kde-format
+#, fuzzy, kde-format
 msgid "Below"
-msgstr ""
+msgstr "Από κάτω"
 
 #: rulesmodel.cpp:922
-#, kde-format
+#, fuzzy, kde-format
 msgid "Above"
-msgstr ""
+msgstr "Από πάνω"
 
 #: rulesmodel.cpp:923
 #, kde-format
@@ -779,9 +833,11 @@ msgid "Unmanaged window"
 msgstr "Παράθυρο χωρίς διαχείριση"
 
 #: rulesmodel.cpp:965
-#, kde-format
+#, fuzzy, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+"Δεν ήταν δυνατός ο εντοπισμός ιδιοτήτων του παραθύρου. Το παράθυρο δεν "
+"διαχειρίζεται από το KWin."
 
 #: ui/FileDialogLoader.qml:15
 #, kde-format
@@ -814,35 +870,35 @@ msgid "Export…"
 msgstr "Εξαγωγή…"
 
 #: ui/main.qml:88
-#, kde-format
+#, fuzzy, kde-format
 msgid "No rules for specific windows are currently set"
-msgstr ""
+msgstr "Δεν έχουν οριστεί κανόνες για συγκεκριμένα παράθυρα"
 
 #: ui/main.qml:89
-#, kde-kuit-format
+#, fuzzy, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
-msgstr ""
+msgstr "Κάντε κλικ στο <interface>Προσθήκη νέου…</interface> για να προσθέσετε"
 
 #: ui/main.qml:97
-#, kde-format
+#, fuzzy, kde-format
 msgid "Select the rules to export"
-msgstr ""
+msgstr "Επιλέξτε τους κανόνες για εξαγωγή"
 
 #: ui/main.qml:101
-#, kde-format
+#, fuzzy, kde-format
 msgid "Unselect All"
-msgstr ""
+msgstr "Αποεπιλογή όλων"
 
 #: ui/main.qml:101
-#, kde-format
+#, fuzzy, kde-format
 msgid "Select All"
-msgstr ""
+msgstr "Επιλογή όλων"
 
 #: ui/main.qml:115
-#, kde-format
+#, fuzzy, kde-format
 msgid "Save Rules"
-msgstr ""
+msgstr "Αποθήκευση κανόνων"
 
 #: ui/main.qml:206
 #, kde-format
@@ -850,9 +906,9 @@ msgid "Edit"
 msgstr "Επεξεργασία"
 
 #: ui/main.qml:212
-#, kde-format
+#, fuzzy, kde-format
 msgid "Duplicate"
-msgstr ""
+msgstr "Αντίγραφο"
 
 #: ui/main.qml:218
 #, kde-format
@@ -892,12 +948,14 @@ msgid "No window properties changed"
 msgstr "Δεν άλλαξαν οι ιδιότητες παραθύρου"
 
 #: ui/RulesEditor.qml:67
-#, kde-kuit-format
+#, fuzzy, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "Click the <interface>Add Property...</interface> button below to add some "
 "window properties that will be affected by the rule"
 msgstr ""
+"Κάντε κλικ στο κουμπί <interface>Προσθήκη ιδιότητας...</interface> παρακάτω "
+"για να προσθέσετε ιδιότητες παραθύρου που θα επηρεάζει ο κανόνας"
 
 #: ui/RulesEditor.qml:88
 #, kde-format

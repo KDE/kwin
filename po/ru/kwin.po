@@ -23,8 +23,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-11 01:04+0000\n"
-"PO-Revision-Date: 2026-10-31 12:02+0200\n"
+"POT-Creation-Date: 2026-11-12 01:03+0000\n"
+"PO-Revision-Date: 2026-11-11 20:48+0200\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -2863,17 +2863,17 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Включить или выключить редактор мозаики"
 
-#: plugins/tileseditor/Main.qml:153
+#: plugins/tileseditor/Main.qml:155
 #, kde-format
 msgid "Padding:"
 msgstr "Отступ:"
 
-#: plugins/tileseditor/Main.qml:163
+#: plugins/tileseditor/Main.qml:165
 #, kde-format
 msgid "Load Layout…"
 msgstr "Загрузить макет…"
 
-#: plugins/tileseditor/Main.qml:270
+#: plugins/tileseditor/Main.qml:272
 #, kde-format
 msgid "Close"
 msgstr "Закрыть"
@@ -4149,12 +4149,12 @@ msgstr "Переключиться на окно слева"
 #: useractions.cpp:918
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr "Увеличить непрозрачность окна на 5%"
+msgstr "Увеличить непрозрачность окна на 5 %"
 
 #: useractions.cpp:920
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr "Уменьшить непрозрачность окна на 5%"
+msgstr "Уменьшить непрозрачность окна на 5 %"
 
 #: useractions.cpp:924
 #, kde-format

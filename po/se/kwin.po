@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-11 01:04+0000\n"
+"POT-Creation-Date: 2026-11-12 01:03+0000\n"
 "PO-Revision-Date: 2007-12-20 11:35+0100\n"
 "Last-Translator: Børre Gaup <boerre@skolelinux.no>\n"
 "Language-Team: Northern Sami <l10n-no@nuug.no>\n"
@@ -2802,17 +2802,17 @@ msgstr ""
 msgid "Toggle Tiles Editor"
 msgstr ""
 
-#: plugins/tileseditor/Main.qml:153
+#: plugins/tileseditor/Main.qml:155
 #, kde-format
 msgid "Padding:"
 msgstr ""
 
-#: plugins/tileseditor/Main.qml:163
+#: plugins/tileseditor/Main.qml:165
 #, kde-format
 msgid "Load Layout…"
 msgstr ""
 
-#: plugins/tileseditor/Main.qml:270
+#: plugins/tileseditor/Main.qml:272
 #, fuzzy, kde-format
 msgid "Close"
 msgstr "&Gidde"
@@ -4407,12 +4407,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#, fuzzy
-#~ msgctxt "@action Grid View is the name of a KWin effect"
-#~ msgid "Toggle Grid View"
-#~ msgstr "Lokte dahje vuolit láse"
-
-#, fuzzy
-#~ msgid "Ignore minimized windows:"
-#~ msgstr "Minimere láse"

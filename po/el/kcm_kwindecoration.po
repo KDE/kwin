@@ -75,9 +75,9 @@ msgid "Keep above other windows"
 msgstr "Διατήρηση πάνω από άλλα παράθυρα"
 
 #: declarative-plugin/buttonsmodel.cpp:74
-#, kde-format
+#, fuzzy, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "Απόκρυψη από στιγμιότυπα και εγγραφές οθόνης"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -223,26 +223,31 @@ msgid "Show titlebar button tooltips"
 msgstr "Εμφάνιση υποδείξεων κουμπιών παραθύρου"
 
 #: ui/ConfigureTitlebar.qml:64
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
 msgstr ""
+"Να εμφανίζεται πάντα το κουμπί «Απόκρυψη από στιγμιότυπα και εγγραφές οθόνης»"
 
 #: ui/ConfigureTitlebar.qml:76
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screenshots and screen recordings"
 msgstr ""
+"Όταν δεν είναι επιλεγμένο, το κουμπί εμφανίζεται μόνο αν το παράθυρο είναι "
+"κρυφό από στιγμιότυπα και εγγραφές οθόνης"
 
 #: ui/ConfigureTitlebar.qml:77
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "To enable this option, add the \"Hide from Screenshots and Screen Recordings"
 "\" button to the titlebar first"
 msgstr ""
+"Για να ενεργοποιήσετε αυτή την επιλογή, προσθέστε πρώτα το κουμπί «Απόκρυψη "
+"από στιγμιότυπα και εγγραφές οθόνης» στη γραμμή τίτλου"
 
 #: ui/main.qml:29
 #, kde-format

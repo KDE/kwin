@@ -1,0 +1,437 @@
+# Copyright (C) 2026 This file is copyright:
+# This file is distributed under the same license as the kwin package.
+#
+# SPDX-FileCopyrightText: 2026 Freek de Kruijf <freekdekruijf@kde.nl>
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2026-11-10 14:33+0000\n"
+"PO-Revision-Date: 2026-11-11 13:55+0100\n"
+"Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
+"Language-Team: \n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 26.08.3\n"
+
+#: kcm.cpp:139 kcm.cpp:214
+#, kde-format
+msgctxt "@title"
+msgid "KWin"
+msgstr "KWin"
+
+#: kcm.cpp:144
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows"
+msgstr "Door vensters wandelen"
+
+#: kcm.cpp:151
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows (Reverse)"
+msgstr "Door vensters wandelen (omgekeerd)"
+
+#: kcm.cpp:158
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows of Current Application"
+msgstr "Door vensters van de huidige toepassing lopen"
+
+#: kcm.cpp:165
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows of Current Application (Reverse)"
+msgstr "Door vensters van de huidige toepassing lopen (omgekeerd)"
+
+#: kcm.cpp:172
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows Alternative"
+msgstr "Alternatief voor lopen door vensters "
+
+#: kcm.cpp:179
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows Alternative (Reverse)"
+msgstr "Alternatief voor lopen door vensters (omgekeerd)"
+
+#: kcm.cpp:186
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "Alternatief door vensters van de huidige toepassing lopen"
+
+#: kcm.cpp:193
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "Alternatief door vensters van de huidige toepassing lopen (omgekeerd)"
+
+#: kcm.cpp:219
+#, kde-format
+msgctxt "@action Overview and Grid View are the name of KWin effects"
+msgid "Cycle through Overview and Grid View"
+msgstr "Ga cyclisch door overzicht en rasterweergave"
+
+#: kcm.cpp:225
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
+msgstr "Ga cyclisch door rasterweergave en overzicht"
+
+#: kcm.cpp:231
+#, kde-format
+msgctxt "@action Overview is the name of a KWin effect"
+msgid "Toggle Overview"
+msgstr "Overzicht omschakelen"
+
+#: kcm.cpp:237
+#, kde-format
+msgctxt "@action Grid View is the name of a KWin effect"
+msgid "Toggle Grid View"
+msgstr "Rasterweergave omschakelen"
+
+#: tabboxlayoutsmodel.cpp:135
+#, kde-format
+msgctxt "@item:inlistbox"
+msgid "None"
+msgstr "Geen"
+
+#: ui/main.qml:36
+#, kde-format
+msgctxt "@title:tab"
+msgid "Task Switcher"
+msgstr "Taakwisselaar"
+
+#: ui/main.qml:42
+#, kde-format
+msgctxt "@title:tab"
+msgid "Task Switcher (Alternative)"
+msgstr "Taakwisselaar (alternatief)"
+
+#: ui/main.qml:48
+#, kde-format
+msgctxt "@title:tab"
+msgid "Overview"
+msgstr "Overzicht"
+
+#: ui/main.qml:62
+#, kde-format
+msgctxt "@info"
+msgid ""
+"Focus policy settings limit the functionality of navigating through windows."
+msgstr ""
+"Het beleid voor focusinstellingen beperkt de functionaliteit van het "
+"navigeren door vensters."
+
+#: ui/main.qml:102
+#, kde-format
+msgctxt "@info"
+msgid ""
+"The alternative task switcher is a second switcher with its own separate "
+"shortcut, appearance, and behavior settings."
+msgstr ""
+"De alternatieve taakwisselaar is een tweede wisselaar met eigen, "
+"afzonderlijke instellingen voor sneltoetsen, uiterlijk en gedrag."
+
+#: ui/OverviewSettings.qml:20
+#, kde-format
+msgctxt "@label"
+msgid "Overview:"
+msgstr "Overzicht:"
+
+#: ui/OverviewSettings.qml:23
+#, kde-format
+msgctxt "@label Hint for overview effect enable button"
+msgid ""
+"Swipe up with four fingers on a touchpad or three on a touchscreen, or use "
+"screen edge gestures to toggle the overview"
+msgstr ""
+"Veeg met vier vingers omhoog op een touchpad, of met drie vingers op een "
+"aanraakscherm of gebruik gebaren vanaf de rand van het scherm om het "
+"overzicht in of uit te schakelen."
+
+#: ui/OverviewSettings.qml:25
+#, kde-format
+msgctxt ""
+"@label Hint for overview effect enable button, %1 is a keyboard shortcut"
+msgid ""
+"Press %1, swipe up with four fingers on a touchpad or three on a "
+"touchscreen, or use screen edge gestures to toggle the overview"
+msgstr ""
+"Druk op %1, veeg met vier vingers omhoog op een touchpad, of met drie "
+"vingers op een aanraakscherm of gebruik gebaren vanaf de rand van het scherm "
+"om het overzicht in of uit te schakelen."
+
+#: ui/OverviewSettings.qml:27
+#, kde-format
+msgctxt ""
+"@label Hint for overview effect enable button, %1 and %2 are alternative "
+"keyboard shortcuts"
+msgid ""
+"Press %1 or %2, swipe up with four fingers on a touchpad or three on a "
+"touchscreen, or use screen edge gestures to toggle the overview"
+msgstr ""
+"Druk op %1 of %2, veeg met vier vingers omhoog op een touchpad, of met drie "
+"vingers op een aanraakscherm of gebruik gebaren vanaf de rand van het scherm "
+"om het overzicht in of uit te schakelen."
+
+#: ui/OverviewSettings.qml:31
+#, kde-format
+msgctxt "@option:check, Enable overview effect"
+msgid "Enable"
+msgstr "Inschakelen"
+
+#: ui/OverviewSettings.qml:47
+#, kde-format
+msgctxt "@option:check"
+msgid "Show minimized windows"
+msgstr "Geminimaliseerde vensters tonen"
+
+#: ui/OverviewSettings.qml:63
+#, kde-format
+msgctxt "@option:check"
+msgid "Search results include windows"
+msgstr "Zoekresultaten omvatten vensters"
+
+#: ui/OverviewSettings.qml:77
+#, kde-format
+msgctxt "@option:check"
+msgid "Organize windows in the Grid view"
+msgstr "Vensters organiseren in de rasterweergave"
+
+#: ui/OverviewSettings.qml:94 ui/TabBoxSettings.qml:314
+#, kde-format
+msgctxt "@action:button"
+msgid "Configure Shortcuts…"
+msgstr "Sneltoetsen configureren…"
+
+#: ui/OverviewSettings.qml:106
+#, kde-format
+msgctxt "@action:button"
+msgid "Configure Screen Edges…"
+msgstr "Schermranden configureren…"
+
+#: ui/OverviewSettings.qml:118
+#, kde-format
+msgctxt "@action:button"
+msgid "Configure Touchscreen Gestures…"
+msgstr "Veeggebaren op aanraakscherm configureren…"
+
+#: ui/TabBoxSettings.qml:26
+#, kde-format
+msgctxt "@title:group"
+msgid "Appearance"
+msgstr "Uiterlijk"
+
+#: ui/TabBoxSettings.qml:29
+#, kde-format
+msgctxt "Task switcher style"
+msgid "Switcher style:"
+msgstr "Stijl van wisselaar:"
+
+#: ui/TabBoxSettings.qml:58
+#, kde-format
+msgctxt "@action:button"
+msgid "Get New…"
+msgstr "Nieuwe ophalen…"
+
+#: ui/TabBoxSettings.qml:67
+#, kde-format
+msgctxt "@action:button"
+msgid "Show Preview"
+msgstr "Voorbeeld tonen"
+
+#: ui/TabBoxSettings.qml:82
+#, kde-format
+msgctxt "@label"
+msgid "Selecting a window:"
+msgstr "Een venster selecteren:"
+
+#: ui/TabBoxSettings.qml:84
+#, kde-format
+msgctxt "@option:check"
+msgid "Hides other windows"
+msgstr "Andere vensters verbergen"
+
+#: ui/TabBoxSettings.qml:99
+#, kde-format
+msgctxt "@label"
+msgid "Show on screen:"
+msgstr "Op scherm weergeven:"
+
+#: ui/TabBoxSettings.qml:106
+#, kde-format
+msgctxt "@item:inlistbox 'Show on screen:'"
+msgid "Active screen"
+msgstr "Actief scherm"
+
+#: ui/TabBoxSettings.qml:106
+#, kde-format
+msgctxt "@item:inlistbox 'Show on screen:'"
+msgid "Primary screen"
+msgstr "Primair scherm"
+
+#: ui/TabBoxSettings.qml:121
+#, kde-format
+msgctxt "@label:spinbox"
+msgid "Show delay:"
+msgstr "Vertraging tonen:"
+
+#: ui/TabBoxSettings.qml:122
+#, kde-format
+msgctxt "@info"
+msgid ""
+"Time to wait before showing the task switcher. Also applies to the "
+"alternative task switcher."
+msgstr ""
+"Wachttijd voordat de taakwisselaar wordt getoond. Geldt ook voor de "
+"alternatieve taakwisselaar."
+
+#: ui/TabBoxSettings.qml:141
+#, kde-format
+msgctxt "@spinbox:value Task switcher show delay"
+msgid "%1 ms"
+msgstr "%1 ms"
+
+#: ui/TabBoxSettings.qml:145
+#, kde-format
+msgctxt "@spinbox:value Task switcher show delay"
+msgid "ms"
+msgstr "ms"
+
+#: ui/TabBoxSettings.qml:157
+#, kde-format
+msgctxt "@title:group"
+msgid "Behavior"
+msgstr "Gedrag"
+
+#: ui/TabBoxSettings.qml:160
+#, kde-format
+msgctxt "As in, 'Include: “Show Desktop” entry'"
+msgid "Include:"
+msgstr "Insluiten:"
+
+#: ui/TabBoxSettings.qml:164
+#, kde-format
+msgctxt "@option:check, 'Include:'"
+msgid "“Show Desktop” entry"
+msgstr "Item “Bureaublad tonen”"
+
+#: ui/TabBoxSettings.qml:179
+#, kde-format
+msgctxt "@label"
+msgid "Sort windows by:"
+msgstr "Vensters sorteren op:"
+
+#: ui/TabBoxSettings.qml:186
+#, kde-format
+msgctxt "@item:inlistbox 'Sort windows by:'"
+msgid "Recently used"
+msgstr "Recent gebruikt"
+
+#: ui/TabBoxSettings.qml:186
+#, kde-format
+msgctxt "@item:inlistbox 'Sort windows by:'"
+msgid "Stacking order"
+msgstr "Stapelvolgorde"
+
+#: ui/TabBoxSettings.qml:200
+#, kde-format
+msgctxt "@option:check"
+msgid "Sort minimized windows after unminimized"
+msgstr "Geminimaliseerde vensters sorteren na niet-geminimaliseerde vensters"
+
+#: ui/TabBoxSettings.qml:215
+#, kde-format
+msgctxt "As in, 'Show windows: From all desktops'"
+msgid "Show windows:"
+msgstr "Vensters tonen:"
+
+#: ui/TabBoxSettings.qml:222
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all desktops"
+msgstr "Van alle bureaubladen"
+
+#: ui/TabBoxSettings.qml:222
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From the current desktop"
+msgstr "Uit het huidige bureaublad"
+
+#: ui/TabBoxSettings.qml:222
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all other desktops"
+msgstr "Van alle andere bureaubladen"
+
+#: ui/TabBoxSettings.qml:241
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all activities"
+msgstr "Van alle activiteiten"
+
+#: ui/TabBoxSettings.qml:241
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From the current activity"
+msgstr "Uit de huidige activiteit"
+
+#: ui/TabBoxSettings.qml:241
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all other activities"
+msgstr "Van alle andere activiteiten"
+
+#: ui/TabBoxSettings.qml:260
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all screens"
+msgstr "Van alle schermen"
+
+#: ui/TabBoxSettings.qml:260
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From the current screen"
+msgstr "Uit het huidige scherm"
+
+#: ui/TabBoxSettings.qml:260
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all other screens"
+msgstr "Van alle andere schermen"
+
+#: ui/TabBoxSettings.qml:279
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "Regardless of minimization state"
+msgstr "Ongeacht de minimalisatietoestand"
+
+#: ui/TabBoxSettings.qml:279
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "That are unminimized"
+msgstr "Die uit geminimaliseerd zijn gehaald"
+
+#: ui/TabBoxSettings.qml:279
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "That are minimized"
+msgstr "Die geminimaliseerd zijn"
+
+#: ui/TabBoxSettings.qml:293
+#, kde-format
+msgctxt "@option:check"
+msgid "Only one window per application"
+msgstr "Alleen één venster per toepassing"
+
+#: ui/TabBoxSettings.qml:312
+#, kde-format
+msgctxt "@label Hint for task switcher usage"
+msgid "Use shortcuts to activate the task switcher"
+msgstr "Gebruik sneltoetsen om de taakwisselaar te activeren"

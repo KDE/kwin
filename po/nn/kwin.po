@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-11 01:04+0000\n"
+"POT-Creation-Date: 2026-11-12 01:03+0000\n"
 "PO-Revision-Date: 2026-10-26 22:00+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
@@ -2808,17 +2808,17 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Start/avslutt flisredigering"
 
-#: plugins/tileseditor/Main.qml:153
+#: plugins/tileseditor/Main.qml:155
 #, kde-format
 msgid "Padding:"
 msgstr "Luft:"
 
-#: plugins/tileseditor/Main.qml:163
+#: plugins/tileseditor/Main.qml:165
 #, kde-format
 msgid "Load Layout…"
 msgstr "Opna utforming …"
 
-#: plugins/tileseditor/Main.qml:270
+#: plugins/tileseditor/Main.qml:272
 #, kde-format
 msgid "Close"
 msgstr "Lukk"
@@ -4427,24 +4427,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland krasja"
-
-#~ msgctxt "@action Overview and Grid View are the name of KWin effects"
-#~ msgid "Cycle through Overview and Grid View"
-#~ msgstr "Bla gjennom oversikts- og så rutenettvising"
-
-#~ msgctxt "@action Overview is the name of a KWin effect"
-#~ msgid "Toggle Overview"
-#~ msgstr "Slå på/av oversikt"
-
-#~ msgctxt "@action Grid View is the name of a KWin effect"
-#~ msgid "Toggle Grid View"
-#~ msgstr "Slå på/av rutenettvising"
-
-#~ msgid "Ignore minimized windows:"
-#~ msgstr "Ignorer minimerte vindauge:"
-
-#~ msgid "Organize windows in the Grid View:"
-#~ msgstr "Organiser vindauge i rutenettvising:"
-
-#~ msgid "Search results include filtered windows:"
-#~ msgstr "Søkjeresultat omfattar filtrerte vindauge:"

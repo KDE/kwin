@@ -91,10 +91,10 @@ msgid "Apply new name"
 msgstr "Επιβεβαίωση νέου ονόματος"
 
 #: ui/main.qml:133
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
-msgstr ""
+msgstr "Ακύρωση μετονομασίας"
 
 #: ui/main.qml:180
 #, kde-format
@@ -121,9 +121,9 @@ msgid "Navigation wraps around"
 msgstr "Η πλοήγηση περιτυλίγεται γύρω του"
 
 #: ui/main.qml:226
-#, kde-format
+#, fuzzy, kde-format
 msgid "Switch desktops independently for each screen"
-msgstr ""
+msgstr "Ανεξάρτητη εναλλαγή επιφανειών εργασίας για κάθε οθόνη"
 
 #: ui/main.qml:244
 #, kde-format

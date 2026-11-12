@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-11 01:04+0000\n"
+"POT-Creation-Date: 2026-11-12 01:03+0000\n"
 "PO-Revision-Date: 2026-10-31 13:34+0100\n"
 "Last-Translator: freek <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -2848,17 +2848,17 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Tegelbewerker omschakelen"
 
-#: plugins/tileseditor/Main.qml:153
+#: plugins/tileseditor/Main.qml:155
 #, kde-format
 msgid "Padding:"
 msgstr "Opvulling:"
 
-#: plugins/tileseditor/Main.qml:163
+#: plugins/tileseditor/Main.qml:165
 #, kde-format
 msgid "Load Layout…"
 msgstr "Indeling laden…"
 
-#: plugins/tileseditor/Main.qml:270
+#: plugins/tileseditor/Main.qml:272
 #, kde-format
 msgid "Close"
 msgstr "Sluiten"

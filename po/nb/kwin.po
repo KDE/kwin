@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-11 01:04+0000\n"
+"POT-Creation-Date: 2026-11-12 01:03+0000\n"
 "PO-Revision-Date: 2025-04-05 11:59+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@nuug.no>\n"
@@ -693,7 +693,7 @@ msgstr "Kniping avbrutt"
 #, kde-format
 msgctxt "A hardware switch (e.g. notebook lid) got toggled"
 msgid "Switch toggled"
-msgstr "Bryter slått av/på"
+msgstr "Bryter slått på/av"
 
 #: debug_console.cpp:515
 #, kde-format
@@ -2092,12 +2092,12 @@ msgstr "Skjul pekeren ved skriving"
 #: plugins/invert/invert.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect"
-msgstr "Slå av/på omsnuingseffekt"
+msgstr "Slå på/av omsnuingseffekt"
 
 #: plugins/invert/invert.cpp:51
 #, kde-format
 msgid "Toggle Invert Effect on Window"
-msgstr "Slå av/på omsnuingseffekt på vindu"
+msgstr "Slå på/av omsnuingseffekt på vindu"
 
 #: plugins/invert/invert.cpp:57
 #, kde-format
@@ -2283,7 +2283,7 @@ msgstr "Maksimer/gjenopprett vinduet på %1"
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:307
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
-msgstr "Slå av/på fullskjerm for vinduet på %1"
+msgstr "Slå på/av fullskjerm for vinduet på %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:310
 #, kde-format
@@ -2293,12 +2293,12 @@ msgstr "Rull opp/ned vinduet på %1"
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:313
 #, kde-format
 msgid "Toggle keep above for running window on %1"
-msgstr "Slå av/på hold vinduet over, vinduet %1"
+msgstr "Slå på/av hold vinduet over, vinduet %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:316
 #, kde-format
 msgid "Toggle keep below running window on %1"
-msgstr "Slå av/på hold vinduet under, vinduet %1"
+msgstr "Slå på/av hold vinduet under, vinduet %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:320
 #, kde-format
@@ -2322,7 +2322,7 @@ msgstr "Standard"
 #: plugins/mouseclick/mouseclick_config.cpp:43
 #, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "Slå av/på animasjon ved museklikk"
+msgstr "Slå på/av animasjon ved museklikk"
 
 #: plugins/mouseclick/mouseclick.cpp:46
 #, kde-format
@@ -2550,7 +2550,7 @@ msgstr "Kveldsfarger slått på"
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr "Kveldsfarger av/på"
+msgstr "Kveldsfarger på/av"
 
 #: plugins/nightlight/nightlightmanager.cpp:461
 #, kde-format
@@ -2657,13 +2657,13 @@ msgstr "Bla gjennom rutenett- og oversiktsvisning"
 #, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
-msgstr "Slå av/på oversiktsvisning"
+msgstr "Slå på/av oversiktsvisning"
 
 #: plugins/overview/overvieweffect.cpp:158
 #, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "Slå av/på rutenettvisning"
+msgstr "Slå på/av rutenettvisning"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:241
 #, kde-format
@@ -2839,7 +2839,7 @@ msgstr ""
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:51
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
-msgstr "Slå av/på miniatyrbilde for gjeldende vindu"
+msgstr "Slå på/av miniatyrbilde for gjeldende vindu"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:23
@@ -2879,17 +2879,17 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Start/avslutt flisredigering"
 
-#: plugins/tileseditor/Main.qml:153
+#: plugins/tileseditor/Main.qml:155
 #, kde-format
 msgid "Padding:"
 msgstr "Luft:"
 
-#: plugins/tileseditor/Main.qml:163
+#: plugins/tileseditor/Main.qml:165
 #, kde-format
 msgid "Load Layout…"
 msgstr "Åpne oppsett …"
 
-#: plugins/tileseditor/Main.qml:270
+#: plugins/tileseditor/Main.qml:272
 #, kde-format
 msgid "Close"
 msgstr "Lukk"
@@ -4509,24 +4509,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland krasjet"
-
-#~ msgctxt "@action Overview and Grid View are the name of KWin effects"
-#~ msgid "Cycle through Overview and Grid View"
-#~ msgstr "Bla gjennom oversikts- og rutenettvisning"
-
-#~ msgctxt "@action Overview is the name of a KWin effect"
-#~ msgid "Toggle Overview"
-#~ msgstr "Slå av/på oversikt"
-
-#~ msgctxt "@action Grid View is the name of a KWin effect"
-#~ msgid "Toggle Grid View"
-#~ msgstr "Slå av/på rutenettvisning"
-
-#~ msgid "Ignore minimized windows:"
-#~ msgstr "Ignorer minimerte vinduer:"
-
-#~ msgid "Organize windows in the Grid View:"
-#~ msgstr "Organiser vinduer i rutenettvisning:"
-
-#~ msgid "Search results include filtered windows:"
-#~ msgstr "Søkeresultat omfatter filtrerte vinduer:"

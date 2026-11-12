@@ -83,12 +83,12 @@ msgstr "Rutenett"
 #: main.cpp:168 touch.cpp:136
 #, kde-format
 msgid "Toggle window switching"
-msgstr "Slå av/på vindusbytting"
+msgstr "Slå på/av vindusbytting"
 
 #: main.cpp:169 touch.cpp:137
 #, kde-format
 msgid "Toggle alternative window switching"
-msgstr "Slå av/på alternativ vindusbytting"
+msgstr "Slå på/av alternativ vindusbytting"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23

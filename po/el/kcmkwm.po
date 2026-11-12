@@ -166,9 +166,9 @@ msgid "When focusing a window on a different Virtual Desktop:"
 msgstr ""
 
 #: ui/Focus.qml:176
-#, kde-format
+#, fuzzy, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr ""
+msgstr "Μεταφορά του παραθύρου στην τρέχουσα εικονική επιφάνεια εργασίας"
 
 #: ui/Focus.qml:180 ui/TitlebarActions.qml:26 ui/TitlebarActions.qml:39
 #: ui/TitlebarActions.qml:64 ui/TitlebarActions.qml:87 ui/WindowActions.qml:38
@@ -266,13 +266,13 @@ msgstr "Ζώνη αρπαγής &κέντρου:"
 #, fuzzy, kde-format
 #| msgid "Raising windows"
 msgid "&Snap windows:"
-msgstr "Ανύψωση παραθύρων"
+msgstr "Έλξη &παραθύρων:"
 
 #: ui/MovementAndPlacement.qml:107
 #, fuzzy, kde-format
 #| msgid "Snap windows onl&y when overlapping"
 msgid "Only when overlapping"
-msgstr "Αρπαγή των παραθύρων &μόνο κατά την επικάλυψη"
+msgstr "Μόνο όταν επικαλύπτονται"
 
 #: ui/MovementAndPlacement.qml:122
 #, kde-format
@@ -290,7 +290,7 @@ msgstr "&Τοποθέτηση:"
 #, fuzzy, kde-format
 #| msgid "Snap windows onl&y when overlapping"
 msgid "Minimal Overlapping"
-msgstr "Αρπαγή των παραθύρων &μόνο κατά την επικάλυψη"
+msgstr "Ελάχιστη επικάλυψη"
 
 #: ui/MovementAndPlacement.qml:130
 #, kde-format
@@ -308,9 +308,9 @@ msgid "Centered"
 msgstr "Κεντραρισμένη"
 
 #: ui/MovementAndPlacement.qml:133
-#, kde-format
+#, fuzzy, kde-format
 msgid "In Top-Left Corner"
-msgstr ""
+msgstr "Στην πάνω αριστερή γωνία"
 
 #: ui/MovementAndPlacement.qml:134
 #, kde-format
@@ -336,29 +336,29 @@ msgid "Picture-in-picture:"
 msgstr ""
 
 #: ui/MovementAndPlacement.qml:172
-#, kde-format
+#, fuzzy, kde-format
 msgid "Top-left"
-msgstr ""
+msgstr "Πάνω αριστερά"
 
 #: ui/MovementAndPlacement.qml:173
-#, kde-format
+#, fuzzy, kde-format
 msgid "Top-right"
-msgstr ""
+msgstr "Πάνω δεξιά"
 
 #: ui/MovementAndPlacement.qml:174
-#, kde-format
+#, fuzzy, kde-format
 msgid "Bottom-left"
-msgstr ""
+msgstr "Κάτω αριστερά"
 
 #: ui/MovementAndPlacement.qml:175
-#, kde-format
+#, fuzzy, kde-format
 msgid "Bottom-right"
-msgstr ""
+msgstr "Κάτω δεξιά"
 
 #: ui/MovementAndPlacement.qml:189
-#, kde-format
+#, fuzzy, kde-format
 msgid "Margin:"
-msgstr ""
+msgstr "Περιθώριο:"
 
 #: ui/OnScreenDisplayPositionSelector.qml:80
 #, kde-format
@@ -456,7 +456,7 @@ msgstr "Κλείσιμο"
 #, fuzzy, kde-format
 #| msgid "&Placement:"
 msgid "Window menu"
-msgstr "&Τοποθέτηση:"
+msgstr "Μενού παραθύρου"
 
 #: ui/TitlebarActions.qml:30 ui/WindowActions.qml:23 ui/WindowActions.qml:54
 #, fuzzy, kde-format
@@ -481,14 +481,14 @@ msgid "Maximize"
 msgstr "Μεγιστοποίηση"
 
 #: ui/TitlebarActions.qml:44 ui/TitlebarActions.qml:58
-#, kde-format
+#, fuzzy, kde-format
 msgid "Vertically maximize"
-msgstr ""
+msgstr "Κατακόρυφη μεγιστοποίηση"
 
 #: ui/TitlebarActions.qml:45 ui/TitlebarActions.qml:59
-#, kde-format
+#, fuzzy, kde-format
 msgid "Horizontally maximize"
-msgstr ""
+msgstr "Οριζόντια μεγιστοποίηση"
 
 #: ui/TitlebarActions.qml:49
 #, kde-format
@@ -535,7 +535,7 @@ msgstr "Αλλαγή αδιαφάνειας"
 #, fuzzy, kde-format
 #| msgid "&Titlebar Actions"
 msgid "Titlebar and Frame Actions"
-msgstr "Ενέργειες &γραμμής τίτλου"
+msgstr "Ενέργειες γραμμής τίτλου και πλαισίου"
 
 #: ui/TitlebarActions.qml:111
 #, fuzzy, kde-format
@@ -589,9 +589,9 @@ msgid "Middle click on an unfocused titlebar or frame"
 msgstr ""
 
 #: ui/TitlebarActions.qml:196 ui/WindowActions.qml:83
-#, kde-format
+#, fuzzy, kde-format
 msgid "&Right click:"
-msgstr ""
+msgstr "&Δεξί κλικ:"
 
 #: ui/TitlebarActions.qml:201
 #, kde-format
@@ -606,9 +606,9 @@ msgid "Right click on an unfocused titlebar or frame"
 msgstr ""
 
 #: ui/TitlebarActions.qml:233
-#, kde-format
+#, fuzzy, kde-format
 msgid "Maximize window by double clicking its frame"
-msgstr ""
+msgstr "Μεγιστοποίηση παραθύρου με διπλό κλικ στο πλαίσιό του"
 
 #: ui/TitlebarActions.qml:248
 #, fuzzy, kde-format
@@ -629,9 +629,9 @@ msgid "Middle c&lick:"
 msgstr "Με&σαίο κουμπί:"
 
 #: ui/TitlebarActions.qml:285 ui/WindowActions.qml:186
-#, kde-format
+#, fuzzy, kde-format
 msgid "Right clic&k:"
-msgstr ""
+msgstr "Δεξί κλι&κ:"
 
 #: ui/WindowActions.qml:20 ui/WindowActions.qml:51
 #, kde-format

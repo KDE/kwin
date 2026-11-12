@@ -27,9 +27,9 @@ msgid "No Action"
 msgstr "Καμία ενέργεια"
 
 #: main.cpp:152 touch.cpp:120
-#, kde-format
+#, fuzzy, kde-format
 msgid "Peek at Desktop"
-msgstr ""
+msgstr "Ματιά στην επιφάνεια εργασίας"
 
 #: main.cpp:153 touch.cpp:121
 #, kde-format
@@ -37,9 +37,9 @@ msgid "Lock Screen"
 msgstr "Κλείδωμα οθόνης"
 
 #: main.cpp:154 touch.cpp:122
-#, kde-format
+#, fuzzy, kde-format
 msgid "Show KRunner"
-msgstr ""
+msgstr "Εμφάνιση KRunner"
 
 #: main.cpp:155 touch.cpp:123
 #, kde-format
@@ -52,9 +52,9 @@ msgid "Application Launcher"
 msgstr "Εκτελεστής εφαρμογών"
 
 #: main.cpp:160 touch.cpp:128
-#, kde-format
+#, fuzzy, kde-format
 msgid "Present Windows"
-msgstr ""
+msgstr "Παρουσίαση παραθύρων"
 
 #: main.cpp:161 touch.cpp:129
 #, kde-format
@@ -72,14 +72,14 @@ msgid "%1 - Current Application"
 msgstr "%1 - Τρέχουσα εφαρμογή"
 
 #: main.cpp:165 touch.cpp:133
-#, kde-format
+#, fuzzy, kde-format
 msgid "Overview"
-msgstr ""
+msgstr "Επισκόπηση"
 
 #: main.cpp:166 touch.cpp:134
-#, kde-format
+#, fuzzy, kde-format
 msgid "Grid"
-msgstr ""
+msgstr "Πλέγμα"
 
 #: main.cpp:168 touch.cpp:136
 #, kde-format
@@ -106,21 +106,21 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67
-#, kde-format
+#, fuzzy, kde-format
 msgid "&Maximize:"
-msgstr ""
+msgstr "&Μεγιστοποίηση:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderMaximize)
 #: main.ui:77
-#, kde-format
+#, fuzzy, kde-format
 msgid "Windows dragged to top edge"
-msgstr ""
+msgstr "Παράθυρα που σύρονται στην πάνω άκρη"
 
 #. i18n: ectx: property (text), widget (QLabel, quickTileLabel)
 #: main.ui:84
-#, kde-format
+#, fuzzy, kde-format
 msgid "&Tile:"
-msgstr ""
+msgstr "&Παράθεση:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderTiling)
 #: main.ui:94
@@ -131,21 +131,21 @@ msgstr "Παράθεση παραθύρων με σύρσιμο τους στα 
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: main.ui:101
-#, kde-format
+#, fuzzy, kde-format
 msgid "Behavior:"
-msgstr ""
+msgstr "Συμπεριφορά:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, remainActiveOnFullscreen)
 #: main.ui:108
-#, kde-format
+#, fuzzy, kde-format
 msgid "Remain active when windows are fullscreen"
-msgstr ""
+msgstr "Να παραμένει ενεργό όταν τα παράθυρα είναι σε πλήρη οθόνη"
 
 #. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
 #: main.ui:115
-#, kde-format
+#, fuzzy, kde-format
 msgid "Trigger &quarter tiling in:"
-msgstr ""
+msgstr "Ενεργοποίηση παράθεσης σε &τέταρτα σε:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, electricBorderCornerRatioSpin)
 #: main.ui:130
@@ -155,9 +155,9 @@ msgstr "%"
 
 #. i18n: ectx: property (prefix), widget (QSpinBox, electricBorderCornerRatioSpin)
 #: main.ui:133
-#, kde-format
+#, fuzzy, kde-format
 msgid "Outer "
-msgstr ""
+msgstr "Εξωτερικό "
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: main.ui:149
@@ -247,13 +247,13 @@ msgstr "&Καθυστέρηση επανενεργοποίησης:"
 
 #. i18n: ectx: property (text), widget (QLabel, CornerBarrierLabel)
 #: main.ui:270
-#, kde-format
+#, fuzzy, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "Φράγμα &γωνίας:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
-#, kde-format
+#, fuzzy, kde-format
 msgid ""
 "Here you can enable or disable the virtual corner barrier between screens. "
 "The barrier prevents the pointer from moving to another screen when it is "
@@ -261,23 +261,27 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Εδώ ενεργοποιείτε ή απενεργοποιείτε το εικονικό φράγμα γωνίας μεταξύ οθονών. "
+"Το φράγμα εμποδίζει τον δείκτη να περάσει σε άλλη οθόνη όταν ήδη αγγίζει μια "
+"γωνία. Έτσι πατάτε ευκολότερα στοιχεία όπως τα κουμπιά κλεισίματος "
+"μεγιστοποιημένων παραθύρων όταν έχετε πολλές οθόνες."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents the pointer from crossing at screen corners."
-msgstr ""
+msgstr "Εμποδίζει τον δείκτη να περάσει στις γωνίες των οθονών."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
-#, kde-format
+#, fuzzy, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "Φράγμα &άκρης:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
-#, kde-format
+#, fuzzy, kde-format
 msgid ""
 "Here you can set size of the edge barrier between different screens. The "
 "barrier adds additional distance you have to move your pointer before it "
@@ -285,25 +289,31 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Εδώ ορίζετε το μέγεθος του φράγματος άκρης μεταξύ οθονών. Το φράγμα "
+"προσθέτει επιπλέον απόσταση που πρέπει να διανύσει ο δείκτης πριν περάσει "
+"στην άλλη οθόνη. Έτσι φτάνετε ευκολότερα σε στοιχεία όπως οι πίνακες Plasma "
+"που βρίσκονται στην άκρη μεταξύ οθονών."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@info:tooltip"
 msgid "Additional distance the pointer needs to travel to cross screen edges."
 msgstr ""
+"Επιπλέον απόσταση που πρέπει να διανύσει ο δείκτης για να περάσει τις άκρες "
+"των οθονών."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
-#, kde-format
+#, fuzzy, kde-format
 msgid "None"
-msgstr ""
+msgstr "Κανένα"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
-#, kde-format
+#, fuzzy, kde-format
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17

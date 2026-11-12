@@ -1,0 +1,423 @@
+# Copyright (C) 2026 This file is copyright:
+# This file is distributed under the same license as the kwin package.
+# SPDX-FileCopyrightText: 2026 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2026-11-10 14:33+0000\n"
+"PO-Revision-Date: 2026-11-11 21:08+0400\n"
+"Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
+"Language-Team: ar\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Lokalize 26.08.1\n"
+
+#: kcm.cpp:139 kcm.cpp:214
+#, kde-format
+msgctxt "@title"
+msgid "KWin"
+msgstr "كوين"
+
+#: kcm.cpp:144
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows"
+msgstr "تنقّل بين النّوافذ"
+
+#: kcm.cpp:151
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows (Reverse)"
+msgstr "تنقّل بين النّوافذ (بالعكس)"
+
+#: kcm.cpp:158
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows of Current Application"
+msgstr "تنقّل بين نوافذ التّطبيق الحاليّ"
+
+#: kcm.cpp:165
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows of Current Application (Reverse)"
+msgstr "تنقّل بين نوافذ التّطبيق الحاليّ (بالعكس)"
+
+#: kcm.cpp:172
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows Alternative"
+msgstr "تنقّل بين النّوافذ البديلة"
+
+#: kcm.cpp:179
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows Alternative (Reverse)"
+msgstr "تنقّل بين النّوافذ البديلة (بالعكس)"
+
+#: kcm.cpp:186
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "تنقّل بين نوافذ التّطبيق الحاليّ البديلة"
+
+#: kcm.cpp:193
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "تنقّل بين نوافذ التّطبيق الحاليّ البديلة (بالعكس)"
+
+#: kcm.cpp:219
+#, kde-format
+msgctxt "@action Overview and Grid View are the name of KWin effects"
+msgid "Cycle through Overview and Grid View"
+msgstr "دور خلال النظرة العامة و عرض الشبكة"
+
+#: kcm.cpp:225
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
+msgstr "دور خلال عرض الشبكة والنظرة العامة"
+
+#: kcm.cpp:231
+#, kde-format
+msgctxt "@action Overview is the name of a KWin effect"
+msgid "Toggle Overview"
+msgstr "بدل النظرة العامة"
+
+#: kcm.cpp:237
+#, kde-format
+msgctxt "@action Grid View is the name of a KWin effect"
+msgid "Toggle Grid View"
+msgstr "بدل عرض الشبكة"
+
+#: tabboxlayoutsmodel.cpp:135
+#, kde-format
+msgctxt "@item:inlistbox"
+msgid "None"
+msgstr "لا شيء"
+
+#: ui/main.qml:36
+#, kde-format
+msgctxt "@title:tab"
+msgid "Task Switcher"
+msgstr "مبدّل المهام"
+
+#: ui/main.qml:42
+#, kde-format
+msgctxt "@title:tab"
+msgid "Task Switcher (Alternative)"
+msgstr ""
+
+#: ui/main.qml:48
+#, kde-format
+msgctxt "@title:tab"
+msgid "Overview"
+msgstr "نظرة عامة"
+
+#: ui/main.qml:62
+#, kde-format
+msgctxt "@info"
+msgid ""
+"Focus policy settings limit the functionality of navigating through windows."
+msgstr "تحد إعدادات سياسة التركيز من وظيفة التنقل عبر النوافذ."
+
+#: ui/main.qml:102
+#, kde-format
+msgctxt "@info"
+msgid ""
+"The alternative task switcher is a second switcher with its own separate "
+"shortcut, appearance, and behavior settings."
+msgstr ""
+
+#: ui/OverviewSettings.qml:20
+#, kde-format
+msgctxt "@label"
+msgid "Overview:"
+msgstr "النظرة العامة:"
+
+#: ui/OverviewSettings.qml:23
+#, kde-format
+msgctxt "@label Hint for overview effect enable button"
+msgid ""
+"Swipe up with four fingers on a touchpad or three on a touchscreen, or use "
+"screen edge gestures to toggle the overview"
+msgstr ""
+
+#: ui/OverviewSettings.qml:25
+#, kde-format
+msgctxt ""
+"@label Hint for overview effect enable button, %1 is a keyboard shortcut"
+msgid ""
+"Press %1, swipe up with four fingers on a touchpad or three on a "
+"touchscreen, or use screen edge gestures to toggle the overview"
+msgstr ""
+
+#: ui/OverviewSettings.qml:27
+#, kde-format
+msgctxt ""
+"@label Hint for overview effect enable button, %1 and %2 are alternative "
+"keyboard shortcuts"
+msgid ""
+"Press %1 or %2, swipe up with four fingers on a touchpad or three on a "
+"touchscreen, or use screen edge gestures to toggle the overview"
+msgstr ""
+
+#: ui/OverviewSettings.qml:31
+#, kde-format
+msgctxt "@option:check, Enable overview effect"
+msgid "Enable"
+msgstr "مكّن"
+
+#: ui/OverviewSettings.qml:47
+#, kde-format
+msgctxt "@option:check"
+msgid "Show minimized windows"
+msgstr ""
+
+#: ui/OverviewSettings.qml:63
+#, kde-format
+msgctxt "@option:check"
+msgid "Search results include windows"
+msgstr ""
+
+#: ui/OverviewSettings.qml:77
+#, kde-format
+msgctxt "@option:check"
+msgid "Organize windows in the Grid view"
+msgstr "رتب النوافذ في عرض الشبكة"
+
+#: ui/OverviewSettings.qml:94 ui/TabBoxSettings.qml:314
+#, kde-format
+msgctxt "@action:button"
+msgid "Configure Shortcuts…"
+msgstr "اضبط الاختصارات"
+
+#: ui/OverviewSettings.qml:106
+#, kde-format
+msgctxt "@action:button"
+msgid "Configure Screen Edges…"
+msgstr ""
+
+#: ui/OverviewSettings.qml:118
+#, kde-format
+msgctxt "@action:button"
+msgid "Configure Touchscreen Gestures…"
+msgstr ""
+
+#: ui/TabBoxSettings.qml:26
+#, kde-format
+msgctxt "@title:group"
+msgid "Appearance"
+msgstr "المظهر"
+
+#: ui/TabBoxSettings.qml:29
+#, kde-format
+msgctxt "Task switcher style"
+msgid "Switcher style:"
+msgstr ""
+
+#: ui/TabBoxSettings.qml:58
+#, kde-format
+msgctxt "@action:button"
+msgid "Get New…"
+msgstr "احصل على جديد…"
+
+#: ui/TabBoxSettings.qml:67
+#, kde-format
+msgctxt "@action:button"
+msgid "Show Preview"
+msgstr "أظهر معاينة"
+
+#: ui/TabBoxSettings.qml:82
+#, kde-format
+msgctxt "@label"
+msgid "Selecting a window:"
+msgstr ""
+
+#: ui/TabBoxSettings.qml:84
+#, kde-format
+msgctxt "@option:check"
+msgid "Hides other windows"
+msgstr ""
+
+#: ui/TabBoxSettings.qml:99
+#, kde-format
+msgctxt "@label"
+msgid "Show on screen:"
+msgstr "اعرض في الشاشة:"
+
+#: ui/TabBoxSettings.qml:106
+#, kde-format
+msgctxt "@item:inlistbox 'Show on screen:'"
+msgid "Active screen"
+msgstr "الشاشة النشطة"
+
+#: ui/TabBoxSettings.qml:106
+#, kde-format
+msgctxt "@item:inlistbox 'Show on screen:'"
+msgid "Primary screen"
+msgstr "الشّاشة الأساسية"
+
+#: ui/TabBoxSettings.qml:121
+#, kde-format
+msgctxt "@label:spinbox"
+msgid "Show delay:"
+msgstr "تأخير الإظهار:"
+
+#: ui/TabBoxSettings.qml:122
+#, kde-format
+msgctxt "@info"
+msgid ""
+"Time to wait before showing the task switcher. Also applies to the "
+"alternative task switcher."
+msgstr ""
+
+#: ui/TabBoxSettings.qml:141
+#, kde-format
+msgctxt "@spinbox:value Task switcher show delay"
+msgid "%1 ms"
+msgstr "%1 م‌ث"
+
+#: ui/TabBoxSettings.qml:145
+#, kde-format
+msgctxt "@spinbox:value Task switcher show delay"
+msgid "ms"
+msgstr "م‌ث"
+
+#: ui/TabBoxSettings.qml:157
+#, kde-format
+msgctxt "@title:group"
+msgid "Behavior"
+msgstr "السّلوك"
+
+#: ui/TabBoxSettings.qml:160
+#, kde-format
+msgctxt "As in, 'Include: “Show Desktop” entry'"
+msgid "Include:"
+msgstr "يتضمّن:"
+
+#: ui/TabBoxSettings.qml:164
+#, kde-format
+msgctxt "@option:check, 'Include:'"
+msgid "“Show Desktop” entry"
+msgstr ""
+
+#: ui/TabBoxSettings.qml:179
+#, kde-format
+msgctxt "@label"
+msgid "Sort windows by:"
+msgstr ""
+
+#: ui/TabBoxSettings.qml:186
+#, kde-format
+msgctxt "@item:inlistbox 'Sort windows by:'"
+msgid "Recently used"
+msgstr "المستخدَم حديثًا"
+
+#: ui/TabBoxSettings.qml:186
+#, kde-format
+msgctxt "@item:inlistbox 'Sort windows by:'"
+msgid "Stacking order"
+msgstr "ترتيب التّكِيدِيس"
+
+#: ui/TabBoxSettings.qml:200
+#, kde-format
+msgctxt "@option:check"
+msgid "Sort minimized windows after unminimized"
+msgstr ""
+
+#: ui/TabBoxSettings.qml:215
+#, kde-format
+msgctxt "As in, 'Show windows: From all desktops'"
+msgid "Show windows:"
+msgstr ""
+
+#: ui/TabBoxSettings.qml:222
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all desktops"
+msgstr ""
+
+#: ui/TabBoxSettings.qml:222
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From the current desktop"
+msgstr "من سطح المكتب الحالي"
+
+#: ui/TabBoxSettings.qml:222
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all other desktops"
+msgstr ""
+
+#: ui/TabBoxSettings.qml:241
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all activities"
+msgstr ""
+
+#: ui/TabBoxSettings.qml:241
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From the current activity"
+msgstr "من النّشاط الحاليّ"
+
+#: ui/TabBoxSettings.qml:241
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all other activities"
+msgstr ""
+
+#: ui/TabBoxSettings.qml:260
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all screens"
+msgstr ""
+
+#: ui/TabBoxSettings.qml:260
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From the current screen"
+msgstr "من الشاشة الحالية"
+
+#: ui/TabBoxSettings.qml:260
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all other screens"
+msgstr ""
+
+#: ui/TabBoxSettings.qml:279
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "Regardless of minimization state"
+msgstr ""
+
+#: ui/TabBoxSettings.qml:279
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "That are unminimized"
+msgstr ""
+
+#: ui/TabBoxSettings.qml:279
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "That are minimized"
+msgstr "المهام المصغّرة"
+
+#: ui/TabBoxSettings.qml:293
+#, kde-format
+msgctxt "@option:check"
+msgid "Only one window per application"
+msgstr "نافذة لكلّ تطبيق"
+
+#: ui/TabBoxSettings.qml:312
+#, kde-format
+msgctxt "@label Hint for task switcher usage"
+msgid "Use shortcuts to activate the task switcher"
+msgstr ""
