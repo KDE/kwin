@@ -34,11 +34,6 @@ public:
     void setRelativeGeometry(const RectF &geom) override;
 
     /*!
-     * Remove this tile from the tile tree.
-     */
-    Q_INVOKABLE void remove();
-
-    /*!
      * Splits the current tile along the specified \a newDirection, either creating two children
      * or a new sibling. Returns the two new tiles created by splitting this one.
      */

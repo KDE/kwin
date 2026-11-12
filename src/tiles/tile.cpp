@@ -583,6 +583,74 @@ void Tile::removeChild(Tile *child)
     Q_EMIT childTilesChanged();
 }
 
+void Tile::remove()
+{
+    if (!m_parentTile) {
+        return;
+    }
+
+    auto *prev = previousSibling();
+    auto *next = nextSibling();
+
+    const auto parentTile = m_parentTile;
+    m_parentTile->removeChild(this);
+    m_parentTile = nullptr;
+
+    if (parentTile->layoutDirection() == LayoutDirection::Horizontal) {
+        if (prev && next) {
+            auto geom = prev->relativeGeometry();
+            geom.setRight(relativeGeometry().center().x());
+            prev->setRelativeGeometry(geom);
+            geom = next->relativeGeometry();
+            geom.setLeft(relativeGeometry().center().x());
+            next->setRelativeGeometry(geom);
+        } else if (prev) {
+            auto geom = prev->relativeGeometry();
+            geom.setRight(relativeGeometry().right());
+            prev->setRelativeGeometry(geom);
+        } else if (next) {
+            auto geom = next->relativeGeometry();
+            geom.setLeft(relativeGeometry().left());
+            next->setRelativeGeometry(geom);
+        }
+    } else if (parentTile->layoutDirection() == LayoutDirection::Vertical) {
+        if (prev && next) {
+            auto geom = prev->relativeGeometry();
+            geom.setBottom(relativeGeometry().center().y());
+            prev->setRelativeGeometry(geom);
+            geom = next->relativeGeometry();
+            geom.setTop(relativeGeometry().center().y());
+            next->setRelativeGeometry(geom);
+        } else if (prev) {
+            auto geom = prev->relativeGeometry();
+            geom.setBottom(relativeGeometry().bottom());
+            prev->setRelativeGeometry(geom);
+        } else if (next) {
+            auto geom = next->relativeGeometry();
+            geom.setTop(relativeGeometry().top());
+            next->setRelativeGeometry(geom);
+        }
+    }
+
+    // On linear layouts remove the last one and promote the layout as leaf
+    if (!parentTile->isRoot() && parentTile->childCount() == 1) {
+        auto *lastTile = static_cast<CustomTile *>(parentTile->childTile(0));
+        if (lastTile->childCount() == 0) {
+            lastTile->remove();
+        }
+    }
+
+    const auto windows = std::exchange(m_windows, {});
+    for (Window *window : windows) {
+        Tile *tile = m_tiling->rootTile(m_desktop)->pick(window->moveResizeGeometry().center());
+        if (tile) {
+            tile->manage(window);
+        }
+    }
+
+    deleteLater(); // not using "delete this" because QQmlEngine will crash
+}
+
 QList<Tile *> Tile::childTiles() const
 {
     return m_children;
