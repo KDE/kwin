@@ -68,7 +68,6 @@ TileManager::TileManager(LogicalOutput *parent)
         m_rootTiles[desk] = rootTile;
         m_quickRootTiles[desk] = new QuickRootTile(this, desk);
 
-        rootTile->setRelativeGeometry(RectF(0, 0, 1, 1));
         connect(rootTile, &Tile::paddingChanged, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
         connect(rootTile, &Tile::layoutModified, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
 
@@ -244,13 +243,6 @@ Tile *TileManager::parseTilingJSon(const QJsonValue &val, const RectF &available
                 }
             }
         }
-        // make sure the children fill exactly the parent, eventually enlarging the last
-        if (parentTile->childCount() > 0) {
-            auto *last = parentTile->childTile(parentTile->childCount() - 1);
-            auto geom = last->relativeGeometry();
-            geom.setRight(parentTile->relativeGeometry().right());
-            last->setRelativeGeometry(geom);
-        }
         return nullptr;
     }
     return nullptr;
@@ -286,8 +278,7 @@ void TileManager::readSettings(RootTile *rootTile)
         rootTile->split(Tile::LayoutDirection::Horizontal);
         rootTile->childTile(0)->split(Tile::LayoutDirection::Horizontal);
         Q_ASSERT(rootTile->childCount() == 3);
-        // Resize middle column, the other two will be auto resized accordingly
-        rootTile->childTile(1)->setRelativeGeometry({0.25, 0.0, 0.5, 1.0});
+        rootTile->childTile(1)->resizeHorizontallyInPercents(0.5);
     };
 
     QJsonParseError error;

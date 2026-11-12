@@ -236,7 +236,6 @@ FocusScope {
                             rootTile.tiles[0].remove();
                         }
                         rootTile.split(KWinComponents.Tile.Horizontal)
-                        rootTile.tiles[0].relativeGeometry = Qt.rect(0, 0, 0.5, 1);
                     }
                 }
                 LayoutButton {
@@ -250,7 +249,7 @@ FocusScope {
                         }
                         rootTile.split(KWinComponents.Tile.Horizontal)
                         rootTile.tiles[0].split(KWinComponents.Tile.Horizontal)
-                        rootTile.tiles[1].relativeGeometry = Qt.rect(0.25, 0, 0.5, 1);
+                        rootTile.tiles[1].resizeHorizontallyInPercents(0.5);
                     }
                 }
                 LayoutButton {
@@ -262,7 +261,7 @@ FocusScope {
                             rootTile.tiles[0].remove();
                         }
                         rootTile.split(KWinComponents.Tile.Horizontal)
-                        rootTile.tiles[0].relativeGeometry = Qt.rect(0, 0, 0.4, 1);
+                        rootTile.tiles[0].resizeHorizontallyInPercents(0.4);
                         rootTile.tiles[0].split(KWinComponents.Tile.Vertical)
                     }
                 }

@@ -19,8 +19,6 @@
 
 #include <cmath>
 
-#include <QScopedValueRollback>
-
 namespace KWin
 {
 
@@ -45,7 +43,6 @@ Tile::Tile(TileManager *tiling, Tile *parent)
 {
     if (m_parentTile) {
         m_padding = m_parentTile->padding();
-        m_minimumSize = m_parentTile->m_minimumSize;
         m_desktop = m_parentTile->desktop();
     }
     connect(Workspace::self(), &Workspace::configChanged, this, &Tile::windowGeometryChanged);
@@ -195,15 +192,11 @@ Gravity Tile::resolveResizeGravity(Gravity gravity)
 
 void Tile::setRelativeGeometry(const RectF &geom)
 {
-    RectF constrainedGeom = geom;
-    constrainedGeom.setWidth(std::max(constrainedGeom.width(), m_minimumSize.width()));
-    constrainedGeom.setHeight(std::max(constrainedGeom.height(), m_minimumSize.height()));
-
-    if (m_relativeGeometry == constrainedGeom) {
+    if (m_relativeGeometry == geom) {
         return;
     }
 
-    m_relativeGeometry = constrainedGeom;
+    m_relativeGeometry = geom;
 
     Q_EMIT relativeGeometryChanged();
     Q_EMIT absoluteGeometryChanged();
@@ -215,130 +208,6 @@ void Tile::setRelativeGeometry(const RectF &geom)
             w->moveResize(windowGeometry());
         }
     }
-}
-
-void Tile::setRelativeGeometryAndArrange(const RectF &geom)
-{
-    if (relativeGeometry() == geom) {
-        return;
-    }
-
-    RectF finalGeom = geom.intersected(RectF(0, 0, 1, 1));
-    finalGeom.setWidth(std::max(finalGeom.width(), minimumSize().width()));
-    finalGeom.setHeight(std::max(finalGeom.height(), minimumSize().height()));
-    // We couldn't set the minimum size and still remain in boundaries, do nothing
-    if (finalGeom.right() > 1 || finalGeom.bottom() > 1) {
-        return;
-    }
-
-    if (m_quickTileMode == QuickTileFlag::Custom) {
-        if (!m_geometryLock && !relativeGeometry().isEmpty() && m_parentTile) {
-            QScopedValueRollback<bool> geometryLock(m_geometryLock, true);
-            if (finalGeom.left() != relativeGeometry().left()) {
-                Tile *tile = nextTileAt(Qt::LeftEdge);
-                if (tile) {
-                    RectF tileGeom = tile->relativeGeometry();
-                    tileGeom.setRight(finalGeom.left());
-                    if (tileGeom.width() <= tile->minimumSize().width()) {
-                        return;
-                    }
-                    tile->setRelativeGeometryAndArrange(tileGeom);
-                    // The other tile geometry may not be what we set due to size constraints
-                    finalGeom.setLeft(tile->relativeGeometry().right());
-                } else {
-                    // We are at the left border of the screen, we are always at 0
-                    finalGeom.setLeft(0);
-                }
-            }
-            if (finalGeom.top() != relativeGeometry().top()) {
-                auto *tile = nextTileAt(Qt::TopEdge);
-                if (tile) {
-                    auto tileGeom = tile->relativeGeometry();
-                    tileGeom.setBottom(finalGeom.top());
-                    if (tileGeom.height() <= tile->minimumSize().height()) {
-                        return;
-                    }
-                    tile->setRelativeGeometryAndArrange(tileGeom);
-                    finalGeom.setTop(tile->relativeGeometry().bottom());
-                } else {
-                    // We are at the top border of the screen, we are always at 0
-                    finalGeom.setTop(0);
-                }
-            }
-            if (finalGeom.right() != relativeGeometry().right()) {
-                auto *tile = nextTileAt(Qt::RightEdge);
-                if (tile) {
-                    auto tileGeom = tile->relativeGeometry();
-                    tileGeom.setLeft(finalGeom.right());
-                    if (tileGeom.width() <= tile->minimumSize().width()) {
-                        return;
-                    }
-                    tile->setRelativeGeometryAndArrange(tileGeom);
-                    finalGeom.setRight(tile->relativeGeometry().left());
-                } else {
-                    // We are at the right border of the screen, we are always at 1
-                    finalGeom.setRight(1);
-                }
-            }
-            if (finalGeom.bottom() != relativeGeometry().bottom()) {
-                auto *tile = nextTileAt(Qt::BottomEdge);
-                if (tile) {
-                    auto tileGeom = tile->relativeGeometry();
-                    tileGeom.setTop(finalGeom.bottom());
-                    if (tileGeom.height() <= tile->minimumSize().height()) {
-                        return;
-                    }
-                    tile->setRelativeGeometryAndArrange(tileGeom);
-                    finalGeom.setBottom(tile->relativeGeometry().top());
-                } else {
-                    // We are at the bottom border of the screen, we are always at 1
-                    finalGeom.setBottom(1);
-                }
-            }
-        }
-
-        const auto childrenT = childTiles();
-
-        // Resize all the children to fit in new size
-        for (auto t : childrenT) {
-            auto childGeom = t->relativeGeometry();
-            childGeom = childGeom.intersected(finalGeom);
-            if (layoutDirection() == LayoutDirection::Horizontal) {
-                childGeom.setTop(finalGeom.top());
-                childGeom.setBottom(finalGeom.bottom());
-            } else if (layoutDirection() == LayoutDirection::Vertical) {
-                childGeom.setLeft(finalGeom.left());
-                childGeom.setRight(finalGeom.right());
-            }
-
-            t->setRelativeGeometryAndArrange(childGeom);
-        }
-
-        if (!childrenT.isEmpty()) {
-            auto childGeom = childrenT.first()->relativeGeometry();
-            if (layoutDirection() == LayoutDirection::Horizontal) {
-                childGeom.setLeft(finalGeom.left());
-            } else if (layoutDirection() == LayoutDirection::Vertical) {
-                childGeom.setTop(finalGeom.top());
-            }
-            childrenT.first()->setRelativeGeometryAndArrange(childGeom);
-        }
-
-        // Make sure the last child item fills the area
-        // TODO: ensure all children don't go below minimum size/resize all children
-        if (!m_geometryLock && !childrenT.isEmpty()) {
-            auto childGeom = childrenT.last()->relativeGeometry();
-            childGeom.setRight(finalGeom.right());
-            childGeom.setBottom(finalGeom.bottom());
-            childrenT.last()->setRelativeGeometryAndArrange(childGeom);
-        }
-    }
-
-    setRelativeGeometry(finalGeom);
-    if (m_parentTile) {
-        Q_EMIT m_parentTile->layoutModified();
-    }
-    m_geometryLock = false;
 }
 
 RectF Tile::relativeGeometry() const
@@ -444,27 +313,6 @@ void Tile::setPadding(qreal padding)
     Q_EMIT windowGeometryChanged();
 }
 
-QSizeF Tile::minimumSize() const
-{
-    return m_minimumSize;
-}
-
-void Tile::setMinimumSize(const QSizeF &size)
-{
-    QSizeF clampedSize = size;
-    clampedSize.setWidth(std::clamp(size.width(), 0.0, 1.0));
-    clampedSize.setHeight(std::clamp(size.height(), 0.0, 1.0));
-
-    if (m_minimumSize == clampedSize) {
-        return;
-    }
-
-    m_minimumSize = clampedSize;
-
-    setRelativeGeometryAndArrange(m_relativeGeometry);
-    Q_EMIT minimumSizeChanged(clampedSize);
-}
-
 QuickTileMode Tile::quickTileMode() const
 {
     return m_quickTileMode;
@@ -485,6 +333,23 @@ Tile *Tile::rootTile() const
         candidate = candidate->parentTile();
     }
     return candidate;
+}
+
+Tile *Tile::layoutReference(LayoutDirection layout) const
+{
+    Tile *candidate = m_parentTile;
+    Tile *anchor = const_cast<Tile *>(this);
+
+    while (candidate) {
+        if (candidate->layoutDirection() == layout) {
+            return anchor;
+        }
+
+        anchor = candidate;
+        candidate = candidate->m_parentTile;
+    }
+
+    return nullptr;
 }
 
 void Tile::resizeByPixels(const QPointF &delta, Gravity gravity)
@@ -532,30 +397,394 @@ void Tile::resizeByPixels(qreal delta, Qt::Edge edge)
     }
 }
 
-void Tile::resizeByPixels(const QPointF &delta, Qt::Edges edges)
+void Tile::resizeByPixels(const QPointF &deltaInPixels, Qt::Edges edges)
 {
     if (!m_parentTile) {
         return;
     }
 
-    const RectF bounds = m_tiling->output()->geometryF();
-    const QPointF relativeDelta(delta.x() / bounds.width(), delta.y() / bounds.height());
+    Tile *horizontalParent = nullptr;
+    if (edges & (Qt::LeftEdge | Qt::RightEdge)) {
+        if (Tile *reference = layoutReference(LayoutDirection::Horizontal)) {
+            QList<Tile *> affected;
+            qreal deltaSize;
 
-    auto newGeom = m_relativeGeometry;
+            if (edges.testFlags(Qt::LeftEdge | Qt::RightEdge)) {
+                deltaSize = deltaInPixels.x();
+                affected = reference->parentTile()->childTiles();
+            } else if (edges.testFlag(Qt::LeftEdge)) {
+                deltaSize = -deltaInPixels.x();
+                affected.append(reference);
+                if (const auto sibling = reference->previousSibling()) {
+                    affected.append(sibling);
+                }
+            } else if (edges.testFlag(Qt::RightEdge)) {
+                deltaSize = deltaInPixels.x();
+                affected.append(reference);
+                if (const auto sibling = reference->nextSibling()) {
+                    affected.append(sibling);
+                }
+            }
 
-    if (edges & Qt::LeftEdge) {
-        newGeom.setLeft(newGeom.left() + relativeDelta.x());
-    } else if (edges & Qt::RightEdge) {
-        newGeom.setRight(newGeom.right() + relativeDelta.x());
+            if (affected.size() > 1) {
+                const RectF parentRectInPixels = reference->parentTile()->absoluteGeometry();
+                const qreal deltaInPercents = deltaSize / parentRectInPixels.width();
+
+                qreal allowedDeltaInPercents = deltaInPercents;
+                if (deltaInPercents <= 0) {
+                    const qreal minWidthInPercents = reference->minWidthInPixels() / parentRectInPixels.width();
+                    const qreal slack = std::min(0.0, minWidthInPercents - reference->m_coverage.width());
+                    allowedDeltaInPercents = std::max(allowedDeltaInPercents, slack);
+                } else {
+                    for (Tile *tile : std::as_const(affected)) {
+                        if (tile != reference) {
+                            const qreal minWidthInPercents = tile->minWidthInPixels() / parentRectInPixels.width();
+                            const qreal slack = std::max(0.0, tile->m_coverage.width() - minWidthInPercents);
+                            allowedDeltaInPercents = std::min(allowedDeltaInPercents, slack);
+                        }
+                    }
+                }
+
+                for (Tile *tile : std::as_const(affected)) {
+                    const qreal adjustment = tile == reference
+                        ? allowedDeltaInPercents
+                        : -allowedDeltaInPercents / (affected.size() - 1);
+
+                    tile->m_coverage.rwidth() += adjustment;
+                }
+
+                horizontalParent = reference->parentTile();
+            }
+        }
     }
 
-    if (edges & Qt::TopEdge) {
-        newGeom.setTop(newGeom.top() + relativeDelta.y());
-    } else if (edges & Qt::BottomEdge) {
-        newGeom.setBottom(newGeom.bottom() + relativeDelta.y());
+    Tile *verticalParent = nullptr;
+    if (edges & (Qt::TopEdge | Qt::BottomEdge)) {
+        if (Tile *reference = layoutReference(LayoutDirection::Vertical)) {
+            QList<Tile *> affected;
+            qreal deltaSize;
+
+            if (edges.testFlags(Qt::TopEdge | Qt::BottomEdge)) {
+                deltaSize = deltaInPixels.y();
+                affected = reference->parentTile()->childTiles();
+            } else if (edges.testFlag(Qt::TopEdge)) {
+                deltaSize = -deltaInPixels.y();
+                affected.append(reference);
+                if (const auto sibling = reference->previousSibling()) {
+                    affected.append(sibling);
+                }
+            } else if (edges.testFlag(Qt::BottomEdge)) {
+                deltaSize = deltaInPixels.y();
+                affected.append(reference);
+                if (const auto sibling = reference->nextSibling()) {
+                    affected.append(sibling);
+                }
+            }
+
+            if (affected.size() > 1) {
+                const RectF parentRectInPixels = reference->parentTile()->absoluteGeometry();
+                const qreal deltaInPercents = deltaSize / parentRectInPixels.height();
+
+                qreal allowedDeltaInPercents = deltaInPercents;
+                if (deltaInPercents <= 0) {
+                    const qreal minHeightInPercents = reference->minHeightInPixels() / parentRectInPixels.height();
+                    const qreal slack = std::min(0.0, minHeightInPercents - reference->m_coverage.height());
+                    allowedDeltaInPercents = std::max(allowedDeltaInPercents, slack);
+                } else {
+                    for (Tile *tile : std::as_const(affected)) {
+                        if (tile != reference) {
+                            const qreal minHeightInPercents = tile->minHeightInPixels() / parentRectInPixels.height();
+                            const qreal slack = std::max(0.0, tile->m_coverage.height() - minHeightInPercents);
+                            allowedDeltaInPercents = std::min(allowedDeltaInPercents, slack);
+                        }
+                    }
+                }
+
+                for (Tile *tile : std::as_const(affected)) {
+                    const qreal adjustment = tile == reference
+                        ? allowedDeltaInPercents
+                        : -allowedDeltaInPercents / (affected.size() - 1);
+
+                    tile->m_coverage.rheight() += adjustment;
+                }
+
+                verticalParent = reference->parentTile();
+            }
+        }
     }
 
-    setRelativeGeometryAndArrange(newGeom);
+    if (horizontalParent && verticalParent) {
+        if (horizontalParent == m_parentTile) {
+            // The vertical layout tile is higher in the tile tree.
+            verticalParent->arrange();
+        } else {
+            horizontalParent->arrange();
+        }
+
+        return;
+    }
+
+    if (horizontalParent) {
+        horizontalParent->arrange();
+    } else if (verticalParent) {
+        verticalParent->arrange();
+    }
+}
+
+void Tile::resizeByPercents(const QPointF &delta, Qt::Edges edges)
+{
+    if (!m_parentTile) {
+        return;
+    }
+
+    Tile *horizontalParent = nullptr;
+    if (edges & (Qt::LeftEdge | Qt::RightEdge)) {
+        if (Tile *reference = layoutReference(LayoutDirection::Horizontal)) {
+            QList<Tile *> affected;
+            qreal deltaSize;
+
+            if (edges.testFlags(Qt::LeftEdge | Qt::RightEdge)) {
+                deltaSize = delta.x();
+                affected = reference->parentTile()->childTiles();
+            } else if (edges.testFlag(Qt::LeftEdge)) {
+                deltaSize = -delta.x();
+                affected.append(reference);
+                if (const auto sibling = reference->previousSibling()) {
+                    affected.append(sibling);
+                }
+            } else if (edges.testFlag(Qt::RightEdge)) {
+                deltaSize = delta.x();
+                affected.append(reference);
+                if (const auto sibling = reference->nextSibling()) {
+                    affected.append(sibling);
+                }
+            }
+
+            if (affected.size() > 1) {
+                const RectF parentRectInPixels = reference->parentTile()->absoluteGeometry();
+
+                qreal allowedDeltaInPercents = deltaSize;
+                if (deltaSize <= 0) {
+                    const qreal minWidthInPercents = reference->minWidthInPixels() / parentRectInPixels.width();
+                    const qreal slack = std::min(0.0, minWidthInPercents - reference->m_coverage.width());
+                    allowedDeltaInPercents = std::max(allowedDeltaInPercents, slack);
+                } else {
+                    for (Tile *tile : std::as_const(affected)) {
+                        if (tile != reference) {
+                            const qreal minWidthInPercents = tile->minWidthInPixels() / parentRectInPixels.width();
+                            const qreal slack = std::max(0.0, tile->m_coverage.width() - minWidthInPercents);
+                            allowedDeltaInPercents = std::min(allowedDeltaInPercents, slack);
+                        }
+                    }
+                }
+
+                for (Tile *tile : std::as_const(affected)) {
+                    const qreal adjustment = tile == reference
+                        ? allowedDeltaInPercents
+                        : -allowedDeltaInPercents / (affected.size() - 1);
+
+                    tile->m_coverage.rwidth() += adjustment;
+                }
+
+                horizontalParent = reference->parentTile();
+            }
+        }
+    }
+
+    Tile *verticalParent = nullptr;
+    if (edges & (Qt::TopEdge | Qt::BottomEdge)) {
+        if (Tile *reference = layoutReference(LayoutDirection::Vertical)) {
+            QList<Tile *> affected;
+            qreal deltaSize;
+
+            if (edges.testFlags(Qt::TopEdge | Qt::BottomEdge)) {
+                deltaSize = delta.y();
+                affected = reference->parentTile()->childTiles();
+            } else if (edges.testFlag(Qt::TopEdge)) {
+                deltaSize = -delta.y();
+                affected.append(reference);
+                if (const auto sibling = reference->previousSibling()) {
+                    affected.append(sibling);
+                }
+            } else if (edges.testFlag(Qt::BottomEdge)) {
+                deltaSize = delta.y();
+                affected.append(reference);
+                if (const auto sibling = reference->nextSibling()) {
+                    affected.append(sibling);
+                }
+            }
+
+            if (affected.size() > 1) {
+                const RectF parentRectInPixels = reference->parentTile()->absoluteGeometry();
+
+                qreal allowedDeltaInPercents = deltaSize;
+                if (deltaSize <= 0) {
+                    const qreal minHeightInPercents = reference->minHeightInPixels() / parentRectInPixels.height();
+                    const qreal slack = std::min(0.0, minHeightInPercents - reference->m_coverage.height());
+                    allowedDeltaInPercents = std::max(allowedDeltaInPercents, slack);
+                } else {
+                    for (Tile *tile : std::as_const(affected)) {
+                        if (tile != reference) {
+                            const qreal minHeightInPercents = tile->minHeightInPixels() / parentRectInPixels.height();
+                            const qreal slack = std::max(0.0, tile->m_coverage.height() - minHeightInPercents);
+                            allowedDeltaInPercents = std::min(allowedDeltaInPercents, slack);
+                        }
+                    }
+                }
+
+                for (Tile *tile : std::as_const(affected)) {
+                    const qreal adjustment = tile == reference
+                        ? allowedDeltaInPercents
+                        : -allowedDeltaInPercents / (affected.size() - 1);
+
+                    tile->m_coverage.rheight() += adjustment;
+                }
+
+                verticalParent = reference->parentTile();
+            }
+        }
+    }
+
+    if (horizontalParent && verticalParent) {
+        if (horizontalParent == m_parentTile) {
+            // The vertical layout tile is higher in the tile tree.
+            verticalParent->arrange();
+        } else {
+            horizontalParent->arrange();
+        }
+
+        return;
+    }
+
+    if (horizontalParent) {
+        horizontalParent->arrange();
+    } else if (verticalParent) {
+        verticalParent->arrange();
+    }
+}
+
+void Tile::resizeInPercents(const QSizeF &size)
+{
+    const QPointF delta(size.width() - m_coverage.width(),
+                        size.height() - m_coverage.height());
+    if (!delta.isNull()) {
+        resizeByPercents(delta, Qt::LeftEdge | Qt::TopEdge | Qt::RightEdge | Qt::BottomEdge);
+    }
+}
+
+void Tile::resizeHorizontallyInPercents(qreal width)
+{
+    const QPointF delta(width - m_coverage.width(), 0);
+    if (!delta.isNull()) {
+        resizeByPercents(delta, Qt::LeftEdge | Qt::RightEdge);
+    }
+}
+
+void Tile::resizeVerticallyInPercents(qreal height)
+{
+    const QPointF delta(0, height - m_coverage.height());
+    if (!delta.isNull()) {
+        resizeByPercents(delta, Qt::TopEdge | Qt::BottomEdge);
+    }
+}
+
+void Tile::arrange()
+{
+    if (quickTileMode() != QuickTileFlag::Custom) {
+        return;
+    }
+
+    if (!isLayout()) {
+        return;
+    }
+
+    if (m_layoutDirection == LayoutDirection::Horizontal) {
+        qreal occupiedCoverage = 0;
+        int emptyCount = 0;
+        for (Tile *childTile : std::as_const(m_children)) {
+            if (childTile->m_coverage.width()) {
+                occupiedCoverage += childTile->m_coverage.width();
+            } else {
+                emptyCount++;
+            }
+        }
+
+        qreal totalCoverage = 0;
+        for (Tile *childTile : std::as_const(m_children)) {
+            if (!childTile->m_coverage.width()) {
+                qreal suggestedCoverage;
+                if (occupiedCoverage < 0.9) {
+                    suggestedCoverage = (1.0 - occupiedCoverage) / emptyCount;
+                } else {
+                    suggestedCoverage = 1.0 / m_children.size();
+                }
+                childTile->m_coverage.rwidth() = suggestedCoverage;
+            }
+            totalCoverage += childTile->m_coverage.width();
+        }
+
+        for (Tile *childTile : std::as_const(m_children)) {
+            childTile->m_coverage.rwidth() /= totalCoverage;
+            childTile->m_coverage.rheight() = 1;
+        }
+
+        qreal left = m_relativeGeometry.left();
+        for (Tile *childTile : std::as_const(m_children)) {
+            const RectF geometry(left,
+                                 m_relativeGeometry.top(),
+                                 m_relativeGeometry.width() * childTile->m_coverage.width(),
+                                 m_relativeGeometry.height());
+            left = geometry.right();
+
+            childTile->setRelativeGeometry(geometry);
+        }
+    } else {
+        qreal occupiedCoverage = 0;
+        int emptyCount = 0;
+        for (Tile *childTile : std::as_const(m_children)) {
+            if (childTile->m_coverage.height()) {
+                occupiedCoverage += childTile->m_coverage.height();
+            } else {
+                emptyCount++;
+            }
+        }
+
+        qreal totalCoverage = 0;
+        for (Tile *childTile : std::as_const(m_children)) {
+            if (!childTile->m_coverage.height()) {
+                qreal suggestedCoverage;
+                if (occupiedCoverage < 0.9) {
+                    suggestedCoverage = (1.0 - occupiedCoverage) / emptyCount;
+                } else {
+                    suggestedCoverage = 1.0 / m_children.size();
+                }
+                childTile->m_coverage.rheight() = suggestedCoverage;
+            }
+            totalCoverage += childTile->m_coverage.height();
+        }
+
+        for (Tile *childTile : std::as_const(m_children)) {
+            childTile->m_coverage.rwidth() = 1;
+            childTile->m_coverage.rheight() /= totalCoverage;
+        }
+
+        qreal top = m_relativeGeometry.top();
+        for (Tile *childTile : std::as_const(m_children)) {
+            const RectF geometry(m_relativeGeometry.left(),
+                                 top,
+                                 m_relativeGeometry.width(),
+                                 m_relativeGeometry.height() * childTile->m_coverage.height());
+            top = geometry.bottom();
+
+            childTile->setRelativeGeometry(geometry);
+        }
+    }
+
+    for (Tile *childTile : std::as_const(m_children)) {
+        childTile->arrange();
+    }
+
+    Q_EMIT layoutModified();
 }
 
 bool Tile::manage(Window *window)
@@ -652,6 +881,32 @@ QList<KWin::Window *> Tile::windows() const
     return m_windows;
 }
 
+Tile *Tile::createChildAt(int position)
+{
+    Tile *child = new Tile(m_tiling, this);
+    connect(child, &Tile::layoutModified, this, &Tile::layoutModified);
+    insertChild(position, child);
+    return child;
+}
+
+Tile *Tile::createChildAt(const RectF &relativeGeometry, LayoutDirection direction, int position)
+{
+    Tile *child = new Tile(m_tiling, this);
+    connect(child, &Tile::layoutModified, this, &Tile::layoutModified);
+
+    if (!relativeGeometry.isEmpty() && !m_relativeGeometry.isEmpty()) {
+        child->setCoverage(
+            QSizeF(relativeGeometry.width() / m_relativeGeometry.width(),
+                   relativeGeometry.height() / m_relativeGeometry.height()));
+    }
+
+    child->setRelativeGeometry(relativeGeometry);
+    child->setLayoutDirection(direction);
+
+    insertChild(position, child);
+    return child;
+}
+
 void Tile::insertChild(int position, Tile *item)
 {
     Q_EMIT aboutToInsertChildTile(item, position);
@@ -690,39 +945,25 @@ void Tile::remove()
 
     if (parentTile->layoutDirection() == LayoutDirection::Horizontal) {
         if (prev && next) {
-            auto geom = prev->relativeGeometry();
-            geom.setRight(relativeGeometry().center().x());
-            prev->setRelativeGeometryAndArrange(geom);
-            geom = next->relativeGeometry();
-            geom.setLeft(relativeGeometry().center().x());
-            next->setRelativeGeometryAndArrange(geom);
+            prev->m_coverage.rwidth() += m_coverage.width() / 2;
+            next->m_coverage.rwidth() += m_coverage.width() / 2;
         } else if (prev) {
-            auto geom = prev->relativeGeometry();
-            geom.setRight(relativeGeometry().right());
-            prev->setRelativeGeometryAndArrange(geom);
+            prev->m_coverage.rwidth() += m_coverage.width();
         } else if (next) {
-            auto geom = next->relativeGeometry();
-            geom.setLeft(relativeGeometry().left());
-            next->setRelativeGeometryAndArrange(geom);
+            next->m_coverage.rwidth() += m_coverage.width();
         }
     } else if (parentTile->layoutDirection() == LayoutDirection::Vertical) {
         if (prev && next) {
-            auto geom = prev->relativeGeometry();
-            geom.setBottom(relativeGeometry().center().y());
-            prev->setRelativeGeometryAndArrange(geom);
-            geom = next->relativeGeometry();
-            geom.setTop(relativeGeometry().center().y());
-            next->setRelativeGeometryAndArrange(geom);
+            prev->m_coverage.rheight() += m_coverage.height() / 2;
+            next->m_coverage.rheight() += m_coverage.height() / 2;
         } else if (prev) {
-            auto geom = prev->relativeGeometry();
-            geom.setBottom(relativeGeometry().bottom());
-            prev->setRelativeGeometryAndArrange(geom);
+            prev->m_coverage.rheight() += m_coverage.height();
         } else if (next) {
-            auto geom = next->relativeGeometry();
-            geom.setTop(relativeGeometry().top());
-            next->setRelativeGeometryAndArrange(geom);
+            next->m_coverage.rheight() += m_coverage.height();
         }
     }
+
+    arrange();
 
     // On linear layouts remove the last one and promote the layout as leaf
     if (!parentTile->isRoot() && parentTile->childCount() == 1) {
@@ -745,53 +986,27 @@ void Tile::remove()
 
 QList<Tile *> Tile::split(KWin::Tile::LayoutDirection newDirection)
 {
+    if (!m_children.isEmpty()) {
+        return {};
+    }
+
     QList<Tile *> splitTiles;
 
-    // If we are m_rootLayoutTile always create children, not siblings
-    if (m_parentTile && (m_parentTile->childCount() < 2 || m_parentTile->layoutDirection() == newDirection)) {
-        // Add a new cell to the current layout
-        setLayoutDirection(newDirection);
-        m_parentTile->setLayoutDirection(newDirection);
-        RectF newGeo;
-        if (newDirection == LayoutDirection::Horizontal) {
-            newGeo = relativeGeometry();
-            newGeo.setWidth(relativeGeometry().width() / 2);
-            setRelativeGeometry(newGeo);
-            newGeo.moveLeft(newGeo.x() + newGeo.width());
-        } else if (newDirection == LayoutDirection::Vertical) {
-            newGeo = relativeGeometry();
-            newGeo.setHeight(relativeGeometry().height() / 2);
-            setRelativeGeometry(newGeo);
-            newGeo.moveTop(newGeo.y() + newGeo.height());
-        }
-
+    if (m_parentTile && m_parentTile->layoutDirection() == newDirection) {
+        const int referenceIndex = m_parentTile->childTiles().indexOf(this);
         splitTiles << this;
-        splitTiles << m_parentTile->createChildAt(newGeo, layoutDirection(), row() + 1);
+        splitTiles << m_parentTile->createChildAt(referenceIndex + 1);
+        m_parentTile->arrange();
     } else {
-        // Do a new layout and put tiles inside
         setLayoutDirection(newDirection);
-        auto newGeo = relativeGeometry();
-        if (newDirection == LayoutDirection::Horizontal) {
-            // Do a new layout with 2 cells inside this one
-            newGeo.setWidth(relativeGeometry().width() / 2);
-            splitTiles << createChildAt(newGeo, newDirection, childCount());
-            newGeo.moveLeft(newGeo.x() + newGeo.width());
-            splitTiles << createChildAt(newGeo, newDirection, childCount());
-        } else if (newDirection == LayoutDirection::Vertical) {
-            // Do a new layout with 2 cells inside this one
-            newGeo.setHeight(relativeGeometry().height() / 2);
-            splitTiles << createChildAt(newGeo, newDirection, childCount());
-            newGeo.moveTop(newGeo.y() + newGeo.height());
-            splitTiles << createChildAt(newGeo, newDirection, childCount());
-        }
+
+        splitTiles << createChildAt(childCount());
+        splitTiles << createChildAt(childCount());
+        arrange();
 
         const auto windows = m_windows;
-        for (auto *w : windows) {
-            Tile *tile = m_tiling->rootTile(m_desktop)->pick(w->moveResizeGeometry().center());
-            unmanage(w);
-            if (tile) {
-                tile->manage(w);
-            }
+        for (Window *window : windows) {
+            splitTiles[0]->manage(window);
         }
     }
 
@@ -956,6 +1171,7 @@ RootTile::RootTile(TileManager *tiling, VirtualDesktop *desktop)
     m_desktop = desktop;
     setParent(tiling);
     setRelativeGeometry({0, 0, 1, 1});
+    setCoverage({1, 1});
 }
 
 Tile *RootTile::tileForWindow(Window *window)
@@ -1001,6 +1217,34 @@ Tile *RootTile::pick(const QPointF &point) const
 Tile *RootTile::pick(qreal x, qreal y) const
 {
     return pick(QPointF(x, y));
+}
+
+QSizeF Tile::coverage() const
+{
+    return m_coverage;
+}
+
+void Tile::setCoverage(const QSizeF &size)
+{
+    m_coverage = size;
+}
+
+qreal Tile::minWidthInPixels() const
+{
+    qreal minWidth = 100;
+    for (Window *window : std::as_const(m_windows)) {
+        minWidth = std::max(minWidth, window->minSize().width() + 2 * m_padding);
+    }
+    return minWidth;
+}
+
+qreal Tile::minHeightInPixels() const
+{
+    qreal minHeight = 50;
+    for (Window *window : std::as_const(m_windows)) {
+        minHeight = std::max(minHeight, window->minSize().height() + 2 * m_padding);
+    }
+    return minHeight;
 }
 
 } // namespace KWin

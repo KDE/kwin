@@ -52,7 +52,7 @@ class KWIN_EXPORT Tile : public QObject
      * The geometry of the tile relative to the size of the associated output. The relative geometry
      * is normalized. \c{relativeGeometry.width} of 1 corresponds to the width of the output.
      */
-    Q_PROPERTY(KWin::RectF relativeGeometry READ relativeGeometry WRITE setRelativeGeometryAndArrange NOTIFY relativeGeometryChanged)
+    Q_PROPERTY(KWin::RectF relativeGeometry READ relativeGeometry NOTIFY relativeGeometryChanged)
 
     /*!
      * \qmlproperty RectF Tile::absoluteGeometry
@@ -77,13 +77,6 @@ class KWIN_EXPORT Tile : public QObject
      * The padding is specified in the logical pixels.
      */
     Q_PROPERTY(qreal padding READ padding WRITE setPadding NOTIFY paddingChanged)
-
-    /*!
-     * \qmlproperty size Tile::minimumSize
-     *
-     * The minimum size that the windows in this Tile can be resized to. In the logical pixels.
-     */
-    Q_PROPERTY(QSizeF minimumSize READ minimumSize WRITE setMinimumSize NOTIFY minimumSizeChanged)
 
     /*!
      * \qmlproperty Tile Tile::parent
@@ -133,7 +126,6 @@ public:
     VirtualDesktop *desktop() const;
     bool isActive() const;
 
-    void setRelativeGeometryAndArrange(const RectF &geom);
     void setRelativeGeometry(const RectF &geom);
 
     bool supportsResizeGravity(Gravity gravity);
@@ -178,9 +170,6 @@ public:
     qreal padding() const;
     void setPadding(qreal padding);
 
-    QSizeF minimumSize() const;
-    void setMinimumSize(const QSizeF &size);
-
     QuickTileMode quickTileMode() const;
     void setQuickTileMode(QuickTileMode mode);
 
@@ -208,8 +197,13 @@ public:
      * may be left unchanged due to size constraints, etc.
      */
     Q_INVOKABLE void resizeByPixels(qreal delta, Qt::Edge edge);
-    Q_INVOKABLE void resizeByPixels(const QPointF &delta, Qt::Edges edges);
+    Q_INVOKABLE void resizeByPixels(const QPointF &deltaInPixels, Qt::Edges edges);
     void resizeByPixels(const QPointF &delta, Gravity gravity);
+
+    void resizeByPercents(const QPointF &delta, Qt::Edges edges);
+    Q_INVOKABLE void resizeInPercents(const QSizeF &size);
+    Q_INVOKABLE void resizeHorizontallyInPercents(qreal width);
+    Q_INVOKABLE void resizeVerticallyInPercents(qreal height);
 
     /*!
      * \qmlmethod void Tile::manage(Window window)
@@ -253,24 +247,24 @@ public:
     void setLayoutDirection(LayoutDirection dir);
     LayoutDirection layoutDirection() const;
 
-    Tile *nextTileAt(Qt::Edge edge) const;
+    /*!
+     * Finds a layout tile with the specified \a layout direction. This returns the direct child
+     * of the layout tile from which this tile can be accessed. For example, if there is an A -> B -> C -> D
+     * tree, D.layoutReference(A) will return B.
+     */
+    Tile *layoutReference(LayoutDirection layout) const;
 
+    Tile *nextTileAt(Qt::Edge edge) const;
     Tile *nextNonLayoutTileAt(Qt::Edge edge) const;
 
-    Tile *createChildAt(const RectF &relativeGeometry, int position)
-    {
-        return createChildAt(relativeGeometry, LayoutDirection::Horizontal, position);
-    }
+    Tile *createChildAt(int position);
+    Tile *createChildAt(const RectF &relativeGeometry, LayoutDirection direction, int position);
 
-    Tile *createChildAt(const RectF &relativeGeometry, LayoutDirection direction, int position)
-    {
-        Tile *t = new Tile(m_tiling, this);
-        connect(t, &Tile::layoutModified, this, &Tile::layoutModified);
-        t->setRelativeGeometry(relativeGeometry);
-        t->setLayoutDirection(direction);
-        insertChild(position, t);
-        return t;
-    }
+    QSizeF coverage() const;
+    void setCoverage(const QSizeF &size);
+
+    qreal minWidthInPixels() const;
+    qreal minHeightInPixels() const;
 
 Q_SIGNALS:
     void activeChanged(bool active);
@@ -278,7 +272,6 @@ Q_SIGNALS:
     void absoluteGeometryChanged();
     void windowGeometryChanged();
     void paddingChanged(qreal padding);
-    void minimumSizeChanged(const QSizeF &size);
     void childTilesChanged();
     void windowsChanged();
 
@@ -315,6 +308,8 @@ protected:
     void add(Window *window);
     bool remove(Window *window);
 
+    void arrange();
+
     QList<Tile *> m_children;
     QList<Window *> m_windows;
     Tile *m_parentTile;
@@ -322,11 +317,10 @@ protected:
     VirtualDesktop *m_desktop = nullptr;
     TileManager *m_tiling;
     RectF m_relativeGeometry;
-    QSizeF m_minimumSize = QSizeF(0.15, 0.15);
+    QSizeF m_coverage = QSizeF(0, 0);
     LayoutDirection m_layoutDirection = LayoutDirection::Horizontal;
     QuickTileMode m_quickTileMode = QuickTileFlag::Custom;
     qreal m_padding = 4.0;
-    bool m_geometryLock = false;
 };
 
 class KWIN_EXPORT RootTile : public Tile

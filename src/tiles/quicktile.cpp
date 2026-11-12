@@ -24,9 +24,10 @@ QuickRootTile::QuickRootTile(TileManager *tiling, VirtualDesktop *desktop)
     setQuickTileMode(QuickTileFlag::None);
 
     auto createTile = [this](const RectF &geometry, QuickTileMode tileMode) {
-        Tile *tile = createChildAt(geometry, childCount());
-        tile->setPadding(0.0);
+        Tile *tile = createChildAt(childCount());
         tile->setQuickTileMode(tileMode);
+        tile->setPadding(0.0);
+        tile->setRelativeGeometry(geometry);
 
         connect(tile, &Tile::relativeGeometryChanged, this, [this, tile]() {
             relayoutToFit(tile);
@@ -142,7 +143,7 @@ qreal QuickRootTile::horizontalSplit() const
 
 void QuickRootTile::setHorizontalSplit(qreal split)
 {
-    const QSizeF minSize = minimumSize(); // minimum size is the same for all tiles
+    const QSizeF minSize(0.15, 0.15); // minimum size is the same for all tiles
     const qreal effectiveSplit = std::clamp(split, minSize.width(), 1.0 - minSize.width());
 
     auto geom = m_leftVerticalTile->relativeGeometry();
@@ -177,7 +178,7 @@ qreal QuickRootTile::verticalSplit() const
 
 void QuickRootTile::setVerticalSplit(qreal split)
 {
-    const QSizeF minSize = minimumSize(); // minimum size is the same for all tiles
+    const QSizeF minSize(0.15, 0.15); // minimum size is the same for all tiles
     const qreal effectiveSplit = std::clamp(split, minSize.height(), 1.0 - minSize.height());
 
     auto geom = m_topHorizontalTile->relativeGeometry();
