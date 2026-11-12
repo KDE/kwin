@@ -123,7 +123,7 @@ KCM.ScrollViewKCM {
                             renameLayout.visible = false;
                         }
                         QQC2.ToolTip.text: text
-                        QQC2.ToolTip.visible: hovered
+                        QQC2.ToolTip.visible: hovered || visualFocus
                         QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
                         display: QQC2.Button.IconOnly
                     }
@@ -135,7 +135,7 @@ KCM.ScrollViewKCM {
                             renameLayout.visible = false;
                         }
                         QQC2.ToolTip.text: text
-                        QQC2.ToolTip.visible: hovered
+                        QQC2.ToolTip.visible: hovered || visualFocus
                         QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
                         display: QQC2.Button.IconOnly
                     }
@@ -154,7 +154,7 @@ KCM.ScrollViewKCM {
     component DelegateButton: QQC2.ToolButton {
         display: QQC2.AbstractButton.IconOnly
         QQC2.ToolTip.text: text
-        QQC2.ToolTip.visible: hovered
+        QQC2.ToolTip.visible: hovered || visualFocus
     }
 
     header: ColumnLayout {

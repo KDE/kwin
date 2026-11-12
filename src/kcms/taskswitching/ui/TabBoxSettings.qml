@@ -70,7 +70,7 @@ Kirigami.Form {
                     enabled: layoutsComboBox.currentValue !== ""
                     onClicked: kcm.showPreview(layoutsComboBox.currentValue, showDesktopMode.checked)
                     QQC2.ToolTip.text: text
-                    QQC2.ToolTip.visible: hovered || activeFocus
+                    QQC2.ToolTip.visible: hovered || visualFocus
                     QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
                 }
             }

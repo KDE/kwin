@@ -44,15 +44,17 @@ ScrollViewKCM {
         QQC2.ToolButton {
             id: filterButton
 
+            text: i18n("Configure Filter")
             icon.name: "view-filter"
 
+            display: QQC2.AbstractButton.IconOnly
             checkable: true
             checked: menu.opened
             onClicked: menu.popup(filterButton, filterButton.width - menu.width, filterButton.height)
 
-            QQC2.ToolTip {
-                text: i18n("Configure Filter")
-            }
+            QQC2.ToolTip.text: text
+            QQC2.ToolTip.visible: hovered || visualFocus
+            QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
         }
 
         QQC2.Menu {

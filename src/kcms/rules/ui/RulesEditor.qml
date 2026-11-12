@@ -203,6 +203,10 @@ KCM.ScrollViewKCM {
                 highlighted: false
                 width: ListView.view.width
 
+                QQC2.ToolTip.text: suggestedLabel.text
+                QQC2.ToolTip.visible: (hovered || visualFocus) && suggestedLabel.truncated
+                QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
+
                 contentItem: RowLayout {
                     Kirigami.Icon {
                         source: model.icon
@@ -226,10 +230,6 @@ KCM.ScrollViewKCM {
                         opacity: 0.7
                         Layout.maximumWidth: propertyDelegate.width - itemNameLabel.implicitWidth - Kirigami.Units.gridUnit * 6
                         Layout.alignment: Qt.AlignVCenter
-                        QQC2.ToolTip {
-                            text: suggestedLabel.text
-                            visible: hovered && suggestedLabel.truncated
-                        }
                     }
 
                     Kirigami.ContextualHelpButton {

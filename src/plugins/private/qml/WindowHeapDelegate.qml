@@ -387,7 +387,7 @@ ExpoCell {
                 display: PC3.AbstractButton.IconOnly
 
                 PC3.ToolTip.text: text
-                PC3.ToolTip.visible: hovered && display === PC3.AbstractButton.IconOnly
+                PC3.ToolTip.visible: hovered || visualFocus
                 PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
                 Accessible.name: text
 
