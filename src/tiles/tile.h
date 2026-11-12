@@ -216,8 +216,6 @@ public:
      */
     void visitDescendants(std::function<void(Tile *child)> callback);
 
-    void resizeFromGravity(Gravity gravity, const QPointF &delta);
-
     /*!
      * \qmlmethod void Tile::resizeByPixels(real delta, enumeration edge)
      *
@@ -225,6 +223,8 @@ public:
      * may be left unchanged due to size constraints, etc.
      */
     Q_INVOKABLE void resizeByPixels(qreal delta, Qt::Edge edge);
+    Q_INVOKABLE void resizeByPixels(const QPointF &delta, Qt::Edges edges);
+    void resizeByPixels(const QPointF &delta, Gravity gravity);
 
     /*!
      * \qmlmethod void Tile::manage(Window window)

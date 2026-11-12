@@ -1151,7 +1151,7 @@ void Window::updateInteractiveMoveResize(const QPointF &global, Qt::KeyboardModi
             const bool isCustomTile = m_tile->quickTileMode() == QuickTileFlag::Custom;
             const Gravity effectiveGravity = isCustomTile ? m_tile->resolveResizeGravity(gravity) : gravity;
             if (m_tile->supportsResizeGravity(effectiveGravity)) {
-                m_tile->resizeFromGravity(effectiveGravity, delta);
+                m_tile->resizeByPixels(delta, effectiveGravity);
                 return;
             }
             if (isCustomTile) {
