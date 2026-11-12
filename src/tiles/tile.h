@@ -128,6 +128,13 @@ class KWIN_EXPORT Tile : public QObject
      */
     Q_PROPERTY(bool canBeRemoved READ canBeRemoved CONSTANT)
 
+    /*!
+     * \qmlproperty Tile::LayoutDirection CustomTile::layoutDirection
+     *
+     * This property specifies the direction in which children tiles are arranged.
+     */
+    Q_PROPERTY(KWin::Tile::LayoutDirection layoutDirection READ layoutDirection WRITE setLayoutDirection NOTIFY layoutDirectionChanged)
+
 public:
     enum class LayoutDirection {
         Horizontal = 1,
@@ -256,6 +263,9 @@ public:
 
     void destroyChild(Tile *tile);
 
+    void setLayoutDirection(LayoutDirection dir);
+    LayoutDirection layoutDirection() const;
+
     template<class T>
     T *createChildAt(const RectF &relativeGeometry, int position)
     {
@@ -300,6 +310,9 @@ Q_SIGNALS:
     void aboutToRemoveChildTile(KWin::Tile *child);
     void childTileRemoved();
 
+    void layoutDirectionChanged(KWin::Tile::LayoutDirection direction);
+    void layoutModified();
+
 protected:
     void insertChild(int position, Tile *item);
     void removeChild(Tile *child);
@@ -315,6 +328,7 @@ protected:
     TileManager *m_tiling;
     RectF m_relativeGeometry;
     QSizeF m_minimumSize = QSizeF(0.15, 0.15);
+    LayoutDirection m_layoutDirection = LayoutDirection::Horizontal;
     QuickTileMode m_quickTileMode = QuickTileFlag::None;
     qreal m_padding = 4.0;
 };

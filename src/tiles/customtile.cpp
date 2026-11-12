@@ -369,21 +369,6 @@ CustomTile *CustomTile::nextNonLayoutTileAt(Qt::Edge edge) const
     return tile;
 }
 
-void CustomTile::setLayoutDirection(Tile::LayoutDirection dir)
-{
-    if (m_layoutDirection == dir) {
-        return;
-    }
-
-    m_layoutDirection = dir;
-    Q_EMIT layoutDirectionChanged(dir);
-}
-
-Tile::LayoutDirection CustomTile::layoutDirection() const
-{
-    return m_layoutDirection;
-}
-
 RootTile::RootTile(TileManager *tiling, VirtualDesktop *desktop)
     : CustomTile(tiling, nullptr)
 {
