@@ -114,7 +114,7 @@ QQC2.ItemDelegate {
             text: i18nc("@info:tooltip", "Configure…")
             display: QQC2.AbstractButton.IconOnly
             QQC2.ToolTip.text: text
-            QQC2.ToolTip.visible: hovered
+            QQC2.ToolTip.visible: hovered || visualFocus
             onClicked: kcm.configure(model.ServiceNameRole, listItem)
         }
     }

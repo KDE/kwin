@@ -109,10 +109,10 @@ QQC2.ComboBox {
             onClicked: optionsCombo.toggleOption(index)
         }
 
-        QQC2.ToolTip {
-            text: model.tooltip
-            visible: hovered && (model.tooltip.length > 0)
-        }
+        QQC2.ToolTip.text: model.tooltip
+        QQC2.ToolTip.visible: (hovered || visualFocus) && model.tooltip.length > 0
+        QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
+
 
         Component.onCompleted: {
             //FIXME: work around bug https://bugs.kde.org/show_bug.cgi?id=403153

@@ -18,6 +18,10 @@ QQC2.ItemDelegate {
     hoverEnabled: false
     down: false
 
+    QQC2.ToolTip.text: model.description
+    QQC2.ToolTip.visible: (hovered || visualFocus) && text.length > 0
+    QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
+
     contentItem: RowLayout {
 
         Kirigami.Icon {
@@ -44,11 +48,10 @@ QQC2.ItemDelegate {
 
                 HoverHandler {
                     id: labelHover
-                    enabled: label.truncated
                 }
 
                 QQC2.ToolTip.text: model.name
-                QQC2.ToolTip.visible: labelHover.hovered
+                QQC2.ToolTip.visible: label.truncated && (labelHover.hovered || ruleDelegate.visualFocus)
                 QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
             }
 
@@ -103,11 +106,6 @@ QQC2.ItemDelegate {
                     model.enabled = false;
                 }
             }
-        }
-
-        QQC2.ToolTip {
-            text: model.description
-            visible: hovered && (text.length > 0)
         }
     }
 }

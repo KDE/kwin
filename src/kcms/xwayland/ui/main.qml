@@ -228,7 +228,7 @@ KCM.SimpleKCM {
                             display: QQC2.AbstractButton.IconOnly
                             text: i18nc("@info:tooltip %1 is the name of the app/binary", "Do not allow %1 to control the pointer and keyboard without asking", modelData)
                             QQC2.ToolTip.text: text
-                            QQC2.ToolTip.visible: hovered
+                            QQC2.ToolTip.visible: hovered || visualFocus
                             QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
                             onClicked: kcm.settings[appsPage.setting] = kcm.settings[appsPage.setting].filter(app => app != modelData)
                         }

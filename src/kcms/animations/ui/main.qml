@@ -129,7 +129,7 @@ KCM.SimpleKCM {
                             display: QQC2.AbstractButton.IconOnly
 
                             QQC2.ToolTip.text: text
-                            QQC2.ToolTip.visible: hovered
+                            QQC2.ToolTip.visible: hovered || visualFocus
                             QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
 
                             enabled: animationComboBox.isConfigurable
@@ -173,7 +173,7 @@ KCM.SimpleKCM {
                             display: QQC2.AbstractButton.IconOnly
 
                             QQC2.ToolTip.text: text
-                            QQC2.ToolTip.visible: hovered
+                            QQC2.ToolTip.visible: hovered || visualFocus
                             QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
 
                             enabled: animationCheckBox.checked

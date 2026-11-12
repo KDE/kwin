@@ -60,7 +60,7 @@ Item {
         Accessible.name: name
 
         QQC2.ToolTip.text: name
-        QQC2.ToolTip.visible: hovered
+        QQC2.ToolTip.visible: hovered || visualFocus
         QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
 
         QQC2.ButtonGroup.group: positionRadios
