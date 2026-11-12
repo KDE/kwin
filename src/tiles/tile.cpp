@@ -210,10 +210,10 @@ void Tile::setGeometryFromAbsolute(const RectF &geom)
                         geom.width() / outGeom.width(),
                         geom.height() / outGeom.height());
 
-    setRelativeGeometry(relGeom);
+    setRelativeGeometryAndArrange(relGeom);
 }
 
-void Tile::applyRelativeGeometry(const RectF &geom)
+void Tile::setRelativeGeometry(const RectF &geom)
 {
     RectF constrainedGeom = geom;
     constrainedGeom.setWidth(std::max(constrainedGeom.width(), m_minimumSize.width()));
@@ -237,7 +237,7 @@ void Tile::applyRelativeGeometry(const RectF &geom)
     }
 }
 
-void Tile::setRelativeGeometry(const RectF &geom)
+void Tile::setRelativeGeometryAndArrange(const RectF &geom)
 {
     if (relativeGeometry() == geom) {
         return;
@@ -262,7 +262,7 @@ void Tile::setRelativeGeometry(const RectF &geom)
                     if (tileGeom.width() <= tile->minimumSize().width()) {
                         return;
                     }
-                    tile->setRelativeGeometry(tileGeom);
+                    tile->setRelativeGeometryAndArrange(tileGeom);
                     // The other tile geometry may not be what we set due to size constraints
                     finalGeom.setLeft(tile->relativeGeometry().right());
                 } else {
@@ -278,7 +278,7 @@ void Tile::setRelativeGeometry(const RectF &geom)
                     if (tileGeom.height() <= tile->minimumSize().height()) {
                         return;
                     }
-                    tile->setRelativeGeometry(tileGeom);
+                    tile->setRelativeGeometryAndArrange(tileGeom);
                     finalGeom.setTop(tile->relativeGeometry().bottom());
                 } else {
                     // We are at the top border of the screen, we are always at 0
@@ -293,7 +293,7 @@ void Tile::setRelativeGeometry(const RectF &geom)
                     if (tileGeom.width() <= tile->minimumSize().width()) {
                         return;
                     }
-                    tile->setRelativeGeometry(tileGeom);
+                    tile->setRelativeGeometryAndArrange(tileGeom);
                     finalGeom.setRight(tile->relativeGeometry().left());
                 } else {
                     // We are at the right border of the screen, we are always at 1
@@ -308,7 +308,7 @@ void Tile::setRelativeGeometry(const RectF &geom)
                     if (tileGeom.height() <= tile->minimumSize().height()) {
                         return;
                     }
-                    tile->setRelativeGeometry(tileGeom);
+                    tile->setRelativeGeometryAndArrange(tileGeom);
                     finalGeom.setBottom(tile->relativeGeometry().top());
                 } else {
                     // We are at the bottom border of the screen, we are always at 1
@@ -331,7 +331,7 @@ void Tile::setRelativeGeometry(const RectF &geom)
                 childGeom.setRight(finalGeom.right());
             }
 
-            t->setRelativeGeometry(childGeom);
+            t->setRelativeGeometryAndArrange(childGeom);
         }
 
         if (!childrenT.isEmpty()) {
@@ -341,7 +341,7 @@ void Tile::setRelativeGeometry(const RectF &geom)
             } else if (layoutDirection() == LayoutDirection::Vertical) {
                 childGeom.setTop(finalGeom.top());
             }
-            childrenT.first()->setRelativeGeometry(childGeom);
+            childrenT.first()->setRelativeGeometryAndArrange(childGeom);
         }
 
         // Make sure the last child item fills the area
@@ -350,11 +350,11 @@ void Tile::setRelativeGeometry(const RectF &geom)
             auto childGeom = childrenT.last()->relativeGeometry();
             childGeom.setRight(finalGeom.right());
             childGeom.setBottom(finalGeom.bottom());
-            childrenT.last()->setRelativeGeometry(childGeom);
+            childrenT.last()->setRelativeGeometryAndArrange(childGeom);
         }
     }
 
-    applyRelativeGeometry(finalGeom);
+    setRelativeGeometry(finalGeom);
     if (m_parentTile) {
         Q_EMIT m_parentTile->layoutModified();
     }
@@ -488,7 +488,7 @@ void Tile::setMinimumSize(const QSizeF &size)
 
     m_minimumSize = clampedSize;
 
-    setRelativeGeometry(m_relativeGeometry);
+    setRelativeGeometryAndArrange(m_relativeGeometry);
     Q_EMIT minimumSizeChanged(clampedSize);
 }
 
@@ -554,7 +554,7 @@ void Tile::resizeFromGravity(Gravity gravity, const QPointF &delta)
         break;
     }
 
-    setRelativeGeometry(newGeom);
+    setRelativeGeometryAndArrange(newGeom);
 }
 
 void Tile::resizeByPixels(qreal delta, Qt::Edge edge)
@@ -588,7 +588,7 @@ void Tile::resizeByPixels(qreal delta, Qt::Edge edge)
         break;
     }
     }
-    setRelativeGeometry(newGeom);
+    setRelativeGeometryAndArrange(newGeom);
 }
 
 bool Tile::manage(Window *window)
@@ -746,35 +746,35 @@ void Tile::remove()
         if (prev && next) {
             auto geom = prev->relativeGeometry();
             geom.setRight(relativeGeometry().center().x());
-            prev->setRelativeGeometry(geom);
+            prev->setRelativeGeometryAndArrange(geom);
             geom = next->relativeGeometry();
             geom.setLeft(relativeGeometry().center().x());
-            next->setRelativeGeometry(geom);
+            next->setRelativeGeometryAndArrange(geom);
         } else if (prev) {
             auto geom = prev->relativeGeometry();
             geom.setRight(relativeGeometry().right());
-            prev->setRelativeGeometry(geom);
+            prev->setRelativeGeometryAndArrange(geom);
         } else if (next) {
             auto geom = next->relativeGeometry();
             geom.setLeft(relativeGeometry().left());
-            next->setRelativeGeometry(geom);
+            next->setRelativeGeometryAndArrange(geom);
         }
     } else if (parentTile->layoutDirection() == LayoutDirection::Vertical) {
         if (prev && next) {
             auto geom = prev->relativeGeometry();
             geom.setBottom(relativeGeometry().center().y());
-            prev->setRelativeGeometry(geom);
+            prev->setRelativeGeometryAndArrange(geom);
             geom = next->relativeGeometry();
             geom.setTop(relativeGeometry().center().y());
-            next->setRelativeGeometry(geom);
+            next->setRelativeGeometryAndArrange(geom);
         } else if (prev) {
             auto geom = prev->relativeGeometry();
             geom.setBottom(relativeGeometry().bottom());
-            prev->setRelativeGeometry(geom);
+            prev->setRelativeGeometryAndArrange(geom);
         } else if (next) {
             auto geom = next->relativeGeometry();
             geom.setTop(relativeGeometry().top());
-            next->setRelativeGeometry(geom);
+            next->setRelativeGeometryAndArrange(geom);
         }
     }
 
@@ -810,12 +810,12 @@ QList<Tile *> Tile::split(KWin::Tile::LayoutDirection newDirection)
         if (newDirection == LayoutDirection::Horizontal) {
             newGeo = relativeGeometry();
             newGeo.setWidth(relativeGeometry().width() / 2);
-            Tile::setRelativeGeometry(newGeo);
+            setRelativeGeometry(newGeo);
             newGeo.moveLeft(newGeo.x() + newGeo.width());
         } else if (newDirection == LayoutDirection::Vertical) {
             newGeo = relativeGeometry();
             newGeo.setHeight(relativeGeometry().height() / 2);
-            Tile::setRelativeGeometry(newGeo);
+            setRelativeGeometry(newGeo);
             newGeo.moveTop(newGeo.y() + newGeo.height());
         }
 
