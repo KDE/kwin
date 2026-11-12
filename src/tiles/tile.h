@@ -133,7 +133,7 @@ class KWIN_EXPORT Tile : public QObject
      *
      * This property specifies the direction in which children tiles are arranged.
      */
-    Q_PROPERTY(KWin::Tile::LayoutDirection layoutDirection READ layoutDirection WRITE setLayoutDirection NOTIFY layoutDirectionChanged)
+    Q_PROPERTY(KWin::Tile::LayoutDirection layoutDirection READ layoutDirection NOTIFY layoutDirectionChanged)
 
 public:
     enum class LayoutDirection {
