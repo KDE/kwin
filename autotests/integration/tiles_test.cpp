@@ -139,7 +139,7 @@ void TilesTest::createSimpleLayout()
             }
 
             QCOMPARE(rootTile->childCount(), 0);
-            rootTile->split(Tile::LayoutDirection::Horizontal);
+            rootTile->splitFirst(Tile::LayoutDirection::Horizontal);
             QCOMPARE(rootTile->childCount(), 2);
 
             auto leftTile = rootTile->childTiles().first();
@@ -162,7 +162,7 @@ void TilesTest::createComplexLayout()
     }
 
     QCOMPARE(m_rootTile->childCount(), 0);
-    m_rootTile->split(Tile::LayoutDirection::Horizontal);
+    m_rootTile->splitFirst(Tile::LayoutDirection::Horizontal);
     QCOMPARE(m_rootTile->childCount(), 2);
 
     auto leftTile = m_rootTile->childTiles().first();
@@ -174,7 +174,7 @@ void TilesTest::createComplexLayout()
     QCOMPARE(rightTile->relativeGeometry(), RectF(0.5, 0, 0.5, 1));
 
     // Splitting with the same layout direction creates a sibling, not 2 children
-    rightTile->split(Tile::LayoutDirection::Horizontal);
+    rightTile->splitFirst(Tile::LayoutDirection::Horizontal);
     auto newRightTile = m_rootTile->childTiles().last();
 
     QCOMPARE(m_rootTile->childCount(), 3);
@@ -191,7 +191,7 @@ void TilesTest::createComplexLayout()
     // Splitting with a different layout direction creates 2 children in the tile
     QVERIFY(!rightTile->isLayout());
     QCOMPARE(rightTile->childCount(), 0);
-    rightTile->split(Tile::LayoutDirection::Vertical);
+    rightTile->splitFirst(Tile::LayoutDirection::Vertical);
     QVERIFY(rightTile->isLayout());
     QCOMPARE(rightTile->childCount(), 2);
     auto verticalTopTile = rightTile->childTiles().first();
@@ -374,7 +374,7 @@ void TilesTest::resizeTileFromWindow()
     QVERIFY(middleTile);
     QCOMPARE(middleTile->windowGeometry(), RectF(514, 4, 444, 1016));
 
-    leftTile->split(Tile::LayoutDirection::Vertical);
+    leftTile->splitFirst(Tile::LayoutDirection::Vertical);
     auto topLeftTile = leftTile->childTiles().first();
     QVERIFY(topLeftTile);
     QCOMPARE(topLeftTile->windowGeometry(), RectF(4, 4, 506, 506));
@@ -999,7 +999,7 @@ void TilesTest::splitFromSingleTileBelowRoot()
 
     m_rootTile->setLayoutDirection(Tile::LayoutDirection::Horizontal);
     auto topLevelTile = m_rootTile->createChildAt(m_rootTile->relativeGeometry(), m_rootTile->layoutDirection(), 0);
-    auto topLevelTiles = topLevelTile->split(Tile::LayoutDirection::Vertical);
+    auto topLevelTiles = topLevelTile->splitFirst(Tile::LayoutDirection::Vertical);
     QCOMPARE(topLevelTiles.count(), 2);
     QCOMPARE(m_rootTile->childCount(), 2);
     QVERIFY(topLevelTiles.contains(topLevelTile));
@@ -1008,7 +1008,7 @@ void TilesTest::splitFromSingleTileBelowRoot()
     QCOMPARE(m_rootTile->layoutDirection(), Tile::LayoutDirection::Vertical);
 
     // Split the top-half tile. It should be the parent instead of the root tile due to different direction.
-    auto leafTiles = topLevelTiles[0]->split(Tile::LayoutDirection::Horizontal);
+    auto leafTiles = topLevelTiles[0]->splitFirst(Tile::LayoutDirection::Horizontal);
     QCOMPARE(leafTiles.count(), 2);
     QCOMPARE(m_rootTile->childCount(), 2);
     QCOMPARE(topLevelTiles[0]->childCount(), 2);

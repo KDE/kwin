@@ -235,7 +235,7 @@ FocusScope {
                         while (rootTile.tiles.length > 0) {
                             rootTile.tiles[0].remove();
                         }
-                        rootTile.split(KWinComponents.Tile.Horizontal)
+                        rootTile.splitFirst(KWinComponents.Tile.Horizontal)
                     }
                 }
                 LayoutButton {
@@ -247,8 +247,8 @@ FocusScope {
                         while (rootTile.tiles.length > 0) {
                             rootTile.tiles[0].remove();
                         }
-                        rootTile.split(KWinComponents.Tile.Horizontal)
-                        rootTile.tiles[0].split(KWinComponents.Tile.Horizontal)
+                        rootTile.splitFirst(KWinComponents.Tile.Horizontal)
+                        rootTile.tiles[0].splitFirst(KWinComponents.Tile.Horizontal)
                         rootTile.tiles[1].resizeHorizontallyInPercents(0.5);
                     }
                 }
@@ -260,9 +260,9 @@ FocusScope {
                         while (rootTile.tiles.length > 0) {
                             rootTile.tiles[0].remove();
                         }
-                        rootTile.split(KWinComponents.Tile.Horizontal)
+                        rootTile.splitFirst(KWinComponents.Tile.Horizontal)
                         rootTile.tiles[0].resizeHorizontallyInPercents(0.4);
-                        rootTile.tiles[0].split(KWinComponents.Tile.Vertical)
+                        rootTile.tiles[0].splitFirst(KWinComponents.Tile.Vertical)
                     }
                 }
             }

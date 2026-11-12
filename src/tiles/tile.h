@@ -226,8 +226,18 @@ public:
     /*!
      * Splits the current tile along the specified \a newDirection, either creating two children
      * or a new sibling. Returns the two new tiles created by splitting this one.
+     *
+     * The windows assigned to this tile will be moved to the first child tile.
      */
-    Q_INVOKABLE QList<KWin::Tile *> split(KWin::Tile::LayoutDirection newDirection);
+    Q_INVOKABLE QList<KWin::Tile *> splitFirst(KWin::Tile::LayoutDirection newDirection);
+
+    /*!
+     * Splits the current tile along the specified \a newDirection, either creating two children
+     * or a new sibling. Returns the two new tiles created by splitting this one.
+     *
+     * The windows assigned to this tile will be moved to the second child tile.
+     */
+    Q_INVOKABLE QList<KWin::Tile *> splitLast(KWin::Tile::LayoutDirection newDirection);
 
     void forget(Window *window);
     QList<KWin::Window *> windows() const;

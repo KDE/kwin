@@ -989,7 +989,7 @@ void Tile::remove()
     deleteLater(); // not using "delete this" because QQmlEngine will crash
 }
 
-QList<Tile *> Tile::split(KWin::Tile::LayoutDirection newDirection)
+QList<Tile *> Tile::splitFirst(KWin::Tile::LayoutDirection newDirection)
 {
     if (!m_children.isEmpty()) {
         return {};
@@ -1012,6 +1012,35 @@ QList<Tile *> Tile::split(KWin::Tile::LayoutDirection newDirection)
         const auto windows = m_windows;
         for (Window *window : windows) {
             splitTiles[0]->manage(window);
+        }
+    }
+
+    return splitTiles;
+}
+
+QList<Tile *> Tile::splitLast(KWin::Tile::LayoutDirection newDirection)
+{
+    if (!m_children.isEmpty()) {
+        return {};
+    }
+
+    QList<Tile *> splitTiles;
+
+    if (m_parentTile && m_parentTile->layoutDirection() == newDirection) {
+        const int referenceIndex = m_parentTile->childTiles().indexOf(this);
+        splitTiles << m_parentTile->createChildAt(referenceIndex);
+        splitTiles << this;
+        m_parentTile->arrange();
+    } else {
+        setLayoutDirection(newDirection);
+
+        splitTiles << createChildAt(childCount());
+        splitTiles << createChildAt(childCount());
+        arrange();
+
+        const auto windows = m_windows;
+        for (Window *window : windows) {
+            splitTiles[1]->manage(window);
         }
     }
 
