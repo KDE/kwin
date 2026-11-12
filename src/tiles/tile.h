@@ -148,8 +148,6 @@ public:
     VirtualDesktop *desktop() const;
     bool isActive() const;
 
-    void setGeometryFromWindow(const RectF &geom);
-    void setGeometryFromAbsolute(const RectF &geom);
     void setRelativeGeometryAndArrange(const RectF &geom);
     void setRelativeGeometry(const RectF &geom);
 
@@ -182,11 +180,6 @@ public:
      * Absolute geometry minus the padding and reserved areas such as panels
      */
     RectF windowGeometry() const;
-
-    /*!
-     * Absolute geometry minus the padding and reserved areas such as panels
-     */
-    RectF maximizedWindowGeometry() const;
 
     /*!
      * Which edges of the tile touches an edge of the screen

@@ -193,22 +193,6 @@ Gravity Tile::resolveResizeGravity(Gravity gravity)
     return vertical;
 }
 
-void Tile::setGeometryFromWindow(const RectF &geom)
-{
-    setGeometryFromAbsolute(geom + QMarginsF(m_padding, m_padding, m_padding, m_padding));
-}
-
-void Tile::setGeometryFromAbsolute(const RectF &geom)
-{
-    const RectF outGeom = m_tiling->output()->geometryF();
-    const RectF relGeom((geom.x() - outGeom.x()) / outGeom.width(),
-                        (geom.y() - outGeom.y()) / outGeom.height(),
-                        geom.width() / outGeom.width(),
-                        geom.height() / outGeom.height());
-
-    setRelativeGeometryAndArrange(relGeom);
-}
-
 void Tile::setRelativeGeometry(const RectF &geom)
 {
     RectF constrainedGeom = geom;
@@ -391,12 +375,6 @@ RectF Tile::windowGeometry() const
 
     const auto geom = absoluteGeometry();
     return geom.intersected(m_tiling->output()->geometryF()) - effectiveMargins;
-}
-
-RectF Tile::maximizedWindowGeometry() const
-{
-    const auto geom = absoluteGeometry();
-    return geom.intersected(m_tiling->output()->geometryF());
 }
 
 Qt::Edges Tile::anchors() const
