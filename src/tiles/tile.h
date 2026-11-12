@@ -250,6 +250,11 @@ public:
      */
     Q_INVOKABLE bool unmanage(KWin::Window *window);
 
+    /*!
+     * Remove this tile from the tile tree.
+     */
+    Q_INVOKABLE void remove();
+
     void forget(Window *window);
     QList<KWin::Window *> windows() const;
 
