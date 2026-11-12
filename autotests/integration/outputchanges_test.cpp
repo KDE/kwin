@@ -2549,9 +2549,9 @@ void OutputChangesTest::testDynamicVirtualOutputResize()
     QCOMPARE(virtualOutput->modeSize(), QSize(1280, 720));
     QCOMPARE(logicalOutput->modeSize(), QSize(1280, 720));
     QCOMPARE(virtualOutput->modes().size(), 1);
-    // the configuration query must not re-apply the pre-resize mode as the
+    // the configuration query must keep the newly requested mode as the
     // desired mode
-    QVERIFY(virtualOutput->desiredMode().isEmpty());
+    QCOMPARE(virtualOutput->desiredMode().size(), QSize(1280, 720));
 
     // Invalid and no-op resizes must be ignored.
     virtualOutput->resize(QSize(0, 0));

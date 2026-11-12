@@ -168,12 +168,7 @@ void DrmVirtualOutput::resize(const QSize &size, std::optional<qreal> scale)
     auto next = m_state;
     next.modes = {mode};
     next.currentMode = mode;
-
-    // Drop stale mode selections so an old mode can't be restored on the
-    // next configuration query, e.g. when the remote client of a
-    // screencast-driven virtual output resizes again.
-    next.desiredMode = OutputModeline();
-    next.customModes = {};
+    next.desiredMode = mode->modeline();
 
     if (scale) {
         next.scale = *scale;

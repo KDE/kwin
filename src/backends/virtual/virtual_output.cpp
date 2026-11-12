@@ -162,6 +162,7 @@ void VirtualOutput::resize(const QSize &size, std::optional<qreal> scale)
     auto next = m_state;
     next.modes = {mode};
     next.currentMode = mode;
+    next.desiredMode = mode->modeline();
     if (scale) {
         next.scale = *scale;
         next.scaleSetting = *scale;
@@ -172,8 +173,6 @@ void VirtualOutput::resize(const QSize &size, std::optional<qreal> scale)
         }
     }
 
-    next.desiredMode = OutputModeline();
-    next.customModes = {};
     setState(next);
     Q_EMIT m_backend->outputsQueried();
 }
