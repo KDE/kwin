@@ -270,7 +270,6 @@ public:
     Tile *nextSibling() const;
     Tile *previousSibling() const;
     Tile *parentTile() const;
-    TileManager *manager() const;
 
     void destroyChild(Tile *tile);
 

@@ -887,11 +887,6 @@ void Tile::visitDescendants(std::function<void(Tile *child)> callback)
     }
 }
 
-TileManager *Tile::manager() const
-{
-    return m_tiling;
-}
-
 int Tile::row() const
 {
     if (m_parentTile) {
