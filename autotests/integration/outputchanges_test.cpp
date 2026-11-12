@@ -13,6 +13,7 @@
 #include "core/session.h"
 #include "outputconfigurationstore.h"
 #include "pointer_input.h"
+#include "tiles/tile.h"
 #include "tiles/tilemanager.h"
 #include "utils/orientationsensor.h"
 #include "wayland_server.h"

@@ -15,6 +15,7 @@
 #include "effect/effecthandler.h"
 #include "outline.h"
 #include "scripting_logging.h"
+#include "tiles/tile.h"
 #include "tiles/tilemanager.h"
 #include "virtualdesktops.h"
 #include "window.h"

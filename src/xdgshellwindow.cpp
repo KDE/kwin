@@ -20,7 +20,7 @@
 #include "input.h"
 #include "killprompt.h"
 #include "placement.h"
-#include "tiles/tilemanager.h"
+#include "tiles/tile.h"
 #include "virtualdesktops.h"
 #include "wayland/appmenu.h"
 #include "wayland/clientconnection.h"

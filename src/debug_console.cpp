@@ -19,7 +19,6 @@
 #include "opengl/glplatform.h"
 #include "opengl/glutils.h"
 #include "scene/workspacescene.h"
-#include "tiles/customtile.h"
 #include "tiles/tile.h"
 #include "utils/filedescriptor.h"
 #include "utils/pipe.h"
@@ -943,8 +942,8 @@ QString DebugConsoleDelegate::displayText(const QVariant &value, const QLocale &
             if (auto tile = value.value<KWin::Tile *>()) {
                 const QString tileGeometry = displayText(QVariant::fromValue(tile->absoluteGeometry()), locale);
 
-                if (auto customTile = qobject_cast<KWin::CustomTile *>(tile)) {
-                    const QString direction = QMetaEnum::fromType<KWin::Tile::LayoutDirection>().valueToKey(static_cast<quint64>(customTile->layoutDirection()));
+                if (tile->quickTileMode() == QuickTileFlag::Custom) {
+                    const QString direction = QMetaEnum::fromType<KWin::Tile::LayoutDirection>().valueToKey(static_cast<quint64>(tile->layoutDirection()));
                     return QStringLiteral("Custom (%1: %2)").arg(direction, tileGeometry);
                 } else {
                     const QString quickTileMode = QMetaEnum::fromType<KWin::QuickTileFlag>().valueToKey(tile->quickTileMode());

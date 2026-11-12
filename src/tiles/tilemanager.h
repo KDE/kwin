@@ -9,15 +9,13 @@
 
 #pragma once
 
-#include "customtile.h"
-#include "quicktile.h"
-#include "tile.h"
-#include "utils/common.h"
 #include <kwin_export.h>
 
-#include <QObject>
+#include "effect/globals.h"
 
 #include <QJsonValue>
+#include <QObject>
+#include <qqmlintegration.h>
 
 class QTimer;
 
@@ -25,7 +23,12 @@ namespace KWin
 {
 
 class LogicalOutput;
+class RectF;
+class RootTile;
+class QuickRootTile;
+class VirtualDesktop;
 class Tile;
+class Window;
 
 /**
  * Custom tiling zones management per output.
@@ -56,13 +59,13 @@ public:
     void forgetWindow(Window *window, VirtualDesktop *desktop);
 
 Q_SIGNALS:
-    void rootTileChanged(KWin::CustomTile *rootTile);
+    void rootTileChanged(KWin::Tile *rootTile);
 
 private:
     void readSettings(RootTile *rootTile);
     void saveSettings();
-    QJsonObject tileToJSon(CustomTile *parentTile);
-    CustomTile *parseTilingJSon(const QJsonValue &val, const RectF &availableArea, CustomTile *parentTile);
+    QJsonObject tileToJSon(Tile *parentTile);
+    Tile *parseTilingJSon(const QJsonValue &val, const RectF &availableArea, Tile *parentTile);
 
     Q_DISABLE_COPY(TileManager)
 
@@ -73,7 +76,6 @@ private:
     QHash<VirtualDesktop *, QuickRootTile *> m_quickRootTiles;
 
     bool m_tearingDown = false;
-    friend class CustomTile;
 };
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const TileManager *tileManager);
