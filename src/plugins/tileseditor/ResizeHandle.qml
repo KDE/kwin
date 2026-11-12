@@ -28,7 +28,7 @@ Rectangle {
     radius: Kirigami.Units.cornerRadius
     color: Kirigami.Theme.highlightColor
     opacity: hoverHandler.hovered || dragHandler.active ? 0.4 : 0
-    visible: valid && (tile.layoutDirection === KWinComponents.Tile.Floating || tile.positionInLayout > 0)
+    visible: valid && tile.parent.tiles.indexOf(tile) > 0
 
     HoverHandler {
         id: hoverHandler
