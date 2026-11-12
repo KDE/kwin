@@ -107,14 +107,6 @@ class KWIN_EXPORT Tile : public QObject
     Q_PROPERTY(QList<KWin::Window *> windows READ windows NOTIFY windowsChanged)
 
     /*!
-     * \qmlproperty bool Tile::isLayout
-     *
-     * Whether this Tile is a layout Tile. In other words, a Tile that arranges its child Tiles
-     * in a special manner, e.g. from left to right, or top to bottom, etc.
-     */
-    Q_PROPERTY(bool isLayout READ isLayout NOTIFY isLayoutChanged)
-
-    /*!
      * \qmlproperty bool Tile::canBeRemoved
      *
      * Whether this Tile can be removed.
@@ -287,7 +279,6 @@ Q_SIGNALS:
     void windowGeometryChanged();
     void paddingChanged(qreal padding);
     void minimumSizeChanged(const QSizeF &size);
-    void isLayoutChanged(bool isLayout);
     void childTilesChanged();
     void windowsChanged();
 
