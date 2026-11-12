@@ -271,6 +271,10 @@ public:
     void setLayoutDirection(LayoutDirection dir);
     LayoutDirection layoutDirection() const;
 
+    Tile *nextTileAt(Qt::Edge edge) const;
+
+    Tile *nextNonLayoutTileAt(Qt::Edge edge) const;
+
     template<class T>
     T *createChildAt(const RectF &relativeGeometry, int position)
     {
