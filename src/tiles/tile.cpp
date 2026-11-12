@@ -487,80 +487,74 @@ Tile *Tile::rootTile() const
     return candidate;
 }
 
-void Tile::resizeFromGravity(Gravity gravity, const QPointF &delta)
+void Tile::resizeByPixels(const QPointF &delta, Gravity gravity)
 {
-    if (!m_parentTile) {
-        return;
-    }
-
-    const RectF outGeom = m_tiling->output()->geometryF();
-    const QPointF relativeDelta(delta.x() / outGeom.width(), delta.y() / outGeom.height());
-    RectF newGeom = m_relativeGeometry;
-
+    Qt::Edges edges;
     switch (gravity) {
     case Gravity::TopLeft:
-        newGeom.setTopLeft(newGeom.topLeft() + relativeDelta);
+        edges = Qt::TopEdge | Qt::LeftEdge;
         break;
     case Gravity::BottomRight:
-        newGeom.setBottomRight(newGeom.bottomRight() + relativeDelta);
+        edges = Qt::BottomEdge | Qt::RightEdge;
         break;
     case Gravity::BottomLeft:
-        newGeom.setBottomLeft(newGeom.bottomLeft() + relativeDelta);
+        edges = Qt::BottomEdge | Qt::LeftEdge;
         break;
     case Gravity::TopRight:
-        newGeom.setTopRight(newGeom.topRight() + relativeDelta);
+        edges = Qt::TopEdge | Qt::RightEdge;
         break;
     case Gravity::Top:
-        newGeom.setTop(newGeom.top() + relativeDelta.y());
+        edges = Qt::TopEdge;
         break;
     case Gravity::Bottom:
-        newGeom.setBottom(newGeom.bottom() + relativeDelta.y());
+        edges = Qt::BottomEdge;
         break;
     case Gravity::Left:
-        newGeom.setLeft(newGeom.left() + relativeDelta.x());
+        edges = Qt::LeftEdge;
         break;
     case Gravity::Right:
-        newGeom.setRight(newGeom.right() + relativeDelta.x());
+        edges = Qt::RightEdge;
         break;
     case Gravity::Center:
         Q_UNREACHABLE();
         break;
     }
 
-    setRelativeGeometryAndArrange(newGeom);
+    resizeByPixels(delta, edges);
 }
 
 void Tile::resizeByPixels(qreal delta, Qt::Edge edge)
+{
+    if (edge & (Qt::LeftEdge | Qt::RightEdge)) {
+        resizeByPixels(QPointF(delta, 0), edge);
+    } else if (edge & (Qt::TopEdge | Qt::BottomEdge)) {
+        resizeByPixels(QPointF(0, delta), edge);
+    }
+}
+
+void Tile::resizeByPixels(const QPointF &delta, Qt::Edges edges)
 {
     if (!m_parentTile) {
         return;
     }
 
-    const auto outGeom = m_tiling->output()->geometryF();
+    const RectF bounds = m_tiling->output()->geometryF();
+    const QPointF relativeDelta(delta.x() / bounds.width(), delta.y() / bounds.height());
+
     auto newGeom = m_relativeGeometry;
 
-    switch (edge) {
-    case Qt::LeftEdge: {
-        qreal relativeDelta = delta / outGeom.width();
-        newGeom.setLeft(newGeom.left() + relativeDelta);
-        break;
+    if (edges & Qt::LeftEdge) {
+        newGeom.setLeft(newGeom.left() + relativeDelta.x());
+    } else if (edges & Qt::RightEdge) {
+        newGeom.setRight(newGeom.right() + relativeDelta.x());
     }
-    case Qt::TopEdge: {
-        qreal relativeDelta = delta / outGeom.height();
-        newGeom.setTop(newGeom.top() + relativeDelta);
-        break;
+
+    if (edges & Qt::TopEdge) {
+        newGeom.setTop(newGeom.top() + relativeDelta.y());
+    } else if (edges & Qt::BottomEdge) {
+        newGeom.setBottom(newGeom.bottom() + relativeDelta.y());
     }
-    case Qt::RightEdge: {
-        qreal relativeDelta = delta / outGeom.width();
-        newGeom.setRight(newGeom.right() + relativeDelta);
-        break;
-    }
-    case Qt::BottomEdge: {
-        qreal relativeDelta = delta / outGeom.height();
-        newGeom.setBottom(newGeom.bottom() + relativeDelta);
-        break;
-    }
-    }
+
     setRelativeGeometryAndArrange(newGeom);
 }
 
