@@ -52,7 +52,7 @@ class KWIN_EXPORT Tile : public QObject
      * The geometry of the tile relative to the size of the associated output. The relative geometry
      * is normalized. \c{relativeGeometry.width} of 1 corresponds to the width of the output.
      */
-    Q_PROPERTY(KWin::RectF relativeGeometry READ relativeGeometry WRITE setRelativeGeometry NOTIFY relativeGeometryChanged)
+    Q_PROPERTY(KWin::RectF relativeGeometry READ relativeGeometry WRITE setRelativeGeometryAndArrange NOTIFY relativeGeometryChanged)
 
     /*!
      * \qmlproperty RectF Tile::absoluteGeometry
@@ -150,6 +150,7 @@ public:
 
     void setGeometryFromWindow(const RectF &geom);
     void setGeometryFromAbsolute(const RectF &geom);
+    void setRelativeGeometryAndArrange(const RectF &geom);
     void setRelativeGeometry(const RectF &geom);
 
     bool supportsResizeGravity(Gravity gravity);
@@ -339,8 +340,6 @@ protected:
 
     void add(Window *window);
     bool remove(Window *window);
-
-    void applyRelativeGeometry(const RectF &rect);
 
     QList<Tile *> m_children;
     QList<Window *> m_windows;
