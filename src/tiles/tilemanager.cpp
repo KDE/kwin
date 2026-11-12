@@ -275,8 +275,8 @@ void TileManager::readSettings(RootTile *rootTile)
         Q_ASSERT(rootTile->childCount() == 0);
         // If empty create an horizontal 3 columns layout
         rootTile->setLayoutDirection(Tile::LayoutDirection::Horizontal);
-        rootTile->split(Tile::LayoutDirection::Horizontal);
-        rootTile->childTile(0)->split(Tile::LayoutDirection::Horizontal);
+        rootTile->splitFirst(Tile::LayoutDirection::Horizontal);
+        rootTile->childTile(0)->splitFirst(Tile::LayoutDirection::Horizontal);
         Q_ASSERT(rootTile->childCount() == 3);
         rootTile->childTile(1)->resizeHorizontallyInPercents(0.5);
     };
