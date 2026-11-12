@@ -657,14 +657,9 @@ void Tile::insertChild(int position, Tile *item)
     Q_EMIT aboutToInsertChildTile(item, position);
 
     Q_ASSERT(position >= 0);
-    const bool wasEmpty = m_children.isEmpty();
     item->setParent(this);
 
     m_children.insert(std::clamp<qsizetype>(position, 0, m_children.length()), item);
-
-    if (wasEmpty) {
-        Q_EMIT isLayoutChanged(true);
-    }
 
     Q_EMIT childTileInserted();
     Q_EMIT childTilesChanged();
@@ -674,11 +669,7 @@ void Tile::removeChild(Tile *child)
 {
     Q_EMIT aboutToRemoveChildTile(child);
 
-    const bool wasEmpty = m_children.isEmpty();
     m_children.removeAll(child);
-    if (m_children.isEmpty() && !wasEmpty) {
-        Q_EMIT isLayoutChanged(false);
-    }
 
     Q_EMIT childTileRemoved();
     Q_EMIT childTilesChanged();
