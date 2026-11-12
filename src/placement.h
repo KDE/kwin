@@ -20,6 +20,8 @@
 namespace KWin
 {
 
+class Tile;
+
 class KWIN_EXPORT Placement
 {
 public:
@@ -44,6 +46,7 @@ private:
     std::optional<PlacementCommand> placeUtility(const Window *c, const Rect &area, PlacementPolicy next = PlacementUnknown);
     std::optional<PlacementCommand> placeOnScreenDisplay(const Window *c, const Rect &area);
     std::optional<PlacementCommand> placePictureInPicture(const Window *c, const Rect &area);
+    std::optional<PlacementCommand> placeTiled(const Window *c, Tile *rootTile);
 };
 
 } // namespace

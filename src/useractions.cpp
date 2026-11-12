@@ -887,6 +887,9 @@ void Workspace::initShortcuts()
                                                        0, &Workspace::slotWindowShrinkVertical, true);
     KGlobalAccel::setInverseShortcutActions(windowGrowVerticalAction, windowShrinkVerticalAction);
 
+    initShortcut("Untile Active Screen", i18n("Untile Active Screen"),
+                 0, &Workspace::untileActiveOutput, false);
+
     initShortcut("Window Quick Tile Left", i18n("Quick Tile Window to the Left"),
                  Qt::META | Qt::Key_Left, std::bind(&Workspace::quickTileWindow, this, QuickTileFlag::Left), true);
     initShortcut("Window Quick Tile Right", i18n("Quick Tile Window to the Right"),

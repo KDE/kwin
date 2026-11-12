@@ -187,6 +187,9 @@
         <entry name="ElectricBorderTiling" type="Bool">
             <default>true</default>
         </entry>
+        <entry name="ElectricBorderCustomTiling" type="Bool">
+            <default>true</default>
+        </entry>
         <entry name="ElectricBorderCornerRatio" type="Double">
             <default>0.25</default>
             <min>0.0</min>
@@ -221,6 +224,17 @@
         </entry>
         <entry name="InteractiveWindowMoveEnabled" type="Bool">
             <default>true</default>
+        </entry>
+        <entry name="InteractiveTiling" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="AutoTiling" type="Enum">
+            <choices name="KWin::AutoTiling">
+                <choice name="Off" value="Off"/>
+                <choice name="On" value="On"/>
+                <choice name="OnDemand" value="OnDemand"/>
+            </choices>
+            <default>AutoTiling::OnDemand</default>
         </entry>
         <entry name="PictureInPictureHomeCorner" type="Enum">
             <choices name="Qt::Corner">

@@ -607,6 +607,45 @@ void Options::setInteractiveWindowMoveEnabled(bool set)
     }
 }
 
+bool Options::interactiveTilingEnabled() const
+{
+    return m_interactiveTilingEnabled;
+}
+
+void Options::setInteractiveTilingEnabled(bool set)
+{
+    if (set != m_interactiveTilingEnabled) {
+        m_interactiveTilingEnabled = set;
+        Q_EMIT interactiveTilingEnabledChanged();
+    }
+}
+
+bool Options::electricBorderCustomTiling() const
+{
+    return m_electricBorderCustomTiling;
+}
+
+void Options::setElectricBorderCustomTiling(bool set)
+{
+    if (set != m_electricBorderCustomTiling) {
+        m_electricBorderCustomTiling = set;
+        Q_EMIT electricBorderCustomTilingChanged();
+    }
+}
+
+AutoTiling Options::autoTiling() const
+{
+    return m_autoTiling;
+}
+
+void Options::setAutoTiling(AutoTiling tiling)
+{
+    if (tiling != m_autoTiling) {
+        m_autoTiling = tiling;
+        Q_EMIT autoTilingChanged();
+    }
+}
+
 Qt::Corner Options::pictureInPictureHomeCorner() const
 {
     return m_pictureInPictureHomeCorner;
@@ -733,10 +772,13 @@ void Options::syncFromKcfgc()
     setBorderlessMaximizedWindows(m_settings->borderlessMaximizedWindows());
     setElectricBorderMaximize(m_settings->electricBorderMaximize());
     setElectricBorderTiling(m_settings->electricBorderTiling());
+    setElectricBorderCustomTiling(m_settings->electricBorderCustomTiling());
     setElectricBorderCornerRatio(m_settings->electricBorderCornerRatio());
     setElectricBorderAllScreenCorner(m_settings->electricBorderAllScreenCorner());
     setAllowTearing(m_settings->allowTearing());
     setInteractiveWindowMoveEnabled(m_settings->interactiveWindowMoveEnabled());
+    setInteractiveTilingEnabled(m_settings->interactiveTiling());
+    setAutoTiling(m_settings->autoTiling());
     setOverlayVirtualKeyboardOnWindows(m_settings->overlayVirtualKeyboardOnWindows());
     setDoubleClickBorderToMaximize(m_settings->doubleClickBorderToMaximize());
     setPictureInPictureHomeCorner(m_settings->pictureInPictureHomeCorner());

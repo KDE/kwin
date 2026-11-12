@@ -60,6 +60,12 @@ enum class FocusStealingPreventionLevel {
     Extreme = 4,
 };
 
+enum class AutoTiling {
+    Off,
+    On,
+    OnDemand,
+};
+
 class Settings;
 
 class KWIN_EXPORT Options : public QObject
@@ -652,6 +658,9 @@ public:
 
     bool allowTearing() const;
     bool interactiveWindowMoveEnabled() const;
+    bool interactiveTilingEnabled() const;
+    bool electricBorderCustomTiling() const;
+    AutoTiling autoTiling() const;
     bool overlayVirtualKeyboardOnWindows() const;
 
     Qt::Corner pictureInPictureHomeCorner() const;
@@ -716,6 +725,9 @@ public:
     void setKillPingTimeout(int killPingTimeout);
     void setAllowTearing(bool allow);
     void setInteractiveWindowMoveEnabled(bool set);
+    void setInteractiveTilingEnabled(bool set);
+    void setElectricBorderCustomTiling(bool set);
+    void setAutoTiling(AutoTiling tiling);
     void setOverlayVirtualKeyboardOnWindows(bool overlay);
 
     // default values
@@ -891,6 +903,9 @@ Q_SIGNALS:
     void configChanged();
     void allowTearingChanged();
     void interactiveWindowMoveEnabledChanged();
+    void interactiveTilingEnabledChanged();
+    void electricBorderCustomTilingChanged();
+    void autoTilingChanged();
     void pictureInPictureHomeCornerChanged();
     void pictureInPictureMarginChanged();
     void onScreenDisplayPositionChanged();
@@ -962,6 +977,9 @@ private:
     bool m_interactiveWindowMoveEnabled = true;
     bool m_overlayVirtualKeyboardOnWindows = false;
     bool m_doubleClickBorderToMaximize = true;
+    bool m_interactiveTilingEnabled = true;
+    bool m_electricBorderCustomTiling = true;
+    AutoTiling m_autoTiling = AutoTiling::OnDemand;
 
     Qt::Corner m_pictureInPictureHomeCorner = Qt::BottomRightCorner;
     int m_pictureInPictureMargin = 20;

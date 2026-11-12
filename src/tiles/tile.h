@@ -166,6 +166,7 @@ public:
     bool isRoot() const;
     bool isLayout() const;
     bool canBeRemoved() const;
+    bool canBeRemovedOnEmpty() const;
 
     qreal padding() const;
     void setPadding(qreal padding);
@@ -211,6 +212,12 @@ public:
     Q_INVOKABLE bool manage(KWin::Window *window);
 
     /*!
+     * Puts the specified \a window in this tile or if it is already occupied, splits this tile
+     * and places the window in one of the child tiles depending on \a reference.
+     */
+    void manageUnoccupied(KWin::Window *window, const QPointF &reference);
+
+    /*!
      * \qmlmethod void Tile::unmanage(Window window)
      *
      * Remove the specified \a window from this tile. The window will be resized to match its size
@@ -250,6 +257,7 @@ public:
     Tile *nextSibling() const;
     Tile *previousSibling() const;
     Tile *parentTile() const;
+    bool isOccupied() const;
 
     void setLayoutDirection(LayoutDirection dir);
     LayoutDirection layoutDirection() const;
@@ -276,6 +284,10 @@ public:
 
     qreal minWidthInPixels() const;
     qreal minHeightInPixels() const;
+
+    void arrange();
+
+    void subdivide(const QList<Window *> &windows);
 
 Q_SIGNALS:
     void activeChanged(bool active);
@@ -321,8 +333,6 @@ protected:
     void add(Window *window);
     bool remove(Window *window);
 
-    void arrange();
-
     QList<Tile *> m_children;
     QList<Window *> m_windows;
     Tile *m_parentTile;
@@ -336,12 +346,56 @@ protected:
     qreal m_padding = 4.0;
 };
 
+enum class TileInsertionPoint {
+    Before,
+    After,
+};
+
+struct TileOperation
+{
+    RectF outline() const;
+    void apply(Window *window);
+
+    Tile *tile;
+};
+
+struct InsertTileOperation
+{
+    RectF outline() const;
+    void apply(Window *window);
+
+    Tile *reference;
+    Tile::LayoutDirection direction;
+    TileInsertionPoint insertionPoint;
+};
+
+struct SplitTileOperation
+{
+    RectF outline() const;
+    void apply(Window *window);
+
+    Tile *reference;
+    Tile::LayoutDirection direction;
+    TileInsertionPoint insertionPoint;
+};
+
+class InteractiveTileOperation : public std::variant<TileOperation, InsertTileOperation, SplitTileOperation>
+{
+public:
+    using variant::variant;
+
+    RectF outline() const;
+    void apply(Window *window);
+};
+
 class KWIN_EXPORT RootTile : public Tile
 {
     Q_OBJECT
 
 public:
     RootTile(TileManager *tiling, VirtualDesktop *desktop);
+
+    std::optional<InteractiveTileOperation> interactiveTile(const Window *window, const QPointF &point) const;
 };
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const Tile *tile);

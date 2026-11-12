@@ -50,6 +50,12 @@ KCM.SimpleKCM {
                     checked: stackLayout.currentIndex === 3
                     onTriggered: stackLayout.currentIndex = 3
                 },
+                Kirigami.Action {
+                    icon.name: "preferences-system-windows-move-symbolic"
+                    text: i18nd("kcmkwm", "&Tiling")
+                    checked: stackLayout.currentIndex === 4
+                    onTriggered: stackLayout.currentIndex = 4
+                },
             ]
         }
 
@@ -62,6 +68,7 @@ KCM.SimpleKCM {
             TitlebarActions {}
             WindowActions {}
             MovementAndPlacement {}
+            Tiling {}
         }
     }
 }

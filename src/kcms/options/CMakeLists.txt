@@ -21,7 +21,7 @@ target_link_libraries(kcm_kwinoptions PRIVATE
     Qt::Quick
 
     KF6::ConfigGui
-
+    KF6::GlobalAccel
     KF6::KCMUtils
     KF6::KCMUtilsQuick
     KF6::I18n
@@ -30,4 +30,3 @@ target_link_libraries(kcm_kwinoptions PRIVATE
 )
 
 qt_add_dbus_interface(kcm_kwinoptions ${KWin_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface)
-

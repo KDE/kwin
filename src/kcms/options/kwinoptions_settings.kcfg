@@ -160,6 +160,23 @@
         <default>LowerCenter</default>
     </entry>
 
+    <entry name="InteractiveTiling" type="Bool">
+        <default>true</default>
+    </entry>
+
+    <entry name="ElectricBorderCustomTiling" type="Bool">
+        <default>true</default>
+    </entry>
+
+    <entry name="AutoTiling" type="Enum">
+        <choices name="AutoTiling">
+            <choice name="Off" value="Off"/>
+            <choice name="On" value="On"/>
+            <choice name="OnDemand" value="OnDemand"/>
+        </choices>
+        <default>AutoTiling::OnDemand</default>
+    </entry>
+
     </group>
 
     <group name="MouseBindings">

@@ -3228,6 +3228,27 @@ RootTile *Workspace::rootTile(LogicalOutput *output, VirtualDesktop *desktop) co
     return nullptr;
 }
 
+void Workspace::untileOutput(LogicalOutput *output)
+{
+    QList<Window *> windowsToUntile;
+    windowsToUntile.reserve(m_windows.size());
+
+    rootTile(output)->visitDescendants([&windowsToUntile](const Tile *tile) {
+        windowsToUntile += tile->windows();
+    });
+
+    for (Window *window : std::as_const(windowsToUntile)) {
+        if (Tile *tile = window->requestedTile()) {
+            tile->unmanage(window);
+        }
+    }
+}
+
+void Workspace::untileActiveOutput()
+{
+    untileOutput(activeOutput());
+}
+
 #if KWIN_BUILD_TABBOX
 TabBox::TabBox *Workspace::tabbox() const
 {

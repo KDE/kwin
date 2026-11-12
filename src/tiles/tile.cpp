@@ -24,6 +24,9 @@
 namespace KWin
 {
 
+const qreal siblingThresholdInPixels = 50;
+const qreal splitThresholdInPercents = 0.25;
+
 QDebug operator<<(QDebug debug, const Tile *tile)
 {
     QDebugStateSaver saver(debug);
@@ -288,6 +291,27 @@ bool Tile::canBeRemoved() const
 {
     // The root tile can *never* be removed
     return m_parentTile;
+}
+
+bool Tile::canBeRemovedOnEmpty() const
+{
+    if (!options->interactiveTilingEnabled()) {
+        return false;
+    }
+
+    if (m_quickTileMode != QuickTileFlag::Custom) {
+        return false;
+    }
+
+    if (!m_parentTile) {
+        return false;
+    }
+
+    if (m_parentTile->isRoot() && m_parentTile->childCount() < 2) {
+        return false;
+    }
+
+    return m_children.isEmpty() && m_windows.isEmpty();
 }
 
 qreal Tile::padding() const
@@ -851,6 +875,11 @@ bool Tile::unmanage(Window *window)
     if (window->requestedTile() == this) {
         window->requestTile(nullptr);
     }
+
+    if (canBeRemovedOnEmpty()) {
+        remove();
+    }
+
     return true;
 }
 
@@ -858,7 +887,38 @@ void Tile::forget(Window *window)
 {
     if (remove(window)) {
         window->forgetTile(this);
+
+        if (canBeRemovedOnEmpty()) {
+            remove();
+        }
     }
+}
+
+void Tile::manageUnoccupied(KWin::Window *window, const QPointF &reference)
+{
+    Tile *placementTile = nullptr;
+    if (!isOccupied()) {
+        placementTile = this;
+    } else {
+        const RectF geometry = absoluteGeometry();
+        const auto layout = geometry.width() > geometry.height()
+            ? LayoutDirection::Horizontal
+            : LayoutDirection::Vertical;
+
+        const bool splitBefore = layout == LayoutDirection::Horizontal
+            ? reference.x() < geometry.horizontalCenter()
+            : reference.y() < geometry.verticalCenter();
+
+        if (splitBefore) {
+            const auto splitTiles = splitLast(layout);
+            placementTile = splitTiles[0];
+        } else {
+            const auto splitTiles = splitFirst(layout);
+            placementTile = splitTiles[1];
+        }
+    }
+
+    placementTile->manage(window);
 }
 
 void Tile::add(Window *window)
@@ -989,6 +1049,10 @@ void Tile::remove()
     }
 
     deleteLater(); // not using "delete this" because QQmlEngine will crash
+
+    if (parentTile->canBeRemovedOnEmpty()) {
+        parentTile->remove();
+    }
 }
 
 QList<Tile *> Tile::splitFirst(KWin::Tile::LayoutDirection newDirection)
@@ -1070,6 +1134,17 @@ int Tile::childCount() const
 Tile *Tile::parentTile() const
 {
     return m_parentTile;
+}
+
+bool Tile::isOccupied() const
+{
+    if (!m_windows.isEmpty()) {
+        return true;
+    }
+
+    return std::ranges::any_of(m_children, [](const Tile *childTile) {
+        return childTile->isOccupied();
+    });
 }
 
 void Tile::visitDescendants(std::function<void(Tile *child)> callback)
@@ -1320,6 +1395,296 @@ qreal Tile::minHeightInPixels() const
         minHeight = std::max(minHeight, window->minSize().height() + 2 * m_padding);
     }
     return minHeight;
+}
+
+RectF TileOperation::outline() const
+{
+    return tile->windowGeometry();
+}
+
+void TileOperation::apply(Window *window)
+{
+    tile->manage(window);
+}
+
+RectF InsertTileOperation::outline() const
+{
+    const Tile *anchorTile = reference->layoutReference(direction);
+    if (!anchorTile) {
+        anchorTile = reference->rootTile();
+    }
+
+    bool first = true;
+    bool last = true;
+    if (anchorTile && !anchorTile->isRoot()) {
+        const auto siblingTiles = anchorTile->parentTile()->childTiles();
+        const int anchorIndex = siblingTiles.indexOf(anchorTile);
+
+        first = anchorIndex == 0;
+        last = anchorIndex == siblingTiles.size() - 1;
+    }
+
+    const RectF anchorRect = anchorTile->windowGeometry();
+    const qreal padding = anchorTile->padding();
+    const qreal threshold = siblingThresholdInPixels - padding / 2;
+
+    if (direction == Tile::LayoutDirection::Horizontal) {
+        if (insertionPoint == TileInsertionPoint::Before) {
+            if (!first) {
+                return RectF(QPointF(anchorRect.left() - threshold - padding, anchorRect.top()),
+                             QPointF(anchorRect.left() + threshold, anchorRect.bottom()));
+            } else {
+                return RectF(QPointF(anchorRect.left(), anchorRect.top()),
+                             QPointF(anchorRect.left() + threshold, anchorRect.bottom()));
+            }
+        } else {
+            if (!last) {
+                return RectF(QPointF(anchorRect.right() - threshold, anchorRect.top()),
+                             QPointF(anchorRect.right() + threshold + padding, anchorRect.bottom()));
+            } else {
+                return RectF(QPointF(anchorRect.right() - threshold, anchorRect.top()),
+                             QPointF(anchorRect.right(), anchorRect.bottom()));
+            }
+        }
+    } else {
+        if (insertionPoint == TileInsertionPoint::Before) {
+            if (!first) {
+                return RectF(QPointF(anchorRect.left(), anchorRect.top() - threshold - padding),
+                             QPointF(anchorRect.right(), anchorRect.top() + threshold));
+            } else {
+                return RectF(QPointF(anchorRect.left(), anchorRect.top()),
+                             QPointF(anchorRect.right(), anchorRect.top() + threshold));
+            }
+        } else {
+            if (!last) {
+                return RectF(QPointF(anchorRect.left(), anchorRect.bottom() - threshold),
+                             QPointF(anchorRect.right(), anchorRect.bottom() + threshold + padding));
+            } else {
+                return RectF(QPointF(anchorRect.left(), anchorRect.bottom() - threshold),
+                             QPointF(anchorRect.right(), anchorRect.bottom()));
+            }
+        }
+    }
+
+    Q_UNREACHABLE_RETURN(RectF());
+}
+
+void InsertTileOperation::apply(Window *window)
+{
+    Tile *anchorTile = reference->layoutReference(direction);
+    Tile *insertedTile = nullptr;
+
+    if (!anchorTile) {
+        Tile *rootTile = reference->rootTile();
+        rootTile->setLayoutDirection(direction);
+
+        int position;
+        if (insertionPoint == TileInsertionPoint::Before) {
+            position = 0;
+        } else {
+            position = rootTile->childCount();
+        }
+
+        insertedTile = rootTile->createChildAt(position);
+        rootTile->arrange();
+    } else {
+        Tile *layoutTile = anchorTile->parentTile();
+
+        int position = layoutTile->childTiles().indexOf(anchorTile);
+        if (insertionPoint == TileInsertionPoint::After) {
+            position++;
+        }
+
+        insertedTile = layoutTile->createChildAt(position);
+        layoutTile->arrange();
+    }
+
+    insertedTile->manage(window);
+}
+
+RectF SplitTileOperation::outline() const
+{
+    const RectF referenceRect = reference->windowGeometry();
+    const qreal padding = reference->padding();
+
+    RectF outlineRect;
+    if (direction == Tile::LayoutDirection::Horizontal) {
+        outlineRect = RectF(0, referenceRect.top(), referenceRect.width() * splitThresholdInPercents - (1 - splitThresholdInPercents) * padding, referenceRect.height());
+        if (insertionPoint == TileInsertionPoint::Before) {
+            outlineRect.moveLeft(referenceRect.left());
+        } else {
+            outlineRect.moveRight(referenceRect.right());
+        }
+    } else {
+        outlineRect = RectF(referenceRect.left(), 0, referenceRect.width(), referenceRect.height() * splitThresholdInPercents - (1 - splitThresholdInPercents) * padding);
+        if (insertionPoint == TileInsertionPoint::Before) {
+            outlineRect.moveTop(referenceRect.top());
+        } else {
+            outlineRect.moveBottom(referenceRect.bottom());
+        }
+    }
+
+    return outlineRect;
+}
+
+void SplitTileOperation::apply(Window *window)
+{
+    if (insertionPoint == TileInsertionPoint::Before) {
+        const auto splitTiles = reference->splitLast(direction);
+        splitTiles[0]->manage(window);
+    } else {
+        const auto splitTiles = reference->splitFirst(direction);
+        splitTiles[1]->manage(window);
+    }
+}
+
+RectF InteractiveTileOperation::outline() const
+{
+    if (const auto tileOperation = std::get_if<TileOperation>(this)) {
+        return tileOperation->outline();
+    } else if (const auto insertOperation = std::get_if<InsertTileOperation>(this)) {
+        return insertOperation->outline();
+    } else if (const auto splitOperation = std::get_if<SplitTileOperation>(this)) {
+        return splitOperation->outline();
+    }
+
+    Q_UNREACHABLE_RETURN(RectF());
+}
+
+void InteractiveTileOperation::apply(Window *window)
+{
+    if (const auto tileOperation = std::get_if<TileOperation>(this)) {
+        tileOperation->apply(window);
+    } else if (const auto insertOperation = std::get_if<InsertTileOperation>(this)) {
+        insertOperation->apply(window);
+    } else if (const auto splitOperation = std::get_if<SplitTileOperation>(this)) {
+        splitOperation->apply(window);
+    }
+}
+
+std::optional<InteractiveTileOperation> RootTile::interactiveTile(const Window *window, const QPointF &point) const
+{
+    Tile *tile = pick(point);
+    if (!tile) {
+        return std::nullopt;
+    }
+
+    if (!options->interactiveTilingEnabled()) {
+        return TileOperation {
+            .tile = tile,
+        };
+    }
+
+    const bool splittable = !tile->windows().isEmpty() && !tile->windows().contains(window);
+    const RectF tileRect = tile->absoluteGeometry();
+
+    const qreal relativeDistanceX = (point.x() - tileRect.left()) / tileRect.width();
+    const qreal relativeDistanceY = (point.y() - tileRect.top()) / tileRect.height();
+
+    const qreal siblingThresholdInPercentsX = siblingThresholdInPixels / tileRect.width();
+    const qreal siblingThresholdInPercentsY = siblingThresholdInPixels / tileRect.height();
+
+    if (relativeDistanceX >= splitThresholdInPercents && relativeDistanceX < (1 - splitThresholdInPercents) &&
+        relativeDistanceY >= splitThresholdInPercents && relativeDistanceY < (1 - splitThresholdInPercents)) {
+        return TileOperation {
+            .tile = tile,
+        };
+    }
+
+    if (relativeDistanceX < siblingThresholdInPercentsX) {
+        return InsertTileOperation {
+            .reference = tile,
+            .direction = LayoutDirection::Horizontal,
+            .insertionPoint = TileInsertionPoint::Before,
+        };
+    } else if (splittable && relativeDistanceX < splitThresholdInPercents) {
+        return SplitTileOperation {
+            .reference = tile,
+            .direction = LayoutDirection::Horizontal,
+            .insertionPoint = TileInsertionPoint::Before,
+        };
+    }
+
+    if (relativeDistanceX >= 1 - siblingThresholdInPercentsX) {
+        return InsertTileOperation {
+            .reference = tile,
+            .direction = LayoutDirection::Horizontal,
+            .insertionPoint = TileInsertionPoint::After,
+        };
+    } else if (splittable && relativeDistanceX >= 1 - splitThresholdInPercents) {
+        return SplitTileOperation {
+            .reference = tile,
+            .direction = LayoutDirection::Horizontal,
+            .insertionPoint = TileInsertionPoint::After,
+        };
+    }
+
+    if (relativeDistanceY < siblingThresholdInPercentsY) {
+        return InsertTileOperation {
+            .reference = tile,
+            .direction = LayoutDirection::Vertical,
+            .insertionPoint = TileInsertionPoint::Before,
+        };
+    } else if (splittable && relativeDistanceY < splitThresholdInPercents) {
+        return SplitTileOperation {
+            .reference = tile,
+            .direction = LayoutDirection::Vertical,
+            .insertionPoint = TileInsertionPoint::Before,
+        };
+    }
+
+    if (relativeDistanceY >= 1 - siblingThresholdInPercentsY) {
+        return InsertTileOperation {
+            .reference = tile,
+            .direction = LayoutDirection::Vertical,
+            .insertionPoint = TileInsertionPoint::After,
+        };
+    } else if (splittable && relativeDistanceY >= 1 - splitThresholdInPercents) {
+        return SplitTileOperation {
+            .reference = tile,
+            .direction = LayoutDirection::Vertical,
+            .insertionPoint = TileInsertionPoint::After,
+        };
+    }
+
+    return TileOperation {
+        .tile = tile,
+    };
+}
+
+void Tile::subdivide(const QList<Window *> &windows)
+{
+    if (windows.isEmpty()) {
+        return;
+    }
+
+    if (windows.size() == 1) {
+        manage(windows[0]);
+        return;
+    }
+
+    const auto oppositeDirection = m_layoutDirection == LayoutDirection::Horizontal
+        ? LayoutDirection::Vertical
+        : LayoutDirection::Horizontal;
+
+    const auto firstTile = createChildAt(childCount());
+    firstTile->setLayoutDirection(oppositeDirection);
+    const auto secondTile = createChildAt(childCount());
+    secondTile->setLayoutDirection(oppositeDirection);
+
+    arrange();
+
+    QList<Window *> sortedWindows = windows;
+    std::ranges::sort(sortedWindows, [this](const auto &a, const auto &b) {
+        if (m_layoutDirection == LayoutDirection::Horizontal) {
+            return a->frameGeometry().horizontalCenter() < b->frameGeometry().horizontalCenter();
+        } else {
+            return a->frameGeometry().verticalCenter() < b->frameGeometry().verticalCenter();
+        }
+    });
+
+    firstTile->subdivide(sortedWindows.first(sortedWindows.size() / 2));
+    secondTile->subdivide(sortedWindows.mid(sortedWindows.size() / 2));
 }
 
 } // namespace KWin

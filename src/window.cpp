@@ -838,6 +838,30 @@ bool Window::titlebarPositionUnderMouse() const
     }
 }
 
+void Window::escapeTileOnMinimize()
+{
+    if (requestedTile() && requestedTile()->quickTileMode() == QuickTileFlag::Custom) {
+        requestedTile()->forget(this);
+    }
+}
+
+void Window::enterTileOnUnminimize(Tile *rootTile)
+{
+    if (requestedTile()) {
+        return;
+    }
+
+    const QPointF center = moveResizeGeometry().center();
+    Tile *emptyTile = rootTile->pick(center, [](const Tile *tile) {
+        return tile->windows().isEmpty();
+    });
+    if (!emptyTile) {
+        emptyTile = rootTile->pick(center);
+    }
+
+    emptyTile->manageUnoccupied(this, center);
+}
+
 void Window::setMinimized(bool set)
 {
     const bool effectiveSet = rules()->checkMinimize(set);
@@ -851,6 +875,28 @@ void Window::setMinimized(bool set)
 
     m_minimized = effectiveSet;
     doMinimize();
+
+    switch (options->autoTiling()) {
+    case AutoTiling::Off:
+        break;
+    case AutoTiling::On:
+        if (m_minimized) {
+            escapeTileOnMinimize();
+        } else {
+            enterTileOnUnminimize(workspace()->rootTile(moveResizeOutput()));
+        }
+        break;
+    case AutoTiling::OnDemand:
+        if (m_minimized) {
+            escapeTileOnMinimize();
+        } else {
+            Tile *rootTile = workspace()->rootTile(moveResizeOutput());
+            if (rootTile->isOccupied()) {
+                enterTileOnUnminimize(rootTile);
+            }
+        }
+        break;
+    }
 
     updateWindowRules(Rules::Minimize);
     Q_EMIT minimizedChanged();
@@ -1088,13 +1134,91 @@ void Window::finishInteractiveMoveResize(bool cancel)
 
     if (isElectricBorderMaximizing()) {
         if (auto quickTileMode = std::get_if<QuickTileMode>(&m_electricMode.value())) {
-            setQuickTileMode(*quickTileMode, m_interactiveMoveResize.anchor);
+            if (options->electricBorderCustomTiling()) {
+                LogicalOutput *output = workspace()->outputAt(m_interactiveMoveResize.anchor);
+                RootTile *rootTile = workspace()->rootTile(output);
+                while (rootTile->childCount() > 0) {
+                    rootTile->childTile(0)->remove();
+                }
+
+                QList<Window *> windows;
+                workspace()->forEachWindow([this, output, &windows](Window *other) {
+                    if (other == this) {
+                        return;
+                    }
+
+                    if (other->isNormalWindow() && other->isOnOutput(output)) {
+                        windows.append(other);
+                    }
+                });
+
+                const auto topLevel = rootTile->splitFirst(Tile::LayoutDirection::Horizontal);
+                topLevel[0]->setLayoutDirection(Tile::LayoutDirection::Vertical);
+                topLevel[1]->setLayoutDirection(Tile::LayoutDirection::Vertical);
+
+                if (*quickTileMode == QuickTileFlag::Left || *quickTileMode == QuickTileFlag::Right) {
+                    if (*quickTileMode == QuickTileFlag::Left) {
+                        topLevel[0]->manage(this);
+                        topLevel[1]->subdivide(windows);
+                    } else {
+                        topLevel[0]->subdivide(windows);
+                        topLevel[1]->manage(this);
+                    }
+                } else if (*quickTileMode == QuickTileMode(QuickTileFlag::Left | QuickTileFlag::Top)) {
+                    const auto splitTiles = topLevel[0]->splitFirst(Tile::LayoutDirection::Vertical);
+                    splitTiles[0]->manage(this);
+
+                    if (!windows.isEmpty()) {
+                        splitTiles[1]->manage(windows.takeFirst());
+                    }
+
+                    topLevel[1]->subdivide(windows);
+                } else if (*quickTileMode == QuickTileMode(QuickTileFlag::Left | QuickTileFlag::Bottom)) {
+                    const auto splitTiles = topLevel[0]->splitFirst(Tile::LayoutDirection::Vertical);
+                    splitTiles[1]->manage(this);
+
+                    if (!windows.isEmpty()) {
+                        splitTiles[0]->manage(windows.takeFirst());
+                    }
+
+                    topLevel[1]->subdivide(windows);
+                } else if (*quickTileMode == QuickTileMode(QuickTileFlag::Right | QuickTileFlag::Top)) {
+                    const auto splitTiles = topLevel[1]->splitFirst(Tile::LayoutDirection::Vertical);
+                    splitTiles[0]->manage(this);
+
+                    if (!windows.isEmpty()) {
+                        splitTiles[1]->manage(windows.takeFirst());
+                    }
+
+                    topLevel[0]->subdivide(windows);
+                } else if (*quickTileMode == QuickTileMode(QuickTileFlag::Right | QuickTileFlag::Bottom)) {
+                    const auto splitTiles = topLevel[1]->splitFirst(Tile::LayoutDirection::Vertical);
+                    splitTiles[1]->manage(this);
+
+                    if (!windows.isEmpty()) {
+                        splitTiles[0]->manage(windows.takeFirst());
+                    }
+
+                    topLevel[0]->subdivide(windows);
+                }
+            } else {
+                setQuickTileMode(*quickTileMode, m_interactiveMoveResize.anchor);
+            }
         } else if (auto maximizeMode = std::get_if<MaximizeMode>(&m_electricMode.value())) {
             maximize(*maximizeMode, m_electricGeometryRestore);
         }
         setElectricBorderMaximizing(false);
-    } else if (wasMove && (m_interactiveMoveResize.modifiers & Qt::ShiftModifier)) {
-        setQuickTileMode(QuickTileFlag::Custom, m_interactiveMoveResize.anchor);
+    } else if (wasMove) {
+        RootTile *rootTile = workspace()->rootTile(workspace()->outputAt(m_interactiveMoveResize.anchor));
+
+        const bool modifier = m_interactiveMoveResize.modifiers & Qt::ShiftModifier;
+        const bool tiled = options->interactiveTilingEnabled() && rootTile->isOccupied();
+
+        if (modifier ^ tiled) {
+            if (auto operation = rootTile->interactiveTile(this, m_interactiveMoveResize.anchor)) {
+                operation->apply(this);
+            }
+        }
     }
     setElectricBorderMode(std::nullopt);
     workspace()->outline()->hide();
@@ -1238,24 +1362,23 @@ void Window::updateInteractiveMoveResize(const QPointF &global, Qt::KeyboardModi
             Q_EMIT interactiveMoveResizeStepped(nextMoveResizeGeom);
         }
 
-        if (!isRequestedFullScreen()) {
-            if (modifiers & Qt::ShiftModifier) {
-                resetQuickTilingMaximizationZones();
-                const auto &r = quickTileGeometry(QuickTileFlag::Custom, global);
-                if (r.isEmpty()) {
-                    workspace()->outline()->hide();
-                } else {
-                    if (!workspace()->outline()->isActive() || workspace()->outline()->geometry() != r.toRect()) {
-                        workspace()->outline()->show(r.toRect(), moveResizeGeometry().toRect());
+        if (!isRequestedFullScreen() && isResizable()) {
+            checkQuickTilingMaximizationZones(global.x(), global.y(), m_interactiveMoveResize.modifiers);
+
+            if (!m_electricMaximizing) {
+                RootTile *rootTile = workspace()->rootTile(workspace()->outputAt(global));
+
+                const bool modifier = m_interactiveMoveResize.modifiers & Qt::ShiftModifier;
+                const bool tiled = options->interactiveTilingEnabled() && rootTile->isOccupied();
+
+                if (modifier ^ tiled) {
+                    resetQuickTilingMaximizationZones();
+                    if (const auto operation = rootTile->interactiveTile(this, global)) {
+                        workspace()->outline()->show(operation->outline().rounded());
+                    } else {
+                        workspace()->outline()->hide();
                     }
-                }
-            } else {
-                if (quickTileMode() == QuickTileMode(QuickTileFlag::None) && isResizable()) {
-                    checkQuickTilingMaximizationZones(global.x(), global.y());
-                }
-                if (!m_electricMaximizing) {
-                    // Only if we are in an electric maximizing gesture we should keep the outline,
-                    // otherwise we must make sure it's hidden
+                } else {
                     workspace()->outline()->hide();
                 }
             }
@@ -2493,13 +2616,13 @@ void Window::doInteractiveResizeSync(const RectF &rect)
     moveResize(rect);
 }
 
-void Window::checkQuickTilingMaximizationZones(int xroot, int yroot)
+void Window::checkQuickTilingMaximizationZones(int xroot, int yroot, Qt::KeyboardModifiers modifiers)
 {
     std::optional<ElectricBorderMode> mode = std::nullopt;
     bool innerBorder = false;
 
     const auto outputs = workspace()->outputs();
-    for (const LogicalOutput *output : outputs) {
+    for (LogicalOutput *output : outputs) {
         if (!output->geometry().contains(QPoint(xroot, yroot))) {
             continue;
         }
@@ -2516,9 +2639,18 @@ void Window::checkQuickTilingMaximizationZones(int xroot, int yroot)
             return false;
         };
 
+        bool electricBorderTiling = false;
+        if (options->electricBorderTiling()) {
+            if (options->electricBorderCustomTiling()) {
+                electricBorderTiling = !workspace()->rootTile(output)->isOccupied();
+            } else {
+                electricBorderTiling = !modifiers.testFlag(Qt::ShiftModifier);
+            }
+        }
+
         RectF area = workspace()->clientArea(MaximizeArea, this, QPointF(xroot, yroot));
         QuickTileMode tile = QuickTileFlag::None;
-        if (options->electricBorderTiling()) {
+        if (electricBorderTiling) {
             if (xroot <= area.x() + 20) {
                 tile |= QuickTileFlag::Left;
                 innerBorder = isInScreen(QPoint(area.x() - 1, yroot));
@@ -3517,6 +3649,8 @@ void Window::place(const PlacementCommand &placement)
         moveResize(*rect);
     } else if (auto maximizeMode = std::get_if<MaximizeMode>(&placement)) {
         maximize(*maximizeMode);
+    } else if (auto placementTile = std::get_if<Tile *>(&placement)) {
+        (*placementTile)->manageUnoccupied(this, workspace()->focusMousePosition());
     }
     markAsPlaced();
 }

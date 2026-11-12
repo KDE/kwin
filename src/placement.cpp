@@ -14,6 +14,7 @@
 #include "cursor.h"
 #include "options.h"
 #include "rules.h"
+#include "tiles/tile.h"
 #include "virtualdesktops.h"
 #include "window.h"
 #include "workspace.h"
@@ -55,10 +56,34 @@ std::optional<PlacementCommand> Placement::place(const Window *c, const RectF &a
     }
 }
 
+std::optional<PlacementCommand> Placement::placeTiled(const Window *c, Tile *rootTile)
+{
+    Tile *emptyTile = rootTile->pick(workspace()->focusMousePosition(), [](const Tile *tile) {
+        return tile->windows().isEmpty();
+    });
+    if (emptyTile) {
+        return emptyTile;
+    }
+
+    return rootTile->pick(workspace()->focusMousePosition());
+}
+
 std::optional<PlacementCommand> Placement::place(const Window *c, const RectF &area, PlacementPolicy policy, PlacementPolicy nextPlacement)
 {
     if (policy == PlacementUnknown || policy == PlacementDefault) {
         policy = options->placement();
+    }
+
+    switch (options->autoTiling()) {
+    case AutoTiling::Off:
+        break;
+    case AutoTiling::On:
+        return placeTiled(c, workspace()->rootTile(workspace()->outputAt(area.center())));
+    case AutoTiling::OnDemand:
+        if (auto rootTile = workspace()->rootTile(workspace()->outputAt(area.center())); rootTile->isOccupied()) {
+            return placeTiled(c, rootTile);
+        }
+        break;
     }
 
     switch (policy) {

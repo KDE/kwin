@@ -73,7 +73,7 @@ using ElectricBorderMode = std::variant<QuickTileMode, MaximizeMode>;
 /*!
  * The PlacementCommand type specifies how a window should be placed in the workspace when it's shown.
  */
-using PlacementCommand = std::variant<QPointF, RectF, MaximizeMode>;
+using PlacementCommand = std::variant<QPointF, RectF, MaximizeMode, Tile *>;
 
 /*!
  * The DecorationMode enum specifies who draws the window decoration, if at all.
@@ -1245,6 +1245,8 @@ public:
 
     RectF iconGeometry() const;
 
+    void escapeTileOnMinimize();
+    void enterTileOnUnminimize(Tile *rootTile);
     void setMinimized(bool set);
     bool isMinimized() const
     {
@@ -1916,7 +1918,7 @@ protected:
      * Checks if the mouse cursor is near the edge of the screen and if so
      * activates quick tiling or maximization
      */
-    void checkQuickTilingMaximizationZones(int xroot, int yroot);
+    void checkQuickTilingMaximizationZones(int xroot, int yroot, Qt::KeyboardModifiers modifiers);
     void resetQuickTilingMaximizationZones();
     /*!
      * Whether a sync request is still pending.

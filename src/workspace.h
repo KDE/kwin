@@ -232,6 +232,9 @@ public:
      */
     RootTile *rootTile(LogicalOutput *output, VirtualDesktop *desktop) const;
 
+    void untileOutput(LogicalOutput *output);
+    void untileActiveOutput();
+
 public:
     QPointF cascadeOffset(const RectF &area) const;
 
