@@ -28,13 +28,6 @@ class KWIN_EXPORT CustomTile : public Tile
     QML_ELEMENT
     QML_UNCREATABLE("")
 
-    /*!
-     * \qmlproperty Tile::LayoutDirection CustomTile::layoutDirection
-     *
-     * This property specifies the direction in which children tiles are arranged.
-     */
-    Q_PROPERTY(KWin::Tile::LayoutDirection layoutDirection READ layoutDirection WRITE setLayoutDirection NOTIFY layoutDirectionChanged)
-
 public:
     CustomTile(TileManager *tiling, CustomTile *parentItem = nullptr);
 
@@ -53,19 +46,11 @@ public:
      */
     Q_INVOKABLE QList<KWin::CustomTile *> split(KWin::Tile::LayoutDirection newDirection);
 
-    void setLayoutDirection(Tile::LayoutDirection dir);
-    Tile::LayoutDirection layoutDirection() const;
-
     CustomTile *nextTileAt(Qt::Edge edge) const;
 
     CustomTile *nextNonLayoutTileAt(Qt::Edge edge) const;
 
-Q_SIGNALS:
-    void layoutDirectionChanged(KWin::Tile::LayoutDirection direction);
-    void layoutModified();
-
 private:
-    Tile::LayoutDirection m_layoutDirection = LayoutDirection::Horizontal;
     bool m_geometryLock = false;
 };
 

@@ -657,6 +657,21 @@ Tile *Tile::previousSibling() const
     }
 }
 
+void Tile::setLayoutDirection(LayoutDirection dir)
+{
+    if (m_layoutDirection == dir) {
+        return;
+    }
+
+    m_layoutDirection = dir;
+    Q_EMIT layoutDirectionChanged(dir);
+}
+
+Tile::LayoutDirection Tile::layoutDirection() const
+{
+    return m_layoutDirection;
+}
+
 } // namespace KWin
 
 #include "moc_tile.cpp"
