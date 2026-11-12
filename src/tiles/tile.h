@@ -86,13 +86,6 @@ class KWIN_EXPORT Tile : public QObject
     Q_PROPERTY(QSizeF minimumSize READ minimumSize WRITE setMinimumSize NOTIFY minimumSizeChanged)
 
     /*!
-     * \qmlproperty int Tile::positionInLayout
-     *
-     * If this Tile is a child of a layout Tile, this property specifies the child index of this Tile.
-     */
-    Q_PROPERTY(int positionInLayout READ row NOTIFY rowChanged)
-
-    /*!
      * \qmlproperty Tile Tile::parent
      *
      * The parent Tile of this Tile. This property can be \c null if this is the root Tile.
@@ -294,7 +287,6 @@ Q_SIGNALS:
     void windowGeometryChanged();
     void paddingChanged(qreal padding);
     void minimumSizeChanged(const QSizeF &size);
-    void rowChanged(int row);
     void isLayoutChanged(bool isLayout);
     void childTilesChanged();
     void windowsChanged();

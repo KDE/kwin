@@ -675,15 +675,9 @@ void Tile::removeChild(Tile *child)
     Q_EMIT aboutToRemoveChildTile(child);
 
     const bool wasEmpty = m_children.isEmpty();
-    const int idx = m_children.indexOf(child);
     m_children.removeAll(child);
     if (m_children.isEmpty() && !wasEmpty) {
         Q_EMIT isLayoutChanged(false);
-    }
-    if (idx > -1) {
-        for (int i = idx; i < m_children.count(); ++i) {
-            Q_EMIT m_children[i]->rowChanged(i);
-        }
     }
 
     Q_EMIT childTileRemoved();
