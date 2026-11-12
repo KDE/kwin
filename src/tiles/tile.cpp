@@ -740,6 +740,74 @@ Tile::LayoutDirection Tile::layoutDirection() const
     return m_layoutDirection;
 }
 
+Tile *Tile::nextTileAt(Qt::Edge edge) const
+{
+    if (!m_parentTile) {
+        return nullptr;
+    }
+
+    Tile *sibling = nullptr;
+
+    const int index = row();
+    int layoutRows;
+    int layoutColumns;
+    switch (m_parentTile->layoutDirection()) {
+    case LayoutDirection::Vertical:
+        layoutRows = std::max(1, m_parentTile->childCount());
+        layoutColumns = 1;
+        break;
+    case LayoutDirection::Horizontal:
+    default:
+        layoutColumns = std::max(1, m_parentTile->childCount());
+        layoutRows = 1;
+        break;
+    }
+    int row = index / layoutColumns;
+    int column = index % layoutColumns;
+
+    switch (edge) {
+    case Qt::LeftEdge:
+        if (column > 0) {
+            sibling = previousSibling();
+        }
+        break;
+    case Qt::TopEdge:
+        if (row > 0) {
+            sibling = m_parentTile->childTiles()[layoutColumns * (row - 1) + column];
+        }
+        break;
+    case Qt::RightEdge:
+        if (column < layoutColumns - 1) {
+            sibling = nextSibling();
+        }
+        break;
+    case Qt::BottomEdge:
+        if (row < layoutRows - 1) {
+            const int newIndex = layoutColumns * (row + 1) + column;
+            if (newIndex < m_parentTile->childCount()) {
+                sibling = m_parentTile->childTiles()[newIndex];
+            }
+        }
+        break;
+    }
+
+    if (sibling) {
+        return sibling;
+    } else {
+        return m_parentTile->nextTileAt(edge);
+    }
+}
+
+Tile *Tile::nextNonLayoutTileAt(Qt::Edge edge) const
+{
+    auto tile = nextTileAt(edge);
+    // Loop through the tiles until we find a child tile that is not a layout
+    while (tile && tile->isLayout()) {
+        tile = tile->childTiles().first();
+    }
+    return tile;
+}
+
 } // namespace KWin
 
 #include "moc_tile.cpp"

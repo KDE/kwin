@@ -39,10 +39,6 @@ public:
      */
     Q_INVOKABLE QList<KWin::CustomTile *> split(KWin::Tile::LayoutDirection newDirection);
 
-    CustomTile *nextTileAt(Qt::Edge edge) const;
-
-    CustomTile *nextNonLayoutTileAt(Qt::Edge edge) const;
-
 private:
     bool m_geometryLock = false;
 };

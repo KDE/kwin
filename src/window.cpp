@@ -3732,10 +3732,6 @@ void Window::handleCustomQuickTileShortcut(QuickTileMode mode)
         tileAtPoint->manage(this);
         return;
     }
-    const auto customTile = qobject_cast<CustomTile *>(tileAtPoint);
-    if (!customTile) {
-        return;
-    }
     // Get the next tile that is not a layout tile from the edge
     Qt::Edge edge;
     if (mode & QuickTileFlag::Left) {
@@ -3750,7 +3746,7 @@ void Window::handleCustomQuickTileShortcut(QuickTileMode mode)
     if (mode & QuickTileFlag::Bottom) {
         edge = Qt::BottomEdge;
     }
-    CustomTile *next = customTile->nextNonLayoutTileAt(edge);
+    Tile *next = tileAtPoint->nextNonLayoutTileAt(edge);
     if (next) {
         next->manage(this);
     }
