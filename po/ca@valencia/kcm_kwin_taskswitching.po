@@ -1,0 +1,441 @@
+# Translation of kcm_kwin_taskswitching.po to Catalan (Valencian)
+# Copyright (C) 2026 This_file_is_part_of_KDE
+# This file is distributed under the license LGPL version 2.1 or
+# version 3 or later versions approved by the membership of KDE e.V.
+#
+# SPDX-FileCopyrightText: 2026 Josep M. Ferrer <txemaq@gmail.com>
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2026-11-10 14:33+0000\n"
+"PO-Revision-Date: 2026-11-11 10:06+0100\n"
+"Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
+"Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
+"Language: ca@valencia\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 25.04.0\n"
+
+#: kcm.cpp:139 kcm.cpp:214
+#, kde-format
+msgctxt "@title"
+msgid "KWin"
+msgstr "KWin"
+
+#: kcm.cpp:144
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows"
+msgstr "Recorre les finestres"
+
+#: kcm.cpp:151
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows (Reverse)"
+msgstr "Recorre les finestres (a la inversa)"
+
+#: kcm.cpp:158
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows of Current Application"
+msgstr "Recorre les finestres de l'aplicació actual"
+
+#: kcm.cpp:165
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows of Current Application (Reverse)"
+msgstr "Recorre les finestres de l'aplicació actual (a la inversa)"
+
+#: kcm.cpp:172
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows Alternative"
+msgstr "Recorre les finestres en alternativa"
+
+#: kcm.cpp:179
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows Alternative (Reverse)"
+msgstr "Recorre les finestres en alternativa (a la inversa)"
+
+#: kcm.cpp:186
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "Recorre les finestres de l'aplicació actual en alternativa"
+
+#: kcm.cpp:193
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr ""
+"Recorre les finestres de l'aplicació actual en alternativa (a la inversa)"
+
+#: kcm.cpp:219
+#, kde-format
+msgctxt "@action Overview and Grid View are the name of KWin effects"
+msgid "Cycle through Overview and Grid View"
+msgstr "Circula entre la vista general i la vista de quadrícula"
+
+#: kcm.cpp:225
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
+msgstr "Circula entre la vista de quadrícula i la vista general"
+
+#: kcm.cpp:231
+#, kde-format
+msgctxt "@action Overview is the name of a KWin effect"
+msgid "Toggle Overview"
+msgstr "Canvia la vista general"
+
+#: kcm.cpp:237
+#, kde-format
+msgctxt "@action Grid View is the name of a KWin effect"
+msgid "Toggle Grid View"
+msgstr "Canvia la vista de quadrícula"
+
+#: tabboxlayoutsmodel.cpp:135
+#, kde-format
+msgctxt "@item:inlistbox"
+msgid "None"
+msgstr "Cap"
+
+#: ui/main.qml:36
+#, kde-format
+msgctxt "@title:tab"
+msgid "Task Switcher"
+msgstr "Commutador de tasques"
+
+#: ui/main.qml:42
+#, kde-format
+msgctxt "@title:tab"
+msgid "Task Switcher (Alternative)"
+msgstr "Commutador de tasques (alternatiu)"
+
+#: ui/main.qml:48
+#, kde-format
+msgctxt "@title:tab"
+msgid "Overview"
+msgstr "Vista general"
+
+#: ui/main.qml:62
+#, kde-format
+msgctxt "@info"
+msgid ""
+"Focus policy settings limit the functionality of navigating through windows."
+msgstr ""
+"La configuració de la política de focus limita la funcionalitat de navegar "
+"per les finestres."
+
+#: ui/main.qml:102
+#, kde-format
+msgctxt "@info"
+msgid ""
+"The alternative task switcher is a second switcher with its own separate "
+"shortcut, appearance, and behavior settings."
+msgstr ""
+"El commutador de tasques alternatiu és un segon commutador amb la seua "
+"pròpia configuració de drecera, aparença i comportament."
+
+#: ui/OverviewSettings.qml:20
+#, kde-format
+msgctxt "@label"
+msgid "Overview:"
+msgstr "Vista general:"
+
+#: ui/OverviewSettings.qml:23
+#, kde-format
+msgctxt "@label Hint for overview effect enable button"
+msgid ""
+"Swipe up with four fingers on a touchpad or three on a touchscreen, or use "
+"screen edge gestures to toggle the overview"
+msgstr ""
+"Feu lliscar cap amunt amb quatre dits en un ratolí tàctil o tres en una "
+"pantalla tàctil, o utilitzeu gestos de vora de la pantalla per canviar la "
+"visió general"
+
+#: ui/OverviewSettings.qml:25
+#, kde-format
+msgctxt ""
+"@label Hint for overview effect enable button, %1 is a keyboard shortcut"
+msgid ""
+"Press %1, swipe up with four fingers on a touchpad or three on a "
+"touchscreen, or use screen edge gestures to toggle the overview"
+msgstr ""
+"Premeu «%1» , llisqueu cap amunt amb quatre dits en un ratolí tàctil o tres "
+"en una pantalla tàctil, o utilitzeu gestos de vora de la pantalla per "
+"canviar la visió general"
+
+#: ui/OverviewSettings.qml:27
+#, kde-format
+msgctxt ""
+"@label Hint for overview effect enable button, %1 and %2 are alternative "
+"keyboard shortcuts"
+msgid ""
+"Press %1 or %2, swipe up with four fingers on a touchpad or three on a "
+"touchscreen, or use screen edge gestures to toggle the overview"
+msgstr ""
+"Premeu «%1» o %2, llisqueu cap amunt amb quatre dits en un ratolí tàctil o "
+"tres en una pantalla tàctil, o utilitzeu gestos de vora de la pantalla per "
+"canviar la visió general"
+
+#: ui/OverviewSettings.qml:31
+#, kde-format
+msgctxt "@option:check, Enable overview effect"
+msgid "Enable"
+msgstr "Activa"
+
+#: ui/OverviewSettings.qml:47
+#, kde-format
+msgctxt "@option:check"
+msgid "Show minimized windows"
+msgstr "Mostra les finestres minimitzades"
+
+#: ui/OverviewSettings.qml:63
+#, kde-format
+msgctxt "@option:check"
+msgid "Search results include windows"
+msgstr "El resultat de la busca inclou les finestres"
+
+#: ui/OverviewSettings.qml:77
+#, kde-format
+msgctxt "@option:check"
+msgid "Organize windows in the Grid view"
+msgstr "Organitza les finestres en la vista de quadrícula"
+
+#: ui/OverviewSettings.qml:94 ui/TabBoxSettings.qml:314
+#, kde-format
+msgctxt "@action:button"
+msgid "Configure Shortcuts…"
+msgstr "Configura les dreceres…"
+
+#: ui/OverviewSettings.qml:106
+#, kde-format
+msgctxt "@action:button"
+msgid "Configure Screen Edges…"
+msgstr "Configura les vores de la pantalla…"
+
+#: ui/OverviewSettings.qml:118
+#, kde-format
+msgctxt "@action:button"
+msgid "Configure Touchscreen Gestures…"
+msgstr "Configura els gestos de pantalla tàctil…"
+
+#: ui/TabBoxSettings.qml:26
+#, kde-format
+msgctxt "@title:group"
+msgid "Appearance"
+msgstr "Aparença"
+
+#: ui/TabBoxSettings.qml:29
+#, kde-format
+msgctxt "Task switcher style"
+msgid "Switcher style:"
+msgstr "Estil del commutador:"
+
+#: ui/TabBoxSettings.qml:58
+#, kde-format
+msgctxt "@action:button"
+msgid "Get New…"
+msgstr "Obtín nous…"
+
+#: ui/TabBoxSettings.qml:67
+#, kde-format
+msgctxt "@action:button"
+msgid "Show Preview"
+msgstr "Mostra la vista prèvia"
+
+#: ui/TabBoxSettings.qml:82
+#, kde-format
+msgctxt "@label"
+msgid "Selecting a window:"
+msgstr "En seleccionar una finestra:"
+
+#: ui/TabBoxSettings.qml:84
+#, kde-format
+msgctxt "@option:check"
+msgid "Hides other windows"
+msgstr "Oculta les altres finestres"
+
+#: ui/TabBoxSettings.qml:99
+#, kde-format
+msgctxt "@label"
+msgid "Show on screen:"
+msgstr "Mostra en pantalla:"
+
+#: ui/TabBoxSettings.qml:106
+#, kde-format
+msgctxt "@item:inlistbox 'Show on screen:'"
+msgid "Active screen"
+msgstr "Pantalla activa"
+
+#: ui/TabBoxSettings.qml:106
+#, kde-format
+msgctxt "@item:inlistbox 'Show on screen:'"
+msgid "Primary screen"
+msgstr "Pantalla primària"
+
+#: ui/TabBoxSettings.qml:121
+#, kde-format
+msgctxt "@label:spinbox"
+msgid "Show delay:"
+msgstr "Retard de visualització:"
+
+#: ui/TabBoxSettings.qml:122
+#, kde-format
+msgctxt "@info"
+msgid ""
+"Time to wait before showing the task switcher. Also applies to the "
+"alternative task switcher."
+msgstr ""
+"Temps d'espera abans de mostrar el commutador de tasques. També s'aplica al "
+"commutador de tasques alternatiu."
+
+#: ui/TabBoxSettings.qml:141
+#, kde-format
+msgctxt "@spinbox:value Task switcher show delay"
+msgid "%1 ms"
+msgstr "%1 ms"
+
+#: ui/TabBoxSettings.qml:145
+#, kde-format
+msgctxt "@spinbox:value Task switcher show delay"
+msgid "ms"
+msgstr "ms"
+
+#: ui/TabBoxSettings.qml:157
+#, kde-format
+msgctxt "@title:group"
+msgid "Behavior"
+msgstr "Comportament"
+
+#: ui/TabBoxSettings.qml:160
+#, kde-format
+msgctxt "As in, 'Include: “Show Desktop” entry'"
+msgid "Include:"
+msgstr "Inclusió:"
+
+#: ui/TabBoxSettings.qml:164
+#, kde-format
+msgctxt "@option:check, 'Include:'"
+msgid "“Show Desktop” entry"
+msgstr "Entrada «Mostra l'escriptori»"
+
+#: ui/TabBoxSettings.qml:179
+#, kde-format
+msgctxt "@label"
+msgid "Sort windows by:"
+msgstr "Ordena les finestres per:"
+
+#: ui/TabBoxSettings.qml:186
+#, kde-format
+msgctxt "@item:inlistbox 'Sort windows by:'"
+msgid "Recently used"
+msgstr "Utilitzades recentment"
+
+#: ui/TabBoxSettings.qml:186
+#, kde-format
+msgctxt "@item:inlistbox 'Sort windows by:'"
+msgid "Stacking order"
+msgstr "Ordre d'apilament"
+
+#: ui/TabBoxSettings.qml:200
+#, kde-format
+msgctxt "@option:check"
+msgid "Sort minimized windows after unminimized"
+msgstr ""
+"Ordena les finestres minimitzades després de les finestres sense minimitzar"
+
+#: ui/TabBoxSettings.qml:215
+#, kde-format
+msgctxt "As in, 'Show windows: From all desktops'"
+msgid "Show windows:"
+msgstr "Mostra les finestres:"
+
+#: ui/TabBoxSettings.qml:222
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all desktops"
+msgstr "De tots els escriptoris"
+
+#: ui/TabBoxSettings.qml:222
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From the current desktop"
+msgstr "De l'escriptori actual"
+
+#: ui/TabBoxSettings.qml:222
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all other desktops"
+msgstr "De tots els altres escriptoris"
+
+#: ui/TabBoxSettings.qml:241
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all activities"
+msgstr "De totes les activitats"
+
+#: ui/TabBoxSettings.qml:241
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From the current activity"
+msgstr "De l'activitat actual"
+
+#: ui/TabBoxSettings.qml:241
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all other activities"
+msgstr "De totes les altres activitats"
+
+#: ui/TabBoxSettings.qml:260
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all screens"
+msgstr "De totes les pantalles"
+
+#: ui/TabBoxSettings.qml:260
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From the current screen"
+msgstr "De la pantalla actual"
+
+#: ui/TabBoxSettings.qml:260
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all other screens"
+msgstr "De totes les altres pantalles"
+
+#: ui/TabBoxSettings.qml:279
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "Regardless of minimization state"
+msgstr "Independentment de l'estat de minimització"
+
+#: ui/TabBoxSettings.qml:279
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "That are unminimized"
+msgstr "Que estiguen sense minimitzar"
+
+#: ui/TabBoxSettings.qml:279
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "That are minimized"
+msgstr "Que estiguen minimitzades"
+
+#: ui/TabBoxSettings.qml:293
+#, kde-format
+msgctxt "@option:check"
+msgid "Only one window per application"
+msgstr "Només una finestra per aplicació"
+
+#: ui/TabBoxSettings.qml:312
+#, kde-format
+msgctxt "@label Hint for task switcher usage"
+msgid "Use shortcuts to activate the task switcher"
+msgstr "Fes servir dreceres per a activar el commutador de tasques"

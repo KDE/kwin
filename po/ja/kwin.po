@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-12 01:03+0000\n"
+"POT-Creation-Date: 2026-11-13 01:01+0000\n"
 "PO-Revision-Date: 2026-07-23 17:22+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -3093,29 +3093,54 @@ msgstr "動かすときにふにゃらせる(&B)"
 msgid "Wobble when &resizing"
 msgstr "リサイズ時にふにゃらせる(&R)"
 
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AdvancedMode)
-#: plugins/wobblywindows/wobblywindows_config.ui:182
-#, kde-format
-msgid "Enable &advanced mode"
-msgstr "プロモードを有効化(&A)"
-
 #. i18n: ectx: property (title), widget (QGroupBox, basicGroup)
-#: plugins/wobblywindows/wobblywindows_config.ui:192
+#: plugins/wobblywindows/wobblywindows_config.ui:185
 #, kde-format
 msgid "&Wobbliness"
 msgstr "ふにゃふにゃ度(&W)"
 
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/wobblywindows/wobblywindows_config.ui:201
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:195
 #, kde-format
-msgid "Less"
-msgstr "弱"
+msgid "Cloth"
+msgstr ""
 
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/wobblywindows/wobblywindows_config.ui:224
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:200
 #, kde-format
-msgid "More"
-msgstr "強"
+msgid "Gelatin"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:205
+#, kde-format
+msgid "Water"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:210
+#, fuzzy, kde-format
+#| msgid "Padding:"
+msgid "Pudding"
+msgstr "余白:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:215
+#, kde-format
+msgid "Molasses"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:220
+#, kde-format
+msgid "Nitroglycerin"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:225
+#, kde-format
+msgid "Custom"
+msgstr ""
 
 #: plugins/zoom/zoom.cpp:89
 #, kde-format
@@ -4447,6 +4472,15 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland がクラッシュしました"
+
+#~ msgid "Enable &advanced mode"
+#~ msgstr "プロモードを有効化(&A)"
+
+#~ msgid "Less"
+#~ msgstr "弱"
+
+#~ msgid "More"
+#~ msgstr "強"
 
 #~ msgctxt "@action Overview and Grid View are the name of KWin effects"
 #~ msgid "Cycle through Overview and Grid View"

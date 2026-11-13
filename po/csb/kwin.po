@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-12 01:03+0000\n"
+"POT-Creation-Date: 2026-11-13 01:01+0000\n"
 "PO-Revision-Date: 2009-12-15 22:22+0100\n"
 "Last-Translator: Mark Kwidzińśczi <mark@linuxcsb.org>\n"
 "Language-Team: Kaszëbsczi <i18n-csb@linuxcsb.org>\n"
@@ -3186,29 +3186,53 @@ msgstr "&Trząsc przë rëchaniu "
 msgid "Wobble when &resizing"
 msgstr "Trząsc przë zmianie mia&rë"
 
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AdvancedMode)
-#: plugins/wobblywindows/wobblywindows_config.ui:182
-#, kde-format
-msgid "Enable &advanced mode"
-msgstr "Aktiwùjë &awansowóny trib"
-
 #. i18n: ectx: property (title), widget (QGroupBox, basicGroup)
-#: plugins/wobblywindows/wobblywindows_config.ui:192
+#: plugins/wobblywindows/wobblywindows_config.ui:185
 #, kde-format
 msgid "&Wobbliness"
 msgstr "&Trząsc"
 
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/wobblywindows/wobblywindows_config.ui:201
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:195
 #, kde-format
-msgid "Less"
-msgstr "Mni"
+msgid "Cloth"
+msgstr ""
 
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/wobblywindows/wobblywindows_config.ui:224
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:200
 #, kde-format
-msgid "More"
-msgstr "Wicy"
+msgid "Gelatin"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:205
+#, kde-format
+msgid "Water"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:210
+#, kde-format
+msgid "Pudding"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:215
+#, kde-format
+msgid "Molasses"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:220
+#, kde-format
+msgid "Nitroglycerin"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:225
+#, kde-format
+msgid "Custom"
+msgstr "Swòjò"
 
 #: plugins/zoom/zoom.cpp:89
 #, fuzzy, kde-format
@@ -4616,6 +4640,15 @@ msgstr ""
 msgid "Xwayland has crashed"
 msgstr ""
 
+#~ msgid "Enable &advanced mode"
+#~ msgstr "Aktiwùjë &awansowóny trib"
+
+#~ msgid "Less"
+#~ msgstr "Mni"
+
+#~ msgid "More"
+#~ msgstr "Wicy"
+
 #, fuzzy
 #~| msgid "Toggle Invert Effect"
 #~ msgctxt "@action Overview is the name of a KWin effect"
@@ -4953,9 +4986,6 @@ msgstr ""
 
 #~ msgid "Automatic"
 #~ msgstr "Aùtomatno"
-
-#~ msgid "Custom"
-#~ msgstr "Swòjò"
 
 #, fuzzy
 #~| msgid "Number of &rows:"

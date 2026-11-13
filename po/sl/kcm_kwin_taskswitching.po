@@ -1,0 +1,433 @@
+# SPDX-FileCopyrightText: 2026 Matjaž Jeran <matjaz.jeran@amis.net>
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2026-11-10 14:33+0000\n"
+"PO-Revision-Date: 2026-11-12 09:36+0100\n"
+"Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
+"Language-Team: Slovenian <lugos-slo@lugos.si>\n"
+"Language: sl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 26.08.2\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
+"%100==4 ? 3 : 0);\n"
+
+#: kcm.cpp:139 kcm.cpp:214
+#, kde-format
+msgctxt "@title"
+msgid "KWin"
+msgstr "KWin"
+
+#: kcm.cpp:144
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows"
+msgstr "Sprehod skozi okna"
+
+#: kcm.cpp:151
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows (Reverse)"
+msgstr "Sprehod skozi okna (obrnjeno)"
+
+#: kcm.cpp:158
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows of Current Application"
+msgstr "Sprehod skozi okna trenutne aplikacije"
+
+#: kcm.cpp:165
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows of Current Application (Reverse)"
+msgstr "Sprehod skozi okna trenutne aplikacije (obrnjeno)"
+
+#: kcm.cpp:172
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows Alternative"
+msgstr "Alternativa sprehoda skozi okna"
+
+#: kcm.cpp:179
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows Alternative (Reverse)"
+msgstr "Alternativa sprehoda skozi okna (obrnjeno)"
+
+#: kcm.cpp:186
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "Alternativni sprehod skozi okna trenutne aplikacije"
+
+#: kcm.cpp:193
+#, kde-format
+msgctxt "@action"
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "Alternativni sprehod skozi okna trenutne aplikacije (obrnjeno)"
+
+#: kcm.cpp:219
+#, kde-format
+msgctxt "@action Overview and Grid View are the name of KWin effects"
+msgid "Cycle through Overview and Grid View"
+msgstr "Preklopi skozi pregled in mrežni pogled"
+
+#: kcm.cpp:225
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
+msgstr "Preklopi skozi mrežni pogled in pregled"
+
+#: kcm.cpp:231
+#, kde-format
+msgctxt "@action Overview is the name of a KWin effect"
+msgid "Toggle Overview"
+msgstr "Preklopi pregled"
+
+#: kcm.cpp:237
+#, kde-format
+msgctxt "@action Grid View is the name of a KWin effect"
+msgid "Toggle Grid View"
+msgstr "Preklopi mrežni pogled"
+
+#: tabboxlayoutsmodel.cpp:135
+#, kde-format
+msgctxt "@item:inlistbox"
+msgid "None"
+msgstr "Brez"
+
+#: ui/main.qml:36
+#, kde-format
+msgctxt "@title:tab"
+msgid "Task Switcher"
+msgstr "Preklopnik opravil"
+
+#: ui/main.qml:42
+#, kde-format
+msgctxt "@title:tab"
+msgid "Task Switcher (Alternative)"
+msgstr "Preklopnik opravil (alternativno)"
+
+#: ui/main.qml:48
+#, kde-format
+msgctxt "@title:tab"
+msgid "Overview"
+msgstr "Pregled"
+
+#: ui/main.qml:62
+#, kde-format
+msgctxt "@info"
+msgid ""
+"Focus policy settings limit the functionality of navigating through windows."
+msgstr ""
+"Nastavitve pravilnika fokusa omejujejo funkcionalnost navigacije po oknih."
+
+#: ui/main.qml:102
+#, kde-format
+msgctxt "@info"
+msgid ""
+"The alternative task switcher is a second switcher with its own separate "
+"shortcut, appearance, and behavior settings."
+msgstr ""
+"Alternativni preklopnik opravil je drugi preklopnik z lastnimi ločenimi "
+"nastavitvami bližnjic, videza in obnašanja."
+
+#: ui/OverviewSettings.qml:20
+#, kde-format
+msgctxt "@label"
+msgid "Overview:"
+msgstr "Pregled:"
+
+#: ui/OverviewSettings.qml:23
+#, kde-format
+msgctxt "@label Hint for overview effect enable button"
+msgid ""
+"Swipe up with four fingers on a touchpad or three on a touchscreen, or use "
+"screen edge gestures to toggle the overview"
+msgstr ""
+"Podrsnite navzgor s štirimi prsti na sledilni ploščici ali tremi na zaslonu "
+"na dotik ali uporabite kretnje na robu zaslona za preklop pregleda"
+
+#: ui/OverviewSettings.qml:25
+#, kde-format
+msgctxt ""
+"@label Hint for overview effect enable button, %1 is a keyboard shortcut"
+msgid ""
+"Press %1, swipe up with four fingers on a touchpad or three on a "
+"touchscreen, or use screen edge gestures to toggle the overview"
+msgstr ""
+"Pritisnite %1, podrsnite navzgor s štirimi prsti na sledilni ploščici ali "
+"tremi na zaslonu na dotik ali uporabite kretnje na robu zaslona za preklop "
+"pregleda"
+
+#: ui/OverviewSettings.qml:27
+#, kde-format
+msgctxt ""
+"@label Hint for overview effect enable button, %1 and %2 are alternative "
+"keyboard shortcuts"
+msgid ""
+"Press %1 or %2, swipe up with four fingers on a touchpad or three on a "
+"touchscreen, or use screen edge gestures to toggle the overview"
+msgstr ""
+"Pritisnite %1 ali %2, podrsnite navzgor s štirimi prsti na sledilni ploščici "
+"ali tremi na zaslonu na dotik ali uporabite kretnje na robu zaslona za "
+"preklop pregleda"
+
+#: ui/OverviewSettings.qml:31
+#, kde-format
+msgctxt "@option:check, Enable overview effect"
+msgid "Enable"
+msgstr "Omogoči"
+
+#: ui/OverviewSettings.qml:47
+#, kde-format
+msgctxt "@option:check"
+msgid "Show minimized windows"
+msgstr "Prikaži minimizirana okna"
+
+#: ui/OverviewSettings.qml:63
+#, kde-format
+msgctxt "@option:check"
+msgid "Search results include windows"
+msgstr "Rezultati iskanja vključujejo okna"
+
+#: ui/OverviewSettings.qml:77
+#, kde-format
+msgctxt "@option:check"
+msgid "Organize windows in the Grid view"
+msgstr "Organiziraj okna v pogledu mreže"
+
+#: ui/OverviewSettings.qml:94 ui/TabBoxSettings.qml:314
+#, kde-format
+msgctxt "@action:button"
+msgid "Configure Shortcuts…"
+msgstr "Konfiguriraj bližnjice…"
+
+#: ui/OverviewSettings.qml:106
+#, kde-format
+msgctxt "@action:button"
+msgid "Configure Screen Edges…"
+msgstr "Konfiguriraj robove zaslona…"
+
+#: ui/OverviewSettings.qml:118
+#, kde-format
+msgctxt "@action:button"
+msgid "Configure Touchscreen Gestures…"
+msgstr "Konfiguriraj kretnje na zaslonu na dotik…"
+
+#: ui/TabBoxSettings.qml:26
+#, kde-format
+msgctxt "@title:group"
+msgid "Appearance"
+msgstr "Videz"
+
+#: ui/TabBoxSettings.qml:29
+#, kde-format
+msgctxt "Task switcher style"
+msgid "Switcher style:"
+msgstr "Slog preklopnika:"
+
+#: ui/TabBoxSettings.qml:58
+#, kde-format
+msgctxt "@action:button"
+msgid "Get New…"
+msgstr "Pridobi nova…"
+
+#: ui/TabBoxSettings.qml:67
+#, kde-format
+msgctxt "@action:button"
+msgid "Show Preview"
+msgstr "Prikaži predogled"
+
+#: ui/TabBoxSettings.qml:82
+#, kde-format
+msgctxt "@label"
+msgid "Selecting a window:"
+msgstr "Izbiranje okna:"
+
+#: ui/TabBoxSettings.qml:84
+#, kde-format
+msgctxt "@option:check"
+msgid "Hides other windows"
+msgstr "Skrije druga okna"
+
+#: ui/TabBoxSettings.qml:99
+#, kde-format
+msgctxt "@label"
+msgid "Show on screen:"
+msgstr "Prikaži na zaslonu:"
+
+#: ui/TabBoxSettings.qml:106
+#, kde-format
+msgctxt "@item:inlistbox 'Show on screen:'"
+msgid "Active screen"
+msgstr "Aktivni zaslon"
+
+#: ui/TabBoxSettings.qml:106
+#, kde-format
+msgctxt "@item:inlistbox 'Show on screen:'"
+msgid "Primary screen"
+msgstr "Primarni zaslon"
+
+#: ui/TabBoxSettings.qml:121
+#, kde-format
+msgctxt "@label:spinbox"
+msgid "Show delay:"
+msgstr "Zakasnitev prikaza:"
+
+#: ui/TabBoxSettings.qml:122
+#, kde-format
+msgctxt "@info"
+msgid ""
+"Time to wait before showing the task switcher. Also applies to the "
+"alternative task switcher."
+msgstr ""
+"Čas čakanja pred prikazom preklopnika opravil. Velja tudi za alternativni "
+"preklopnik opravil."
+
+#: ui/TabBoxSettings.qml:141
+#, kde-format
+msgctxt "@spinbox:value Task switcher show delay"
+msgid "%1 ms"
+msgstr "%1 ms"
+
+#: ui/TabBoxSettings.qml:145
+#, kde-format
+msgctxt "@spinbox:value Task switcher show delay"
+msgid "ms"
+msgstr "ms"
+
+#: ui/TabBoxSettings.qml:157
+#, kde-format
+msgctxt "@title:group"
+msgid "Behavior"
+msgstr "Obnašanje"
+
+#: ui/TabBoxSettings.qml:160
+#, kde-format
+msgctxt "As in, 'Include: “Show Desktop” entry'"
+msgid "Include:"
+msgstr "Vključi:"
+
+#: ui/TabBoxSettings.qml:164
+#, kde-format
+msgctxt "@option:check, 'Include:'"
+msgid "“Show Desktop” entry"
+msgstr "Vnos \"Prikaži namizje\""
+
+#: ui/TabBoxSettings.qml:179
+#, kde-format
+msgctxt "@label"
+msgid "Sort windows by:"
+msgstr "Razvrsti okna glede na:"
+
+#: ui/TabBoxSettings.qml:186
+#, kde-format
+msgctxt "@item:inlistbox 'Sort windows by:'"
+msgid "Recently used"
+msgstr "Nedavno uporabo"
+
+#: ui/TabBoxSettings.qml:186
+#, kde-format
+msgctxt "@item:inlistbox 'Sort windows by:'"
+msgid "Stacking order"
+msgstr "Vrstni red zlaganja"
+
+#: ui/TabBoxSettings.qml:200
+#, kde-format
+msgctxt "@option:check"
+msgid "Sort minimized windows after unminimized"
+msgstr "Razvrsti strnjena okna za nestrnjenimi"
+
+#: ui/TabBoxSettings.qml:215
+#, kde-format
+msgctxt "As in, 'Show windows: From all desktops'"
+msgid "Show windows:"
+msgstr "Prikaži okna:"
+
+#: ui/TabBoxSettings.qml:222
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all desktops"
+msgstr "Z vseh namizij"
+
+#: ui/TabBoxSettings.qml:222
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From the current desktop"
+msgstr "S trenutnega namizja"
+
+#: ui/TabBoxSettings.qml:222
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all other desktops"
+msgstr "Z vseh drugih namizij"
+
+#: ui/TabBoxSettings.qml:241
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all activities"
+msgstr "Iz vseh dejavnosti"
+
+#: ui/TabBoxSettings.qml:241
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From the current activity"
+msgstr "Iz trenutne dejavnosti"
+
+#: ui/TabBoxSettings.qml:241
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all other activities"
+msgstr "Iz vseh drugih dejavnosti"
+
+#: ui/TabBoxSettings.qml:260
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all screens"
+msgstr "Z vseh zaslonov"
+
+#: ui/TabBoxSettings.qml:260
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From the current screen"
+msgstr "S trenutnega zaslona"
+
+#: ui/TabBoxSettings.qml:260
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "From all other screens"
+msgstr "Z vseh drugih zaslonov"
+
+#: ui/TabBoxSettings.qml:279
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "Regardless of minimization state"
+msgstr "Ne glede na stanje strnjenosti"
+
+#: ui/TabBoxSettings.qml:279
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "That are unminimized"
+msgstr "Ki niso strnjena"
+
+#: ui/TabBoxSettings.qml:279
+#, kde-format
+msgctxt "@item:inlistbox 'Show windows:'"
+msgid "That are minimized"
+msgstr "Ki so strnjena"
+
+#: ui/TabBoxSettings.qml:293
+#, kde-format
+msgctxt "@option:check"
+msgid "Only one window per application"
+msgstr "Samo eno okno na aplikacijo"
+
+#: ui/TabBoxSettings.qml:312
+#, kde-format
+msgctxt "@label Hint for task switcher usage"
+msgid "Use shortcuts to activate the task switcher"
+msgstr "Uporabi bližnjice za aktiviranje preklopnika opravil"

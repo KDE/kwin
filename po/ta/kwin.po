@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-12 01:03+0000\n"
+"POT-Creation-Date: 2026-11-13 01:01+0000\n"
 "PO-Revision-Date: 2026-05-10 16:23+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -3097,29 +3097,54 @@ msgstr "&நகர்த்தும்போது ஆட்டு"
 msgid "Wobble when &resizing"
 msgstr "&அளவுமாற்றும்போது ஆட்டு"
 
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AdvancedMode)
-#: plugins/wobblywindows/wobblywindows_config.ui:182
-#, kde-format
-msgid "Enable &advanced mode"
-msgstr "&மேம்பட்ட பயன்முறையை இயக்கு"
-
 #. i18n: ectx: property (title), widget (QGroupBox, basicGroup)
-#: plugins/wobblywindows/wobblywindows_config.ui:192
+#: plugins/wobblywindows/wobblywindows_config.ui:185
 #, kde-format
 msgid "&Wobbliness"
 msgstr "&ஆடுவது"
 
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/wobblywindows/wobblywindows_config.ui:201
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:195
 #, kde-format
-msgid "Less"
-msgstr "குறைவு"
+msgid "Cloth"
+msgstr ""
 
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/wobblywindows/wobblywindows_config.ui:224
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:200
 #, kde-format
-msgid "More"
-msgstr "அதிகம்"
+msgid "Gelatin"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:205
+#, kde-format
+msgid "Water"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:210
+#, fuzzy, kde-format
+#| msgid "Padding:"
+msgid "Pudding"
+msgstr "இடையிலான இடைவெளி:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:215
+#, kde-format
+msgid "Molasses"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:220
+#, kde-format
+msgid "Nitroglycerin"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:225
+#, kde-format
+msgid "Custom"
+msgstr "வேறு"
 
 #: plugins/zoom/zoom.cpp:89
 #, kde-format
@@ -4457,6 +4482,15 @@ msgstr ""
 msgid "Xwayland has crashed"
 msgstr "Xwayland முறிவடைந்துள்ளது"
 
+#~ msgid "Enable &advanced mode"
+#~ msgstr "&மேம்பட்ட பயன்முறையை இயக்கு"
+
+#~ msgid "Less"
+#~ msgstr "குறைவு"
+
+#~ msgid "More"
+#~ msgstr "அதிகம்"
+
 #~ msgctxt "@action Overview and Grid View are the name of KWin effects"
 #~ msgid "Cycle through Overview and Grid View"
 #~ msgstr "மேலோட்டப் பார்வை மற்றும் கிரிட் பார்வைக்கிடையே மாறு"
@@ -4904,9 +4938,6 @@ msgstr "Xwayland முறிவடைந்துள்ளது"
 
 #~ msgid "Automatic"
 #~ msgstr "தானியக்கம்"
-
-#~ msgid "Custom"
-#~ msgstr "வேறு"
 
 #~ msgid "N&umber of rows:"
 #~ msgstr "வரிசைகளின் &எண்ணிக்கை:"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-12 01:03+0000\n"
+"POT-Creation-Date: 2026-11-13 01:01+0000\n"
 "PO-Revision-Date: 2026-10-03 19:49-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -3091,29 +3091,54 @@ msgstr "يۆتكىگەندە تىترەت(&B)"
 msgid "Wobble when &resizing"
 msgstr "چوڭلۇقىنى ئۆزگەرتكەندە تىترەت(&R)"
 
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AdvancedMode)
-#: plugins/wobblywindows/wobblywindows_config.ui:182
-#, kde-format
-msgid "Enable &advanced mode"
-msgstr "ئالىي ھالەتنى ئىناۋەتلىك قىل(&A)"
-
 #. i18n: ectx: property (title), widget (QGroupBox, basicGroup)
-#: plugins/wobblywindows/wobblywindows_config.ui:192
+#: plugins/wobblywindows/wobblywindows_config.ui:185
 #, kde-format
 msgid "&Wobbliness"
 msgstr "تىترىشى(&W)"
 
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/wobblywindows/wobblywindows_config.ui:201
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:195
 #, kde-format
-msgid "Less"
-msgstr "كىچىك"
+msgid "Cloth"
+msgstr ""
 
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/wobblywindows/wobblywindows_config.ui:224
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:200
 #, kde-format
-msgid "More"
-msgstr "تېخىمۇ كۆپ"
+msgid "Gelatin"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:205
+#, kde-format
+msgid "Water"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:210
+#, fuzzy, kde-format
+#| msgid "Padding:"
+msgid "Pudding"
+msgstr "يان ئارىلىقى:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:215
+#, kde-format
+msgid "Molasses"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:220
+#, kde-format
+msgid "Nitroglycerin"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
+#: plugins/wobblywindows/wobblywindows_config.ui:225
+#, kde-format
+msgid "Custom"
+msgstr "ئىختىيارى"
 
 #: plugins/zoom/zoom.cpp:89
 #, kde-format
@@ -4446,6 +4471,15 @@ msgstr ""
 msgid "Xwayland has crashed"
 msgstr "Xwayland يىمىرىلدى"
 
+#~ msgid "Enable &advanced mode"
+#~ msgstr "ئالىي ھالەتنى ئىناۋەتلىك قىل(&A)"
+
+#~ msgid "Less"
+#~ msgstr "كىچىك"
+
+#~ msgid "More"
+#~ msgstr "تېخىمۇ كۆپ"
+
 #~ msgctxt "@action Overview and Grid View are the name of KWin effects"
 #~ msgid "Cycle through Overview and Grid View"
 #~ msgstr "ئىخچام كۆرۈنۈش ۋە شادا كۆرۈنۈشنى دەۋرىي ئالماشتۇر"
@@ -4859,9 +4893,6 @@ msgstr "Xwayland يىمىرىلدى"
 
 #~ msgid "Automatic"
 #~ msgstr "ئاپتوماتىك"
-
-#~ msgid "Custom"
-#~ msgstr "ئىختىيارى"
 
 #~| msgid "Number of &rows:"
 #~ msgid "N&umber of rows:"
