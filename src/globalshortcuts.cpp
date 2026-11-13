@@ -15,6 +15,10 @@
 #include "gestures.h"
 #include "main.h"
 #include "utils/common.h"
+#include "wayland/display.h"
+#include "wayland/seat.h"
+#include "wayland_server.h"
+#include "xdgactivationv1.h"
 // KDE
 #if KWIN_BUILD_GLOBALSHORTCUTS
 #include <kglobalacceld.h>
@@ -98,6 +102,14 @@ void GlobalShortcutsManager::init()
     if (!m_kglobalAccel->init()) {
         qCDebug(KWIN_CORE) << "Init of kglobalaccel failed";
         m_kglobalAccel.reset();
+    } else {
+        m_kglobalAccel->setActivationTokenCreator([](const QString &componentId, KGlobalAccelD::ActivationTokenUsage usage) {
+            auto seat = KWin::waylandServer()->seat();
+            // Only pass the app id when an application is being launched, otherwise we'd show
+            // launch feedback for applications that are already running
+            const QString appId = usage == KGlobalAccelD::ActivationTokenUsage::Launch ? componentId : QString();
+            return KWin::waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, seat->display()->serial(), seat, appId);
+        });
     }
 #endif
 }
