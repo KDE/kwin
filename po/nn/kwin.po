@@ -3122,7 +3122,7 @@ msgstr ""
 #: plugins/wobblywindows/wobblywindows_config.ui:225
 #, kde-format
 msgid "Custom"
-msgstr ""
+msgstr "Tilpassa"
 
 #: plugins/zoom/zoom.cpp:89
 #, kde-format
@@ -4452,12 +4452,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland krasja"
-
-#~ msgid "Enable &advanced mode"
-#~ msgstr "Bruk &avansert modus"
-
-#~ msgid "Less"
-#~ msgstr "Lågare"
-
-#~ msgid "More"
-#~ msgstr "Høgare"

@@ -4534,12 +4534,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland krasjet"
-
-#~ msgid "Enable &advanced mode"
-#~ msgstr "Slå på &avansert modus"
-
-#~ msgid "Less"
-#~ msgstr "Mindre"
-
-#~ msgid "More"
-#~ msgstr "Mer"
