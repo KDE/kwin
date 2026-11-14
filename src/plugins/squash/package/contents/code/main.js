@@ -13,6 +13,20 @@ var squashEffect = {
     loadConfig: function () {
         squashEffect.duration = animationTime(250);
     },
+    iconGeometry: function (window) {
+        var iconRect = window.iconGeometry;
+        if (iconRect.width != 0 && iconRect.height != 0) {
+            return iconRect;
+        }
+
+        var windowRect = window.geometry;
+        return {
+            x: windowRect.x + windowRect.width / 2,
+            y: windowRect.y + windowRect.height / 2,
+            width: 0,
+            height: 0
+        };
+    },
     slotWindowMinimized: function (window) {
         if (effects.hasActiveFullScreenEffect) {
             return;
@@ -20,12 +34,7 @@ var squashEffect = {
 
         window.setData(Effect.WindowForceBlurRole, true);
 
-        // If the window doesn't have an icon in the task manager,
-        // don't animate it.
-        var iconRect = window.iconGeometry;
-        if (iconRect.width == 0 || iconRect.height == 0) {
-            return;
-        }
+        var iconRect = squashEffect.iconGeometry(window);
 
         if (window.unminimizeAnimation) {
             if (redirect(window.unminimizeAnimation, Effect.Backward)) {
@@ -91,12 +100,7 @@ var squashEffect = {
 
         window.setData(Effect.WindowForceBlurRole, true);
 
-        // If the window doesn't have an icon in the task manager,
-        // don't animate it.
-        var iconRect = window.iconGeometry;
-        if (iconRect.width == 0 || iconRect.height == 0) {
-            return;
-        }
+        var iconRect = squashEffect.iconGeometry(window);
 
         if (window.minimizeAnimation) {
             if (redirect(window.minimizeAnimation, Effect.Backward)) {
