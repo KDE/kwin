@@ -163,7 +163,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
             return std::nullopt;
         }
 
-        auto shadowFbo = m_surface->context->importDmaBufAsFbo(slot->buffer());
+        auto shadowFbo = m_surface->context->importDmaBufAsFbo(m_surface->currentShadowSlot->buffer());
         if (!shadowFbo) {
             return std::nullopt;
         }
