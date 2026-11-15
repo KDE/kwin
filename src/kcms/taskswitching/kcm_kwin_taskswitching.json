@@ -61,6 +61,7 @@
         "Name[ca]": "Commutació de tasques",
         "Name[cs]": "Přepínač úloh",
         "Name[es]": "Selección de tarea",
+        "Name[fr]": "Commutateur de tâches",
         "Name[he]": "החלפת משימות",
         "Name[ka]": "ამოცანების გადართვა",
         "Name[lt]": "Užduočių perjungimas",
@@ -68,6 +69,10 @@
         "Name[pt_BR]": "Seleção de tarefas",
         "Name[ru]": "Переключение окон",
         "Name[sl]": "Preklapljanje opravil",
+        "Name[sr@ijekavian]": "Пребацивање задатака",
+        "Name[sr@ijekavianlatin]": "Prebacivanje zadataka",
+        "Name[sr@latin]": "Prebacivanje zadataka",
+        "Name[sr]": "Пребацивање задатака",
         "Name[tr]": "Görev Değiştirme",
         "Name[uk]": "Перемикання задач"
     },
