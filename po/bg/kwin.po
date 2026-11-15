@@ -3096,46 +3096,46 @@ msgstr "&Трептене"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:195
-#, kde-format
+#, fuzzy, kde-format
 msgid "Cloth"
-msgstr ""
+msgstr "Платно"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:200
-#, kde-format
+#, fuzzy, kde-format
 msgid "Gelatin"
-msgstr ""
+msgstr "Желатиновост"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:205
-#, kde-format
+#, fuzzy, kde-format
 msgid "Water"
-msgstr ""
+msgstr "Вода"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:210
 #, fuzzy, kde-format
 #| msgid "Padding:"
 msgid "Pudding"
-msgstr "Отстъп:"
+msgstr "Пъдинг"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:215
-#, kde-format
+#, fuzzy, kde-format
 msgid "Molasses"
-msgstr ""
+msgstr "Меласа"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:220
-#, kde-format
+#, fuzzy, kde-format
 msgid "Nitroglycerin"
-msgstr ""
+msgstr "Нитроглицерин"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:225
-#, kde-format
+#, fuzzy, kde-format
 msgid "Custom"
-msgstr ""
+msgstr "Потребителски"
 
 #: plugins/zoom/zoom.cpp:89
 #, kde-format
@@ -4468,12 +4468,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland се срина"
-
-#~ msgid "Enable &advanced mode"
-#~ msgstr "Активиране на разширен режим"
-
-#~ msgid "Less"
-#~ msgstr "По-малко"
-
-#~ msgid "More"
-#~ msgstr "Повече"

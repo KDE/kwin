@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-13 01:01+0000\n"
-"PO-Revision-Date: 2026-11-05 09:11+0400\n"
+"PO-Revision-Date: 2026-11-14 16:59+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -3078,38 +3078,37 @@ msgstr "ال&تمايل"
 #: plugins/wobblywindows/wobblywindows_config.ui:195
 #, kde-format
 msgid "Cloth"
-msgstr ""
+msgstr "قماش"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:200
 #, kde-format
 msgid "Gelatin"
-msgstr ""
+msgstr "جيلاتين"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:205
 #, kde-format
 msgid "Water"
-msgstr ""
+msgstr "ماء"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:210
-#, fuzzy, kde-format
-#| msgid "Padding:"
+#, kde-format
 msgid "Pudding"
-msgstr "الحشو:"
+msgstr "حلوى شحمية"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:215
 #, kde-format
 msgid "Molasses"
-msgstr ""
+msgstr "دبس السكر"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:220
 #, kde-format
 msgid "Nitroglycerin"
-msgstr ""
+msgstr "نيتروغليسرين"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:225

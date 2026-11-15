@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-13 01:01+0000\n"
-"PO-Revision-Date: 2026-11-01 23:06+0200\n"
+"PO-Revision-Date: 2026-11-15 02:02+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -3122,38 +3122,37 @@ msgstr "&Svirduliavimas"
 #: plugins/wobblywindows/wobblywindows_config.ui:195
 #, kde-format
 msgid "Cloth"
-msgstr ""
+msgstr "Audinys"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:200
 #, kde-format
 msgid "Gelatin"
-msgstr ""
+msgstr "Želatina"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:205
 #, kde-format
 msgid "Water"
-msgstr ""
+msgstr "Vanduo"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:210
-#, fuzzy, kde-format
-#| msgid "Padding:"
+#, kde-format
 msgid "Pudding"
-msgstr "Užpildas:"
+msgstr "Pudingas"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:215
 #, kde-format
 msgid "Molasses"
-msgstr ""
+msgstr "Sirupas"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:220
 #, kde-format
 msgid "Nitroglycerin"
-msgstr ""
+msgstr "Nitroglicerinas"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:225

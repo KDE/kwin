@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-13 01:01+0000\n"
-"PO-Revision-Date: 2026-10-07 11:45+0200\n"
+"PO-Revision-Date: 2026-11-14 16:15+0100\n"
 "Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
 "Language: sr@ijekavian\n"
@@ -1964,25 +1964,15 @@ msgid "<application>%1</application> is asking to control input devices"
 msgstr "<application>%1</application> тражи да управља улазним уређајима"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check, %1 is the application name. This option always allow apps "
-#| "claiming to be a given application name to control input devices"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option remembers the "
 "selection for apps claiming to be a given application name"
 msgid "Remember for apps claiming to be %1"
-msgstr "Увијек дозволи програмима који тврде да су %1"
+msgstr "Запамти за програме који тврде да су %1"
 
 #: plugins/eis/eisprompter.cpp:66
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Identities of legacy X11 apps cannot be verified. Any app claiming to be "
-#| "<application>%1</application> will be able to control input devices. You "
-#| "can revoke this permission later on <application>System Settings</"
-#| "application>’ “Legacy X11 App Support” page."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Identities of legacy X11 apps cannot be verified. If permitted any app "
@@ -1990,10 +1980,11 @@ msgid ""
 "devices. You can change this setting later on <application>System Settings</"
 "application>’ “Legacy X11 App Support” page."
 msgstr ""
-"Идентитети старих икс11 програма не могу се провјерити. Сваки програм који "
-"тврди да је <application>%1</application> моћи ће да управља улазним "
-"уређајима. Ову дозволу можете касније опозвати на страници „Подршка за старе "
-"икс11 програме“ у <application>Системским поставкама</application>."
+"Идентитети старих икс11 програма не могу се провјерити. Ако се дозволи, "
+"сваки програм који тврди да је <application>%1</application> моћи ће да "
+"управља улазним уређајима. Ову поставку можете касније измијенити на "
+"страници „Подршка за старе икс11 програме“ у <application>Системским "
+"поставкама</application>."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
@@ -2624,6 +2615,10 @@ msgid ""
 "temporarily active.\n"
 "            "
 msgstr ""
+"\n"
+"                Задаје датум и вријеме до којег ноћно свјетло мора бити "
+"привремено укључено.\n"
+"            "
 
 #. i18n: ectx: label, entry (ActivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:28
@@ -2633,6 +2628,9 @@ msgid ""
 "                Night Light is activated until manually disabled.\n"
 "            "
 msgstr ""
+"\n"
+"                Ноћно свјетло је укључено док се ручно не искључи.\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedUntil), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:35
@@ -2643,6 +2641,10 @@ msgid ""
 "temporarily inactive.\n"
 "            "
 msgstr ""
+"\n"
+"                Задаје датум и вријеме до којег ноћно свјетло мора бити "
+"привремено неактивно.\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:42
@@ -2652,6 +2654,10 @@ msgid ""
 "                Night Light is suspended until manually turned back on.\n"
 "            "
 msgstr ""
+"\n"
+"                Ноћно свјетло је суспендовано док се ручно поново не "
+"укључи.\n"
+"            "
 
 #: plugins/outputlocator/outputlocator.cpp:26
 #, kde-format
@@ -3223,44 +3229,43 @@ msgstr "&Лелујавост"
 #: plugins/wobblywindows/wobblywindows_config.ui:195
 #, kde-format
 msgid "Cloth"
-msgstr ""
+msgstr "тканина"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:200
 #, kde-format
 msgid "Gelatin"
-msgstr ""
+msgstr "желатин"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:205
 #, kde-format
 msgid "Water"
-msgstr ""
+msgstr "вода"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:210
-#, fuzzy, kde-format
-#| msgid "Padding:"
+#, kde-format
 msgid "Pudding"
-msgstr "Одступ:"
+msgstr "пудинг"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:215
 #, kde-format
 msgid "Molasses"
-msgstr ""
+msgstr "меласа"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:220
 #, kde-format
 msgid "Nitroglycerin"
-msgstr ""
+msgstr "нитроглицерин"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:225
 #, kde-format
 msgid "Custom"
-msgstr ""
+msgstr "посебна"
 
 #: plugins/zoom/zoom.cpp:89
 #, kde-format
@@ -4533,10 +4538,9 @@ msgid "More displays are enabled than are supported by the graphics card."
 msgstr "Укључено је више екрана него што графичка карта подржава."
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration: %s"
+#, kde-format
 msgid "The driver rejected the output configuration: %1"
-msgstr "Драјвер је одбио поставу излаза: %s"
+msgstr "Драјвер је одбио поставу излаза: %1"
 
 #: window.cpp:3181
 #, kde-format
@@ -4593,33 +4597,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Икс‑вејланд се срушио"
-
-#~ msgid "Enable &advanced mode"
-#~ msgstr "&Напредни режим"
-
-#~ msgid "Less"
-#~ msgstr "мања"
-
-#~ msgid "More"
-#~ msgstr "већа"
-
-#~ msgctxt "@action Overview and Grid View are the name of KWin effects"
-#~ msgid "Cycle through Overview and Grid View"
-#~ msgstr "Смјењуј преглед и мрежни приказ"
-
-#~ msgctxt "@action Overview is the name of a KWin effect"
-#~ msgid "Toggle Overview"
-#~ msgstr "Укључи/искључи преглед"
-
-#~ msgctxt "@action Grid View is the name of a KWin effect"
-#~ msgid "Toggle Grid View"
-#~ msgstr "Укључи/искључи мрежни приказ"
-
-#~ msgid "Ignore minimized windows:"
-#~ msgstr "Игнориши минимизоване прозоре:"
-
-#~ msgid "Organize windows in the Grid View:"
-#~ msgstr "Организуј прозоре у мрежном приказу:"
-
-#~ msgid "Search results include filtered windows:"
-#~ msgstr "Резултати претраге обухватају филтриране прозоре:"
