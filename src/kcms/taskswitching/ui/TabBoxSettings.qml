@@ -79,9 +79,9 @@ Kirigami.Form {
         Kirigami.FormSeparator {}
 
         Kirigami.FormEntry {
-            title: i18nc("@label", "Selecting a window:")
+            title: i18nc("@label, Part of the sentence 'Selecting a window hides other windows'", "Selecting a window:")
             contentItem: QQC2.CheckBox {
-                text: i18nc("@option:check", "Hides other windows")
+                text: i18nc("@option:check, Part of the sentence 'Selecting a window hides other windows'", "Hides other windows")
 
                 checked: root.tabBoxSettings.highlightWindows
                 onToggled: root.tabBoxSettings.highlightWindows = checked
@@ -96,7 +96,7 @@ Kirigami.Form {
         Kirigami.FormSeparator {}
 
         Kirigami.FormEntry {
-            title: i18nc("@label", "Show on screen:")
+            title: i18nc("@label Followed by 'Active screen' or 'Primary screen'", "Show on screen:")
             contentItem: QQC2.ComboBox {
                 id: showScreenModeComboBox
 
