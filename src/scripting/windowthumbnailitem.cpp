@@ -12,14 +12,17 @@
 #include "core/renderdevice.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
+#include "core/syncobjtimeline.h"
 #include "effect/effect.h"
 #include "opengl/eglcontext.h"
-#include "opengl/glframebuffer.h"
+#include "opengl/egldisplay.h"
+#include "opengl/eglnativefence.h"
 #include "opengl/gltexture.h"
 #include "scene/itemrenderer.h"
 #include "scene/windowitem.h"
 #include "scene/workspacescene.h"
 #include "scripting_logging.h"
+#include "swapchain.h"
 #include "window.h"
 #include "workspace.h"
 
@@ -42,7 +45,6 @@ WindowThumbnailSource::WindowThumbnailSource(RenderDevice *device, QQuickWindow 
     : m_view(view)
     , m_handle(handle)
     , m_renderDevice(device)
-    , m_context(device->eglContext())
 {
     connect(handle, &Window::frameGeometryChanged, this, [this]() {
         m_dirty = true;
@@ -62,19 +64,6 @@ WindowThumbnailSource::~WindowThumbnailSource()
 {
     if (m_handle) {
         m_handle->unrefOffscreenRendering();
-    }
-
-    if (!m_offscreenTexture) {
-        return;
-    }
-    const bool hasContext = QOpenGLContext::currentContext()
-        || m_context->makeCurrent();
-    m_offscreenTarget.reset();
-    m_offscreenTexture.reset();
-
-    if (m_acquireFence && hasContext) {
-        glDeleteSync(m_acquireFence);
-        m_acquireFence = 0;
     }
 }
 
@@ -101,17 +90,21 @@ std::shared_ptr<WindowThumbnailSource> WindowThumbnailSource::getOrCreate(QQuick
     return s;
 }
 
-WindowThumbnailSource::Frame WindowThumbnailSource::acquire()
+std::optional<WindowThumbnailSource::Frame> WindowThumbnailSource::acquire()
 {
+    if (!m_slot) {
+        return std::nullopt;
+    }
     return Frame{
-        .texture = m_offscreenTexture,
-        .fence = std::exchange(m_acquireFence, nullptr),
+        .buffer = m_slot->buffer(),
+        .fence = std::move(m_fence),
+        .release = m_slot->releasePoint(),
     };
 }
 
 void WindowThumbnailSource::update()
 {
-    if (m_acquireFence || !m_dirty || !m_handle) {
+    if (!m_dirty || !m_handle) {
         return;
     }
     Q_ASSERT(m_view);
@@ -120,30 +113,31 @@ void WindowThumbnailSource::update()
     const qreal devicePixelRatio = m_view->devicePixelRatio();
     const QSize textureSize = geometry.toAlignedRect().size() * devicePixelRatio;
 
-    const auto context = m_renderDevice->eglContext();
-    if (!context || !context->makeCurrent()) {
+    if (!m_swapchain || m_swapchain->size() != textureSize) {
+        const auto openglMods = m_renderDevice->eglDisplay()->nonExternalOnlySupportedDrmFormats().value(DRM_FORMAT_ARGB8888);
+        const auto renderMods = Compositor::self()->backend()->supportedFormats().value(DRM_FORMAT_ARGB8888);
+        const GraphicsBufferOptions options{
+            .size = textureSize,
+            .format = DRM_FORMAT_ARGB8888,
+            .modifiers = openglMods.intersected(renderMods),
+            .software = false,
+            .scanout = false,
+            .render = true,
+        };
+        m_swapchain = Swapchain::create(m_renderDevice->allocator(), options);
+    }
+
+    auto slot = m_swapchain->acquire();
+    if (!slot) {
         return;
     }
+    m_slot = std::move(slot);
 
-    if (!m_offscreenTexture || m_offscreenTexture->size() != textureSize) {
-        m_offscreenTexture = GLTexture::allocate(GL_RGBA8, textureSize);
-        if (!m_offscreenTexture) {
-            return;
-        }
-        m_offscreenTexture->setContentTransform(OutputTransform::FlipY);
-        m_offscreenTexture->setFilter(GL_LINEAR);
-        m_offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-        m_offscreenTarget = std::make_unique<GLFramebuffer>(m_offscreenTexture.get());
-    }
-
-    // The thumbnail must be rendered using kwin's opengl context as VAOs are not
-    // shared across contexts. Unfortunately, this also introduces a latency of 1
-    // frame, which is not ideal, but it is acceptable for things such as thumbnails.
     const int mask = Scene::PAINT_WINDOW_TRANSFORMED;
     ItemRenderer *renderer = kwinApp()->scene()->renderer(m_renderDevice);
 
     OutputLayerBeginFrameInfo beginInfo{
-        .renderTarget = RenderTarget{m_offscreenTarget.get()},
+        .renderTarget = RenderTarget{m_slot->buffer(), OutputTransform::Normal},
         .repaint = Region::infinite(),
     };
     const auto newRenderInfo = renderer->beginFrame(beginInfo, nullptr, nullptr);
@@ -155,12 +149,8 @@ void WindowThumbnailSource::update()
     if (!renderer->renderItem(newRenderInfo->renderTarget, offscreenViewport, m_handle->windowItem(), mask, Region::infinite(), WindowPaintData{}, {}, {})) {
         return;
     }
-    std::ignore = renderer->endFrame(Region::infinite(), nullptr, nullptr);
-
-    // The fence is needed to avoid the case where qtquick renderer starts using
-    // the texture while all rendering commands to it haven't completed yet.
+    m_fence = renderer->endFrame(Region::infinite(), nullptr, nullptr);
     m_dirty = false;
-    m_acquireFence = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
 
     Q_EMIT changed();
 }
@@ -171,13 +161,13 @@ public:
     explicit ThumbnailTextureProvider(QQuickWindow *window);
 
     QSGTexture *texture() const override;
-    void setTexture(const std::shared_ptr<GLTexture> &nativeTexture);
+    void setTexture(GLTexture *nativeTexture, const std::shared_ptr<SyncReleasePoint> &release, const FileDescriptor &previousRelease);
     void setTexture(QSGTexture *texture);
 
 private:
     QQuickWindow *m_window;
-    std::shared_ptr<GLTexture> m_nativeTexture;
     std::unique_ptr<QSGTexture> m_texture;
+    std::shared_ptr<SyncReleasePoint> m_release;
 };
 
 ThumbnailTextureProvider::ThumbnailTextureProvider(QQuickWindow *window)
@@ -190,11 +180,14 @@ QSGTexture *ThumbnailTextureProvider::texture() const
     return m_texture.get();
 }
 
-void ThumbnailTextureProvider::setTexture(const std::shared_ptr<GLTexture> &nativeTexture)
+void ThumbnailTextureProvider::setTexture(GLTexture *nativeTexture, const std::shared_ptr<SyncReleasePoint> &release, const FileDescriptor &previousRelease)
 {
-    if (m_nativeTexture != nativeTexture) {
+    if (m_release) {
+        m_release->addReleaseFence(previousRelease);
+    }
+    if (m_release != release) {
+        m_release = release;
         const GLuint textureId = nativeTexture->texture();
-        m_nativeTexture = nativeTexture;
         m_texture.reset(QNativeInterface::QSGOpenGLTexture::fromNative(textureId, m_window,
                                                                        nativeTexture->size(),
                                                                        QQuickWindow::TextureHasAlphaChannel));
@@ -209,7 +202,7 @@ void ThumbnailTextureProvider::setTexture(const std::shared_ptr<GLTexture> &nati
 
 void ThumbnailTextureProvider::setTexture(QSGTexture *texture)
 {
-    m_nativeTexture = nullptr;
+    m_release.reset();
     m_texture.reset(texture);
     Q_EMIT textureChanged();
 }
@@ -322,21 +315,31 @@ QSGNode *WindowThumbnailItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Upda
         return oldNode;
     }
 
-    auto [texture, acquireFence] = m_source->acquire();
+    auto opt = m_source->acquire();
+    if (!opt) {
+        return oldNode;
+    }
+    auto &[buffer, fence, release] = *opt;
+
+    // Wait for rendering commands to the offscreen texture complete if there are any.
+    if (fence.isValid()) {
+        auto imported = EGLNativeFence::importFence(EglContext::currentContext()->displayObject(), std::move(fence));
+        imported.waitSync();
+    }
+
+    auto texture = EglContext::currentContext()->importDmaBufAsTexture(buffer.get());
     if (!texture) {
         return oldNode;
     }
 
-    // Wait for rendering commands to the offscreen texture complete if there are any.
-    if (acquireFence) {
-        glWaitSync(acquireFence, 0, GL_TIMEOUT_IGNORED);
-        glDeleteSync(acquireFence);
-    }
-
+    FileDescriptor sync;
     if (!m_provider) {
         m_provider = new ThumbnailTextureProvider(window());
+    } else {
+        EGLNativeFence releaseFence(EglContext::currentContext()->displayObject());
+        sync = releaseFence.takeFileDescriptor();
     }
-    m_provider->setTexture(texture);
+    m_provider->setTexture(texture, release, sync);
 
     QSGImageNode *node = static_cast<QSGImageNode *>(oldNode);
     if (!node) {
