@@ -40,6 +40,21 @@ EglBackend::EglBackend(RenderDevice *device)
     connect(GpuManager::s_self.get(), &GpuManager::renderDeviceRemoved, this, &EglBackend::updateDmabufTranches);
 }
 
+bool EglBackend::init()
+{
+    if (!initClientExtensions()) {
+        qCWarning(KWIN_OPENGL, "Could not initialize egl");
+        return false;
+    }
+    m_context = m_renderDevice->eglContext();
+    if (!m_context) {
+        qCWarning(KWIN_OPENGL, "Could not initialize rendering context");
+        return false;
+    }
+    updateDmabufTranches();
+    return true;
+}
+
 CompositingType EglBackend::compositingType() const
 {
     return OpenGLCompositing;
@@ -48,11 +63,6 @@ CompositingType EglBackend::compositingType() const
 void EglBackend::cleanup()
 {
     m_context.reset();
-}
-
-void EglBackend::initWayland()
-{
-    updateDmabufTranches();
 }
 
 static const auto s_dmabufV6Env = environmentVariableBoolValue("KWIN_ALLOW_DMABUF_V6");
@@ -180,12 +190,6 @@ bool EglBackend::initClientExtensions()
 bool EglBackend::hasClientExtension(const QByteArray &ext) const
 {
     return m_clientExtensions.contains(ext);
-}
-
-bool EglBackend::createContext()
-{
-    m_context = m_renderDevice->eglContext();
-    return m_context != nullptr;
 }
 
 QList<LinuxDmaBufV1Feedback::Tranche> EglBackend::tranches() const

@@ -263,7 +263,7 @@ bool Compositor::attemptOpenGLCompositing()
         }
         qCDebug(KWIN_CORE, "Chose %s as the primary GPU", qPrintable(m_primaryDevice->path()));
     }
-    std::unique_ptr<EglBackend> backend = kwinApp()->outputBackend()->createOpenGLBackend(m_primaryDevice);
+    std::unique_ptr<EglBackend> backend = std::make_unique<EglBackend>(m_primaryDevice);
     if (!backend->init()) {
         return false;
     }

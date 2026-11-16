@@ -15,7 +15,7 @@
 #include "input.h"
 #include "wayland-client/linuxdmabuf.h"
 #include "wayland_display.h"
-#include "wayland_egl_backend.h"
+#include "wayland_layer.h"
 #include "wayland_logging.h"
 #include "wayland_output.h"
 
@@ -548,11 +548,6 @@ void WaylandBackend::destroyOutputs()
 std::unique_ptr<InputBackend> WaylandBackend::createInputBackend()
 {
     return std::make_unique<WaylandInputBackend>(this);
-}
-
-std::unique_ptr<EglBackend> WaylandBackend::createOpenGLBackend(RenderDevice *device)
-{
-    return std::make_unique<WaylandEglBackend>(this, device);
 }
 
 WaylandOutput *WaylandBackend::findOutput(KWayland::Client::Surface *nativeSurface) const

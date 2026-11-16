@@ -32,11 +32,6 @@ std::unique_ptr<InputBackend> OutputBackend::createInputBackend()
     return nullptr;
 }
 
-std::unique_ptr<EglBackend> OutputBackend::createOpenGLBackend(RenderDevice *device)
-{
-    return nullptr;
-}
-
 std::expected<void, OutputError> OutputBackend::applyOutputChanges(const OutputConfiguration &config)
 {
     const auto availableOutputs = outputs();

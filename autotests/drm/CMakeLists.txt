@@ -8,7 +8,6 @@ set(mockDRM_SRCS
     ../../src/backends/drm/drm_commit_thread.cpp
     ../../src/backends/drm/drm_connector.cpp
     ../../src/backends/drm/drm_crtc.cpp
-    ../../src/backends/drm/drm_egl_backend.cpp
     ../../src/backends/drm/drm_gpu.cpp
     ../../src/backends/drm/drm_layer.cpp
     ../../src/backends/drm/drm_logging.cpp

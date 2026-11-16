@@ -15,7 +15,6 @@
 #include "core/renderdevice.h"
 #include "pointer_input.h"
 #include "utils/xcbutils.h"
-#include "x11_windowed_egl_backend.h"
 #include "x11_windowed_layers.h"
 #include "x11_windowed_logging.h"
 #include "x11_windowed_output.h"
@@ -696,11 +695,6 @@ X11WindowedInputDevice *X11WindowedBackend::keyboardDevice() const
 X11WindowedInputDevice *X11WindowedBackend::touchDevice() const
 {
     return m_touchDevice.get();
-}
-
-std::unique_ptr<EglBackend> X11WindowedBackend::createOpenGLBackend(RenderDevice *device)
-{
-    return std::make_unique<X11WindowedEglBackend>(this, device);
 }
 
 std::unique_ptr<InputBackend> X11WindowedBackend::createInputBackend()

@@ -30,8 +30,6 @@ public:
 
     bool initialize() override;
 
-    std::unique_ptr<EglBackend> createOpenGLBackend(RenderDevice *renderDevice) override;
-
     BackendOutput *createVirtualOutput(const QString &name, const QString &description, const QSize &size, qreal scale) override;
     void removeVirtualOutput(BackendOutput *output) override;
 
