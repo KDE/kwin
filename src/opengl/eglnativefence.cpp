@@ -69,17 +69,20 @@ bool EGLNativeFence::waitSync() const
     return eglWaitSync(m_display->handle(), m_sync, 0) == EGL_TRUE;
 }
 
-EGLNativeFence EGLNativeFence::importFence(EglDisplay *display, FileDescriptor &&fd)
+bool EGLNativeFence::importFence(EglDisplay *display, FileDescriptor &&fd)
 {
     EGLint attributes[] = {
         EGL_SYNC_NATIVE_FENCE_FD_ANDROID, fd.get(),
         EGL_NONE};
-    auto ret = eglCreateSyncKHR(display->handle(), EGL_SYNC_NATIVE_FENCE_ANDROID, attributes);
-    if (ret != EGL_NO_SYNC_KHR) {
-        // eglCreateSyncKHR takes ownership only on success
-        fd.take();
+    auto sync = eglCreateSyncKHR(display->handle(), EGL_SYNC_NATIVE_FENCE_ANDROID, attributes);
+    if (sync == EGL_NO_SYNC_KHR) {
+        return false;
     }
-    return EGLNativeFence(display, ret);
+    // eglCreateSyncKHR takes ownership only on success
+    fd.take();
+    const bool ret = eglWaitSync(display->handle(), sync, 0) == EGL_TRUE;
+    eglDestroySyncKHR(display->handle(), sync);
+    return ret;
 }
 
 } // namespace KWin

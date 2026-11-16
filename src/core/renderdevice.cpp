@@ -545,8 +545,7 @@ bool RenderDevice::download(GraphicsBuffer *source, FileDescriptor &&sync, QImag
     if (!fbo) {
         return false;
     }
-    auto fence = EGLNativeFence::importFence(m_display.get(), std::move(sync));
-    fence.waitSync();
+    EGLNativeFence::importFence(m_display.get(), std::move(sync));
 
     context->pushFramebuffer(fbo);
     context->glReadnPixels(0, 0, fbo->size().width(), fbo->size().height(), *glFormat, GL_UNSIGNED_BYTE, target.sizeInBytes(), target.bits());

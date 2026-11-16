@@ -835,8 +835,7 @@ std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::copy(GraphicsBuffer *buff
         return std::nullopt;
     }
 
-    EGLNativeFence importFence = EGLNativeFence::importFence(m_context->displayObject(), std::move(sync));
-    importFence.waitSync();
+    EGLNativeFence::importFence(m_context->displayObject(), std::move(sync));
 
     if (m_swapchain->options().software) {
         return cpuCopy(buffer, damage, frame, releasePoint);

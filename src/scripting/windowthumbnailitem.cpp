@@ -323,8 +323,9 @@ QSGNode *WindowThumbnailItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Upda
 
     // Wait for rendering commands to the offscreen texture complete if there are any.
     if (fence.isValid()) {
-        auto imported = EGLNativeFence::importFence(EglContext::currentContext()->displayObject(), std::move(fence));
-        imported.waitSync();
+        if (!EGLNativeFence::importFence(EglContext::currentContext()->displayObject(), std::move(fence))) {
+            return oldNode;
+        }
     }
 
     auto texture = EglContext::currentContext()->importDmaBufAsTexture(buffer.get());

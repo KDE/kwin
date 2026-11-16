@@ -242,8 +242,7 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const FileDe
         m_mgpuSwapchain.reset();
         m_releasePoint = releasePoint;
         if (sync.isValid()) {
-            const auto fence = EGLNativeFence::importFence(m_renderDevice->eglDisplay(), sync.duplicate());
-            if (!fence.waitSync()) {
+            if (!EGLNativeFence::importFence(m_renderDevice->eglDisplay(), sync.duplicate())) {
                 return false;
             }
         }
@@ -260,8 +259,7 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const FileDe
         if (!imported.has_value()) {
             return false;
         }
-        const auto fence = EGLNativeFence::importFence(m_renderDevice->eglDisplay(), std::move(imported->sync));
-        if (!fence.waitSync()) {
+        if (!EGLNativeFence::importFence(m_renderDevice->eglDisplay(), std::move(imported->sync))) {
             return false;
         }
         buffer = imported->buffer;
@@ -299,8 +297,7 @@ void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const File
         if (!imported.has_value()) {
             return;
         }
-        const auto fence = EGLNativeFence::importFence(m_renderDevice->eglDisplay(), std::move(imported->sync));
-        if (!fence.waitSync()) {
+        if (!EGLNativeFence::importFence(m_renderDevice->eglDisplay(), std::move(imported->sync))) {
             return;
         }
         buffer = imported->buffer;
@@ -308,8 +305,7 @@ void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const File
     } else {
         m_releasePoint = releasePoint;
         if (sync.isValid()) {
-            const auto fence = EGLNativeFence::importFence(m_renderDevice->eglDisplay(), sync.duplicate());
-            if (!fence.waitSync()) {
+            if (!EGLNativeFence::importFence(m_renderDevice->eglDisplay(), sync.duplicate())) {
                 return;
             }
         }

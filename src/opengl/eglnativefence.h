@@ -30,7 +30,7 @@ public:
     FileDescriptor &&takeFileDescriptor();
     bool waitSync() const;
 
-    static EGLNativeFence importFence(EglDisplay *display, FileDescriptor &&fd);
+    static bool importFence(EglDisplay *display, FileDescriptor &&fd);
 
 private:
     EGLSyncKHR m_sync = EGL_NO_SYNC_KHR;
