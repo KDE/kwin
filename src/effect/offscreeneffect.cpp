@@ -365,7 +365,7 @@ bool CrossFadeEffect::drawWindow(const RenderTarget &renderTarget, const RenderV
     const auto it = d->windows.find(window);
 
     // paint the new window (if applicable) underneath
-    if (data.crossFadeProgress() > 0 || it == d->windows.end()) {
+    if (it == d->windows.end() || it->second->m_recursionGuard || data.crossFadeProgress() > 0) {
         if (!Effect::drawWindow(renderTarget, viewport, window, mask, deviceRegion, data)) {
             return false;
         }
