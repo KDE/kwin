@@ -192,11 +192,6 @@ public:
     QList<Tile *> childTiles() const;
 
     /*!
-     * All tiles descendant of this tile, recursive
-     */
-    QList<Tile *> descendants() const;
-
-    /*!
      * Visit all tiles descendant of this tile, recursive
      */
     void visitDescendants(std::function<void(Tile *child)> callback);
@@ -259,6 +254,9 @@ public:
 
     Tile *nextNonLayoutTileAt(Qt::Edge edge) const;
 
+    Q_INVOKABLE KWin::Tile *pick(const QPointF &point) const;
+    Q_INVOKABLE KWin::Tile *pick(qreal x, qreal y) const;
+
     Tile *createChildAt(const RectF &relativeGeometry, int position)
     {
         return createChildAt(relativeGeometry, LayoutDirection::Horizontal, position);
@@ -311,6 +309,8 @@ Q_SIGNALS:
     void layoutModified();
 
 protected:
+    bool pick(const QPointF &point, Tile *&bestTile, qreal &bestScore) const;
+
     void insertChild(int position, Tile *item);
     void removeChild(Tile *child);
 
@@ -337,9 +337,6 @@ class KWIN_EXPORT RootTile : public Tile
 
 public:
     RootTile(TileManager *tiling, VirtualDesktop *desktop);
-
-    Q_INVOKABLE KWin::Tile *pick(const QPointF &point) const;
-    Q_INVOKABLE KWin::Tile *pick(qreal x, qreal y) const;
 };
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const Tile *tile);

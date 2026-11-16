@@ -821,15 +821,6 @@ int Tile::childCount() const
     return m_children.count();
 }
 
-QList<Tile *> Tile::descendants() const
-{
-    QList<Tile *> tiles;
-    for (auto *t : std::as_const(m_children)) {
-        tiles << t << t->descendants();
-    }
-    return tiles;
-}
-
 Tile *Tile::parentTile() const
 {
     return m_parentTile;
@@ -970,42 +961,63 @@ Tile *Tile::tileForWindow(Window *window)
     return nullptr;
 }
 
+Tile *Tile::pick(const QPointF &point) const
+{
+    qreal score = std::numeric_limits<qreal>::max();
+    Tile *tile = nullptr;
+
+    pick(point, tile, score);
+    return tile;
+}
+
+bool Tile::pick(const QPointF &point, Tile *&bestTile, qreal &bestScore) const
+{
+    for (Tile *childTile : m_children) {
+        const RectF geometry = childTile->absoluteGeometry();
+        if (!geometry.contains(point)) {
+            continue;
+        }
+
+        if (childTile->isLayout()) {
+            if (childTile->pick(point, bestTile, bestScore)) {
+                return true;
+            }
+        } else {
+            bestTile = childTile;
+            bestScore = 0;
+            return true;
+        }
+    }
+
+    for (Tile *childTile : m_children) {
+        if (childTile->isLayout()) {
+            childTile->pick(point, bestTile, bestScore);
+        } else {
+            const RectF geometry = childTile->absoluteGeometry();
+            const QPointF closestPoint(std::clamp(point.x(), geometry.left(), geometry.right()),
+                                       std::clamp(point.y(), geometry.top(), geometry.bottom()));
+            const qreal score = (closestPoint - point).manhattanLength();
+            if (!bestScore || score < bestScore) {
+                bestTile = childTile;
+                bestScore = score;
+            }
+        }
+    }
+
+    return false;
+}
+
+Tile *Tile::pick(qreal x, qreal y) const
+{
+    return pick(QPointF(x, y));
+}
+
 RootTile::RootTile(TileManager *tiling, VirtualDesktop *desktop)
     : Tile(tiling, nullptr)
 {
     m_desktop = desktop;
     setParent(tiling);
     setRelativeGeometry({0, 0, 1, 1});
-}
-
-Tile *RootTile::pick(const QPointF &point) const
-{
-    const auto tiles = descendants();
-    qreal minimumDistance = std::numeric_limits<qreal>::max();
-    Tile *ret = nullptr;
-
-    for (auto *t : tiles) {
-        if (!t->isLayout()) {
-            const auto r = t->absoluteGeometry();
-            // It's possible for tiles to overlap, so take the one which center is nearer to mouse pos
-            qreal distance = (r.center() - point).manhattanLength();
-            if (!r.contains(point)) {
-                // This gives a strong preference for tiles that contain the point
-                // still base on distance though as floating tiles can overlap
-                distance += m_tiling->output()->geometryF().width();
-            }
-            if (distance < minimumDistance) {
-                minimumDistance = distance;
-                ret = t;
-            }
-        }
-    }
-    return ret;
-}
-
-Tile *RootTile::pick(qreal x, qreal y) const
-{
-    return pick(QPointF(x, y));
 }
 
 } // namespace KWin
