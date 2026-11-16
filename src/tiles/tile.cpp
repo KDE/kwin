@@ -916,9 +916,10 @@ void Tile::insertChild(int position, Tile *item)
 {
     Q_EMIT aboutToInsertChildTile(item, position);
 
-    Q_ASSERT(position >= 0);
+    item->m_parentTile = this;
     item->setParent(this);
 
+    Q_ASSERT(position >= 0);
     m_children.insert(std::clamp<qsizetype>(position, 0, m_children.length()), item);
 
     Q_EMIT childTileInserted();
@@ -929,6 +930,7 @@ void Tile::removeChild(Tile *child)
 {
     Q_EMIT aboutToRemoveChildTile(child);
 
+    child->m_parentTile = nullptr;
     m_children.removeAll(child);
 
     Q_EMIT childTileRemoved();
@@ -1111,6 +1113,20 @@ void Tile::setLayoutDirection(LayoutDirection dir)
 {
     if (m_layoutDirection == dir) {
         return;
+    }
+
+    if (!m_children.isEmpty()) {
+        const auto children = m_children;
+
+        Tile *newParent = createChildAt(childCount());
+        newParent->setRelativeGeometry(relativeGeometry());
+        newParent->setCoverage(QSizeF(1, 1));
+        newParent->setLayoutDirection(layoutDirection());
+
+        for (Tile *child : children) {
+            removeChild(child);
+            newParent->insertChild(newParent->childCount(), child);
+        }
     }
 
     m_layoutDirection = dir;
