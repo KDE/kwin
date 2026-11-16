@@ -51,15 +51,6 @@ bool EglGbmBackend::init()
     return true;
 }
 
-QList<OutputLayer *> EglGbmBackend::compatibleOutputLayers(BackendOutput *output)
-{
-    if (auto virtualOutput = qobject_cast<DrmVirtualOutput *>(output)) {
-        return {virtualOutput->primaryLayer()};
-    } else {
-        return static_cast<DrmOutput *>(output)->pipeline()->gpu()->compatibleOutputLayers(output);
-    }
-}
-
 } // namespace KWin
 
 #include "moc_drm_egl_backend.cpp"

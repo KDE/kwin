@@ -50,11 +50,6 @@ bool X11WindowedEglBackend::init()
     return true;
 }
 
-QList<OutputLayer *> X11WindowedEglBackend::compatibleOutputLayers(BackendOutput *output)
-{
-    return static_cast<X11WindowedOutput *>(output)->outputLayers();
-}
-
 } // namespace
 
 #include "moc_x11_windowed_egl_backend.cpp"

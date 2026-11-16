@@ -169,6 +169,11 @@ void DrmVirtualOutput::resize(const QSize &size, std::optional<qreal> scale)
     Q_EMIT m_backend->outputsQueried();
 }
 
+QList<OutputLayer *> DrmVirtualOutput::compatibleOutputLayers() const
+{
+    return {m_layer.get()};
+}
+
 }
 
 #include "moc_drm_virtual_output.cpp"

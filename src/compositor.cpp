@@ -907,7 +907,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         frame->setArtificialHdrHeadroom(1);
     }
 
-    QList<OutputLayer *> unusedOutputLayers = m_backend->compatibleOutputLayers(output);
+    QList<OutputLayer *> unusedOutputLayers = output->compatibleOutputLayers();
 
     const bool overlaysAllowed = m_allowOverlaysEnv.value_or(output->recommendsOverlayUse());
     QList<OutputLayer *> allowedOutputLayers = unusedOutputLayers | std::views::filter([this, renderLoop, overlaysAllowed](OutputLayer *layer) {
@@ -1108,7 +1108,7 @@ void Compositor::removeOutput(BackendOutput *output)
 
 void Compositor::assignOutputLayers(LogicalOutput *logicalOutput, BackendOutput *backendOutput)
 {
-    const auto layers = m_backend->compatibleOutputLayers(backendOutput);
+    const auto layers = backendOutput->compatibleOutputLayers();
     const auto primaryLayer = findLayer(layers, OutputLayerType::Primary);
     Q_ASSERT(primaryLayer);
     auto &sceneView = m_primaryViews[backendOutput->renderLoop()];

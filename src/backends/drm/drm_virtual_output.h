@@ -32,6 +32,7 @@ public:
     std::expected<void, OutputError> testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
     std::expected<void, OutputError> present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
     void applyChanges(const OutputConfiguration &config) override;
+    QList<OutputLayer *> compatibleOutputLayers() const override;
 
     VirtualDrmLayer *primaryLayer() const;
     void recreateLayer();

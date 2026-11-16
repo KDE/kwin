@@ -25,6 +25,11 @@ std::expected<void, KWin::OutputError> FakeBackendOutput::present(const QList<KW
     return {};
 }
 
+QList<KWin::OutputLayer *> FakeBackendOutput::compatibleOutputLayers() const
+{
+    return {};
+}
+
 void FakeBackendOutput::setMode(QSize size, uint32_t refreshRate)
 {
     auto mode = std::make_shared<KWin::OutputMode>(KWin::OutputModeline(size, refreshRate));

@@ -116,7 +116,7 @@ public:
     std::expected<void, OutputError> present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
 
     void setOutputLayers(std::vector<std::unique_ptr<OutputLayer>> &&layers);
-    QList<OutputLayer *> outputLayers() const;
+    QList<OutputLayer *> compatibleOutputLayers() const override;
 
 private:
     void initXInputForWindow();

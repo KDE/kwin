@@ -452,7 +452,7 @@ std::expected<void, OutputError> X11WindowedOutput::testPresentation(const std::
 
 std::expected<void, OutputError> X11WindowedOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
-    auto cursorLayers = Compositor::self()->backend()->compatibleOutputLayers(this) | std::views::filter([](OutputLayer *layer) {
+    auto cursorLayers = compatibleOutputLayers() | std::views::filter([](OutputLayer *layer) {
         return layer->type() == OutputLayerType::CursorOnly;
     });
     if (!cursorLayers.empty()) {
@@ -506,7 +506,7 @@ void X11WindowedOutput::setOutputLayers(std::vector<std::unique_ptr<OutputLayer>
     m_layers = std::move(layers);
 }
 
-QList<OutputLayer *> X11WindowedOutput::outputLayers() const
+QList<OutputLayer *> X11WindowedOutput::compatibleOutputLayers() const
 {
     return m_layers | std::views::transform(&std::unique_ptr<OutputLayer>::get) | std::ranges::to<QList>();
 }

@@ -256,7 +256,7 @@ const wl_callback_listener WaylandOutput::s_frameCallbackListener{
 
 std::expected<void, OutputError> WaylandOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
 {
-    auto cursorLayers = Compositor::self()->backend()->compatibleOutputLayers(this) | std::views::filter([](OutputLayer *layer) {
+    auto cursorLayers = compatibleOutputLayers() | std::views::filter([](OutputLayer *layer) {
         return layer->type() == OutputLayerType::CursorOnly;
     });
     if (m_hasPointerLock && std::ranges::any_of(cursorLayers, &OutputLayer::isEnabled)) {
@@ -565,7 +565,7 @@ void WaylandOutput::setOutputLayers(std::vector<std::unique_ptr<OutputLayer>> &&
     m_layers = std::move(layers);
 }
 
-QList<OutputLayer *> WaylandOutput::outputLayers() const
+QList<OutputLayer *> WaylandOutput::compatibleOutputLayers() const
 {
     return m_layers | std::views::transform(&std::unique_ptr<OutputLayer>::get) | std::ranges::to<QList>();
 }

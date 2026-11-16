@@ -117,7 +117,6 @@ public:
     void forgetBuffer(GraphicsBuffer *buf);
     void createLayers();
     void destroyLayers();
-    QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) const;
 
     FileDescriptor createNonMasterFd() const;
     std::unique_ptr<DrmLease> leaseOutputs(const QList<DrmOutput *> &outputs);

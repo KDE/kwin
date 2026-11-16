@@ -108,7 +108,7 @@ public:
     void applyChanges(const OutputConfiguration &config) override;
 
     void setOutputLayers(std::vector<std::unique_ptr<OutputLayer>> &&layers);
-    QList<OutputLayer *> outputLayers() const;
+    QList<OutputLayer *> compatibleOutputLayers() const override;
 
 Q_SIGNALS:
     void closeRequested();

@@ -379,6 +379,11 @@ bool DrmOutput::recommendsOverlayUse() const
     }
 }
 
+QList<OutputLayer *> DrmOutput::compatibleOutputLayers() const
+{
+    return m_pipeline->layers() | std::ranges::to<QList<OutputLayer *>>();
+}
+
 DrmConnector *DrmOutput::connector() const
 {
     return m_connector.get();

@@ -48,11 +48,6 @@ bool VirtualEglBackend::init()
     return true;
 }
 
-QList<OutputLayer *> VirtualEglBackend::compatibleOutputLayers(BackendOutput *output)
-{
-    return {static_cast<VirtualOutput *>(output)->outputLayer()};
-}
-
 } // namespace
 
 #include "moc_virtual_egl_backend.cpp"

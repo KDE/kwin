@@ -73,11 +73,6 @@ bool WaylandEglBackend::initRenderingContext()
     return openglContext()->makeCurrent();
 }
 
-QList<OutputLayer *> WaylandEglBackend::compatibleOutputLayers(BackendOutput *output)
-{
-    return static_cast<WaylandOutput *>(output)->outputLayers();
-}
-
 }
 }
 

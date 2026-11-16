@@ -32,7 +32,6 @@ public:
 
     bool init() override;
     void endFrame(BackendOutput *output, const Region &renderedDeviceRegion, const Region &damagedDeviceRegion);
-    QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) override;
 
 private:
     X11WindowedBackend *m_backend;
