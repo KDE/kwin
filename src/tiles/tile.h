@@ -243,6 +243,8 @@ public:
     void forget(Window *window);
     QList<KWin::Window *> windows() const;
 
+    Tile *tileForWindow(Window *window);
+
     int row() const;
     int childCount() const;
     Tile *childTile(int row);
@@ -335,8 +337,6 @@ class KWIN_EXPORT RootTile : public Tile
 
 public:
     RootTile(TileManager *tiling, VirtualDesktop *desktop);
-
-    Tile *tileForWindow(Window *window);
 
     Q_INVOKABLE KWin::Tile *pick(const QPointF &point) const;
     Q_INVOKABLE KWin::Tile *pick(qreal x, qreal y) const;

@@ -955,27 +955,27 @@ Tile *Tile::nextNonLayoutTileAt(Qt::Edge edge) const
     return tile;
 }
 
+Tile *Tile::tileForWindow(Window *window)
+{
+    if (m_windows.contains(window)) {
+        return this;
+    }
+
+    for (Tile *tile : std::as_const(m_children)) {
+        if (Tile *needle = tile->tileForWindow(window)) {
+            return needle;
+        }
+    }
+
+    return nullptr;
+}
+
 RootTile::RootTile(TileManager *tiling, VirtualDesktop *desktop)
     : Tile(tiling, nullptr)
 {
     m_desktop = desktop;
     setParent(tiling);
     setRelativeGeometry({0, 0, 1, 1});
-}
-
-Tile *RootTile::tileForWindow(Window *window)
-{
-    if (windows().contains(window)) {
-        return this;
-    }
-
-    for (Tile *tile : descendants()) {
-        if (tile->windows().contains(window)) {
-            return tile;
-        }
-    }
-
-    return nullptr;
 }
 
 Tile *RootTile::pick(const QPointF &point) const
