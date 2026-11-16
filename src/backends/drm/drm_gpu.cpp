@@ -880,11 +880,9 @@ void DrmGpu::releaseBuffers()
         pipeline->applyPendingChanges();
     }
     for (const auto &plane : std::as_const(m_planes)) {
-        plane->releaseCurrentBuffer();
         m_planeLayerMap.erase(plane.get());
     }
     for (const auto &crtc : std::as_const(m_crtcs)) {
-        crtc->releaseCurrentBuffer();
         m_legacyLayerMap.erase(crtc.get());
         m_legacyCursorLayerMap.erase(crtc.get());
     }
