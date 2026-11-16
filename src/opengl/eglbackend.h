@@ -36,7 +36,7 @@ class KWIN_EXPORT EglBackend : public RenderBackend
 public:
     explicit EglBackend(RenderDevice *device);
 
-    virtual bool init() = 0;
+    bool init();
     CompositingType compositingType() const override final;
 
     EglContext *openglContext() const;
@@ -52,9 +52,7 @@ public:
 protected:
     void cleanup();
     bool initClientExtensions();
-    void initWayland();
     bool hasClientExtension(const QByteArray &ext) const;
-    bool createContext();
     void updateDmabufTranches();
 
     RenderDevice *m_renderDevice = nullptr;

@@ -8,7 +8,6 @@
 */
 #include "virtual_backend.h"
 
-#include "virtual_egl_backend.h"
 #include "virtual_layer.h"
 #include "virtual_output.h"
 
@@ -40,11 +39,6 @@ bool VirtualBackend::initialize()
 QList<CompositingType> VirtualBackend::supportedCompositors() const
 {
     return {OpenGLCompositing};
-}
-
-std::unique_ptr<EglBackend> VirtualBackend::createOpenGLBackend(RenderDevice *renderDevice)
-{
-    return std::make_unique<VirtualEglBackend>(this, renderDevice);
 }
 
 BackendOutput *VirtualBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, qreal scale)

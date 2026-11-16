@@ -14,7 +14,6 @@
 #include "core/gpumanager.h"
 #include "core/outputconfiguration.h"
 #include "core/session.h"
-#include "drm_egl_backend.h"
 #include "drm_gpu.h"
 #include "drm_layer.h"
 #include "drm_logging.h"
@@ -319,11 +318,6 @@ void DrmBackend::updateOutputs(DrmGpu *onlyUpdate)
 std::unique_ptr<InputBackend> DrmBackend::createInputBackend()
 {
     return std::make_unique<LibinputBackend>(m_session);
-}
-
-std::unique_ptr<EglBackend> DrmBackend::createOpenGLBackend(RenderDevice *device)
-{
-    return std::make_unique<EglGbmBackend>(device);
 }
 
 QList<CompositingType> DrmBackend::supportedCompositors() const

@@ -7,7 +7,6 @@ target_sources(kwin PRIVATE
     drm_commit_thread.cpp
     drm_connector.cpp
     drm_crtc.cpp
-    drm_egl_backend.cpp
     drm_gpu.cpp
     drm_layer.cpp
     drm_logging.cpp

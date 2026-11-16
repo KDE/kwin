@@ -43,7 +43,6 @@ public:
 
     virtual bool initialize() = 0;
     virtual std::unique_ptr<InputBackend> createInputBackend();
-    virtual std::unique_ptr<EglBackend> createOpenGLBackend(RenderDevice *device);
 
     /**
      * The CompositingTypes supported by the Platform.
