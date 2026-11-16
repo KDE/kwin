@@ -92,21 +92,19 @@ KCM.SimpleKCM {
                     Kirigami.ContextualHelpButton {
                         id: animationSpeedHelpButton
                         Layout.alignment: Qt.AlignTop
-                        toolTipText: xi18nc("@info:tooltip", "Some applications do not support this setting: In particular, GTK applications cannot change animation duration, but will still disable animations when <interface>animation speed</interface> is <interface>Instant</interface>.")
+                        toolTipText: xi18nc("@info:tooltip", "Some applications do not support this setting: in particular, GTK applications cannot change animation duration, but will still disable animations when <interface>animation speed</interface> is <interface>Instant</interface>.")
                     }
                 ]
             }
         }
 
         Kirigami.FormGroup {
-            title: i18nc("@title:group", "Desktop animations")
+            title: i18nc("@title:group", "Window animations")
             Repeater {
-                model: [{"animationsModel": kcm.windowOpenCloseAnimations,  "label": i18nc("@label:listbox", "Window open/close:")        },
-                        {"animationsModel": kcm.windowMaximizeAnimations,   "label": i18nc("@label:listbox", "Window maximize:")          },
-                        {"animationsModel": kcm.windowMinimizeAnimations,   "label": i18nc("@label:listbox", "Window minimize:")          },
-                        {"animationsModel": kcm.windowFullscreenAnimations, "label": i18nc("@label:listbox", "Window full screen:")       },
-                        {"animationsModel": kcm.peekDesktopAnimations,      "label": i18nc("@label:listbox", "Peek at desktop:")          },
-                        {"animationsModel": kcm.virtualDesktopAnimations,   "label": i18nc("@label:listbox", "Virtual desktop switching:")}]
+                model: [{"animationsModel": kcm.windowOpenCloseAnimations,  "label": i18nc("@label:listbox", "Open/close:")        },
+                        {"animationsModel": kcm.windowMaximizeAnimations,   "label": i18nc("@label:listbox", "Maximize:")          },
+                        {"animationsModel": kcm.windowMinimizeAnimations,   "label": i18nc("@label:listbox", "Minimize:")          },
+                        {"animationsModel": kcm.windowFullscreenAnimations, "label": i18nc("@label:listbox", "Full screen:")       }]
                 delegate: Kirigami.FormEntry {
                     id: delegate
                     required property var modelData
@@ -139,7 +137,48 @@ KCM.SimpleKCM {
                     ]
                 }
             }
+        }
 
+        Kirigami.FormGroup {
+            title: i18nc("@title:group", "Desktop animations")
+            Repeater {
+                model: [{"animationsModel": kcm.peekDesktopAnimations,    "label": i18nc("@label:listbox", "Peek at desktop:")        },
+                        {"animationsModel": kcm.virtualDesktopAnimations, "label": i18nc("@label:listbox", "Switch virtual desktops:")}]
+                delegate: Kirigami.FormEntry {
+                    id: delegate
+                    required property var modelData
+                    title: modelData.label
+                    enabled: kcm.globalsSettings.animationDurationFactor != 0
+                    contentItem: AnimationComboBox {
+                        id: animationComboBox
+                        animationsModel: delegate.modelData.animationsModel
+                        KCM.SettingHighlighter {
+                            highlight: !animationComboBox.isDefault && kcm.globalsSettings.animationDurationFactor != 0
+                        }
+                        Component.onCompleted: contentItemSizeGroup.appendItem(this);
+                        Component.onDestruction: contentItemSizeGroup.removeItem(this);
+                    }
+                    trailingItems: [
+                        QQC2.Button {
+                            id: animationConfigure
+                            icon.name: "configure"
+                            text: i18nc("@info:tooltip", "Configure…")
+                            display: QQC2.AbstractButton.IconOnly
+
+                            QQC2.ToolTip.text: text
+                            QQC2.ToolTip.visible: hovered
+                            QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
+
+                            enabled: animationComboBox.isConfigurable
+                            visible: animationComboBox.isAnyConfigurable
+                            onClicked: kcm.configure(animationComboBox.configurePluginId, root)
+                        }
+                    ]
+                }
+            }
+        }
+
+        Kirigami.FormGroup {
             Connections {
                 target: kcm.otherEffects
                 function onModelReset() { otherEffectsRepeater.model = kcm.otherEffects.rowCount(); }
