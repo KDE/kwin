@@ -7,7 +7,9 @@
 
 #pragma once
 
+#include "core/graphicsbuffer.h"
 #include "core/rect.h"
+#include "utils/filedescriptor.h"
 
 #include <QQuickItem>
 #include <QUuid>
@@ -18,12 +20,12 @@ namespace KWin
 {
 
 class Window;
-class GLFramebuffer;
-class GLTexture;
 class ThumbnailTextureProvider;
 class WindowThumbnailSource;
-class EglContext;
 class RenderDevice;
+class SyncReleasePoint;
+class Swapchain;
+class SwapchainSlot;
 
 class WindowThumbnailSource : public QObject
 {
@@ -37,11 +39,11 @@ public:
 
     struct Frame
     {
-        std::shared_ptr<GLTexture> texture;
-        GLsync fence;
+        GraphicsBufferRef buffer;
+        FileDescriptor fence;
+        std::shared_ptr<SyncReleasePoint> release;
     };
-
-    Frame acquire();
+    std::optional<Frame> acquire();
 
 Q_SIGNALS:
     void changed();
@@ -53,10 +55,9 @@ private:
     QPointer<Window> m_handle;
 
     RenderDevice *m_renderDevice = nullptr;
-    std::shared_ptr<EglContext> m_context;
-    std::shared_ptr<GLTexture> m_offscreenTexture;
-    std::unique_ptr<GLFramebuffer> m_offscreenTarget;
-    GLsync m_acquireFence = 0;
+    std::unique_ptr<Swapchain> m_swapchain;
+    std::shared_ptr<SwapchainSlot> m_slot;
+    FileDescriptor m_fence;
     bool m_dirty = true;
 };
 
