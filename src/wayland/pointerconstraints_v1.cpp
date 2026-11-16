@@ -241,7 +241,9 @@ void LockedPointerV1Interface::setLocked(bool locked)
         return;
     }
     if (!locked) {
-        SurfaceInterfacePrivate::get(d->m_surface)->pending->pointerLockHint.reset();
+        auto priv = SurfaceInterfacePrivate::get(d->m_surface);
+        priv->pending->pointerLockHint.reset();
+        priv->pending->committed |= SurfaceState::Field::PointerLockHint;
     }
     d->isLocked = locked;
     if (d->isLocked) {
