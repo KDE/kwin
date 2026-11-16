@@ -31,39 +31,16 @@ WaylandEglBackend::WaylandEglBackend(WaylandBackend *b, RenderDevice *device)
     : EglBackend(device)
     , m_backend(b)
 {
-    connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandEglBackend::createOutputLayers);
-
-    b->setEglBackend(this);
 }
 
 WaylandEglBackend::~WaylandEglBackend()
 {
-    const auto outputs = m_backend->outputs();
-    for (BackendOutput *output : outputs) {
-        static_cast<WaylandOutput *>(output)->setOutputLayers({});
-    }
     cleanup();
 }
 
 WaylandBackend *WaylandEglBackend::backend() const
 {
     return m_backend;
-}
-
-void WaylandEglBackend::createOutputLayers(BackendOutput *output)
-{
-    const auto waylandOutput = static_cast<WaylandOutput *>(output);
-    std::vector<std::unique_ptr<OutputLayer>> layers;
-    auto primary = std::make_unique<WaylandLayer>(waylandOutput, this, backend()->display(), OutputLayerType::Primary, 0);
-    primary->subSurface()->placeAbove(waylandOutput->surface());
-    layers.push_back(std::move(primary));
-    for (int z = 1; z < 5; z++) {
-        auto layer = std::make_unique<WaylandLayer>(waylandOutput, this, backend()->display(), OutputLayerType::GenericLayer, z);
-        layer->subSurface()->placeAbove(static_cast<WaylandLayer *>(layers.back().get())->surface());
-        layers.push_back(std::move(layer));
-    }
-    layers.push_back(std::make_unique<WaylandCursorLayer>(waylandOutput, this, backend()->display()));
-    waylandOutput->setOutputLayers(std::move(layers));
 }
 
 bool WaylandEglBackend::init()
@@ -91,10 +68,6 @@ bool WaylandEglBackend::initRenderingContext()
     // we only allow to start with at least one output
     if (waylandOutputs.isEmpty()) {
         return false;
-    }
-
-    for (auto *out : waylandOutputs) {
-        createOutputLayers(out);
     }
 
     return openglContext()->makeCurrent();

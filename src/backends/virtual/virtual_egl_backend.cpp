@@ -26,10 +26,6 @@ VirtualEglBackend::VirtualEglBackend(VirtualBackend *b, RenderDevice *renderDevi
 
 VirtualEglBackend::~VirtualEglBackend()
 {
-    const auto outputs = m_backend->outputs();
-    for (BackendOutput *output : outputs) {
-        static_cast<VirtualOutput *>(output)->setOutputLayer(nullptr);
-    }
     cleanup();
 }
 
@@ -49,19 +45,7 @@ bool VirtualEglBackend::init()
         return false;
     }
     initWayland();
-
-    const auto outputs = m_backend->outputs();
-    for (BackendOutput *output : outputs) {
-        addOutput(output);
-    }
-
-    connect(m_backend, &VirtualBackend::outputAdded, this, &VirtualEglBackend::addOutput);
     return true;
-}
-
-void VirtualEglBackend::addOutput(BackendOutput *output)
-{
-    static_cast<VirtualOutput *>(output)->setOutputLayer(std::make_unique<VirtualLayer>(output, this));
 }
 
 QList<OutputLayer *> VirtualEglBackend::compatibleOutputLayers(BackendOutput *output)

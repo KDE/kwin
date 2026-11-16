@@ -31,6 +31,7 @@ class Session;
 class BackendOutput;
 class EglContext;
 class RenderDevice;
+class RenderBackend;
 
 class KWIN_EXPORT OutputBackend : public QObject
 {
@@ -72,6 +73,11 @@ public:
 
     virtual Session *session() const;
 
+    virtual void createOutputLayers(RenderBackend *renderBackend) = 0;
+    virtual void destroyOutputLayers() = 0;
+
+    RenderBackend *renderBackend() const;
+
 Q_SIGNALS:
     void outputsQueried();
     /**
@@ -87,6 +93,7 @@ Q_SIGNALS:
 protected:
     explicit OutputBackend(QObject *parent = nullptr);
 
+    RenderBackend *m_renderBackend = nullptr;
     EglContext *m_globalShareContext = nullptr;
 };
 

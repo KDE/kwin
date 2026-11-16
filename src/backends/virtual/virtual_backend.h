@@ -56,6 +56,9 @@ public:
 
     QList<CompositingType> supportedCompositors() const override;
 
+    void createOutputLayers(RenderBackend *renderBackend) override;
+    void destroyOutputLayers() override;
+
 Q_SIGNALS:
     void virtualOutputsSet(bool countChanged);
 

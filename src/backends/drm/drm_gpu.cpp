@@ -873,7 +873,7 @@ QSize DrmGpu::cursorSize() const
     return m_cursorSize;
 }
 
-void DrmGpu::releaseBuffers()
+void DrmGpu::destroyLayers()
 {
     for (DrmPipeline *pipeline : std::as_const(m_pipelines)) {
         pipeline->setLayers({});
@@ -892,12 +892,12 @@ void DrmGpu::createLayers()
 {
     if (m_atomicModeSetting) {
         for (const auto &plane : m_planes) {
-            m_planeLayerMap[plane.get()] = m_platform->renderBackend()->createDrmPlaneLayer(plane.get());
+            m_planeLayerMap[plane.get()] = std::make_unique<DrmPipelineLayer>(m_platform->renderBackend(), plane.get());
         }
     } else {
         for (const auto &crtc : m_crtcs) {
-            m_legacyLayerMap[crtc.get()] = m_platform->renderBackend()->createDrmPlaneLayer(this, DrmPlane::TypeIndex::Primary);
-            m_legacyCursorLayerMap[crtc.get()] = m_platform->renderBackend()->createDrmPlaneLayer(this, DrmPlane::TypeIndex::Cursor);
+            m_legacyLayerMap[crtc.get()] = std::make_unique<DrmPipelineLayer>(m_platform->renderBackend(), this, DrmPlane::TypeIndex::Primary);
+            m_legacyCursorLayerMap[crtc.get()] = std::make_unique<DrmPipelineLayer>(m_platform->renderBackend(), this, DrmPlane::TypeIndex::Cursor);
         }
     }
     assignOutputLayers();

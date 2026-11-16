@@ -16,6 +16,7 @@
 #include "pointer_input.h"
 #include "utils/xcbutils.h"
 #include "x11_windowed_egl_backend.h"
+#include "x11_windowed_layers.h"
 #include "x11_windowed_logging.h"
 #include "x11_windowed_output.h"
 // KDE
@@ -366,6 +367,9 @@ void X11WindowedBackend::createOutputs()
                             XCB_ATOM_ATOM,
                             32, 1,
                             &m_deleteWindowProtocol);
+        if (m_renderBackend) {
+            createLayers(output);
+        }
 
         m_outputs << output;
         Q_EMIT outputAdded(output);
@@ -782,6 +786,30 @@ void X11WindowedBackend::destroyOutputs()
 RenderDevice *X11WindowedBackend::renderDevice() const
 {
     return m_renderDevice;
+}
+
+void X11WindowedBackend::createOutputLayers(RenderBackend *renderBackend)
+{
+    m_renderBackend = renderBackend;
+    for (X11WindowedOutput *output : m_outputs) {
+        createLayers(output);
+    }
+}
+
+void X11WindowedBackend::destroyOutputLayers()
+{
+    m_renderBackend = nullptr;
+    for (X11WindowedOutput *output : m_outputs) {
+        output->setOutputLayers({});
+    }
+}
+
+void X11WindowedBackend::createLayers(X11WindowedOutput *output)
+{
+    std::vector<std::unique_ptr<OutputLayer>> layers;
+    layers.push_back(std::make_unique<X11WindowedPrimaryLayer>(this, m_renderBackend, output));
+    layers.push_back(std::make_unique<X11WindowedCursorLayer>(this, m_renderBackend, output));
+    output->setOutputLayers(std::move(layers));
 }
 
 } // namespace KWin
