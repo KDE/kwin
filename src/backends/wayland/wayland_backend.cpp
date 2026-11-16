@@ -558,7 +558,7 @@ std::unique_ptr<EglBackend> WaylandBackend::createOpenGLBackend(RenderDevice *de
 WaylandOutput *WaylandBackend::findOutput(KWayland::Client::Surface *nativeSurface) const
 {
     for (WaylandOutput *output : m_outputs) {
-        const auto layers = Compositor::self()->backend()->compatibleOutputLayers(output);
+        const auto layers = output->compatibleOutputLayers();
         const bool isALayer = std::ranges::any_of(layers, [nativeSurface](OutputLayer *layer) {
             if (layer->type() == OutputLayerType::CursorOnly) {
                 return false;
@@ -578,7 +578,7 @@ WaylandOutput *WaylandBackend::findOutput(KWayland::Client::Surface *nativeSurfa
 KWayland::Client::SubSurface *WaylandBackend::findSubSurface(KWayland::Client::Surface *nativeSurface) const
 {
     for (WaylandOutput *output : m_outputs) {
-        const auto layers = Compositor::self()->backend()->compatibleOutputLayers(output);
+        const auto layers = output->compatibleOutputLayers();
         const auto it = std::ranges::find_if(layers, [nativeSurface](OutputLayer *layer) {
             // cursor-only layers are a different class
             // and can't be a subsurface

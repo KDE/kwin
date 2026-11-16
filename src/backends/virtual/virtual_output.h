@@ -29,6 +29,7 @@ public:
 
     std::expected<void, OutputError> testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
     std::expected<void, OutputError> present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
+    QList<OutputLayer *> compatibleOutputLayers() const override;
 
     void init(const QSize &pixelSize, qreal scale, const QList<OutputModeline> &modes);
 

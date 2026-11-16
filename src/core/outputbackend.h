@@ -32,6 +32,7 @@ class BackendOutput;
 class EglContext;
 class RenderDevice;
 class RenderBackend;
+class OutputLayer;
 
 class KWIN_EXPORT OutputBackend : public QObject
 {

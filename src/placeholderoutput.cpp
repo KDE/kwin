@@ -48,6 +48,11 @@ std::expected<void, OutputError> PlaceholderOutput::present(const QList<OutputLa
     return {};
 }
 
+QList<OutputLayer *> PlaceholderOutput::compatibleOutputLayers() const
+{
+    return {};
+}
+
 } // namespace KWin
 
 #include "moc_placeholderoutput.cpp"

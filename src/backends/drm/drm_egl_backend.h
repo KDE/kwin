@@ -40,7 +40,6 @@ public:
     EglGbmBackend(RenderDevice *device);
     ~EglGbmBackend() override;
 
-    QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) override;
     bool init() override;
 };
 

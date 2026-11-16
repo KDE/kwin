@@ -51,7 +51,6 @@ public:
     WaylandBackend *backend() const;
 
     bool init() override;
-    QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) override;
 
 private:
     bool initRenderingContext();

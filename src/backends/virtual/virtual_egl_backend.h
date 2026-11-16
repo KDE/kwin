@@ -28,7 +28,6 @@ public:
     VirtualEglBackend(VirtualBackend *b, RenderDevice *renderDevice);
     ~VirtualEglBackend() override;
 
-    QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) override;
     bool init() override;
 
     VirtualBackend *backend() const;

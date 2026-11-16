@@ -1048,16 +1048,6 @@ void DrmGpu::forgetBufferObject(QObject *buf)
     m_fbCache.remove(static_cast<GraphicsBuffer *>(buf));
 }
 
-QList<OutputLayer *> DrmGpu::compatibleOutputLayers(BackendOutput *output) const
-{
-    if (auto virt = qobject_cast<DrmVirtualOutput *>(output)) {
-        return {virt->primaryLayer()};
-    }
-    // TODO once dynamic ownership of layers is defined somehow,
-    // additionally return planes that aren't currently in use
-    return static_cast<DrmOutput *>(output)->pipeline()->layers() | std::ranges::to<QList<OutputLayer *>>();
-}
-
 RenderDevice *DrmGpu::renderDevice() const
 {
     return m_renderDevice;

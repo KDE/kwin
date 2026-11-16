@@ -309,6 +309,7 @@ public:
     virtual std::expected<void, OutputError> testPresentation(const std::shared_ptr<OutputFrame> &frame) = 0;
     virtual std::expected<void, OutputError> present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) = 0;
     virtual void repairPresentation();
+    virtual QList<OutputLayer *> compatibleOutputLayers() const = 0;
 
     /**
      * Can be used by the backend to suggest the compositor (not) to

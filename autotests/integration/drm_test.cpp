@@ -456,7 +456,7 @@ void DrmTest::testCursorLayer()
     uint32_t time = 0;
     BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
 
-    const auto layers = Compositor::self()->backend()->compatibleOutputLayers(output);
+    const auto layers = output->compatibleOutputLayers();
     if (layers.size() == 1) {
         QSKIP("The driver only advertises a primary plane");
     }
@@ -552,7 +552,7 @@ void DrmTest::testDirectScanout()
         QVERIFY(workspace()->applyOutputConfiguration(cfg));
     }
 
-    const auto layers = Compositor::self()->backend()->compatibleOutputLayers(output);
+    const auto layers = output->compatibleOutputLayers();
     if (layers.size() == 1) {
         QSKIP("The driver only advertises a primary plane");
     }
@@ -628,7 +628,7 @@ void DrmTest::testOverlay()
     uint32_t time = 0;
     BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
 
-    const auto layers = Compositor::self()->backend()->compatibleOutputLayers(output);
+    const auto layers = output->compatibleOutputLayers();
     if (layers.size() < 3) {
         QSKIP("The driver doesn't advertise an overlay plane");
     }
