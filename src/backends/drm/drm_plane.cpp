@@ -263,13 +263,6 @@ void DrmPlane::disable(DrmAtomicCommit *commit)
     commit->addBuffer(this, nullptr, nullptr);
 }
 
-void DrmPlane::releaseCurrentBuffer()
-{
-    if (m_current) {
-        m_current->releaseBuffer();
-    }
-}
-
 DrmPlane::Transformations DrmPlane::outputTransformToPlaneTransform(OutputTransform transform)
 {
     // note that drm transformations are counter clockwise
