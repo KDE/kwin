@@ -14,7 +14,7 @@ class GLFramebuffer;
 class ColorPickerLayer : public OutputLayer
 {
 public:
-    explicit ColorPickerLayer(BackendOutput *output, GLFramebuffer *buffer);
+    explicit ColorPickerLayer(BackendOutput *output, GraphicsBuffer *buffer);
 
     FormatModifierMap supportedDrmFormats() const override;
     void releaseBuffers() override;
@@ -23,7 +23,7 @@ public:
     bool endFrame(const Region &damagedRegion, FileDescriptor &&sync, OutputFrame *frame) override;
 
 private:
-    GLFramebuffer *const m_buffer;
+    GraphicsBuffer *const m_buffer;
 };
 
 }

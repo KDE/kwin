@@ -13,18 +13,17 @@
 #include "compositor.h"
 #include "core/output.h"
 #include "core/pixelgrid.h"
+#include "core/renderbackend.h"
 #include "core/renderdevice.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effect.h"
 #include "effect/effecthandler.h"
-#include "opengl/eglbackend.h"
-#include "opengl/glplatform.h"
-#include "opengl/glutils.h"
 #include "scene/item.h"
 #include "scene/itemrenderer.h"
 #include "scene/windowitem.h"
 #include "scene/workspacescene.h"
+#include "swapchain.h"
 #include "window.h"
 #include "workspace.h"
 
@@ -96,17 +95,20 @@ QColor ColorPickerEffect::pick()
             });
 
             const auto device = Compositor::self()->primaryDevice();
-            const auto context = device->eglContext();
-            if (!context || !context->makeCurrent()) {
+            const GraphicsBufferOptions options{
+                .size = QSize(1, 1),
+                .format = DRM_FORMAT_ARGB8888,
+                .modifiers = Compositor::self()->backend()->supportedFormats()[DRM_FORMAT_ARGB8888],
+                .software = false,
+                .scanout = false,
+                .render = true,
+            };
+            const auto swapchain = Swapchain::create(device->allocator(), options);
+            if (!swapchain) {
                 return;
             }
-
-            const auto offscreenTexture = GLTexture::allocate(GL_RGB8, QSize(1, 1));
-            if (!offscreenTexture) {
-                return;
-            }
-            const auto target = std::make_unique<GLFramebuffer>(offscreenTexture.get());
-            if (!target->valid()) {
+            const auto slot = swapchain->acquire();
+            if (!slot) {
                 return;
             }
 
@@ -115,7 +117,7 @@ QColor ColorPickerEffect::pick()
                 return;
             }
 
-            ColorPickerLayer layer(screen->backendOutput(), target.get());
+            ColorPickerLayer layer(screen->backendOutput(), slot->buffer());
             if (!layer.preparePresentationTest()) {
                 return;
             }
@@ -131,15 +133,14 @@ QColor ColorPickerEffect::pick()
             sceneView.prePaint();
             FileDescriptor sync = sceneView.paint(*beginInfo, QPoint(), pixelDamage, nullptr);
             sceneView.postPaint();
-            if (!layer.endFrame(pixelDamage, std::move(sync), nullptr)) {
+            if (!layer.endFrame(pixelDamage, FileDescriptor{}, nullptr)) {
                 return;
             }
 
-            GLFramebuffer::pushFramebuffer(target.get());
-            QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBA8888);
-            context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
-            GLFramebuffer::popFramebuffer();
-
+            QImage snapshot(QSize(1, 1), QImage::Format_ARGB32_Premultiplied);
+            if (!device->download(slot->buffer(), std::move(sync), snapshot)) {
+                return;
+            }
             QDBusConnection::sessionBus().send(m_replyMessage.createReply(snapshot.pixelColor(0, 0)));
         }
     });
