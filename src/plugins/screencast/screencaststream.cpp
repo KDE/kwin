@@ -664,8 +664,7 @@ void ScreenCastStream::record(std::chrono::nanoseconds timestamp, Contents conte
                                                                                             SPA_META_SyncTimeline,
                                                                                             sizeof(spa_meta_sync_timeline)));
                 FileDescriptor syncFileFd = dmabuf->synctimeline->exportSyncFile(synctmeta->release_point);
-                EGLNativeFence fence = EGLNativeFence::importFence(m_source->renderDevice()->eglDisplay(), std::move(syncFileFd));
-                if (fence.waitSync() != EGL_TRUE) {
+                if (!EGLNativeFence::importFence(m_source->renderDevice()->eglDisplay(), std::move(syncFileFd))) {
                     qCWarning(KWIN_SCREENCAST) << objectName() << "Failed to wait on a fence, recording may be corrupted";
                 }
             }
