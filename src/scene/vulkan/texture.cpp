@@ -85,7 +85,7 @@ BufferTextureVulkan::BufferTextureVulkan(VulkanDevice *device)
 
 bool BufferTextureVulkan::attach(GraphicsBuffer *buffer)
 {
-    if (buffer->dmabufAttributes()) {
+    if (buffer->dmabufAttributes() || buffer->udmabufAttributes()) {
         return loadDmabufTexture(buffer);
     } else if (buffer->shmAttributes()) {
         return loadShmTexture(buffer);
@@ -101,7 +101,7 @@ void BufferTextureVulkan::attach(GraphicsBuffer *buffer, const FileDescriptor &s
                                  const std::shared_ptr<SyncReleasePoint> &releasePoint, const std::shared_ptr<ColorDescription> &color)
 {
     // FIXME don't ignore all the other inputs!
-    if (buffer->dmabufAttributes()) {
+    if (buffer->dmabufAttributes() || buffer->udmabufAttributes()) {
         updateDmabufTexture(buffer);
     } else if (buffer->shmAttributes()) {
         updateShmTexture(buffer, region);
@@ -172,7 +172,7 @@ bool BufferTextureVulkan::loadDmabufTexture(GraphicsBuffer *buffer)
     m_texture = std::move(tex);
     m_bufferType = BufferType::DmaBuf;
     m_size = buffer->size();
-    const auto info = FormatInfo::get(buffer->dmabufAttributes()->format);
+    const auto info = FormatInfo::get(buffer->format());
     m_isFloatingPoint = info && info->floatingPoint;
     return true;
 }

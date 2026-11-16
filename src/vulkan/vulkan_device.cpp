@@ -68,14 +68,14 @@ void VulkanDevice::getQueues()
 
 std::shared_ptr<VulkanTexture> VulkanDevice::importBuffer(GraphicsBuffer *buffer, VkImageUsageFlags usage)
 {
-    if (!buffer->dmabufAttributes()) {
+    if (!buffer->dmabufAttributes() && !buffer->udmabufAttributes()) {
         return nullptr;
     }
     auto it = m_importedTextures.find(buffer);
     if (it != m_importedTextures.end()) {
         return it.value();
     }
-    std::shared_ptr<VulkanTexture> ret = importDmabuf(buffer->dmabufAttributes(), usage);
+    std::shared_ptr<VulkanTexture> ret = importDmabuf(buffer->dmabufAttributes() ? buffer->dmabufAttributes() : buffer->udmabufAttributes(), usage);
     m_importedTextures[buffer] = ret;
     connect(buffer, &QObject::destroyed, this, [this, buffer]() {
         m_importedTextures.remove(buffer);
