@@ -4,7 +4,7 @@
 #
 # Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2009, 2010, 2012, 2016, 2017, 2018, 2021, 2022.
 # André Marcelo Alvarenga <alvarenga@kde.org>, 2009, 2010, 2011, 2012, 2014, 2015, 2019.
-# Marcus Gama <marcus.gama@gmail.com>, 2012.
+# Marcus Gama <marcus.gama@kde.org>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
