@@ -896,16 +896,6 @@ GLPlatform::GLPlatform(QByteArrayView openglVersionString, QByteArrayView glslVe
     // Driver/GPU specific features
     // ====================================================
     if (isRadeon()) {
-        if (m_chipClass < R300) {
-            // fallback to NoCompositing for R100 and R200
-            m_recommendedCompositor = NoCompositing;
-        } else if (m_chipClass < R600) {
-            // NoCompositing due to NPOT limitations not supported by KWin's shaders
-            m_recommendedCompositor = NoCompositing;
-        } else {
-            m_recommendedCompositor = OpenGLCompositing;
-        }
-
         if (driver() == Driver_R600G || (driver() == Driver_R600C && renderer.contains("DRI2"))) {
             m_looseBinding = true;
         }
@@ -916,41 +906,11 @@ GLPlatform::GLPlatform(QByteArrayView openglVersionString, QByteArrayView glslVe
             m_looseBinding = true;
             m_preferBufferSubData = true;
         }
-
-        if (m_chipClass < NV40) {
-            m_recommendedCompositor = NoCompositing;
-        } else {
-            m_recommendedCompositor = OpenGLCompositing;
-        }
     }
 
     if (isIntel()) {
         // see https://bugs.freedesktop.org/show_bug.cgi?id=80349#c1
         m_looseBinding = false;
-
-        if (m_chipClass < I915) {
-            m_recommendedCompositor = NoCompositing;
-        } else {
-            m_recommendedCompositor = OpenGLCompositing;
-        }
-    }
-
-    if (isPanfrost()) {
-        m_recommendedCompositor = OpenGLCompositing;
-    }
-
-    if (isLima()) {
-        m_recommendedCompositor = OpenGLCompositing;
-    }
-
-    if (isVideoCore4()) {
-        // OpenGL works, but is much slower than QPainter
-        m_recommendedCompositor = QPainterCompositing;
-    }
-
-    if (isVideoCore3D()) {
-        // OpenGL works, but is much slower than QPainter
-        m_recommendedCompositor = QPainterCompositing;
     }
 
     if (isMesaDriver()) {
@@ -960,33 +920,16 @@ GLPlatform::GLPlatform(QByteArrayView openglVersionString, QByteArrayView glslVe
         m_looseBinding = true;
     }
 
-    if (m_driver == Driver_Qualcomm) {
-        if (m_chipClass == Adreno1XX) {
-            m_recommendedCompositor = NoCompositing;
-        } else {
-            // all other drivers support at least GLES 2
-            m_recommendedCompositor = OpenGLCompositing;
-        }
-    }
-
-    if (m_chipClass == UnknownChipClass && m_driver == Driver_Unknown) {
-        // we don't know the hardware. Let's be optimistic and assume OpenGL compatible hardware
-        m_recommendedCompositor = OpenGLCompositing;
-    }
-
     if (isVirtualBox()) {
         m_virtualMachine = true;
-        m_recommendedCompositor = OpenGLCompositing;
     }
 
     if (isVMware()) {
         m_virtualMachine = true;
-        m_recommendedCompositor = OpenGLCompositing;
     }
 
     if (m_driver == Driver_Virgl) {
         m_virtualMachine = true;
-        m_recommendedCompositor = OpenGLCompositing;
     }
 }
 
@@ -1116,11 +1059,6 @@ bool GLPlatform::isLooseBinding() const
 bool GLPlatform::isVirtualMachine() const
 {
     return m_virtualMachine;
-}
-
-CompositingType GLPlatform::recommendedCompositor() const
-{
-    return m_recommendedCompositor;
 }
 
 bool GLPlatform::preferBufferSubData() const

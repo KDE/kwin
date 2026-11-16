@@ -31,7 +31,6 @@
 
 // Qt
 #include <QDBusConnection>
-#include <QOpenGLContext>
 
 namespace KWin
 {
@@ -238,19 +237,7 @@ CompositorDBusInterface::CompositorDBusInterface(Compositor *parent)
 
 QString CompositorDBusInterface::compositingType() const
 {
-    switch (m_compositor->backend()->compositingType()) {
-    case OpenGLCompositing:
-        if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES) {
-            return QStringLiteral("gles");
-        } else {
-            return QStringLiteral("gl2");
-        }
-    case QPainterCompositing:
-        return QStringLiteral("qpainter");
-    case NoCompositing:
-    default:
-        return QStringLiteral("none");
-    }
+    return QStringLiteral("gles");
 }
 
 bool CompositorDBusInterface::isActive() const

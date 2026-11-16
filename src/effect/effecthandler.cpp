@@ -111,14 +111,10 @@ static void unregisterSupportProperty(xcb_atom_t atom)
 EffectsHandler::EffectsHandler(Compositor *compositor, WorkspaceScene *scene)
     : keyboard_grab_effect(nullptr)
     , fullscreen_effect(nullptr)
-    , compositing_type(compositor->backend()->compositingType())
     , m_compositor(compositor)
     , m_scene(scene)
     , m_effectLoader(new EffectLoader(this))
 {
-    if (compositing_type == NoCompositing) {
-        return;
-    }
     KWin::effects = this;
 
     qRegisterMetaType<QList<KWin::EffectWindow *>>();
@@ -296,14 +292,9 @@ xcb_connection_t *EffectsHandler::xcbConnection() const
 }
 #endif
 
-CompositingType EffectsHandler::compositingType() const
-{
-    return compositing_type;
-}
-
 bool EffectsHandler::isOpenGLCompositing() const
 {
-    return compositing_type & OpenGLCompositing;
+    return openglContext();
 }
 
 EglContext *EffectsHandler::openglContext() const

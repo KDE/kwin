@@ -176,7 +176,6 @@ class KWIN_EXPORT Options : public QObject
      * timeout before non-responding application will be killed after attempt to close.
      */
     Q_PROPERTY(int killPingTimeout READ killPingTimeout WRITE setKillPingTimeout NOTIFY killPingTimeoutChanged)
-    Q_PROPERTY(int compositingMode READ compositingMode WRITE setCompositingMode NOTIFY compositingModeChanged)
     /**
      * 0 = no, 1 = yes when transformed,
      * 2 = try trilinear when transformed; else 1,
@@ -651,15 +650,6 @@ public:
      */
     double animationTimeFactor() const;
 
-    CompositingType compositingMode() const
-    {
-        return m_compositingMode;
-    }
-    void setCompositingMode(CompositingType mode)
-    {
-        m_compositingMode = mode;
-    }
-
     bool allowTearing() const;
     bool interactiveWindowMoveEnabled() const;
     bool overlayVirtualKeyboardOnWindows() const;
@@ -724,7 +714,6 @@ public:
     void setElectricBorderCornerRatio(float electricBorderCornerRatio);
     void setBorderlessMaximizedWindows(bool borderlessMaximizedWindows);
     void setKillPingTimeout(int killPingTimeout);
-    void setCompositingMode(int compositingMode);
     void setAllowTearing(bool allow);
     void setInteractiveWindowMoveEnabled(bool set);
     void setOverlayVirtualKeyboardOnWindows(bool overlay);
@@ -809,10 +798,6 @@ public:
     static uint defaultKeyCmdAllModKey()
     {
         return Qt::Key_Alt;
-    }
-    static CompositingType defaultCompositingMode()
-    {
-        return OpenGLCompositing;
     }
     static int defaultXwaylandMaxCrashCount()
     {
@@ -902,7 +887,6 @@ Q_SIGNALS:
     void electricBorderAllScreenCornerChanged();
     void borderlessMaximizedWindowsChanged();
     void killPingTimeoutChanged();
-    void compositingModeChanged();
     void animationSpeedChanged();
     void configChanged();
     void allowTearingChanged();
@@ -944,7 +928,6 @@ private:
     QStringList m_xwaylandEisNoPromptApps;
     QStringList m_xwaylandEisDenyApps;
 
-    CompositingType m_compositingMode;
     WindowOperation OpTitlebarDblClick;
     WindowOperation opMaxButtonRightClick = defaultOperationMaxButtonRightClick();
     WindowOperation opMaxButtonMiddleClick = defaultOperationMaxButtonMiddleClick();

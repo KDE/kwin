@@ -55,11 +55,6 @@ bool EglBackend::init()
     return true;
 }
 
-CompositingType EglBackend::compositingType() const
-{
-    return OpenGLCompositing;
-}
-
 void EglBackend::cleanup()
 {
     m_context.reset();

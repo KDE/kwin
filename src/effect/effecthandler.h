@@ -148,7 +148,6 @@ class KWIN_EXPORT EffectsHandler : public QObject
      * Whether window decorations use the alpha channel.
      */
     Q_PROPERTY(bool decorationsHaveAlpha READ decorationsHaveAlpha)
-    Q_PROPERTY(CompositingType compositingType READ compositingType CONSTANT)
     Q_PROPERTY(QPointF cursorPos READ cursorPos)
     Q_PROPERTY(QSize virtualScreenSize READ virtualScreenSize NOTIFY virtualScreenSizeChanged)
     Q_PROPERTY(KWin::Rect virtualScreenGeometry READ virtualScreenGeometry NOTIFY virtualScreenGeometryChanged)
@@ -466,7 +465,6 @@ public:
     Q_SCRIPTABLE void addRepaint(const Region &logicalRegion);
     Q_SCRIPTABLE void addRepaint(int x, int y, int w, int h);
 
-    CompositingType compositingType() const;
     /**
      * @brief Whether the Compositor is OpenGL based (either GL 1 or 2).
      *
@@ -1094,7 +1092,6 @@ protected:
     QHash<long, int> registered_atoms;
 #endif
     QList<EffectPair> loaded_effects;
-    CompositingType compositing_type;
     EffectsList m_activeEffects;
     EffectsIterator m_currentDrawWindowIterator;
     EffectsIterator m_currentPaintWindowIterator;

@@ -320,11 +320,6 @@ std::unique_ptr<InputBackend> DrmBackend::createInputBackend()
     return std::make_unique<LibinputBackend>(m_session);
 }
 
-QList<CompositingType> DrmBackend::supportedCompositors() const
-{
-    return QList<CompositingType>{OpenGLCompositing};
-}
-
 QString DrmBackend::supportInformation() const
 {
     QString supportInfo;

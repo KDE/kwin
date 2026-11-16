@@ -37,7 +37,6 @@ public:
     explicit EglBackend(RenderDevice *device);
 
     bool init();
-    CompositingType compositingType() const override final;
 
     EglContext *openglContext() const;
     std::shared_ptr<EglContext> openglContextRef() const;

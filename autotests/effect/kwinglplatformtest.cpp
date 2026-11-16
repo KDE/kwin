@@ -206,7 +206,6 @@ void GLPlatformTest::testDetect()
     QCOMPARE(gl.glShadingLanguageVersionString(), glslVersion);
 
     QCOMPARE(gl.isLooseBinding(), settingsGroup.readEntry("LooseBinding", false));
-    QCOMPARE(gl.recommendedCompositor(), CompositingType(settingsGroup.readEntry("Compositor", int(NoCompositing))));
     QCOMPARE(gl.preferBufferSubData(), settingsGroup.readEntry("PreferBufferSubData", false));
 }
 

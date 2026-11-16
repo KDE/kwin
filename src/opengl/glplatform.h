@@ -276,12 +276,6 @@ public:
     bool isLooseBinding() const;
 
     /**
-     * @returns The CompositingType recommended by the driver.
-     * @since 4.10
-     */
-    CompositingType recommendedCompositor() const;
-
-    /**
      * Returns true if glMapBufferRange() is likely to perform worse than glBufferSubData()
      * when updating an unused range of a buffer object, and false otherwise.
      *
@@ -323,7 +317,6 @@ private:
     QByteArrayView m_vendorString;
     Driver m_driver = Driver_Unknown;
     ChipClass m_chipClass = UnknownChipClass;
-    CompositingType m_recommendedCompositor = OpenGLCompositing;
     Version m_openglVersion;
     Version m_glslVersion;
     Version m_mesaVersion;

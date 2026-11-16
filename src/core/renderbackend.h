@@ -142,8 +142,6 @@ class KWIN_EXPORT RenderBackend : public QObject
     Q_OBJECT
 
 public:
-    virtual CompositingType compositingType() const = 0;
-
     virtual RenderDevice *renderDevice() const;
 
     virtual bool testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice);

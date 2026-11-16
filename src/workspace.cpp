@@ -2043,9 +2043,7 @@ QString Workspace::supportInformation() const
     support.append(QStringLiteral("===========\n"));
     if (effects) {
         support.append(QStringLiteral("Compositing is active\n"));
-        switch (effects->compositingType()) {
-        case OpenGLCompositing: {
-            const auto context = Compositor::self()->primaryDevice()->eglContext();
+        if (const auto context = Compositor::self()->primaryDevice()->eglContext()) {
             GLPlatform *platform = context->glPlatform();
             support.append(QStringLiteral("Compositing Type: OpenGL ES\n"));
             support.append(QStringLiteral("OpenGL vendor string: ") + QString::fromUtf8(platform->glVendorString()) + QStringLiteral("\n"));
@@ -2094,12 +2092,6 @@ QString Workspace::supportInformation() const
             }
 
             support.append(QStringLiteral("OpenGL 2 Shaders are used\n"));
-            break;
-        }
-        case QPainterCompositing:
-        case NoCompositing:
-        default:
-            support.append(QStringLiteral("Something is really broken, no supported compositing type is used"));
         }
         support.append(QStringLiteral("\nLoaded Effects:\n"));
         support.append(QStringLiteral("---------------\n"));

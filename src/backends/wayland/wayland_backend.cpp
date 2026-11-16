@@ -619,15 +619,6 @@ void WaylandBackend::togglePointerLock()
     m_pointerLockRequested = !m_pointerLockRequested;
 }
 
-QList<CompositingType> WaylandBackend::supportedCompositors() const
-{
-    QList<CompositingType> ret;
-    if (m_display->linuxDmabuf() && m_renderDevice) {
-        ret.append(OpenGLCompositing);
-    }
-    return ret;
-}
-
 QList<BackendOutput *> WaylandBackend::outputs() const
 {
     return m_outputs | std::ranges::to<QList<BackendOutput *>>();

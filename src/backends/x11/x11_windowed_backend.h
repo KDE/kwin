@@ -112,7 +112,6 @@ public:
 
     bool initialize() override;
     std::unique_ptr<InputBackend> createInputBackend() override;
-    QList<CompositingType> supportedCompositors() const override;
     QList<BackendOutput *> outputs() const override;
 
     X11WindowedInputDevice *pointerDevice() const;

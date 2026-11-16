@@ -87,14 +87,12 @@ void SlidingPopupsTest::testWithOtherEffectWayland_data()
     QTest::newRow("scale, slide") << QStringList{QStringLiteral("scale"), QStringLiteral("slidingpopups")};
     QTest::newRow("slide, scale") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("scale")};
 
-    if (effects->compositingType() & KWin::OpenGLCompositing) {
-        QTest::newRow("glide, slide") << QStringList{QStringLiteral("glide"), QStringLiteral("slidingpopups")};
-        QTest::newRow("slide, glide") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("glide")};
-        QTest::newRow("wobblywindows, slide") << QStringList{QStringLiteral("wobblywindows"), QStringLiteral("slidingpopups")};
-        QTest::newRow("slide, wobblywindows") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("wobblywindows")};
-        QTest::newRow("fallapart, slide") << QStringList{QStringLiteral("fallapart"), QStringLiteral("slidingpopups")};
-        QTest::newRow("slide, fallapart") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("fallapart")};
-    }
+    QTest::newRow("glide, slide") << QStringList{QStringLiteral("glide"), QStringLiteral("slidingpopups")};
+    QTest::newRow("slide, glide") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("glide")};
+    QTest::newRow("wobblywindows, slide") << QStringList{QStringLiteral("wobblywindows"), QStringLiteral("slidingpopups")};
+    QTest::newRow("slide, wobblywindows") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("wobblywindows")};
+    QTest::newRow("fallapart, slide") << QStringList{QStringLiteral("fallapart"), QStringLiteral("slidingpopups")};
+    QTest::newRow("slide, fallapart") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("fallapart")};
 }
 
 void SlidingPopupsTest::testWithOtherEffectWayland()

@@ -44,13 +44,6 @@ public:
     virtual bool initialize() = 0;
     virtual std::unique_ptr<InputBackend> createInputBackend();
 
-    /**
-     * The CompositingTypes supported by the Platform.
-     * The first item should be the most preferred one.
-     * @since 5.11
-     */
-    virtual QList<CompositingType> supportedCompositors() const = 0;
-
     virtual QList<BackendOutput *> outputs() const = 0;
     BackendOutput *findOutput(const QString &name) const;
 

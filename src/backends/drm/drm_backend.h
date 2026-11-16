@@ -45,8 +45,6 @@ public:
     QList<BackendOutput *> outputs() const override;
     Session *session() const override;
 
-    QList<CompositingType> supportedCompositors() const override;
-
     QString supportInformation() const override;
     BackendOutput *createVirtualOutput(const QString &name, const QString &description, const QSize &size, double scale) override;
     void removeVirtualOutput(BackendOutput *output) override;

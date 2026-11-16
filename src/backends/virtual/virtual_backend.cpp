@@ -36,11 +36,6 @@ bool VirtualBackend::initialize()
     return true;
 }
 
-QList<CompositingType> VirtualBackend::supportedCompositors() const
-{
-    return {OpenGLCompositing};
-}
-
 BackendOutput *VirtualBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, qreal scale)
 {
     return addOutput(OutputInfo{

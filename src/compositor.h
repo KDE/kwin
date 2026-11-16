@@ -121,8 +121,6 @@ protected:
                                                                                           const std::shared_ptr<OutputFrame> &frame,
                                                                                           std::unordered_set<OutputLayer *> &toUpdate);
 
-    CompositingType m_selectedCompositor = NoCompositing;
-
     State m_state = State::Off;
     std::unique_ptr<RenderBackend> m_backend;
     std::unordered_map<RenderLoop *, std::unique_ptr<SceneView>> m_primaryViews;

@@ -754,15 +754,6 @@ int X11WindowedBackend::driMinorVersion() const
     return m_driMinorVersion;
 }
 
-QList<CompositingType> X11WindowedBackend::supportedCompositors() const
-{
-    QList<CompositingType> ret;
-    if (m_renderDevice) {
-        ret.append(OpenGLCompositing);
-    }
-    return ret;
-}
-
 QList<BackendOutput *> X11WindowedBackend::outputs() const
 {
     return m_outputs | std::ranges::to<QList<BackendOutput *>>();

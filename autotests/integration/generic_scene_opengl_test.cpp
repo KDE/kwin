@@ -8,7 +8,7 @@
 */
 #include "generic_scene_opengl_test.h"
 #include "compositor.h"
-#include "core/renderbackend.h"
+#include "core/renderdevice.h"
 #include "effect/effectloader.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -57,7 +57,7 @@ void GenericSceneOpenGLTest::initTestCase()
     });
     QVERIFY(Compositor::self());
 
-    QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);
+    QVERIFY(Compositor::self()->primaryDevice()->eglContext());
 }
 
 #include "moc_generic_scene_opengl_test.cpp"

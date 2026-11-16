@@ -58,7 +58,6 @@ Options::Options(QObject *parent)
     , m_xwaylandEisNoPrompt(Options::defaultXwaylandEisNoPrompt())
     , m_xwaylandEisNoPromptApps(Options::defaultXwaylandEisNotPromptApps())
     , m_xwaylandEisDenyApps(Options::defaultXwaylandEisDenyApps())
-    , m_compositingMode(Options::defaultCompositingMode())
     , OpTitlebarDblClick(Options::defaultOperationTitlebarDblClick())
     , CmdActiveTitlebar1(Options::defaultCommandActiveTitlebar1())
     , CmdActiveTitlebar2(Options::defaultCommandActiveTitlebar2())
@@ -582,15 +581,6 @@ void Options::setKillPingTimeout(int killPingTimeout)
     Q_EMIT killPingTimeoutChanged();
 }
 
-void Options::setCompositingMode(int compositingMode)
-{
-    if (m_compositingMode == static_cast<CompositingType>(compositingMode)) {
-        return;
-    }
-    m_compositingMode = static_cast<CompositingType>(compositingMode);
-    Q_EMIT compositingModeChanged();
-}
-
 bool Options::allowTearing() const
 {
     return m_allowTearing;
@@ -710,33 +700,6 @@ void Options::loadConfig()
     setCommandAll1(mouseCommand(m_settings->commandAll1(), false));
     setCommandAll2(mouseCommand(m_settings->commandAll2(), false));
     setCommandAll3(mouseCommand(m_settings->commandAll3(), false));
-
-    // Compositing
-    const KConfigGroup config(m_settings->config(), QStringLiteral("Compositing"));
-    CompositingType compositingMode = NoCompositing;
-    QString compositingBackend = config.readEntry("Backend", "OpenGL");
-    if (compositingBackend == "QPainter") {
-        compositingMode = QPainterCompositing;
-    } else {
-        compositingMode = OpenGLCompositing;
-    }
-
-    if (const char *c = getenv("KWIN_COMPOSE")) {
-        switch (c[0]) {
-        case 'O':
-            qCDebug(KWIN_CORE) << "Compositing forced to OpenGL mode by environment variable";
-            compositingMode = OpenGLCompositing;
-            break;
-        case 'Q':
-            qCDebug(KWIN_CORE) << "Compositing forced to QPainter mode by environment variable";
-            compositingMode = QPainterCompositing;
-            break;
-        default:
-            qCDebug(KWIN_CORE) << "Unknown KWIN_COMPOSE mode set, ignoring";
-            break;
-        }
-    }
-    setCompositingMode(compositingMode);
 }
 
 void Options::syncFromKcfgc()

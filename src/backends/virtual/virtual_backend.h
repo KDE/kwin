@@ -52,8 +52,6 @@ public:
 
     QList<BackendOutput *> outputs() const override;
 
-    QList<CompositingType> supportedCompositors() const override;
-
     void createOutputLayers(RenderBackend *renderBackend) override;
     void destroyOutputLayers() override;
 

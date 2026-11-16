@@ -270,21 +270,6 @@ bool Compositor::attemptOpenGLCompositing()
 
     KCrash::setGPUData(collectCrashInformation(backend.get()));
 
-    const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
-    if (!forceEnv.isEmpty()) {
-        if (qstrcmp(forceEnv, "O2") == 0 || qstrcmp(forceEnv, "O2ES") == 0) {
-            qCDebug(KWIN_CORE) << "OpenGL 2 compositing enforced by environment variable";
-        } else {
-            // OpenGL 2 disabled by environment variable
-            return false;
-        }
-    } else {
-        if (backend->openglContext()->glPlatform()->recommendedCompositor() < OpenGLCompositing) {
-            qCDebug(KWIN_CORE) << "Driver does not recommend OpenGL compositing";
-            return false;
-        }
-    }
-
     // We only support the OpenGL 2+ shader API, not GL_ARB_shader_objects
     if (!backend->openglContext()->hasVersion(Version(2, 0))) {
         qCDebug(KWIN_CORE) << "OpenGL 2.0 is not supported";
@@ -292,57 +277,18 @@ bool Compositor::attemptOpenGLCompositing()
     }
     m_backend = std::move(backend);
     qCDebug(KWIN_CORE) << "OpenGL compositing has been successfully initialized";
+
+    QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
     return true;
 }
 
 void Compositor::createRenderer()
 {
-    // If compositing has been restarted, try to use the last used compositing type.
-    const QList<CompositingType> availableCompositors = kwinApp()->outputBackend()->supportedCompositors();
-    QList<CompositingType> candidateCompositors;
-
-    if (m_selectedCompositor != NoCompositing) {
-        candidateCompositors.append(m_selectedCompositor);
-    } else {
-        candidateCompositors = availableCompositors;
-
-        const auto userConfigIt = std::find(candidateCompositors.begin(), candidateCompositors.end(), options->compositingMode());
-        if (userConfigIt != candidateCompositors.end()) {
-            candidateCompositors.erase(userConfigIt);
-            candidateCompositors.prepend(options->compositingMode());
-        } else {
-            qCWarning(KWIN_CORE) << "Configured compositor not supported by Platform. Falling back to defaults";
-        }
-    }
-
-    for (auto type : std::as_const(candidateCompositors)) {
-        bool stop = false;
-        switch (type) {
-        case OpenGLCompositing:
-            qCDebug(KWIN_CORE) << "Attempting to load the OpenGL scene";
-            stop = attemptOpenGLCompositing();
-            break;
-        case QPainterCompositing:
-            stop = true;
-            break;
-        case NoCompositing:
-            qCDebug(KWIN_CORE) << "Starting without compositing...";
-            stop = true;
-            break;
-        }
-
-        if (stop) {
-            break;
-        } else if (qEnvironmentVariableIsSet("KWIN_COMPOSE")) {
-            qCFatal(KWIN_CORE) << "Could not fulfill the requested compositing mode in KWIN_COMPOSE:" << type << ". Exiting.";
-        }
-    }
-
-    if (m_backend) {
-        kwinApp()->outputBackend()->createOutputLayers(m_backend.get());
-    } else {
+    if (!attemptOpenGLCompositing()) {
         qCFatal(KWIN_CORE) << "Couldn't create a renderer. We are going to quit KWin now as it is broken";
     }
+
+    kwinApp()->outputBackend()->createOutputLayers(m_backend.get());
 }
 
 void Compositor::start()
@@ -359,21 +305,6 @@ void Compositor::start()
 
     if (!m_backend) {
         createRenderer();
-    }
-
-    if (m_selectedCompositor == NoCompositing) {
-        m_selectedCompositor = m_backend->compositingType();
-
-        switch (m_selectedCompositor) {
-        case NoCompositing:
-            break;
-        case OpenGLCompositing:
-            QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
-            break;
-        case QPainterCompositing:
-            QQuickWindow::setGraphicsApi(QSGRendererInterface::Software);
-            break;
-        }
     }
 
     const auto &devices = GpuManager::self()->renderDevices();
@@ -412,10 +343,8 @@ void Compositor::stop()
     disconnect(workspace(), &Workspace::outputsChanged, this, &Compositor::handleOutputsChanged);
     disconnect(kwinApp()->outputBackend(), &OutputBackend::outputRemoved, this, &Compositor::removeOutput);
 
-    if (m_backend->compositingType() == OpenGLCompositing) {
-        // some layers need a context current for destruction
-        (void)static_cast<EglBackend *>(m_backend.get())->openglContext()->makeCurrent();
-    }
+    // some layers need a context current for destruction
+    (void)static_cast<EglBackend *>(m_backend.get())->openglContext()->makeCurrent();
 
     const auto loops = m_primaryViews | std::views::transform([](const auto &pair) {
         return pair.first;

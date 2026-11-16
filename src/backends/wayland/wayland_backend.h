@@ -229,8 +229,6 @@ public:
     bool supportsPointerLock();
     void togglePointerLock();
 
-    QList<CompositingType> supportedCompositors() const override;
-
     WaylandOutput *findOutput(KWayland::Client::Surface *nativeSurface) const;
     KWayland::Client::SubSurface *findSubSurface(KWayland::Client::Surface *nativeSurface) const;
     QList<BackendOutput *> outputs() const override;

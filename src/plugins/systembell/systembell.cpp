@@ -258,7 +258,7 @@ void SystemBellEffect::reconfigure(ReconfigureFlags flags)
 
 bool SystemBellEffect::supported()
 {
-    return effects->compositingType() == OpenGLCompositing;
+    return effects->isOpenGLCompositing();
 }
 
 void SystemBellEffect::flash(EffectWindow *window)

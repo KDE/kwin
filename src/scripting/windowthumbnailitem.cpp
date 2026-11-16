@@ -35,7 +35,7 @@ namespace KWin
 static bool useGlThumbnails()
 {
     static bool qtQuickIsSoftware = QStringList({QStringLiteral("software"), QStringLiteral("softwarecontext")}).contains(QQuickWindow::sceneGraphBackend());
-    return Compositor::self()->backend() && Compositor::self()->backend()->compositingType() == OpenGLCompositing && !qtQuickIsSoftware;
+    return !qtQuickIsSoftware;
 }
 
 WindowThumbnailSource::WindowThumbnailSource(RenderDevice *device, QQuickWindow *view, Window *handle)
