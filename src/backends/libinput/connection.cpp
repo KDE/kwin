@@ -137,7 +137,16 @@ void Connection::setup()
     // NOTE We need the initial device list for the startup of other parts of KWin,
     // like tablet mode and output configuration
     QMetaObject::invokeMethod(this, &Connection::doSetup, Qt::BlockingQueuedConnection);
-    processEvents();
+    QMutexLocker locker(&m_mutex);
+    for (auto it = m_eventQueue.begin(); it != m_eventQueue.end();) {
+        auto &event = *it;
+        if (event->type() == LIBINPUT_EVENT_DEVICE_ADDED) {
+            addDevice(event->nativeDevice());
+            it = m_eventQueue.erase(it);
+        } else {
+            it++;
+        }
+    }
 }
 
 void Connection::doSetup()
@@ -269,22 +278,7 @@ void Connection::processEvents()
         m_eventQueue.pop_front();
         switch (event->type()) {
         case LIBINPUT_EVENT_DEVICE_ADDED: {
-            auto device = new Device(event->nativeDevice());
-            device->moveToThread(thread());
-            m_devices << device;
-
-            applyDeviceConfig(device);
-            applyScreenToDevice(device);
-
-            connect(device, &Device::outputNameChanged, this, [this, device] {
-                // If the output name changes from something to empty we need to
-                // re-run the assignment heuristic so that an output is assigned
-                if (device->outputName().isEmpty()) {
-                    applyScreenToDevice(device);
-                }
-            });
-
-            Q_EMIT deviceAdded(device);
+            addDevice(event->nativeDevice());
             break;
         }
         case LIBINPUT_EVENT_DEVICE_REMOVED: {
@@ -616,6 +610,26 @@ void Connection::processEvents()
             break;
         }
     }
+}
+
+void Connection::addDevice(libinput_device *nativeDevice)
+{
+    auto device = new Device(nativeDevice);
+    device->moveToThread(thread());
+    m_devices << device;
+
+    applyDeviceConfig(device);
+    applyScreenToDevice(device);
+
+    connect(device, &Device::outputNameChanged, this, [this, device] {
+        // If the output name changes from something to empty we need to
+        // re-run the assignment heuristic so that an output is assigned
+        if (device->outputName().isEmpty()) {
+            applyScreenToDevice(device);
+        }
+    });
+
+    Q_EMIT deviceAdded(device);
 }
 
 void Connection::updateScreens()
