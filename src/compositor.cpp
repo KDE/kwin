@@ -338,7 +338,9 @@ void Compositor::createRenderer()
         }
     }
 
-    if (!m_backend) {
+    if (m_backend) {
+        kwinApp()->outputBackend()->createOutputLayers(m_backend.get());
+    } else {
         qCFatal(KWIN_CORE) << "Couldn't create a renderer. We are going to quit KWin now as it is broken";
     }
 }
@@ -428,6 +430,7 @@ void Compositor::stop()
         disconnect(device.get(), &RenderDevice::resetDetected, this, &Compositor::gpuResetDetected);
     }
 
+    kwinApp()->outputBackend()->destroyOutputLayers();
     m_backend.reset();
 
     m_state = State::Off;

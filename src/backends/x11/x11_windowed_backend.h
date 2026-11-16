@@ -122,6 +122,9 @@ public:
 
     RenderDevice *renderDevice() const;
 
+    void createOutputLayers(RenderBackend *renderBackend) override;
+    void destroyOutputLayers() override;
+
 private:
     void createOutputs();
     void grabKeyboard(xcb_timestamp_t time);
@@ -138,6 +141,7 @@ private:
     void initRender();
     X11WindowedOutput *findOutput(xcb_window_t window) const;
     void destroyOutputs();
+    void createLayers(X11WindowedOutput *output);
 
     X11WindowedBackendOptions m_options;
     xcb_connection_t *m_connection = nullptr;

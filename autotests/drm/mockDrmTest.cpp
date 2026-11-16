@@ -173,6 +173,7 @@ void DrmTest::testOutputDetection()
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
     QVERIFY(gpu->updateOutputs());
     const auto renderBackend = backend->createOpenGLBackend(gpu->renderDevice());
+    backend->createOutputLayers(renderBackend.get());
 
     // 3 outputs should be detected, one of them non-desktop
     const auto outputs = gpu->drmOutputs();
@@ -219,6 +220,7 @@ void DrmTest::testZeroModesHandling()
     const auto backend = std::make_unique<DrmBackend>(session.get());
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
     const auto renderBackend = backend->createOpenGLBackend(gpu->renderDevice());
+    backend->createOutputLayers(renderBackend.get());
 
     // connector with zero modes should be ignored
     conn->modes.clear();
@@ -275,6 +277,7 @@ void DrmTest::testModeFiltering()
     auto gpu = std::make_unique<DrmGpu>(
         backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
     const auto renderBackend = backend->createOpenGLBackend(gpu->renderDevice());
+    backend->createOutputLayers(renderBackend.get());
 
     QVERIFY(gpu->updateOutputs());
     QCOMPARE(gpu->drmOutputs().size(), 1);
@@ -432,6 +435,7 @@ void DrmTest::testModeGeneration()
     const auto backend = std::make_unique<DrmBackend>(session.get());
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
     const auto renderBackend = backend->createOpenGLBackend(gpu->renderDevice());
+    backend->createOutputLayers(renderBackend.get());
 
     QFETCH(Mode, nativeMode);
     QFETCH(QList<Mode>, expectedModes);
@@ -481,6 +485,7 @@ void DrmTest::testConnectorLifetime()
     const auto backend = std::make_unique<DrmBackend>(session.get());
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
     const auto renderBackend = backend->createOpenGLBackend(gpu->renderDevice());
+    backend->createOutputLayers(renderBackend.get());
 
     QVERIFY(gpu->updateOutputs());
     QCOMPARE(gpu->drmOutputs().size(), 1);
@@ -520,6 +525,7 @@ void DrmTest::testModeset()
     const auto backend = std::make_unique<DrmBackend>(session.get());
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
     const auto renderBackend = backend->createOpenGLBackend(gpu->renderDevice());
+    backend->createOutputLayers(renderBackend.get());
 
     QVERIFY(gpu->updateOutputs());
     QCOMPARE(gpu->drmOutputs().size(), 1);
@@ -548,6 +554,7 @@ void DrmTest::testVrrChange()
     const auto backend = std::make_unique<DrmBackend>(session.get());
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
     const auto renderBackend = backend->createOpenGLBackend(gpu->renderDevice());
+    backend->createOutputLayers(renderBackend.get());
 
     QVERIFY(gpu->updateOutputs());
     const auto output = gpu->drmOutputs().front();
@@ -572,6 +579,7 @@ void DrmTest::testLeaseDisconnectReconnect()
     const auto backend = std::make_unique<DrmBackend>(session.get());
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
     const auto renderBackend = backend->createOpenGLBackend(gpu->renderDevice());
+    backend->createOutputLayers(renderBackend.get());
 
     QVERIFY(gpu->updateOutputs());
     const auto outputs = gpu->drmOutputs();
@@ -644,6 +652,7 @@ void DrmTest::testLeaseAvailableWhenClientExitsBeforeQueuedReoffer()
     const auto backend = std::make_unique<DrmBackend>(session.get());
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
     const auto renderBackend = backend->createOpenGLBackend(gpu->renderDevice());
+    backend->createOutputLayers(renderBackend.get());
 
     QVERIFY(gpu->updateOutputs());
     const auto outputs = gpu->drmOutputs();

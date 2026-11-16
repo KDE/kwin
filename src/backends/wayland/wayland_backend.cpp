@@ -504,6 +504,10 @@ WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &si
         removeOutput(waylandOutput);
     });
 
+    if (m_renderBackend) {
+        createLayers(waylandOutput);
+    }
+
     Q_EMIT outputAdded(waylandOutput);
 
     return waylandOutput;
@@ -515,6 +519,21 @@ void WaylandBackend::removeOutput(WaylandOutput *output)
     Q_EMIT outputRemoved(output);
     Q_EMIT outputsQueried();
     output->unref();
+}
+
+void WaylandBackend::createLayers(WaylandOutput *output)
+{
+    std::vector<std::unique_ptr<OutputLayer>> layers;
+    auto primary = std::make_unique<WaylandLayer>(output, m_renderBackend, m_display.get(), OutputLayerType::Primary, 0);
+    primary->subSurface()->placeAbove(output->surface());
+    layers.push_back(std::move(primary));
+    for (int z = 1; z < 5; z++) {
+        auto layer = std::make_unique<WaylandLayer>(output, m_renderBackend, m_display.get(), OutputLayerType::GenericLayer, z);
+        layer->subSurface()->placeAbove(static_cast<WaylandLayer *>(layers.back().get())->surface());
+        layers.push_back(std::move(layer));
+    }
+    layers.push_back(std::make_unique<WaylandCursorLayer>(output, m_renderBackend, m_display.get()));
+    output->setOutputLayers(std::move(layers));
 }
 
 void WaylandBackend::destroyOutputs()
@@ -701,6 +720,22 @@ DrmDevice *WaylandBackend::drmDevice() const
 RenderDevice *WaylandBackend::renderDevice() const
 {
     return m_renderDevice;
+}
+
+void WaylandBackend::createOutputLayers(RenderBackend *renderBackend)
+{
+    m_renderBackend = renderBackend;
+    for (WaylandOutput *output : m_outputs) {
+        createLayers(output);
+    }
+}
+
+void WaylandBackend::destroyOutputLayers()
+{
+    m_renderBackend = nullptr;
+    for (WaylandOutput *output : m_outputs) {
+        output->setOutputLayers({});
+    }
 }
 
 WaylandBuffer::WaylandBuffer(wl_buffer *handle, GraphicsBuffer *graphicsBuffer)

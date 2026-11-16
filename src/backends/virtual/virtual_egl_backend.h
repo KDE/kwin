@@ -34,8 +34,6 @@ public:
     VirtualBackend *backend() const;
 
 private:
-    void addOutput(BackendOutput *output);
-
     VirtualBackend *m_backend;
 };
 

@@ -253,6 +253,9 @@ public:
     }
     RenderDevice *renderDevice() const;
 
+    void createOutputLayers(RenderBackend *renderBackend) override;
+    void destroyOutputLayers() override;
+
 Q_SIGNALS:
     void pointerLockChanged(bool locked);
 
@@ -261,6 +264,7 @@ private:
     void destroyOutputs();
     WaylandOutput *createOutput(const QString &name, const QSize &size, qreal scale, bool fullscreen, BackendOutput::Capabilities capabilities);
     void removeOutput(WaylandOutput *output);
+    void createLayers(WaylandOutput *output);
 
     WaylandBackendOptions m_options;
     std::unique_ptr<WaylandDisplay> m_display;

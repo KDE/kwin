@@ -29,7 +29,6 @@ class Cursor;
 class DrmAuthHandle;
 class DrmGpu;
 class DrmVirtualOutput;
-class DrmRenderBackend;
 
 class KWIN_EXPORT DrmBackend : public OutputBackend
 {
@@ -56,11 +55,8 @@ public:
     DrmGpu *findGpu(dev_t deviceId) const;
     size_t gpuCount() const;
 
-    void setRenderBackend(DrmRenderBackend *backend);
-    DrmRenderBackend *renderBackend() const;
-
-    void createLayers();
-    void releaseBuffers();
+    void createOutputLayers(RenderBackend *renderBackend) override;
+    void destroyOutputLayers() override;
     void updateOutputs(DrmGpu *onlyUpdate = nullptr);
 
     const std::vector<std::unique_ptr<DrmGpu>> &gpus() const;
@@ -89,7 +85,6 @@ private:
     QHash<QString, std::shared_ptr<DrmAuthHandle>> m_gpuAuthHandles;
     std::vector<std::unique_ptr<DrmGpu>> m_gpus;
     QList<DrmVirtualOutput *> m_virtualOutputs;
-    DrmRenderBackend *m_renderBackend = nullptr;
 };
 
 }

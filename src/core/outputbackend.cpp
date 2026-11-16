@@ -91,6 +91,11 @@ Session *OutputBackend::session() const
     return nullptr;
 }
 
+RenderBackend *OutputBackend::renderBackend() const
+{
+    return m_renderBackend;
+}
+
 } // namespace KWin
 
 #include "moc_outputbackend.cpp"

@@ -20,7 +20,6 @@
 #include "drm_logging.h"
 #include "drm_output.h"
 #include "drm_pipeline.h"
-#include "drm_render_backend.h"
 #include "drm_virtual_output.h"
 #include "utils/envvar.h"
 #include "utils/udev.h"
@@ -324,7 +323,7 @@ std::unique_ptr<InputBackend> DrmBackend::createInputBackend()
 
 std::unique_ptr<EglBackend> DrmBackend::createOpenGLBackend(RenderDevice *device)
 {
-    return std::make_unique<EglGbmBackend>(this, device);
+    return std::make_unique<EglGbmBackend>(device);
 }
 
 QList<CompositingType> DrmBackend::supportedCompositors() const
@@ -349,6 +348,9 @@ BackendOutput *DrmBackend::createVirtualOutput(const QString &name, const QStrin
 {
     const auto ret = new DrmVirtualOutput(this, name, description, size, scale, BackendOutput::Capability::CustomModes);
     m_virtualOutputs.push_back(ret);
+    if (m_renderBackend) {
+        ret->recreateLayer();
+    }
     addOutput(ret);
     Q_EMIT outputsQueried();
     return ret;
@@ -431,18 +433,9 @@ std::expected<void, OutputError> DrmBackend::applyOutputChanges(const OutputConf
     return {};
 }
 
-void DrmBackend::setRenderBackend(DrmRenderBackend *backend)
+void DrmBackend::createOutputLayers(RenderBackend *renderBackend)
 {
-    m_renderBackend = backend;
-}
-
-DrmRenderBackend *DrmBackend::renderBackend() const
-{
-    return m_renderBackend;
-}
-
-void DrmBackend::createLayers()
-{
+    m_renderBackend = renderBackend;
     for (const auto &gpu : m_gpus) {
         gpu->createLayers();
     }
@@ -451,10 +444,11 @@ void DrmBackend::createLayers()
     }
 }
 
-void DrmBackend::releaseBuffers()
+void DrmBackend::destroyOutputLayers()
 {
+    m_renderBackend = nullptr;
     for (const auto &gpu : m_gpus) {
-        gpu->releaseBuffers();
+        gpu->destroyLayers();
     }
     for (DrmVirtualOutput *output : std::as_const(m_virtualOutputs)) {
         output->releaseLayer();

@@ -26,18 +26,14 @@
 namespace KWin
 {
 
-EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend, RenderDevice *device)
+EglGbmBackend::EglGbmBackend(RenderDevice *device)
     : EglBackend(device)
-    , m_backend(drmBackend)
 {
-    drmBackend->setRenderBackend(this);
 }
 
 EglGbmBackend::~EglGbmBackend()
 {
-    m_backend->releaseBuffers();
     cleanup();
-    m_backend->setRenderBackend(nullptr);
 }
 
 bool EglGbmBackend::init()
@@ -52,7 +48,6 @@ bool EglGbmBackend::init()
         return false;
     }
     initWayland();
-    m_backend->createLayers();
     return true;
 }
 
@@ -63,21 +58,6 @@ QList<OutputLayer *> EglGbmBackend::compatibleOutputLayers(BackendOutput *output
     } else {
         return static_cast<DrmOutput *>(output)->pipeline()->gpu()->compatibleOutputLayers(output);
     }
-}
-
-std::unique_ptr<DrmPipelineLayer> EglGbmBackend::createDrmPlaneLayer(DrmPlane *plane)
-{
-    return std::make_unique<DrmPipelineLayer>(this, plane);
-}
-
-std::unique_ptr<DrmPipelineLayer> EglGbmBackend::createDrmPlaneLayer(DrmGpu *gpu, DrmPlane::TypeIndex type)
-{
-    return std::make_unique<DrmPipelineLayer>(this, gpu, type);
-}
-
-std::unique_ptr<VirtualDrmLayer> EglGbmBackend::createLayer(DrmVirtualOutput *output)
-{
-    return std::make_unique<VirtualDrmLayer>(this, output);
 }
 
 } // namespace KWin

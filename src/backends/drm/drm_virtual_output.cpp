@@ -14,7 +14,6 @@
 #include "drm_backend.h"
 #include "drm_gpu.h"
 #include "drm_layer.h"
-#include "drm_render_backend.h"
 #include "drm_virtual_layer.h"
 #include "utils/vsyncsource.h"
 
@@ -79,7 +78,7 @@ VirtualDrmLayer *DrmVirtualOutput::primaryLayer() const
 
 void DrmVirtualOutput::recreateLayer()
 {
-    m_layer = m_backend->renderBackend()->createLayer(this);
+    m_layer = std::make_unique<VirtualDrmLayer>(m_backend->renderBackend(), this);
 }
 
 void DrmVirtualOutput::releaseLayer()

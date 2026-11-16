@@ -55,7 +55,6 @@ public:
 
 private:
     bool initRenderingContext();
-    void createOutputLayers(BackendOutput *output);
 
     WaylandBackend *m_backend;
 };

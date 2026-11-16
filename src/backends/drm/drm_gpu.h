@@ -115,8 +115,8 @@ public:
 
     std::shared_ptr<DrmFramebuffer> importBuffer(GraphicsBuffer *buffer, FileDescriptor &&explicitFence);
     void forgetBuffer(GraphicsBuffer *buf);
-    void releaseBuffers();
     void createLayers();
+    void destroyLayers();
     QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) const;
 
     FileDescriptor createNonMasterFd() const;

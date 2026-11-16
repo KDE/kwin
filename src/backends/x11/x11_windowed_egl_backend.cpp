@@ -25,10 +25,6 @@ X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend, Render
 
 X11WindowedEglBackend::~X11WindowedEglBackend()
 {
-    const auto outputs = m_backend->outputs();
-    for (BackendOutput *output : outputs) {
-        static_cast<X11WindowedOutput *>(output)->setOutputLayers({});
-    }
     cleanup();
 }
 
@@ -51,15 +47,6 @@ bool X11WindowedEglBackend::init()
     }
 
     initWayland();
-
-    const auto &outputs = m_backend->outputs();
-    for (const auto &output : outputs) {
-        X11WindowedOutput *x11Output = static_cast<X11WindowedOutput *>(output);
-        std::vector<std::unique_ptr<OutputLayer>> layers;
-        layers.push_back(std::make_unique<X11WindowedPrimaryLayer>(backend(), this, x11Output));
-        layers.push_back(std::make_unique<X11WindowedCursorLayer>(backend(), this, x11Output));
-        x11Output->setOutputLayers(std::move(layers));
-    }
     return true;
 }
 

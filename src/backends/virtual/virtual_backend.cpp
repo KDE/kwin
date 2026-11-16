@@ -9,6 +9,7 @@
 #include "virtual_backend.h"
 
 #include "virtual_egl_backend.h"
+#include "virtual_layer.h"
 #include "virtual_output.h"
 
 #include <fcntl.h>
@@ -72,6 +73,9 @@ VirtualOutput *VirtualBackend::createOutput(const OutputInfo &info)
 {
     VirtualOutput *output = new VirtualOutput(this, info.internal, info.physicalSizeInMM, info.panelOrientation, info.edid, info.edidIdentifierOverride, info.connectorName, info.mstPath, info.capabilities);
     output->init(info.size * info.scale, info.scale, info.modes);
+    if (m_renderBackend) {
+        output->setOutputLayer(std::make_unique<VirtualLayer>(output, m_renderBackend));
+    }
     m_outputs.append(output);
     Q_EMIT outputAdded(output);
     return output;
@@ -108,6 +112,22 @@ void VirtualBackend::setVirtualOutputs(const QList<OutputInfo> &infos)
     }
 
     Q_EMIT outputsQueried();
+}
+
+void VirtualBackend::createOutputLayers(RenderBackend *renderBackend)
+{
+    m_renderBackend = renderBackend;
+    for (VirtualOutput *output : m_outputs) {
+        output->setOutputLayer(std::make_unique<VirtualLayer>(output, renderBackend));
+    }
+}
+
+void VirtualBackend::destroyOutputLayers()
+{
+    m_renderBackend = nullptr;
+    for (VirtualOutput *output : m_outputs) {
+        output->setOutputLayer(nullptr);
+    }
 }
 
 } // namespace KWin
