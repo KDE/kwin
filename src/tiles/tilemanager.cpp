@@ -18,6 +18,7 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 
+#include <QJSEngine>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -58,6 +59,8 @@ TileManager::TileManager(LogicalOutput *parent)
     : QObject(parent)
     , m_output(parent)
 {
+    QJSEngine::setObjectOwnership(this, QJSEngine::CppOwnership);
+
     m_saveTimer = std::make_unique<QTimer>(this);
     m_saveTimer->setSingleShot(true);
     m_saveTimer->setInterval(2000);
