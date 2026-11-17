@@ -1698,11 +1698,11 @@ void XdgToplevelWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *s
 
 void XdgToplevelWindow::setFullScreen(bool set)
 {
-    if (!isFullScreenable()) {
+    set = rules()->checkFullScreen(set);
+    if (set && !isFullScreenable()) {
         return;
     }
 
-    set = rules()->checkFullScreen(set);
     if (m_isRequestedFullScreen == set) {
         return;
     }
