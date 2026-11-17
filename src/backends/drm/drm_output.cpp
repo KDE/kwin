@@ -369,10 +369,10 @@ bool DrmOutput::recommendsOverlayUse() const
 {
     // Two drivers are known to have issues with overlays:
     // - amdgpu on some hardware has really slow atomic tests when overlays are involved
-    // - Nvidia has more severe issues
+    // - Nvidia has more severe issues with drivers older than 615.78.08
     if (PROJECT_VERSION_PATCH >= 80) {
         // we can take some more risks in development versions.
-        return !m_gpu->drmDevice()->isNvidia();
+        return !m_gpu->drmDevice()->isNvidia() || m_gpu->nvidiaDriverVersion() >= Version(615, 78, 8);
     } else {
         // release version: play it really safe for now, only enable on select drivers
         return m_gpu->drmDevice()->isI915() || m_gpu->drmDevice()->isIntelXE();
