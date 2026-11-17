@@ -125,6 +125,10 @@ void Window::setGeometry(const QRect &rect)
     QWindowSystemInterface::handleGeometryChange(window(), rect);
 }
 
+void Window::setMask(const QRegion &)
+{
+}
+
 WId Window::winId() const
 {
     return m_windowId;
