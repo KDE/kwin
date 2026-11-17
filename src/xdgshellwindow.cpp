@@ -721,30 +721,16 @@ void XdgToplevelWindow::doSetMaximized()
 
 void XdgToplevelWindow::doSetQuickTileMode()
 {
-    const Qt::Edges anchors = requestedTile() ? requestedTile()->anchors() : Qt::Edges();
-
-    if (anchors & Qt::LeftEdge) {
-        m_nextStates |= XdgToplevelInterface::State::TiledLeft;
+    if (requestedTile()) {
+        m_nextStates |= XdgToplevelInterface::State::TiledLeft
+            | XdgToplevelInterface::State::TiledRight
+            | XdgToplevelInterface::State::TiledTop
+            | XdgToplevelInterface::State::TiledBottom;
     } else {
-        m_nextStates &= ~XdgToplevelInterface::State::TiledLeft;
-    }
-
-    if (anchors & Qt::RightEdge) {
-        m_nextStates |= XdgToplevelInterface::State::TiledRight;
-    } else {
-        m_nextStates &= ~XdgToplevelInterface::State::TiledRight;
-    }
-
-    if (anchors & Qt::TopEdge) {
-        m_nextStates |= XdgToplevelInterface::State::TiledTop;
-    } else {
-        m_nextStates &= ~XdgToplevelInterface::State::TiledTop;
-    }
-
-    if (anchors & Qt::BottomEdge) {
-        m_nextStates |= XdgToplevelInterface::State::TiledBottom;
-    } else {
-        m_nextStates &= ~XdgToplevelInterface::State::TiledBottom;
+        m_nextStates &= ~XdgToplevelInterface::State::TiledLeft
+            & ~XdgToplevelInterface::State::TiledRight
+            & ~XdgToplevelInterface::State::TiledTop
+            & ~XdgToplevelInterface::State::TiledBottom;
     }
 
     scheduleConfigure();

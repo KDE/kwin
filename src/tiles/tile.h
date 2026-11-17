@@ -184,7 +184,7 @@ public:
     /*!
      * Which edges of the tile touches an edge of the screen
      */
-    Qt::Edges anchors() const;
+    Qt::Edges constrainedEdges() const;
 
     bool isRoot() const;
     bool isLayout() const;

@@ -299,7 +299,7 @@ bool DecoratedWindowImpl::isMaximizedHorizontally() const
 Qt::Edges DecoratedWindowImpl::adjacentScreenEdges() const
 {
     if (Tile *tile = m_window->requestedTile()) {
-        return tile->anchors();
+        return tile->constrainedEdges();
     }
     return Qt::Edges();
 }
