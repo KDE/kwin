@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-13 01:01+0000\n"
+"POT-Creation-Date: 2026-11-17 01:09+0000\n"
 "PO-Revision-Date: 2026-11-14 16:15+0100\n"
 "Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -33,29 +33,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "toptan@kde.org.yu,caslav.ilic@gmx.net,nemhirsl@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:486
+#: backends/wayland/wayland_output.cpp:491
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Pritisnite desni Control da otpustite pokazivač"
 
-#: backends/wayland/wayland_output.cpp:488
+#: backends/wayland/wayland_output.cpp:493
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Pritisnite desni Control da uhvatite pokazivač"
 
-#: backends/wayland/wayland_output.cpp:492
+#: backends/wayland/wayland_output.cpp:497
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE‑ov Wayland slagač %1"
 
-#: backends/wayland/wayland_output.cpp:495
+#: backends/wayland/wayland_output.cpp:500
 #, kde-format
 msgid "- Output disabled"
 msgstr "- izlaz isključen"
 
-#: backends/wayland/wayland_output.cpp:497
+#: backends/wayland/wayland_output.cpp:502
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- izlaz prigušen"

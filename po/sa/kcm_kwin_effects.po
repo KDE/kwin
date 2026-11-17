@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-15 00:47+0000\n"
+"POT-Creation-Date: 2026-11-16 14:48+0000\n"
 "PO-Revision-Date: 2024-12-13 19:10+0530\n"
 "Last-Translator: Kali <EMAIL@ADDRESS>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -38,12 +38,12 @@ msgctxt "@action:button get new KWin effects"
 msgid "Get New…"
 msgstr "नवीनं प्राप्तुम्..."
 
-#: ui/main.qml:54
+#: ui/main.qml:47
 #, kde-format
 msgid "Configure Filter"
 msgstr "फ़िल्टर विन्यस्तं कुर्वन्तु"
 
-#: ui/main.qml:66
+#: ui/main.qml:68
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "असमर्थितप्रभावान् बहिष्कृत्य"

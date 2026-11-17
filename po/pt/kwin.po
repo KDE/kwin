@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-13 01:01+0000\n"
+"POT-Creation-Date: 2026-11-17 01:09+0000\n"
 "PO-Revision-Date: 2026-02-11 00:16+0000\n"
 "Last-Translator: César A. P. Cláudio <cesarapclaudio@gmail.com>\n"
 "Language-Team: pt\n"
@@ -45,29 +45,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "cesarapclaudio@gmail.com, morais@kde.org"
 
-#: backends/wayland/wayland_output.cpp:486
+#: backends/wayland/wayland_output.cpp:491
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Prima a tecla Control direita para libertar o ponteiro do rato"
 
-#: backends/wayland/wayland_output.cpp:488
+#: backends/wayland/wayland_output.cpp:493
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Prima a tecla Control direita para capturar o ponteiro do rato"
 
-#: backends/wayland/wayland_output.cpp:492
+#: backends/wayland/wayland_output.cpp:497
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "Compositor Wayland do KDE %1"
 
-#: backends/wayland/wayland_output.cpp:495
+#: backends/wayland/wayland_output.cpp:500
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Saída desativada"
 
-#: backends/wayland/wayland_output.cpp:497
+#: backends/wayland/wayland_output.cpp:502
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Saída com brilho reduzido"

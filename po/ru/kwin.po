@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-13 01:01+0000\n"
+"POT-Creation-Date: 2026-11-17 01:09+0000\n"
 "PO-Revision-Date: 2026-11-13 07:45+0200\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -50,29 +50,29 @@ msgid "Your emails"
 msgstr ""
 "asm@som.kiev.ua,mokhin@bog.msu.ru,kekcuHa@gmail.com,gammaray@basealt.ru"
 
-#: backends/wayland/wayland_output.cpp:486
+#: backends/wayland/wayland_output.cpp:491
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Чтобы освободить указатель, нажмите правую клавишу Ctrl"
 
-#: backends/wayland/wayland_output.cpp:488
+#: backends/wayland/wayland_output.cpp:493
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Чтобы захватить указатель, нажмите правую клавишу Ctrl"
 
-#: backends/wayland/wayland_output.cpp:492
+#: backends/wayland/wayland_output.cpp:497
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "Графический сервер Wayland для KDE %1"
 
-#: backends/wayland/wayland_output.cpp:495
+#: backends/wayland/wayland_output.cpp:500
 #, kde-format
 msgid "- Output disabled"
 msgstr "- логический выход отключён"
 
-#: backends/wayland/wayland_output.cpp:497
+#: backends/wayland/wayland_output.cpp:502
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- логический выход затемнён"

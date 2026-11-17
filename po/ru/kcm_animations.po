@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-19 00:48+0000\n"
+"POT-Creation-Date: 2026-11-16 18:18+0000\n"
 "PO-Revision-Date: 2025-05-20 13:46+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -42,10 +42,16 @@ msgid "Instant"
 msgstr "Мгновенно"
 
 #: ui/main.qml:95
-#, kde-kuit-format
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info:tooltip"
+#| msgid ""
+#| "Some applications do not support this setting: In particular, GTK "
+#| "applications cannot change animation duration, but will still disable "
+#| "animations when <interface>animation speed</interface> is "
+#| "<interface>Instant</interface>."
 msgctxt "@info:tooltip"
 msgid ""
-"Some applications do not support this setting: In particular, GTK "
+"Some applications do not support this setting: in particular, GTK "
 "applications cannot change animation duration, but will still disable "
 "animations when <interface>animation speed</interface> is "
 "<interface>Instant</interface>."
@@ -57,61 +63,79 @@ msgstr ""
 "interface>."
 
 #: ui/main.qml:102
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@title:group"
+#| msgid "Desktop animations"
 msgctxt "@title:group"
-msgid "Desktop animations"
+msgid "Window animations"
 msgstr "Анимация рабочего стола"
 
 #: ui/main.qml:104
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@label:listbox"
+#| msgid "Window open/close:"
 msgctxt "@label:listbox"
-msgid "Window open/close:"
+msgid "Open/close:"
 msgstr "Открытие и закрытие окон:"
 
 #: ui/main.qml:105
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@label:listbox"
+#| msgid "Window maximize:"
 msgctxt "@label:listbox"
-msgid "Window maximize:"
+msgid "Maximize:"
 msgstr "Распахивание окон:"
 
 #: ui/main.qml:106
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@label:listbox"
+#| msgid "Window minimize:"
 msgctxt "@label:listbox"
-msgid "Window minimize:"
+msgid "Minimize:"
 msgstr "Сворачивание окон:"
 
 #: ui/main.qml:107
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@label:listbox"
+#| msgid "Window full screen:"
 msgctxt "@label:listbox"
-msgid "Window full screen:"
+msgid "Full screen:"
 msgstr "Переход в полноэкранный режим:"
 
-#: ui/main.qml:108
-#, kde-format
-msgctxt "@label:listbox"
-msgid "Peek at desktop:"
-msgstr "Взглянуть на рабочий стол:"
-
-#: ui/main.qml:109
-#, kde-format
-msgctxt "@label:listbox"
-msgid "Virtual desktop switching:"
-msgstr "Переключение виртуальных рабочих столов:"
-
-#: ui/main.qml:128 ui/main.qml:172
+#: ui/main.qml:126 ui/main.qml:165 ui/main.qml:211
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
 msgstr "Настроить…"
 
-#: ui/main.qml:155
+#: ui/main.qml:143
+#, kde-format
+msgctxt "@title:group"
+msgid "Desktop animations"
+msgstr "Анимация рабочего стола"
+
+#: ui/main.qml:145
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Peek at desktop:"
+msgstr "Взглянуть на рабочий стол:"
+
+#: ui/main.qml:146
+#, fuzzy, kde-format
+#| msgctxt "@label:listbox"
+#| msgid "Virtual desktop switching:"
+msgctxt "@label:listbox"
+msgid "Switch virtual desktops:"
+msgstr "Переключение виртуальных рабочих столов:"
+
+#: ui/main.qml:194
 #, kde-format
 msgctxt ""
 "@option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'"
 msgid "%1:"
 msgstr "%1:"
 
-#: ui/main.qml:193
+#: ui/main.qml:232
 #, kde-format
 msgctxt "@title:group translate as short as possible"
 msgid "More effects settings:"

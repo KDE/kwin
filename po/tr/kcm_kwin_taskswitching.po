@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-10 14:33+0000\n"
-"PO-Revision-Date: 2026-11-11 20:53+0300\n"
+"PO-Revision-Date: 2026-11-16 19:13+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -244,7 +244,7 @@ msgstr "Yeni Al…"
 #, kde-format
 msgctxt "@action:button"
 msgid "Show Preview"
-msgstr "Önizlemeyi Göster"
+msgstr "Ön İzlemeyi Göster"
 
 #: ui/TabBoxSettings.qml:82
 #, kde-format

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-19 00:48+0000\n"
+"POT-Creation-Date: 2026-11-16 18:18+0000\n"
 "PO-Revision-Date: 2026-10-02 20:50+0200\n"
 "Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -41,10 +41,16 @@ msgid "Instant"
 msgstr "trenutno"
 
 #: ui/main.qml:95
-#, kde-kuit-format
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info:tooltip"
+#| msgid ""
+#| "Some applications do not support this setting: In particular, GTK "
+#| "applications cannot change animation duration, but will still disable "
+#| "animations when <interface>animation speed</interface> is "
+#| "<interface>Instant</interface>."
 msgctxt "@info:tooltip"
 msgid ""
-"Some applications do not support this setting: In particular, GTK "
+"Some applications do not support this setting: in particular, GTK "
 "applications cannot change animation duration, but will still disable "
 "animations when <interface>animation speed</interface> is "
 "<interface>Instant</interface>."
@@ -54,61 +60,79 @@ msgstr ""
 "<interface>brzina animacije</interface> <interface>trenutno</interface>."
 
 #: ui/main.qml:102
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@title:group"
+#| msgid "Desktop animations"
 msgctxt "@title:group"
-msgid "Desktop animations"
+msgid "Window animations"
 msgstr "Animacije površi"
 
 #: ui/main.qml:104
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@label:listbox"
+#| msgid "Window open/close:"
 msgctxt "@label:listbox"
-msgid "Window open/close:"
+msgid "Open/close:"
 msgstr "Otvaranje i zatvaranje prozora:"
 
 #: ui/main.qml:105
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@label:listbox"
+#| msgid "Window maximize:"
 msgctxt "@label:listbox"
-msgid "Window maximize:"
+msgid "Maximize:"
 msgstr "Maksimizovanje prozora:"
 
 #: ui/main.qml:106
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@label:listbox"
+#| msgid "Window minimize:"
 msgctxt "@label:listbox"
-msgid "Window minimize:"
+msgid "Minimize:"
 msgstr "Minimizovanje prozora:"
 
 #: ui/main.qml:107
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@label:listbox"
+#| msgid "Window full screen:"
 msgctxt "@label:listbox"
-msgid "Window full screen:"
+msgid "Full screen:"
 msgstr "Prozor preko celog ekrana:"
 
-#: ui/main.qml:108
-#, kde-format
-msgctxt "@label:listbox"
-msgid "Peek at desktop:"
-msgstr "Zavirivanje u površ:"
-
-#: ui/main.qml:109
-#, kde-format
-msgctxt "@label:listbox"
-msgid "Virtual desktop switching:"
-msgstr "Smena virtuelnih površi:"
-
-#: ui/main.qml:128 ui/main.qml:172
+#: ui/main.qml:126 ui/main.qml:165 ui/main.qml:211
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
 msgstr "Podesi…"
 
-#: ui/main.qml:155
+#: ui/main.qml:143
+#, kde-format
+msgctxt "@title:group"
+msgid "Desktop animations"
+msgstr "Animacije površi"
+
+#: ui/main.qml:145
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Peek at desktop:"
+msgstr "Zavirivanje u površ:"
+
+#: ui/main.qml:146
+#, fuzzy, kde-format
+#| msgctxt "@label:listbox"
+#| msgid "Virtual desktop switching:"
+msgctxt "@label:listbox"
+msgid "Switch virtual desktops:"
+msgstr "Smena virtuelnih površi:"
+
+#: ui/main.qml:194
 #, kde-format
 msgctxt ""
 "@option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'"
 msgid "%1:"
 msgstr "%1:"
 
-#: ui/main.qml:193
+#: ui/main.qml:232
 #, kde-format
 msgctxt "@title:group translate as short as possible"
 msgid "More effects settings:"

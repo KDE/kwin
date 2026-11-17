@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-08-19 00:48+0000\n"
+"POT-Creation-Date: 2026-11-16 18:18+0000\n"
 "PO-Revision-Date: 2026-03-11 16:30+0100\n"
 "Last-Translator: Alexander Becker <alex-at-kde-l10n-de@freenet.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -43,10 +43,16 @@ msgid "Instant"
 msgstr "Sofort"
 
 #: ui/main.qml:95
-#, kde-kuit-format
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info:tooltip"
+#| msgid ""
+#| "Some applications do not support this setting: In particular, GTK "
+#| "applications cannot change animation duration, but will still disable "
+#| "animations when <interface>animation speed</interface> is "
+#| "<interface>Instant</interface>."
 msgctxt "@info:tooltip"
 msgid ""
-"Some applications do not support this setting: In particular, GTK "
+"Some applications do not support this setting: in particular, GTK "
 "applications cannot change animation duration, but will still disable "
 "animations when <interface>animation speed</interface> is "
 "<interface>Instant</interface>."
@@ -57,61 +63,79 @@ msgstr ""
 "interface> auf <interface>Sofort</interface> eingestellt ist."
 
 #: ui/main.qml:102
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@title:group"
+#| msgid "Desktop animations"
 msgctxt "@title:group"
-msgid "Desktop animations"
+msgid "Window animations"
 msgstr "Arbeitsflächenanimationen"
 
 #: ui/main.qml:104
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@label:listbox"
+#| msgid "Window open/close:"
 msgctxt "@label:listbox"
-msgid "Window open/close:"
+msgid "Open/close:"
 msgstr "Fenster öffnen/schließen:"
 
 #: ui/main.qml:105
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@label:listbox"
+#| msgid "Window maximize:"
 msgctxt "@label:listbox"
-msgid "Window maximize:"
+msgid "Maximize:"
 msgstr "Fenster maximieren:"
 
 #: ui/main.qml:106
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@label:listbox"
+#| msgid "Window minimize:"
 msgctxt "@label:listbox"
-msgid "Window minimize:"
+msgid "Minimize:"
 msgstr "Fenster minimieren:"
 
 #: ui/main.qml:107
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@label:listbox"
+#| msgid "Window full screen:"
 msgctxt "@label:listbox"
-msgid "Window full screen:"
+msgid "Full screen:"
 msgstr "Fenster Vollbildmodus:"
 
-#: ui/main.qml:108
-#, kde-format
-msgctxt "@label:listbox"
-msgid "Peek at desktop:"
-msgstr "Blick auf die Arbeitsfläche:"
-
-#: ui/main.qml:109
-#, kde-format
-msgctxt "@label:listbox"
-msgid "Virtual desktop switching:"
-msgstr "Virtuelle Arbeitsfläche umschalten:"
-
-#: ui/main.qml:128 ui/main.qml:172
+#: ui/main.qml:126 ui/main.qml:165 ui/main.qml:211
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
 msgstr "Einrichten …"
 
-#: ui/main.qml:155
+#: ui/main.qml:143
+#, kde-format
+msgctxt "@title:group"
+msgid "Desktop animations"
+msgstr "Arbeitsflächenanimationen"
+
+#: ui/main.qml:145
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Peek at desktop:"
+msgstr "Blick auf die Arbeitsfläche:"
+
+#: ui/main.qml:146
+#, fuzzy, kde-format
+#| msgctxt "@label:listbox"
+#| msgid "Virtual desktop switching:"
+msgctxt "@label:listbox"
+msgid "Switch virtual desktops:"
+msgstr "Virtuelle Arbeitsfläche umschalten:"
+
+#: ui/main.qml:194
 #, kde-format
 msgctxt ""
 "@option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'"
 msgid "%1:"
 msgstr "%1:"
 
-#: ui/main.qml:193
+#: ui/main.qml:232
 #, kde-format
 msgctxt "@title:group translate as short as possible"
 msgid "More effects settings:"

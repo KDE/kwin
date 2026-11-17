@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-15 00:47+0000\n"
+"POT-Creation-Date: 2026-11-16 14:48+0000\n"
 "PO-Revision-Date: 2023-06-08 12:06+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -39,12 +39,12 @@ msgctxt "@action:button get new KWin effects"
 msgid "Get New…"
 msgstr "احصل على جديد…"
 
-#: ui/main.qml:54
+#: ui/main.qml:47
 #, kde-format
 msgid "Configure Filter"
 msgstr "مرشح الضبط"
 
-#: ui/main.qml:66
+#: ui/main.qml:68
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "استبعد التأثير غير المدعومة"

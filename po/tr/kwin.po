@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-13 01:01+0000\n"
-"PO-Revision-Date: 2026-11-15 19:46+0300\n"
+"POT-Creation-Date: 2026-11-17 01:09+0000\n"
+"PO-Revision-Date: 2026-11-16 18:49+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -37,29 +37,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "tulliana@gmail.com, volkangezer@gmail.com, emir_sari@icloud.com"
 
-#: backends/wayland/wayland_output.cpp:486
+#: backends/wayland/wayland_output.cpp:491
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "İşaretçiyi bırakmak için sağ kontrol düğmesine bas"
 
-#: backends/wayland/wayland_output.cpp:488
+#: backends/wayland/wayland_output.cpp:493
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "İşaretçiyi yakalamak için sağ kontrol düğmesine bas"
 
-#: backends/wayland/wayland_output.cpp:492
+#: backends/wayland/wayland_output.cpp:497
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland Bileşikleştiricisi %1"
 
-#: backends/wayland/wayland_output.cpp:495
+#: backends/wayland/wayland_output.cpp:500
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Çıkış devre dışı"
 
-#: backends/wayland/wayland_output.cpp:497
+#: backends/wayland/wayland_output.cpp:502
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Çıkış karartıldı"
@@ -2485,7 +2485,7 @@ msgstr "Gece Işığını Sürdür/Askıya Al"
 #: plugins/nightlight/nightlightmanager.cpp:461
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr "Renk Sıcaklığı Önizlemesi"
+msgstr "Renk Sıcaklığı Ön İzlemesi"
 
 #. i18n: ectx: label, entry (ActivatedUntil), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:21
