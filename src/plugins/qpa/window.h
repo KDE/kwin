@@ -33,6 +33,7 @@ public:
     QSurfaceFormat format() const override;
     void setVisible(bool visible) override;
     void setGeometry(const QRect &rect) override;
+    void setMask(const QRegion &region) override;
     WId winId() const override;
     qreal devicePixelRatio() const override;
     void requestActivateWindow() override;
