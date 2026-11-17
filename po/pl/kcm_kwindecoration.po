@@ -1,5 +1,5 @@
 # translation of kcmkwindecoration.po to Polish
-# Version: $Revision: 1752328 $
+# Version: $Revision$
 # translation of kcmkwindecoration.po to
 # SPDX-FileCopyrightText: 2012-2019, 2021-2026 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 # Norbert Popiołek <norbert@kde.com.pl>\n"

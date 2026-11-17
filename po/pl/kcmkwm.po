@@ -1,6 +1,6 @@
 # translation of kcmkwm.po to Polish
 # translation of kcmkwm.po to
-# Version: $Revision: 1741297 $
+# Version: $Revision$
 # SPDX-FileCopyrightText: 2011-2015, 2019, 2021-2022, 2024-2026 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 # Previous translations Piotr Roszatycki <dexter@debian.org>
 # Michał Rudolf <mrudolf@kdewebdev.org>, 2002.

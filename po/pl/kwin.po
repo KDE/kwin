@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1751934 $
+# Version: $Revision$
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011-2026 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
