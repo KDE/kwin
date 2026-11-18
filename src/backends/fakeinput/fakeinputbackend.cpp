@@ -388,6 +388,18 @@ FakeInputBackend::~FakeInputBackend()
     }
 }
 
+QList<InputDevice *> FakeInputBackend::devices() const
+{
+    QList<InputDevice *> devices;
+    devices.reserve(d->devices.size());
+
+    for (const auto &[resource, device] : d->devices) {
+        devices.append(device.get());
+    }
+
+    return devices;
+}
+
 void FakeInputBackend::initialize()
 {
     d->init(*d->display, s_version);

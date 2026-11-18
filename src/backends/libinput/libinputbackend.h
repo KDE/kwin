@@ -30,6 +30,8 @@ public:
     explicit LibinputBackend(Session *session, QObject *parent = nullptr);
     ~LibinputBackend() override;
 
+    QList<InputDevice *> devices() const override;
+
     void initialize() override;
     void updateScreens() override;
 

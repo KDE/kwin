@@ -38,6 +38,8 @@ class EisBackend : public KWin::InputBackend, public QDBusContext
 public:
     explicit EisBackend(QObject *parent = nullptr);
     ~EisBackend() override;
+
+    QList<InputDevice *> devices() const override;
     void initialize() override;
 
     void updateScreens() override;

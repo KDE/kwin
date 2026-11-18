@@ -110,6 +110,28 @@ EisContext::~EisContext()
     eis_unref(m_eisContext);
 }
 
+QList<InputDevice *> EisContext::devices() const
+{
+    QList<InputDevice *> devices;
+
+    for (const auto &client : m_clients) {
+        if (client->absoluteDevice) {
+            devices.append(client->absoluteDevice.get());
+        }
+        if (client->keyboard) {
+            devices.append(client->keyboard.get());
+        }
+        if (client->pointer) {
+            devices.append(client->pointer.get());
+        }
+        if (client->text) {
+            devices.append(client->text.get());
+        }
+    }
+
+    return devices;
+}
+
 void EisContext::updateScreens()
 {
     for (const auto &client : m_clients) {

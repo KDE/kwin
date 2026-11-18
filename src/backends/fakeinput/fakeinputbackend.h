@@ -26,6 +26,8 @@ public:
     explicit FakeInputBackend(Display *display);
     ~FakeInputBackend();
 
+    QList<InputDevice *> devices() const override;
+
     void initialize() override;
 
 private:

@@ -27,6 +27,8 @@ public:
     KSharedConfigPtr config() const;
     void setConfig(KSharedConfigPtr config);
 
+    virtual QList<InputDevice *> devices() const = 0;
+
     virtual void initialize()
     {
     }

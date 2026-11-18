@@ -44,6 +44,11 @@ LibinputBackend::~LibinputBackend()
     m_thread.wait();
 }
 
+QList<InputDevice *> LibinputBackend::devices() const
+{
+    return m_connection->devices() | std::ranges::to<QList<InputDevice *>>();
+}
+
 void LibinputBackend::initialize()
 {
     m_connection->setInputConfig(config());

@@ -3368,11 +3368,16 @@ void InputRedirection::updateAvailableInputDevices()
 
 void InputRedirection::addInputBackend(std::unique_ptr<InputBackend> &&inputBackend)
 {
-    connect(inputBackend.get(), &InputBackend::deviceAdded, this, &InputRedirection::addInputDevice);
-    connect(inputBackend.get(), &InputBackend::deviceRemoved, this, &InputRedirection::removeInputDevice);
-
     inputBackend->setConfig(kwinApp()->inputConfig());
     inputBackend->initialize();
+
+    const auto inputDevices = inputBackend->devices();
+    for (InputDevice *inputDevice : inputDevices) {
+        addInputDevice(inputDevice);
+    }
+
+    connect(inputBackend.get(), &InputBackend::deviceAdded, this, &InputRedirection::addInputDevice);
+    connect(inputBackend.get(), &InputBackend::deviceRemoved, this, &InputRedirection::removeInputDevice);
 
     m_inputBackends.push_back(std::move(inputBackend));
 }

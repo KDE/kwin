@@ -295,21 +295,30 @@ WaylandInputBackend::WaylandInputBackend(WaylandBackend *backend, QObject *paren
 {
 }
 
+QList<InputDevice *> WaylandInputBackend::devices() const
+{
+    WaylandSeat *seat = m_backend->seat();
+
+    QList<InputDevice *> devices;
+    if (seat->relativePointerDevice()) {
+        devices.append(seat->relativePointerDevice());
+    }
+    if (seat->pointerDevice()) {
+        devices.append(seat->pointerDevice());
+    }
+    if (seat->keyboardDevice()) {
+        devices.append(seat->keyboardDevice());
+    }
+    if (seat->touchDevice()) {
+        devices.append(seat->touchDevice());
+    }
+
+    return devices;
+}
+
 void WaylandInputBackend::initialize()
 {
     WaylandSeat *seat = m_backend->seat();
-    if (seat->relativePointerDevice()) {
-        Q_EMIT deviceAdded(seat->relativePointerDevice());
-    }
-    if (seat->pointerDevice()) {
-        Q_EMIT deviceAdded(seat->pointerDevice());
-    }
-    if (seat->keyboardDevice()) {
-        Q_EMIT deviceAdded(seat->keyboardDevice());
-    }
-    if (seat->touchDevice()) {
-        Q_EMIT deviceAdded(seat->touchDevice());
-    }
 
     connect(seat, &WaylandSeat::deviceAdded, this, &InputBackend::deviceAdded);
     connect(seat, &WaylandSeat::deviceRemoved, this, &InputBackend::deviceRemoved);

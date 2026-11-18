@@ -121,17 +121,23 @@ X11WindowedInputBackend::X11WindowedInputBackend(X11WindowedBackend *backend)
 {
 }
 
-void X11WindowedInputBackend::initialize()
+QList<InputDevice *> X11WindowedInputBackend::devices() const
 {
+    QList<InputDevice *> devices;
     if (m_backend->pointerDevice()) {
-        Q_EMIT deviceAdded(m_backend->pointerDevice());
+        devices.append(m_backend->pointerDevice());
     }
     if (m_backend->keyboardDevice()) {
-        Q_EMIT deviceAdded(m_backend->keyboardDevice());
+        devices.append(m_backend->keyboardDevice());
     }
     if (m_backend->touchDevice()) {
-        Q_EMIT deviceAdded(m_backend->touchDevice());
+        devices.append(m_backend->touchDevice());
     }
+    return devices;
+}
+
+void X11WindowedInputBackend::initialize()
+{
 }
 
 X11WindowedBackend::X11WindowedBackend(const X11WindowedBackendOptions &options)

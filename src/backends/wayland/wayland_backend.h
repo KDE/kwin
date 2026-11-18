@@ -109,6 +109,8 @@ class WaylandInputBackend : public InputBackend
 public:
     explicit WaylandInputBackend(WaylandBackend *backend, QObject *parent = nullptr);
 
+    QList<InputDevice *> devices() const override;
+
     void initialize() override;
 
 private:

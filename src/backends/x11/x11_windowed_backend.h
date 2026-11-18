@@ -73,6 +73,8 @@ class X11WindowedInputBackend : public InputBackend
 public:
     explicit X11WindowedInputBackend(X11WindowedBackend *backend);
 
+    QList<InputDevice *> devices() const override;
+
     void initialize() override;
 
 private:

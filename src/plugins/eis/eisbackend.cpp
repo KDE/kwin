@@ -74,6 +74,17 @@ EisBackend::~EisBackend()
 {
 }
 
+QList<InputDevice *> EisBackend::devices() const
+{
+    QList<InputDevice *> devices;
+
+    for (const auto &context : m_contexts) {
+        devices += context->devices();
+    }
+
+    return devices;
+}
+
 void EisBackend::initialize()
 {
     const QByteArray keyMap = input()->keyboard()->xkb()->keymapContents();
