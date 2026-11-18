@@ -575,7 +575,13 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_nextState->dimming = props->dimming.value_or(m_state.dimming);
     m_nextState->brightnessDevice = props->brightnessDevice.value_or(m_state.brightnessDevice);
     if (!m_nextState->highDynamicRange && m_nextState->brightnessDevice) {
-        m_nextState->currentBrightness = props->currentHardwareBrightness.has_value() ? props->currentHardwareBrightness : m_state.currentBrightness;
+        if (m_state.highDynamicRange) {
+            // HDR brightness is applied in software; the hardware must be
+            // updated even when the requested brightness has not changed.
+            m_nextState->currentBrightness.reset();
+        } else {
+            m_nextState->currentBrightness = props->currentHardwareBrightness.has_value() ? props->currentHardwareBrightness : m_state.currentBrightness;
+        }
     }
     m_nextState->uuid = props->uuid.value_or(m_state.uuid);
     m_nextState->replicationSource = props->replicationSource.value_or(m_state.replicationSource);
