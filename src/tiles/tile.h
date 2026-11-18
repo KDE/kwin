@@ -264,6 +264,7 @@ public:
     Tile *nextTileAt(Qt::Edge edge) const;
     Tile *nextNonLayoutTileAt(Qt::Edge edge) const;
 
+    Tile *pick(const QPointF &point, std::function<bool (const Tile *tile)> filter) const;
     Q_INVOKABLE KWin::Tile *pick(const QPointF &point) const;
     Q_INVOKABLE KWin::Tile *pick(qreal x, qreal y) const;
 
@@ -312,7 +313,7 @@ Q_SIGNALS:
     void layoutModified();
 
 protected:
-    bool pick(const QPointF &point, Tile *&bestTile, qreal &bestScore) const;
+    bool pick(const QPointF &point, std::function<bool (const Tile *tile)> filter, Tile *&bestTile, qreal &bestScore) const;
 
     void insertChild(int position, Tile *item);
     void removeChild(Tile *child);

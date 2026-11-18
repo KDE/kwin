@@ -1221,25 +1221,34 @@ Tile *Tile::tileForWindow(Window *window)
     return nullptr;
 }
 
-Tile *Tile::pick(const QPointF &point) const
+Tile *Tile::pick(const QPointF &point, std::function<bool (const Tile *tile)> filter) const
 {
     qreal score = std::numeric_limits<qreal>::max();
     Tile *tile = nullptr;
 
-    pick(point, tile, score);
+    pick(point, filter, tile, score);
     return tile;
 }
 
-bool Tile::pick(const QPointF &point, Tile *&bestTile, qreal &bestScore) const
+Tile *Tile::pick(const QPointF &point) const
+{
+    return pick(point, nullptr);
+}
+
+bool Tile::pick(const QPointF &point, std::function<bool (const Tile *tile)> filter, Tile *&bestTile, qreal &bestScore) const
 {
     for (Tile *childTile : m_children) {
+        if (filter && !filter(childTile)) {
+            continue;
+        }
+
         const RectF geometry = childTile->absoluteGeometry();
         if (!geometry.contains(point)) {
             continue;
         }
 
         if (childTile->isLayout()) {
-            if (childTile->pick(point, bestTile, bestScore)) {
+            if (childTile->pick(point, filter, bestTile, bestScore)) {
                 return true;
             }
         } else {
@@ -1250,8 +1259,12 @@ bool Tile::pick(const QPointF &point, Tile *&bestTile, qreal &bestScore) const
     }
 
     for (Tile *childTile : m_children) {
+        if (filter && !filter(childTile)) {
+            continue;
+        }
+
         if (childTile->isLayout()) {
-            childTile->pick(point, bestTile, bestScore);
+            childTile->pick(point, filter, bestTile, bestScore);
         } else {
             const RectF geometry = childTile->absoluteGeometry();
             const QPointF closestPoint(std::clamp(point.x(), geometry.left(), geometry.right()),
