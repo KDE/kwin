@@ -1,21 +1,21 @@
 # Copyright (C) 2025 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# SPDX-FileCopyrightText: 2025 Emir SARI <emir_sari@îcloud.com>
+# SPDX-FileCopyrightText: 2025-2026 Emir SARI <emir_sari@îcloud.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-16 18:18+0000\n"
-"PO-Revision-Date: 2025-04-25 09:49+0300\n"
-"Last-Translator: Emir SARI <emir_sari@îcloud.com>\n"
+"PO-Revision-Date: 2026-11-17 18:58+0300\n"
+"Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 25.04.0\n"
+"X-Generator: Lokalize 26.08.2\n"
 
 #: ui/AnimationComboBox.qml:49
 #, kde-format
@@ -41,13 +41,7 @@ msgid "Instant"
 msgstr "Anında"
 
 #: ui/main.qml:95
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Some applications do not support this setting: In particular, GTK "
-#| "applications cannot change animation duration, but will still disable "
-#| "animations when <interface>animation speed</interface> is "
-#| "<interface>Instant</interface>."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some applications do not support this setting: in particular, GTK "
@@ -61,44 +55,34 @@ msgstr ""
 "bırakacaklardır."
 
 #: ui/main.qml:102
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Desktop animations"
+#, kde-format
 msgctxt "@title:group"
 msgid "Window animations"
-msgstr "Masaüstü Canlandırmaları"
+msgstr "Pencere Canlandırmaları"
 
 #: ui/main.qml:104
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window open/close:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Open/close:"
-msgstr "Pencereyi aç/kapat:"
+msgstr "Aç/kapat:"
 
 #: ui/main.qml:105
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window maximize:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Maximize:"
-msgstr "Pencereyi ekranda kapla:"
+msgstr "Ekranı kapla:"
 
 #: ui/main.qml:106
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window minimize:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Minimize:"
-msgstr "Pencereyi simge durumuna küçült:"
+msgstr "Simge durumuna küçült:"
 
 #: ui/main.qml:107
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window full screen:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Full screen:"
-msgstr "Pencereyi tam ekran yap:"
+msgstr "Tam ekran yap:"
 
 #: ui/main.qml:126 ui/main.qml:165 ui/main.qml:211
 #, kde-format
@@ -119,12 +103,10 @@ msgid "Peek at desktop:"
 msgstr "Masaüstüne bak:"
 
 #: ui/main.qml:146
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Virtual desktop switching:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Switch virtual desktops:"
-msgstr "Sanal masaüstü geçişi:"
+msgstr "Sanal masaüstüne geç:"
 
 #: ui/main.qml:194
 #, kde-format

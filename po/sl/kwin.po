@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1753447 2026-11-17 01:57:26Z scripty $
+# $Id: kwin.po 1753530 2026-11-18 01:55:06Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-17 01:09+0000\n"
+"POT-Creation-Date: 2026-11-18 01:12+0000\n"
 "PO-Revision-Date: 2026-11-13 10:31+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -2692,6 +2692,7 @@ msgid "Failed to create PipeWire stream"
 msgstr "Kreiranje toka PipeWire ni uspelo"
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:388
+#: plugins/screenshot/screenshotdbusinterface3.cpp:205
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2701,6 +2702,7 @@ msgstr ""
 "Tipka Escape ali desni klik za preklic."
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:406
+#: plugins/screenshot/screenshotdbusinterface3.cpp:220
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

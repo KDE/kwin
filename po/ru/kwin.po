@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-17 01:09+0000\n"
+"POT-Creation-Date: 2026-11-18 01:12+0000\n"
 "PO-Revision-Date: 2026-11-13 07:45+0200\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -2717,6 +2717,7 @@ msgid "Failed to create PipeWire stream"
 msgstr "Не удалось создать поток PipeWire"
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:388
+#: plugins/screenshot/screenshotdbusinterface3.cpp:205
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2727,6 +2728,7 @@ msgstr ""
 "правую кнопку мыши."
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:406
+#: plugins/screenshot/screenshotdbusinterface3.cpp:220
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

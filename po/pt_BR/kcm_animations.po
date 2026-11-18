@@ -2,22 +2,22 @@
 # This file is distributed under the same license as the kwin package.
 #
 # SPDX-FileCopyrightText: 2025 Geraldo Simiao <geraldosimiao@fedoraproject.org>
-# SPDX-FileCopyrightText: 2025 Marcus Gama <marcus.gama@kde.org>
+# SPDX-FileCopyrightText: 2025-2026 Marcus Gama <marcus.gama@kde.org>
 # SPDX-FileCopyrightText: 2025 Guilherme Marçal Silva <guimarcalsilva@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-16 18:18+0000\n"
-"PO-Revision-Date: 2025-11-08 21:10-0300\n"
-"Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
+"PO-Revision-Date: 2026-11-17 05:48-0300\n"
+"Last-Translator: Marcus Gama <marcus.gama@kde.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 25.08.2\n"
+"X-Generator: Lokalize 26.08.2\n"
 
 #: ui/AnimationComboBox.qml:49
 #, kde-format
@@ -43,13 +43,7 @@ msgid "Instant"
 msgstr "Instantânea"
 
 #: ui/main.qml:95
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Some applications do not support this setting: In particular, GTK "
-#| "applications cannot change animation duration, but will still disable "
-#| "animations when <interface>animation speed</interface> is "
-#| "<interface>Instant</interface>."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some applications do not support this setting: in particular, GTK "
@@ -63,41 +57,31 @@ msgstr ""
 "interface> for <interface>Instantânea</interface>."
 
 #: ui/main.qml:102
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Desktop animations"
+#, kde-format
 msgctxt "@title:group"
 msgid "Window animations"
-msgstr "Animações da área de trabalho"
+msgstr "Animações de janela"
 
 #: ui/main.qml:104
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window open/close:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Open/close:"
-msgstr "Abrir/fechar janela:"
+msgstr "Abrir/fechar:"
 
 #: ui/main.qml:105
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window maximize:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Maximize:"
-msgstr "Maximizar janela:"
+msgstr "Maximizar:"
 
 #: ui/main.qml:106
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window minimize:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Minimize:"
-msgstr "Minimizar janela:"
+msgstr "Minimizar:"
 
 #: ui/main.qml:107
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window full screen:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Full screen:"
 msgstr "Tela cheia:"
@@ -121,12 +105,10 @@ msgid "Peek at desktop:"
 msgstr "Espiar área de trabalho:"
 
 #: ui/main.qml:146
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Virtual desktop switching:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Switch virtual desktops:"
-msgstr "Trocar área de trabalho virtual:"
+msgstr "Alternar áreas de trabalho virtuais:"
 
 #: ui/main.qml:194
 #, kde-format

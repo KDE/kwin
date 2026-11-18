@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-16 18:18+0000\n"
-"PO-Revision-Date: 2026-10-02 20:50+0200\n"
+"PO-Revision-Date: 2026-11-17 23:51+0100\n"
 "Last-Translator: Nemanja Hiršl <nemhirsl@gmail.com>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
 "Language: sr\n"
@@ -41,13 +41,7 @@ msgid "Instant"
 msgstr "тренутно"
 
 #: ui/main.qml:95
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Some applications do not support this setting: In particular, GTK "
-#| "applications cannot change animation duration, but will still disable "
-#| "animations when <interface>animation speed</interface> is "
-#| "<interface>Instant</interface>."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some applications do not support this setting: in particular, GTK "
@@ -60,44 +54,34 @@ msgstr ""
 "<interface>брзина анимације</interface> <interface>тренутно</interface>."
 
 #: ui/main.qml:102
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Desktop animations"
+#, kde-format
 msgctxt "@title:group"
 msgid "Window animations"
-msgstr "Анимације површи"
+msgstr "Анимације прозора"
 
 #: ui/main.qml:104
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window open/close:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Open/close:"
-msgstr "Отварање и затварање прозора:"
+msgstr "Отварање и затварање:"
 
 #: ui/main.qml:105
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window maximize:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Maximize:"
-msgstr "Максимизовање прозора:"
+msgstr "Максимизовање:"
 
 #: ui/main.qml:106
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window minimize:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Minimize:"
-msgstr "Минимизовање прозора:"
+msgstr "Минимизовање:"
 
 #: ui/main.qml:107
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window full screen:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Full screen:"
-msgstr "Прозор преко целог екрана:"
+msgstr "Преко целог екрана:"
 
 #: ui/main.qml:126 ui/main.qml:165 ui/main.qml:211
 #, kde-format
@@ -118,9 +102,7 @@ msgid "Peek at desktop:"
 msgstr "Завиривање у површ:"
 
 #: ui/main.qml:146
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Virtual desktop switching:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Switch virtual desktops:"
 msgstr "Смена виртуелних површи:"
