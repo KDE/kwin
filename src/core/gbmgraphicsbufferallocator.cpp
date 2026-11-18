@@ -88,7 +88,7 @@ class DumbGraphicsBuffer : public GraphicsBuffer
     Q_OBJECT
 
 public:
-    DumbGraphicsBuffer(int drmFd, uint32_t handle, DmaBufAttributes attributes);
+    DumbGraphicsBuffer(DmaBufAttributes &&attributes, void *mappedPtr);
     ~DumbGraphicsBuffer() override;
 
     Map map(MapFlags flags) override;
@@ -102,8 +102,6 @@ public:
     uint32_t pitch() const override;
 
 private:
-    int m_drmFd;
-    uint32_t m_handle;
     void *m_data = nullptr;
     size_t m_size = 0;
     DmaBufAttributes m_dmabufAttributes;
@@ -130,32 +128,51 @@ static GraphicsBuffer *allocateDumb(gbm_device *device, dev_t deviceId, const Gr
         .width = uint32_t(options.size.width()),
         .bpp = 32,
     };
-    if (drmIoctl(gbm_device_get_fd(device), DRM_IOCTL_MODE_CREATE_DUMB, &createArgs) != 0) {
+    const int drmFd = gbm_device_get_fd(device);
+    if (drmIoctl(drmFd, DRM_IOCTL_MODE_CREATE_DUMB, &createArgs) != 0) {
         qCWarning(KWIN_CORE) << "DRM_IOCTL_MODE_CREATE_DUMB failed:" << strerror(errno);
         return nullptr;
     }
 
-    int primeFd;
-    if (drmPrimeHandleToFD(gbm_device_get_fd(device), createArgs.handle, DRM_CLOEXEC, &primeFd) != 0) {
-        qCWarning(KWIN_CORE) << "drmPrimeHandleToFD() failed:" << strerror(errno);
+    const auto destroy = qScopeGuard([=]() {
         drm_mode_destroy_dumb destroyArgs{
             .handle = createArgs.handle,
         };
-        drmIoctl(gbm_device_get_fd(device), DRM_IOCTL_MODE_DESTROY_DUMB, &destroyArgs);
+        drmIoctl(drmFd, DRM_IOCTL_MODE_DESTROY_DUMB, &destroyArgs);
+    });
+
+    FileDescriptor primeFd;
+    if (drmPrimeHandleToFD(drmFd, createArgs.handle, DRM_CLOEXEC, std::out_ptr(primeFd)) != 0) {
+        qCWarning(KWIN_CORE) << "drmPrimeHandleToFD() failed:" << strerror(errno);
         return nullptr;
     }
 
-    return new DumbGraphicsBuffer(gbm_device_get_fd(device), createArgs.handle, DmaBufAttributes{
-                                                                                    .planeCount = 1,
-                                                                                    .width = options.size.width(),
-                                                                                    .height = options.size.height(),
-                                                                                    .format = options.format,
-                                                                                    .modifier = DRM_FORMAT_MOD_LINEAR,
-                                                                                    .device = deviceId,
-                                                                                    .fd = {FileDescriptor(primeFd), FileDescriptor{}, FileDescriptor{}, FileDescriptor{}},
-                                                                                    .offset = {0, 0, 0, 0},
-                                                                                    .pitch = {createArgs.pitch, 0, 0, 0},
-                                                                                });
+    drm_mode_map_dumb mapArgs{
+        .handle = createArgs.handle,
+    };
+    if (drmIoctl(drmFd, DRM_IOCTL_MODE_MAP_DUMB, &mapArgs) != 0) {
+        qCWarning(KWIN_CORE) << "DRM_IOCTL_MODE_MAP_DUMB failed:" << strerror(errno);
+        return nullptr;
+    }
+
+    void *address = mmap(nullptr, createArgs.pitch * options.size.height(), PROT_READ | PROT_WRITE, MAP_SHARED, drmFd, mapArgs.offset);
+    if (address == MAP_FAILED) {
+        qCWarning(KWIN_CORE) << "mmap() failed:" << strerror(errno);
+        return nullptr;
+    }
+
+    return new DumbGraphicsBuffer(DmaBufAttributes{
+                                      .planeCount = 1,
+                                      .width = options.size.width(),
+                                      .height = options.size.height(),
+                                      .format = options.format,
+                                      .modifier = DRM_FORMAT_MOD_LINEAR,
+                                      .device = deviceId,
+                                      .fd = {std::move(primeFd), FileDescriptor{}, FileDescriptor{}, FileDescriptor{}},
+                                      .offset = {0, 0, 0, 0},
+                                      .pitch = {createArgs.pitch, 0, 0, 0},
+                                  },
+                                  address);
 }
 
 static GraphicsBuffer *allocateDmaBuf(gbm_device *device, dev_t deviceId, const GraphicsBufferOptions &options)
@@ -281,9 +298,8 @@ uint32_t GbmGraphicsBuffer::pitch() const
     return m_dmabufAttributes.pitch[0];
 }
 
-DumbGraphicsBuffer::DumbGraphicsBuffer(int drmFd, uint32_t handle, DmaBufAttributes attributes)
-    : m_drmFd(drmFd)
-    , m_handle(handle)
+DumbGraphicsBuffer::DumbGraphicsBuffer(DmaBufAttributes &&attributes, void *mappedPtr)
+    : m_data(mappedPtr)
     , m_size(attributes.pitch[0] * attributes.height)
     , m_dmabufAttributes(std::move(attributes))
     , m_hasAlphaChannel(alphaChannelFromDrmFormat(m_dmabufAttributes.format))
@@ -292,12 +308,8 @@ DumbGraphicsBuffer::DumbGraphicsBuffer(int drmFd, uint32_t handle, DmaBufAttribu
 
 DumbGraphicsBuffer::~DumbGraphicsBuffer()
 {
-    unmap();
-
-    drm_mode_destroy_dumb destroyArgs{
-        .handle = m_handle,
-    };
-    drmIoctl(m_drmFd, DRM_IOCTL_MODE_DESTROY_DUMB, &destroyArgs);
+    asyncMunmap(m_data, m_size);
+    m_data = nullptr;
 }
 
 QSize DumbGraphicsBuffer::size() const
@@ -332,23 +344,6 @@ uint32_t DumbGraphicsBuffer::pitch() const
 
 GraphicsBuffer::Map DumbGraphicsBuffer::map(MapFlags flags)
 {
-    if (!m_data) {
-        drm_mode_map_dumb mapArgs{
-            .handle = m_handle,
-        };
-        if (drmIoctl(m_drmFd, DRM_IOCTL_MODE_MAP_DUMB, &mapArgs) != 0) {
-            qCWarning(KWIN_CORE) << "DRM_IOCTL_MODE_MAP_DUMB failed:" << strerror(errno);
-            return {};
-        }
-
-        void *address = mmap(nullptr, m_size, PROT_READ | PROT_WRITE, MAP_SHARED, m_drmFd, mapArgs.offset);
-        if (address == MAP_FAILED) {
-            qCWarning(KWIN_CORE) << "mmap() failed:" << strerror(errno);
-            return {};
-        }
-
-        m_data = address;
-    }
     return Map{
         .data = m_data,
         .stride = m_dmabufAttributes.pitch[0],
@@ -357,10 +352,6 @@ GraphicsBuffer::Map DumbGraphicsBuffer::map(MapFlags flags)
 
 void DumbGraphicsBuffer::unmap()
 {
-    if (m_data) {
-        asyncMunmap(m_data, m_size);
-        m_data = nullptr;
-    }
 }
 
 } // namespace KWin

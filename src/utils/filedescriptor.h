@@ -16,6 +16,9 @@ namespace KWin
 class KWIN_EXPORT FileDescriptor
 {
 public:
+    // for std::out_ptr
+    using pointer = int;
+
     FileDescriptor() = default;
     explicit FileDescriptor(int fd);
     FileDescriptor(FileDescriptor &&);
