@@ -4038,7 +4038,7 @@ void Window::checkWorkspacePosition(RectF oldGeometry, LogicalOutput *oldOutput)
             oldScreenArea = newOutput->geometry();
         }
         screenArea = newOutput->geometry();
-        newGeom.translate(screenArea.topLeft() - oldScreenArea.topLeft());
+        newGeom = moveToArea(newGeom, oldScreenArea, screenArea);
     } else {
         oldScreenArea = workspace()->clientArea(ScreenArea, workspace()->outputAt(oldGeometry.center()));
         screenArea = workspace()->clientArea(ScreenArea, this, newGeom.center());
