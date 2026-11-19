@@ -36,6 +36,10 @@ std::optional<vk::Format> VulkanTexture::qImageToVulkanFormat(QImage::Format for
     case QImage::Format_RGBX8888:
     case QImage::Format_RGBA8888_Premultiplied:
         return vk::Format::eR8G8B8A8Unorm;
+    case QImage::Format_RGB32:
+    case QImage::Format_ARGB32:
+    case QImage::Format_ARGB32_Premultiplied:
+        return vk::Format::eB8G8R8A8Unorm;
     case QImage::Format_BGR30:
     case QImage::Format_A2BGR30_Premultiplied:
         return vk::Format::eA2B10G10R10UnormPack32;
@@ -69,6 +73,8 @@ std::optional<QImage::Format> VulkanTexture::vulkanToQImageFormat(vk::Format for
         return QImage::Format_RGBA16FPx4_Premultiplied;
     case vk::Format::eR32G32B32A32Sfloat:
         return QImage::Format_RGBA32FPx4_Premultiplied;
+    case vk::Format::eB8G8R8A8Unorm:
+        return QImage::Format_ARGB32_Premultiplied;
     default:
         return std::nullopt;
     }
@@ -105,7 +111,7 @@ vk::Format VulkanTexture::format() const
 
 bool VulkanTexture::downloadTo(QImage &target, FileDescriptor &&sync) const
 {
-    if (target.format() != vulkanToQImageFormat(m_format)) {
+    if (qImageToVulkanFormat(target.format()) != m_format) {
         return false;
     }
 
