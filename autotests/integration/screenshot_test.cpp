@@ -116,7 +116,7 @@ void ScreenshotTest::screenshot()
 {
     LogicalOutput *const output = workspace()->outputs().front();
 
-    QImage testImage(output->pixelSize(), QImage::Format_RGBX8888);
+    QImage testImage(output->pixelSize(), QImage::Format_RGB32);
     testImage.fill(Qt::blue);
     testImage.setPixel(0, 0, qRgba(50, 123, 231, 128));
     testImage.setPixel(testImage.width() - 1, testImage.height() - 1, qRgba(244, 231, 123, 64));
@@ -134,7 +134,7 @@ void ScreenshotTest::screenshot()
 
 void ScreenshotTest::areashot()
 {
-    QImage testImage(QSize(200, 200), QImage::Format_RGBX8888);
+    QImage testImage(QSize(200, 200), QImage::Format_RGB32);
     testImage.fill(Qt::blue);
     testImage.setPixel(0, 0, qRgba(50, 123, 231, 128));
     testImage.setPixel(testImage.width() - 1, testImage.height() - 1, qRgba(244, 231, 123, 64));
@@ -152,7 +152,7 @@ void ScreenshotTest::windowshot()
 {
     LogicalOutput *const output = workspace()->outputs().front();
 
-    QImage testImage(QSize(300, 300), QImage::Format_RGBA8888_Premultiplied);
+    QImage testImage(QSize(300, 300), QImage::Format_ARGB32_Premultiplied);
     testImage.fill(Qt::blue);
     testImage.setPixel(0, 0, qRgba(50, 123, 231, 128));
     testImage.setPixel(testImage.width() - 1, testImage.height() - 1, qRgba(244, 231, 123, 64));
