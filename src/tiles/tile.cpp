@@ -15,6 +15,8 @@
 #include "window.h"
 #include "workspace.h"
 
+#include <QJSEngine>
+
 #include <cmath>
 
 namespace KWin
@@ -25,6 +27,8 @@ Tile::Tile(TileManager *tiling, Tile *parent)
     , m_parentTile(parent)
     , m_tiling(tiling)
 {
+    QJSEngine::setObjectOwnership(this, QJSEngine::CppOwnership);
+
     if (m_parentTile) {
         m_padding = m_parentTile->padding();
         m_minimumSize = m_parentTile->m_minimumSize;
