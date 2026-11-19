@@ -121,6 +121,31 @@ FormatModifierMap FormatModifierMap::intersected(const FormatModifierMap &other)
 // - for non-packed 8 and 16 bits per channel formats, the channel order is inverted vs. drm
 // - for packed formats, the channel order matches drm
 const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
+    // 24 bpp
+    {DRM_FORMAT_BGR888, FormatInfo{
+                            .drmFormat = DRM_FORMAT_BGR888,
+                            .bitsPerColor = 8,
+                            .alphaBits = 0,
+                            .bitsPerPixel = 24,
+                            .openglFormat = GL_RGB8,
+                            .vulkanFormat = VK_FORMAT_R8G8B8_UNORM,
+                            .floatingPoint = false,
+                            .yuv = false,
+                            .qimageFormat = QImage::Format_RGB888,
+                        }},
+    {DRM_FORMAT_RGB888, FormatInfo{
+                            .drmFormat = DRM_FORMAT_RGB888,
+                            .bitsPerColor = 8,
+                            .alphaBits = 0,
+                            .bitsPerPixel = 24,
+                            .openglFormat = GL_RGB8,
+                            .vulkanFormat = VK_FORMAT_B8G8R8_UNORM,
+                            .floatingPoint = false,
+                            .yuv = false,
+                            .qimageFormat = QImage::Format_BGR888,
+                        }},
+
+    // 32 bpp
     {DRM_FORMAT_XRGB8888, FormatInfo{
                               .drmFormat = DRM_FORMAT_XRGB8888,
                               .bitsPerColor = 8,
@@ -130,6 +155,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .vulkanFormat = VK_FORMAT_B8G8R8A8_UNORM,
                               .floatingPoint = false,
                               .yuv = false,
+                              .qimageFormat = QImage::Format_RGB32,
                           }},
     {DRM_FORMAT_XBGR8888, FormatInfo{
                               .drmFormat = DRM_FORMAT_XBGR8888,
@@ -150,6 +176,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .vulkanFormat = VK_FORMAT_UNDEFINED,
                               .floatingPoint = false,
                               .yuv = false,
+                              .qimageFormat = QImage::Format_RGBX8888,
                           }},
     {DRM_FORMAT_BGRX8888, FormatInfo{
                               .drmFormat = DRM_FORMAT_BGRX8888,
@@ -170,6 +197,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .vulkanFormat = VK_FORMAT_B8G8R8A8_UNORM,
                               .floatingPoint = false,
                               .yuv = false,
+                              .qimageFormat = QImage::Format_ARGB32_Premultiplied,
                           }},
     {DRM_FORMAT_ABGR8888, FormatInfo{
                               .drmFormat = DRM_FORMAT_ABGR8888,
@@ -210,6 +238,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                  .vulkanFormat = VK_FORMAT_A2R10G10B10_UNORM_PACK32,
                                  .floatingPoint = false,
                                  .yuv = false,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
+                                 .qimageFormat = QImage::Format_RGB30,
+#endif
                              }},
     {DRM_FORMAT_XBGR2101010, FormatInfo{
                                  .drmFormat = DRM_FORMAT_XBGR2101010,
@@ -220,6 +251,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                  .vulkanFormat = VK_FORMAT_A2B10G10R10_UNORM_PACK32,
                                  .floatingPoint = false,
                                  .yuv = false,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
+                                 .qimageFormat = QImage::Format_BGR30,
+#endif
                              }},
     {DRM_FORMAT_RGBX1010102, FormatInfo{
                                  .drmFormat = DRM_FORMAT_RGBX1010102,
@@ -250,6 +284,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                  .vulkanFormat = VK_FORMAT_A2R10G10B10_UNORM_PACK32,
                                  .floatingPoint = false,
                                  .yuv = false,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
+                                 .qimageFormat = QImage::Format_A2RGB30_Premultiplied,
+#endif
                              }},
     {DRM_FORMAT_ABGR2101010, FormatInfo{
                                  .drmFormat = DRM_FORMAT_ABGR2101010,
@@ -260,6 +297,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                  .vulkanFormat = VK_FORMAT_A2B10G10R10_UNORM_PACK32,
                                  .floatingPoint = false,
                                  .yuv = false,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
+                                 .qimageFormat = QImage::Format_A2BGR30_Premultiplied,
+#endif
                              }},
     {DRM_FORMAT_RGBA1010102, FormatInfo{
                                  .drmFormat = DRM_FORMAT_RGBA1010102,
@@ -281,6 +321,8 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                  .floatingPoint = false,
                                  .yuv = false,
                              }},
+
+    // 64 bpp
     {DRM_FORMAT_XRGB16161616, FormatInfo{
                                   .drmFormat = DRM_FORMAT_XRGB16161616,
                                   .bitsPerColor = 16,
@@ -300,6 +342,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                   .vulkanFormat = VK_FORMAT_R16G16B16A16_UNORM,
                                   .floatingPoint = false,
                                   .yuv = false,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
+                                  .qimageFormat = QImage::Format_RGBX64,
+#endif
                               }},
     {DRM_FORMAT_ARGB16161616, FormatInfo{
                                   .drmFormat = DRM_FORMAT_ARGB16161616,
@@ -320,6 +365,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                   .vulkanFormat = VK_FORMAT_R16G16B16A16_UNORM,
                                   .floatingPoint = false,
                                   .yuv = false,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
+                                  .qimageFormat = QImage::Format_RGBA64_Premultiplied,
+#endif
                               }},
     {DRM_FORMAT_XRGB16161616F, FormatInfo{
                                    .drmFormat = DRM_FORMAT_XRGB16161616F,
@@ -340,6 +388,10 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                    .vulkanFormat = VK_FORMAT_R16G16B16A16_SFLOAT,
                                    .floatingPoint = true,
                                    .yuv = false,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
+                                   .qimageFormat = QImage::QImage::Format_RGBX16FPx4,
+#endif
+
                                }},
     {DRM_FORMAT_ARGB16161616F, FormatInfo{
                                    .drmFormat = DRM_FORMAT_ARGB16161616F,
@@ -360,7 +412,12 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                    .vulkanFormat = VK_FORMAT_R16G16B16A16_SFLOAT,
                                    .floatingPoint = true,
                                    .yuv = false,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
+                                   .qimageFormat = QImage::Format_RGBA16FPx4_Premultiplied,
+#endif
                                }},
+
+    // 16 bpp
     {DRM_FORMAT_ARGB4444, FormatInfo{
                               .drmFormat = DRM_FORMAT_ARGB4444,
                               .bitsPerColor = 4,
@@ -441,7 +498,8 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .floatingPoint = false,
                               .yuv = false,
                           }},
-    // TODO support YUV formats with Vulkan
+
+    // YUV formats. TODO support them with Vulkan
     {DRM_FORMAT_NV12, FormatInfo{
                           .drmFormat = DRM_FORMAT_NV12,
                           .bitsPerColor = 8,
@@ -611,6 +669,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .vulkanFormat = VK_FORMAT_UNDEFINED,
                               .floatingPoint = false,
                               .yuv = true,
+                              .qimageFormat = QImage::Format_RGB32,
                           }},
     {DRM_FORMAT_XVUY8888, FormatInfo{
                               .drmFormat = DRM_FORMAT_XVUY8888,

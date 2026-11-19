@@ -10,6 +10,7 @@
 #include "kwin_export.h"
 
 #include <QHash>
+#include <QImage>
 #include <QList>
 #include <QString>
 #include <unordered_map>
@@ -66,6 +67,7 @@ struct KWIN_EXPORT FormatInfo
     VkFormat vulkanFormat;
     bool floatingPoint;
     bool yuv;
+    std::optional<QImage::Format> qimageFormat;
 
     static const std::unordered_map<uint32_t, FormatInfo> s_knownFormats;
 
