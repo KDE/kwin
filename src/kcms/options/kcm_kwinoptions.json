@@ -110,6 +110,12 @@
     },
     "X-DocPath": "kcontrol/windowbehaviour/index.html",
     "X-KDE-Keywords": "focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,activation,activate,pip,picture in picture,picture-in-picture,osd,overlay",
+    "X-KDE-Keywords[ca@valencia]": "focus,emplaçament,comportament de les finestres,accions de les finestres,animació,elevació,elevació automàtica,finestres,marc,barra de títol,doble clic,escriptori,ajusta,moviment,activació,activa,pip,imatge en la imatge,osd,superposició",
+    "X-KDE-Keywords[ca]": "focus,emplaçament,comportament de les finestres,accions de les finestres,animació,elevació,elevació automàtica,finestres,marc,barra de títol,doble clic,escriptori,ajusta,moviment,activació,activa,pip,imatge en la imatge,osd,superposició",
+    "X-KDE-Keywords[nl]": "focus,plaatsing,venstergedrag,vensteracties,animatie,omhoog brengen, automatisch omhoog brengen,vensters,frame,titelbalk,dubbel-klik,bureaublad,vastklikken,verplaatsing,activatie,activeren,pip,picture in picture, picture-in-picture,osd,overlay",
+    "X-KDE-Keywords[pt_BR]": "foco,posicionamento,comportamento da janela,ações da janela,animação,elevação,elevação automática,janelas,quadro,barra de título,clique duplo,área de trabalho,encaixe,movimento,ativação,ativar,pip,picture in picture,picture-in-picture,osd,sobreposição",
+    "X-KDE-Keywords[ru]": "focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,activation,activate,pip,picture in picture,picture-in-picture,osd,overlay,фокус,расположение,размещение,поведение окон,действия окна,анимация,поднять,поднять автоматически,автоматическое поднятие,окна,рамка,строка заголовка,заголовок,двойной щелчок,рабочий стол,привязка,прилипание,перемещение,активация,активировать,картинка в картинке,экранный индикатор,наложение",
+    "X-KDE-Keywords[tr]": "odak,yerleşim,pencere davranışı,pencere eylemleri,canlandırma,animasyon,yükselt,çerçeve,başlık çubuğu,çift tık,masaüstü,tuttur,hareket,taşı,etkinleştir,pip,picture in picture,picture-in-picture,resim içinde resim,görüntü içinde görüntü,ekran içinde ekran,ekran üzeri görüntü,eüg,osd,kaplama,bindirme,overlay",
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"
     ],
