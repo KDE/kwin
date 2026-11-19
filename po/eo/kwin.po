@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-18 01:12+0000\n"
+"POT-Creation-Date: 2026-11-19 01:09+0000\n"
 "PO-Revision-Date: 2025-03-15 10:38+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -64,17 +64,17 @@ msgstr "- Eligo malebligita"
 msgid "- Output dimmed"
 msgstr "- Eligo malheliĝis"
 
-#: backends/x11/x11_windowed_backend.cpp:500
+#: backends/x11/x11_windowed_backend.cpp:503
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "Premu dekstran Ctrl-klavon por malkapti enigon"
 
-#: backends/x11/x11_windowed_backend.cpp:500
+#: backends/x11/x11_windowed_backend.cpp:503
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "Premu dekstran Ctrl-klavon por kapti enigon"
 
-#: backends/x11/x11_windowed_backend.cpp:501
+#: backends/x11/x11_windowed_backend.cpp:504
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Komponisto"
@@ -1824,7 +1824,7 @@ msgstr "Daŭro:"
 msgid "None"
 msgstr "Neniu"
 
-#: plugins/colorpicker/colorpicker.cpp:151
+#: plugins/colorpicker/colorpicker.cpp:152
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
@@ -2728,7 +2728,7 @@ msgstr "Ne eblis trovi eligon"
 msgid "Invalid region"
 msgstr "Nevalida regiono"
 
-#: plugins/screencast/screencaststream.cpp:435
+#: plugins/screencast/screencaststream.cpp:428
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Malsukcesis krei PipeWire-rivereton"
@@ -4489,30 +4489,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ne respondante)"
 
-#: workspace.cpp:1392
+#: workspace.cpp:1394
 #, kde-format
 msgid "Built-in Screen"
 msgstr ""
 
-#: workspace.cpp:1405
+#: workspace.cpp:1407
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr ""
 
-#: workspace.cpp:1415
+#: workspace.cpp:1417
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr ""
 
-#: workspace.cpp:1418
+#: workspace.cpp:1420
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr ""
 
-#: workspace.cpp:1887
+#: workspace.cpp:1889
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

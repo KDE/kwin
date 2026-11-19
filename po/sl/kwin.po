@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1753530 2026-11-18 01:55:06Z scripty $
+# $Id: kwin.po 1753610 2026-11-19 01:53:04Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-18 01:12+0000\n"
+"POT-Creation-Date: 2026-11-19 01:09+0000\n"
 "PO-Revision-Date: 2026-11-13 10:31+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -70,17 +70,17 @@ msgstr "- Output onemogočen"
 msgid "- Output dimmed"
 msgstr "- Output zamegljen"
 
-#: backends/x11/x11_windowed_backend.cpp:500
+#: backends/x11/x11_windowed_backend.cpp:503
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "Pritisnite desno kontrolko, da spustite input"
 
-#: backends/x11/x11_windowed_backend.cpp:500
+#: backends/x11/x11_windowed_backend.cpp:503
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "Pritisnite puščico desno da zgrabite vhod"
 
-#: backends/x11/x11_windowed_backend.cpp:501
+#: backends/x11/x11_windowed_backend.cpp:504
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Compositor"
@@ -1772,7 +1772,7 @@ msgstr "Nasičenje:"
 msgid "None"
 msgstr "Noben"
 
-#: plugins/colorpicker/colorpicker.cpp:151
+#: plugins/colorpicker/colorpicker.cpp:152
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
@@ -2686,7 +2686,7 @@ msgstr "Ni bilo mogoče najti outputa"
 msgid "Invalid region"
 msgstr "Neveljavna regija"
 
-#: plugins/screencast/screencaststream.cpp:435
+#: plugins/screencast/screencaststream.cpp:428
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Kreiranje toka PipeWire ni uspelo"
@@ -4434,30 +4434,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(se ne odziva)"
 
-#: workspace.cpp:1392
+#: workspace.cpp:1394
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Vgrajen zaslon"
 
-#: workspace.cpp:1405
+#: workspace.cpp:1407
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1415
+#: workspace.cpp:1417
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1418
+#: workspace.cpp:1420
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: workspace.cpp:1887
+#: workspace.cpp:1889
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

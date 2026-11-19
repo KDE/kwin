@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-18 01:12+0000\n"
+"POT-Creation-Date: 2026-11-19 01:09+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -54,17 +54,17 @@ msgstr "- 输出已禁用"
 msgid "- Output dimmed"
 msgstr "- 输出已变暗"
 
-#: backends/x11/x11_windowed_backend.cpp:500
+#: backends/x11/x11_windowed_backend.cpp:503
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "按右 Ctrl 键释放输入"
 
-#: backends/x11/x11_windowed_backend.cpp:500
+#: backends/x11/x11_windowed_backend.cpp:503
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "按右 Ctrl 键抓取输入"
 
-#: backends/x11/x11_windowed_backend.cpp:501
+#: backends/x11/x11_windowed_backend.cpp:504
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland 显示特效混合器"
@@ -1736,7 +1736,7 @@ msgstr "饱和度："
 msgid "None"
 msgstr "无"
 
-#: plugins/colorpicker/colorpicker.cpp:151
+#: plugins/colorpicker/colorpicker.cpp:152
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
@@ -2637,7 +2637,7 @@ msgstr "无法找到输出"
 msgid "Invalid region"
 msgstr "无效区域"
 
-#: plugins/screencast/screencaststream.cpp:435
+#: plugins/screencast/screencaststream.cpp:428
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "创建 PipeWire 流失败"
@@ -4375,30 +4375,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(没有响应)"
 
-#: workspace.cpp:1392
+#: workspace.cpp:1394
 #, kde-format
 msgid "Built-in Screen"
 msgstr "内置屏幕"
 
-#: workspace.cpp:1405
+#: workspace.cpp:1407
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1415
+#: workspace.cpp:1417
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1418
+#: workspace.cpp:1420
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: workspace.cpp:1887
+#: workspace.cpp:1889
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

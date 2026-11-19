@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-10 14:33+0000\n"
+"POT-Creation-Date: 2026-11-18 14:19+0000\n"
 "PO-Revision-Date: 2026-11-12 09:36+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -243,20 +243,27 @@ msgid "Show Preview"
 msgstr "Prikaži predogled"
 
 #: ui/TabBoxSettings.qml:82
-#, kde-format
-msgctxt "@label"
+#, fuzzy, kde-format
+#| msgctxt "@label"
+#| msgid "Selecting a window:"
+msgctxt "@label, Part of the sentence 'Selecting a window hides other windows'"
 msgid "Selecting a window:"
 msgstr "Izbiranje okna:"
 
 #: ui/TabBoxSettings.qml:84
-#, kde-format
-msgctxt "@option:check"
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Hides other windows"
+msgctxt ""
+"@option:check, Part of the sentence 'Selecting a window hides other windows'"
 msgid "Hides other windows"
 msgstr "Skrije druga okna"
 
 #: ui/TabBoxSettings.qml:99
-#, kde-format
-msgctxt "@label"
+#, fuzzy, kde-format
+#| msgctxt "@label"
+#| msgid "Show on screen:"
+msgctxt "@label Followed by 'Active screen' or 'Primary screen'"
 msgid "Show on screen:"
 msgstr "Prikaži na zaslonu:"
 
