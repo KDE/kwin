@@ -6,11 +6,23 @@
 
 #pragma once
 
+#include <kwin_export.h>
+
 #include <sys/mman.h>
 #include <utility>
 
 namespace KWin
 {
+
+/*!
+ * Asynchrnously unmaps a part of the address space starting at \a addr and continuing for
+ * \a length bytes.
+ *
+ * Plain munmap() can take a significant amount of time to complete sometimes, for example, it
+ * can take 10ms or so. This function schedules munmap() to be called from a worker thread
+ * to keep the caller thread unblocked.
+ */
+KWIN_EXPORT void asyncMunmap(void *addr, size_t length);
 
 class MemoryMap
 {
@@ -36,14 +48,14 @@ public:
     ~MemoryMap()
     {
         if (m_data != MAP_FAILED) {
-            munmap(m_data, m_size);
+            asyncMunmap(m_data, m_size);
         }
     }
 
     MemoryMap &operator=(MemoryMap &&other)
     {
         if (m_data != MAP_FAILED) {
-            munmap(m_data, m_size);
+            asyncMunmap(m_data, m_size);
         }
         m_data = std::exchange(other.m_data, MAP_FAILED);
         m_size = std::exchange(other.m_size, 0);

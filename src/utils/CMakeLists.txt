@@ -5,6 +5,7 @@ target_sources(kwin PRIVATE
     filedescriptor.cpp
     gravity.cpp
     lightsensor.cpp
+    memorymap.cpp
     orientationsensor.cpp
     precisetimer.cpp
     proximitysensor.cpp

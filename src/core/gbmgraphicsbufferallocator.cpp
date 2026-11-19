@@ -358,7 +358,7 @@ GraphicsBuffer::Map DumbGraphicsBuffer::map(MapFlags flags)
 void DumbGraphicsBuffer::unmap()
 {
     if (m_data) {
-        munmap(m_data, m_size);
+        asyncMunmap(m_data, m_size);
         m_data = nullptr;
     }
 }
