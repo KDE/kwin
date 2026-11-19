@@ -60,7 +60,7 @@ void ScreenshotTest::screenshot()
 {
     LogicalOutput *const output = workspace()->outputs().front();
 
-    QImage testImage(output->pixelSize(), QImage::Format_RGBX8888);
+    QImage testImage(output->pixelSize(), QImage::Format_RGB32);
     testImage.fill(Qt::blue);
     testImage.setPixel(0, 0, qRgba(50, 123, 321, 128));
     testImage.setPixel(output->pixelSize().width() - 1, output->pixelSize().height() - 1, qRgba(244, 321, 123, 64));

@@ -43,12 +43,17 @@ static bool shouldFilterWindowFromCapture(Window *window, std::optional<pid_t> p
     return window->excludeFromCapture() || (pidToHide.has_value() && window->pid() == *pidToHide);
 }
 
-std::optional<ScreenShotBuffer> ScreenShotBuffer::from(RenderDevice *device, GraphicsBuffer *buffer, FileDescriptor &&sync, qreal devicePixelRatio, QImage::Format format)
+std::optional<ScreenShotBuffer> ScreenShotBuffer::from(RenderDevice *device, GraphicsBuffer *buffer, FileDescriptor &&sync, qreal devicePixelRatio)
 {
     const QSize size = buffer->size();
     const int bytesPerPixel = 4;
     const int bytesPerLine = size.width() * bytesPerPixel;
     const int sizeInBytes = size.height() * bytesPerLine;
+
+    const auto info = FormatInfo::get(buffer->format());
+    if (!info || !info->qimageFormat) {
+        return std::nullopt;
+    }
 
     FileDescriptor fd = AnonymousFile::allocate("screenshot", sizeInBytes);
     if (!fd) {
@@ -60,7 +65,7 @@ std::optional<ScreenShotBuffer> ScreenShotBuffer::from(RenderDevice *device, Gra
         return std::nullopt;
     }
 
-    QImage target(static_cast<uchar *>(memoryMap.data()), size.width(), size.height(), bytesPerLine, format);
+    QImage target(static_cast<uchar *>(memoryMap.data()), size.width(), size.height(), bytesPerLine, *info->qimageFormat);
     device->download(buffer, std::move(sync), target);
 
     return ScreenShotBuffer{
@@ -68,7 +73,7 @@ std::optional<ScreenShotBuffer> ScreenShotBuffer::from(RenderDevice *device, Gra
         .map = std::move(memoryMap),
         .size = size,
         .bytesPerLine = bytesPerLine,
-        .format = format,
+        .format = *info->qimageFormat,
         .devicePixelRatio = devicePixelRatio,
     };
 }
@@ -98,8 +103,8 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(LogicalOutput 
 
     GraphicsBuffer *buffer = device->allocator()->allocate(GraphicsBufferOptions{
         .size = nativeSize,
-        .format = DRM_FORMAT_ARGB8888,
-        .modifiers = backend->supportedFormats()[DRM_FORMAT_ARGB8888],
+        .format = DRM_FORMAT_XRGB8888,
+        .modifiers = backend->supportedFormats()[DRM_FORMAT_XRGB8888],
         .software = false,
         .scanout = false,
         .render = true,
@@ -143,7 +148,7 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(LogicalOutput 
         return std::nullopt;
     }
 
-    return ScreenShotBuffer::from(device, buffer, std::move(sync), scale, QImage::Format_RGBX8888);
+    return ScreenShotBuffer::from(device, buffer, std::move(sync), scale);
 }
 
 std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(const Rect &area, ScreenShotFlags flags, std::optional<pid_t> pidToHide)
@@ -162,8 +167,8 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(const Rect &ar
 
     GraphicsBuffer *buffer = device->allocator()->allocate(GraphicsBufferOptions{
         .size = nativeSize,
-        .format = DRM_FORMAT_ARGB8888,
-        .modifiers = backend->supportedFormats()[DRM_FORMAT_ARGB8888],
+        .format = DRM_FORMAT_XRGB8888,
+        .modifiers = backend->supportedFormats()[DRM_FORMAT_XRGB8888],
         .software = false,
         .scanout = false,
         .render = true,
@@ -207,7 +212,7 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(const Rect &ar
         return std::nullopt;
     }
 
-    return ScreenShotBuffer::from(device, buffer, std::move(sync), scale, QImage::Format_RGBX8888);
+    return ScreenShotBuffer::from(device, buffer, std::move(sync), scale);
 }
 
 std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(Window *window, ScreenShotFlags flags)
@@ -273,7 +278,7 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(Window *window
     }
     FileDescriptor sync = renderer->endFrame(Region::infinite(), nullptr, nullptr);
 
-    return ScreenShotBuffer::from(device, buffer, std::move(sync), scale, QImage::Format_RGBA8888_Premultiplied);
+    return ScreenShotBuffer::from(device, buffer, std::move(sync), scale);
 }
 
 } // namespace KWin

@@ -48,7 +48,7 @@ struct ScreenShotBuffer
     QImage::Format format;
     qreal devicePixelRatio;
 
-    static std::optional<ScreenShotBuffer> from(RenderDevice *device, GraphicsBuffer *buffer, FileDescriptor &&sync, qreal devicePixelRatio, QImage::Format format);
+    static std::optional<ScreenShotBuffer> from(RenderDevice *device, GraphicsBuffer *buffer, FileDescriptor &&sync, qreal devicePixelRatio);
 };
 
 /**
