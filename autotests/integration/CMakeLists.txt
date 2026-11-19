@@ -227,6 +227,7 @@ if (KWIN_BUILD_EIS)
     target_compile_definitions(testLibeiInput PRIVATE -DEIS_HAVE_16=${EIS_HAVE_16})
 endif()
 
+integrationTest(NAME testScreenshot SRCS screenshot_test.cpp)
 
 add_subdirectory(scripting)
 add_subdirectory(effects)

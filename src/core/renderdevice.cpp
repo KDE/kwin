@@ -474,6 +474,9 @@ FileDescriptor RenderDevice::clearBuffer(GraphicsBuffer *buffer)
         }
         return m_vulkanDevice->graphicsQueue()->submit(std::move(cmd), FileDescriptor{}, {buffer}).value_or(FileDescriptor{});
     } else if (auto context = eglContext()) {
+        if (!context->makeCurrent()) {
+            return FileDescriptor{};
+        }
         auto fbo = context->importDmaBufAsFbo(buffer);
         if (!fbo) {
             return FileDescriptor{};
@@ -500,6 +503,9 @@ QImage RenderDevice::download(GraphicsBuffer *buffer)
         }
         return texture->download();
     } else if (auto context = eglContext()) {
+        if (!context->makeCurrent()) {
+            return QImage{};
+        }
         auto texture = context->importDmaBufAsTexture(buffer);
         if (!texture) {
             return QImage{};
@@ -530,8 +536,8 @@ bool RenderDevice::download(GraphicsBuffer *source, FileDescriptor &&sync, QImag
 {
     if (m_vulkanDevice
         && m_vulkanDevice->transferFormats().containsFormat(source->format(), source->modifier())
-        && VulkanTexture::qImageToVulkanFormat(target.format())) {
-        const auto texture = m_vulkanDevice->importBuffer(source, VK_IMAGE_USAGE_TRANSFER_DST_BIT);
+        && VulkanTexture::qImageToVulkanFormat(target.format()) == vk::Format(FormatInfo::get(source->format())->vulkanFormat)) {
+        const auto texture = m_vulkanDevice->importBuffer(source, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
         if (!texture) {
             return false;
         }
@@ -543,7 +549,7 @@ bool RenderDevice::download(GraphicsBuffer *source, FileDescriptor &&sync, QImag
         return false;
     }
     const auto context = eglContext();
-    if (!context) {
+    if (!context || !context->makeCurrent()) {
         return false;
     }
     const auto fbo = context->importDmaBufAsFbo(source);

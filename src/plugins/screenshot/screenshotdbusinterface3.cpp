@@ -16,6 +16,7 @@
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
+#include <unistd.h>
 
 namespace KWin
 {
@@ -103,7 +104,7 @@ std::optional<pid_t> ScreenShotDBusInterface3::determineCallerPid() const
         return std::nullopt;
     }
     const QDBusReply<uint> reply = connection().interface()->servicePid(message().service());
-    if (reply.isValid()) {
+    if (reply.isValid() && pid_t(reply.value()) != getpid()) {
         return reply.value();
     } else {
         return std::nullopt;
