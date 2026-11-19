@@ -264,6 +264,7 @@ FocusScope {
     WheelHandler {
         property int wheelDelta: 0
         acceptedDevices: PointerDevice.Mouse
+        enabled: container.state === "overview" || container.state === "grid"
 
         onWheel: (event) => {
             const delta = (event.inverted ? -1 : 1) * (event.angleDelta.y ? event.angleDelta.y : -event.angleDelta.x);
