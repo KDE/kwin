@@ -14,74 +14,21 @@
 namespace KWin
 {
 
-static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
-{
-    switch (drmFormat) {
-#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
-    case DRM_FORMAT_ABGR16161616:
-        return QImage::Format_RGBA64_Premultiplied;
-    case DRM_FORMAT_XBGR16161616:
-        return QImage::Format_RGBX64;
-    case DRM_FORMAT_ARGB2101010:
-        return QImage::Format_A2RGB30_Premultiplied;
-    case DRM_FORMAT_XRGB2101010:
-        return QImage::Format_RGB30;
-    case DRM_FORMAT_ABGR2101010:
-        return QImage::Format_A2BGR30_Premultiplied;
-    case DRM_FORMAT_XBGR2101010:
-        return QImage::Format_BGR30;
-    case DRM_FORMAT_XBGR16161616F:
-        return QImage::Format_RGBX16FPx4;
-    case DRM_FORMAT_ABGR16161616F:
-        return QImage::Format_RGBA16FPx4_Premultiplied;
-#endif
-    case DRM_FORMAT_ARGB8888:
-        return QImage::Format_ARGB32_Premultiplied;
-    case DRM_FORMAT_XRGB8888:
-        // it's up to the calling code to do conversions
-    case DRM_FORMAT_XYUV8888:
-        return QImage::Format_RGB32;
-    case DRM_FORMAT_BGR888:
-        return QImage::Format_RGB888;
-    case DRM_FORMAT_RGB888:
-        return QImage::Format_BGR888;
-    default:
-        return QImage::Format_Invalid;
-    }
-}
-
 GraphicsBufferView::GraphicsBufferView(GraphicsBuffer *buffer, GraphicsBuffer::MapFlags accessFlags)
     : m_buffer(buffer)
 {
-    int width;
-    int height;
-    int format;
-
-    if (auto dmabuf = buffer->dmabufAttributes()) {
-        if (dmabuf->planeCount != 1) {
-            return;
-        }
-        width = dmabuf->width;
-        height = dmabuf->height;
-        format = dmabuf->format;
-    } else if (auto shm = buffer->shmAttributes()) {
-        width = shm->size.width();
-        height = shm->size.height();
-        format = shm->format;
-    } else if (buffer->singlePixelAttributes()) {
-        width = 1;
-        height = 1;
-        format = DRM_FORMAT_ARGB8888;
-    } else {
-        qCWarning(KWIN_CORE) << "Cannot create a graphics buffer view for unknown buffer type" << buffer;
+    const QSize size = buffer->size();
+    const uint32_t format = buffer->format();
+    const auto info = FormatInfo::get(format);
+    if (!info || !info->qimageFormat) {
         return;
     }
 
     const auto [data, stride] = buffer->map(accessFlags);
     if (data) {
-        m_image = QImage(static_cast<uchar *>(data), width, height, stride, drmFormatToQImageFormat(format));
+        m_image = QImage(static_cast<uchar *>(data), size.width(), size.height(), stride, *info->qimageFormat);
         if (Q_UNLIKELY(m_image.isNull())) {
-            qCWarning(KWIN_CORE) << "Cannot create a graphics buffer view" << buffer << FormatInfo::drmFormatName(format) << drmFormatToQImageFormat(format);
+            qCWarning(KWIN_CORE) << "Cannot create a graphics buffer view" << buffer << FormatInfo::drmFormatName(format) << *info->qimageFormat;
         }
     }
 }
