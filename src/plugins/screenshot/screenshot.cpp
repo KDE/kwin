@@ -247,7 +247,7 @@ std::optional<ScreenShotBuffer> ScreenShotManager::takeScreenShot(Window *window
     auto renderer = scene->renderer(device);
 
     OutputLayerBeginFrameInfo beginInfo{
-        .renderTarget = RenderTarget(buffer, OutputTransform::FlipY),
+        .renderTarget = RenderTarget(buffer, OutputTransform::Normal),
         .repaint = Region::infinite(),
     };
     const auto renderInfo = renderer->beginFrame(beginInfo, nullptr, nullptr);
