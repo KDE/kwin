@@ -77,7 +77,7 @@ void FractionalRepaintTest::testBottomRow()
 
     const auto layer = static_cast<VirtualLayer *>(output->backendOutput()->compatibleOutputLayers().front());
 
-    QImage img(QSize(1080, 2280), QImage::Format::Format_RGBA8888_Premultiplied);
+    QImage img(QSize(1080, 2280), QImage::Format::Format_ARGB32_Premultiplied);
     img.fill(Qt::red);
     QCOMPARE(layer->download(), img);
 
@@ -87,9 +87,9 @@ void FractionalRepaintTest::testBottomRow()
     QVERIFY(window.presentWait());
 
     img.fill(Qt::blue);
-    // the last row of pixels should be black, not red
+    // the last row of pixels should be transparent, not red
     for (int i = 0; i < img.width(); i++) {
-        img.setPixel(i, 2279, qRgba(0, 0, 0, 255));
+        img.setPixel(i, 2279, qRgba(0, 0, 0, 0));
     }
     QCOMPARE(layer->download(), img);
 }
