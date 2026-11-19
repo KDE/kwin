@@ -27,14 +27,41 @@ var squashEffect = {
             height: 0
         };
     },
+    slotAnimationEnded: function (window, animationId) {
+        if (window.minimizeAnimation) {
+            const index = window.minimizeAnimation.indexOf(animationId);
+            if (index > -1) {
+                window.minimizeAnimation.splice(index, 1);
+
+                if (window.minimizeAnimation.length === 0) {
+                    delete window.minimizeAnimation;
+                } else {
+                    return;
+                }
+            }
+        }
+
+        if (window.unminimizeAnimation) {
+            const index = window.unminimizeAnimation.indexOf(animationId);
+            if (index > -1) {
+                window.unminimizeAnimation.splice(index, 1);
+
+                if (window.unminimizeAnimation.length === 0) {
+                    delete window.unminimizeAnimation;
+                } else {
+                    return;
+                }
+            }
+        }
+
+        window.windowFrameGeometryChanged.disconnect(squashEffect.slotWindowFrameGeometryChanged);
+
+        window.setData(Effect.WindowForceBlurRole, null);
+    },
     slotWindowMinimized: function (window) {
         if (effects.hasActiveFullScreenEffect) {
             return;
         }
-
-        window.setData(Effect.WindowForceBlurRole, true);
-
-        var iconRect = squashEffect.iconGeometry(window);
 
         if (window.unminimizeAnimation) {
             if (redirect(window.unminimizeAnimation, Effect.Backward)) {
@@ -51,9 +78,10 @@ var squashEffect = {
             cancel(window.minimizeAnimation);
         }
 
-        var windowRect = window.geometry;
-
         window.setData(Effect.WindowForceBlurRole, true);
+
+        const iconRect = squashEffect.iconGeometry(window);
+        const windowRect = window.geometry;
 
         window.minimizeAnimation = animate({
             window: window,
@@ -92,15 +120,13 @@ var squashEffect = {
                 }
             ]
         });
+
+        window.windowFrameGeometryChanged.connect(squashEffect.slotWindowFrameGeometryChanged);
     },
     slotWindowUnminimized: function (window) {
         if (effects.hasActiveFullScreenEffect) {
             return;
         }
-
-        window.setData(Effect.WindowForceBlurRole, true);
-
-        var iconRect = squashEffect.iconGeometry(window);
 
         if (window.minimizeAnimation) {
             if (redirect(window.minimizeAnimation, Effect.Backward)) {
@@ -117,9 +143,10 @@ var squashEffect = {
             cancel(window.unminimizeAnimation);
         }
 
-        var windowRect = window.geometry;
-
         window.setData(Effect.WindowForceBlurRole, true);
+
+        const iconRect = squashEffect.iconGeometry(window);
+        const windowRect = window.geometry;
 
         window.unminimizeAnimation = animate({
             window: window,
@@ -158,6 +185,40 @@ var squashEffect = {
                 }
             ]
         });
+
+        window.windowFrameGeometryChanged.connect(squashEffect.slotWindowFrameGeometryChanged);
+    },
+    slotWindowFrameGeometryChanged: function (window) {
+        const iconRect = squashEffect.iconGeometry(window);
+        const windowRect = window.geometry;
+
+        if (window.minimizeAnimation) {
+            // The window changed its geometry while being animated to the panel.
+
+            retarget(window.minimizeAnimation[0], {
+                value1: iconRect.width,
+                value2: iconRect.height
+            });
+
+            retarget(window.minimizeAnimation[1], {
+                value1: iconRect.x - windowRect.x -
+                    (windowRect.width - iconRect.width) / 2,
+                value2: iconRect.y - windowRect.y -
+                    (windowRect.height - iconRect.height) / 2,
+            });
+        } else if (window.unminimizeAnimation) {
+            // The window changed its geometry while being animated from the panel.
+
+            retarget(window.unminimizeAnimation[0], {
+                value1: windowRect.width,
+                value2: windowRect.height
+            });
+
+            retarget(window.unminimizeAnimation[1], {
+                value1: 0.0,
+                value2: 0.0
+            });
+        }
     },
     slotWindowAdded: function (window) {
         window.minimizedChanged.connect(() => {
@@ -168,12 +229,9 @@ var squashEffect = {
             }
         });
     },
-    restoreForceBlurState: function(window) {
-        window.setData(Effect.WindowForceBlurRole, null);
-    },
     init: function () {
         effect.configChanged.connect(squashEffect.loadConfig);
-        effect.animationEnded.connect(this.restoreForceBlurState.bind(this));
+        effect.animationEnded.connect(squashEffect.slotAnimationEnded);
 
         effects.windowAdded.connect(squashEffect.slotWindowAdded);
         for (const window of effects.stackingOrder) {
