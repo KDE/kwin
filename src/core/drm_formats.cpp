@@ -632,6 +632,30 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                             .yuv = false,
                         }},
 
+    // 48bpp
+    {DRM_FORMAT_RGB161616, FormatInfo{
+                               .drmFormat = DRM_FORMAT_RGB161616,
+                               .bitsPerColor = 16,
+                               .alphaBits = 0,
+                               .bitsPerPixel = 48,
+                               .openglFormat = GL_RGB16,
+                               .vulkanFormat = VK_FORMAT_UNDEFINED,
+                               .floatingPoint = false,
+                               .yuv = false,
+                           }},
+    {DRM_FORMAT_BGR161616, FormatInfo{
+                               .drmFormat = DRM_FORMAT_BGR161616,
+                               .bitsPerColor = 16,
+                               .alphaBits = 0,
+                               .bitsPerPixel = 48,
+                               .openglFormat = GL_RGB16,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
+                               .vulkanFormat = VK_FORMAT_R16G16B16_UNORM,
+#endif
+                               .floatingPoint = false,
+                               .yuv = false,
+                           }},
+
     // YUV formats. TODO support them with Vulkan
     {DRM_FORMAT_NV12, FormatInfo{
                           .drmFormat = DRM_FORMAT_NV12,
