@@ -82,7 +82,7 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importBuffer(GraphicsBuffer *buffer
     return ret;
 }
 
-std::shared_ptr<VulkanBuffer> VulkanDevice::importBufferAsBuffer(GraphicsBuffer *buffer, vk::BufferUsageFlags usage)
+std::shared_ptr<VulkanBuffer> VulkanDevice::importBufferAsBuffer(GraphicsBuffer *buffer)
 {
     if (!buffer->dmabufAttributes() && !buffer->hostDataAttributes()) {
         return nullptr;
@@ -91,6 +91,7 @@ std::shared_ptr<VulkanBuffer> VulkanDevice::importBufferAsBuffer(GraphicsBuffer 
     if (it != m_importedBuffers.end()) {
         return it.value();
     }
+    constexpr auto usage = vk::BufferUsageFlagBits::eTransferSrc | vk::BufferUsageFlagBits::eTransferDst;
     std::shared_ptr<VulkanBuffer> ret;
     if (buffer->hostDataAttributes()) {
         ret = importHostPointerAsBuffer(buffer->hostDataAttributes(), usage);
