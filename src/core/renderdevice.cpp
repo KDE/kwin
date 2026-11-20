@@ -273,16 +273,13 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             minImportedHostPointerAlignment = hostProperties.minImportedHostPointerAlignment;
         }
 
-        std::vector<VkDeviceQueueCreateInfo> queueInfo;
-        float priority = 1;
+        std::vector<vk::DeviceQueueCreateInfo> queueInfo;
+        const std::array priorities{1.0f};
         for (uint32_t i = 0; i < queueProperties.size(); i++) {
-            queueInfo.push_back(VkDeviceQueueCreateInfo{
-                .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
-                .pNext = nullptr,
-                .flags = {},
-                .queueFamilyIndex = i,
-                .queueCount = 1,
-                .pQueuePriorities = &priority,
+            queueInfo.push_back(vk::DeviceQueueCreateInfo{
+                vk::DeviceQueueCreateFlags{},
+                i,
+                priorities,
             });
         }
 
@@ -292,27 +289,19 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             continue;
         }
 
-        vk::PhysicalDeviceHostQueryResetFeatures hostQueryReset;
-        hostQueryReset.hostQueryReset = true;
-        vk::PhysicalDeviceSynchronization2Features syncFeatures;
-        syncFeatures.synchronization2 = true;
-        syncFeatures.pNext = &hostQueryReset;
-        VkPhysicalDeviceFeatures features{
-            .robustBufferAccess = true,
-        };
-        VkDeviceCreateInfo deviceInfo{
-            .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
-            .pNext = &syncFeatures,
-            .flags = {},
-            .queueCreateInfoCount = uint32_t(queueInfo.size()),
-            .pQueueCreateInfos = queueInfo.data(),
-            .enabledLayerCount = 0,
-            .ppEnabledLayerNames = nullptr,
-            .enabledExtensionCount = uint32_t(usedExtensions.size()),
-            .ppEnabledExtensionNames = usedExtensions.data(),
-            .pEnabledFeatures = &features,
-        };
+        vk::StructureChain<vk::PhysicalDeviceFeatures2, vk::PhysicalDeviceSynchronization2Features, vk::PhysicalDeviceHostQueryResetFeatures, vk::PhysicalDeviceShaderObjectFeaturesEXT> features;
+        features.get<vk::PhysicalDeviceFeatures2>().features.robustBufferAccess = true;
+        features.get<vk::PhysicalDeviceHostQueryResetFeatures>().hostQueryReset = true;
+        features.get<vk::PhysicalDeviceSynchronization2Features>().synchronization2 = true;
 
+        vk::DeviceCreateInfo deviceInfo{
+            vk::DeviceCreateFlags{},
+            queueInfo,
+            {},
+            usedExtensions,
+            nullptr,
+            &features.get<vk::PhysicalDeviceFeatures2>(),
+        };
         auto [result, logicalDevice] = physicalDevice.createDevice(deviceInfo);
         if (result != vk::Result::eSuccess) {
             qCWarning(KWIN_VULKAN, "vkCreateDevice for %s failed: %s", deviceName, vk::to_string(vk::Result(result)).c_str());
@@ -322,7 +311,7 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
         auto ret = std::make_unique<VulkanDevice>(
             physicalDevice,
             std::move(logicalDevice),
-            queueProperties | std::ranges::to<std::vector<VkQueueFamilyProperties>>(),
+            std::move(queueProperties),
             basicProperties.properties.deviceType,
             minImportedHostPointerAlignment);
         if (ret->transferFormats().isEmpty()) {
