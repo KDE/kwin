@@ -1,5 +1,4 @@
 # Translation of kwin into Japanese.
-# SPDX-FileCopyrightText: 2026 Mint <5602mint@gmail.com>
 # This file is distributed under the same license as the kdebase package.
 # Noboru Sinohara <shinobo@leo.bekkoame.ne.jp>, 2002.
 # Ryuichi Kakuda <ryuk@user.script.nu>, 2004.
@@ -9,13 +8,14 @@
 # TAKANO Yuji <takachan@running-dog.net>, 2015.
 # Tomohiro Hyakutake <tomhioo@outlook.jp>, 2019.
 # Fumiaki Okushi <fumiaki.okushi@gmail.com>, 2004, 2005, 2006, 2007, 2008, 2010, 2015, 2019, 2021.
+# SPDX-FileCopyrightText: 2026 Mint <5602mint@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-04 03:16+0000\n"
-"PO-Revision-Date: 2026-07-23 17:22+0900\n"
+"PO-Revision-Date: 2026-11-14 11:27+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
@@ -25,13 +25,13 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 26.04.3\n"
+"X-Generator: Lokalize 26.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
-"Taiki Komoda,Noboru Sinohara,Ryuichi Kakuda, Fumiaki Okushi,Shinichi Tsunoda,"
+"Taiki Komoda,Noboru Sinohara,Ryuichi Kakuda,Fumiaki Okushi,Shinichi Tsunoda,"
 "Mint"
 
 #, kde-format
@@ -3508,10 +3508,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Decoration policy rule type"
-msgstr "常に最前面に表示(&A)"
+msgstr "装飾ポリシールールタイプ"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:339
@@ -3839,10 +3838,9 @@ msgid "&Extensions"
 msgstr ""
 
 #: useractions.cpp:412
-#, fuzzy, kde-format
-#| msgid "&All Desktops"
+#, kde-format
 msgid "&Desktops"
-msgstr "すべてのデスクトップ(&A)"
+msgstr "デスクトップ(&D)"
 
 #: useractions.cpp:428
 #, kde-format
@@ -3877,13 +3875,12 @@ msgid "Move to New Desktop"
 msgstr "新しいデスクトップへ移動"
 
 #: useractions.cpp:552
-#, fuzzy, kde-format
-#| msgid "Window to Screen 1"
+#, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
 "number, second the output identifier. E.g. Screen 1 (HDMI1)"
 msgid "Screen &%1 (%2)"
-msgstr "ウィンドウをスクリーン 1 へ"
+msgstr "スクリーン &%1 (%2)"
 
 #: useractions.cpp:579
 #, kde-format
@@ -4374,10 +4371,9 @@ msgid "More displays are enabled than are supported by the graphics card."
 msgstr ""
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration"
+#, kde-format
 msgid "The driver rejected the output configuration: %s"
-msgstr "ドライバーが出力設定を拒否しました"
+msgstr "ドライバが出力設定を拒否しました。エラー内容: %s"
 
 #: window.cpp:3178
 #, kde-format
@@ -4437,13 +4433,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland がクラッシュしました"
-
-#~ msgctxt "@label"
-#~ msgid "Paint Amount"
-#~ msgstr "描画量"
-
-#~ msgid "Desktop effects were restarted due to a graphics reset"
-#~ msgstr "グラフィックスのリセットにより、デスクトップ効果が再起動しました"
-
-#~ msgid "Disable configuration options"
-#~ msgstr "設定オプションを無効化"
