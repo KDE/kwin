@@ -20,7 +20,7 @@ namespace KWin
 {
 
 VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::Device &&logicalDevice,
-                           std::vector<VkQueueFamilyProperties> &&queueProperties, vk::PhysicalDeviceType type,
+                           std::vector<vk::QueueFamilyProperties> &&queueProperties, vk::PhysicalDeviceType type,
                            std::optional<VkDeviceSize> minImportedHostPointerAlignment)
     : m_type(type)
     , m_physical(physicalDevice)
@@ -48,8 +48,8 @@ VulkanDevice::~VulkanDevice()
 void VulkanDevice::getQueues()
 {
     // prefer the most minimal capabilities for the transfer queue
-    auto transfer = m_queueProperties | std::views::filter([](const VkQueueFamilyProperties &props) {
-        return props.queueFlags & VK_QUEUE_TRANSFER_BIT;
+    auto transfer = m_queueProperties | std::views::filter([](const vk::QueueFamilyProperties &props) {
+        return bool(props.queueFlags & vk::QueueFlagBits::eTransfer);
     });
     const auto transferIt = std::ranges::min_element(transfer, [](const VkQueueFamilyProperties &left, const VkQueueFamilyProperties &right) {
         return std::popcount(left.queueFlags) < std::popcount(right.queueFlags);
@@ -58,8 +58,8 @@ void VulkanDevice::getQueues()
         m_transferQueue = VulkanQueue::create(this, std::distance(m_queueProperties.begin(), transferIt.base()));
     }
 
-    auto it = std::ranges::find_if(m_queueProperties, [](const VkQueueFamilyProperties &props) {
-        return props.queueFlags & VK_QUEUE_GRAPHICS_BIT;
+    auto it = std::ranges::find_if(m_queueProperties, [](const vk::QueueFamilyProperties &props) {
+        return bool(props.queueFlags & vk::QueueFlagBits::eGraphics);
     });
     Q_ASSERT(it != m_queueProperties.end());
     m_graphicsQueue = VulkanQueue::create(this, std::distance(m_queueProperties.begin(), it));
@@ -524,7 +524,7 @@ VulkanQueue *VulkanDevice::transferQueue() const
     return m_transferQueue.get();
 }
 
-std::span<const VkQueueFamilyProperties> VulkanDevice::queueFamilyProperties() const
+std::span<const vk::QueueFamilyProperties> VulkanDevice::queueFamilyProperties() const
 {
     return m_queueProperties;
 }
