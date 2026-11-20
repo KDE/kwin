@@ -199,13 +199,6 @@ bool EglBackend::testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice)
         return false;
     }
 
-    if (device != m_renderDevice && device->vulkanDevice() && device->vulkanDevice()->transferFormats().containsFormat(buffer->dmabufAttributes()->format, buffer->dmabufAttributes()->modifier)) {
-        if (device->vulkanDevice()->importBuffer(buffer, vk::ImageUsageFlagBits::eTransferSrc)) {
-            return true;
-        }
-        // allow falling back to EGL
-    }
-
     // NOTE for YUV buffers this uses whatever default values
     // the OpenGL driver chooses, since we don't know yet which
     // parameters the client will use with the buffer later on
