@@ -9,17 +9,27 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
+#include "keyboard_input.h"
 #include "pointer_input.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
+#include "xkb.h"
 
 #include <QAbstractEventDispatcher>
 #include <QSocketNotifier>
 
+#include <linux/input-event-codes.h>
 #include <netwm.h>
 #include <xcb/xcb_icccm.h>
+#define explicit xcb_explicit
+#include <xcb/xkb.h>
+#undef explicit
+#include <xkbcommon/xkbcommon-keysyms.h>
+#include <xkbcommon/xkbcommon-x11.h>
+
+#include <utility>
 
 namespace KWin
 {
@@ -32,6 +42,7 @@ private Q_SLOTS:
     void init();
     void testPointerEnterLeaveSsd();
     void testPointerEventLeaveCsd();
+    void testKeyboardInput();
 };
 
 void XWaylandInputTest::initTestCase()
@@ -65,15 +76,26 @@ class X11EventReaderHelper : public QObject
 
 public:
     X11EventReaderHelper(xcb_connection_t *c);
+    bool enableKeyboard();
+    QString receivedText() const;
+    xkb_keysym_t keySymForKeycode(xkb_keycode_t keycode) const;
 
 Q_SIGNALS:
     void entered(const QPoint &localPoint);
     void left(const QPoint &localPoint);
+    void receivedTextChanged();
+    void keymapChanged();
 
 private:
     void processXcbEvents();
+    bool updateKeymap();
     xcb_connection_t *m_connection;
     QSocketNotifier *m_notifier;
+    uint8_t m_xkbEventBase = 0;
+    Test::XkbContextPtr m_xkbContext = Test::XkbContextPtr(nullptr, &xkb_context_unref);
+    Test::XkbKeymapPtr m_xkbKeymap = Test::XkbKeymapPtr(nullptr, &xkb_keymap_unref);
+    Test::XkbStatePtr m_xkbState = Test::XkbStatePtr(nullptr, &xkb_state_unref);
+    QString m_receivedText;
 };
 
 X11EventReaderHelper::X11EventReaderHelper(xcb_connection_t *c)
@@ -86,10 +108,93 @@ X11EventReaderHelper::X11EventReaderHelper(xcb_connection_t *c)
     connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::awake, this, &X11EventReaderHelper::processXcbEvents);
 }
 
+bool X11EventReaderHelper::enableKeyboard()
+{
+    uint16_t majorVersion;
+    uint16_t minorVersion;
+    uint8_t eventBase;
+    uint8_t errorBase;
+    if (!xkb_x11_setup_xkb_extension(m_connection,
+                                     XKB_X11_MIN_MAJOR_XKB_VERSION,
+                                     XKB_X11_MIN_MINOR_XKB_VERSION,
+                                     XKB_X11_SETUP_XKB_EXTENSION_NO_FLAGS,
+                                     &majorVersion,
+                                     &minorVersion,
+                                     &eventBase,
+                                     &errorBase)) {
+        return false;
+    }
+    m_xkbEventBase = eventBase;
+
+    const uint16_t xkbEvents = XCB_XKB_EVENT_TYPE_NEW_KEYBOARD_NOTIFY | XCB_XKB_EVENT_TYPE_MAP_NOTIFY;
+    const uint16_t mapParts = XCB_XKB_MAP_PART_KEY_TYPES
+        | XCB_XKB_MAP_PART_KEY_SYMS
+        | XCB_XKB_MAP_PART_MODIFIER_MAP
+        | XCB_XKB_MAP_PART_EXPLICIT_COMPONENTS
+        | XCB_XKB_MAP_PART_KEY_ACTIONS
+        | XCB_XKB_MAP_PART_KEY_BEHAVIORS
+        | XCB_XKB_MAP_PART_VIRTUAL_MODS
+        | XCB_XKB_MAP_PART_VIRTUAL_MOD_MAP;
+    xcb_xkb_select_events(m_connection,
+                          XCB_XKB_ID_USE_CORE_KBD,
+                          xkbEvents,
+                          0,
+                          xkbEvents,
+                          mapParts,
+                          mapParts,
+                          nullptr);
+
+    m_xkbContext.reset(xkb_context_new(XKB_CONTEXT_NO_FLAGS));
+    if (!m_xkbContext) {
+        return false;
+    }
+
+    return updateKeymap();
+}
+
+bool X11EventReaderHelper::updateKeymap()
+{
+    const int32_t deviceId = xkb_x11_get_core_keyboard_device_id(m_connection);
+    if (deviceId == -1) {
+        return false;
+    }
+    Test::XkbKeymapPtr keymap(xkb_x11_keymap_new_from_device(m_xkbContext.get(), m_connection, deviceId, XKB_KEYMAP_COMPILE_NO_FLAGS), &xkb_keymap_unref);
+    if (!keymap) {
+        return false;
+    }
+    Test::XkbStatePtr state(xkb_x11_state_new_from_device(keymap.get(), m_connection, deviceId), &xkb_state_unref);
+    if (!state) {
+        return false;
+    }
+
+    m_xkbState = std::move(state);
+    m_xkbKeymap = std::move(keymap);
+
+    return true;
+}
+
+QString X11EventReaderHelper::receivedText() const
+{
+    return m_receivedText;
+}
+
+xkb_keysym_t X11EventReaderHelper::keySymForKeycode(xkb_keycode_t keycode) const
+{
+    return xkb_state_key_get_one_sym(m_xkbState.get(), keycode);
+}
+
 void X11EventReaderHelper::processXcbEvents()
 {
     while (auto event = xcb_poll_for_event(m_connection)) {
         const uint8_t eventType = event->response_type & ~0x80;
+        if (m_xkbEventBase != 0 && eventType == m_xkbEventBase) {
+            const auto xkbEvent = reinterpret_cast<xcb_xkb_map_notify_event_t *>(event);
+            if (xkbEvent->xkbType == XCB_XKB_MAP_NOTIFY || xkbEvent->xkbType == XCB_XKB_NEW_KEYBOARD_NOTIFY) {
+                if (updateKeymap()) {
+                    Q_EMIT keymapChanged();
+                }
+            }
+        }
         switch (eventType) {
         case XCB_ENTER_NOTIFY: {
             auto enterEvent = reinterpret_cast<xcb_enter_notify_event_t *>(event);
@@ -99,6 +204,25 @@ void X11EventReaderHelper::processXcbEvents()
         case XCB_LEAVE_NOTIFY: {
             auto leaveEvent = reinterpret_cast<xcb_leave_notify_event_t *>(event);
             Q_EMIT left(QPoint(leaveEvent->event_x, leaveEvent->event_y));
+            break;
+        }
+        case XCB_KEY_PRESS:
+        case XCB_KEY_RELEASE: {
+            if (m_xkbState) {
+                const auto keyEvent = reinterpret_cast<xcb_key_press_event_t *>(event);
+                const xkb_keycode_t keycode = keyEvent->detail;
+                const bool pressed = eventType == XCB_KEY_PRESS;
+                xkb_state_update_key(m_xkbState.get(), keycode, pressed ? XKB_KEY_DOWN : XKB_KEY_UP);
+
+                if (pressed) {
+                    char text[64];
+                    const int length = xkb_state_key_get_utf8(m_xkbState.get(), keycode, text, sizeof(text));
+                    if (length > 0) {
+                        m_receivedText.append(QString::fromUtf8(text, length));
+                        Q_EMIT receivedTextChanged();
+                    }
+                }
+            }
             break;
         }
         }
@@ -251,6 +375,86 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     QCOMPARE(leftSpy.last().first().toPoint(), QPoint(60, 105));
 
     // Destroy the window.
+    QSignalSpy windowClosedSpy(window, &X11Window::closed);
+    xcb_unmap_window(c.get(), windowId);
+    xcb_destroy_window(c.get(), windowId);
+    xcb_flush(c.get());
+    QVERIFY(windowClosedSpy.wait());
+}
+
+void XWaylandInputTest::testKeyboardInput()
+{
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+
+    X11EventReaderHelper eventReader(c.get());
+    QVERIFY(eventReader.enableKeyboard());
+    QSignalSpy keymapChangedSpy(&eventReader, &X11EventReaderHelper::keymapChanged);
+
+    const xcb_window_t windowId = xcb_generate_id(c.get());
+    const uint32_t values[] = {XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_KEY_RELEASE};
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+                      100, 100, 400, 300, 0,
+                      XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT,
+                      XCB_CW_EVENT_MASK, values);
+    xcb_size_hints_t hints{};
+    xcb_icccm_size_hints_set_position(&hints, 1, 100, 100);
+    xcb_icccm_size_hints_set_size(&hints, 1, 400, 300);
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    NETWinInfo info(c.get(), windowId, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
+    info.setWindowType(NET::Normal);
+
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
+
+    QVERIFY(windowCreatedSpy.wait());
+    X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
+    QVERIFY(window);
+    QVERIFY(Test::waitForWaylandSurface(window));
+    workspace()->activateWindow(window);
+    QVERIFY(window->isActive());
+
+    quint32 timestamp = 0;
+    auto tap = [&timestamp](quint32 key) {
+        Test::keyboardKeyPressed(key, timestamp++);
+        Test::keyboardKeyReleased(key, timestamp++);
+    };
+    auto shiftedTap = [&timestamp](quint32 key) {
+        Test::keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
+        Test::keyboardKeyPressed(key, timestamp++);
+        Test::keyboardKeyReleased(key, timestamp++);
+        Test::keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
+    };
+
+    // Exercise ordinary keys using the default keymap before generating custom keymaps.
+    tap(KEY_A);
+    shiftedTap(KEY_B);
+    tap(KEY_SPACE);
+
+    auto sendCustomKeysym = [&](xkb_keysym_t keysym, const QString &character) {
+        keymapChangedSpy.clear();
+        QVERIFY(input()->keyboard()->xkb()->updateToKeymapForKeySym(Xkb::scratchKeycode, keysym));
+        QVERIFY(keymapChangedSpy.wait()); // IRL we can't wait for this!
+
+        const QString receivedText = eventReader.receivedText();
+        tap(KEY_F24);
+        QTRY_COMPARE(eventReader.receivedText(), receivedText + character); // IRL we can't wait for this!
+
+        keymapChangedSpy.clear();
+        input()->keyboard()->xkb()->reconfigure();
+        QVERIFY(keymapChangedSpy.wait()); // IRL we can't wait for this!
+    };
+
+    sendCustomKeysym(XKB_KEY_adiaeresis, QStringLiteral("ä"));
+    sendCustomKeysym(XKB_KEY_Adiaeresis, QStringLiteral("Ä"));
+    tap(KEY_SPACE);
+    sendCustomKeysym(0x01000000 | 0xC548, QStringLiteral("안"));
+    sendCustomKeysym(0x01000000 | 0x1F60A, QStringLiteral("😊"));
+    tap(KEY_F);
+
+    QTRY_COMPARE(eventReader.receivedText(), QStringLiteral("aB äÄ 안😊f"));
+
     QSignalSpy windowClosedSpy(window, &X11Window::closed);
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
