@@ -436,7 +436,6 @@ FormatModifierMap VulkanDevice::queryFormats(vk::ImageUsageFlags flags) const
 
             const vk::Result result = physical.getImageFormatProperties2(&imageInfo, &imageProps);
             if (result == vk::Result::eErrorFormatNotSupported) {
-                qCDebug(KWIN_VULKAN) << "unsupported format:" << vk::to_string(vk::Format(info.vulkanFormat));
                 continue;
             } else if (result != vk::Result::eSuccess) {
                 qCWarning(KWIN_VULKAN) << "failed to get image format properties:" << vk::to_string(result);
