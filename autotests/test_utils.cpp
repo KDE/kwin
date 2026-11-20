@@ -10,7 +10,9 @@
 
 #include <config-kwin.h>
 
+#include <fcntl.h>
 #include <sys/mman.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 #include "utils/memorymap.h"
@@ -18,6 +20,7 @@
 
 #include <QScopeGuard>
 #include <QSemaphore>
+#include <QTemporaryFile>
 #include <QTest>
 #include <QThreadPool>
 
@@ -30,6 +33,7 @@ private Q_SLOTS:
     void testRamFile();
     void testSealedRamFile();
     void testUnmapWithBusyGlobalThreadPool();
+    void testMemoryMapClosesItsFileDescriptor();
 };
 
 static const QByteArray s_testByteArray = QByteArrayLiteral("Test Data \0\1\2\3");
@@ -109,6 +113,42 @@ void TestUtils::testUnmapWithBusyGlobalThreadPool()
         QVERIFY(isMapped(address));
     }
     QTRY_VERIFY(!isMapped(address));
+}
+
+static bool isSameFile(int fd, int otherFd)
+{
+    struct stat st;
+    struct stat otherSt;
+    if (fstat(fd, &st) != 0 || fstat(otherFd, &otherSt) != 0) {
+        return false;
+    }
+    return st.st_dev == otherSt.st_dev && st.st_ino == otherSt.st_ino;
+}
+
+void TestUtils::testMemoryMapClosesItsFileDescriptor()
+{
+    // The map keeps a duplicate of the file descriptor and closes it after unmapping.
+    QTemporaryFile file;
+    QVERIFY(file.open());
+    QVERIFY(file.resize(1 << 20));
+    const FileDescriptor fd(dup(file.handle()));
+    QVERIFY(fd.isValid());
+
+    // duplicate() takes the lowest free number, which is the one probed here.
+    int keptFd = fd.duplicate().get();
+    QVERIFY(keptFd != -1);
+    QVERIFY(!isSameFile(keptFd, fd.get()));
+
+    void *address;
+    {
+        MemoryMap map(1 << 20, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+        QVERIFY(map.isValid());
+        address = map.data();
+        QVERIFY(isSameFile(keptFd, fd.get()));
+    }
+    QTRY_VERIFY(!isMapped(address));
+    QTRY_VERIFY(!isSameFile(keptFd, fd.get()));
+    QVERIFY(fcntl(fd.get(), F_GETFD) != -1);
 }
 
 QTEST_MAIN(TestUtils)

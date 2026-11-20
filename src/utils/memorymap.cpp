@@ -28,14 +28,15 @@ public:
 
 Q_GLOBAL_STATIC(UnmapThreadPool, s_unmapThreadPool)
 
-void asyncMunmap(void *addr, size_t length)
+void asyncMunmap(void *addr, size_t length, FileDescriptor &&fd)
 {
     if (s_unmapThreadPool.isDestroyed()) {
         munmap(addr, length);
         return;
     }
-    s_unmapThreadPool->start([addr, length]() {
+    s_unmapThreadPool->start([addr, length, fd = std::move(fd)]() mutable {
         munmap(addr, length);
+        fd.reset();
     });
 }
 
