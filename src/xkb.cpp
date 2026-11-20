@@ -1346,21 +1346,27 @@ XkbKeymapPtr Xkb::createKeymapForKeysym(xkb_keycode_t newKeycode,
     }
 
     const int keycode = newKeycode + EVDEV_OFFSET;
+    const char *keyName = xkb_keymap_key_get_name(m_keymap.get(), keycode);
+    if (!keyName) {
+        qWarning() << "Could not find key name for keycode" << keycode;
+        return {};
+    }
 
     const QString keyMapString = QString::asprintf(
         R"eof(xkb_keymap {
   xkb_keycodes "custom" {
-    <CSTM> = %d;
+    include "evdev+aliases(qwerty)"
   };
   xkb_types "(custom)" { include "complete" };
   xkb_compatibility "custom" { include "complete" };
   xkb_symbols "custom" {
     include "pc+us"
-    key <CSTM> { [ %s ] };
+    key <%s> { [ %s ] };
   };
 };
 )eof",
-        keycode, symName);
+        keyName,
+        symName);
 
     struct xkb_keymap *newMap =
         xkb_keymap_new_from_string(m_context,
