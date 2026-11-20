@@ -46,7 +46,7 @@ public:
     ~VulkanDevice();
 
     std::shared_ptr<VulkanTexture> importBuffer(GraphicsBuffer *buffer, vk::ImageUsageFlags usage);
-    std::shared_ptr<VulkanBuffer> importBufferAsBuffer(GraphicsBuffer *buffer, vk::BufferUsageFlags usage);
+    std::shared_ptr<VulkanBuffer> importBufferAsBuffer(GraphicsBuffer *buffer);
 
     bool isSoftwareRenderer() const;
     vk::PhysicalDeviceType type() const;

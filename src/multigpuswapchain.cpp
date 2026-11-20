@@ -550,7 +550,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
     std::shared_ptr<VulkanBuffer> dstBuffer;
     if (!buffer->hostDataAttributes() && useTransferQueue
         && buffer->format() == m_swapchain->format() && m_swapchain->modifier() == DRM_FORMAT_MOD_LINEAR) {
-        dstBuffer = copyVk->importBufferAsBuffer(m_currentSlot->buffer(), vk::BufferUsageFlagBits::eTransferDst);
+        dstBuffer = copyVk->importBufferAsBuffer(m_currentSlot->buffer());
     }
     std::shared_ptr<VulkanTexture> dstTexture;
     if (!dstBuffer) {
@@ -566,7 +566,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
     // no fitting command for copying between two image-like buffers in Vulkan
     std::shared_ptr<VulkanBuffer> srcBuffer;
     if (!dstBuffer && useTransferQueue && buffer->format() == m_swapchain->format() && buffer->modifier() == DRM_FORMAT_MOD_LINEAR) {
-        srcBuffer = copyVk->importBufferAsBuffer(buffer, vk::BufferUsageFlagBits::eTransferSrc);
+        srcBuffer = copyVk->importBufferAsBuffer(buffer);
     }
     std::shared_ptr<VulkanTexture> srcTexture;
     if (!srcBuffer) {
