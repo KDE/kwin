@@ -111,6 +111,7 @@ std::optional<OutputLayerBeginFrameInfo> ItemRendererOpenGL::beginFrame(const Ou
     const bool needsShadow = view && view->layer()
         && view->backendOutput() && view->backendOutput()->needsShadowBuffer();
     if (!needsShadow) {
+        m_shadowBuffers.erase(view);
         m_context->pushFramebuffer(fbo);
         m_context->streamingVbo()->beginFrame();
         return OutputLayerBeginFrameInfo{
