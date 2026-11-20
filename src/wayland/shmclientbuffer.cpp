@@ -108,7 +108,8 @@ void ShmPool::shm_pool_create_buffer(Resource *resource, uint32_t id, int32_t of
         return;
     }
 
-    if (offset < 0 || width <= 0 || height <= 0 || stride < width
+    const uint32_t bytesPerPixel = info->bitsPerPixel / 8;
+    if (offset < 0 || width <= 0 || height <= 0 || stride < int32_t(width * bytesPerPixel)
         || INT32_MAX / stride < height || offset > mapping->size() - stride * height) {
         wl_resource_post_error(resource->handle,
                                WL_SHM_ERROR_INVALID_STRIDE,
@@ -116,8 +117,6 @@ void ShmPool::shm_pool_create_buffer(Resource *resource, uint32_t id, int32_t of
                                width, height, stride);
         return;
     }
-
-    const uint32_t bytesPerPixel = info->bitsPerPixel / 8;
     if ((stride % bytesPerPixel) != 0) {
         wl_resource_post_error(resource->handle,
                                WL_SHM_ERROR_INVALID_STRIDE,
