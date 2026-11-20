@@ -10,6 +10,7 @@
 
 #include "core/output.h"
 #include "cursor.h"
+#include "options.h"
 #include "placement.h"
 #include "pointer_input.h"
 #include "scene/windowitem.h"
@@ -62,6 +63,8 @@ private Q_SLOTS:
     void testRestrictedResizeRight();
     void testMoveWithPerOutputVirtualDesktops();
     void testDontUpdateDesktopDueToChangeOnAnotherOutput();
+    void testMoveMaximizedRespectsBorderSnapZone();
+    void testMovePartiallyMaximizedKeepsGuideRail();
 
 private:
     std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, std::unique_ptr<Test::XdgToplevel>> showWindow();
@@ -1393,6 +1396,115 @@ void MoveResizeWindowTest::testDontUpdateDesktopDueToChangeOnAnotherOutput()
     QCOMPARE(window.m_window->isOnCurrentDesktop(), true);
     QCOMPARE(window.m_window->windowItem()->isVisible(), true);
     QCOMPARE(window.m_window->isActive(), true);
+}
+
+void MoveResizeWindowTest::testMoveMaximizedRespectsBorderSnapZone()
+{
+    const int originalBorderSnapZone = options->borderSnapZone();
+    auto restoreSnapZone = qScopeGuard([originalBorderSnapZone]() {
+        options->setBorderSnapZone(originalBorderSnapZone);
+    });
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    QVERIFY(surface != nullptr);
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    QVERIFY(shellSurface != nullptr);
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(300, 200), Qt::blue);
+    QVERIFY(window);
+
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    // Maximize the window on the 1280x1024 output (where maxRect.height() / 16 would be 64px).
+    window->setMaximize(true, true);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->maximizeMode(), MaximizeMode::MaximizeFull);
+
+    // With borderSnapZone == 10, moving less than 10px stays maximized, and moving past 10px unmaximizes
+    // without requiring the old 1/16th screen (64px) drag distance.
+    options->setBorderSnapZone(10);
+    Test::pointerMotion(QPointF(640, 512), 1);
+    workspace()->slotWindowMove();
+    QVERIFY(window->isInteractiveMove());
+
+    Test::pointerMotion(QPointF(640, 512 + 5), 2);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+
+    Test::pointerMotion(QPointF(640, 512 + 11), 3);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    window->endInteractiveMoveResize();
+
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->maximizeMode(), MaximizeMode::MaximizeRestore);
+
+    // Re-maximize and test borderSnapZone == 0: moving by 1px unmaximizes immediately.
+    window->setMaximize(true, true);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->maximizeMode(), MaximizeMode::MaximizeFull);
+
+    options->setBorderSnapZone(0);
+    Test::pointerMotion(QPointF(640, 512), 4);
+    workspace()->slotWindowMove();
+    QVERIFY(window->isInteractiveMove());
+
+    Test::pointerMotion(QPointF(640, 512 + 1), 5);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    window->endInteractiveMoveResize();
+}
+
+void MoveResizeWindowTest::testMovePartiallyMaximizedKeepsGuideRail()
+{
+    const int originalBorderSnapZone = options->borderSnapZone();
+    auto restoreSnapZone = qScopeGuard([originalBorderSnapZone]() {
+        options->setBorderSnapZone(originalBorderSnapZone);
+    });
+    options->setBorderSnapZone(10);
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    QVERIFY(surface != nullptr);
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    QVERIFY(shellSurface != nullptr);
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(300, 200), Qt::blue);
+    QVERIFY(window);
+
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    // Vertically maximize the window so it can still slide horizontally.
+    window->setMaximize(true, false);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->maximizeMode(), MaximizeMode::MaximizeVertical);
+
+    const QPointF startPos = window->frameGeometry().center();
+    Test::pointerMotion(startPos, 1);
+    workspace()->slotWindowMove();
+    QVERIFY(window->isInteractiveMove());
+
+    // Sliding horizontally with a 20px vertical drift (larger than borderSnapZone=10, smaller than 1024/16=64)
+    // should keep vertical maximization intact.
+    Test::pointerMotion(startPos + QPointF(50, 20), 2);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeMode::MaximizeVertical);
+
+    // Moving vertically beyond maxRect.height() / 16 (64px) should unmaximize.
+    Test::pointerMotion(startPos + QPointF(50, 70), 3);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    window->endInteractiveMoveResize();
 }
 
 }
