@@ -79,7 +79,7 @@ static FormatModifierMap getImportFormats(EglDisplay *eglDisplay, VulkanDevice *
         ret = eglDisplay->allSupportedDrmFormats();
     }
     if (vulkanDevice) {
-        ret = ret.merged(vulkanDevice->transferFormats());
+        ret = ret.merged(vulkanDevice->sampleFormats());
     }
     return ret;
 }
@@ -314,7 +314,7 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             std::move(queueProperties),
             basicProperties.properties.deviceType,
             minImportedHostPointerAlignment);
-        if (ret->transferFormats().isEmpty()) {
+        if (ret->sampleFormats().isEmpty()) {
             continue;
         }
         qCDebug(KWIN_VULKAN, "Found Vulkan device %s for %s", deviceName, qPrintable(path));
@@ -440,8 +440,8 @@ void RenderDevice::fetchName()
 
 FileDescriptor RenderDevice::clearBuffer(GraphicsBuffer *buffer)
 {
-    if (m_vulkanDevice && m_vulkanDevice->transferFormats().containsFormat(buffer->format(), buffer->modifier())) {
-        auto texture = m_vulkanDevice->importBuffer(buffer, vk::ImageUsageFlagBits::eTransferDst);
+    if (m_vulkanDevice && m_vulkanDevice->sampleFormats().containsFormat(buffer->format(), buffer->modifier())) {
+        auto texture = m_vulkanDevice->importBuffer(buffer, VulkanDevice::s_imageSampleFlags);
         if (!texture) {
             return FileDescriptor{};
         }
@@ -484,9 +484,9 @@ FileDescriptor RenderDevice::clearBuffer(GraphicsBuffer *buffer)
 QImage RenderDevice::download(GraphicsBuffer *buffer)
 {
     if (m_vulkanDevice
-        && m_vulkanDevice->transferFormats().containsFormat(buffer->format(), buffer->modifier())
+        && m_vulkanDevice->sampleFormats().containsFormat(buffer->format(), buffer->modifier())
         && VulkanTexture::vulkanToQImageFormat(vk::Format(FormatInfo::get(buffer->format())->vulkanFormat))) {
-        auto texture = m_vulkanDevice->importBuffer(buffer, vk::ImageUsageFlagBits::eTransferSrc);
+        auto texture = m_vulkanDevice->importBuffer(buffer, VulkanDevice::s_imageSampleFlags);
         if (!texture) {
             return QImage{};
         }
@@ -524,9 +524,9 @@ static std::optional<GLenum> closestGLType(QImage::Format format)
 bool RenderDevice::download(GraphicsBuffer *source, FileDescriptor &&sync, QImage &target)
 {
     if (m_vulkanDevice
-        && m_vulkanDevice->transferFormats().containsFormat(source->format(), source->modifier())
+        && m_vulkanDevice->sampleFormats().containsFormat(source->format(), source->modifier())
         && VulkanTexture::qImageToVulkanFormat(target.format()) == vk::Format(FormatInfo::get(source->format())->vulkanFormat)) {
-        const auto texture = m_vulkanDevice->importBuffer(source, vk::ImageUsageFlagBits::eTransferSrc);
+        const auto texture = m_vulkanDevice->importBuffer(source, VulkanDevice::s_imageSampleFlags);
         if (!texture) {
             return false;
         }
