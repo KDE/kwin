@@ -109,27 +109,34 @@ void EglBackend::updateDmabufTranches()
     m_tranches.clear();
 
     // put the "main" device first, with EGL format+modifiers
+    RenderDevice *main = m_renderDevice;
+    const auto &devices = GpuManager::s_self->renderDevices();
+    const auto alternate = std::ranges::find_if(devices, [main](const auto &dev) {
+        return dev.get() != main && !dev->isSoftwareDevice();
+    });
+    if (alternate != devices.end()) {
+        main = alternate->get();
+    }
     m_tranches.append({
-        .device = m_renderDevice->deviceId(),
+        .device = main->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-        .formatTable = filterFormats(m_renderDevice, nullptr, 10),
+        .formatTable = filterFormats(main, nullptr, 10),
     });
     m_tranches.append({
-        .device = m_renderDevice->deviceId(),
+        .device = main->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-        .formatTable = filterFormats(m_renderDevice, nullptr, 8),
+        .formatTable = filterFormats(main, nullptr, 8),
     });
     m_tranches.append({
-        .device = m_renderDevice->deviceId(),
+        .device = main->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-        .formatTable = filterFormats(m_renderDevice, nullptr, std::nullopt),
+        .formatTable = filterFormats(main, nullptr, std::nullopt),
     });
 
     // Other GPUs come afterwards, in no particular order.
     // Until the copy code can handle them, YUV formats are excluded from this
-    const auto &devices = GpuManager::s_self->renderDevices();
     for (const auto &device : devices) {
-        if (device.get() == m_renderDevice) {
+        if (device.get() == main) {
             continue;
         }
         if (!s_dmabufV6Env.value_or(true)) {
