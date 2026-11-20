@@ -15,6 +15,7 @@
 #include "effect/effecthandler.h"
 #include "scene/windowitem.h"
 #include "wayland/display.h"
+#include "wayland/plasmashell.h"
 #include "wayland/slide.h"
 #include "wayland/surface.h"
 
@@ -22,6 +23,9 @@
 #include <QGuiApplication>
 #include <QTimer>
 #include <QWindow>
+
+#include <algorithm>
+#include <cmath>
 
 #include <KWindowEffects>
 
@@ -96,6 +100,8 @@ void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
     // Keep these durations in sync with the value of Kirigami.Units.longDuration
     m_slideInDuration = animationTime(SlidingPopupsConfig::slideInTime() != 0 ? std::chrono::milliseconds(SlidingPopupsConfig::slideInTime()) : 200ms);
     m_slideOutDuration = animationTime(SlidingPopupsConfig::slideOutTime() != 0 ? std::chrono::milliseconds(SlidingPopupsConfig::slideOutTime()) : 200ms);
+    m_morphEasing = QEasingCurve(QEasingCurve::BezierSpline);
+    m_morphEasing.addCubicBezierSegment(QPointF(0.2, 0.8), QPointF(0.2, 1.0), QPointF(1.0, 1.0));
 
     for (auto &[window, animation] : m_animations) {
         animation.timeLine.setDuration(animation.kind == AnimationKind::In ? m_slideInDuration : m_slideOutDuration);
@@ -128,6 +134,12 @@ bool SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
     auto animationIt = m_animations.find(w);
     if (animationIt == m_animations.end()) {
         return effects->paintWindow(renderTarget, viewport, w, mask, deviceGeometry, data);
+    }
+
+    if (animationIt->second.morph) {
+        Region effectiveRegion = deviceGeometry;
+        paintMorph(animationIt->second, w, data, effectiveRegion, viewport);
+        return effects->paintWindow(renderTarget, viewport, w, mask, effectiveRegion, data);
     }
 
     const AnimationData &animData = m_animationsData[w];
@@ -173,8 +185,11 @@ void SlidingPopupsEffect::postPaintScreen()
 {
     for (auto animationIt = m_animations.begin(); animationIt != m_animations.end();) {
         EffectWindow *w = animationIt->first;
-        const AnimationData &animData = m_animationsData[w];
-        effects->addRepaint(damagedLogicalArea(w, animData));
+        if (animationIt->second.morph) {
+            effects->addRepaint(w->expandedGeometry());
+        } else {
+            effects->addRepaint(damagedLogicalArea(w, m_animationsData[w]));
+        }
 
         if (animationIt->second.timeLine.done()) {
             if (!w->isDeleted()) {
@@ -226,6 +241,7 @@ void SlidingPopupsEffect::slotWindowClosed(EffectWindow *w)
 void SlidingPopupsEffect::slotWindowDeleted(EffectWindow *w)
 {
     m_animationsData.remove(w);
+    m_morphs.remove(w);
 }
 
 void SlidingPopupsEffect::slotWindowHiddenChanged(EffectWindow *w)
@@ -443,9 +459,18 @@ void SlidingPopupsEffect::slideIn(EffectWindow *w)
 
     Animation &animation = m_animations[w];
     animation.kind = AnimationKind::In;
-    animation.timeLine.setDirection(TimeLine::Forward);
+    animation.morph = morphFor(w, (*dataIt).location);
+    if (animation.morph) {
+        m_morphs[w] = *animation.morph;
+        // the way back is not the way there, so a morph always starts from the beginning
+        animation.timeLine.reset();
+        animation.timeLine.setDirection(TimeLine::Forward);
+        animation.timeLine.setEasingCurve(QEasingCurve::Linear);
+    } else {
+        animation.timeLine.setDirection(TimeLine::Forward);
+        animation.timeLine.setEasingCurve(QEasingCurve::OutCubic);
+    }
     animation.timeLine.setDuration((*dataIt).slideInDuration);
-    animation.timeLine.setEasingCurve(QEasingCurve::OutCubic);
     animation.windowEffect = ItemEffect(w->windowItem());
 
     // If the opposite animation (Out) was active and it had shorter duration,
@@ -480,10 +505,20 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
     animation.deletedRef = EffectWindowDeletedRef(w);
     animation.visibleRef = EffectWindowVisibleRef(w, EffectWindow::PAINT_DISABLED);
     animation.kind = AnimationKind::Out;
-    animation.timeLine.setDirection(TimeLine::Backward);
+    animation.morph = morphFor(w, (*dataIt).location);
+    if (!animation.morph && m_morphs.contains(w)) {
+        animation.morph = m_morphs.value(w);
+    }
+    if (animation.morph) {
+        animation.timeLine.reset();
+        animation.timeLine.setDirection(TimeLine::Forward);
+        animation.timeLine.setEasingCurve(QEasingCurve::Linear);
+    } else {
+        animation.timeLine.setDirection(TimeLine::Backward);
+        // this is effectively InCubic because the direction is reversed
+        animation.timeLine.setEasingCurve(QEasingCurve::OutCubic);
+    }
     animation.timeLine.setDuration((*dataIt).slideOutDuration);
-    // this is effectively InCubic because the direction is reversed
-    animation.timeLine.setEasingCurve(QEasingCurve::OutCubic);
     animation.windowEffect = ItemEffect(w->windowItem());
 
     // If the opposite animation (In) was active and it had shorter duration,
@@ -497,6 +532,106 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
     w->setData(WindowForceBlurRole, QVariant(true));
 
     w->addRepaintFull();
+}
+
+std::optional<SlidingPopupsEffect::Morph> SlidingPopupsEffect::morphFor(EffectWindow *w, Location location) const
+{
+    SurfaceInterface *surface = w->surface();
+    PlasmaShellSurfaceInterface *shellSurface = surface ? PlasmaShellSurfaceInterface::get(surface) : nullptr;
+    if (!shellSurface || !shellSurface->popupOrigin()) {
+        return std::nullopt;
+    }
+    const RectF frame = w->frameGeometry();
+    if (frame.isEmpty()) {
+        return std::nullopt;
+    }
+
+    Morph morph;
+    morph.origin = RectF(*shellSurface->popupOrigin());
+    const QPointF center = morph.origin.center();
+
+    morph.leading = location == Location::Top || location == Location::Bottom ? Qt::Vertical : Qt::Horizontal;
+
+    // The start is a small copy of the popup as wide (or tall) as what opens it, on the popup's side next to it.
+    const qreal aspect = frame.width() / frame.height();
+    if (morph.leading == Qt::Vertical) {
+        const qreal width = std::min(morph.origin.width(), frame.width());
+        const qreal height = width / aspect;
+        const qreal x = std::clamp(center.x() - width / 2, frame.left(), frame.left() + frame.width() - width);
+        const qreal y = location == Location::Bottom ? frame.top() + frame.height() - height : frame.top();
+        morph.from = RectF(x, y, width, height);
+    } else {
+        const qreal height = std::min(morph.origin.height(), frame.height());
+        const qreal width = height * aspect;
+        const qreal y = std::clamp(center.y() - height / 2, frame.top(), frame.top() + frame.height() - height);
+        const qreal x = location == Location::Right ? frame.left() + frame.width() - width : frame.left();
+        morph.from = RectF(x, y, width, height);
+    }
+    return morph;
+}
+
+RectF SlidingPopupsEffect::morphBox(const Animation &animation, const RectF &frame) const
+{
+    const qreal t = animation.timeLine.value();
+    const auto ease = [this](qreal x) {
+        return m_morphEasing.valueForProgress(std::clamp(x, 0.0, 1.0));
+    };
+    // Each edge goes straight to its place. Opening, the leading axis runs a little ahead, so the popup
+    // rises out of the panel before it spreads; closing mirrors it.
+    const qreal fast = ease(t / 0.78);
+    const qreal slow = ease((t - 0.07) / 0.93);
+    const bool opening = animation.kind == AnimationKind::In;
+    const qreal leadingProgress = opening ? fast : slow;
+    const qreal otherProgress = opening ? slow : fast;
+    const qreal ev = animation.morph->leading == Qt::Vertical ? leadingProgress : otherProgress;
+    const qreal eh = animation.morph->leading == Qt::Vertical ? otherProgress : leadingProgress;
+
+    const RectF &a = opening ? animation.morph->from : frame;
+    const RectF &b = opening ? frame : animation.morph->from;
+    const qreal left = interpolate(a.left(), b.left(), eh);
+    const qreal right = interpolate(a.left() + a.width(), b.left() + b.width(), eh);
+    const qreal top = interpolate(a.top(), b.top(), ev);
+    const qreal bottom = interpolate(a.top() + a.height(), b.top() + b.height(), ev);
+    return RectF(left, top, right - left, bottom - top);
+}
+
+void SlidingPopupsEffect::paintMorph(const Animation &animation, EffectWindow *w, WindowPaintData &data, Region &region, const RenderViewport &viewport) const
+{
+    const Morph &morph = *animation.morph;
+    const RectF frame = w->frameGeometry();
+    const RectF box = morphBox(animation, frame);
+
+    const qreal scale = std::min(1.0, std::max(box.width() / frame.width(), box.height() / frame.height()));
+    const qreal xScale = scale * std::sqrt(std::min(1.0, box.width() / (frame.width() * scale)));
+    const qreal yScale = scale * std::sqrt(std::min(1.0, box.height() / (frame.height() * scale)));
+
+    const qreal fx = std::clamp((morph.origin.center().x() - frame.left()) / frame.width(), 0.0, 1.0);
+    const qreal fy = std::clamp((morph.origin.center().y() - frame.top()) / frame.height(), 0.0, 1.0);
+    const RectF content(box.left() + (box.width() - frame.width() * xScale) * fx,
+                        box.top() + (box.height() - frame.height() * yScale) * fy,
+                        frame.width() * xScale,
+                        frame.height() * yScale);
+
+    data.setXScale(xScale);
+    data.setYScale(yScale);
+    data.translate(content.left() - frame.left(), content.top() - frame.top());
+
+    const qreal e = m_morphEasing.valueForProgress(animation.timeLine.value());
+    data.multiplyOpacity(animation.kind == AnimationKind::In ? e : 1.0 - e);
+
+    // Clip to the box, except on sides where nothing is cropped, where the shadow may show past it.
+    const RectF expanded = w->expandedGeometry();
+    const qreal left = content.left() < box.left() - 0.5 ? box.left() : content.left() - (frame.left() - expanded.left()) * xScale;
+    const qreal top = content.top() < box.top() - 0.5 ? box.top() : content.top() - (frame.top() - expanded.top()) * yScale;
+    const qreal contentRight = content.left() + content.width();
+    const qreal contentBottom = content.top() + content.height();
+    const qreal right = contentRight > box.left() + box.width() + 0.5
+        ? box.left() + box.width()
+        : contentRight + ((expanded.left() + expanded.width()) - (frame.left() + frame.width())) * xScale;
+    const qreal bottom = contentBottom > box.top() + box.height() + 0.5
+        ? box.top() + box.height()
+        : contentBottom + ((expanded.top() + expanded.height()) - (frame.top() + frame.height())) * yScale;
+    region &= viewport.mapToDeviceCoordinatesAligned(RectF(left, top, right - left, bottom - top));
 }
 
 void SlidingPopupsEffect::stopAnimations()

@@ -15,6 +15,10 @@
 #include "effect/timeline.h"
 #include "scene/item.h"
 
+#include <QEasingCurve>
+
+#include <optional>
+
 namespace KWin
 {
 
@@ -73,6 +77,14 @@ private:
     std::chrono::milliseconds m_slideInDuration;
     std::chrono::milliseconds m_slideOutDuration;
 
+    struct Morph
+    {
+        RectF origin;
+        RectF from;
+        // The axis that grows first when opening
+        Qt::Orientation leading;
+    };
+
     enum class AnimationKind {
         In,
         Out,
@@ -85,6 +97,7 @@ private:
         AnimationKind kind;
         TimeLine timeLine;
         ItemEffect windowEffect;
+        std::optional<Morph> morph;
     };
     std::unordered_map<EffectWindow *, Animation> m_animations;
 
@@ -106,6 +119,12 @@ private:
     QHash<const EffectWindow *, AnimationData> m_animationsData;
 
     RectF damagedLogicalArea(EffectWindow *w, const AnimationData animData);
+
+    std::optional<Morph> morphFor(EffectWindow *w, Location location) const;
+    RectF morphBox(const Animation &animation, const RectF &frame) const;
+    void paintMorph(const Animation &animation, EffectWindow *w, WindowPaintData &data, Region &region, const RenderViewport &viewport) const;
+    QHash<const EffectWindow *, Morph> m_morphs;
+    QEasingCurve m_morphEasing;
 };
 
 inline int SlidingPopupsEffect::slideInDuration() const

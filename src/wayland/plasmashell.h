@@ -9,7 +9,9 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <QRect>
 #include <memory>
+#include <optional>
 
 class QSize;
 struct wl_resource;
@@ -162,6 +164,12 @@ public:
     bool panelTakesFocus() const;
 
     /**
+     * @returns the area, in global coordinates, of the item that opens this surface (e.g. an applet's
+     * button in a panel), if the client set one.
+     */
+    std::optional<QRect> popupOrigin() const;
+
+    /**
      * @returns The PlasmaShellSurfaceInterface for the @p native resource.
      */
     static PlasmaShellSurfaceInterface *get(wl_resource *native);
@@ -172,6 +180,11 @@ Q_SIGNALS:
      * A change of global position has been requested.
      */
     void positionChanged();
+
+    /**
+     * The area the surface opens from has changed.
+     */
+    void popupOriginChanged();
 
     /**
      * The surface has requested to be initially shown under the cursor. Can only occur

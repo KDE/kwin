@@ -16,7 +16,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 8;
+static const quint32 s_version = 9;
 static QList<PlasmaShellSurfaceInterface *> s_shellSurfaces;
 
 class PlasmaShellSurfaceCommit : public SurfaceAttachedState<PlasmaShellSurfaceCommit>
@@ -57,6 +57,7 @@ public:
     bool m_skipSwitcher = false;
     bool m_panelTakesFocus = false;
     bool m_openUnderCursorRequested = false;
+    std::optional<QRect> m_popupOrigin;
 
 private:
     void org_kde_plasma_surface_destroy_resource(Resource *resource) override;
@@ -71,6 +72,7 @@ private:
     void org_kde_plasma_surface_set_panel_takes_focus(Resource *resource, uint32_t takes_focus) override;
     void org_kde_plasma_surface_set_skip_switcher(Resource *resource, uint32_t skip) override;
     void org_kde_plasma_surface_open_under_cursor(Resource *resource) override;
+    void org_kde_plasma_surface_set_popup_origin(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height) override;
 };
 
 PlasmaShellInterface::PlasmaShellInterface(Display *display, QObject *parent)
@@ -166,6 +168,19 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_open_under_curso
     }
     m_openUnderCursorRequested = true;
     Q_EMIT q->openUnderCursorRequested();
+}
+
+void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_popup_origin(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
+{
+    std::optional<QRect> origin;
+    if (width > 0 && height > 0) {
+        origin = QRect(x, y, width, height);
+    }
+    if (origin == m_popupOrigin) {
+        return;
+    }
+    m_popupOrigin = origin;
+    Q_EMIT q->popupOriginChanged();
 }
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_role(Resource *resource, uint32_t role)
@@ -296,6 +311,11 @@ bool PlasmaShellSurfaceInterface::isPositionSet() const
 bool PlasmaShellSurfaceInterface::wantsOpenUnderCursor() const
 {
     return d->m_openUnderCursorRequested;
+}
+
+std::optional<QRect> PlasmaShellSurfaceInterface::popupOrigin() const
+{
+    return d->m_popupOrigin;
 }
 
 PlasmaShellSurfaceInterface::PanelBehavior PlasmaShellSurfaceInterface::panelBehavior() const
