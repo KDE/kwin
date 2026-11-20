@@ -197,8 +197,7 @@ bool BufferTextureOpenGL::loadShmTexture(GraphicsBuffer *buffer)
     m_bufferType = BufferType::Shm;
     m_texture = std::move(texture);
     m_size = buffer->size();
-    const auto info = FormatInfo::get(buffer->shmAttributes()->format);
-    m_isFloatingPoint = info && info->floatingPoint;
+    m_isFloatingPoint = FormatInfo::get(buffer->shmAttributes()->format)->floatingPoint;
 
     return true;
 }
@@ -226,8 +225,7 @@ void BufferTextureOpenGL::updateShmTexture(GraphicsBuffer *buffer, const Region 
     }
 
     m_texture->update(*view.image(), simplifyDamage(region) & Rect(QPoint(0, 0), m_texture->size()));
-    const auto info = FormatInfo::get(buffer->shmAttributes()->format);
-    m_isFloatingPoint = info && info->floatingPoint;
+    m_isFloatingPoint = FormatInfo::get(buffer->shmAttributes()->format)->floatingPoint;
 }
 
 bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const FileDescriptor &sync,
@@ -280,8 +278,7 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const FileDe
 
     m_bufferType = BufferType::DmaBuf;
     m_size = buffer->size();
-    const auto info = FormatInfo::get(buffer->dmabufAttributes()->format);
-    m_isFloatingPoint = info && info->floatingPoint;
+    m_isFloatingPoint = FormatInfo::get(buffer->dmabufAttributes()->format)->floatingPoint;
 
     return true;
 }
@@ -323,8 +320,7 @@ void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const File
     glEGLImageTargetTexture2DOES(m_texture->target(), static_cast<GLeglImageOES>(image));
     m_texture->unbind();
 
-    const auto info = FormatInfo::get(buffer->dmabufAttributes()->format);
-    m_isFloatingPoint = info && info->floatingPoint;
+    m_isFloatingPoint = FormatInfo::get(buffer->dmabufAttributes()->format)->floatingPoint;
 }
 
 bool BufferTextureOpenGL::loadSinglePixelTexture(GraphicsBuffer *buffer)
@@ -392,8 +388,7 @@ bool BufferTextureOpenGL::loadUDmabufTexture(GraphicsBuffer *buffer, EGLImageKHR
     m_texture = std::move(texture);
     m_bufferType = BufferType::UDmaBuf;
     m_size = buffer->size();
-    const auto info = FormatInfo::get(buffer->shmAttributes()->format);
-    m_isFloatingPoint = info && info->floatingPoint;
+    m_isFloatingPoint = FormatInfo::get(buffer->shmAttributes()->format)->floatingPoint;
     m_releasePoint = std::make_shared<UDmabufReleasePoint>(buffer);
     return true;
 }
@@ -412,8 +407,7 @@ void BufferTextureOpenGL::updateUDmabufTexture(GraphicsBuffer *buffer, EGLImageK
     glEGLImageTargetTexture2DOES(target, image);
     m_texture->unbind();
 
-    const auto info = FormatInfo::get(buffer->shmAttributes()->format);
-    m_isFloatingPoint = info && info->floatingPoint;
+    m_isFloatingPoint = FormatInfo::get(buffer->shmAttributes()->format)->floatingPoint;
     m_releasePoint = std::make_shared<UDmabufReleasePoint>(buffer);
 }
 

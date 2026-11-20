@@ -261,9 +261,6 @@ QList<FormatInfo> OutputLayer::filterAndSortFormats(const FormatModifierMap &for
     QList<FormatInfo> ret;
     for (auto it = formats.begin(); it != formats.end(); it++) {
         const auto info = FormatInfo::get(it.key());
-        if (!info) {
-            continue;
-        }
         if (info->alphaBits < requiredAlphaBits) {
             continue;
         }

@@ -74,7 +74,7 @@ void EglBackend::updateDmabufTranches()
         }
         for (auto it = allFormats.constBegin(); it != allFormats.constEnd(); it++) {
             const auto info = FormatInfo::get(it.key());
-            if (bpc && (!info || bpc != info->bitsPerColor)) {
+            if (bpc && bpc != info->bitsPerColor) {
                 continue;
             }
 

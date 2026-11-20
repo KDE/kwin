@@ -109,7 +109,7 @@ void GraphicsBuffer::addReleasePoint(const std::shared_ptr<SyncReleasePoint> &re
 bool GraphicsBuffer::alphaChannelFromDrmFormat(uint32_t format)
 {
     const auto info = FormatInfo::get(format);
-    return info && info->alphaBits > 0;
+    return info->alphaBits > 0;
 }
 
 } // namespace KWin

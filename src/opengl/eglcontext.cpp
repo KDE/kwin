@@ -268,7 +268,7 @@ std::shared_ptr<GLTexture> EglContext::importDmaBufAsTexture(const DmaBufAttribu
     EGLImageKHR image = m_display->importDmaBufAsImage(attributes);
     if (image != EGL_NO_IMAGE_KHR) {
         const auto info = FormatInfo::get(attributes.format);
-        return EGLImageTexture::create(m_display, image, info ? info->openglFormat : GL_RGBA8, QSize(attributes.width, attributes.height), m_display->isExternalOnly(attributes.format, attributes.modifier));
+        return EGLImageTexture::create(m_display, image, info->openglFormat, QSize(attributes.width, attributes.height), m_display->isExternalOnly(attributes.format, attributes.modifier));
     } else {
         qCWarning(KWIN_OPENGL) << "Error creating EGLImageKHR: " << getEglErrorString();
         return nullptr;
@@ -709,7 +709,7 @@ GLTexture *EglContext::importDmaBufAsTexture(GraphicsBuffer *buffer)
     EGLImageKHR image = m_display->importDmaBufAsImage(*attributes);
     if (image != EGL_NO_IMAGE_KHR) {
         const auto info = FormatInfo::get(attributes->format);
-        ret = EGLImageTexture::create(m_display, image, info ? info->openglFormat : GL_RGBA8, QSize(attributes->width, attributes->height), m_display->isExternalOnly(attributes->format, attributes->modifier));
+        ret = EGLImageTexture::create(m_display, image, info->openglFormat, QSize(attributes->width, attributes->height), m_display->isExternalOnly(attributes->format, attributes->modifier));
     }
     return ret.get();
 }

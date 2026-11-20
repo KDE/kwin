@@ -133,11 +133,6 @@ static bool isDisjoint(const DmaBufAttributes &attributes)
 
 std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes *attributes, VkImageUsageFlags usage)
 {
-    const auto format = FormatInfo::get(attributes->format);
-    if (!format) {
-        qCWarning(KWIN_VULKAN, "Dmabuf has unknown format");
-        return nullptr;
-    }
     auto formatIt = m_transferFormats.find(attributes->format);
     if (formatIt == m_transferFormats.end() || !formatIt->contains(attributes->modifier)) {
         if (formatIt == m_transferFormats.end()) {
@@ -163,10 +158,11 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
         &modifierInfo,
     };
     const bool disjoint = isDisjoint(*attributes);
+    const auto format = vk::Format(FormatInfo::get(attributes->format)->vulkanFormat);
     vk::ImageCreateInfo imageInfo{
         disjoint ? vk::ImageCreateFlagBits::eDisjoint : vk::ImageCreateFlags(),
         vk::ImageType::e2D,
-        vk::Format(format->vulkanFormat),
+        format,
         vk::Extent3D(attributes->width, attributes->height, 1),
         1,
         1,
@@ -259,17 +255,12 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
     for (FileDescriptor &fd : duplicatedFds) {
         fd.take();
     }
-    return std::make_shared<VulkanTexture>(this, vk::Format(format->vulkanFormat), std::move(image),
+    return std::make_shared<VulkanTexture>(this, format, std::move(image),
                                            std::move(deviceMemory), QSize(attributes->width, attributes->height));
 }
 
 std::shared_ptr<VulkanBuffer> VulkanDevice::importDmabufAsBuffer(const DmaBufAttributes *attributes, vk::BufferUsageFlags usage)
 {
-    const auto format = FormatInfo::get(attributes->format);
-    if (!format) {
-        qCWarning(KWIN_VULKAN, "Dmabuf has unknown format");
-        return nullptr;
-    }
     if (attributes->modifier != DRM_FORMAT_MOD_LINEAR) {
         // VkBuffer is always linear
         return nullptr;
@@ -339,11 +330,6 @@ std::shared_ptr<VulkanBuffer> VulkanDevice::importDmabufAsBuffer(const DmaBufAtt
 
 std::shared_ptr<VulkanBuffer> VulkanDevice::importHostPointerAsBuffer(const HostMemoryAttributes *attributes, vk::BufferUsageFlags usage)
 {
-    const auto format = FormatInfo::get(attributes->format);
-    if (!format) {
-        qCWarning(KWIN_VULKAN, "Dmabuf has unknown format");
-        return nullptr;
-    }
     auto formatIt = m_transferFormats.find(attributes->format);
     if (formatIt == m_transferFormats.end() || !formatIt->contains(DRM_FORMAT_MOD_LINEAR)) {
         return nullptr;

@@ -335,6 +335,10 @@ EglDisplay::Formats EglDisplay::queryImportFormats() const
     Formats ret;
     const ModifierList implicitModifiers = {DRM_FORMAT_MOD_INVALID, DRM_FORMAT_MOD_LINEAR};
     for (const auto format : std::as_const(formats)) {
+        const auto info = FormatInfo::get(format);
+        if (!info) {
+            continue;
+        }
         EGLint count = 0;
         const bool success = m_functions.queryDmaBufModifiersEXT
             && m_functions.queryDmaBufModifiersEXT(m_handle, format, 0, nullptr, nullptr, &count);

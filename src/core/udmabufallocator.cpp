@@ -134,9 +134,6 @@ GraphicsBuffer *UDmabufAllocator::allocate(uint32_t format, const QSize &size)
         return nullptr;
     }
     auto info = FormatInfo::get(format);
-    if (!info) {
-        return nullptr;
-    }
     // padding to 64 pixels is required to work around a crash in llvmpipe:
     // https://gitlab.freedesktop.org/mesa/mesa/-/work_items/16447
     const int paddedWidth = align(size.width(), 64);

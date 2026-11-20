@@ -430,7 +430,7 @@ static bool prepareDirectScanout(RenderView *view, LogicalOutput *logicalOutput,
     }
 
     const auto info = FormatInfo::get(attrs->format);
-    const auto bufferType = info && info->floatingPoint ? ColorPipeline::InputType::FloatingPoint : ColorPipeline::InputType::FixedPoint;
+    const auto bufferType = info->floatingPoint ? ColorPipeline::InputType::FloatingPoint : ColorPipeline::InputType::FixedPoint;
 
     layer->setTargetRect(mapItemToOutputDeviceCoordinates(candidate, view, logicalOutput, backendOutput));
     layer->setEnabled(true);

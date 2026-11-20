@@ -72,7 +72,7 @@ protected:
     void zwp_linux_buffer_params_v1_set_sampling_device(Resource *resource, wl_array *device) override;
 
 private:
-    bool test(Resource *resource, uint32_t width, uint32_t height);
+    bool test(Resource *resource);
 
     LinuxDmaBufV1ClientBufferIntegration *m_integration;
     DmaBufAttributes m_attrs;

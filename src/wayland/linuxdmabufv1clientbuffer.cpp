@@ -156,7 +156,11 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create(Resource *resource, 
         return;
     }
 
-    if (Q_UNLIKELY(!test(resource, width, height))) {
+    m_attrs.width = width;
+    m_attrs.height = height;
+    m_attrs.format = format;
+
+    if (Q_UNLIKELY(!test(resource))) {
         return;
     }
 
@@ -172,10 +176,6 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create(Resource *resource, 
     }
 
     m_isUsed = true;
-
-    m_attrs.width = width;
-    m_attrs.height = height;
-    m_attrs.format = format;
 
     auto clientBuffer = new LinuxDmaBufV1ClientBuffer(std::move(m_attrs));
     const dev_t target = m_targetDevice.value_or(m_integration->mainDevice(resource->client()).value());
@@ -224,7 +224,11 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *reso
         return;
     }
 
-    if (Q_UNLIKELY(!test(resource, width, height))) {
+    m_attrs.width = width;
+    m_attrs.height = height;
+    m_attrs.format = format;
+
+    if (Q_UNLIKELY(!test(resource))) {
         return;
     }
 
@@ -240,10 +244,6 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *reso
     }
 
     m_isUsed = true;
-
-    m_attrs.width = width;
-    m_attrs.height = height;
-    m_attrs.format = format;
 
     auto clientBuffer = new LinuxDmaBufV1ClientBuffer(std::move(m_attrs));
     const dev_t target = m_targetDevice.value_or(m_integration->mainDevice(resource->client()).value());
@@ -288,8 +288,13 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_set_sampling_device(Resourc
     m_targetDevice = *reinterpret_cast<dev_t *>(device->data);
 }
 
-bool LinuxDmaBufParamsV1::test(Resource *resource, uint32_t width, uint32_t height)
+bool LinuxDmaBufParamsV1::test(Resource *resource)
 {
+    if (!FormatInfo::get(m_attrs.format)) {
+        wl_resource_post_error(resource->handle, error_invalid_format, "unsupported format %u", m_attrs.format);
+        return false;
+    }
+
     if (Q_UNLIKELY(!m_attrs.planeCount)) {
         wl_resource_post_error(resource->handle, error_incomplete, "no planes have been specified");
         return false;
@@ -303,8 +308,8 @@ bool LinuxDmaBufParamsV1::test(Resource *resource, uint32_t width, uint32_t heig
         }
     }
 
-    if (Q_UNLIKELY(width == 0 || height == 0)) {
-        wl_resource_post_error(resource->handle, error_invalid_dimensions, "invalid width %d or height %d", width, height);
+    if (Q_UNLIKELY(m_attrs.width == 0 || m_attrs.height == 0)) {
+        wl_resource_post_error(resource->handle, error_invalid_dimensions, "invalid width %d or height %d", m_attrs.width, m_attrs.height);
         return false;
     }
 
@@ -315,7 +320,7 @@ bool LinuxDmaBufParamsV1::test(Resource *resource, uint32_t width, uint32_t heig
             return false;
         }
 
-        if (Q_UNLIKELY(i == 0 && uint64_t(m_attrs.offset[i]) + uint64_t(m_attrs.pitch[i]) * height > UINT32_MAX)) {
+        if (Q_UNLIKELY(i == 0 && uint64_t(m_attrs.offset[i]) + uint64_t(m_attrs.pitch[i]) * m_attrs.height > UINT32_MAX)) {
             wl_resource_post_error(resource->handle, error_out_of_bounds, "size overflow for plane %d", i);
             return false;
         }
@@ -339,7 +344,7 @@ bool LinuxDmaBufParamsV1::test(Resource *resource, uint32_t width, uint32_t heig
 
         // Only valid for first plane as other planes might be sub-sampled according to
         // fourcc format.
-        if (Q_UNLIKELY(i == 0 && m_attrs.offset[i] + m_attrs.pitch[i] * height > size)) {
+        if (Q_UNLIKELY(i == 0 && m_attrs.offset[i] + m_attrs.pitch[i] * m_attrs.height > size)) {
             wl_resource_post_error(resource->handle, error_out_of_bounds, "invalid buffer stride of height for plane %d", i);
             return false;
         }
