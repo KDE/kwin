@@ -13,9 +13,13 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
+#include "utils/memorymap.h"
 #include "utils/ramfile.h"
 
+#include <QScopeGuard>
+#include <QSemaphore>
 #include <QTest>
+#include <QThreadPool>
 
 using namespace KWin;
 
@@ -25,6 +29,7 @@ class TestUtils : public QObject
 private Q_SLOTS:
     void testRamFile();
     void testSealedRamFile();
+    void testUnmapWithBusyGlobalThreadPool();
 };
 
 static const QByteArray s_testByteArray = QByteArrayLiteral("Test Data \0\1\2\3");
@@ -65,6 +70,45 @@ void TestUtils::testSealedRamFile()
 #else
     QSKIP("Sealing requires memfd support.");
 #endif
+}
+
+static bool isMapped(void *address)
+{
+#if defined(Q_OS_FREEBSD)
+    char vec;
+#else
+    unsigned char vec;
+#endif
+    return mincore(address, 1, &vec) == 0;
+}
+
+void TestUtils::testUnmapWithBusyGlobalThreadPool()
+{
+    // Unmapping must not wait for other work on the global thread pool.
+    QThreadPool *pool = QThreadPool::globalInstance();
+    const int threadCount = pool->maxThreadCount();
+    QSemaphore started;
+    QSemaphore release;
+    auto cleanup = qScopeGuard([&]() {
+        release.release(threadCount);
+        pool->waitForDone();
+    });
+    for (int i = 0; i < threadCount; ++i) {
+        pool->start([&]() {
+            started.release();
+            release.acquire();
+        });
+    }
+    QVERIFY(started.tryAcquire(threadCount, 5000));
+
+    void *address;
+    {
+        MemoryMap map(1 << 20, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+        QVERIFY(map.isValid());
+        address = map.data();
+        QVERIFY(isMapped(address));
+    }
+    QTRY_VERIFY(!isMapped(address));
 }
 
 QTEST_MAIN(TestUtils)

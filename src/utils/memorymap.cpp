@@ -11,9 +11,30 @@
 namespace KWin
 {
 
+namespace
+{
+
+class UnmapThreadPool : public QThreadPool
+{
+public:
+    UnmapThreadPool()
+    {
+        setMaxThreadCount(1);
+        setObjectName(QStringLiteral("KWin munmap"));
+    }
+};
+
+}
+
+Q_GLOBAL_STATIC(UnmapThreadPool, s_unmapThreadPool)
+
 void asyncMunmap(void *addr, size_t length)
 {
-    QThreadPool::globalInstance()->start([addr, length]() {
+    if (s_unmapThreadPool.isDestroyed()) {
+        munmap(addr, length);
+        return;
+    }
+    s_unmapThreadPool->start([addr, length]() {
         munmap(addr, length);
     });
 }
