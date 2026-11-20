@@ -29,24 +29,6 @@ namespace KWin
 
 static constexpr int s_version = 2;
 
-static constexpr uint32_t s_formats[] = {
-    WL_SHM_FORMAT_ARGB8888,
-    WL_SHM_FORMAT_XRGB8888,
-    WL_SHM_FORMAT_XYUV8888,
-#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
-    WL_SHM_FORMAT_ARGB2101010,
-    WL_SHM_FORMAT_XRGB2101010,
-    WL_SHM_FORMAT_ABGR2101010,
-    WL_SHM_FORMAT_XBGR2101010,
-    WL_SHM_FORMAT_ABGR16161616,
-    WL_SHM_FORMAT_XBGR16161616,
-    WL_SHM_FORMAT_ABGR16161616F,
-    WL_SHM_FORMAT_XBGR16161616F,
-#endif
-    WL_SHM_FORMAT_BGR888,
-    WL_SHM_FORMAT_RGB888,
-};
-
 static std::atomic<ShmAccess *> s_accessedBuffers = nullptr;
 static struct sigaction prevSigbusAction;
 
@@ -59,6 +41,18 @@ static uint32_t shmFormatToDrmFormat(uint32_t shmFormat)
         return DRM_FORMAT_XRGB8888;
     default:
         return shmFormat; // other wl_shm formats match the drm formats
+    }
+}
+
+static uint32_t drmToShmFormat(uint32_t drmFormat)
+{
+    switch (drmFormat) {
+    case DRM_FORMAT_ARGB8888:
+        return WL_SHM_FORMAT_ARGB8888;
+    case DRM_FORMAT_XRGB8888:
+        return WL_SHM_FORMAT_XRGB8888;
+    default:
+        return drmFormat;
     }
 }
 
@@ -104,7 +98,9 @@ void ShmPool::shm_pool_destroy(Resource *resource)
 
 void ShmPool::shm_pool_create_buffer(Resource *resource, uint32_t id, int32_t offset, int32_t width, int32_t height, int32_t stride, uint32_t format)
 {
-    if (std::find(std::begin(s_formats), std::end(s_formats), format) == std::end(s_formats)) {
+    const uint32_t drmFormat = shmFormatToDrmFormat(format);
+    const auto info = FormatInfo::get(drmFormat);
+    if (!info || !info->qimageFormat) {
         wl_resource_post_error(resource->handle,
                                WL_SHM_ERROR_INVALID_FORMAT,
                                "invalid format 0x%x",
@@ -121,18 +117,14 @@ void ShmPool::shm_pool_create_buffer(Resource *resource, uint32_t id, int32_t of
         return;
     }
 
-    const uint32_t drmFormat = shmFormatToDrmFormat(format);
-
-    if (auto formatInfo = FormatInfo::get(drmFormat)) {
-        const uint32_t bytesPerPixel = formatInfo->bitsPerPixel / 8;
-        if ((stride % bytesPerPixel) != 0) {
-            wl_resource_post_error(resource->handle,
-                                   WL_SHM_ERROR_INVALID_STRIDE,
-                                   "invalid stride, %d is not a multiple of %d",
-                                   stride,
-                                   bytesPerPixel);
-            return;
-        }
+    const uint32_t bytesPerPixel = info->bitsPerPixel / 8;
+    if ((stride % bytesPerPixel) != 0) {
+        wl_resource_post_error(resource->handle,
+                               WL_SHM_ERROR_INVALID_STRIDE,
+                               "invalid stride, %d is not a multiple of %d",
+                               stride,
+                               bytesPerPixel);
+        return;
     }
 
     ShmAttributes attributes{
@@ -371,8 +363,10 @@ ShmClientBufferIntegrationPrivate::ShmClientBufferIntegrationPrivate(Display *di
 
 void ShmClientBufferIntegrationPrivate::shm_bind_resource(Resource *resource)
 {
-    for (const uint32_t &format : s_formats) {
-        send_format(resource->handle, format);
+    for (const auto &[format, info] : FormatInfo::s_knownFormats) {
+        if (info.qimageFormat) {
+            send_format(resource->handle, drmToShmFormat(format));
+        }
     }
 }
 
