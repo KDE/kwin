@@ -304,21 +304,19 @@ msgstr "Pod myšou"
 #, kde-format
 msgctxt "@title:group"
 msgid "Overlay Positioning"
-msgstr ""
+msgstr "Umiestnenie prekrytí"
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
 msgctxt "@label:chooser"
 msgid "OSD popups:"
-msgstr ""
+msgstr "Vyskakovacie okná OSD:"
 
 #: ui/MovementAndPlacement.qml:167
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Picture-in-picture Placement"
+#, kde-format
 msgctxt "@label:chooser"
 msgid "Picture-in-picture:"
-msgstr "Umiestnenie obrazu v obraze"
+msgstr "Obraz v obraze:"
 
 #: ui/MovementAndPlacement.qml:172
 #, kde-format
@@ -346,64 +344,55 @@ msgid "Margin:"
 msgstr "Okraj:"
 
 #: ui/OnScreenDisplayPositionSelector.qml:80
-#, fuzzy, kde-format
-#| msgid "Top-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Top-left"
 msgstr "Vľavo hore"
 
 #: ui/OnScreenDisplayPositionSelector.qml:85
-#, fuzzy, kde-format
-#| msgid "Top-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Top-center"
-msgstr "Vľavo hore"
+msgstr "Hore v strede"
 
 #: ui/OnScreenDisplayPositionSelector.qml:90
-#, fuzzy, kde-format
-#| msgid "Top-right"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Top-right"
 msgstr "Vpravo hore"
 
 #: ui/OnScreenDisplayPositionSelector.qml:95
-#, fuzzy, kde-format
-#| msgid "Centered"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Center-left"
-msgstr "V strede"
+msgstr "V strede vľavo"
 
 #: ui/OnScreenDisplayPositionSelector.qml:100
-#, fuzzy, kde-format
-#| msgid "Centered"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Center"
 msgstr "V strede"
 
 #: ui/OnScreenDisplayPositionSelector.qml:105
-#, fuzzy, kde-format
-#| msgid "Centered"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Center-right"
-msgstr "V strede"
+msgstr "V strede vpravo"
 
 #: ui/OnScreenDisplayPositionSelector.qml:110
-#, fuzzy, kde-format
-#| msgid "Bottom-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Bottom-left"
 msgstr "Vľavo dole"
 
 #: ui/OnScreenDisplayPositionSelector.qml:115
-#, fuzzy, kde-format
-#| msgid "Bottom-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Bottom-center"
-msgstr "Vľavo dole"
+msgstr "Dole v strede"
 
 #: ui/OnScreenDisplayPositionSelector.qml:120
-#, fuzzy, kde-format
-#| msgid "Bottom-right"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Bottom-right"
 msgstr "Vpravo dole"
@@ -412,7 +401,7 @@ msgstr "Vpravo dole"
 #, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Lower center"
-msgstr ""
+msgstr "Nižšie v strede"
 
 #: ui/TitlebarActions.qml:20 ui/TitlebarActions.qml:33 ui/WindowActions.qml:31
 #, kde-format

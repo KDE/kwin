@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-19 01:09+0000\n"
+"POT-Creation-Date: 2026-11-20 01:14+0000\n"
 "PO-Revision-Date: 2008-07-08 18:58+0530\n"
 "Last-Translator: \n"
 "Language-Team: SMC <smc.org.in>\n"
@@ -2505,25 +2505,25 @@ msgstr "പണിയിടം ഗ്രിഡ് കാണിക്കുക"
 msgid "Virtual Desktop limit reached"
 msgstr "പണിയിടം ഗ്രിഡ് കാണിക്കുക"
 
-#: plugins/overview/Main.qml:428
+#: plugins/overview/Main.qml:429
 #, fuzzy, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "&പണിയിടത്തിലേയ്ക്കു്"
 
-#: plugins/overview/Main.qml:434
+#: plugins/overview/Main.qml:435
 #, fuzzy, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "പണിയിടം ഗ്രിഡ് കാണിക്കുക"
 
-#: plugins/overview/Main.qml:441
+#: plugins/overview/Main.qml:442
 #, fuzzy, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "ജാലകത്തിനുള്ള വിശേഷതകള്‍ ക്രമീ&കരിക്കുക..."
 
-#: plugins/overview/Main.qml:792
+#: plugins/overview/Main.qml:793
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgctxt "@info:placeholder"
@@ -2596,27 +2596,18 @@ msgstr ""
 msgid "Failed to connect PipeWire context"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:56
-#: plugins/screencast/screencastmanager.cpp:81
-#: plugins/screencast/screencastmanager.cpp:102
-#: plugins/screencast/screencastmanager.cpp:158
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
-msgid "Unsupported compositing type"
-msgstr "വേര്‍തിരിക്കല്‍ തല്‍കാലത്തേക്ക് നിര്‍ത്തുക "
-
-#: plugins/screencast/screencastmanager.cpp:62
+#: plugins/screencast/screencastmanager.cpp:49
 #, kde-format
 msgid "Could not find window id %1"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:125
+#: plugins/screencast/screencastmanager.cpp:79
+#: plugins/screencast/screencastmanager.cpp:102
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:163
+#: plugins/screencast/screencastmanager.cpp:135
 #, kde-format
 msgid "Invalid region"
 msgstr ""
@@ -4389,7 +4380,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %1"
 msgstr ""
 
-#: window.cpp:3181
+#: window.cpp:3178
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4437,6 +4428,11 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Suspend Compositing"
+#~ msgid "Unsupported compositing type"
+#~ msgstr "വേര്‍തിരിക്കല്‍ തല്‍കാലത്തേക്ക് നിര്‍ത്തുക "
 
 #~ msgid "Enable &advanced mode"
 #~ msgstr "&സങ്കീര്‍ണമായ ദശ പ്രാവര്‍ത്തികമാക്കുക"

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-19 01:09+0000\n"
+"POT-Creation-Date: 2026-11-20 01:14+0000\n"
 "PO-Revision-Date: 2026-11-17 19:51+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -2587,25 +2587,25 @@ msgstr "Añadir escritorio virtual"
 msgid "Virtual Desktop limit reached"
 msgstr "Se ha alcanzado el límite de escritorios virtuales"
 
-#: plugins/overview/Main.qml:428
+#: plugins/overview/Main.qml:429
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "No hay otros escritorios virtuales para mostrar"
 
-#: plugins/overview/Main.qml:434
+#: plugins/overview/Main.qml:435
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Añadir escritorio virtual"
 
-#: plugins/overview/Main.qml:441
+#: plugins/overview/Main.qml:442
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Configurar los escritorios virtuales…"
 
-#: plugins/overview/Main.qml:792
+#: plugins/overview/Main.qml:793
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2674,26 +2674,18 @@ msgstr "No se ha podido crear el contexto de PipeWire"
 msgid "Failed to connect PipeWire context"
 msgstr "No se ha podido conectar con el contexto de PipeWire"
 
-#: plugins/screencast/screencastmanager.cpp:56
-#: plugins/screencast/screencastmanager.cpp:81
-#: plugins/screencast/screencastmanager.cpp:102
-#: plugins/screencast/screencastmanager.cpp:158
-#, kde-format
-msgid "Unsupported compositing type"
-msgstr "Tipo de composición no permitido"
-
-#: plugins/screencast/screencastmanager.cpp:62
+#: plugins/screencast/screencastmanager.cpp:49
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "No se ha encontrado el identificador de ventana %1"
 
-#: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:125
+#: plugins/screencast/screencastmanager.cpp:79
+#: plugins/screencast/screencastmanager.cpp:102
 #, kde-format
 msgid "Could not find output"
 msgstr "No se ha encontrado la salida"
 
-#: plugins/screencast/screencastmanager.cpp:163
+#: plugins/screencast/screencastmanager.cpp:135
 #, kde-format
 msgid "Invalid region"
 msgstr "Región no válida"
@@ -4450,7 +4442,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %1"
 msgstr "El controlador ha rechazado la configuración de salida: %1"
 
-#: window.cpp:3181
+#: window.cpp:3178
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4508,3 +4500,6 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ha fallado"
+
+#~ msgid "Unsupported compositing type"
+#~ msgstr "Tipo de composición no permitido"

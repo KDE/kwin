@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-19 01:09+0000\n"
+"POT-Creation-Date: 2026-11-20 01:14+0000\n"
 "PO-Revision-Date: 2026-11-13 09:20+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -2578,25 +2578,25 @@ msgstr "Додати віртуальну стільницю"
 msgid "Virtual Desktop limit reached"
 msgstr "Перевищено обмеження на віртуальні стільниці"
 
-#: plugins/overview/Main.qml:428
+#: plugins/overview/Main.qml:429
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Немає інших віртуальних стільниць для показу"
 
-#: plugins/overview/Main.qml:434
+#: plugins/overview/Main.qml:435
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Додати віртуальну стільницю"
 
-#: plugins/overview/Main.qml:441
+#: plugins/overview/Main.qml:442
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Налаштувати віртуальні стільниці…"
 
-#: plugins/overview/Main.qml:792
+#: plugins/overview/Main.qml:793
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2665,26 +2665,18 @@ msgstr "Не вдалося створити контекст PipeWire"
 msgid "Failed to connect PipeWire context"
 msgstr "Не вдалося встановити з'єднання із контекстом PipeWire"
 
-#: plugins/screencast/screencastmanager.cpp:56
-#: plugins/screencast/screencastmanager.cpp:81
-#: plugins/screencast/screencastmanager.cpp:102
-#: plugins/screencast/screencastmanager.cpp:158
-#, kde-format
-msgid "Unsupported compositing type"
-msgstr "Непідтримуваний тип композиції"
-
-#: plugins/screencast/screencastmanager.cpp:62
+#: plugins/screencast/screencastmanager.cpp:49
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "Не вдалося знайти ідентифікатор вікна %1"
 
-#: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:125
+#: plugins/screencast/screencastmanager.cpp:79
+#: plugins/screencast/screencastmanager.cpp:102
 #, kde-format
 msgid "Could not find output"
 msgstr "Не вдалося виявити виведення"
 
-#: plugins/screencast/screencastmanager.cpp:163
+#: plugins/screencast/screencastmanager.cpp:135
 #, kde-format
 msgid "Invalid region"
 msgstr "Некоректна область"
@@ -4433,7 +4425,7 @@ msgstr "Увімкнено більше дисплеїв, ніж може обр
 msgid "The driver rejected the output configuration: %1"
 msgstr "Драйвером відмовлено у налаштовування виведення: %1"
 
-#: window.cpp:3181
+#: window.cpp:3178
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4491,6 +4483,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland завершив роботу в аварійному режимі"
+
+#~ msgid "Unsupported compositing type"
+#~ msgstr "Непідтримуваний тип композиції"
 
 #~ msgid "Enable &advanced mode"
 #~ msgstr "Увімкнути &розширений режим"

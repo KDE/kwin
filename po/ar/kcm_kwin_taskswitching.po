@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-18 14:19+0000\n"
-"PO-Revision-Date: 2026-11-12 09:00+0400\n"
+"PO-Revision-Date: 2026-11-19 16:39+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -242,26 +242,20 @@ msgid "Show Preview"
 msgstr "أظهر معاينة"
 
 #: ui/TabBoxSettings.qml:82
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Selecting a window:"
+#, kde-format
 msgctxt "@label, Part of the sentence 'Selecting a window hides other windows'"
 msgid "Selecting a window:"
 msgstr "تحديد نافذة:"
 
 #: ui/TabBoxSettings.qml:84
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Hides other windows"
+#, kde-format
 msgctxt ""
 "@option:check, Part of the sentence 'Selecting a window hides other windows'"
 msgid "Hides other windows"
 msgstr "يخفي النوافذ الأخرى"
 
 #: ui/TabBoxSettings.qml:99
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Show on screen:"
+#, kde-format
 msgctxt "@label Followed by 'Active screen' or 'Primary screen'"
 msgid "Show on screen:"
 msgstr "اعرض في الشاشة:"

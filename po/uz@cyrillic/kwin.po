@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-19 01:09+0000\n"
+"POT-Creation-Date: 2026-11-20 01:14+0000\n"
 "PO-Revision-Date: 2006-12-17 12:27+0000\n"
 "Last-Translator: Mashrab Kuvatov <kmashrab@uni-bremen.de>\n"
 "Language-Team: Uzbek <floss-uz-l10n@googlegroups.com>\n"
@@ -2588,28 +2588,28 @@ msgstr "1 Иш столига ўтиш"
 msgid "Virtual Desktop limit reached"
 msgstr "1 Иш столига ўтиш"
 
-#: plugins/overview/Main.qml:428
+#: plugins/overview/Main.qml:429
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "&Иш столига"
 
-#: plugins/overview/Main.qml:434
+#: plugins/overview/Main.qml:435
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "1 Иш столига ўтиш"
 
-#: plugins/overview/Main.qml:441
+#: plugins/overview/Main.qml:442
 #, fuzzy, kde-format
 #| msgid "Configur&e Window Behavior..."
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Ойнанинг &хусусиятлари"
 
-#: plugins/overview/Main.qml:792
+#: plugins/overview/Main.qml:793
 #, fuzzy, kde-format
 #| msgid "Resize Window"
 msgctxt "@info:placeholder"
@@ -2683,26 +2683,18 @@ msgstr ""
 msgid "Failed to connect PipeWire context"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:56
-#: plugins/screencast/screencastmanager.cpp:81
-#: plugins/screencast/screencastmanager.cpp:102
-#: plugins/screencast/screencastmanager.cpp:158
-#, kde-format
-msgid "Unsupported compositing type"
-msgstr ""
-
-#: plugins/screencast/screencastmanager.cpp:62
+#: plugins/screencast/screencastmanager.cpp:49
 #, kde-format
 msgid "Could not find window id %1"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:125
+#: plugins/screencast/screencastmanager.cpp:79
+#: plugins/screencast/screencastmanager.cpp:102
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:163
+#: plugins/screencast/screencastmanager.cpp:135
 #, kde-format
 msgid "Invalid region"
 msgstr ""
@@ -4530,7 +4522,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %1"
 msgstr ""
 
-#: window.cpp:3181
+#: window.cpp:3178
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

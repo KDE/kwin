@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-19 01:09+0000\n"
+"POT-Creation-Date: 2026-11-20 01:14+0000\n"
 "PO-Revision-Date: 2026-06-25 22:17+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -2570,25 +2570,25 @@ msgstr "Virtuális asztal hozzáadása"
 msgid "Virtual Desktop limit reached"
 msgstr "Virtuális asztalok korlátja elérve"
 
-#: plugins/overview/Main.qml:428
+#: plugins/overview/Main.qml:429
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Nincs másik megjelenítendő virtuális asztal"
 
-#: plugins/overview/Main.qml:434
+#: plugins/overview/Main.qml:435
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Virtuális asztal hozzáadása"
 
-#: plugins/overview/Main.qml:441
+#: plugins/overview/Main.qml:442
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Virtuális asztalok beállítása…"
 
-#: plugins/overview/Main.qml:792
+#: plugins/overview/Main.qml:793
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2657,26 +2657,18 @@ msgstr "A fő PipeWire környezet létrehozása sikertelen"
 msgid "Failed to connect PipeWire context"
 msgstr "Nem sikerült kapcsolódni a PipeWire környezethez"
 
-#: plugins/screencast/screencastmanager.cpp:56
-#: plugins/screencast/screencastmanager.cpp:81
-#: plugins/screencast/screencastmanager.cpp:102
-#: plugins/screencast/screencastmanager.cpp:158
-#, kde-format
-msgid "Unsupported compositing type"
-msgstr "Nem támogatott kompozíciótípus"
-
-#: plugins/screencast/screencastmanager.cpp:62
+#: plugins/screencast/screencastmanager.cpp:49
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "A(z) %1 ablakazonosító nem található"
 
-#: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:125
+#: plugins/screencast/screencastmanager.cpp:79
+#: plugins/screencast/screencastmanager.cpp:102
 #, kde-format
 msgid "Could not find output"
 msgstr "A kimenet nem található"
 
-#: plugins/screencast/screencastmanager.cpp:163
+#: plugins/screencast/screencastmanager.cpp:135
 #, kde-format
 msgid "Invalid region"
 msgstr "Érvénytelen terület"
@@ -4419,7 +4411,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %1"
 msgstr "Az illesztőprogram elutasította a kimenetbeállítást"
 
-#: window.cpp:3181
+#: window.cpp:3178
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4474,6 +4466,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Az Xwayland összeomlott"
+
+#~ msgid "Unsupported compositing type"
+#~ msgstr "Nem támogatott kompozíciótípus"
 
 #~ msgid "Enable &advanced mode"
 #~ msgstr "&Speciális mód"

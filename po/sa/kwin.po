@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-19 01:09+0000\n"
+"POT-Creation-Date: 2026-11-20 01:14+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -2600,25 +2600,25 @@ msgstr "वर्चुअल् डेस्कटॉप् योजयन्�
 msgid "Virtual Desktop limit reached"
 msgstr "वर्चुअल् डेस्कटॉप् योजयन्तु"
 
-#: plugins/overview/Main.qml:428
+#: plugins/overview/Main.qml:429
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "अन्ये Virtual Desktops दर्शयितुं न सन्ति"
 
-#: plugins/overview/Main.qml:434
+#: plugins/overview/Main.qml:435
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "वर्चुअल् डेस्कटॉप् योजयन्तु"
 
-#: plugins/overview/Main.qml:441
+#: plugins/overview/Main.qml:442
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "वर्चुअल् डेस्कटॉप्स् विन्यस्तं कुर्वन्तु..."
 
-#: plugins/overview/Main.qml:792
+#: plugins/overview/Main.qml:793
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2687,27 +2687,18 @@ msgstr "PipeWire सन्दर्भं निर्मातुं असफ�
 msgid "Failed to connect PipeWire context"
 msgstr "PipeWire सन्दर्भं संयोजयितुं असफलम्"
 
-#: plugins/screencast/screencastmanager.cpp:56
-#: plugins/screencast/screencastmanager.cpp:81
-#: plugins/screencast/screencastmanager.cpp:102
-#: plugins/screencast/screencastmanager.cpp:158
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
-msgid "Unsupported compositing type"
-msgstr "कम्पोजिटिंग निलम्बित करें"
-
-#: plugins/screencast/screencastmanager.cpp:62
+#: plugins/screencast/screencastmanager.cpp:49
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "%1 विण्डो id न ज्ञातम्"
 
-#: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:125
+#: plugins/screencast/screencastmanager.cpp:79
+#: plugins/screencast/screencastmanager.cpp:102
 #, kde-format
 msgid "Could not find output"
 msgstr "उत्पादनं न प्राप्नोत्"
 
-#: plugins/screencast/screencastmanager.cpp:163
+#: plugins/screencast/screencastmanager.cpp:135
 #, kde-format
 msgid "Invalid region"
 msgstr "अमान्यः प्रदेशः"
@@ -4462,7 +4453,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %1"
 msgstr "चालकः निर्गमविन्यासं अङ्गीकृतवान्"
 
-#: window.cpp:3181
+#: window.cpp:3178
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4516,6 +4507,11 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland दुर्घटना अभवत्"
+
+#, fuzzy
+#~| msgid "Suspend Compositing"
+#~ msgid "Unsupported compositing type"
+#~ msgstr "कम्पोजिटिंग निलम्बित करें"
 
 #~ msgid "Enable &advanced mode"
 #~ msgstr "&उन्नत मोड सक्षम करें"

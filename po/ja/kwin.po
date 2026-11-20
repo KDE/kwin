@@ -1,5 +1,4 @@
 # Translation of kwin into Japanese.
-# SPDX-FileCopyrightText: 2026 Mint <5602mint@gmail.com>
 # This file is distributed under the same license as the kdebase package.
 # Noboru Sinohara <shinobo@leo.bekkoame.ne.jp>, 2002.
 # Ryuichi Kakuda <ryuk@user.script.nu>, 2004.
@@ -9,13 +8,14 @@
 # TAKANO Yuji <takachan@running-dog.net>, 2015.
 # Tomohiro Hyakutake <tomhioo@outlook.jp>, 2019.
 # Fumiaki Okushi <fumiaki.okushi@gmail.com>, 2004, 2005, 2006, 2007, 2008, 2010, 2015, 2019, 2021.
+# SPDX-FileCopyrightText: 2026 Mint <5602mint@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-19 01:09+0000\n"
-"PO-Revision-Date: 2026-07-23 17:22+0900\n"
+"POT-Creation-Date: 2026-11-20 01:14+0000\n"
+"PO-Revision-Date: 2026-11-14 11:27+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
@@ -25,13 +25,13 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 26.04.3\n"
+"X-Generator: Lokalize 26.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
-"Taiki Komoda,Noboru Sinohara,Ryuichi Kakuda, Fumiaki Okushi,Shinichi Tsunoda,"
+"Taiki Komoda,Noboru Sinohara,Ryuichi Kakuda,Fumiaki Okushi,Shinichi Tsunoda,"
 "Mint"
 
 #, kde-format
@@ -2571,25 +2571,25 @@ msgstr "仮想デスクトップを追加"
 msgid "Virtual Desktop limit reached"
 msgstr "仮想デスクトップ数の上限に達しました"
 
-#: plugins/overview/Main.qml:428
+#: plugins/overview/Main.qml:429
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "ほかに仮想デスクトップはありません"
 
-#: plugins/overview/Main.qml:434
+#: plugins/overview/Main.qml:435
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "仮想デスクトップを追加"
 
-#: plugins/overview/Main.qml:441
+#: plugins/overview/Main.qml:442
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "仮想デスクトップを設定…"
 
-#: plugins/overview/Main.qml:792
+#: plugins/overview/Main.qml:793
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2658,27 +2658,18 @@ msgstr ""
 msgid "Failed to connect PipeWire context"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:56
-#: plugins/screencast/screencastmanager.cpp:81
-#: plugins/screencast/screencastmanager.cpp:102
-#: plugins/screencast/screencastmanager.cpp:158
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
-msgid "Unsupported compositing type"
-msgstr "コンポジティングを一時停止"
-
-#: plugins/screencast/screencastmanager.cpp:62
+#: plugins/screencast/screencastmanager.cpp:49
 #, kde-format
 msgid "Could not find window id %1"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:125
+#: plugins/screencast/screencastmanager.cpp:79
+#: plugins/screencast/screencastmanager.cpp:102
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:163
+#: plugins/screencast/screencastmanager.cpp:135
 #, kde-format
 msgid "Invalid region"
 msgstr ""
@@ -3545,10 +3536,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (decorationpolicyrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Decoration policy rule type"
-msgstr "常に最前面に表示(&A)"
+msgstr "装飾ポリシールールタイプ"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:339
@@ -3876,10 +3866,9 @@ msgid "&Extensions"
 msgstr ""
 
 #: useractions.cpp:412
-#, fuzzy, kde-format
-#| msgid "&All Desktops"
+#, kde-format
 msgid "&Desktops"
-msgstr "すべてのデスクトップ(&A)"
+msgstr "デスクトップ(&D)"
 
 #: useractions.cpp:428
 #, kde-format
@@ -3914,13 +3903,12 @@ msgid "Move to New Desktop"
 msgstr "新しいデスクトップへ移動"
 
 #: useractions.cpp:552
-#, fuzzy, kde-format
-#| msgid "Window to Screen 1"
+#, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
 "number, second the output identifier. E.g. Screen 1 (HDMI1)"
 msgid "Screen &%1 (%2)"
-msgstr "ウィンドウをスクリーン 1 へ"
+msgstr "スクリーン &%1 (%2)"
 
 #: useractions.cpp:579
 #, kde-format
@@ -4416,7 +4404,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %1"
 msgstr "ドライバーが出力設定を拒否しました"
 
-#: window.cpp:3181
+#: window.cpp:3178
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4475,42 +4463,7 @@ msgstr ""
 msgid "Xwayland has crashed"
 msgstr "Xwayland がクラッシュしました"
 
-#~ msgid "Enable &advanced mode"
-#~ msgstr "プロモードを有効化(&A)"
-
-#~ msgid "Less"
-#~ msgstr "弱"
-
-#~ msgid "More"
-#~ msgstr "強"
-
-#~ msgctxt "@action Overview and Grid View are the name of KWin effects"
-#~ msgid "Cycle through Overview and Grid View"
-#~ msgstr "オーバービューとグリッドビューを切り替え"
-
-#~ msgctxt "@action Overview is the name of a KWin effect"
-#~ msgid "Toggle Overview"
-#~ msgstr "オーバービューを切り替え"
-
-#~ msgctxt "@action Grid View is the name of a KWin effect"
-#~ msgid "Toggle Grid View"
-#~ msgstr "グリッドビューを切り替え"
-
-#~ msgid "Ignore minimized windows:"
-#~ msgstr "最小化されたウィンドウを無視:"
-
-#~ msgid "Organize windows in the Grid View:"
-#~ msgstr "グリッドビューでウィンドウを管理:"
-
-#~ msgid "Search results include filtered windows:"
-#~ msgstr "フィルタリングされたウィンドウを検索結果に含める:"
-
-#~ msgctxt "@label"
-#~ msgid "Paint Amount"
-#~ msgstr "描画量"
-
-#~ msgid "Desktop effects were restarted due to a graphics reset"
-#~ msgstr "グラフィックスのリセットにより、デスクトップ効果が再起動しました"
-
-#~ msgid "Disable configuration options"
-#~ msgstr "設定オプションを無効化"
+#, fuzzy
+#~| msgid "Suspend Compositing"
+#~ msgid "Unsupported compositing type"
+#~ msgstr "コンポジティングを一時停止"

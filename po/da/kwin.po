@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-19 01:09+0000\n"
+"POT-Creation-Date: 2026-11-20 01:14+0000\n"
 "PO-Revision-Date: 2026-03-20 21:54+0100\n"
 "Last-Translator: Rasmus Rosendahl-Kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -2601,25 +2601,25 @@ msgstr "Tilføj virtuelt skrivebord"
 msgid "Virtual Desktop limit reached"
 msgstr "Tilføj virtuelt skrivebord"
 
-#: plugins/overview/Main.qml:428
+#: plugins/overview/Main.qml:429
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Ingen andre virtuelle skriveborde at vise"
 
-#: plugins/overview/Main.qml:434
+#: plugins/overview/Main.qml:435
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Tilføj virtuelt skrivebord"
 
-#: plugins/overview/Main.qml:441
+#: plugins/overview/Main.qml:442
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Konfigurér virtuelle skriveborde…"
 
-#: plugins/overview/Main.qml:792
+#: plugins/overview/Main.qml:793
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2688,27 +2688,18 @@ msgstr "Kunne ikke oprette PipeWire-kontekst"
 msgid "Failed to connect PipeWire context"
 msgstr "Kunne ikke tilslutte PipeWire-kontekst"
 
-#: plugins/screencast/screencastmanager.cpp:56
-#: plugins/screencast/screencastmanager.cpp:81
-#: plugins/screencast/screencastmanager.cpp:102
-#: plugins/screencast/screencastmanager.cpp:158
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
-msgid "Unsupported compositing type"
-msgstr "Suspendér compositing"
-
-#: plugins/screencast/screencastmanager.cpp:62
+#: plugins/screencast/screencastmanager.cpp:49
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "Kunne ikke finde vindue-id %1"
 
-#: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:125
+#: plugins/screencast/screencastmanager.cpp:79
+#: plugins/screencast/screencastmanager.cpp:102
 #, kde-format
 msgid "Could not find output"
 msgstr "Kunne ikke finde udgang"
 
-#: plugins/screencast/screencastmanager.cpp:163
+#: plugins/screencast/screencastmanager.cpp:135
 #, kde-format
 msgid "Invalid region"
 msgstr "Ugyldig region"
@@ -4470,7 +4461,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %1"
 msgstr "Driveren afviste outputkonfigurationen"
 
-#: window.cpp:3181
+#: window.cpp:3178
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4528,6 +4519,11 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland har brudt ned"
+
+#, fuzzy
+#~| msgid "Suspend Compositing"
+#~ msgid "Unsupported compositing type"
+#~ msgstr "Suspendér compositing"
 
 #~ msgid "Enable &advanced mode"
 #~ msgstr "Aktivér &avanceret tilstand"

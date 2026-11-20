@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-19 01:09+0000\n"
+"POT-Creation-Date: 2026-11-20 01:14+0000\n"
 "PO-Revision-Date: 2014-10-20 20:21+0000\n"
 "Last-Translator: Lejla Agic <lagic1@etf.unsa.ba>\n"
 "Language-Team: bosanski <bs@li.org>\n"
@@ -2642,14 +2642,14 @@ msgstr "&Nova radna površina"
 msgid "Virtual Desktop limit reached"
 msgstr "&Nova radna površina"
 
-#: plugins/overview/Main.qml:428
+#: plugins/overview/Main.qml:429
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Pomjeri na ra&dnu površinu"
 
-#: plugins/overview/Main.qml:434
+#: plugins/overview/Main.qml:435
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move there the window"
 #| msgid "&New Desktop"
@@ -2657,14 +2657,14 @@ msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "&Nova radna površina"
 
-#: plugins/overview/Main.qml:441
+#: plugins/overview/Main.qml:442
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Pomjeri na ra&dnu površinu"
 
-#: plugins/overview/Main.qml:792
+#: plugins/overview/Main.qml:793
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgctxt "@info:placeholder"
@@ -2739,27 +2739,18 @@ msgstr ""
 msgid "Failed to connect PipeWire context"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:56
-#: plugins/screencast/screencastmanager.cpp:81
-#: plugins/screencast/screencastmanager.cpp:102
-#: plugins/screencast/screencastmanager.cpp:158
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
-msgid "Unsupported compositing type"
-msgstr "Suspenduj slaganje"
-
-#: plugins/screencast/screencastmanager.cpp:62
+#: plugins/screencast/screencastmanager.cpp:49
 #, kde-format
 msgid "Could not find window id %1"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:125
+#: plugins/screencast/screencastmanager.cpp:79
+#: plugins/screencast/screencastmanager.cpp:102
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:163
+#: plugins/screencast/screencastmanager.cpp:135
 #, kde-format
 msgid "Invalid region"
 msgstr ""
@@ -4586,7 +4577,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %1"
 msgstr ""
 
-#: window.cpp:3181
+#: window.cpp:3178
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4654,6 +4645,11 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Suspend Compositing"
+#~ msgid "Unsupported compositing type"
+#~ msgstr "Suspenduj slaganje"
 
 #~ msgid "Enable &advanced mode"
 #~ msgstr "&Napredni režim"

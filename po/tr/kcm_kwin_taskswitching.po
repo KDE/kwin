@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-18 14:19+0000\n"
-"PO-Revision-Date: 2026-11-16 19:13+0300\n"
+"PO-Revision-Date: 2026-11-19 18:27+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -247,41 +247,35 @@ msgid "Show Preview"
 msgstr "Ön İzlemeyi Göster"
 
 #: ui/TabBoxSettings.qml:82
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Selecting a window:"
+#, kde-format
 msgctxt "@label, Part of the sentence 'Selecting a window hides other windows'"
 msgid "Selecting a window:"
 msgstr "Bir pencereyi seçmek:"
 
 #: ui/TabBoxSettings.qml:84
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Hides other windows"
+#, kde-format
 msgctxt ""
 "@option:check, Part of the sentence 'Selecting a window hides other windows'"
 msgid "Hides other windows"
 msgstr "Diğer pencereleri gizler"
 
 #: ui/TabBoxSettings.qml:99
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Show on screen:"
+#, kde-format
 msgctxt "@label Followed by 'Active screen' or 'Primary screen'"
 msgid "Show on screen:"
-msgstr "Ekranda göster:"
+msgstr "Ekranda:"
 
 #: ui/TabBoxSettings.qml:106
 #, kde-format
 msgctxt "@item:inlistbox 'Show on screen:'"
 msgid "Active screen"
-msgstr "Etkin ekran"
+msgstr "Etkin ekranı göster"
 
 #: ui/TabBoxSettings.qml:106
 #, kde-format
 msgctxt "@item:inlistbox 'Show on screen:'"
 msgid "Primary screen"
-msgstr "Ana ekran"
+msgstr "Ana ekranı göster"
 
 #: ui/TabBoxSettings.qml:121
 #, kde-format
