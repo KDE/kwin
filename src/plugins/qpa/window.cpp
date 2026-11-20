@@ -61,7 +61,8 @@ Swapchain *Window::swapchain(const std::shared_ptr<EglContext> &context, const F
         }
 
         for (auto it = formats.begin(); it != formats.end(); it++) {
-            if (auto info = FormatInfo::get(it.key()); info && info->bitsPerColor == 8 && info->alphaBits == 8) {
+            const auto info = FormatInfo::get(it.key());
+            if (info->bitsPerColor == 8 && info->alphaBits == 8) {
                 const auto options = GraphicsBufferOptions{
                     .size = nativeSize,
                     .format = it.key(),

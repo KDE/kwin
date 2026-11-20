@@ -120,13 +120,13 @@ std::optional<DrmFormat> MultiGpuSwapchain::chooseFormat(uint32_t inputFormat, c
         };
     }
 
-    const auto info = FormatInfo::get(inputFormat).value_or(*FormatInfo::get(DRM_FORMAT_ARGB8888));
+    const auto info = *FormatInfo::get(inputFormat);
     std::optional<DrmFormat> ret;
     std::optional<uint32_t> retBPP;
     for (auto it = srcFormats.begin(); it != srcFormats.end(); it++) {
         const auto otherInfo = FormatInfo::get(it.key());
         // TODO sort the formats and accept suboptimal ones when needed
-        if (!otherInfo.has_value() || otherInfo->bitsPerColor < info.bitsPerColor || otherInfo->alphaBits < info.alphaBits) {
+        if (otherInfo->bitsPerColor < info.bitsPerColor || otherInfo->alphaBits < info.alphaBits) {
             continue;
         }
         if (!retBPP || otherInfo->bitsPerPixel < retBPP) {
@@ -332,13 +332,12 @@ std::optional<MultiGpuSwapchain::AllocationInfo> MultiGpuSwapchain::createForSca
         // CPU copy only supports EGL and 8 bits per color atm
 
         const auto srcInfo = FormatInfo::get(options.format);
-        if (!srcInfo || srcInfo->bitsPerPixel != 32 || srcInfo->bitsPerColor != 8) {
+        if (srcInfo->bitsPerPixel != 32 || srcInfo->bitsPerColor != 8) {
             return std::nullopt;
         }
         for (const auto &[format, modifiers] : importFormats.asKeyValueRange()) {
             const auto info = FormatInfo::get(format);
-            if (!info
-                || info->bitsPerPixel != 32
+            if (info->bitsPerPixel != 32
                 || info->bitsPerColor != 8
                 || info->alphaBits != srcInfo->alphaBits
                 || !modifiers.contains(DRM_FORMAT_MOD_LINEAR)) {

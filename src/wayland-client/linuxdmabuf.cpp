@@ -120,6 +120,9 @@ void LinuxDmabufFeedbackV1::tranche_formats(void *data, zwp_linux_dmabuf_feedbac
     const auto entries = static_cast<linux_dmabuf_feedback_v1_table_entry *>(feedback->m_formatTable.data());
     for (const uint16_t &index : std::span(static_cast<uint16_t *>(indices->data), indices->size / sizeof(uint16_t))) {
         const linux_dmabuf_feedback_v1_table_entry &entry = entries[index];
+        if (!FormatInfo::get(entry.format)) {
+            continue;
+        }
         if (main == tranche) {
             feedback->m_formats[entry.format].insert(entry.modifier);
         }

@@ -129,12 +129,18 @@ bool DrmPlane::updateProperties()
     if (inFormats.isValid() && inFormats.immutableBlob() && gpu()->addFB2ModifiersSupported()) {
         drmModeFormatModifierIterator iterator{};
         while (drmModeFormatModifierBlobIterNext(inFormats.immutableBlob(), &iterator)) {
+            if (!FormatInfo::get(iterator.fmt)) {
+                continue;
+            }
             m_supportedFormats[iterator.fmt].insert(iterator.mod);
         }
     } else {
         // if we don't have modifier support, assume the cursor needs a linear buffer
         const ModifierList modifiers = {type.enumValue() == TypeIndex::Cursor ? DRM_FORMAT_MOD_LINEAR : DRM_FORMAT_MOD_INVALID};
         for (uint32_t i = 0; i < p->count_formats; i++) {
+            if (!FormatInfo::get(p->formats[i])) {
+                continue;
+            }
             m_supportedFormats.insert(p->formats[i], modifiers);
         }
         if (m_supportedFormats.isEmpty()) {
@@ -145,7 +151,7 @@ bool DrmPlane::updateProperties()
     m_lowBandwidthFormats.clear();
     for (auto it = m_supportedFormats.begin(); it != m_supportedFormats.end(); it++) {
         const auto info = FormatInfo::get(it.key());
-        if (info && info->bitsPerPixel <= 32) {
+        if (info->bitsPerPixel <= 32) {
             // Mesa usually picks the modifier with lowest bandwidth requirements,
             // so prefer implicit modifiers for low bandwidth if supported
             m_lowBandwidthFormats.insert(it.key(), {DRM_FORMAT_MOD_INVALID});

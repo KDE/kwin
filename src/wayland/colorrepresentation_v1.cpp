@@ -132,11 +132,6 @@ bool ColorRepresentationSurfaceV1::maybeEmitProtocolErrors()
         return false;
     }
     const auto info = FormatInfo::get(priv->pending->buffer->format());
-    if (!info) {
-        // assume the best
-        return false;
-    }
-
     const bool match = info->yuv == (priv->pending->yuvCoefficients != YUVMatrixCoefficients::Identity);
     if (match) {
         return false;
