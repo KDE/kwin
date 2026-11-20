@@ -34,7 +34,7 @@ class KWIN_EXPORT VulkanDevice : public QObject
 
 public:
     explicit VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::Device &&logicalDevice,
-                          std::vector<VkQueueFamilyProperties> &&queueProperties, vk::PhysicalDeviceType type,
+                          std::vector<vk::QueueFamilyProperties> &&queueProperties, vk::PhysicalDeviceType type,
                           std::optional<VkDeviceSize> minImportedHostPointerAlignment);
     VulkanDevice(VulkanDevice &&other) = delete;
     VulkanDevice(const VulkanDevice &) = delete;
@@ -58,7 +58,7 @@ public:
     VulkanQueue *graphicsQueue() const;
     VulkanQueue *transferQueue() const;
 
-    std::span<const VkQueueFamilyProperties> queueFamilyProperties() const;
+    std::span<const vk::QueueFamilyProperties> queueFamilyProperties() const;
     float nanosecondsPerQueryTick() const;
 
     std::optional<vk::raii::Semaphore> importSemaphore(FileDescriptor &&syncFd) const;
@@ -110,7 +110,7 @@ private:
     vk::raii::PhysicalDevice m_physical;
     vk::raii::Device m_logical;
     FormatModifierMap m_transferFormats;
-    std::vector<VkQueueFamilyProperties> m_queueProperties;
+    std::vector<vk::QueueFamilyProperties> m_queueProperties;
     vk::PhysicalDeviceMemoryProperties m_memoryProperties;
     vk::PhysicalDeviceLimits m_deviceLimits;
     std::optional<VkDeviceSize> m_minImportedHostPointerAlignment;
