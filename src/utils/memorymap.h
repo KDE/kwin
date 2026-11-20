@@ -15,7 +15,7 @@ namespace KWin
 {
 
 /*!
- * Asynchrnously unmaps a part of the address space starting at \a addr and continuing for
+ * Asynchronously unmaps a part of the address space starting at \a addr and continuing for
  * \a length bytes.
  *
  * Plain munmap() can take a significant amount of time to complete sometimes, for example, it
