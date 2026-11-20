@@ -25,7 +25,7 @@ VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::De
     : m_type(type)
     , m_physical(physicalDevice)
     , m_logical(std::move(logicalDevice))
-    , m_transferFormats(queryFormats(vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eTransferDst))
+    , m_sampleFormats(queryFormats(s_imageSampleFlags))
     , m_queueProperties(std::move(queueProperties))
     , m_deviceLimits(m_physical.getProperties().limits)
     , m_minImportedHostPointerAlignment(minImportedHostPointerAlignment)
@@ -136,18 +136,6 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
     const auto format = FormatInfo::get(attributes->format);
     if (!format) {
         qCWarning(KWIN_VULKAN, "Dmabuf has unknown format");
-        return nullptr;
-    }
-    auto formatIt = m_transferFormats.find(attributes->format);
-    if (formatIt == m_transferFormats.end() || !formatIt->contains(attributes->modifier)) {
-        if (formatIt == m_transferFormats.end()) {
-            qCWarning(KWIN_VULKAN, "Dmabuf has unsupported format %s", qPrintable(FormatInfo::drmFormatName(attributes->format)));
-            for (auto it = m_transferFormats.begin(); it != m_transferFormats.end(); it++) {
-                qCWarning(KWIN_VULKAN, "Supported fmt: %s", qPrintable(FormatInfo::drmFormatName(it.key())));
-            }
-        } else {
-            qCWarning(KWIN_VULKAN, "Dmabuf has unsupported modifier for format %s", qPrintable(FormatInfo::drmFormatName(attributes->format)));
-        }
         return nullptr;
     }
     std::vector<vk::SubresourceLayout> subLayouts;
@@ -274,10 +262,6 @@ std::shared_ptr<VulkanBuffer> VulkanDevice::importDmabufAsBuffer(const DmaBufAtt
         // VkBuffer is always linear
         return nullptr;
     }
-    auto formatIt = m_transferFormats.find(attributes->format);
-    if (formatIt == m_transferFormats.end() || !formatIt->contains(DRM_FORMAT_MOD_LINEAR)) {
-        return nullptr;
-    }
     if (isDisjoint(*attributes)) {
         return nullptr;
     }
@@ -342,10 +326,6 @@ std::shared_ptr<VulkanBuffer> VulkanDevice::importHostPointerAsBuffer(const Host
     const auto format = FormatInfo::get(attributes->format);
     if (!format) {
         qCWarning(KWIN_VULKAN, "Dmabuf has unknown format");
-        return nullptr;
-    }
-    auto formatIt = m_transferFormats.find(attributes->format);
-    if (formatIt == m_transferFormats.end() || !formatIt->contains(DRM_FORMAT_MOD_LINEAR)) {
         return nullptr;
     }
 
@@ -503,9 +483,9 @@ std::optional<VkDeviceSize> VulkanDevice::minImportedHostPointerAlignment() cons
     return m_minImportedHostPointerAlignment;
 }
 
-const FormatModifierMap &VulkanDevice::transferFormats() const
+const FormatModifierMap &VulkanDevice::sampleFormats() const
 {
-    return m_transferFormats;
+    return m_sampleFormats;
 }
 
 const vk::raii::Device &VulkanDevice::logicalDevice() const

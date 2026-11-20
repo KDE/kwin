@@ -171,9 +171,9 @@ static std::optional<CopyRet> createCopy(RenderDevice *device,
     // NOTE that using Vulkan to copy from an Nvidia GPU to a dmabuf in system memory
     // causes glitches due to a driver bug, so that path is disabled by default for now
     if (device->vulkanDevice() && s_allowVulkanCopy.value_or(!device->isNvidia() || targetType != BufferType::SystemMemory || hostAllocator)) {
-        auto retModifiers = device->vulkanDevice()->transferFormats()[sourceFormat].intersected(sourceModifiers);
+        auto retModifiers = device->vulkanDevice()->sampleFormats()[sourceFormat].intersected(sourceModifiers);
         if (!retModifiers.empty()) {
-            const auto fmt = MultiGpuSwapchain::chooseFormat(sourceFormat, device->vulkanDevice()->transferFormats(), formats);
+            const auto fmt = MultiGpuSwapchain::chooseFormat(sourceFormat, device->vulkanDevice()->sampleFormats(), formats);
             if (fmt) {
                 options.format = fmt->format;
                 if (s_forceLinear.value_or(device->drmDevice() && device->drmDevice()->isAmdgpu() && allocator == device->allocator())
@@ -555,7 +555,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
     }
     std::shared_ptr<VulkanTexture> dstTexture;
     if (!dstBuffer) {
-        dstTexture = copyVk->importBuffer(m_currentSlot->buffer(), vk::ImageUsageFlagBits::eTransferDst);
+        dstTexture = copyVk->importBuffer(m_currentSlot->buffer(), VulkanDevice::s_imageSampleFlags);
     }
     if (!dstBuffer && !dstTexture) {
         qCWarning(KWIN_VULKAN, "Could not import destination buffer for multi GPU copy!");
@@ -571,7 +571,7 @@ std::optional<MultiGpuSwapchain::Ret> VulkanMultiGpuCopy::copy(GraphicsBuffer *b
     }
     std::shared_ptr<VulkanTexture> srcTexture;
     if (!srcBuffer) {
-        srcTexture = copyVk->importBuffer(buffer, vk::ImageUsageFlagBits::eTransferSrc);
+        srcTexture = copyVk->importBuffer(buffer, VulkanDevice::s_imageSampleFlags);
     }
     if (!srcBuffer && !srcTexture) {
         qCWarning(KWIN_VULKAN, "Could not import source buffer for multi GPU copy!");
@@ -1040,7 +1040,7 @@ bool MultiGpuSwapchain::isSuitableFor(GraphicsBuffer *buffer) const
         return false;
     }
     if (qobject_cast<VulkanMultiGpuCopy *>(m_firstCopy.get())) {
-        return m_firstCopy->m_device->vulkanDevice()->transferFormats().containsFormat(attrs->format, attrs->modifier);
+        return m_firstCopy->m_device->vulkanDevice()->sampleFormats().containsFormat(attrs->format, attrs->modifier);
     } else {
         return m_firstCopy->m_device->eglDisplay()->allSupportedDrmFormats().containsFormat(attrs->format, attrs->modifier);
     }

@@ -33,6 +33,11 @@ class KWIN_EXPORT VulkanDevice : public QObject
     Q_OBJECT
 
 public:
+    // Transfer formats should be present in all flag combinations.
+    static constexpr auto s_imageSampleFlags = vk::ImageUsageFlagBits::eSampled
+        | vk::ImageUsageFlagBits::eTransferSrc
+        | vk::ImageUsageFlagBits::eTransferDst;
+
     explicit VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::Device &&logicalDevice,
                           std::vector<vk::QueueFamilyProperties> &&queueProperties, vk::PhysicalDeviceType type,
                           std::optional<VkDeviceSize> minImportedHostPointerAlignment);
@@ -52,7 +57,7 @@ public:
 
     std::optional<VkDeviceSize> minImportedHostPointerAlignment() const;
 
-    const FormatModifierMap &transferFormats() const;
+    const FormatModifierMap &sampleFormats() const;
     const vk::raii::Device &logicalDevice() const;
 
     VulkanQueue *graphicsQueue() const;
@@ -109,7 +114,7 @@ private:
     vk::PhysicalDeviceType m_type;
     vk::raii::PhysicalDevice m_physical;
     vk::raii::Device m_logical;
-    FormatModifierMap m_transferFormats;
+    FormatModifierMap m_sampleFormats;
     std::vector<vk::QueueFamilyProperties> m_queueProperties;
     vk::PhysicalDeviceMemoryProperties m_memoryProperties;
     vk::PhysicalDeviceLimits m_deviceLimits;
