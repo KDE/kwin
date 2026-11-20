@@ -9,13 +9,12 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
-#include "keyboard_input.h"
+#include "input.h"
 #include "pointer_input.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
-#include "xkb.h"
 
 #include <QAbstractEventDispatcher>
 #include <QSocketNotifier>
@@ -40,9 +39,13 @@ class XWaylandInputTest : public QObject
 private Q_SLOTS:
     void initTestCase();
     void init();
+    void cleanup();
     void testPointerEnterLeaveSsd();
     void testPointerEventLeaveCsd();
     void testKeyboardInput();
+
+private:
+    bool m_waylandConnectionSetUp = false;
 };
 
 void XWaylandInputTest::initTestCase()
@@ -70,6 +73,14 @@ void XWaylandInputTest::init()
     QVERIFY(waylandServer()->windows().isEmpty());
 }
 
+void XWaylandInputTest::cleanup()
+{
+    if (m_waylandConnectionSetUp) {
+        Test::destroyWaylandConnection();
+        m_waylandConnectionSetUp = false;
+    }
+}
+
 class X11EventReaderHelper : public QObject
 {
     Q_OBJECT
@@ -78,13 +89,11 @@ public:
     X11EventReaderHelper(xcb_connection_t *c);
     bool enableKeyboard();
     QString receivedText() const;
-    xkb_keysym_t keySymForKeycode(xkb_keycode_t keycode) const;
 
 Q_SIGNALS:
     void entered(const QPoint &localPoint);
     void left(const QPoint &localPoint);
     void receivedTextChanged();
-    void keymapChanged();
 
 private:
     void processXcbEvents();
@@ -178,11 +187,6 @@ QString X11EventReaderHelper::receivedText() const
     return m_receivedText;
 }
 
-xkb_keysym_t X11EventReaderHelper::keySymForKeycode(xkb_keycode_t keycode) const
-{
-    return xkb_state_key_get_one_sym(m_xkbState.get(), keycode);
-}
-
 void X11EventReaderHelper::processXcbEvents()
 {
     while (auto event = xcb_poll_for_event(m_connection)) {
@@ -190,9 +194,7 @@ void X11EventReaderHelper::processXcbEvents()
         if (m_xkbEventBase != 0 && eventType == m_xkbEventBase) {
             const auto xkbEvent = reinterpret_cast<xcb_xkb_map_notify_event_t *>(event);
             if (xkbEvent->xkbType == XCB_XKB_MAP_NOTIFY || xkbEvent->xkbType == XCB_XKB_NEW_KEYBOARD_NOTIFY) {
-                if (updateKeymap()) {
-                    Q_EMIT keymapChanged();
-                }
+                updateKeymap();
             }
         }
         switch (eventType) {
@@ -387,9 +389,15 @@ void XWaylandInputTest::testKeyboardInput()
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
 
+    QSignalSpy deviceAddedSpy(input(), &InputRedirection::deviceAdded);
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::FakeInput));
+    m_waylandConnectionSetUp = true;
+    QVERIFY(deviceAddedSpy.wait());
+    Test::FakeInput *fakeInput = Test::waylandFakeInput();
+    fakeInput->authenticate(QStringLiteral("org.kde.foobar"), QStringLiteral("foobar"));
+
     X11EventReaderHelper eventReader(c.get());
     QVERIFY(eventReader.enableKeyboard());
-    QSignalSpy keymapChangedSpy(&eventReader, &X11EventReaderHelper::keymapChanged);
 
     const xcb_window_t windowId = xcb_generate_id(c.get());
     const uint32_t values[] = {XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_KEY_RELEASE};
@@ -427,31 +435,21 @@ void XWaylandInputTest::testKeyboardInput()
         Test::keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
     };
 
-    // Exercise ordinary keys using the default keymap before generating custom keymaps.
+    auto sendKeysym = [fakeInput](xkb_keysym_t keysym) {
+        fakeInput->keyboard_keysym(keysym, QtWayland::wl_keyboard::key_state_pressed);
+        fakeInput->keyboard_keysym(keysym, QtWayland::wl_keyboard::key_state_released);
+    };
+
+    // Type a and B with ordinary key events before generating custom keymaps.
     tap(KEY_A);
     shiftedTap(KEY_B);
     tap(KEY_SPACE);
-
-    auto sendCustomKeysym = [&](xkb_keysym_t keysym, const QString &character) {
-        keymapChangedSpy.clear();
-        QVERIFY(input()->keyboard()->xkb()->updateToKeymapForKeySym(Xkb::scratchKeycode, keysym));
-        QVERIFY(keymapChangedSpy.wait()); // IRL we can't wait for this!
-
-        const QString receivedText = eventReader.receivedText();
-        tap(KEY_F24);
-        QTRY_COMPARE(eventReader.receivedText(), receivedText + character); // IRL we can't wait for this!
-
-        keymapChangedSpy.clear();
-        input()->keyboard()->xkb()->reconfigure();
-        QVERIFY(keymapChangedSpy.wait()); // IRL we can't wait for this!
-    };
-
-    sendCustomKeysym(XKB_KEY_adiaeresis, QStringLiteral("ä"));
-    sendCustomKeysym(XKB_KEY_Adiaeresis, QStringLiteral("Ä"));
-    tap(KEY_SPACE);
-    sendCustomKeysym(0x01000000 | 0xC548, QStringLiteral("안"));
-    sendCustomKeysym(0x01000000 | 0x1F60A, QStringLiteral("😊"));
-    tap(KEY_F);
+    sendKeysym(XKB_KEY_adiaeresis);
+    sendKeysym(XKB_KEY_Adiaeresis);
+    sendKeysym(XKB_KEY_space);
+    sendKeysym(0x01000000 | 0xC548); // 안
+    sendKeysym(0x01000000 | 0x1F60A); // 😊
+    sendKeysym(XKB_KEY_f);
 
     QTRY_COMPARE(eventReader.receivedText(), QStringLiteral("aB äÄ 안😊f"));
 
