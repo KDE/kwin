@@ -435,6 +435,46 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                }},
 
     // 16 bpp
+    {DRM_FORMAT_XRGB4444, FormatInfo{
+                              .drmFormat = DRM_FORMAT_XRGB4444,
+                              .bitsPerColor = 4,
+                              .alphaBits = 0,
+                              .bitsPerPixel = 16,
+                              .openglFormat = GL_RGBA4,
+                              .vulkanFormat = VK_FORMAT_UNDEFINED,
+                              .floatingPoint = false,
+                              .yuv = false,
+                          }},
+    {DRM_FORMAT_XBGR4444, FormatInfo{
+                              .drmFormat = DRM_FORMAT_XBGR4444,
+                              .bitsPerColor = 4,
+                              .alphaBits = 0,
+                              .bitsPerPixel = 16,
+                              .openglFormat = GL_RGBA4,
+                              .vulkanFormat = VK_FORMAT_UNDEFINED,
+                              .floatingPoint = false,
+                              .yuv = false,
+                          }},
+    {DRM_FORMAT_RGBX4444, FormatInfo{
+                              .drmFormat = DRM_FORMAT_RGBX4444,
+                              .bitsPerColor = 4,
+                              .alphaBits = 0,
+                              .bitsPerPixel = 16,
+                              .openglFormat = GL_RGBA4,
+                              .vulkanFormat = VK_FORMAT_UNDEFINED,
+                              .floatingPoint = false,
+                              .yuv = false,
+                          }},
+    {DRM_FORMAT_BGRX4444, FormatInfo{
+                              .drmFormat = DRM_FORMAT_BGRX4444,
+                              .bitsPerColor = 4,
+                              .alphaBits = 0,
+                              .bitsPerPixel = 16,
+                              .openglFormat = GL_RGBA4,
+                              .vulkanFormat = VK_FORMAT_UNDEFINED,
+                              .floatingPoint = false,
+                              .yuv = false,
+                          }},
     {DRM_FORMAT_ARGB4444, FormatInfo{
                               .drmFormat = DRM_FORMAT_ARGB4444,
                               .bitsPerColor = 4,
@@ -479,6 +519,46 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .floatingPoint = false,
                               .yuv = false,
                           }},
+    {DRM_FORMAT_XRGB1555, FormatInfo{
+                              .drmFormat = DRM_FORMAT_XRGB1555,
+                              .bitsPerColor = 5,
+                              .alphaBits = 0,
+                              .bitsPerPixel = 16,
+                              .openglFormat = GL_RGB5_A1,
+                              .vulkanFormat = VK_FORMAT_UNDEFINED,
+                              .floatingPoint = false,
+                              .yuv = false,
+                          }},
+    {DRM_FORMAT_XBGR1555, FormatInfo{
+                              .drmFormat = DRM_FORMAT_XBGR1555,
+                              .bitsPerColor = 5,
+                              .alphaBits = 0,
+                              .bitsPerPixel = 16,
+                              .openglFormat = GL_RGB5_A1,
+                              .vulkanFormat = VK_FORMAT_UNDEFINED,
+                              .floatingPoint = false,
+                              .yuv = false,
+                          }},
+    {DRM_FORMAT_RGBX5551, FormatInfo{
+                              .drmFormat = DRM_FORMAT_RGBX5551,
+                              .bitsPerColor = 5,
+                              .alphaBits = 0,
+                              .bitsPerPixel = 16,
+                              .openglFormat = GL_RGB5_A1,
+                              .vulkanFormat = VK_FORMAT_UNDEFINED,
+                              .floatingPoint = false,
+                              .yuv = false,
+                          }},
+    {DRM_FORMAT_BGRX5551, FormatInfo{
+                              .drmFormat = DRM_FORMAT_BGRX5551,
+                              .bitsPerColor = 5,
+                              .alphaBits = 0,
+                              .bitsPerPixel = 16,
+                              .openglFormat = GL_RGB5_A1,
+                              .vulkanFormat = VK_FORMAT_UNDEFINED,
+                              .floatingPoint = false,
+                              .yuv = false,
+                          }},
     {DRM_FORMAT_ARGB1555, FormatInfo{
                               .drmFormat = DRM_FORMAT_ARGB1555,
                               .bitsPerColor = 5,
@@ -497,7 +577,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .alphaBits = 1,
                               .bitsPerPixel = 16,
                               .openglFormat = GL_RGB5_A1,
-                              .vulkanFormat = VK_FORMAT_UNDEFINED,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
+                              .vulkanFormat = VK_FORMAT_A1B5G5R5_UNORM_PACK16,
+#endif
                               .floatingPoint = false,
                               .yuv = false,
                           }},
@@ -525,6 +607,30 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .floatingPoint = false,
                               .yuv = false,
                           }},
+    {DRM_FORMAT_RGB565, FormatInfo{
+                            .drmFormat = DRM_FORMAT_RGB565,
+                            .bitsPerColor = 6,
+                            .alphaBits = 0,
+                            .bitsPerPixel = 16,
+                            .openglFormat = GL_RGB565,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
+                            .vulkanFormat = VK_FORMAT_R5G6B5_UNORM_PACK16,
+#endif
+                            .floatingPoint = false,
+                            .yuv = false,
+                        }},
+    {DRM_FORMAT_BGR565, FormatInfo{
+                            .drmFormat = DRM_FORMAT_BGR565,
+                            .bitsPerColor = 6,
+                            .alphaBits = 0,
+                            .bitsPerPixel = 16,
+                            .openglFormat = GL_RGB565,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
+                            .vulkanFormat = VK_FORMAT_B5G6R5_UNORM_PACK16,
+#endif
+                            .floatingPoint = false,
+                            .yuv = false,
+                        }},
 
     // YUV formats. TODO support them with Vulkan
     {DRM_FORMAT_NV12, FormatInfo{
