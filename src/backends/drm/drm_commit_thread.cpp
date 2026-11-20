@@ -61,6 +61,8 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                             qCCritical(KWIN_DRM, "Please report this at https://forums.developer.nvidia.com/c/gpu-graphics/linux");
                         } else if (m_gpu->drmDevice()->isI915()) {
                             qCCritical(KWIN_DRM, "Please report this at https://gitlab.freedesktop.org/drm/i915/kernel/-/issues");
+                        } else if (m_gpu->drmDevice()->isIntelXE()) {
+                            qCCritical(KWIN_DRM, "Please report this at https://gitlab.freedesktop.org/drm/xe/kernel/-/issues");
                         }
                         qCCritical(KWIN_DRM, "With the output of 'sudo dmesg' and 'journalctl --user-unit plasma-kwin_wayland --boot 0'");
                         m_pageflipTimeoutDetected = true;
