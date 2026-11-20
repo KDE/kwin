@@ -49,8 +49,7 @@ void VulkanTest::initTestCase()
 
 void VulkanTest::testAllocateImage()
 {
-    auto texture = VulkanTexture::allocate(m_device, vk::Format::eR8G8B8A8Unorm, QSize(64, 64),
-                                           vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eSampled);
+    auto texture = VulkanTexture::allocate(m_device, vk::Format::eR8G8B8A8Unorm, QSize(64, 64), VulkanDevice::s_imageSampleFlags);
     QVERIFY(texture != nullptr);
     QCOMPARE(texture->size(), QSize(64, 64));
     QCOMPARE(texture->format(), vk::Format::eR8G8B8A8Unorm);
@@ -70,8 +69,7 @@ void VulkanTest::testUploadPattern()
         }
     }
 
-    auto texture = VulkanTexture::upload(m_device, source,
-                                         vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eSampled);
+    auto texture = VulkanTexture::upload(m_device, source, VulkanDevice::s_imageSampleFlags);
     QVERIFY(texture != nullptr);
     QCOMPARE(texture->size(), size);
 
@@ -93,8 +91,7 @@ void VulkanTest::testUpdateRegion()
     QImage source(64, 64, QImage::Format_RGBA8888_Premultiplied);
     source.fill(QColor(0, 255, 0, 255));
 
-    auto texture = VulkanTexture::upload(m_device, source,
-                                         vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eSampled);
+    auto texture = VulkanTexture::upload(m_device, source, VulkanDevice::s_imageSampleFlags);
     QVERIFY(texture != nullptr);
 
     QImage updateSource(64, 64, QImage::Format_RGBA8888_Premultiplied);
@@ -125,8 +122,7 @@ void VulkanTest::testUpdateCorners()
     QImage source(64, 64, QImage::Format_RGBA8888_Premultiplied);
     source.fill(QColor(0, 0, 0, 255));
 
-    auto texture = VulkanTexture::upload(m_device, source,
-                                         vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eSampled);
+    auto texture = VulkanTexture::upload(m_device, source, VulkanDevice::s_imageSampleFlags);
     QVERIFY(texture != nullptr);
 
     QImage updateSource(64, 64, QImage::Format_RGBA8888_Premultiplied);

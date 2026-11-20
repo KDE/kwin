@@ -69,8 +69,8 @@ void EglBackend::updateDmabufTranches()
         auto allFormats = device->eglDisplay()->allSupportedDrmFormats();
         auto nonExternalOnly = device->eglDisplay()->nonExternalOnlySupportedDrmFormats();
         if (vkDevice && !vkDevice->isSoftwareRenderer()) {
-            allFormats = allFormats.intersected(vkDevice->transferFormats());
-            nonExternalOnly = nonExternalOnly.intersected(vkDevice->transferFormats());
+            allFormats = allFormats.intersected(vkDevice->sampleFormats());
+            nonExternalOnly = nonExternalOnly.intersected(vkDevice->sampleFormats());
         }
         for (auto it = allFormats.constBegin(); it != allFormats.constEnd(); it++) {
             const auto info = FormatInfo::get(it.key());
