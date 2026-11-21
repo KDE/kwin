@@ -24,6 +24,7 @@ class QSocketNotifier;
 class QThread;
 
 struct libinput_tablet_tool;
+struct libinput_device;
 
 namespace KWin
 {
@@ -82,6 +83,7 @@ private:
     void applyScreenToDevice(Device *device);
     void doSetup();
     TabletTool *getOrCreateTool(libinput_tablet_tool *tool);
+    void addDevice(libinput_device *nativeDevice);
 
     std::unique_ptr<QSocketNotifier> m_notifier;
     QRecursiveMutex m_mutex;
