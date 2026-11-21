@@ -535,7 +535,7 @@ void SlideEffect::desktopChangingCancelled()
 
 void SlideEffectScreen::desktopChangingCancelled()
 {
-    if (m_state != State::Inactive) {
+    if (m_state == State::ActiveGesture) {
         startAnimation(m_gesturePos, effects->currentDesktop(m_screen), nullptr);
     }
 }
