@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwin_taskswitching\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-18 14:19+0000\n"
-"PO-Revision-Date: 2026-11-11 12:05+0100\n"
+"PO-Revision-Date: 2026-11-19 13:45+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -251,26 +251,20 @@ msgid "Show Preview"
 msgstr "Mostrar vista previa"
 
 #: ui/TabBoxSettings.qml:82
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Selecting a window:"
+#, kde-format
 msgctxt "@label, Part of the sentence 'Selecting a window hides other windows'"
 msgid "Selecting a window:"
 msgstr "Al seleccionar una ventana:"
 
 #: ui/TabBoxSettings.qml:84
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Hides other windows"
+#, kde-format
 msgctxt ""
 "@option:check, Part of the sentence 'Selecting a window hides other windows'"
 msgid "Hides other windows"
 msgstr "Se ocultan las demás ventanas"
 
 #: ui/TabBoxSettings.qml:99
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Show on screen:"
+#, kde-format
 msgctxt "@label Followed by 'Active screen' or 'Primary screen'"
 msgid "Show on screen:"
 msgstr "Mostrar en pantalla:"
