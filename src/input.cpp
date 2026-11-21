@@ -65,6 +65,8 @@
 #include <KScreenLocker/KsldApp>
 #endif
 // Qt
+#include <limits>
+
 #include <QAction>
 #include <QKeyEvent>
 #include <QThread>
@@ -1894,12 +1896,43 @@ class ScreenEdgeInputFilter : public InputEventFilter
 public:
     ScreenEdgeInputFilter()
         : InputEventFilter(InputFilterOrder::ScreenEdge)
+        , m_pointerGesturesEnabled(qEnvironmentVariableIntValue("KWIN_SCREENEDGE_POINTER_GESTURES") != 0)
     {
     }
     bool pointerMotion(PointerMotionEvent *event) override
     {
+        if (m_pointerGestureActive) {
+            workspace()->screenEdges()->gestureRecognizer()->touchMotion(s_pointerGestureId, event->position);
+            return true;
+        }
         workspace()->screenEdges()->handlePointerMotion(event->position, event->timestamp);
         // always forward
+        return false;
+    }
+    bool pointerButton(PointerButtonEvent *event) override
+    {
+        if (!m_pointerGesturesEnabled || event->button != Qt::LeftButton) {
+            return m_pointerGestureActive;
+        }
+
+        // Emulate screen edge gesture with mouse pointer when KWIN_SCREENEDGE_POINTER_GESTURES=1
+        auto recognizer = workspace()->screenEdges()->gestureRecognizer();
+        if (event->state == PointerButtonState::Pressed) {
+            if (!m_pointerGestureActive && recognizer->touchDown(s_pointerGestureId, event->position)) {
+                m_pointerGestureActive = true;
+                return true;
+            }
+
+            // touchDown() records the point even if no gesture matched, so release it again
+            recognizer->touchUp(s_pointerGestureId);
+            return m_pointerGestureActive;
+        }
+
+        if (m_pointerGestureActive) {
+            recognizer->touchUp(s_pointerGestureId);
+            m_pointerGestureActive = false;
+            return true;
+        }
         return false;
     }
     bool touchDown(TouchDownEvent *event) override
@@ -1917,8 +1950,15 @@ public:
     bool touchCancel() override
     {
         workspace()->screenEdges()->gestureRecognizer()->touchCancel();
+        m_pointerGestureActive = false;
         return false;
     }
+
+private:
+    // Mouse pointer emulated touch point
+    static constexpr uint32_t s_pointerGestureId = std::numeric_limits<uint32_t>::max();
+    const bool m_pointerGesturesEnabled;
+    bool m_pointerGestureActive = false;
 };
 
 /**
