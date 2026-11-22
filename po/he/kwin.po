@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-20 01:14+0000\n"
-"PO-Revision-Date: 2026-11-13 14:33+0200\n"
+"PO-Revision-Date: 2026-11-21 09:21+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <kde-l10n-he@kde.org>\n"
 "Language: he\n"
@@ -3457,7 +3457,7 @@ msgstr "סוג כלל דילוג על מדפדף"
 #: rulesettings.kcfg:263
 #, kde-format
 msgid "Skip switcher"
-msgstr "דילוג במחליף"
+msgstr "דילוג בבורר"
 
 #. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:267

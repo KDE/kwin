@@ -4527,8 +4527,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland krasjet"
-
-#, fuzzy
-#~| msgid "Block Compositing rule type"
-#~ msgid "Unsupported compositing type"
-#~ msgstr "Regeltype for blokkering av sammensetting"
