@@ -177,6 +177,7 @@ bool OffscreenData::maybeRender(EffectWindow *window)
         m_slot.reset();
         return false;
     }
+    fbo->colorAttachment()->setContentTransform(OutputTransform::Normal);
 
     RenderTarget renderTarget(fbo, m_colorDescription);
     RenderViewport viewport(logicalGeometry, scale, renderTarget, QPoint());
