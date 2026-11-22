@@ -150,6 +150,8 @@ bool OffscreenData::maybeRender(EffectWindow *window)
     if (!m_slot) {
         return false;
     }
+    m_slot->framebuffer()->colorAttachment()->setContentTransform(OutputTransform::Normal);
+
     RenderTarget renderTarget(m_slot->framebuffer());
     RenderViewport viewport(logicalGeometry, scale, renderTarget, QPoint());
     GLFramebuffer::pushFramebuffer(m_slot->framebuffer());
