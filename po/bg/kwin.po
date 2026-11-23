@@ -4461,6 +4461,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland се срина"
-
-#~ msgid "Unsupported compositing type"
-#~ msgstr "Неподдържан тип композиране"

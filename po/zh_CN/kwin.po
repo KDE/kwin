@@ -1842,25 +1842,15 @@ msgid "<application>%1</application> is asking to control input devices"
 msgstr "<application>%1</application> 正在请求控制输入设备"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check, %1 is the application name. This option always allow apps "
-#| "claiming to be a given application name to control input devices"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option remembers the "
 "selection for apps claiming to be a given application name"
 msgid "Remember for apps claiming to be %1"
-msgstr "总是允许声称为 %1 的应用"
+msgstr "记住声称为 %1 的应用的此项设置"
 
 #: plugins/eis/eisprompter.cpp:66
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Identities of legacy X11 apps cannot be verified. Any app claiming to be "
-#| "<application>%1</application> will be able to control input devices. You "
-#| "can revoke this permission later on <application>System Settings</"
-#| "application>’ “Legacy X11 App Support” page."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Identities of legacy X11 apps cannot be verified. If permitted any app "
@@ -1868,9 +1858,9 @@ msgid ""
 "devices. You can change this setting later on <application>System Settings</"
 "application>’ “Legacy X11 App Support” page."
 msgstr ""
-"无法验证旧版 X11 应用程序的身份。任何声称是 <application>%1</application> 的"
-"应用程序都将能够控制输入设备。您稍后可以在<application>系统设置</application>"
-"的“旧式 X11 应用程序支持”页面中撤销此权限。"
+"无法验证旧版 X11 应用程序的身份。如果允许，则任何声称是 <application>%1</"
+"application> 的应用程序均可控制输入设备。您稍后可以在<application>系统设置</"
+"application>的“旧式 X11 应用程序支持”页面中更改此设置。"
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
@@ -2476,6 +2466,9 @@ msgid ""
 "temporarily active.\n"
 "            "
 msgstr ""
+"\n"
+"                指定夜间颜色临时启用后重新停用的日期和时间。\n"
+"            "
 
 #. i18n: ectx: label, entry (ActivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:28
@@ -2485,6 +2478,9 @@ msgid ""
 "                Night Light is activated until manually disabled.\n"
 "            "
 msgstr ""
+"\n"
+"                夜间颜色已启用，直到手动禁用。\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedUntil), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:35
@@ -2495,6 +2491,9 @@ msgid ""
 "temporarily inactive.\n"
 "            "
 msgstr ""
+"\n"
+"                指定夜间颜色临时停用后重新启用的日期和时间。\n"
+"            "
 
 #. i18n: ectx: label, entry (DeactivatedManual), group (NightLight)
 #: plugins/nightlight/nightlightstate.kcfg:42
@@ -2504,12 +2503,15 @@ msgid ""
 "                Night Light is suspended until manually turned back on.\n"
 "            "
 msgstr ""
+"\n"
+"                夜间颜色已停用，直到手动重新启用。\n"
+"            "
 
 #: plugins/outputlocator/outputlocator.cpp:26
 #, kde-format
 msgctxt "@label"
 msgid "Built-in Screen"
-msgstr "内置屏幕"
+msgstr "自带屏幕"
 
 #: plugins/overview/DesktopBar.qml:157
 #, kde-format
@@ -3053,44 +3055,43 @@ msgstr "晃动程度(&W)"
 #: plugins/wobblywindows/wobblywindows_config.ui:195
 #, kde-format
 msgid "Cloth"
-msgstr ""
+msgstr "布料"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:200
 #, kde-format
 msgid "Gelatin"
-msgstr ""
+msgstr "明胶"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:205
 #, kde-format
 msgid "Water"
-msgstr ""
+msgstr "水"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:210
-#, fuzzy, kde-format
-#| msgid "Padding:"
+#, kde-format
 msgid "Pudding"
-msgstr "边距："
+msgstr "布丁"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:215
 #, kde-format
 msgid "Molasses"
-msgstr ""
+msgstr "糖蜜"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:220
 #, kde-format
 msgid "Nitroglycerin"
-msgstr ""
+msgstr "硝酸甘油"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:225
 #, kde-format
 msgid "Custom"
-msgstr ""
+msgstr "自定义"
 
 #: plugins/zoom/zoom.cpp:89
 #, kde-format
@@ -3703,11 +3704,11 @@ msgstr "遍历窗口 (反向)"
 
 #: tabbox/tabbox.cpp:324
 msgid "Walk Through Windows Alternative"
-msgstr "遍历窗口交替"
+msgstr "遍历窗口 (第二切换器)"
 
 #: tabbox/tabbox.cpp:325
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr "遍历窗口交替 (反向)"
+msgstr "遍历窗口 (第二切换器) (反向)"
 
 #: tabbox/tabbox.cpp:326
 msgid "Walk Through Windows of Current Application"
@@ -3719,11 +3720,11 @@ msgstr "遍历当前应用程序窗口 (反向)"
 
 #: tabbox/tabbox.cpp:328
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr "遍历当前应用程序窗口交替"
+msgstr "遍历当前应用程序窗口 (第二切换器)"
 
 #: tabbox/tabbox.cpp:329
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr "遍历当前应用程序窗口交替 (反向)"
+msgstr "遍历当前应用程序窗口 (第二切换器) (反向)"
 
 #: tabbox/tabboxhandler.cpp:190
 #, kde-format
@@ -4356,10 +4357,9 @@ msgid "More displays are enabled than are supported by the graphics card."
 msgstr "启用的显示器数量超出显卡支持的上限。"
 
 #: wayland/outputmanagement_v2.cpp:750
-#, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration: %s"
+#, kde-format
 msgid "The driver rejected the output configuration: %1"
-msgstr "驱动程序拒绝了输出配置：%s"
+msgstr "驱动程序拒绝了输出配置：%1"
 
 #: window.cpp:3178
 #, kde-format
@@ -4370,7 +4370,7 @@ msgstr "(没有响应)"
 #: workspace.cpp:1394
 #, kde-format
 msgid "Built-in Screen"
-msgstr "内置屏幕"
+msgstr "自带屏幕"
 
 #: workspace.cpp:1407
 #, kde-format
@@ -4415,36 +4415,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgid "Unsupported compositing type"
-#~ msgstr "不支持的合成类型"
-
-#~ msgid "Enable &advanced mode"
-#~ msgstr "启用高级设置(&A)"
-
-#~ msgid "Less"
-#~ msgstr "低"
-
-#~ msgid "More"
-#~ msgstr "高"
-
-#~ msgctxt "@action Overview and Grid View are the name of KWin effects"
-#~ msgid "Cycle through Overview and Grid View"
-#~ msgstr "循环显示桌面概览和网格视图"
-
-#~ msgctxt "@action Overview is the name of a KWin effect"
-#~ msgid "Toggle Overview"
-#~ msgstr "显示/隐藏桌面总览"
-
-#~ msgctxt "@action Grid View is the name of a KWin effect"
-#~ msgid "Toggle Grid View"
-#~ msgstr "切换网格视图"
-
-#~ msgid "Ignore minimized windows:"
-#~ msgstr "忽略最小化的窗口："
-
-#~ msgid "Organize windows in the Grid View:"
-#~ msgstr "使用网格视图组织窗口："
-
-#~ msgid "Search results include filtered windows:"
-#~ msgstr "搜索结果包括过滤后的窗口："

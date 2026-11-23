@@ -150,24 +150,18 @@ msgid "Applications allowed to control the pointer and keyboard"
 msgstr "允许控制指针和键盘的应用程序"
 
 #: ui/main.qml:165
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "See Allowed Applications…"
+#, kde-format
 msgctxt "@action:button"
 msgid "See Denied Applications…"
-msgstr "查看允许的应用程序…"
+msgstr "查看拒绝的应用程序…"
 
 #: ui/main.qml:169
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@title:window title of the page opened by the 'See allowed applications' "
-#| "button"
-#| msgid "Applications allowed to control the pointer and keyboard"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See denied applications' "
 "button"
 msgid "Applications never allowed to control the pointer and keyboard"
-msgstr "允许控制指针和键盘的应用程序"
+msgstr "不允许控制指针和键盘的应用程序"
 
 #: ui/main.qml:178
 #, kde-format

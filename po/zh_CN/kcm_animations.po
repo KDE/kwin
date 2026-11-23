@@ -41,13 +41,7 @@ msgid "Instant"
 msgstr "即时"
 
 #: ui/main.qml:95
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Some applications do not support this setting: In particular, GTK "
-#| "applications cannot change animation duration, but will still disable "
-#| "animations when <interface>animation speed</interface> is "
-#| "<interface>Instant</interface>."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some applications do not support this setting: in particular, GTK "
@@ -55,49 +49,38 @@ msgid ""
 "animations when <interface>animation speed</interface> is "
 "<interface>Instant</interface>."
 msgstr ""
-"某些应用程序不支持此设置：特别是 GTK 应用程序无法更改动效持续时间，但仍然可以"
-"将 <interface>动效速度</interface> 设置为 <interface>即时</interface> 以禁用"
-"动效。"
+"某些应用程序不支持此设置：GTK 应用程序无法更改动效时长，且当 <interface>动画"
+"速度</interface> 设置为 <interface>即时</interface> 时，仍会禁用动效。"
 
 #: ui/main.qml:102
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Desktop animations"
+#, kde-format
 msgctxt "@title:group"
 msgid "Window animations"
-msgstr "桌面动效"
+msgstr "窗口动效"
 
 #: ui/main.qml:104
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window open/close:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Open/close:"
-msgstr "窗口打开/关闭："
+msgstr "打开/关闭："
 
 #: ui/main.qml:105
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window maximize:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Maximize:"
-msgstr "窗口最大化："
+msgstr "最大化："
 
 #: ui/main.qml:106
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window minimize:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Minimize:"
-msgstr "窗口最小化："
+msgstr "最小化："
 
 #: ui/main.qml:107
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window full screen:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Full screen:"
-msgstr "窗口全屏："
+msgstr "全屏："
 
 #: ui/main.qml:126 ui/main.qml:165 ui/main.qml:211
 #, kde-format
@@ -118,12 +101,10 @@ msgid "Peek at desktop:"
 msgstr "暂时显示桌面："
 
 #: ui/main.qml:146
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Virtual desktop switching:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Switch virtual desktops:"
-msgstr "虚拟桌面切换器："
+msgstr "切换虚拟桌面："
 
 #: ui/main.qml:194
 #, kde-format
