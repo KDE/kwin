@@ -54,8 +54,10 @@ void FallApartEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPr
 {
     auto animationIt = windows.find(w);
     if (animationIt != windows.end() && isRealWindow(w)) {
-        const int time = animationIt->clock.tickMs(view).count();
-        animationIt->progress += double(time) / animationTime(1s).count();
+        const auto time = animationIt->clock.tick(view);
+        const auto duration = animationTime(1s);
+
+        animationIt->progress += progressRatio(time, duration);
         data.setTransformed();
     }
     effects->prePaintWindow(view, w, data);
