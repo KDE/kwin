@@ -134,7 +134,7 @@ QRect SlideBackEffect::getSlideDestination(const QRect &windowUnderGeometry, con
 
 void SlideBackEffect::prePaintScreen(ScreenPrePaintData &data)
 {
-    const int time = clock.tickMs(data.view).count();
+    const auto time = clock.tick(data.view);
 
     if (motionManager.managingWindows()) {
         motionManager.calculate(time);

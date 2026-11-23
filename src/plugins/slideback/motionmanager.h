@@ -93,7 +93,7 @@ public:
      * Calculates the new position if not at the target. Called
      * once per frame only.
      */
-    void calculate(const int msec);
+    void calculate(std::chrono::nanoseconds nsec);
     /**
      * Place the object on top of the target immediately,
      * bypassing all movement calculation.
@@ -107,6 +107,7 @@ private:
     T m_velocity;
     double m_strength;
     double m_smoothness;
+    std::chrono::nanoseconds m_accumulatedTime;
 };
 
 /**
@@ -189,7 +190,7 @@ public:
      * prePaintScreen(). Remember to set the
      * Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS flag.
      */
-    void calculate(int time);
+    void calculate(std::chrono::nanoseconds time);
     /**
      * Modify a registered window's paint data to make it appear
      * at its real location on the screen. Usually called in
@@ -315,6 +316,7 @@ Motion<T>::Motion(T initial, double strength, double smoothness)
     , m_velocity()
     , m_strength(strength)
     , m_smoothness(smoothness)
+    , m_accumulatedTime(0)
 {
 }
 
@@ -326,6 +328,7 @@ Motion<T>::Motion(const Motion &other)
     , m_velocity(other.velocity())
     , m_strength(other.strength())
     , m_smoothness(other.smoothness())
+    , m_accumulatedTime(0)
 {
 }
 
@@ -335,15 +338,18 @@ Motion<T>::~Motion()
 }
 
 template<typename T>
-void Motion<T>::calculate(const int msec)
+void Motion<T>::calculate(std::chrono::nanoseconds nsec)
 {
     if (m_value == m_target && m_velocity == T()) { // At target and not moving
         return;
     }
 
-    // Poor man's time independent calculation
-    int steps = std::max(1, msec / 5);
-    for (int i = 0; i < steps; i++) {
+    const std::chrono::nanoseconds step = std::chrono::milliseconds(5);
+    m_accumulatedTime += nsec;
+
+    while (m_accumulatedTime >= step) {
+        m_accumulatedTime -= step;
+
         T diff = m_target - m_value;
         T strength = diff * m_strength;
         m_velocity = (m_smoothness * m_velocity + strength) / (m_smoothness + 1.0);

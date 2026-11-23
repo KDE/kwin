@@ -98,7 +98,7 @@ void WindowMotionManager::unmanageAll()
     m_movingWindowsSet.clear();
 }
 
-void WindowMotionManager::calculate(int time)
+void WindowMotionManager::calculate(std::chrono::nanoseconds time)
 {
     if (!effects->animationTimeFactor()) {
         // Just skip it completely if the user wants no animation
