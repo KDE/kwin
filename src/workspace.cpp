@@ -422,7 +422,19 @@ void Workspace::initializeX11()
     Xcb::Extensions::self();
 
     // Call this before XSelectInput() on the root window
-    m_startup = std::make_unique<KStartupInfo>(KStartupInfo::DisableKWinModule | KStartupInfo::AnnounceSilenceChanges, this);
+    m_startup = std::make_unique<KStartupInfo>(KStartupInfo::DisableKWinModule, this);
+
+    connect(m_startup.get(), &KStartupInfo::gotNewStartup, this, [this](const KStartupInfoId &id, const KStartupInfoData &data) {
+        const auto icon = QIcon::fromTheme(data.findIcon(), QIcon::fromTheme(QStringLiteral("system-run")));
+        Q_EMIT startupAdded(id.id(), icon);
+    });
+    connect(m_startup.get(), &KStartupInfo::gotRemoveStartup, this, [this](const KStartupInfoId &id, const KStartupInfoData &data) {
+        Q_EMIT startupRemoved(id.id());
+    });
+    connect(m_startup.get(), &KStartupInfo::gotStartupChange, this, [this](const KStartupInfoId &id, const KStartupInfoData &data) {
+        const auto icon = QIcon::fromTheme(data.findIcon(), QIcon::fromTheme(QStringLiteral("system-run")));
+        Q_EMIT startupChanged(id.id(), icon);
+    });
 
     // Select windowmanager privileges
     selectWmInputEventMask();

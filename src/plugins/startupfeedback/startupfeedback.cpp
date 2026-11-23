@@ -20,7 +20,6 @@
 // KDE
 #include <KConfigGroup>
 #include <KSharedConfig>
-#include <KWindowSystem>
 // KWin
 #include "core/output.h"
 #include "core/pixelgrid.h"
@@ -58,9 +57,6 @@ static const int s_startupDefaultTimeout = 5;
 
 StartupFeedbackEffect::StartupFeedbackEffect()
     : m_bounceSizesRatio(1.0)
-#if KWIN_BUILD_X11
-    , m_startupInfo(new KStartupInfo(KStartupInfo::CleanOnCantDetect, this))
-#endif
     , m_active(false)
     , m_frame(0)
     , m_progress(0)
@@ -69,20 +65,6 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("klaunchrc", KConfig::NoGlobals)))
     , m_splashVisible(false)
 {
-#if KWIN_BUILD_X11
-    connect(m_startupInfo, &KStartupInfo::gotNewStartup, this, [](const KStartupInfoId &id, const KStartupInfoData &data) {
-        const auto icon = QIcon::fromTheme(data.findIcon(), QIcon::fromTheme(QStringLiteral("system-run")));
-        Q_EMIT effects->startupAdded(id.id(), icon);
-    });
-    connect(m_startupInfo, &KStartupInfo::gotRemoveStartup, this, [](const KStartupInfoId &id, const KStartupInfoData &data) {
-        Q_EMIT effects->startupRemoved(id.id());
-    });
-    connect(m_startupInfo, &KStartupInfo::gotStartupChange, this, [](const KStartupInfoId &id, const KStartupInfoData &data) {
-        const auto icon = QIcon::fromTheme(data.findIcon(), QIcon::fromTheme(QStringLiteral("system-run")));
-        Q_EMIT effects->startupChanged(id.id(), icon);
-    });
-#endif
-
     connect(effects, &EffectsHandler::startupAdded, this, &StartupFeedbackEffect::gotNewStartup);
     connect(effects, &EffectsHandler::startupRemoved, this, &StartupFeedbackEffect::gotRemoveStartup);
     connect(effects, &EffectsHandler::startupChanged, this, &StartupFeedbackEffect::gotStartupChange);
@@ -120,9 +102,7 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
 
     c = m_configWatcher->config()->group(QStringLiteral("BusyCursorSettings"));
     m_timeout = std::chrono::seconds(c.readEntry("Timeout", s_startupDefaultTimeout));
-#if KWIN_BUILD_X11
-    m_startupInfo->setTimeout(m_timeout.count());
-#endif
+
     const bool busyBlinking = c.readEntry("Blinking", false);
     const bool busyBouncing = c.readEntry("Bouncing", true);
     if (!busyCursor) {

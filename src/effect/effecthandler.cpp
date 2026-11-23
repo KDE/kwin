@@ -167,6 +167,9 @@ EffectsHandler::EffectsHandler(Compositor *compositor, WorkspaceScene *scene)
             Q_EMIT windowDeleted(d->effectWindow());
         }
     });
+    connect(ws, &Workspace::startupAdded, this, &EffectsHandler::startupAdded);
+    connect(ws, &Workspace::startupRemoved, this, &EffectsHandler::startupRemoved);
+    connect(ws, &Workspace::startupChanged, this, &EffectsHandler::startupChanged);
     connect(ws->sessionManager(), &SessionManager::stateChanged, this, &KWin::EffectsHandler::sessionStateChanged);
     connect(vds, &VirtualDesktopManager::layoutChanged, this, [this](int width, int height) {
         Q_EMIT desktopGridSizeChanged(QSize(width, height));
