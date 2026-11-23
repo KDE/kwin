@@ -77,7 +77,7 @@ private:
     QMap<QString, Startup> m_startups;
     bool m_active;
     int m_frame;
-    int m_progress;
+    std::chrono::nanoseconds m_elapsed;
     AnimationClock m_clock;
     std::unique_ptr<ImageItem> m_item;
     std::unique_ptr<ImageItem> m_blinkItem;

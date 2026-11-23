@@ -304,4 +304,9 @@ private:
     QSharedDataPointer<Data> d;
 };
 
+static inline qreal progressRatio(std::chrono::nanoseconds elapsed, std::chrono::nanoseconds duration)
+{
+    return qreal(elapsed.count()) / duration.count();
+}
+
 } // namespace KWin

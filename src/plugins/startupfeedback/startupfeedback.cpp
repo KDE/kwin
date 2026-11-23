@@ -40,14 +40,16 @@ Q_LOGGING_CATEGORY(KWIN_STARTUPFEEDBACK, "kwin_effect_startupfeedback", QtWarnin
 namespace KWin
 {
 
+using namespace std::chrono_literals;
+
 // duration of one bounce animation
-static const int BOUNCE_DURATION = 500;
+static const std::chrono::nanoseconds BOUNCE_DURATION = 500ms;
 // number of key frames for blinking animation
 static const int BLINKING_FRAMES = 5;
 // duration between two key frames in msec
-static const int BLINKING_FRAME_DURATION = 100;
+static const std::chrono::nanoseconds BLINKING_FRAME_DURATION = 100ms;
 // duration of one blinking animation
-static const int BLINKING_DURATION = BLINKING_FRAME_DURATION * BLINKING_FRAMES;
+static const std::chrono::nanoseconds BLINKING_DURATION = BLINKING_FRAME_DURATION * BLINKING_FRAMES;
 // const int color_to_pixmap[] = { 0, 1, 2, 3, 2, 1 };
 static const int FRAME_TO_BLINKING_COLOR[] = {
     0, 1, 2, 3, 2, 1};
@@ -59,7 +61,7 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     : m_bounceSizesRatio(1.0)
     , m_active(false)
     , m_frame(0)
-    , m_progress(0)
+    , m_elapsed(0)
     , m_type(BouncingFeedback)
     , m_cursorSize(24)
     , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("klaunchrc", KConfig::NoGlobals)))
@@ -122,7 +124,7 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
 
 void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data)
 {
-    const int time = m_clock.tickMs(data.view).count();
+    const auto time = m_clock.tick(data.view);
 
     if (m_active && effects->isCursorHidden()) {
         stop();
@@ -130,9 +132,9 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data)
     if (m_active) {
         switch (m_type) {
         case BouncingFeedback: {
-            m_progress = (m_progress + time) % BOUNCE_DURATION;
-            const qreal progressRatio = qreal(m_progress) / BOUNCE_DURATION;
-            const qreal squeeze = std::pow(std::cos((progressRatio - 0.25) * M_PI), 2) * 24 - 12;
+            m_elapsed = (m_elapsed + time) % BOUNCE_DURATION;
+            const qreal t = progressRatio(m_elapsed, BOUNCE_DURATION);
+            const qreal squeeze = std::pow(std::cos((t - 0.25) * M_PI), 2) * 24 - 12;
             const QSize bounceSize = QSize(64 + squeeze, 64 - squeeze);
             QTransform transform;
             transform.scale(bounceSize.width() / 64.0, bounceSize.height() / 64.0);
@@ -140,8 +142,8 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data)
             m_item->setTransform(transform);
         } break;
         case BlinkingFeedback: {
-            m_progress = (m_progress + time) % BLINKING_DURATION;
-            m_frame = qRound((qreal)m_progress / (qreal)BLINKING_FRAME_DURATION) % BLINKING_FRAMES;
+            m_elapsed = (m_elapsed + time) % BLINKING_DURATION;
+            m_frame = qRound(progressRatio(m_elapsed, BLINKING_FRAME_DURATION)) % BLINKING_FRAMES;
             QImage img(1, 1, QImage::Format_ARGB32_Premultiplied);
             img.fill(BLINKING_COLORS[FRAME_TO_BLINKING_COLOR[m_frame]]);
             m_blinkItem->setImage(img);
@@ -313,8 +315,7 @@ QPointF StartupFeedbackEffect::feedbackOffset() const
     // Add bounce
     int yBounceOffset = 0;
     if (m_type == BouncingFeedback) {
-        const qreal progressRatio = qreal(m_progress) / BOUNCE_DURATION;
-        yBounceOffset = std::sin((progressRatio + 1) * M_PI) * 24 + 8;
+        yBounceOffset = std::sin((progressRatio(m_elapsed, BOUNCE_DURATION) + 1) * M_PI) * 24 + 8;
     }
 
     offsetPoint.setY(offsetPoint.y() + yBounceOffset);
