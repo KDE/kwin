@@ -76,7 +76,8 @@
         "Name[sr@latin]": "Prebacivanje zadataka",
         "Name[sr]": "Пребацивање задатака",
         "Name[tr]": "Görev Değiştirme",
-        "Name[uk]": "Перемикання задач"
+        "Name[uk]": "Перемикання задач",
+        "Name[zh_CN]": "任务切换"
     },
     "X-DocPath": "kcontrol/kwintabbox/index.html",
     "X-KDE-Keywords": "window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab,apps changer,application changer,app,task,switch,task switcher",
