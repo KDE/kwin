@@ -8,7 +8,6 @@
 */
 
 #include "xdgactivationv1.h"
-#include "effect/effecthandler.h"
 #include "input.h"
 #include "utils/common.h"
 #include "wayland/clientconnection.h"
@@ -106,7 +105,7 @@ QString XdgActivationV1Integration::requestToken(bool isPrivileged, SurfaceInter
     }
     workspace()->setActivationToken(newToken, serial, appId);
     if (showNotify) {
-        Q_EMIT effects->startupAdded(newToken, icon);
+        Q_EMIT workspace()->startupAdded(newToken, icon);
     }
     return newToken;
 }
@@ -137,7 +136,7 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
 void XdgActivationV1Integration::clearFeedback()
 {
     if (m_activation) {
-        Q_EMIT effects->startupRemoved(m_lastToken);
+        Q_EMIT workspace()->startupRemoved(m_lastToken);
         m_activation.reset();
     }
 }

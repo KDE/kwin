@@ -588,6 +588,10 @@ Q_SIGNALS:
     void dpmsStateChanged(std::chrono::milliseconds animationTime);
     void screenCaptureActiveChanged();
 
+    void startupAdded(const QString &id, const QIcon &icon);
+    void startupChanged(const QString &id, const QIcon &icon);
+    void startupRemoved(const QString &id);
+
 private:
     void init();
     void initShortcuts();
