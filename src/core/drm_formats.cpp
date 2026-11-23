@@ -236,7 +236,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                  .alphaBits = 0,
                                  .bitsPerPixel = 32,
                                  .openglFormat = GL_RGB10_A2,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
                                  .vulkanFormat = VK_FORMAT_A2R10G10B10_UNORM_PACK32,
+#endif
                                  .floatingPoint = false,
                                  .yuv = false,
 #if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
@@ -249,7 +251,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                  .alphaBits = 0,
                                  .bitsPerPixel = 32,
                                  .openglFormat = GL_RGB10_A2,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
                                  .vulkanFormat = VK_FORMAT_A2B10G10R10_UNORM_PACK32,
+#endif
                                  .floatingPoint = false,
                                  .yuv = false,
 #if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
@@ -282,7 +286,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                  .alphaBits = 2,
                                  .bitsPerPixel = 32,
                                  .openglFormat = GL_RGB10_A2,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
                                  .vulkanFormat = VK_FORMAT_A2R10G10B10_UNORM_PACK32,
+#endif
                                  .floatingPoint = false,
                                  .yuv = false,
 #if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
@@ -295,7 +301,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                  .alphaBits = 2,
                                  .bitsPerPixel = 32,
                                  .openglFormat = GL_RGB10_A2,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
                                  .vulkanFormat = VK_FORMAT_A2B10G10R10_UNORM_PACK32,
+#endif
                                  .floatingPoint = false,
                                  .yuv = false,
 #if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
@@ -340,7 +348,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                   .alphaBits = 0,
                                   .bitsPerPixel = 64,
                                   .openglFormat = GL_RGBA16,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
                                   .vulkanFormat = VK_FORMAT_R16G16B16A16_UNORM,
+#endif
                                   .floatingPoint = false,
                                   .yuv = false,
 #if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
@@ -363,7 +373,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                   .alphaBits = 16,
                                   .bitsPerPixel = 64,
                                   .openglFormat = GL_RGBA16,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
                                   .vulkanFormat = VK_FORMAT_R16G16B16A16_UNORM,
+#endif
                                   .floatingPoint = false,
                                   .yuv = false,
 #if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
@@ -386,7 +398,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                    .alphaBits = 0,
                                    .bitsPerPixel = 64,
                                    .openglFormat = GL_RGBA16F,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
                                    .vulkanFormat = VK_FORMAT_R16G16B16A16_SFLOAT,
+#endif
                                    .floatingPoint = true,
                                    .yuv = false,
 #if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
@@ -410,7 +424,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                    .alphaBits = 16,
                                    .bitsPerPixel = 64,
                                    .openglFormat = GL_RGBA16F,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
                                    .vulkanFormat = VK_FORMAT_R16G16B16A16_SFLOAT,
+#endif
                                    .floatingPoint = true,
                                    .yuv = false,
 #if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
@@ -445,7 +461,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .alphaBits = 4,
                               .bitsPerPixel = 16,
                               .openglFormat = GL_RGBA4,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
                               .vulkanFormat = VK_FORMAT_R4G4B4A4_UNORM_PACK16,
+#endif
                               .floatingPoint = false,
                               .yuv = false,
                           }},
@@ -455,7 +473,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .alphaBits = 4,
                               .bitsPerPixel = 16,
                               .openglFormat = GL_RGBA4,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
                               .vulkanFormat = VK_FORMAT_B4G4R4A4_UNORM_PACK16,
+#endif
                               .floatingPoint = false,
                               .yuv = false,
                           }},
@@ -465,7 +485,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .alphaBits = 1,
                               .bitsPerPixel = 16,
                               .openglFormat = GL_RGB5_A1,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
                               .vulkanFormat = VK_FORMAT_A1R5G5B5_UNORM_PACK16,
+#endif
                               .floatingPoint = false,
                               .yuv = false,
                           }},
@@ -485,7 +507,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .alphaBits = 1,
                               .bitsPerPixel = 16,
                               .openglFormat = GL_RGB5_A1,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
                               .vulkanFormat = VK_FORMAT_R5G5B5A1_UNORM_PACK16,
+#endif
                               .floatingPoint = false,
                               .yuv = false,
                           }},
@@ -495,7 +519,9 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .alphaBits = 1,
                               .bitsPerPixel = 16,
                               .openglFormat = GL_RGB5_A1,
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
                               .vulkanFormat = VK_FORMAT_B5G5R5A1_UNORM_PACK16,
+#endif
                               .floatingPoint = false,
                               .yuv = false,
                           }},
