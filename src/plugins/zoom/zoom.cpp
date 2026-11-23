@@ -206,13 +206,12 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
 {
     data.mask |= PAINT_SCREEN_TRANSFORMED;
     if (m_zoom != m_targetZoom) {
-        const int time = m_clock.tickMs(data.view).count();
-
         const float zoomDist = std::abs(m_targetZoom - m_sourceZoom);
+        const float stepSize = progressRatio(m_clock.tick(data.view), animationTime(std::chrono::milliseconds(int(150 * m_zoomFactor))));
         if (m_targetZoom > m_zoom) {
-            m_zoom = std::min(m_zoom + ((zoomDist * time) / animationTime(std::chrono::milliseconds(int(150 * m_zoomFactor))).count()), m_targetZoom);
+            m_zoom = std::min(m_zoom + zoomDist * stepSize, m_targetZoom);
         } else {
-            m_zoom = std::max(m_zoom - ((zoomDist * time) / animationTime(std::chrono::milliseconds(int(150 * m_zoomFactor))).count()), m_targetZoom);
+            m_zoom = std::max(m_zoom - zoomDist * stepSize, m_targetZoom);
         }
     }
 
@@ -281,7 +280,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
         const int screenLeft = currScreen.left();
         const int screenRight = currScreen.right();
         const int screenBottom = currScreen.bottom();
-        
+
         // figure out whether we have adjacent displays in all 4 directions
         // We pan within the screen in directions where there are no adjacent screens.
         const bool adjacentLeft = screenExistsAt(QPoint(screenLeft - 1, y));
