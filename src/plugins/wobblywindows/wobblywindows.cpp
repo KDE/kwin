@@ -28,6 +28,8 @@
 
 Q_LOGGING_CATEGORY(KWIN_WOBBLYWINDOWS, "kwin_effect_wobblywindows", QtWarningMsg)
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -241,13 +243,13 @@ void WobblyWindowsEffect::setDrag(qreal drag)
     m_drag = drag;
 }
 
-static const std::chrono::milliseconds integrationStep(10);
+static const std::chrono::milliseconds integrationStep = 10ms;
 
 void WobblyWindowsEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data)
 {
     auto infoIt = windows.find(w);
     if (infoIt != windows.end()) {
-        infoIt->accumulatedTime += infoIt->clock.tickMs(view);
+        infoIt->accumulatedTime += infoIt->clock.tick(view);
         while (infoIt->accumulatedTime >= integrationStep) {
             infoIt->accumulatedTime -= integrationStep;
 
@@ -438,7 +440,7 @@ void WobblyWindowsEffect::initWobblyInfo(WindowWobblyInfos &wwi, RectF geometry)
     wwi.bezierSurface.resize(wwi.bezierCount);
 
     wwi.status = Moving;
-    wwi.accumulatedTime = std::chrono::milliseconds(0);
+    wwi.accumulatedTime = 0ns;
 
     qreal x = geometry.x(), y = geometry.y();
     qreal width = geometry.width(), height = geometry.height();
