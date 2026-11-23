@@ -247,12 +247,11 @@ void WobblyWindowsEffect::prePaintWindow(RenderView *view, EffectWindow *w, Wind
 {
     auto infoIt = windows.find(w);
     if (infoIt != windows.end()) {
-        std::chrono::milliseconds delta = infoIt->clock.tickMs(view);
-        while (delta.count() > 0) {
-            const auto dt = std::min(delta, integrationStep);
-            delta -= dt;
+        infoIt->accumulatedTime += infoIt->clock.tickMs(view);
+        while (infoIt->accumulatedTime >= integrationStep) {
+            infoIt->accumulatedTime -= integrationStep;
 
-            if (!updateWindowWobblyDatas(w, dt.count())) {
+            if (!updateWindowWobblyDatas(w, integrationStep.count())) {
                 break;
             }
         }
@@ -439,6 +438,7 @@ void WobblyWindowsEffect::initWobblyInfo(WindowWobblyInfos &wwi, RectF geometry)
     wwi.bezierSurface.resize(wwi.bezierCount);
 
     wwi.status = Moving;
+    wwi.accumulatedTime = std::chrono::milliseconds(0);
 
     qreal x = geometry.x(), y = geometry.y();
     qreal width = geometry.width(), height = geometry.height();
