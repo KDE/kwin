@@ -227,7 +227,7 @@ FileDescriptor ItemRendererOpenGL::endFrame(const Region &repainted, RenderView 
         m_context->popFramebuffer();
 
         EGLNativeFence fence(m_context->displayObject());
-        buffer.swapchain->release(buffer.currentSlot.get(), fence.takeFileDescriptor());
+        buffer.swapchain->release(buffer.currentSlot.get(), fence.fileDescriptor());
         buffer.currentSlot.reset();
 
         buffer.journal.add(repainted);

@@ -67,7 +67,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedPrimaryLayer::beginFrame(Out
 
 bool X11WindowedPrimaryLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
-    m_swapchain->release(m_buffer.get(), std::move(sync));
+    m_swapchain->release(m_buffer.get(), sync);
     m_output->setPrimaryBuffer(m_buffer->buffer());
     return true;
 }

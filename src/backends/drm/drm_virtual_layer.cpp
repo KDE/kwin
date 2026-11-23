@@ -72,7 +72,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualDrmLayer::beginFrame(OutputFrame
 bool VirtualDrmLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
     m_damageJournal.add(damagedDeviceRegion);
-    m_swapchain->release(m_currentSlot.get(), std::move(sync));
+    m_swapchain->release(m_currentSlot.get(), sync);
     return true;
 }
 

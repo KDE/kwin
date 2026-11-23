@@ -411,7 +411,7 @@ void OffscreenQuickView::update(OutputFrame *frame)
 
     if (usingGl) {
         EGLNativeFence fence(EglContext::currentContext()->displayObject());
-        d->m_swapchain->release(d->m_currentSlot.get(), fence.takeFileDescriptor());
+        d->m_swapchain->release(d->m_currentSlot.get(), fence.fileDescriptor());
         QOpenGLFramebufferObject::bindDefault();
         if (frame && renderTime) {
             renderTime->end();

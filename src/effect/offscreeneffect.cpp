@@ -202,7 +202,7 @@ bool OffscreenData::maybeRender(EffectWindow *window)
 
     GLFramebuffer::popFramebuffer();
     EGLNativeFence fence(EglContext::currentContext()->displayObject());
-    m_swapchain->release(m_slot.get(), fence.takeFileDescriptor());
+    m_swapchain->release(m_slot.get(), fence.fileDescriptor());
     m_releasePoint = m_slot->releasePoint();
 
     m_isDirty = false;

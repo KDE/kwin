@@ -666,7 +666,7 @@ void ScreenCastStream::record(std::chrono::nanoseconds timestamp, Contents conte
             bumpBufferAge(memfd);
             if (result) {
                 m_source->renderDevice()->download(slot->buffer(), result->sync.duplicate(), *memfd->view.image());
-                m_shadowSwapchain->release(slot.get(), std::move(result->sync));
+                m_shadowSwapchain->release(slot.get(), result->sync);
             }
         } else if (auto dmabuf = dynamic_cast<DmaBufScreenCastBuffer *>(buffer)) {
             result = m_source->render(dmabuf->m_buffer, m_damageJournal.accumulate(dmabuf->m_age, Region::infinite()));

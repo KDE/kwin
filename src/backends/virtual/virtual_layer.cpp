@@ -55,7 +55,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualLayer::beginFrame(OutputFrame *f
 
 bool VirtualLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
-    m_swapchain->release(m_current.get(), std::move(sync));
+    m_swapchain->release(m_current.get(), sync);
     m_damageJournal.add(damagedDeviceRegion);
     return true;
 }

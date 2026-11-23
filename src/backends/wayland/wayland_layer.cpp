@@ -188,7 +188,7 @@ bool WaylandLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&
 {
     const QSize pictureSize = m_bufferTransform.map(m_swapchain->size());
     setBuffer(m_currentSlot->buffer(), m_bufferTransform.map(damagedDeviceRegion & Rect(QPoint(), pictureSize), pictureSize));
-    m_swapchain->release(m_currentSlot.get(), std::move(sync));
+    m_swapchain->release(m_currentSlot.get(), sync);
 
     m_damageJournal.add(damagedDeviceRegion);
     return true;
@@ -274,7 +274,7 @@ bool WaylandCursorLayer::endFrame(const Region &damagedDeviceRegion, FileDescrip
 
     static_cast<WaylandOutput *>(m_output.get())->cursor()->update(buffer, m_buffer->buffer()->size() / m_output->scale(), (hotspot() / m_output->scale()).toPoint());
 
-    m_swapchain->release(m_buffer.get(), std::move(sync));
+    m_swapchain->release(m_buffer.get(), sync);
     return true;
 }
 

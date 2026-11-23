@@ -138,7 +138,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmPipelineLayer::beginFrame(OutputFram
 bool DrmPipelineLayer::endFrame(const Region &damagedDeviceRegion, FileDescriptor &&sync, OutputFrame *frame)
 {
     m_surface->damageJournal.add(damagedDeviceRegion);
-    m_surface->swapchain->release(m_surface->currentSlot.get(), sync.duplicate());
+    m_surface->swapchain->release(m_surface->currentSlot.get(), sync);
     const auto buffer = importBuffer(m_surface.get(), m_surface->currentSlot.get(), std::move(sync), frame, damagedDeviceRegion);
     if (buffer) {
         m_surface->currentFramebuffer = buffer;

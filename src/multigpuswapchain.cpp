@@ -886,7 +886,7 @@ std::optional<MultiGpuSwapchain::Ret> EglMultiGpuCopy::copy(GraphicsBuffer *buff
 
     m_context->popFramebuffer();
     EGLNativeFence fence(m_context->displayObject());
-    m_swapchain->release(m_currentSlot.get(), fence.fileDescriptor().duplicate());
+    m_swapchain->release(m_currentSlot.get(), fence.fileDescriptor());
 
     if (renderTime) {
         renderTime->end();
