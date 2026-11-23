@@ -95,7 +95,7 @@ bool TouchPointsEffect::touchUp(qint32 id, std::chrono::microseconds time)
 
 void TouchPointsEffect::prePaintScreen(ScreenPrePaintData &data)
 {
-    const int time = m_clock.tickMs(data.view).count();
+    const auto time = m_clock.tick(data.view);
 
     auto it = m_points.begin();
     while (it != m_points.end()) {
@@ -142,19 +142,19 @@ void TouchPointsEffect::postPaintScreen()
     repaint();
 }
 
-float TouchPointsEffect::computeRadius(int time, bool press, int ring)
+float TouchPointsEffect::computeRadius(std::chrono::nanoseconds time, bool press, int ring)
 {
-    float ringDistance = m_ringLife / (m_ringCount * 3);
+    const qreal ringDistance = qreal(m_ringLife.count()) / (m_ringCount * 3);
     if (press) {
-        return ((time - ringDistance * ring) / m_ringLife) * m_ringMaxSize;
+        return ((time.count() - ringDistance * ring) / m_ringLife.count()) * m_ringMaxSize;
     }
-    return ((m_ringLife - time - ringDistance * ring) / m_ringLife) * m_ringMaxSize;
+    return (((m_ringLife - time).count() - ringDistance * ring) / m_ringLife.count()) * m_ringMaxSize;
 }
 
-float TouchPointsEffect::computeAlpha(int time, int ring)
+float TouchPointsEffect::computeAlpha(std::chrono::nanoseconds time, int ring)
 {
-    float ringDistance = m_ringLife / (m_ringCount * 3);
-    return (m_ringLife - (float)time - ringDistance * (ring)) / m_ringLife;
+    const qreal ringDistance = qreal(m_ringLife.count()) / (m_ringCount * 3);
+    return ((m_ringLife - time).count() - ringDistance * (ring)) / m_ringLife.count();
 }
 
 void TouchPointsEffect::repaint()

@@ -43,7 +43,7 @@ public:
     }
     int ringLife() const
     {
-        return m_ringLife;
+        return m_ringLife.count();
     }
     int ringSize() const
     {
@@ -59,8 +59,8 @@ private:
 
     void repaint();
 
-    float computeAlpha(int time, int ring);
-    float computeRadius(int time, bool press, int ring);
+    float computeAlpha(std::chrono::nanoseconds time, int ring);
+    float computeRadius(std::chrono::nanoseconds time, bool press, int ring);
     void drawCircleGl(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r);
     void paintScreenSetupGl(const RenderTarget &renderTarget, const QMatrix4x4 &projectionMatrix);
     void paintScreenFinishGl();
@@ -69,13 +69,13 @@ private:
 
     int m_ringCount = 2;
     float m_lineWidth = 1.0;
-    int m_ringLife = 300;
+    std::chrono::nanoseconds m_ringLife = std::chrono::milliseconds(300);
     float m_ringMaxSize = 20.0;
 
     struct TouchPoint
     {
         QPointF pos;
-        int time = 0;
+        std::chrono::nanoseconds time = std::chrono::nanoseconds(0);
         bool press;
         QColor color;
     };
