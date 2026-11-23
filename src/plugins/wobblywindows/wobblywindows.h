@@ -131,6 +131,7 @@ private:
         RectF resize_original_rect;
 
         AnimationClock clock;
+        std::chrono::milliseconds accumulatedTime;
     };
 
     QHash<const EffectWindow *, WindowWobblyInfos> windows;
