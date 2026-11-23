@@ -28,10 +28,10 @@ class InputDeviceTabletTool;
 class MouseClickMouseEvent
 {
 public:
-    MouseClickMouseEvent(int button, QPoint point, int time, std::unique_ptr<EffectFrame> &&frame, bool press)
+    MouseClickMouseEvent(int button, QPoint point, std::unique_ptr<EffectFrame> &&frame, bool press)
         : m_button(button)
         , m_pos(point)
-        , m_time(time)
+        , m_time(0)
         , m_frame(std::move(frame))
         , m_press(press)
     {
@@ -39,7 +39,7 @@ public:
 
     int m_button;
     QPoint m_pos;
-    int m_time;
+    std::chrono::nanoseconds m_time;
     std::unique_ptr<EffectFrame> m_frame;
     bool m_press;
 };
@@ -72,7 +72,7 @@ public:
         if (m_isPressed != pressed) {
             m_isPressed = pressed;
             if (pressed) {
-                m_time = 0;
+                m_time = std::chrono::nanoseconds(0);
             }
         }
     }
@@ -81,7 +81,7 @@ public:
     QString m_labelDown;
     Qt::MouseButtons m_button;
     bool m_isPressed;
-    int m_time;
+    std::chrono::nanoseconds m_time;
 };
 
 class MouseClickEffect
@@ -151,7 +151,7 @@ private:
     QColor m_colors[BUTTON_COUNT];
     int m_ringCount;
     float m_lineWidth;
-    float m_ringLife;
+    std::chrono::nanoseconds m_ringLife;
     float m_ringMaxSize;
     bool m_showText;
     QFont m_font;

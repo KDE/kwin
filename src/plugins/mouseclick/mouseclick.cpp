@@ -30,6 +30,8 @@
 namespace KWin
 {
 
+using namespace std::chrono_literals;
+
 MouseClickEffect::MouseClickEffect()
 {
     MouseClickConfig::instance(effects->config());
@@ -59,7 +61,7 @@ void MouseClickEffect::reconfigure(ReconfigureFlags)
     m_colors[1] = MouseClickConfig::color2();
     m_colors[2] = MouseClickConfig::color3();
     m_lineWidth = MouseClickConfig::lineWidth();
-    m_ringLife = MouseClickConfig::ringLife();
+    m_ringLife = std::chrono::milliseconds(MouseClickConfig::ringLife());
     m_ringMaxSize = MouseClickConfig::ringSize();
     m_ringCount = MouseClickConfig::ringCount();
     m_showText = MouseClickConfig::showText();
@@ -68,7 +70,7 @@ void MouseClickEffect::reconfigure(ReconfigureFlags)
 
 void MouseClickEffect::prePaintScreen(ScreenPrePaintData &data)
 {
-    const int time = m_clock.tickMs(data.view).count();
+    const auto time = m_clock.tick(data.view);
 
     for (auto &click : m_clicks) {
         click->m_time += time;
@@ -136,17 +138,17 @@ void MouseClickEffect::postPaintScreen()
 
 float MouseClickEffect::computeRadius(const MouseClickMouseEvent *click, int ring)
 {
-    float ringDistance = m_ringLife / (m_ringCount * 3);
+    const qreal ringDistance = qreal(m_ringLife.count()) / (m_ringCount * 3);
     if (click->m_press) {
-        return ((click->m_time - ringDistance * ring) / m_ringLife) * m_ringMaxSize;
+        return ((click->m_time.count() - ringDistance * ring) / m_ringLife.count()) * m_ringMaxSize;
     }
-    return ((m_ringLife - click->m_time - ringDistance * ring) / m_ringLife) * m_ringMaxSize;
+    return (((m_ringLife - click->m_time).count() - ringDistance * ring) / m_ringLife.count()) * m_ringMaxSize;
 }
 
 float MouseClickEffect::computeAlpha(const MouseClickMouseEvent *click, int ring)
 {
-    float ringDistance = m_ringLife / (m_ringCount * 3);
-    return (m_ringLife - (float)click->m_time - ringDistance * (ring)) / m_ringLife;
+    const qreal ringDistance = qreal(m_ringLife.count()) / (m_ringCount * 3);
+    return ((m_ringLife - click->m_time).count() - ringDistance * (ring)) / m_ringLife.count();
 }
 
 void MouseClickEffect::slotMouseChanged(const QPointF &pos, const QPointF &,
@@ -162,11 +164,11 @@ void MouseClickEffect::slotMouseChanged(const QPointF &pos, const QPointF &,
     while (--i >= 0) {
         MouseButton *b = m_buttons[i].get();
         if (isPressed(b->m_button, buttons, oldButtons)) {
-            m = std::make_unique<MouseClickMouseEvent>(i, pos.toPoint(), 0, createEffectFrame(pos.toPoint(), b->m_labelDown), true);
+            m = std::make_unique<MouseClickMouseEvent>(i, pos.toPoint(), createEffectFrame(pos.toPoint(), b->m_labelDown), true);
             break;
         } else if (isReleased(b->m_button, buttons, oldButtons) && (!b->m_isPressed || b->m_time > m_ringLife)) {
             // we might miss a press, thus also check !b->m_isPressed, bug #314762
-            m = std::make_unique<MouseClickMouseEvent>(i, pos.toPoint(), 0, createEffectFrame(pos.toPoint(), b->m_labelUp), false);
+            m = std::make_unique<MouseClickMouseEvent>(i, pos.toPoint(), createEffectFrame(pos.toPoint(), b->m_labelUp), false);
             break;
         }
         b->setPressed(b->m_button & buttons);
@@ -237,7 +239,7 @@ void MouseClickEffect::toggleEnabled()
     m_tabletTools.clear();
 
     for (int i = 0; i < BUTTON_COUNT; ++i) {
-        m_buttons[i]->m_time = 0;
+        m_buttons[i]->m_time = 0ns;
         m_buttons[i]->m_isPressed = false;
     }
 }
@@ -372,7 +374,7 @@ qreal MouseClickEffect::lineWidth() const
 
 int MouseClickEffect::ringLife() const
 {
-    return m_ringLife;
+    return m_ringLife.count();
 }
 
 int MouseClickEffect::ringSize() const
