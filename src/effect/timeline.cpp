@@ -52,20 +52,6 @@ std::chrono::nanoseconds AnimationClock::tick(const RenderView *view)
     return tick(view->nextPresentationTimestamp(), view->repaintDriver() || view->renderDevice()->isSoftwareDevice() ? 0 : view->refreshRate());
 }
 
-std::chrono::milliseconds AnimationClock::tickMs(std::chrono::nanoseconds timestamp, uint refreshRate)
-{
-    if (m_lastTimestamp && timestamp - *m_lastTimestamp < 1ms) {
-        return 0ms;
-    }
-
-    return std::chrono::duration_cast<std::chrono::milliseconds>(tick(timestamp, refreshRate));
-}
-
-std::chrono::milliseconds AnimationClock::tickMs(const RenderView *view)
-{
-    return tickMs(view->nextPresentationTimestamp(), view->repaintDriver() || view->renderDevice()->isSoftwareDevice() ? 0 : view->refreshRate());
-}
-
 class Q_DECL_HIDDEN TimeLine::Data : public QSharedData
 {
 public:

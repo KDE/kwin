@@ -42,8 +42,6 @@ public:
      */
     std::chrono::nanoseconds tick(std::chrono::nanoseconds timestamp, uint refreshRate = 0);
     std::chrono::nanoseconds tick(const RenderView *view);
-    std::chrono::milliseconds tickMs(std::chrono::nanoseconds timestamp, uint refreshRate = 0);
-    std::chrono::milliseconds tickMs(const RenderView *view);
 
 private:
     std::optional<std::chrono::nanoseconds> m_lastTimestamp;
