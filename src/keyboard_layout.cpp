@@ -111,11 +111,13 @@ void KeyboardLayout::reconfigure()
         m_configGroup.config()->reparseConfiguration();
         const QString policyKey = m_configGroup.readEntry("SwitchMode", QStringLiteral("Global"));
         m_xkb->reconfigure();
+        m_xkb->flushKeymap();
         if (!m_policy || m_policy->name() != policyKey) {
             m_policy = KeyboardLayoutSwitching::Policy::create(m_xkb, this, m_configGroup, policyKey);
         }
     } else {
         m_xkb->reconfigure();
+        m_xkb->flushKeymap();
     }
     resetLayout();
 }

@@ -641,6 +641,7 @@ XkbKeymapPtr Xkb::loadKeymapFromLocale1()
 void Xkb::updateKeymap(XkbKeymapPtr &&keymap)
 {
     Q_ASSERT(keymap);
+    m_keyMapDirty = true;
     XkbStatePtr state(xkb_state_new(keymap.get()));
     if (!state) {
         qCWarning(KWIN_XKB) << "Could not create XKB state";
@@ -705,6 +706,14 @@ void Xkb::updateKeymap(XkbKeymapPtr &&keymap)
         setLock(m_numModifier, numLockIsOn);
         setLock(m_capsModifier, capsLockIsOn);
     }
+}
+
+void Xkb::flushKeymap()
+{
+    if (!m_keyMapDirty) {
+        return;
+    }
+    m_keyMapDirty = false;
 
     createKeymapFile();
     forwardModifiers();

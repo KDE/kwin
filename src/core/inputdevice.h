@@ -135,6 +135,7 @@ public:
 
 Q_SIGNALS:
     void keyChanged(quint32 key, KWin::KeyboardKeyState, std::chrono::microseconds time, KWin::InputDevice *device);
+    void keySymChanged(quint32 sym, KWin::KeyboardKeyState, std::chrono::microseconds time, KWin::InputDevice *device);
     void pointerButtonChanged(quint32 button, KWin::PointerButtonState state, std::chrono::microseconds time, KWin::InputDevice *device);
     void pointerMotionAbsolute(const QPointF &position, std::chrono::microseconds time, KWin::InputDevice *device);
     void pointerMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, KWin::InputDevice *device);

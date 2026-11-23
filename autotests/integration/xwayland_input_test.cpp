@@ -434,14 +434,9 @@ void XWaylandInputTest::testKeyboardInput()
 
     QTRY_COMPARE(eventReader.receivedText(), QStringLiteral("aB "));
     auto sendCustomKeysym = [&](xkb_keysym_t keysym) {
-        QVERIFY(input()->keyboard()->xkb()->updateToKeymapForKeySym(Xkb::scratchKeycode, keysym));
-        QVERIFY(keymapChangedSpy.wait()); // IRL we can't wait for this!
-
-        tap(KEY_F24);
-
-        keymapChangedSpy.clear();
-        input()->keyboard()->xkb()->reconfigure();
-        QVERIFY(keymapChangedSpy.wait()); // IRL we can't wait for this!
+        input()->keyboard()->processKeySym(keysym, KeyboardKeyState::Pressed, std::chrono::milliseconds(timestamp++), nullptr);
+        input()->keyboard()->processKeySym(keysym, KeyboardKeyState::Released, std::chrono::milliseconds(timestamp++), nullptr);
+        QVERIFY(keymapChangedSpy.wait()); // IRL we can't wait this to happen in the client, but X is racey and this keeps the test working.
     };
 
     sendCustomKeysym(XKB_KEY_adiaeresis);

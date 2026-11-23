@@ -3246,6 +3246,7 @@ void InputRedirection::updateLeds(LEDs leds)
 void InputRedirection::addInputDevice(InputDevice *device)
 {
     connect(device, &InputDevice::keyChanged, m_keyboard, &KeyboardInputRedirection::processKey);
+    connect(device, &InputDevice::keySymChanged, m_keyboard, &KeyboardInputRedirection::processKeySym);
 
     connect(device, &InputDevice::pointerMotionAbsolute,
             m_pointer, &PointerInputRedirection::processMotionAbsolute);

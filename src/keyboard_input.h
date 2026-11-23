@@ -9,6 +9,7 @@
 #pragma once
 
 #include "input.h"
+#include "xkb.h"
 
 #include <QObject>
 #include <QPointF>
@@ -17,15 +18,6 @@
 #include <KSharedConfig>
 
 class QWindow;
-struct xkb_context;
-struct xkb_keymap;
-struct xkb_state;
-struct xkb_compose_table;
-struct xkb_compose_state;
-typedef uint32_t xkb_mod_index_t;
-typedef uint32_t xkb_led_index_t;
-typedef uint32_t xkb_keysym_t;
-typedef uint32_t xkb_layout_index_t;
 
 namespace KWin
 {
@@ -35,7 +27,6 @@ class InputDevice;
 class InputRedirection;
 class KeyboardLayout;
 class ModifiersChangedSpy;
-class Xkb;
 class KeyboardRepeat;
 class KeyStateChangedSpy;
 
@@ -56,6 +47,7 @@ public:
      * @internal
      */
     void processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device = nullptr);
+    void processKeySym(uint32_t sym, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device = nullptr);
 
     Xkb *xkb() const;
     Qt::KeyboardModifiers modifiers() const;
@@ -79,6 +71,7 @@ Q_SIGNALS:
 
 private:
     Window *pickFocus() const;
+    void processKeyInternal(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device = nullptr);
 
     InputRedirection *m_input;
     bool m_inited = false;

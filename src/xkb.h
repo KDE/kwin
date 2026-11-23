@@ -95,6 +95,13 @@ public:
     Q_ENUM(Modifier)
     Q_DECLARE_FLAGS(Modifiers, Modifier)
 
+    struct ModifierState
+    {
+        xkb_mod_index_t depressed = 0;
+        xkb_mod_index_t latched = 0;
+        xkb_mod_index_t locked = 0;
+    };
+
     Xkb(bool followLocale1 = false);
     ~Xkb() override;
     void setConfig(const KSharedConfigPtr &config);
@@ -207,7 +214,10 @@ public:
     bool updateToKeymapForKeySym(xkb_keycode_t newKeycode,
                                  xkb_keysym_t customSym);
 
+    void flushKeymap();
+
     static QList<xkb_keysym_t> textToKeySyms(const QString &inputString);
+
 
 public Q_SLOTS:
     void reconfigure();
@@ -256,12 +266,9 @@ private:
     KConfigGroup m_configGroup;
     KSharedConfigPtr m_numLockConfig;
 
-    struct ModifierState
-    {
-        xkb_mod_index_t depressed = 0;
-        xkb_mod_index_t latched = 0;
-        xkb_mod_index_t locked = 0;
-    } m_modifierState;
+    ModifierState m_modifierState;
+
+    bool m_keyMapDirty = false;
 
     QPointer<SeatInterface> m_seat;
     const bool m_followLocale1;

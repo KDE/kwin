@@ -276,12 +276,75 @@ static constexpr std::array s_modifierKeys = {
     Qt::Key_ScrollLock,
 };
 
+void KeyboardInputRedirection::processKeySym(uint32_t sym, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
+{
+    input()->setLastInputHandler(this);
+    if (!m_inited) {
+        return;
+    }
+
+    // grab the current modifier state, cache it, send our key with our own modifiers at a known state, then reset back
+    const auto modifierState = m_xkb->modifierState();
+    const auto layout = m_xkb->currentLayout();
+
+    std::optional<Xkb::KeyCode> keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(sym);
+    if (keyCode) {
+        // if the keysym is "F" we need to temporarily depress shift before the F key and most importantly unset it after
+        // however we still want modifiers like pressing control and alt to still work.
+
+        // In addition if a modifier key is received we want that modifier state to persist until released, so don't set/unset modifiers when forwarding
+        static const QSet<xkb_keysym_t> modifierKeySyms = {
+            XKB_KEY_Shift_L,
+            XKB_KEY_Shift_R,
+            XKB_KEY_Control_L,
+            XKB_KEY_Control_R,
+            XKB_KEY_Alt_L,
+            XKB_KEY_Alt_R,
+            XKB_KEY_Meta_L,
+            XKB_KEY_Meta_R,
+            XKB_KEY_Super_L,
+            XKB_KEY_Super_R,
+        };
+
+        const bool isModifier = modifierKeySyms.contains(sym);
+        if (isModifier) {
+            processKey(keyCode->keyCode, state, time, device);
+        } else {
+            m_xkb->updateModifiers(modifierState.depressed | keyCode->modifiers, modifierState.latched, modifierState.locked, layout);
+            processKey(keyCode->keyCode, state, time, device);
+            m_xkb->updateModifiers(modifierState.depressed, modifierState.latched, modifierState.locked, layout);
+        }
+        return;
+    }
+
+    // clients don't seem to like having a keymap change whilst a key is pressed
+    // for now send a fake release with every press and ignore other releases. We can make the keymap resetting more lazy if it's an issue IRL
+    if (state == KeyboardKeyState::Pressed) {
+        const bool keymapUpdated = m_xkb->updateToKeymapForKeySym(Xkb::scratchKeycode, sym);
+        if (!keymapUpdated) {
+            return;
+        }
+        processKeyInternal(Xkb::scratchKeycode, KeyboardKeyState::Pressed, time, device);
+        processKeyInternal(Xkb::scratchKeycode, KeyboardKeyState::Released, time, device);
+    }
+
+    m_xkb->reconfigure();
+    m_xkb->updateModifiers(modifierState.depressed, modifierState.latched, modifierState.locked, layout);
+}
+
 void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
 {
     input()->setLastInputHandler(this);
     if (!m_inited) {
         return;
     }
+
+    processKeyInternal(key, state, time, device);
+}
+
+void KeyboardInputRedirection::processKeyInternal(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
+{
+    m_xkb->flushKeymap();
 
     m_keyRepeatSpy->keyboardKey(key, state, time);
 

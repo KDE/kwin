@@ -601,6 +601,7 @@ void KeyboardLayoutTest::testNumLock()
     group.writeEntry("NumLock", 0, KConfig::Notify);
     group.sync();
     xkb->reconfigure();
+    xkb->flushKeymap();
     // now it should be on
     QVERIFY(xkb->leds().testFlag(LED::NumLock));
     // pressing should result in it being off
@@ -617,6 +618,7 @@ void KeyboardLayoutTest::testNumLock()
     group.writeEntry("NumLock", 1, KConfig::Notify);
     group.sync();
     xkb->reconfigure();
+    xkb->flushKeymap();
     QVERIFY(!xkb->leds().testFlag(LED::NumLock));
 }
 

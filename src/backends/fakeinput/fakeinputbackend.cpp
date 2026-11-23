@@ -298,60 +298,7 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *
         return;
     }
 
-    std::optional<Xkb::KeyCode> keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(keySym);
-    // grab the current modifier state, cache it, send our key with our own modifiers at a known state, then reset back
-    xkb_state *state = input()->keyboard()->xkb()->state();
-    xkb_mod_mask_t formerDepressed = xkb_state_serialize_mods(state, XKB_STATE_MODS_DEPRESSED);
-    xkb_mod_mask_t formerLatched = xkb_state_serialize_mods(state, XKB_STATE_MODS_LATCHED);
-    xkb_mod_mask_t formerLocked = xkb_state_serialize_mods(state, XKB_STATE_MODS_LOCKED);
-    xkb_layout_index_t formerLayout = xkb_state_serialize_layout(state, XKB_STATE_LAYOUT_EFFECTIVE);
-
-    if (keyCode) {
-        // if the keysym is "F" we need to temporarily depress shift before the F key and most importantly unset it after
-        // however we still want modifiers like pressing control and alt to still work.
-
-        // In addition if a modifier key is received we want that modifier state to persist until released, so don't set/unset modifiers when forwarding
-        static const QSet<xkb_keysym_t> modifierKeySyms = {
-            XKB_KEY_Shift_L,
-            XKB_KEY_Shift_R,
-            XKB_KEY_Control_L,
-            XKB_KEY_Control_R,
-            XKB_KEY_Alt_L,
-            XKB_KEY_Alt_R,
-            XKB_KEY_Meta_L,
-            XKB_KEY_Meta_R,
-            XKB_KEY_Super_L,
-            XKB_KEY_Super_R,
-        };
-
-        const bool isModifier = modifierKeySyms.contains(keySym);
-        if (isModifier) {
-            sendKey(device, keyCode->keyCode, nativeState);
-        } else {
-            input()->keyboard()->xkb()->updateModifiers(formerDepressed | keyCode->modifiers, formerLatched, formerLocked, formerLayout);
-            sendKey(device, keyCode->keyCode, nativeState);
-            input()->keyboard()->xkb()->updateModifiers(formerDepressed, formerLatched, formerLocked, formerLayout);
-        }
-        return;
-    }
-
-    // otherwise create a new keymap and send that one key
-    // clients don't seem to like having a keymap change whilst a key is pressed
-    // for now send a fake release with every press and ignore other releases. We can make the keymap resetting more lazy if it's an issue IRL
-    if (nativeState == KeyboardKeyState::Pressed) {
-        bool keymapUpdated = input()->keyboard()->xkb()->updateToKeymapForKeySym(Xkb::scratchKeycode, keySym);
-        if (!keymapUpdated) {
-            return;
-        }
-        sendKey(device, Xkb::scratchKeycode, KeyboardKeyState::Pressed);
-
-        for (quint32 key : std::as_const(device->pressedKeys)) {
-            sendKey(device, key, KeyboardKeyState::Released);
-        }
-        // reset keyboard back
-        input()->keyboard()->xkb()->reconfigure();
-        input()->keyboard()->xkb()->updateModifiers(formerDepressed, formerLatched, formerLocked, formerLayout);
-    }
+    Q_EMIT device->keySymChanged(keySym, nativeState, currentTime(), device);
 }
 
 void FakeInputBackendPrivate::sendKey(FakeInputDevice *device, uint32_t keyCode, KeyboardKeyState state)
