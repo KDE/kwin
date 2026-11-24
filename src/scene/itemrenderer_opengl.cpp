@@ -159,8 +159,8 @@ std::optional<OutputLayerBeginFrameInfo> ItemRendererOpenGL::beginFrame(const Ou
     }
 
     ShadowBuffer &buffer = it->second;
-    if (buffer.color != beginInfo.renderTarget.colorDescription()) {
-        buffer.color = beginInfo.renderTarget.colorDescription();
+    if (buffer.color != view->backendOutput()->blendingColor()) {
+        buffer.color = view->backendOutput()->blendingColor();
         buffer.journal.clear();
     }
 
