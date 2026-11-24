@@ -69,8 +69,8 @@ std::optional<ScreenShotBuffer> ScreenShotBuffer::from(RenderDevice *device, Gra
     device->download(buffer, std::move(sync), target);
 
     return ScreenShotBuffer{
-        .file = std::move(fd),
         .map = std::move(memoryMap),
+        .file = std::move(fd),
         .size = size,
         .bytesPerLine = bytesPerLine,
         .format = *info->qimageFormat,

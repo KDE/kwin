@@ -40,8 +40,8 @@ class GraphicsBuffer;
 
 struct ScreenShotBuffer
 {
-    FileDescriptor file;
     MemoryMap map;
+    FileDescriptor file;
 
     QSize size;
     int bytesPerLine;
