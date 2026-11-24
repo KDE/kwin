@@ -61,7 +61,7 @@
 <para
 >Listeye bir sanal masaüstü eklemek için <guibutton
 >Ekle</guibutton
-> düğmesine basın (öntanımlı adı <guilabel
+> düğmesine basın (varsayılan adı <guilabel
 >Yeni Masaüstü</guilabel
 >’dür). </para>
 <para
@@ -114,7 +114,7 @@
 ></term>
 <listitem
 ><para
->Bu seçeneğin etkinleştirilmesi, seçili masaüstünü gösteren masaüstü yerleşiminin küçük bir önizlemesini gösterecektir. </para
+>Bu seçeneğin etkinleştirilmesi, seçili masaüstünü gösteren masaüstü yerleşiminin küçük bir ön izlemesini gösterecektir. </para
 ></listitem>
 </varlistentry>
 
@@ -125,7 +125,7 @@
 >Sayfalayıcı</guilabel
 > simgesi üzerinde kaydırmak, kaydırdığınız yönde (yukarı veya aşağı) sayısal olarak bir sonraki sanal masaüstüne geçecektir.</para>
 <para
->Bu öntanımlı davranışı <guilabel
+>Bu varsayılan davranışı <guilabel
 >Masaüstü Ayarları</guilabel
 > içindeki <guilabel
 >Fare Eylemleri</guilabel

@@ -61,7 +61,7 @@
 <para>
   <screenshot>
     <screeninfo
->Öntanımlı Görev Değiştiricisi ekran görüntüsü</screeninfo>
+>Varsayılan Görev Değiştiricisi ekran görüntüsü</screeninfo>
     <mediaobject>
       <imageobject>
         <imagedata fileref="taskswitcher.png" format="PNG"/>
@@ -89,7 +89,7 @@
 <title
 >Görselleştirme</title>
 <para
->Bu yapılandırma seçenekleri grubu, pencere listesinin ekranda nasıl görüntüleneceğini denetler. Öntanımlı görselleştirmeye <guilabel
+>Bu yapılandırma seçenekleri grubu, pencere listesinin ekranda nasıl görüntüleneceğini denetler. Varsayılan görselleştirmeye <guilabel
 >Esinti</guilabel
 > adı verilir. Ekranın sol tarafında tüm açık pencereleri listeler. Diğer görselleştirmeler arasında <guilabel
 >Kapak Değiştirici</guilabel
@@ -102,7 +102,7 @@
 > düğmesine tıklayarak daha birçok görselleştirme indirilebilir ve kurulabilir.</para>
 
 <para
->Açılır listeden bir görselleştirme seçildikten sonra, bir önizleme görmek veya görselleştirmeye özgü seçenekleri yapılandırmak için listenin sağındaki düğme tıklanabilir.</para>
+>Açılır listeden bir görselleştirme seçildikten sonra, bir ön izleme görmek veya görselleştirmeye özgü seçenekleri yapılandırmak için listenin sağındaki düğme tıklanabilir.</para>
 
 <para
 ><guilabel

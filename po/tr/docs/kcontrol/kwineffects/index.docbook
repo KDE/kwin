@@ -87,7 +87,7 @@
 > düğmesine tıklayın.</para>
 <note
 ><para
->Lütfen bu makul öntanımlıları değiştirmenin sisteminizi bozabileceğini unutmayın.</para>
+>Lütfen bu makul varsayılanları değiştirmenin sisteminizi bozabileceğini unutmayın.</para>
 </note>
 
 <para
@@ -104,7 +104,7 @@
 ></inlinemediaobject
 > yapılandırma düğmesi bulunur. Bir yapılandırma iletişim kutusu açmak için ona tıklayın.</para>
 <para
->Efektin bir video önizlemesini görmek için <inlinemediaobject
+>Efektin bir video ön izlemesini görmek için <inlinemediaobject
 ><imageobject
 ><imagedata fileref="video.png" format="PNG"/> </imageobject
 ></inlinemediaobject
@@ -121,11 +121,11 @@
 >Bu tür efektler olduğunda, grafik arayüz radyo düğmeleri kullanır ve yalnızca bir tanesinin etkin olduğundan emin olur. </para>
 
 <para
->Hâlihazırda kullanılan bileşikleştirme arka ucu tarafından desteklenmeyen tüm efektler öntanımlı olarak gizlenir (&eg;, yazılım sunucusu kullanılırken OpenGL efektleri). </para
+>Hâlihazırda kullanılan bileşikleştirme arka ucu tarafından desteklenmeyen tüm efektler varsayılan olarak gizlenir (&eg;, yazılım sunucusu kullanılırken OpenGL efektleri). </para
 > 
 
 <para
->Ayrıca tüm iç veya yardımcı efektler öntanımlı olarak gizlidir. Bunlar, KWin çekirdeğinin işlevselliğini değiştiren veya masaüstü kabuğunun diğer ögeleriyle etkileşim sağlayan efektlerdir. </para>
+>Ayrıca tüm iç veya yardımcı efektler varsayılan olarak gizlidir. Bunlar, KWin çekirdeğinin işlevselliğini değiştiren veya masaüstü kabuğunun diğer ögeleriyle etkileşim sağlayan efektlerdir. </para>
 
 <!--FIXME 
 39 effects + 7 internal (XRender compositor)
