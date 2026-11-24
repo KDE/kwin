@@ -349,6 +349,15 @@ public:
         return s_clock.elapsed();
     }
 
+Q_SIGNALS:
+    /**
+     * Emitted whenever an animation ends.
+     *
+     * @param w The animated window.
+     * @param animationId The id of the animation.
+     */
+    void animationEnded(KWin::EffectWindow *w, quint64 animationId);
+
 protected:
     /**
      * Starts an animated transition of any supported attribute.
@@ -455,19 +464,6 @@ protected:
      * @since 5.15
      */
     bool complete(quint64 animationId);
-
-    /**
-     * Called whenever an animation ends.
-     *
-     * You can reimplement this method to keep a constant transformation for the window
-     * (i.e. keep it at some opacity or position) or to start another animation.
-     *
-     * @param w The animated window.
-     * @param a The animated attribute.
-     * @param meta Originally supplied metadata to animate() or set().
-     * @since 4.8
-     */
-    virtual void animationEnded(EffectWindow *w, Attribute a, uint meta);
 
     /**
      * Cancels a running animation.

@@ -189,14 +189,12 @@ Q_SIGNALS:
      * Signal emitted whenever the effect's config changed.
      */
     void configChanged();
-    void animationEnded(KWin::EffectWindow *w, quint64 animationId);
     void isActiveFullScreenEffectChanged();
 
 protected:
     ScriptedEffect();
     QJSEngine *engine() const;
     bool init(const QString &effectName, const QString &pathToScript);
-    void animationEnded(KWin::EffectWindow *w, Attribute a, uint meta) override;
 
 private:
     enum class AnimationType {

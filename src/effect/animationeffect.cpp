@@ -415,10 +415,6 @@ bool AnimationEffect::cancel(quint64 animationId)
     return false;
 }
 
-void AnimationEffect::animationEnded(EffectWindow *w, Attribute a, uint meta)
-{
-}
-
 void AnimationEffect::genericAnimation(EffectWindow *w, WindowPaintData &data, float progress, uint meta)
 {
 }
@@ -653,7 +649,7 @@ void AnimationEffect::postPaintScreen()
             })) {
                 unredirect(window);
             }
-            animationEnded(window, anim->attribute, anim->meta);
+            Q_EMIT animationEnded(window, anim->id);
             d->m_justEndedAnimation = 0;
             // NOTICE animationEnded is an external call and might have called "::animate"
             // as a result our iterators could now point random junk on the heap
