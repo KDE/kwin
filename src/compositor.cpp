@@ -343,9 +343,6 @@ void Compositor::stop()
     disconnect(workspace(), &Workspace::outputsChanged, this, &Compositor::handleOutputsChanged);
     disconnect(kwinApp()->outputBackend(), &OutputBackend::outputRemoved, this, &Compositor::removeOutput);
 
-    // some layers need a context current for destruction
-    (void)static_cast<EglBackend *>(m_backend.get())->openglContext()->makeCurrent();
-
     const auto loops = m_primaryViews | std::views::transform([](const auto &pair) {
         return pair.first;
     }) | std::ranges::to<QList>();

@@ -49,6 +49,7 @@ ItemRendererOpenGL::ItemRendererOpenGL(RenderDevice *device)
 
 ItemRendererOpenGL::~ItemRendererOpenGL()
 {
+    (void)m_context->makeCurrent();
 }
 
 std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(GraphicsBuffer *buffer, const FileDescriptor &sync,
