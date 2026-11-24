@@ -40,17 +40,6 @@ class ScaleEffect {
     }
 
     static isScaleWindow(window) {
-        // We don't want to animate most of plasmashell's windows, yet, some
-        // of them we want to, for example, Task Manager Settings window.
-        // The problem is that all those window share single window class.
-        // So, the only way to decide whether a window should be animated is
-        // to use a heuristic: if a window has decoration, then it's most
-        // likely a dialog or a settings window so we have to animate it.
-        if (window.windowClass == "plasmashell plasmashell"
-                || window.windowClass == "plasmashell org.kde.plasmashell") {
-            return window.hasDecoration;
-        }
-
         const blacklistedTags = blacklist[window.windowClass];
         if (blacklistedTags && (blacklistedTags.length === 0 || blacklistedTags.includes(window.tag))) {
             return false;
