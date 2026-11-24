@@ -602,7 +602,9 @@ void SurfaceState::mergeInto(SurfaceState *target)
         target->pointerLockRegion = pointerLockRegion;
         target->confinementLifetime = confinementLifetime;
     }
-    target->pointerLockHint = pointerLockHint;
+    if (committed & SurfaceState::Field::PointerLockHint) {
+        target->pointerLockHint = pointerLockHint;
+    }
     target->requestedTiming = std::exchange(requestedTiming, std::nullopt);
 
     auto previousExtensions = std::exchange(target->extensions, {});
