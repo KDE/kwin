@@ -40,7 +40,7 @@ class FadeEffect {
         if (blacklistedTags && (blacklistedTags.length === 0 || blacklistedTags.includes(w.tag))) {
             return false;
         }
-        if (w.popupWindow) {
+        if (w.popupWindow || w.appletPopup) {
             return false;
         }
         if (!w.managed) {

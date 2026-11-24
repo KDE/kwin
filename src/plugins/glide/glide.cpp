@@ -279,7 +279,7 @@ bool GlideEffect::isGlideWindow(EffectWindow *w) const
     }
 
     // Don't animate combobox popups, tooltips, popup menus, etc.
-    if (w->isPopupWindow()) {
+    if (w->isPopupWindow() || w->isAppletPopup()) {
         return false;
     }
 
