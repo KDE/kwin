@@ -162,6 +162,52 @@ struct CopyRet
     std::unique_ptr<MultiGpuCopy> copy;
     ModifierList sourceModifiers;
 };
+
+static std::optional<CopyRet> createVulkanCopy(RenderDevice *device,
+                                               RenderDevice *otherDevice,
+                                               BufferType targetType,
+                                               uint32_t sourceFormat,
+                                               const ModifierList &sourceModifiers,
+                                               GraphicsBufferAllocator *allocator,
+                                               const FormatModifierMap &formats,
+                                               GraphicsBufferOptions options,
+                                               const std::shared_ptr<HostMemoryGraphicsBufferAllocator> &hostAllocator)
+{
+    // NOTE that using Vulkan to copy from an Nvidia GPU to a dmabuf in system memory
+    // causes glitches due to a driver bug, so that path is disabled by default for now
+    if (!device->vulkanDevice() || !s_allowVulkanCopy.value_or(!device->isNvidia() || !otherDevice->isIntel() || targetType != BufferType::SystemMemory || hostAllocator)) {
+        return std::nullopt;
+    }
+
+    auto retModifiers = device->vulkanDevice()->sampleFormats()[sourceFormat].intersected(sourceModifiers);
+    if (retModifiers.empty()) {
+        return std::nullopt;
+    }
+
+    const auto fmt = MultiGpuSwapchain::chooseFormat(sourceFormat, device->vulkanDevice()->sampleFormats(), formats);
+    if (!fmt) {
+        return std::nullopt;
+    }
+    options.format = fmt->format;
+    if (s_forceLinear.value_or(device->drmDevice() && device->drmDevice()->isAmdgpu() && allocator == device->allocator())
+        && fmt->modifiers.contains(DRM_FORMAT_MOD_LINEAR)) {
+        options.modifiers = {DRM_FORMAT_MOD_LINEAR};
+    } else {
+        options.modifiers = fmt->modifiers;
+    }
+    options.render = false;
+
+    auto swapchain = Swapchain::create(allocator, options);
+    if (!swapchain) {
+        return std::nullopt;
+    }
+
+    return CopyRet{
+        .copy = std::make_unique<VulkanMultiGpuCopy>(device, std::move(swapchain), hostAllocator),
+        .sourceModifiers = retModifiers,
+    };
+}
+
 static std::optional<CopyRet> createCopy(RenderDevice *device,
                                          RenderDevice *otherDevice,
                                          BufferType targetType,
@@ -172,31 +218,8 @@ static std::optional<CopyRet> createCopy(RenderDevice *device,
                                          GraphicsBufferOptions options,
                                          const std::shared_ptr<HostMemoryGraphicsBufferAllocator> &hostAllocator = nullptr)
 {
-    // use Vulkan if possible.
-    // NOTE that using Vulkan to copy from an Nvidia GPU to a dmabuf in system memory
-    // causes glitches due to a driver bug, so that path is disabled by default for now
-    if (device->vulkanDevice() && s_allowVulkanCopy.value_or(!device->isNvidia() || !otherDevice->isIntel() || targetType != BufferType::SystemMemory || hostAllocator)) {
-        auto retModifiers = device->vulkanDevice()->sampleFormats()[sourceFormat].intersected(sourceModifiers);
-        if (!retModifiers.empty()) {
-            const auto fmt = MultiGpuSwapchain::chooseFormat(sourceFormat, device->vulkanDevice()->sampleFormats(), formats);
-            if (fmt) {
-                options.format = fmt->format;
-                if (s_forceLinear.value_or(device->drmDevice() && device->drmDevice()->isAmdgpu())
-                    && fmt->modifiers.contains(DRM_FORMAT_MOD_LINEAR)) {
-                    options.modifiers = {DRM_FORMAT_MOD_LINEAR};
-                } else {
-                    options.modifiers = fmt->modifiers;
-                }
-                options.render = false;
-                auto swapchain = Swapchain::create(allocator, options);
-                if (swapchain) {
-                    return CopyRet{
-                        .copy = std::make_unique<VulkanMultiGpuCopy>(device, std::move(swapchain), hostAllocator),
-                        .sourceModifiers = retModifiers,
-                    };
-                }
-            }
-        }
+    if (auto ret = createVulkanCopy(device, otherDevice, targetType, sourceFormat, sourceModifiers, allocator, formats, options, hostAllocator)) {
+        return ret;
     }
     if (hostAllocator) {
         // this can't work with EGL
