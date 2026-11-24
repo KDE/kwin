@@ -33,11 +33,6 @@ using namespace std::chrono_literals;
 namespace KWin
 {
 
-static const QSet<QString> s_blacklist{
-    QStringLiteral("ksmserver-logout-greeter ksmserver-logout-greeter"),
-    QStringLiteral("ksplashqml ksplashqml"),
-};
-
 GlideEffect::GlideEffect()
 {
     GlideConfig::instance(effects->config());
@@ -188,7 +183,7 @@ void GlideEffect::windowAdded(EffectWindow *w)
         return;
     }
 
-    if (!isGlideWindow(w)) {
+    if (!w->canBeAnimatedByToplevelOpenCloseEffect()) {
         return;
     }
 
@@ -218,7 +213,7 @@ void GlideEffect::windowClosed(EffectWindow *w)
     if (closeGrab) {
         return;
     }
-    if (effects->activeFullScreenEffect() || !isGlideWindow(w) || !w->isVisible() || w->skipsCloseAnimation()) {
+    if (effects->activeFullScreenEffect() || !w->canBeAnimatedByToplevelOpenCloseEffect() || !w->isVisible() || w->skipsCloseAnimation()) {
         const auto it = m_animations.find(w);
         if (it != m_animations.end()) {
             unredirect(w);
@@ -249,37 +244,6 @@ void GlideEffect::windowDataChanged(EffectWindow *w, int role)
         unredirect(animationIt->first);
         m_animations.erase(animationIt);
     }
-}
-
-bool GlideEffect::isGlideWindow(EffectWindow *w) const
-{
-    if (w->windowClass() == QLatin1StringView("spectacle org.kde.spectacle")
-        && w->tag() == QLatin1StringView("region-editor")) {
-        return false;
-    }
-
-    if (s_blacklist.contains(w->windowClass())) {
-        return false;
-    }
-
-    // Don't animate combobox popups, tooltips, popup menus, etc.
-    if (w->isPopupWindow() || w->isAppletPopup()) {
-        return false;
-    }
-
-    // Don't animate the outline and the screenlocker as it looks bad.
-    if (w->isLockScreen() || w->isOutline()) {
-        return false;
-    }
-
-    // Override-redirect windows are usually used for user interface
-    // concepts that are not expected to be animated by this effect.
-    if (w->isX11Client() && !w->isManaged()) {
-        return false;
-    }
-
-    return w->isNormalWindow()
-        || w->isDialog();
 }
 
 bool GlideEffect::blocksDirectScanout() const

@@ -9,16 +9,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-const blacklist = {
-    // The logout screen has to be animated only by the logout effect.
-    "ksmserver-logout-greeter ksmserver-logout-greeter": [],
-
-    // KDE Plasma splash screen has to be animated only by the login effect.
-    "ksplashqml ksplashqml": [],
-
-    "spectacle org.kde.spectacle": ["region-editor"],
-};
-
 class FadeEffect {
     constructor() {
         effect.configChanged.connect(this.loadConfig.bind(this));
@@ -34,36 +24,14 @@ class FadeEffect {
         this.fadeOutTime = animationTime(effect.readConfig("FadeOutTime", 150)) * 4;
     }
 
-    static isFadeWindow(w) {
-        const blacklistedTags = blacklist[w.windowClass];
-        if (blacklistedTags && (blacklistedTags.length === 0 || blacklistedTags.includes(w.tag))) {
-            return false;
-        }
-        if (w.popupWindow || w.appletPopup) {
-            return false;
-        }
-        if (!w.managed) {
-            return false;
-        }
-        if (!w.visible) {
-            return false;
-        }
-        if (w.outline) {
-            return false;
-        }
-        if (w.deleted && effect.isGrabbed(w, Effect.WindowClosedGrabRole)) {
-            return false;
-        } else if (!w.deleted && effect.isGrabbed(w, Effect.WindowAddedGrabRole)) {
-            return false;
-        }
-        return w.normalWindow || w.dialog;
-    }
-
     onWindowAdded(window) {
         if (effects.hasActiveFullScreenEffect) {
             return;
         }
-        if (!FadeEffect.isFadeWindow(window)) {
+        if (effect.isGrabbed(window, Effect.WindowAddedGrabRole)) {
+            return;
+        }
+        if (!window.canBeAnimatedByToplevelOpenCloseEffect) {
             return;
         }
         if (window.fadeOutAnimation) {
@@ -83,7 +51,10 @@ class FadeEffect {
         if (effects.hasActiveFullScreenEffect) {
             return;
         }
-        if (window.skipsCloseAnimation || !FadeEffect.isFadeWindow(window)) {
+        if (effect.isGrabbed(window, Effect.WindowClosedGrabRole)) {
+            return;
+        }
+        if (window.skipsCloseAnimation || !window.canBeAnimatedByToplevelOpenCloseEffect) {
             return;
         }
         window.fadeOutAnimation = animate({

@@ -338,6 +338,9 @@ class KWIN_EXPORT EffectWindow : public QObject
      */
     Q_PROPERTY(QString tag READ tag)
 
+    Q_PROPERTY(bool canBeAnimatedByToplevelOpenCloseEffect READ canBeAnimatedByToplevelOpenCloseEffect CONSTANT);
+    Q_PROPERTY(bool canBeAnimatedByPopupOpenCloseEffect READ canBeAnimatedByPopupOpenCloseEffect CONSTANT);
+
 public:
     /**  Flags explaining why painting should be disabled  */
     enum {
@@ -668,6 +671,9 @@ public:
     Window *window() const;
     WindowItem *windowItem() const;
     void elevate(bool elevate);
+
+    bool canBeAnimatedByToplevelOpenCloseEffect() const;
+    bool canBeAnimatedByPopupOpenCloseEffect() const;
 
 Q_SIGNALS:
     /**

@@ -83,8 +83,6 @@ private Q_SLOTS:
     void windowDataChanged(KWin::EffectWindow *w, int role);
 
 private:
-    bool isGlideWindow(EffectWindow *w) const;
-
     std::chrono::milliseconds m_duration;
     std::unordered_map<EffectWindow *, GlideAnimation> m_animations;
 

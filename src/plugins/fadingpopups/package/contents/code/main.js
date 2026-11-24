@@ -9,31 +9,6 @@
 
 "use strict";
 
-function isPopupWindow(window) {
-    // Animate combo box popups, tooltips, popup menus, etc.
-    if (window.popupWindow) {
-        return true;
-    }
-
-    // Maybe the outline deserves its own effect.
-    if (window.outline) {
-        return true;
-    }
-
-    // Override-redirect windows are usually used for user interface
-    // concepts that are expected to be animated by this effect, e.g.
-    // popups that contain window thumbnails on X11, etc.
-    if (!window.managed) {
-        return true;
-    }
-
-    if (window.splash || window.toolbar || window.onScreenDisplay || window.appletPopup) {
-        return true;
-    }
-
-    return window.windowClass === "spectacle org.kde.spectacle" && window.tag === "region-editor";
-}
-
 var fadingPopupsEffect = {
     loadConfig: function () {
         fadingPopupsEffect.fadeInDuration = animationTime(150);
@@ -43,10 +18,7 @@ var fadingPopupsEffect = {
         if (effects.hasActiveFullScreenEffect) {
             return;
         }
-        if (!isPopupWindow(window)) {
-            return;
-        }
-        if (!window.visible) {
+        if (!window.visible || !window.canBeAnimatedByPopupOpenCloseEffect) {
             return;
         }
         if (!effect.grab(window, Effect.WindowAddedGrabRole)) {
@@ -65,10 +37,7 @@ var fadingPopupsEffect = {
         if (effects.hasActiveFullScreenEffect) {
             return;
         }
-        if (!isPopupWindow(window)) {
-            return;
-        }
-        if (!window.visible || window.skipsCloseAnimation) {
+        if (!window.visible || window.skipsCloseAnimation || !window.canBeAnimatedByPopupOpenCloseEffect) {
             return;
         }
         if (!effect.grab(window, Effect.WindowClosedGrabRole)) {

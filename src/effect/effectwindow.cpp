@@ -449,6 +449,53 @@ bool EffectWindow::isX11Client() const
     return d->m_x11Window;
 }
 
+// The key is the window class, the value is excluded toplevel tags (an empty list means exclude all windows).
+static const QHash<QString, QStringList> s_toplevelAnimationDenyList{
+    {QStringLiteral("ksmserver-logout-greeter ksmserver-logout-greeter"), {}},
+    {QStringLiteral("ksplashqml ksplashqml"), {}},
+    {QStringLiteral("spectacle org.kde.spectacle"), {QStringLiteral("region-editor")}},
+};
+
+bool EffectWindow::canBeAnimatedByToplevelOpenCloseEffect() const
+{
+    if (const auto it = s_toplevelAnimationDenyList.find(windowClass()); it != s_toplevelAnimationDenyList.end()) {
+        if (it->isEmpty() || it->contains(tag())) {
+            return false;
+        }
+    }
+
+    // Don't animate combobox popups, tooltips, popup menus, etc.
+    if (isPopupWindow() || isAppletPopup()) {
+        return false;
+    }
+
+    // Don't animate the outline and the screenlocker as it looks bad.
+    if (isLockScreen() || isOutline()) {
+        return false;
+    }
+
+    // Override-redirect windows are usually used for user interface concepts that have popup semantics.
+    if (!isManaged()) {
+        return false;
+    }
+
+    return isNormalWindow() || isDialog();
+}
+
+bool EffectWindow::canBeAnimatedByPopupOpenCloseEffect() const
+{
+    if (isPopupWindow() || isAppletPopup() || isSplash() || isToolbar() || isOnScreenDisplay() || isAppletPopup() || isOutline()) {
+        return true;
+    }
+
+    // Override-redirect windows are usually used for user interface concepts that have popup semantics.
+    if (!isManaged()) {
+        return true;
+    }
+
+    return windowClass() == QLatin1StringView("spectacle org.kde.spectacle") && tag() == QLatin1StringView("region-editor");
+}
+
 //****************************************
 // EffectWindowGroup
 //****************************************

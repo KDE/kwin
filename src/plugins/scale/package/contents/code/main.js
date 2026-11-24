@@ -9,16 +9,6 @@
 
 "use strict";
 
-const blacklist = {
-    // The logout screen has to be animated only by the logout effect.
-    "ksmserver-logout-greeter ksmserver-logout-greeter": [],
-
-    // KDE Plasma splash screen has to be animated only by the login effect.
-    "ksplashqml ksplashqml": [],
-
-    "spectacle org.kde.spectacle": ["region-editor"],
-};
-
 class ScaleEffect {
     constructor() {
         effect.configChanged.connect(this.loadConfig.bind(this));
@@ -38,31 +28,6 @@ class ScaleEffect {
         this.outScale = effect.readConfig("OutScale", 0.8);
     }
 
-    static isScaleWindow(window) {
-        const blacklistedTags = blacklist[window.windowClass];
-        if (blacklistedTags && (blacklistedTags.length === 0 || blacklistedTags.includes(window.tag))) {
-            return false;
-        }
-
-        // Don't animate combobox popups, tooltips, popup menus, etc.
-        if (window.popupWindow || window.appletPopup) {
-            return false;
-        }
-
-        // Don't animate the outline and the screenlocker as it looks bad.
-        if (window.lockScreen || window.outline) {
-            return false;
-        }
-
-        // Override-redirect windows are usually used for user interface
-        // concepts that are not expected to be animated by this effect.
-        if (!window.managed) {
-            return false;
-        }
-
-        return window.normalWindow || window.dialog;
-    }
-
     setupForcedRoles(window) {
         window.setData(Effect.WindowForceBlurRole, true);
     }
@@ -75,13 +40,10 @@ class ScaleEffect {
         if (effects.hasActiveFullScreenEffect) {
             return;
         }
-        if (!ScaleEffect.isScaleWindow(window)) {
-            return;
-        }
-        if (!window.visible) {
-            return;
-        }
         if (effect.isGrabbed(window, Effect.WindowAddedGrabRole)) {
+            return;
+        }
+        if (!window.canBeAnimatedByToplevelOpenCloseEffect || !window.visible) {
             return;
         }
         this.setupForcedRoles(window);
@@ -106,13 +68,10 @@ class ScaleEffect {
         if (effects.hasActiveFullScreenEffect) {
             return;
         }
-        if (!ScaleEffect.isScaleWindow(window)) {
-            return;
-        }
-        if (!window.visible || window.skipsCloseAnimation) {
-            return;
-        }
         if (effect.isGrabbed(window, Effect.WindowClosedGrabRole)) {
+            return;
+        }
+        if (!window.canBeAnimatedByToplevelOpenCloseEffect || !window.visible || window.skipsCloseAnimation) {
             return;
         }
         if (window.scaleInAnimation) {
