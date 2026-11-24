@@ -324,7 +324,7 @@
 </variablelist>
 
 <para
->Odak çalması engellenen pencereler dikkat istiyor olarak işaretlenir, bu da öntanımlı olarak görev çubuğu girişlerinin vurgulanacağı anlamına gelir. Bu, Bildirimler denetim modülünde değiştirilebilir. </para>
+>Odak çalması engellenen pencereler dikkat istiyor olarak işaretlenir, bu da varsayılan olarak görev çubuğu girişlerinin vurgulanacağı anlamına gelir. Bu, Bildirimler denetim modülünde değiştirilebilir. </para>
 
 </sect3>
 
@@ -341,7 +341,7 @@
 <para
 ><guilabel
 >Tıklama etkin pencereyi yükseltir</guilabel
-> üzerine tıklandığında bir pencereyi öne getirir. Bu, odaklanmak için tıkla politikasıyla öntanımlı olarak etkindir. </para>
+> üzerine tıklandığında bir pencereyi öne getirir. Bu, odaklanmak için tıkla politikasıyla varsayılan olarak etkindir. </para>
 
 <para
 ><guilabel
@@ -885,7 +885,7 @@
 >Niteleyici düğme</guilabel
 > olarak, <guilabel
 >Meta</guilabel
-> (öntanımlı) veya <guilabel
+> (varsayılan) veya <guilabel
 >Seçenek</guilabel
 > arasında seçim yapabilirsiniz. </para>
 

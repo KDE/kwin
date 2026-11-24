@@ -51,7 +51,7 @@
 <keyword
 >tema</keyword>
 <keyword
->biçem</keyword>
+>stil</keyword>
 </keywordset>
 </articleinfo>
 <sect1 id="window-deco">
@@ -59,7 +59,7 @@
 >Pencere Dekorasyonları</title>
 
 <para
->Bu modül, pencerelerin etrafındaki düğmeler ve kenarlıklar için bir biçem seçmenizi sağlar.</para>
+>Bu modül, pencerelerin etrafındaki düğmeler ve kenarlıklar için bir stil seçmenizi sağlar.</para>
 
 <sect2>
 <title
@@ -82,27 +82,27 @@
 </para>
 
 <para
->Önizleme listesinden bir pencere dekorasyonu biçemi seçin veya <guibutton
+>Ön izleme listesinden bir pencere dekorasyonu stili seçin veya <guibutton
 >Yeni Pencere Dekorasyonları Al</guibutton
-> düğmesini kullanarak yeni bir biçem indirin.</para>
+> düğmesini kullanarak yeni bir stil indirin.</para>
 
 <para
->Öntanımlı pencere dekorasyonuna <quote
+>Varsayılan pencere dekorasyonuna <quote
 >Esinti</quote
 > denir.</para>
 
 <para
->Her biçemin farklı bir görünümü; ancak aynı zamanda farklı bir <quote
+>Her stilin farklı bir görünümü; ancak aynı zamanda farklı bir <quote
 >hissi</quote
 > vardır. Bazılarının tüm kenarlarında (bazen görünmez) <quote
 >yeniden boyutlandır</quote
 > kenarlıklar vardır, bu da yeniden boyutlandırmayı kolaylaştırırken taşımayı daha zor hale getirir. Bazılarının belirli kenarlarında kenarlık yoktur.</para>
 
 <para
->Çalışma düzeninize en uygun olanı bulana kadar farklı biçemleri denemeniz teşvik edilir.</para>
+>Çalışma düzeninize en uygun olanı bulana kadar farklı stilleri denemeniz teşvik edilir.</para>
 
 <para
->Her bir biçemin önizlemesinde, dekorasyon yapılandırması iletişim kutusunu açmak için bir <inlinemediaobject
+>Her bir stilin ön izlemesinde, dekorasyon yapılandırması iletişim kutusunu açmak için bir <inlinemediaobject
 ><imageobject
 > <imagedata fileref="configure.png" format="PNG"/></imageobject
 ></inlinemediaobject
@@ -141,7 +141,7 @@
 >Dekorasyonlar</title>
 
 <para
->Bu iletişim kutusundan pencerenin dekorasyonunu değiştirebilirsiniz. Kullanılabilir seçenekler seçili biçeme bağlıdır. </para>
+>Bu iletişim kutusundan pencerenin dekorasyonunu değiştirebilirsiniz. Kullanılabilir seçenekler seçili stile bağlıdır. </para>
 <para>
 <screenshot>
 <screeninfo
@@ -188,7 +188,7 @@
 > seçeneğini işaretleyin. </para>
 
 <para
->Fare işaretçisiyle başlık çubuğu düğmeleri üzerine geldiğinizde öntanımlı araç ipuçlarını görmek istiyorsanız <guilabel
+>Fare işaretçisiyle başlık çubuğu düğmeleri üzerine geldiğinizde varsayılan araç ipuçlarını görmek istiyorsanız <guilabel
 >Başlık çubuğu düğmesi araç ipuçlarını göster</guilabel
 > seçeneğini işaretleyin. </para>
 

@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-20 01:14+0000\n"
-"PO-Revision-Date: 2026-11-16 18:49+0300\n"
+"POT-Creation-Date: 2026-11-24 01:07+0000\n"
+"PO-Revision-Date: 2026-11-23 17:58+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -1603,12 +1603,12 @@ msgstr "Sanal bir çerçeve arabelleğine sun."
 #: main_wayland.cpp:364
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
-msgstr "Pencereli kipin genişliği. Öntanımlı genişlik 1024’tür."
+msgstr "Pencereli kipin genişliği. Varsayılan genişlik 1024’tür."
 
 #: main_wayland.cpp:368
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
-msgstr "Pencereli kipin yüksekliği. Öntanımlı yükseklik 768’tir."
+msgstr "Pencereli kipin yüksekliği. Varsayılan yükseklik 768’tir."
 
 #: main_wayland.cpp:373
 #, kde-format
@@ -1618,14 +1618,14 @@ msgstr "Pencereli kipin tam ekran yapılıp yapılmayacağı"
 #: main_wayland.cpp:377
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
-msgstr "Pencerelenmiş kipin ölçeği. Öntanımlı değer 1’dir."
+msgstr "Pencerelenmiş kipin ölçeği. Varsayılan değer 1’dir."
 
 #: main_wayland.cpp:382
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
-"Pencere kipinde çıkış olarak açılacak pencere sayısı. Öntanımlı değer 1’dir"
+"Pencere kipinde çıkış olarak açılacak pencere sayısı. Varsayılan değer 1’dir"
 
 #: main_wayland.cpp:387
 #, kde-format
@@ -1835,7 +1835,7 @@ msgstr "Hareket eşiği"
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:21
 #, kde-format
 msgid "Default Button"
-msgstr "Öntanımlı düğme"
+msgstr "Varsayılan düğme"
 
 #. i18n: ectx: label, entry (ButtonLocked), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:33
@@ -1922,7 +1922,7 @@ msgstr "Süre:"
 #: plugins/scale/package/contents/ui/config.ui:30
 #, kde-format
 msgid "Default"
-msgstr "Öntanımlı"
+msgstr "Varsayılan"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
@@ -2246,7 +2246,7 @@ msgstr "Görüntüyü karart (yalnızca tam ekran açılış ekranları)"
 #, kde-format
 msgctxt "Duration of rotation"
 msgid "Default"
-msgstr "Öntanımlı"
+msgstr "Varsayılan"
 
 #: plugins/mouseclick/mouseclick.cpp:40
 #: plugins/mouseclick/mouseclick_config.cpp:43
@@ -2670,7 +2670,7 @@ msgid "Failed to create PipeWire stream"
 msgstr "PipeWire akışı oluşturulamadı"
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:388
-#: plugins/screenshot/screenshotdbusinterface3.cpp:205
+#: plugins/screenshot/screenshotdbusinterface3.cpp:206
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2680,7 +2680,7 @@ msgstr ""
 "İptal etmek için Vazgeç düğmesine basın veya sağ tıklayın."
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:406
-#: plugins/screenshot/screenshotdbusinterface3.cpp:220
+#: plugins/screenshot/screenshotdbusinterface3.cpp:221
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -4406,7 +4406,7 @@ msgstr "Grafik kartının desteklediğinden fazla görüntü etkinleştirilmiş.
 msgid "The driver rejected the output configuration: %1"
 msgstr "Sürücü, çıkış yapılandırmasını reddetti: %1"
 
-#: window.cpp:3178
+#: window.cpp:3179
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

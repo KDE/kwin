@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-20 01:14+0000\n"
+"POT-Creation-Date: 2026-11-24 01:07+0000\n"
 "PO-Revision-Date: 2026-11-13 09:15+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -2691,7 +2691,7 @@ msgid "Failed to create PipeWire stream"
 msgstr "Ha fallat mentre es creava el flux de PipeWire"
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:388
-#: plugins/screenshot/screenshotdbusinterface3.cpp:205
+#: plugins/screenshot/screenshotdbusinterface3.cpp:206
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2702,7 +2702,7 @@ msgstr ""
 "La tecla d'escapada o clic dret per a cancel·lar."
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:406
-#: plugins/screenshot/screenshotdbusinterface3.cpp:220
+#: plugins/screenshot/screenshotdbusinterface3.cpp:221
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -4437,7 +4437,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %1"
 msgstr "El controlador ha rebutjat la configuració de l'eixida: %1"
 
-#: window.cpp:3178
+#: window.cpp:3179
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

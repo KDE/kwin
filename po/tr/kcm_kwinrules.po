@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-15 00:47+0000\n"
-"PO-Revision-Date: 2026-07-17 19:38+0300\n"
+"PO-Revision-Date: 2026-11-23 18:16+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 26.04.2\n"
+"X-Generator: Lokalize 26.08.2\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -124,7 +124,7 @@ msgid ""
 "for it will be used.\n"
 "Specifying this will block more generic window settings from taking effect."
 msgstr ""
-"Pencere özelliği etkilenmeyecek ve onun öntanımlı işlemesi kullanılacak.\n"
+"Pencere özelliği etkilenmeyecek ve onun varsayılan işlemesi kullanılacak.\n"
 "Bunu belirtmek, birçok genel pencere ayarının değişmesini engelleyecektir."
 
 #: optionsmodel.cpp:226
@@ -689,7 +689,7 @@ msgstr "Pencereyi tüm etkinliklerde kullanılabilir yap"
 #: rulesmodel.cpp:875
 #, kde-format
 msgid "Default"
-msgstr "Öntanımlı"
+msgstr "Varsayılan"
 
 #: rulesmodel.cpp:876
 #, kde-format

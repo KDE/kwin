@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-20 01:14+0000\n"
+"POT-Creation-Date: 2026-11-24 01:07+0000\n"
 "PO-Revision-Date: 2025-04-05 11:59+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@nuug.no>\n"
@@ -2726,7 +2726,7 @@ msgid "Failed to create PipeWire stream"
 msgstr "Klarte ikke starte PipeWire-strøm"
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:388
-#: plugins/screenshot/screenshotdbusinterface3.cpp:205
+#: plugins/screenshot/screenshotdbusinterface3.cpp:206
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2736,7 +2736,7 @@ msgstr ""
 "Høyreklikk eller trykk «Escape» for å avbryte."
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:406
-#: plugins/screenshot/screenshotdbusinterface3.cpp:220
+#: plugins/screenshot/screenshotdbusinterface3.cpp:221
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -4470,7 +4470,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %1"
 msgstr "Driveren avviste utenhetsoppsettet"
 
-#: window.cpp:3178
+#: window.cpp:3179
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

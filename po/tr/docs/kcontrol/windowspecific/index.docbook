@@ -488,7 +488,7 @@
 >Pencere eşleştirme</guilabel
 > sekmesinde, <guilabel
 >Pencere Özelliklerini Algıla</guilabel
-> işlevi başlamadan önceki gecikme saniyesini ayarlayın. Öntanımlı değer sıfır saniyedir.</para
+> işlevi başlamadan önceki gecikme saniyesini ayarlayın. Varsayılan değer sıfır saniyedir.</para
 ></listitem>
 <listitem
 ><para
@@ -800,7 +800,7 @@
 <listitem
 ><para
 ><guilabel
->Öntanımlı</guilabel
+>Varsayılan</guilabel
 > — genel pencere yerleştirme stratejisini kullanın.</para
 ></listitem>
 <listitem
@@ -862,7 +862,7 @@
 ></term>
     <listitem>
     <para
->Pencerenin istenen geometri konumunu kabul etmek veya yok saymak arasında geçiş yapın. Öntanımlı yerleştirme stratejisi ile pencerenin isteği arasındaki çakışmaları önlemek için pencerenin isteği kabul edildiğinde yerleştirme stratejisi yok sayılır.</para>
+>Pencerenin istenen geometri konumunu kabul etmek veya yok saymak arasında geçiş yapın. Varsayılan yerleştirme stratejisi ile pencerenin isteği arasındaki çakışmaları önlemek için pencerenin isteği kabul edildiğinde yerleştirme stratejisi yok sayılır.</para>
      </listitem>
   </varlistentry>
   <varlistentry
@@ -888,7 +888,7 @@
 >yükseklik</emphasis
 > X <emphasis
 >genişlik</emphasis
-> piksel sayısı olmalıdır. Genellikle 1 × 1’dir. Diğer pencereler, örneğin uçbirim öykünücüleri veya düzenleyicileri, eş aralıklı yazıtiplerini kullanır ve bir karakterin boyutuna göre taban artışlarını ister.</para>
+> piksel sayısı olmalıdır. Genellikle 1 × 1’dir. Diğer pencereler, örneğin uçbirim öykünücüleri veya düzenleyicileri, eş aralıklı yazı tiplerini kullanır ve bir karakterin boyutuna göre taban artışlarını ister.</para>
      </listitem>
   </varlistentry>
 </variablelist>
@@ -1346,7 +1346,7 @@
 >Pencereye Özgü Ayarları Düzenle</guilabel
 > penceresi görüntülenir. <guilabel
 >Pencere eşleştirme</guilabel
-> öntanımlı sekmedir: <screenshot>
+> varsayılan sekmedir: <screenshot>
 <screeninfo
 ></screeninfo>
   <mediaobject>

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-20 01:14+0000\n"
+"POT-Creation-Date: 2026-11-24 01:07+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -2755,7 +2755,7 @@ msgid "Failed to create PipeWire stream"
 msgstr ""
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:388
-#: plugins/screenshot/screenshotdbusinterface3.cpp:205
+#: plugins/screenshot/screenshotdbusinterface3.cpp:206
 #, fuzzy, kde-format
 #| msgid ""
 #| "Select window to force close with left click or enter.\n"
@@ -2768,7 +2768,7 @@ msgstr ""
 "Esc ή δεξί κλικ για ακύρωση."
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:406
-#: plugins/screenshot/screenshotdbusinterface3.cpp:220
+#: plugins/screenshot/screenshotdbusinterface3.cpp:221
 #, fuzzy, kde-format
 #| msgid ""
 #| "Select window to force close with left click or enter.\n"
@@ -4553,7 +4553,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %1"
 msgstr ""
 
-#: window.cpp:3178
+#: window.cpp:3179
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

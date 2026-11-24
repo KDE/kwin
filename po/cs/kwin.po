@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-20 01:14+0000\n"
+"POT-Creation-Date: 2026-11-24 01:07+0000\n"
 "PO-Revision-Date: 2026-11-13 11:09+0100\n"
 "Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -2682,7 +2682,7 @@ msgid "Failed to create PipeWire stream"
 msgstr "Nepodařilo se vytvořit PipeWire stream"
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:388
-#: plugins/screenshot/screenshotdbusinterface3.cpp:205
+#: plugins/screenshot/screenshotdbusinterface3.cpp:206
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2693,7 +2693,7 @@ msgstr ""
 "Stisknutím klávesy Esc nebo kliknutím pravým tlačítkem myši akci zrušíte."
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:406
-#: plugins/screenshot/screenshotdbusinterface3.cpp:220
+#: plugins/screenshot/screenshotdbusinterface3.cpp:221
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -4416,7 +4416,7 @@ msgstr "Je povoleno více displejů, než kolik grafická karta podporuje."
 msgid "The driver rejected the output configuration: %1"
 msgstr "Ovladač odmítl výstupní konfiguraci: %1"
 
-#: window.cpp:3178
+#: window.cpp:3179
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

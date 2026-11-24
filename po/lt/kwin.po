@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-20 01:14+0000\n"
+"POT-Creation-Date: 2026-11-24 01:07+0000\n"
 "PO-Revision-Date: 2026-11-15 02:02+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -2683,7 +2683,7 @@ msgid "Failed to create PipeWire stream"
 msgstr "Nepavyko sukurti PipeWire srauto"
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:388
-#: plugins/screenshot/screenshotdbusinterface3.cpp:205
+#: plugins/screenshot/screenshotdbusinterface3.cpp:206
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2695,7 +2695,7 @@ msgstr ""
 "spustelėkite dešiniuoju pelės mygtuku."
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:406
-#: plugins/screenshot/screenshotdbusinterface3.cpp:220
+#: plugins/screenshot/screenshotdbusinterface3.cpp:221
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -4427,7 +4427,7 @@ msgstr "Yra įjungta daugiau ekranų nei palaiko grafikos plokštė."
 msgid "The driver rejected the output configuration: %1"
 msgstr "Tvarkyklė atmetė išvedimo konfigūraciją: %1"
 
-#: window.cpp:3178
+#: window.cpp:3179
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
