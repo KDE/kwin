@@ -11,7 +11,6 @@
 
 const blacklist = {
     // The logout screen has to be animated only by the logout effect.
-    "ksmserver ksmserver": [],
     "ksmserver-logout-greeter ksmserver-logout-greeter": [],
 
     // KDE Plasma splash screen has to be animated only by the login effect.
