@@ -45,10 +45,6 @@ class ScaleEffect {
             return false;
         }
 
-        if (window.hasDecoration) {
-            return true;
-        }
-
         // Don't animate combobox popups, tooltips, popup menus, etc.
         if (window.popupWindow || window.appletPopup) {
             return false;
