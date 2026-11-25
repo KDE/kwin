@@ -89,6 +89,12 @@ public:
     bool focusUpdatesBlocked() override;
 
     /**
+     * Keeps the current pointer focus while locked. Can be nested.
+     */
+    void lockFocus();
+    void unlockFocus();
+
+    /**
      * @internal
      */
     void processMotionAbsolute(const QPointF &pos, std::chrono::microseconds time, InputDevice *device = nullptr);
@@ -202,6 +208,7 @@ private:
     bool m_enableConstraints = true;
     bool m_lastOutputWasPlaceholder = true;
     bool m_autoscroll = false;
+    int m_focusLocks = 0;
     QPointF m_movementInEdgeBarrier;
     std::chrono::microseconds m_lastMoveTime = std::chrono::microseconds::zero();
     friend class PositionUpdateBlocker;

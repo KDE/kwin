@@ -1,0 +1,8 @@
+{
+    "KPlugin": {
+        "Description": "Dismiss notifications by swiping them away",
+        "EnabledByDefault": true,
+        "License": "GPL",
+        "Name": "Notification Swipe"
+    }
+}

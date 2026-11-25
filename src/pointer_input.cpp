@@ -581,7 +581,23 @@ bool PointerInputRedirection::focusUpdatesBlocked()
     if (areButtonsPressed()) {
         return true;
     }
+    if (m_focusLocks > 0) {
+        return true;
+    }
     return false;
+}
+
+void PointerInputRedirection::lockFocus()
+{
+    ++m_focusLocks;
+}
+
+void PointerInputRedirection::unlockFocus()
+{
+    Q_ASSERT(m_focusLocks > 0);
+    if (--m_focusLocks == 0) {
+        update();
+    }
 }
 
 void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedWindowImpl *old, Decoration::DecoratedWindowImpl *now)
