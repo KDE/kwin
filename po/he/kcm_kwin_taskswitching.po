@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-18 14:19+0000\n"
-"PO-Revision-Date: 2026-11-21 09:23+0200\n"
+"PO-Revision-Date: 2026-11-24 09:14+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <kde-l10n-he@kde.org>\n"
 "Language: he\n"
@@ -22,85 +22,85 @@ msgstr ""
 #, kde-format
 msgctxt "@title"
 msgid "KWin"
-msgstr ""
+msgstr "KWin"
 
 #: kcm.cpp:144
 #, kde-format
 msgctxt "@action"
 msgid "Walk Through Windows"
-msgstr ""
+msgstr "מעבר בין החלונות"
 
 #: kcm.cpp:151
 #, kde-format
 msgctxt "@action"
 msgid "Walk Through Windows (Reverse)"
-msgstr ""
+msgstr "מעבר בין החלונות (אחורה)"
 
 #: kcm.cpp:158
 #, kde-format
 msgctxt "@action"
 msgid "Walk Through Windows of Current Application"
-msgstr ""
+msgstr "מעבר בין החלונות של היישום הנוכחי"
 
 #: kcm.cpp:165
 #, kde-format
 msgctxt "@action"
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr ""
+msgstr "מעבר בין החלונות של היישום הנוכחי (אחורה)"
 
 #: kcm.cpp:172
 #, kde-format
 msgctxt "@action"
 msgid "Walk Through Windows Alternative"
-msgstr ""
+msgstr "מעבר חלופי בין החלונות"
 
 #: kcm.cpp:179
 #, kde-format
 msgctxt "@action"
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr ""
+msgstr "מעבר חלופי בין החלונות (אחורה)"
 
 #: kcm.cpp:186
 #, kde-format
 msgctxt "@action"
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr ""
+msgstr "מעבר חלופי בין החלונות של היישום הנוכחי"
 
 #: kcm.cpp:193
 #, kde-format
 msgctxt "@action"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr ""
+msgstr "מעבר חלופי בין החלונות של היישום הנוכחי (אחורה)"
 
 #: kcm.cpp:219
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "החלפה מעגלית בין סקירה ותצוגת רשת"
 
 #: kcm.cpp:225
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "החלפה מעגלית בין תצוגת רשת וסקירה"
 
 #: kcm.cpp:231
 #, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
-msgstr ""
+msgstr "החלפת מצב סקירה"
 
 #: kcm.cpp:237
 #, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr ""
+msgstr "החלפת מצב תצוגת רשת"
 
 #: tabboxlayoutsmodel.cpp:135
 #, kde-format
 msgctxt "@item:inlistbox"
 msgid "None"
-msgstr ""
+msgstr "ללא"
 
 #: ui/main.qml:36
 #, kde-format
@@ -125,7 +125,7 @@ msgstr "סקירה"
 msgctxt "@info"
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
-msgstr ""
+msgstr "הגדרות מדיניות מיקוד מגבילות את פעילות הניווט בין החלונות."
 
 #: ui/main.qml:102
 #, kde-format
@@ -134,6 +134,7 @@ msgid ""
 "The alternative task switcher is a second switcher with its own separate "
 "shortcut, appearance, and behavior settings."
 msgstr ""
+"בורר המשימות החלופי הוא בורר שני עם מקשי קיצור, מראה והגדרות התנהגות משלו."
 
 #: ui/OverviewSettings.qml:20
 #, kde-format
@@ -148,6 +149,8 @@ msgid ""
 "Swipe up with four fingers on a touchpad or three on a touchscreen, or use "
 "screen edge gestures to toggle the overview"
 msgstr ""
+"אפשר להחליק למעלה עם שתי אצבעות על משטח המגע או על מסך המגע או להשתמש במחוות "
+"קצה המסך כדי להפעיל/לכבות את הסקירה"
 
 #: ui/OverviewSettings.qml:25
 #, kde-format
@@ -157,6 +160,8 @@ msgid ""
 "Press %1, swipe up with four fingers on a touchpad or three on a "
 "touchscreen, or use screen edge gestures to toggle the overview"
 msgstr ""
+"אפשר ללחוץ על %1, להחליק למעלה עם שתי אצבעות על משטח המגע או על מסך המגע או "
+"להשתמש במחוות קצה המסך כדי להפעיל/לכבות את הסקירה"
 
 #: ui/OverviewSettings.qml:27
 #, kde-format
@@ -167,6 +172,8 @@ msgid ""
 "Press %1 or %2, swipe up with four fingers on a touchpad or three on a "
 "touchscreen, or use screen edge gestures to toggle the overview"
 msgstr ""
+"אפשר ללחוץ על %1 או על %2, להחליק למעלה עם שתי אצבעות על משטח המגע או על מסך "
+"המגע או להשתמש במחוות קצה המסך כדי להפעיל/לכבות את הסקירה"
 
 #: ui/OverviewSettings.qml:31
 #, kde-format
@@ -277,7 +284,7 @@ msgctxt "@info"
 msgid ""
 "Time to wait before showing the task switcher. Also applies to the "
 "alternative task switcher."
-msgstr ""
+msgstr "זמן להמתנה בטרם הצגת בורר המשימות. חל גם על בורר המשימות החלופי."
 
 #: ui/TabBoxSettings.qml:141
 #, kde-format
@@ -331,94 +338,94 @@ msgstr "סדר ערימה"
 #, kde-format
 msgctxt "@option:check"
 msgid "Sort minimized windows after unminimized"
-msgstr ""
+msgstr "מיון חלונות ממוזערים לאחר שבוטל מזעורם"
 
 #: ui/TabBoxSettings.qml:215
 #, kde-format
 msgctxt "As in, 'Show windows: From all desktops'"
 msgid "Show windows:"
-msgstr ""
+msgstr "להציג חלונות:"
 
 #: ui/TabBoxSettings.qml:222
 #, kde-format
 msgctxt "@item:inlistbox 'Show windows:'"
 msgid "From all desktops"
-msgstr ""
+msgstr "מכל שולחנות העבודה"
 
 #: ui/TabBoxSettings.qml:222
 #, kde-format
 msgctxt "@item:inlistbox 'Show windows:'"
 msgid "From the current desktop"
-msgstr ""
+msgstr "משולחן העבודה הנוכחי;"
 
 #: ui/TabBoxSettings.qml:222
 #, kde-format
 msgctxt "@item:inlistbox 'Show windows:'"
 msgid "From all other desktops"
-msgstr ""
+msgstr "מכל שולחנות העבודה האחרים"
 
 #: ui/TabBoxSettings.qml:241
 #, kde-format
 msgctxt "@item:inlistbox 'Show windows:'"
 msgid "From all activities"
-msgstr ""
+msgstr "מכל הפעילויות"
 
 #: ui/TabBoxSettings.qml:241
 #, kde-format
 msgctxt "@item:inlistbox 'Show windows:'"
 msgid "From the current activity"
-msgstr ""
+msgstr "מהפעילות הנוכחית"
 
 #: ui/TabBoxSettings.qml:241
 #, kde-format
 msgctxt "@item:inlistbox 'Show windows:'"
 msgid "From all other activities"
-msgstr ""
+msgstr "מכל הפעילויות האחרות"
 
 #: ui/TabBoxSettings.qml:260
 #, kde-format
 msgctxt "@item:inlistbox 'Show windows:'"
 msgid "From all screens"
-msgstr ""
+msgstr "מכל המסכים"
 
 #: ui/TabBoxSettings.qml:260
 #, kde-format
 msgctxt "@item:inlistbox 'Show windows:'"
 msgid "From the current screen"
-msgstr ""
+msgstr "מהמסך הנוכחי"
 
 #: ui/TabBoxSettings.qml:260
 #, kde-format
 msgctxt "@item:inlistbox 'Show windows:'"
 msgid "From all other screens"
-msgstr ""
+msgstr "מכל המסכים האחרים"
 
 #: ui/TabBoxSettings.qml:279
 #, kde-format
 msgctxt "@item:inlistbox 'Show windows:'"
 msgid "Regardless of minimization state"
-msgstr ""
+msgstr "ללא תלות במצב המזעור"
 
 #: ui/TabBoxSettings.qml:279
 #, kde-format
 msgctxt "@item:inlistbox 'Show windows:'"
 msgid "That are unminimized"
-msgstr ""
+msgstr "לא ממוזערים"
 
 #: ui/TabBoxSettings.qml:279
 #, kde-format
 msgctxt "@item:inlistbox 'Show windows:'"
 msgid "That are minimized"
-msgstr ""
+msgstr "ממוזערים"
 
 #: ui/TabBoxSettings.qml:293
 #, kde-format
 msgctxt "@option:check"
 msgid "Only one window per application"
-msgstr ""
+msgstr "חלון אחד בלבד לכל יישום"
 
 #: ui/TabBoxSettings.qml:312
 #, kde-format
 msgctxt "@label Hint for task switcher usage"
 msgid "Use shortcuts to activate the task switcher"
-msgstr ""
+msgstr "להשתמש במקשי קיצור כדי להפעיל את בורר המשימות"

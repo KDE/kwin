@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-24 01:07+0000\n"
-"PO-Revision-Date: 2026-11-21 09:21+0200\n"
+"POT-Creation-Date: 2026-11-25 01:27+0000\n"
+"PO-Revision-Date: 2026-11-24 09:10+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <kde-l10n-he@kde.org>\n"
 "Language: he\n"
@@ -1495,7 +1495,7 @@ msgstr "שם"
 #: keyboard_layout.cpp:46 keyboard_layout.cpp:54 keyboard_layout.cpp:136
 #, kde-format
 msgid "Keyboard Layout Switcher"
-msgstr "מחליף פריסות מקלדת"
+msgstr "בורר פריסות מקלדת"
 
 #: killwindow.cpp:31
 #, kde-format
@@ -2243,25 +2243,25 @@ msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "ברירת־מחדל"
 
-#: plugins/mouseclick/mouseclick.cpp:40
+#: plugins/mouseclick/mouseclick.cpp:42
 #: plugins/mouseclick/mouseclick_config.cpp:43
 #, kde-format
 msgid "Toggle Mouse Click Animation"
 msgstr "החלפת מצב הנפשת לחיצת עכבר"
 
-#: plugins/mouseclick/mouseclick.cpp:46
+#: plugins/mouseclick/mouseclick.cpp:48
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "שמאל"
 
-#: plugins/mouseclick/mouseclick.cpp:47
+#: plugins/mouseclick/mouseclick.cpp:49
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "אמצע"
 
-#: plugins/mouseclick/mouseclick.cpp:48
+#: plugins/mouseclick/mouseclick.cpp:50
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -3463,7 +3463,7 @@ msgstr "דילוג בבורר"
 #: rulesettings.kcfg:267
 #, kde-format
 msgid "Skip switcher rule type"
-msgstr "סוג כלל דילוג על מחליף"
+msgstr "סוג כלל דילוג על בורר"
 
 #. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:274
@@ -3759,7 +3759,7 @@ msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
 "Contact your distribution about this."
 msgstr ""
-"התקנת מחליף החלונות פגומה, המשאבים חסרים.\n"
+"התקנת בורר החלונות פגומה, המשאבים חסרים.\n"
 "נא ליצור קשר עם אורזי ההפצה שלך בנוגע לזה."
 
 #: tablet_input.cpp:119
@@ -4396,30 +4396,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(לא מגיב)"
 
-#: workspace.cpp:1394
+#: workspace.cpp:1406
 #, kde-format
 msgid "Built-in Screen"
 msgstr "מסך מובנה"
 
-#: workspace.cpp:1407
+#: workspace.cpp:1419
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1417
+#: workspace.cpp:1429
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1420
+#: workspace.cpp:1432
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: workspace.cpp:1889
+#: workspace.cpp:1901
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

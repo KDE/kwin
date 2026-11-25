@@ -1,14 +1,14 @@
 # Copyright (C) 2025 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# SPDX-FileCopyrightText: 2025 Toms Trasuns <toms.trasuns@posteo.net>
+# SPDX-FileCopyrightText: 2025-2026 Toms Trasuns <toms.trasuns@posteo.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-16 18:18+0000\n"
-"PO-Revision-Date: 2025-05-08 16:39+0300\n"
-"Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
+"PO-Revision-Date: 2026-11-23 09:48+0200\n"
+"Last-Translator: Toms Trasūns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
-"X-Generator: Lokalize 25.04.0\n"
+"X-Generator: Lokalize 26.08.3\n"
 
 #: ui/AnimationComboBox.qml:49
 #, kde-format
@@ -42,13 +42,7 @@ msgid "Instant"
 msgstr "Tūlītējas"
 
 #: ui/main.qml:95
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Some applications do not support this setting: In particular, GTK "
-#| "applications cannot change animation duration, but will still disable "
-#| "animations when <interface>animation speed</interface> is "
-#| "<interface>Instant</interface>."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some applications do not support this setting: in particular, GTK "
@@ -62,44 +56,34 @@ msgstr ""
 "interface>."
 
 #: ui/main.qml:102
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Desktop animations"
+#, kde-format
 msgctxt "@title:group"
 msgid "Window animations"
-msgstr "Darbvirsmas animācijas"
+msgstr "Logu animācijas"
 
 #: ui/main.qml:104
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window open/close:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Open/close:"
-msgstr "Logu atvēršana/aizvēršana:"
+msgstr "Atvēršana/aizvēršana:"
 
 #: ui/main.qml:105
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window maximize:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Maximize:"
-msgstr "Loku maksimizēšana:"
+msgstr "Maksimizēšana:"
 
 #: ui/main.qml:106
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window minimize:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Minimize:"
-msgstr "Logu minimizēšana:"
+msgstr "Minimizēšana:"
 
 #: ui/main.qml:107
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Window full screen:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Full screen:"
-msgstr "Logu pilnekrāns:"
+msgstr "Pilnekrāns:"
 
 #: ui/main.qml:126 ui/main.qml:165 ui/main.qml:211
 #, kde-format
@@ -120,9 +104,7 @@ msgid "Peek at desktop:"
 msgstr "Palūkoties uz darbvirsmu:"
 
 #: ui/main.qml:146
-#, fuzzy, kde-format
-#| msgctxt "@label:listbox"
-#| msgid "Virtual desktop switching:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Switch virtual desktops:"
 msgstr "Virtuālo darbvirsmu pārslēgšana:"

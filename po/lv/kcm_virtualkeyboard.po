@@ -1,14 +1,14 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# SPDX-FileCopyrightText: 2024 Toms Trasuns <toms.trasuns@posteo.net>
+# SPDX-FileCopyrightText: 2024, 2026 Toms Trasuns <toms.trasuns@posteo.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-07 00:46+0000\n"
-"PO-Revision-Date: 2024-01-19 21:29+0200\n"
-"Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
+"PO-Revision-Date: 2026-11-23 11:42+0200\n"
+"Last-Translator: Toms Trasūns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 26.08.3\n"
 
 #: kcmvirtualkeyboard.cpp:84
 #, kde-format
@@ -29,23 +29,22 @@ msgid "Do not use any virtual keyboard"
 msgstr "Neizmantot virtuālo tastatūru"
 
 #: ui/main.qml:24
-#, fuzzy, kde-format
-#| msgid "Do not use any virtual keyboard"
+#, kde-format
 msgctxt "Selector label"
 msgid "Show Virtual Keyboard:"
-msgstr "Neizmantot virtuālo tastatūru"
+msgstr "Rādīt virtuālo tastatūru:"
 
 #: ui/main.qml:32
 #, kde-format
 msgid "Never"
-msgstr ""
+msgstr "Nekad"
 
 #: ui/main.qml:33
 #, kde-format
 msgid "With Touch and Tablet"
-msgstr ""
+msgstr "Ar skārienus reģistrējošām ierīcēm un planšetdatoru"
 
 #: ui/main.qml:34
 #, kde-format
 msgid "With Touch, Tablet, and Mouse"
-msgstr ""
+msgstr "Ar skārienus reģistrējošām ierīcēm, planšetdatoru un peli"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin stable\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-24 01:07+0000\n"
+"POT-Creation-Date: 2026-11-25 01:27+0000\n"
 "PO-Revision-Date: 2005-11-28 12:28+0200\n"
 "Last-Translator: Kobus Venter <kabousv@therugby.co.za>\n"
 "Language-Team: AFRIKAANS <translate-discuss-af@lists.sourceforge.net>\n"
@@ -2287,26 +2287,26 @@ msgctxt "Duration of rotation"
 msgid "Default"
 msgstr ""
 
-#: plugins/mouseclick/mouseclick.cpp:40
+#: plugins/mouseclick/mouseclick.cpp:42
 #: plugins/mouseclick/mouseclick_config.cpp:43
 #, fuzzy, kde-format
 #| msgid "Window Operations Menu"
 msgid "Toggle Mouse Click Animation"
 msgstr "Venster Operasies Kieslys"
 
-#: plugins/mouseclick/mouseclick.cpp:46
+#: plugins/mouseclick/mouseclick.cpp:48
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr ""
 
-#: plugins/mouseclick/mouseclick.cpp:47
+#: plugins/mouseclick/mouseclick.cpp:49
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr ""
 
-#: plugins/mouseclick/mouseclick.cpp:48
+#: plugins/mouseclick/mouseclick.cpp:50
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -4553,30 +4553,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1394
+#: workspace.cpp:1406
 #, kde-format
 msgid "Built-in Screen"
 msgstr ""
 
-#: workspace.cpp:1407
+#: workspace.cpp:1419
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr ""
 
-#: workspace.cpp:1417
+#: workspace.cpp:1429
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr ""
 
-#: workspace.cpp:1420
+#: workspace.cpp:1432
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr ""
 
-#: workspace.cpp:1889
+#: workspace.cpp:1901
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -1,14 +1,14 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# SPDX-FileCopyrightText: 2024, 2025 Toms Trasuns <toms.trasuns@posteo.net>
+# SPDX-FileCopyrightText: 2024-2026 Toms Trasuns <toms.trasuns@posteo.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-20 00:54+0000\n"
-"PO-Revision-Date: 2025-06-21 13:41+0300\n"
-"Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
+"PO-Revision-Date: 2026-11-23 11:41+0200\n"
+"Last-Translator: Toms Trasūns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
-"X-Generator: Lokalize 25.04.2\n"
+"X-Generator: Lokalize 26.08.3\n"
 
 #: ui/main.qml:28
 #, kde-kuit-format
@@ -139,46 +139,40 @@ msgid "Control of pointer and keyboard:"
 msgstr "Rādītāja un tastatūras kontrole:"
 
 #: ui/main.qml:146
-#, fuzzy, kde-format
-#| msgctxt "@option:radio Listening for mouse buttons is allowed"
-#| msgid "Allowed"
+#, kde-format
 msgctxt ""
 "@option:check Allowed control of pointer and keyboard without asking for "
 "permissions for allowed apps"
 msgid "Allowed apps"
-msgstr "Atļauta"
+msgstr "Atļautās lietojumprogrammas"
 
 #: ui/main.qml:156
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
-msgstr ""
+msgstr "Apskatīt atļautās prorgammas…"
 
 #: ui/main.qml:160
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Control of pointer and keyboard:"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
 "button"
 msgid "Applications allowed to control the pointer and keyboard"
-msgstr "Rādītāja un tastatūras kontrole:"
+msgstr "Programmas, kurām ir atļauts kontrolēt rādītāju un tastatūru"
 
 #: ui/main.qml:165
 #, kde-format
 msgctxt "@action:button"
 msgid "See Denied Applications…"
-msgstr ""
+msgstr "Skatīt liegtās programmas…"
 
 #: ui/main.qml:169
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Control of pointer and keyboard:"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See denied applications' "
 "button"
 msgid "Applications never allowed to control the pointer and keyboard"
-msgstr "Rādītāja un tastatūras kontrole:"
+msgstr "Lietojumprogrammas, kurās ir liegts kontrolēt rādītāju un tastatūru"
 
 #: ui/main.qml:178
 #, kde-format
@@ -188,13 +182,12 @@ msgid ""
 "will be able to take control of the computer, because XWayland-using apps’ "
 "identities can’t be verified"
 msgstr ""
+"Vidēja drošība. Programmas, kas lieto „XWayland“ un apgalvo, ka ir šajā "
+"sarakstā, varēs pārņem kontroli pār ierīci, jo „XWayland“ programmu "
+"identitāti nav iespējams pārbaudīt"
 
 #: ui/main.qml:184
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check Allow control of pointer and keyboard without asking for "
-#| "permission"
-#| msgid "Allow without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
 "permission"
@@ -223,7 +216,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
-msgstr ""
+msgstr "Neļaut „%1“ kontrolēt rādītāju un tastatūru bez jautāšanas"
 
 #~ msgctxt "@info"
 #~ msgid "Changes will take effect the next time you log in."

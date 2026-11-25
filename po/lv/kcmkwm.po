@@ -5,50 +5,46 @@
 # Viesturs Zarins <viesturs.zarins@mii.lu.lv>, 2008.
 # Viesturs Zariņš <viesturs.zarins@mii.lu.lv>, 2009.
 # Rūdofls Mazurs <rudolfs.mazurs@gmail.com>, 2011.
-# SPDX-FileCopyrightText: 2024, 2025 Toms Trasuns <toms.trasuns@posteo.net>
+# SPDX-FileCopyrightText: 2024-2026 Toms Trasuns <toms.trasuns@posteo.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-03 00:56+0000\n"
-"PO-Revision-Date: 2025-08-19 11:20+0300\n"
+"PO-Revision-Date: 2026-11-23 12:26+0200\n"
 "Last-Translator: Toms Trasūns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.08.0\n"
+"X-Generator: Lokalize 26.08.3\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
 
 #: ui/Focus.qml:22
-#, fuzzy, kde-format
-#| msgid "Window &activation policy:"
+#, kde-format
 msgctxt "@label:listbox"
 msgid "Window focus policy:"
-msgstr "Loga &aktivizēšanas politika:"
+msgstr "Loga fokusēšanas politika:"
 
 #: ui/Focus.qml:46
-#, fuzzy, kde-format
-#| msgctxt "sassa asas"
-#| msgid "Click to focus"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Click to focus"
-msgstr "Klikšķināt lai fokusētu"
+msgstr "Klikšķināt, lai fokusētu"
 
 #: ui/Focus.qml:47
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window becomes focused when clicked."
-msgstr ""
+msgstr "Logs iegūst fokusu pēc uzklikšķināšanas uz tā"
 
 #: ui/Focus.qml:51
-#, fuzzy, kde-format
-#| msgid "Focus follows mouse"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus follows pointer"
-msgstr "Fokuss seko pelei"
+msgstr "Fokuss seko rādītājam"
 
 #: ui/Focus.qml:52
 #, kde-format
@@ -57,19 +53,20 @@ msgid ""
 "As the pointer moves, windows under it become focused after a configurable "
 "delay."
 msgstr ""
+"Rādītājam pārvietojoties, logi zem tā pēc konfigurējamas aiztures iegūst "
+"fokusu."
 
 #: ui/Focus.qml:56
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgctxt "@item:inlistbox Window focus policy"
 msgid "Focus under pointer"
-msgstr "Fokuss zem peles"
+msgstr "Fokuss zem rādītāja"
 
 #: ui/Focus.qml:57
 #, kde-format
 msgctxt "@info:tooltip Window focus policy"
 msgid "Window under pointer receives focus, even if the pointer has not moved."
-msgstr ""
+msgstr "Logs zem rādītāja saņem fokusu pat tad, ja rādītājs nav pārvietots."
 
 #: ui/Focus.qml:75
 #, kde-kuit-format
@@ -79,48 +76,49 @@ msgid ""
 "some windows appearing on screen. This can lead to assigning focus to "
 "unwanted windows. Use with caution."
 msgstr ""
+"Atlasot <interface>Fokuss zem rādītāja</interface> iespēju, fokuss netiks "
+"novirzīts uz dažiem logiem ekrānā. Tas var likt fokusam atrasties uz "
+"nevēlamiem logiem. Lietojiet piesardzīgi."
 
 #: ui/Focus.qml:81
 #, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Last focused window"
-msgstr ""
+msgstr "Pēdējais fokusētais logs"
 
 #: ui/Focus.qml:83
 #, kde-format
 msgctxt "@title:group"
 msgid "After closing a window, move focus to:"
-msgstr ""
+msgstr "Pēc loga aizvēršanas, fokusu pārvietot uz:"
 
 #: ui/Focus.qml:86
-#, fuzzy, kde-format
-#| msgid "&Window snap zone:"
+#, kde-format
 msgctxt "@option:radio After closing a window, move focus to:"
 msgid "Window under pointer"
-msgstr "&Logu pielipšanas zona:"
+msgstr "Logu zem rādītāja"
 
 #: ui/Focus.qml:115
 #, kde-format
 msgid "&Delay focus by:"
-msgstr "&Novēlot fokusu par:"
+msgstr "&Aizturēt fokusu par:"
 
 #: ui/Focus.qml:124 ui/Focus.qml:250
 #, kde-format
 msgctxt "short for millisecond(s)"
 msgid "%1 ms"
-msgstr ""
+msgstr "%1 ms"
 
 #: ui/Focus.qml:128 ui/Focus.qml:254
-#, fuzzy, kde-format
-#| msgid " ms"
+#, kde-format
 msgctxt "short for millisecond(s)"
 msgid "ms"
-msgstr " ms"
+msgstr "ms"
 
 #: ui/Focus.qml:146
 #, kde-format
 msgid "Focus &stealing prevention:"
-msgstr "Fokusa &zaudēšanas novēršana:"
+msgstr "Fokusa &nolaupīšanas novēršana:"
 
 #: ui/Focus.qml:150 ui/MovementAndPlacement.qml:30
 #: ui/MovementAndPlacement.qml:58 ui/MovementAndPlacement.qml:87
@@ -149,18 +147,16 @@ msgid "Extreme"
 msgstr "Ekstrēma"
 
 #: ui/Focus.qml:171
-#, fuzzy, kde-format
-#| msgid "Switch to that Virtual Desktop"
+#, kde-format
 msgctxt "@option:radio When focusing a window on a different Virtual Desktop:"
 msgid "Switch to window’s Virtual Desktop"
-msgstr "Pārslēgties uz šo virtuālo darbvirsmu"
+msgstr "Pārslēgties uz loga virtuālo darbvirsmu"
 
 #: ui/Focus.qml:173
-#, fuzzy, kde-format
-#| msgid "When activating a window on a different Virtual Desktop:"
+#, kde-format
 msgctxt "@title:group"
 msgid "When focusing a window on a different Virtual Desktop:"
-msgstr "Aktivizējot logu citā virtuālajā darbvirsmā:"
+msgstr "Fokusējoties uz logu uz citas darbvirsmas:"
 
 #: ui/Focus.qml:176
 #, kde-format
@@ -180,10 +176,9 @@ msgid "Raising windows:"
 msgstr "Pacelt logus:"
 
 #: ui/Focus.qml:208
-#, fuzzy, kde-format
-#| msgid "&Click raises active window"
+#, kde-format
 msgid "&Click raises focused window"
-msgstr "&Klikšķis paceļ aktīvo logu"
+msgstr "&Klikšķis paceļ fokusēto logu"
 
 #: ui/Focus.qml:228
 #, kde-format
@@ -216,17 +211,15 @@ msgid "W&indow Actions"
 msgstr "&Logu darbības"
 
 #: ui/main.qml:49
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgid "Mo&vement & Placement"
-msgstr "&Novietojums"
+msgstr "&Pārvietošana un novietojums"
 
 #: ui/MovementAndPlacement.qml:17
-#, fuzzy, kde-format
-#| msgid "Mo&vement"
+#, kde-format
 msgctxt "@title:group"
 msgid "Movement"
-msgstr "&Novietojums"
+msgstr "Pārvietošana"
 
 #: ui/MovementAndPlacement.qml:22
 #, kde-format
@@ -238,15 +231,14 @@ msgstr "&Robežu pielipšanas zona:"
 #, kde-format
 msgctxt "short for pixel(s)"
 msgid "%1 px"
-msgstr ""
+msgstr "%1 piks."
 
 #: ui/MovementAndPlacement.qml:34 ui/MovementAndPlacement.qml:62
 #: ui/MovementAndPlacement.qml:91 ui/MovementAndPlacement.qml:203
-#, fuzzy, kde-format
-#| msgid " px"
+#, kde-format
 msgctxt "short for pixel(s)"
 msgid "px"
-msgstr " px"
+msgstr "piks."
 
 #: ui/MovementAndPlacement.qml:50
 #, kde-format
@@ -272,7 +264,7 @@ msgstr "Tikai pārklājoties"
 #, kde-format
 msgctxt "@title:group"
 msgid "Placement"
-msgstr ""
+msgstr "Novietojums"
 
 #: ui/MovementAndPlacement.qml:125
 #, kde-format
@@ -313,20 +305,19 @@ msgstr "Zem peles kursora"
 #, kde-format
 msgctxt "@title:group"
 msgid "Overlay Positioning"
-msgstr ""
+msgstr "Virsekrāna paziņojuma novietojums"
 
 #: ui/MovementAndPlacement.qml:152
 #, kde-format
 msgctxt "@label:chooser"
 msgid "OSD popups:"
-msgstr ""
+msgstr "Virsekrāna uznirstošie paziņojumi:"
 
 #: ui/MovementAndPlacement.qml:167
-#, fuzzy, kde-format
-#| msgid "&Picture-in-picture"
+#, kde-format
 msgctxt "@label:chooser"
 msgid "Picture-in-picture:"
-msgstr "&Attēls attēlā"
+msgstr "Attēls attēlā:"
 
 #: ui/MovementAndPlacement.qml:172
 #, kde-format
@@ -354,64 +345,55 @@ msgid "Margin:"
 msgstr "Attālums līdz malai:"
 
 #: ui/OnScreenDisplayPositionSelector.qml:80
-#, fuzzy, kde-format
-#| msgid "Top-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Top-left"
 msgstr "Augšā pa kreisi"
 
 #: ui/OnScreenDisplayPositionSelector.qml:85
-#, fuzzy, kde-format
-#| msgid "Top-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Top-center"
-msgstr "Augšā pa kreisi"
+msgstr "Augšā centrā"
 
 #: ui/OnScreenDisplayPositionSelector.qml:90
-#, fuzzy, kde-format
-#| msgid "Top-right"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Top-right"
 msgstr "Augšā pa labi"
 
 #: ui/OnScreenDisplayPositionSelector.qml:95
-#, fuzzy, kde-format
-#| msgid "Centered"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Center-left"
-msgstr "Centrā"
+msgstr "Centrā pa kreisi"
 
 #: ui/OnScreenDisplayPositionSelector.qml:100
-#, fuzzy, kde-format
-#| msgid "Centered"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Center"
 msgstr "Centrā"
 
 #: ui/OnScreenDisplayPositionSelector.qml:105
-#, fuzzy, kde-format
-#| msgid "Centered"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Center-right"
-msgstr "Centrā"
+msgstr "Centrā pa labi"
 
 #: ui/OnScreenDisplayPositionSelector.qml:110
-#, fuzzy, kde-format
-#| msgid "Bottom-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Bottom-left"
-msgstr "Apakšā pe kreisi"
+msgstr "Apakšā pa kreisi"
 
 #: ui/OnScreenDisplayPositionSelector.qml:115
-#, fuzzy, kde-format
-#| msgid "Bottom-left"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Bottom-center"
-msgstr "Apakšā pe kreisi"
+msgstr "Apakšā centrā"
 
 #: ui/OnScreenDisplayPositionSelector.qml:120
-#, fuzzy, kde-format
-#| msgid "Bottom-right"
+#, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Bottom-right"
 msgstr "Apakšā pa labi"
@@ -420,7 +402,7 @@ msgstr "Apakšā pa labi"
 #, kde-format
 msgctxt "@option:radio Position of on-screen displays"
 msgid "Lower center"
-msgstr ""
+msgstr "Zemāk centrā"
 
 #: ui/TitlebarActions.qml:20 ui/TitlebarActions.qml:33 ui/WindowActions.qml:31
 #, kde-format
@@ -457,22 +439,19 @@ msgid "Window menu"
 msgstr "Loga izvēlne"
 
 #: ui/TitlebarActions.qml:30 ui/WindowActions.qml:23 ui/WindowActions.qml:54
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and raise"
-msgstr "Fokuss zem peles"
+msgstr "Fokusēt un pacelt"
 
 #: ui/TitlebarActions.qml:31
-#, fuzzy, kde-format
-#| msgid "Focus under mouse"
+#, kde-format
 msgid "Focus and lower"
-msgstr "Fokuss zem peles"
+msgstr "Fokusēt un nolaist"
 
 #: ui/TitlebarActions.qml:32 ui/WindowActions.qml:22 ui/WindowActions.qml:53
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgid "Focus"
-msgstr "&Fokuss"
+msgstr "Fokusēt"
 
 #: ui/TitlebarActions.qml:43 ui/TitlebarActions.qml:57
 #, kde-format
@@ -535,12 +514,11 @@ msgid "Titlebar and Frame Actions"
 msgstr "Virsrakstjoslas un ietvara darbības"
 
 #: ui/TitlebarActions.qml:111
-#, fuzzy, kde-format
-#| msgid "&Focus"
+#, kde-format
 msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for focused windows"
 msgid "Focused"
-msgstr "&Fokuss"
+msgstr "Fokusēts"
 
 #: ui/TitlebarActions.qml:116
 #, kde-format
@@ -548,7 +526,7 @@ msgctxt ""
 "@label for a group of comboboxes Left/Middle/Right-Click for unfocused "
 "windows"
 msgid "Unfocused"
-msgstr ""
+msgstr "Nav fokusēts"
 
 #: ui/TitlebarActions.qml:122 ui/WindowActions.qml:46
 #, kde-format
@@ -559,13 +537,13 @@ msgstr "&Kreisais klikšķi:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on a focused titlebar or frame"
-msgstr ""
+msgstr "Kreisais klikšķis uz fokusā esošas virsrakstjoslas vai rāmja"
 
 #: ui/TitlebarActions.qml:143
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Left click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "Kreisais klikšķis uz fokusā neesošas virsrakstjoslas vai rāmja"
 
 #: ui/TitlebarActions.qml:160 ui/WindowActions.qml:68
 #, kde-format
@@ -576,13 +554,13 @@ msgstr "&Vidējais klikšķis:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on a focused titlebar or frame"
-msgstr ""
+msgstr "Vidējais klikšķis uz fokusā esošas virsrakstjoslas vai rāmja"
 
 #: ui/TitlebarActions.qml:179
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Middle click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "Vidējais klikšķis uz fokusā neesošas virsrakstjoslas vai rāmja"
 
 #: ui/TitlebarActions.qml:196 ui/WindowActions.qml:83
 #, kde-format
@@ -593,13 +571,13 @@ msgstr "&Labais klikšķis:"
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on a focused titlebar or frame"
-msgstr ""
+msgstr "Labais klikšķis uz fokusā esošas virsrakstjoslas vai rāmja"
 
 #: ui/TitlebarActions.qml:215
 #, kde-format
 msgctxt "@label:listbox accessible name"
 msgid "Right click on an unfocused titlebar or frame"
-msgstr ""
+msgstr "Labais klikšķis uz fokusā neesošas virsrakstjoslas vai rāmja"
 
 #: ui/TitlebarActions.qml:233
 #, kde-format
@@ -629,12 +607,12 @@ msgstr "Labais &klikšķis:"
 #: ui/WindowActions.qml:20 ui/WindowActions.qml:51
 #, kde-format
 msgid "Focus, raise, and click through"
-msgstr ""
+msgstr "Fokusēt, pacelt un klikšķināt"
 
 #: ui/WindowActions.qml:21 ui/WindowActions.qml:52
 #, kde-format
 msgid "Focus and click through"
-msgstr ""
+msgstr "Fokusēt un klikšķināt"
 
 #: ui/WindowActions.qml:27
 #, kde-format
@@ -642,16 +620,14 @@ msgid "Move"
 msgstr "Pārvietot"
 
 #: ui/WindowActions.qml:28
-#, fuzzy, kde-format
-#| msgid "Activate, raise and move"
+#, kde-format
 msgid "Focus, raise, and move"
-msgstr "Aktivizēt, pacelt un pārvietot"
+msgstr "Fokusēt, pacelt un pārvietot"
 
 #: ui/WindowActions.qml:29
-#, fuzzy, kde-format
-#| msgid "Activate, raise and move"
+#, kde-format
 msgid "Focus, raise, and resize"
-msgstr "Aktivizēt, pacelt un pārvietot"
+msgstr "Fokusēt, pacelt un mainīt izmēru"
 
 #: ui/WindowActions.qml:30
 #, kde-format
@@ -669,17 +645,15 @@ msgid "Increase opacity"
 msgstr "Palielināt necaurspīdīgumu"
 
 #: ui/WindowActions.qml:42
-#, fuzzy, kde-format
-#| msgid "Inactive Inner Window Actions"
+#, kde-format
 msgctxt "@title:group"
 msgid "Unfocused Inner Window Actions"
-msgstr "Neaktīva iekšējā loga darbības"
+msgstr "Nefokusēta iekšējā loga darbības"
 
 #: ui/WindowActions.qml:50
-#, fuzzy, kde-format
-#| msgid "Activate, pass click and raise on release"
+#, kde-format
 msgid "Focus, click through, and raise on release"
-msgstr "Aktivizēt, padot klikšķi un pacelt pēc atlaišanas"
+msgstr "Fokusēt, klikšķināt un pacelt pēc klikšķa atlaišanas"
 
 #: ui/WindowActions.qml:103
 #, kde-format
@@ -687,22 +661,19 @@ msgid "Scroll"
 msgstr "Ritināt"
 
 #: ui/WindowActions.qml:104
-#, fuzzy, kde-format
-#| msgid "Activate and scroll"
+#, kde-format
 msgid "Focus and scroll"
-msgstr "Aktivizēt un ritināt"
+msgstr "Fokusēt un ritināt"
 
 #: ui/WindowActions.qml:105
-#, fuzzy, kde-format
-#| msgid "Activate, raise and scroll"
+#, kde-format
 msgid "Focus, raise, and scroll"
-msgstr "Aktivizēt, pacelt un ritināt"
+msgstr "Fokusēt, pacelt un ritināt"
 
 #: ui/WindowActions.qml:120
-#, fuzzy, kde-format
-#| msgid "Inner Window, Titlebar and Frame Actions"
+#, kde-format
 msgid "Inner Window, Titlebar, and Frame Actions"
-msgstr "Iekšējā loga, virsrakstjoslas un ietvara darbības"
+msgstr "Iekšējā loga, virsraksta joslas un rāmja darbības"
 
 #: ui/WindowActions.qml:123
 #, kde-format
