@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-04 03:16+0000\n"
-"PO-Revision-Date: 2026-09-09 22:03+0200\n"
+"POT-Creation-Date: 2026-11-25 03:27+0000\n"
+"PO-Revision-Date: 2026-11-24 22:23+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 26.08.0\n"
+"X-Generator: Lokalize 26.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -167,7 +167,7 @@ msgstr "В цветовия профил липсват TRC тагове"
 #: core/iccprofile.cpp:552
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "Не можаха да се обърнат тоналните криви на ICC профила \"%1\""
+msgstr "Не можаха да се обърнат тоналните криви на ICC профила „%1“"
 
 #: debug_console.cpp:87
 #, kde-format
@@ -4377,30 +4377,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Не отговаря)"
 
-#: workspace.cpp:1348
+#: workspace.cpp:1360
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Вграден екран"
 
-#: workspace.cpp:1361
+#: workspace.cpp:1373
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1371
+#: workspace.cpp:1383
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1374
+#: workspace.cpp:1386
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2```"
 
-#: workspace.cpp:1843
+#: workspace.cpp:1855
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-04 03:16+0000\n"
+"POT-Creation-Date: 2026-11-25 03:27+0000\n"
 "PO-Revision-Date: 2026-11-11 20:46+0200\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -4428,31 +4428,31 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(не отвечает)"
 
-#: workspace.cpp:1348
+#: workspace.cpp:1360
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Встроенный экран"
 
-#: workspace.cpp:1361
+#: workspace.cpp:1373
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1371
+#: workspace.cpp:1383
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1374
+#: workspace.cpp:1386
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
 # BUGME: please proofread this translation, it's full of worms --aspotashev
-#: workspace.cpp:1843
+#: workspace.cpp:1855
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
