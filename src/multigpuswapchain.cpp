@@ -158,6 +158,7 @@ struct CopyRet
     ModifierList sourceModifiers;
 };
 static std::optional<CopyRet> createCopy(RenderDevice *device,
+                                         RenderDevice *otherDevice,
                                          BufferType targetType,
                                          uint32_t sourceFormat,
                                          const ModifierList &sourceModifiers,
@@ -169,7 +170,7 @@ static std::optional<CopyRet> createCopy(RenderDevice *device,
     // use Vulkan if possible.
     // NOTE that using Vulkan to copy from an Nvidia GPU to a dmabuf in system memory
     // causes glitches due to a driver bug, so that path is disabled by default for now
-    if (device->vulkanDevice() && s_allowVulkanCopy.value_or(!device->isNvidia() || targetType != BufferType::SystemMemory || hostAllocator)) {
+    if (device->vulkanDevice() && s_allowVulkanCopy.value_or(!device->isNvidia() || !otherDevice->isIntel() || targetType != BufferType::SystemMemory || hostAllocator)) {
         auto retModifiers = device->vulkanDevice()->transferFormats()[sourceFormat].intersected(sourceModifiers);
         if (!retModifiers.empty()) {
             const auto fmt = chooseFormat(sourceFormat, device->vulkanDevice()->transferFormats(), formats);
@@ -280,33 +281,33 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::createForSampling(RenderDe
             const auto alignment = std::lcm(*sourceDevice->vulkanDevice()->minImportedHostPointerAlignment(),
                                             *destination->vulkanDevice()->minImportedHostPointerAlignment());
             hostAllocator = std::make_shared<HostMemoryGraphicsBufferAllocator>(alignment);
-            firstCopy = createCopy(sourceDevice, BufferType::SystemMemory, format, {modifier}, hostAllocator.get(),
+            firstCopy = createCopy(sourceDevice, destination, BufferType::SystemMemory, format, {modifier}, hostAllocator.get(),
                                    destination->allImportableFormats(), options, hostAllocator);
             if (!firstCopy) {
                 hostAllocator.reset();
             }
         }
         if (!firstCopy && sysMemDevice) {
-            firstCopy = createCopy(sourceDevice, BufferType::SystemMemory, format, {modifier},
+            firstCopy = createCopy(sourceDevice, destination, BufferType::SystemMemory, format, {modifier},
                                    sysMemDevice->allocator(), destination->allImportableFormats(), options);
         }
         if (!firstCopy) {
-            firstCopy = createCopy(sourceDevice, BufferType::SystemMemory, format, {modifier}, fallbackDevice->allocator(), destination->allImportableFormats(), options);
+            firstCopy = createCopy(sourceDevice, destination, BufferType::SystemMemory, format, {modifier}, fallbackDevice->allocator(), destination->allImportableFormats(), options);
         }
         if (!firstCopy) {
             return nullptr;
         }
-        auto secondCopy = createCopy(destination, BufferType::DeviceMemory, firstCopy->copy->format(), {firstCopy->copy->modifier()}, destination->allocator(), importFormats, options, hostAllocator);
+        auto secondCopy = createCopy(destination, sourceDevice, BufferType::DeviceMemory, firstCopy->copy->format(), {firstCopy->copy->modifier()}, destination->allocator(), importFormats, options, hostAllocator);
         if (!secondCopy) {
             return nullptr;
         }
         return std::make_unique<MultiGpuSwapchain>(std::move(firstCopy->copy), std::move(secondCopy->copy), format);
     } else {
         if (sysMemDevice) {
-            firstCopy = createCopy(sourceDevice, BufferType::SystemMemory, format, {modifier}, sysMemDevice->allocator(), importFormats, options);
+            firstCopy = createCopy(sourceDevice, destination, BufferType::SystemMemory, format, {modifier}, sysMemDevice->allocator(), importFormats, options);
         }
         if (!firstCopy) {
-            firstCopy = createCopy(sourceDevice, BufferType::SystemMemory, format, {modifier}, fallbackDevice->allocator(), importFormats, options);
+            firstCopy = createCopy(sourceDevice, destination, BufferType::SystemMemory, format, {modifier}, fallbackDevice->allocator(), importFormats, options);
         }
         if (!firstCopy) {
             return nullptr;
@@ -347,7 +348,7 @@ std::optional<MultiGpuSwapchain::AllocationInfo> MultiGpuSwapchain::createForSca
         if (!retModifiers.isEmpty()) {
             // We can use the source buffer directly, since it's already in system memory.
             options.scanout = true;
-            auto copy = createCopy(destination, BufferType::SystemMemory, format, modifiers, targetDevice->allocator(), importFormats, options);
+            auto copy = createCopy(destination, sourceDevice, BufferType::SystemMemory, format, modifiers, targetDevice->allocator(), importFormats, options);
             if (copy) {
                 return AllocationInfo{
                     .swapchain = std::make_unique<MultiGpuSwapchain>(std::move(copy->copy), nullptr, format),
@@ -369,22 +370,22 @@ std::optional<MultiGpuSwapchain::AllocationInfo> MultiGpuSwapchain::createForSca
         const auto alignment = std::lcm(*sourceDevice->vulkanDevice()->minImportedHostPointerAlignment(),
                                         *destination->vulkanDevice()->minImportedHostPointerAlignment());
         hostAllocator = std::make_shared<HostMemoryGraphicsBufferAllocator>(alignment);
-        firstCopy = createCopy(sourceDevice, BufferType::SystemMemory, format, modifiers, hostAllocator.get(), destination->allImportableFormats(), options, hostAllocator);
+        firstCopy = createCopy(sourceDevice, destination, BufferType::SystemMemory, format, modifiers, hostAllocator.get(), destination->allImportableFormats(), options, hostAllocator);
         if (!firstCopy) {
             hostAllocator.reset();
         }
     }
     if (!firstCopy && sysMemDevice) {
-        firstCopy = createCopy(sourceDevice, BufferType::SystemMemory, format, modifiers, sysMemDevice->allocator(), destination->allImportableFormats(), options);
+        firstCopy = createCopy(sourceDevice, destination, BufferType::SystemMemory, format, modifiers, sysMemDevice->allocator(), destination->allImportableFormats(), options);
     }
     if (!firstCopy) {
-        firstCopy = createCopy(sourceDevice, BufferType::SystemMemory, format, modifiers, fallbackDevice->allocator(), destination->allImportableFormats(), options);
+        firstCopy = createCopy(sourceDevice, destination, BufferType::SystemMemory, format, modifiers, fallbackDevice->allocator(), destination->allImportableFormats(), options);
     }
     if (!firstCopy) {
         return std::nullopt;
     }
     options.scanout = true;
-    auto secondCopy = createCopy(destination, BufferType::DeviceMemory, format, {firstCopy->copy->modifier()}, targetDevice->allocator(), importFormats, options, hostAllocator);
+    auto secondCopy = createCopy(destination, sourceDevice, BufferType::DeviceMemory, format, {firstCopy->copy->modifier()}, targetDevice->allocator(), importFormats, options, hostAllocator);
     if (!secondCopy) {
         return std::nullopt;
     }
