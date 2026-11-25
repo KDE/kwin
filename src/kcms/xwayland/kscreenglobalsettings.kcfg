@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: 2026 Kai Uwe Broulik <kde@broulik.de>
+SPDX-License-Identifier: BSD-2-Clause
+-->
+<kcfg xmlns="https://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="https://www.kde.org/standards/kcfg/1.0
+                          https://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <kcfgfile name="kdeglobals"/>
+  <group name="KScreen">
+    <entry name="xwaylandClientsScale" key="XwaylandClientsScale" type="Bool">
+      <default>true</default>
+    </entry>
+  </group>
+</kcfg>
+

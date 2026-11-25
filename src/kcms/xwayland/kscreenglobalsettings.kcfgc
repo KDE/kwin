@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: 2026 Kai Uwe Broulik <kde@broulik.de>
+# SPDX-License-Identifier: CC0-1.0
+File=kscreenglobalsettings.kcfg
+ClassName=KScreenGlobalSettings
+Mutators=true
+DefaultValueGetters=true
+GenerateProperties=true
+ParentInConstructor=true
+Notifiers=true
+ItemAccessors=true

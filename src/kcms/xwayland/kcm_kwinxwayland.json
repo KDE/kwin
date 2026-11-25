@@ -104,7 +104,7 @@
         "Name[zh_CN]": "旧式 X11 应用程序支持",
         "Name[zh_TW]": "舊式 X11 應用程式支援"
     },
-    "X-KDE-Keywords": "xwayland,global,keys,forward",
+    "X-KDE-Keywords": "xwayland,global,keys,forward,scale,scaling",
     "X-KDE-Keywords[ar]": "إكسوايلاند,العالمية,مفاتيح,إلى الأمام",
     "X-KDE-Keywords[bg]": "xwayland,глобално,ключове,напред",
     "X-KDE-Keywords[ca@valencia]": "xwayland,global,tecles,reenviament",

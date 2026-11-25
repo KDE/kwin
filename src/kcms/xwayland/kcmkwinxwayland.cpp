@@ -26,8 +26,10 @@ KcmXwayland::KcmXwayland(QObject *parent, const KPluginMetaData &metaData)
     : KQuickManagedConfigModule(parent, metaData)
     , m_data(new KWinXwaylandData(this))
     , m_settings(new KWinXwaylandSettings(m_data))
+    , m_kscreenSettings(new KScreenGlobalSettings(m_data))
 {
     registerSettings(m_settings);
+    registerSettings(m_kscreenSettings);
     qmlRegisterAnonymousType<KWinXwaylandSettings>("org.kde.kwin.kwinxwaylandsettings", 1);
 }
 

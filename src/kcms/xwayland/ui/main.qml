@@ -25,7 +25,7 @@ KCM.SimpleKCM {
         QQC2.Label {
             Layout.fillWidth: true
             Layout.margins: Kirigami.Units.gridUnit
-            text: xi18nc("@info:usagetip", "Legacy X11 apps with global shortcuts and other features accessed while running in the background need to be able to listen for keystrokes all the time.<nl/><nl/>If you use any of these apps, you can choose your preferred balance of security and compatibility here.")
+            text: xi18nc("@info:usagetip", "Legacy X11 apps with global shortcuts and other features accessed while running in the background need to be able to listen for keystrokes all the time. They also often don't support screen scaling.<nl/><nl/>If you use any of these apps, you can choose your preferred balance of security and compatibility here.")
             wrapMode: Text.Wrap
         }
 
@@ -199,6 +199,43 @@ KCM.SimpleKCM {
                     type: Kirigami.MessageType.Warning
                     text: i18nc("@info:usagetip", "Note that using this setting will drastically reduce system security and permit malicious software to take complete control of your pointer and keyboard. Make sure you understand and accept this risk.")
                     visible: totalControl.checked
+                }
+            }
+
+            QQC2.ButtonGroup {
+                id: scalingGroup
+            }
+
+            Kirigami.FormGroup {
+                Kirigami.FormEntry {
+                    title: i18nc("@title:group screen scaling/high-dpi", "Scaling:")
+                    contentItem: QQC2.RadioButton {
+                        text: i18nc("The apps themselves should scale to fit the displays", "Apply scaling themselves")
+                        checked: kcm.kscreenSettings.xwaylandClientsScale
+                        onToggled: kcm.kscreenSettings.xwaylandClientsScale = checked
+                        QQC2.ButtonGroup.group: scalingGroup
+
+                        KCM.SettingStateBinding {
+                            configObject: kcm.kscreenSettings
+                            settingName: "xwaylandClientsScale"
+                        }
+                    }
+                    subtitle: i18nc("@info:usagetip", "Legacy Applications that support scaling will use it and look crisp, however those that don’t will not be scaled at all")
+                }
+
+                Kirigami.FormEntry {
+                    contentItem: QQC2.RadioButton {
+                        text: i18nc("The system will perform the x11 apps scaling", "Scaled by the system")
+                        checked: !kcm.kscreenSettings.xwaylandClientsScale
+                        onToggled: kcm.kscreenSettings.xwaylandClientsScale = !checked
+                        QQC2.ButtonGroup.group: scalingGroup
+
+                        KCM.SettingStateBinding {
+                            configObject: kcm.kscreenSettings
+                            settingName: "xwaylandClientsScale"
+                        }
+                    }
+                    subtitle: i18nc("@info:usagetip", "All legacy applications will be scaled by the system to the correct size, however they will always look slightly blurry")
                 }
             }
         }
