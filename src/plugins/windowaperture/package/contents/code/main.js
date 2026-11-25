@@ -28,8 +28,6 @@ var badBadWindowsEffect = {
         var xOffset = screenGeo.width / 16;
         var yOffset = screenGeo.height / 16;
         if (showing) {
-            var closestWindows = [ undefined, undefined, undefined, undefined ];
-            var movedWindowsCount = 0;
             for (var i = 0; i < stackingOrder.length; ++i) {
                 var w = stackingOrder[i];
 
@@ -59,56 +57,16 @@ var badBadWindowsEffect = {
                 var dr = screenGeo.x + screenGeo.width - geo.x;
                 var dt = geo.y + geo.height - screenGeo.y;
                 var db = screenGeo.y + screenGeo.height - geo.y;
-                w.apertureDistances = [ dl + dt, dr + dt, dr + db, dl + db ];
-                movedWindowsCount += 1;
+                var distances = [ dl + dt, dr + dt, dr + db, dl + db ];
 
-                // if this window is the closest one to any corner, set it as preferred there
                 var nearest = 0;
                 for (var j = 1; j < 4; ++j) {
-                    if (w.apertureDistances[j] < w.apertureDistances[nearest] ||
-                        (w.apertureDistances[j] == w.apertureDistances[nearest] && closestWindows[j] === undefined)) {
+                    if (distances[j] < distances[nearest]) {
                         nearest = j;
                     }
                 }
-                if (closestWindows[nearest] === undefined ||
-                    closestWindows[nearest].apertureDistances[nearest] > w.apertureDistances[nearest])
-                    closestWindows[nearest] = w;
+                w.apertureCorner = nearest;
             }
-
-            // second pass, select corners
-
-            // 1st off, move the nearest windows to their nearest corners
-            // this will ensure that if there's only on window in the lower right
-            // it won't be moved out to the upper left
-            var movedWindowsDec = [ 0, 0, 0, 0 ];
-            for (var i = 0; i < 4; ++i) {
-                if (closestWindows[i] === undefined)
-                    continue;
-                closestWindows[i].apertureCorner = i;
-                delete closestWindows[i].apertureDistances;
-                movedWindowsDec[i] = 1;
-            }
-
-            // 2nd, distribute the remainders according to their preferences
-            // this doesn't exactly have heapsort performance ;-)
-            movedWindowsCount = Math.floor((movedWindowsCount + 3) / 4);
-            for (var i = 0; i < 4; ++i) {
-                for (var j = 0; j < movedWindowsCount - movedWindowsDec[i]; ++j) {
-                    var bestWindow = undefined;
-                    for (var k = 0; k < stackingOrder.length; ++k) {
-                        if (stackingOrder[k].apertureDistances === undefined)
-                            continue;
-                        if (bestWindow === undefined ||
-                            stackingOrder[k].apertureDistances[i] < bestWindow.apertureDistances[i])
-                            bestWindow = stackingOrder[k];
-                    }
-                    if (bestWindow === undefined)
-                        break;
-                    bestWindow.apertureCorner = i;
-                    delete bestWindow.apertureDistances;
-                }
-            }
-
         }
 
         // actually re/move windows from/to assigned corners
