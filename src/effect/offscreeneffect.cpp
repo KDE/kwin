@@ -30,7 +30,7 @@ struct OffscreenData
 public:
     virtual ~OffscreenData();
     void setDirty();
-    void setShader(GLShader *newShader);
+    void setShader(FragmentShaderInfo *shader);
     void setVertexSnappingMode(RenderGeometry::VertexSnappingMode mode);
 
     void paint(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, const Region &deviceRegion,
@@ -44,7 +44,9 @@ public:
     std::shared_ptr<ColorDescription> m_colorDescription = ColorDescription::sRGB;
     bool m_isDirty = true;
     bool m_recursionGuard = false;
-    GLShader *m_shader = nullptr;
+    std::unique_ptr<GLShader> m_shader;
+    FragmentShaderInfo *m_shaderInfo = nullptr;
+    QString m_shaderPath;
     RenderGeometry::VertexSnappingMode m_vertexSnappingMode = RenderGeometry::VertexSnappingMode::Round;
     QMetaObject::Connection m_windowDamagedConnection;
     QMetaObject::Connection m_windowOpacityChangedConnection;
@@ -108,7 +110,7 @@ void OffscreenEffect::unredirect(EffectWindow *window)
     }
 }
 
-void OffscreenEffect::setShader(EffectWindow *window, GLShader *shader)
+void OffscreenEffect::setShader(EffectWindow *window, FragmentShaderInfo *shader)
 {
     if (const auto it = d->windows.find(window); it != d->windows.end()) {
         it->second->setShader(shader);
@@ -220,9 +222,9 @@ void OffscreenData::setDirty()
     m_isDirty = true;
 }
 
-void OffscreenData::setShader(GLShader *newShader)
+void OffscreenData::setShader(FragmentShaderInfo *shader)
 {
-    m_shader = newShader;
+    m_shaderInfo = shader;
 }
 
 void OffscreenData::setVertexSnappingMode(RenderGeometry::VertexSnappingMode mode)
@@ -238,7 +240,16 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     }
     auto texture = EglContext::currentContext()->importDmaBufAsTexture(m_slot->buffer());
 
-    GLShader *shader = m_shader ? m_shader : ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation | ShaderTrait::TransformColorspace);
+    const QString shaderPath = m_shaderInfo ? m_shaderInfo->m_path : QString();
+    if (m_shaderPath != shaderPath) {
+        m_shaderPath = shaderPath;
+        if (shaderPath.isEmpty()) {
+            m_shader.reset();
+        } else {
+            m_shader = ShaderManager::instance()->generateShaderFromFile(m_shaderInfo->m_traits, {}, shaderPath);
+        }
+    }
+    GLShader *shader = m_shader ? m_shader.get() : ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation | ShaderTrait::TransformColorspace);
     ShaderBinder binder(shader);
 
     const double scale = viewport.scale();
@@ -278,6 +289,26 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     shader->setUniform(GLShader::IntUniform::TextureWidth, texture->width());
     shader->setUniform(GLShader::IntUniform::TextureHeight, texture->height());
     shader->setColorspaceUniforms(m_colorDescription, renderTarget.colorDescription(), RenderingIntent::Perceptual);
+    if (m_shaderInfo) {
+        for (const auto &[name, value] : m_shaderInfo->m_floatUniforms.asKeyValueRange()) {
+            shader->setUniform(name, value);
+        }
+        for (const auto &[name, value] : m_shaderInfo->m_colorUniforms.asKeyValueRange()) {
+            shader->setUniform(name, value);
+        }
+        for (const auto &[name, value] : m_shaderInfo->m_matrix3x3Uniforms.asKeyValueRange()) {
+            shader->setUniform(name, value);
+        }
+        for (const auto &[name, value] : m_shaderInfo->m_vector2DUniforms.asKeyValueRange()) {
+            shader->setUniform(name, value);
+        }
+        for (const auto &[name, value] : m_shaderInfo->m_vector3DUniforms.asKeyValueRange()) {
+            shader->setUniform(name, value);
+        }
+        for (const auto &[name, value] : m_shaderInfo->m_vector4DUniforms.asKeyValueRange()) {
+            shader->setUniform(name, value);
+        }
+    }
 
     const bool clipping = deviceRegion != Region::infinite();
     const Region clipRegion = clipping ? viewport.transform().map(deviceRegion, renderTarget.transformedSize()) : Region::infinite();
@@ -489,7 +520,7 @@ void CrossFadeEffect::handleWindowDeleted(EffectWindow *window)
     unredirect(window);
 }
 
-void CrossFadeEffect::setShader(EffectWindow *window, GLShader *shader)
+void CrossFadeEffect::setShader(EffectWindow *window, FragmentShaderInfo *shader)
 {
     if (const auto it = d->windows.find(window); it != d->windows.end()) {
         it->second->setShader(shader);
