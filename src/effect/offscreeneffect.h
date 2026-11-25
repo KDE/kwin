@@ -7,7 +7,10 @@
 #pragma once
 
 #include "effect/effect.h"
+#include "opengl/glshadermanager.h"
 #include "scene/itemgeometry.h"
+
+#include <QMatrix3x3>
 
 namespace KWin
 {
@@ -16,6 +19,26 @@ class GLShader;
 class OffscreenEffectPrivate;
 class CrossFadeEffectPrivate;
 class ShaderEffectPrivate;
+
+/**
+ * Provides a GPU-independent alternative to GLShader, which merely
+ * holds information about a shader but no actual GPU resources.
+ * When the shader is actually applied, the GLShader can be generated
+ * on the correct GPU and the necessary uniforms set there.
+ */
+class KWIN_EXPORT FragmentShaderInfo
+{
+public:
+    QString m_path;
+    ShaderTraits m_traits;
+
+    QHash<QByteArray, float> m_floatUniforms;
+    QHash<QByteArray, QVector2D> m_vector2DUniforms;
+    QHash<QByteArray, QVector3D> m_vector3DUniforms;
+    QHash<QByteArray, QVector4D> m_vector4DUniforms;
+    QHash<QByteArray, QColor> m_colorUniforms;
+    QHash<QByteArray, QMatrix3x3> m_matrix3x3Uniforms;
+};
 
 /**
  * The OffscreenEffect class is the base class for effects that paint deformed windows.
@@ -63,7 +86,7 @@ protected:
      * Allows to specify a @p shader to draw the redirected texture for @p window.
      * Can only be called once the window is redirected.
      **/
-    void setShader(EffectWindow *window, GLShader *shader);
+    void setShader(EffectWindow *window, FragmentShaderInfo *shader);
 
     /**
      * Set what mode to use to snap the vertices of this effect.
@@ -122,7 +145,7 @@ public:
      * Can only be called once the window is redirected.
      * @since 5.25
      **/
-    void setShader(EffectWindow *window, GLShader *shader);
+    void setShader(EffectWindow *window, FragmentShaderInfo *shader);
 
     bool blocksDirectScanout() const override;
 
