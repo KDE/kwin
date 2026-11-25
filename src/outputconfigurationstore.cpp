@@ -823,12 +823,13 @@ std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(BackendOutput *
         return (mode->flags() & OutputModeline::Flag::Preferred);
     });
     const auto nativeSizeIt = std::ranges::max_element(preferredOnly, findBiggestFastest);
+    const std::shared_ptr<OutputMode> nativeSize = nativeSizeIt == preferredOnly.end() ? nullptr : *nativeSizeIt;
 
     // match progressive vs. interlaced with the preferred mode,
     // since interlaced might not actually work
-    const bool interlace = nativeSizeIt != preferredOnly.end()
-        && (*nativeSizeIt)->modeline().cvt()
-        && ((*nativeSizeIt)->modeline().cvt()->flags & DRM_MODE_FLAG_INTERLACE);
+    const bool interlace = nativeSize
+        && nativeSize->modeline().cvt()
+        && (nativeSize->modeline().cvt()->flags & DRM_MODE_FLAG_INTERLACE);
     erase_if(notPotentiallyBroken, [&](const auto &mode) {
         const auto modeCvt = mode->modeline().cvt();
         if (!modeCvt) {
@@ -842,7 +843,7 @@ std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(BackendOutput *
         return aspectRatio > 31 / 9.0 && aspectRatio < 33 / 9.0;
     };
 
-    if (nativeSizeIt == preferredOnly.end() || is32by9(*nativeSizeIt)) {
+    if (!nativeSize || is32by9(nativeSize)) {
         // 32:9 displays often advertise a lower resolution mode as preferred, special case them
         auto only32by9 = notPotentiallyBroken | std::ranges::views::filter(is32by9);
         const auto best32By9 = std::ranges::max_element(only32by9, findBiggestFastest);
@@ -854,8 +855,8 @@ std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(BackendOutput *
     // Non-default modes have a decent chance of not working on VGA,
     // so avoid doing anything out of the ordinary there
     const bool isVGA = output->name().contains("VGA");
-    if (!isVGA && (nativeSizeIt != preferredOnly.end() || output->edid().likelyNativeResolution())) {
-        const auto size = nativeSizeIt != preferredOnly.end() ? (*nativeSizeIt)->size() : *output->edid().likelyNativeResolution();
+    if (!isVGA && (nativeSize || output->edid().likelyNativeResolution())) {
+        const auto size = nativeSize ? nativeSize->size() : *output->edid().likelyNativeResolution();
         auto correctSize = notPotentiallyBroken | std::ranges::views::filter([size](const auto &mode) {
             return mode->size() == size;
         });
