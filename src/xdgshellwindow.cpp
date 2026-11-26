@@ -1545,8 +1545,12 @@ void XdgToplevelWindow::installXdgDecoration(XdgToplevelDecorationV1Interface *d
 {
     m_xdgDecoration = decoration;
 
-    connect(m_xdgDecoration, &XdgToplevelDecorationV1Interface::destroyed,
-            this, &XdgToplevelWindow::clearDecoration);
+    connect(m_xdgDecoration, &XdgToplevelDecorationV1Interface::destroyed, this, [this]() {
+        clearDecoration();
+        if (m_isInitialized) {
+            scheduleConfigure();
+        }
+    });
     connect(m_xdgDecoration, &XdgToplevelDecorationV1Interface::preferredModeChanged, this, [this] {
         if (m_isInitialized) {
             configureDecoration();
@@ -1561,8 +1565,12 @@ void XdgToplevelWindow::installServerDecoration(ServerSideDecorationInterface *d
         configureDecoration();
     }
 
-    connect(m_serverDecoration, &ServerSideDecorationInterface::destroyed,
-            this, &XdgToplevelWindow::clearDecoration);
+    connect(m_serverDecoration, &ServerSideDecorationInterface::destroyed, this, [this]() {
+        clearDecoration();
+        if (m_isInitialized) {
+            scheduleConfigure();
+        }
+    });
     connect(m_serverDecoration, &ServerSideDecorationInterface::preferredModeChanged, this, [this]() {
         if (m_isInitialized) {
             configureDecoration();
