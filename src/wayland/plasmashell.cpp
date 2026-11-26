@@ -47,7 +47,6 @@ public:
     PlasmaShellSurfaceInterfacePrivate(PlasmaShellSurfaceInterface *q, SurfaceInterface *surface, wl_resource *resource);
     void apply(PlasmaShellSurfaceCommit *commit);
 
-    QPointer<SurfaceInterface> surface;
     PlasmaShellSurfaceInterface *q;
 
     std::optional<QPoint> m_globalPos;
@@ -114,7 +113,6 @@ void PlasmaShellInterfacePrivate::org_kde_plasma_shell_get_surface(QtWaylandServ
 PlasmaShellSurfaceInterfacePrivate::PlasmaShellSurfaceInterfacePrivate(PlasmaShellSurfaceInterface *_q, SurfaceInterface *surface, wl_resource *resource)
     : SurfaceExtension(surface)
     , QtWaylandServer::org_kde_plasma_surface(resource)
-    , surface(surface)
     , q(_q)
 {
 }
