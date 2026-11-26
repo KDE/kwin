@@ -45,41 +45,45 @@ static QString getHostName()
     return QString();
 }
 
+static std::shared_ptr<addrinfo> getAddressInfo(const QByteArray &hostName)
+{
+    addrinfo hints{};
+    hints.ai_family = PF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_flags = AI_CANONNAME;
+    addrinfo *address = nullptr;
+    const int error = getaddrinfo(hostName.constData(), nullptr, &hints, &address);
+    if (error != 0) {
+        qCDebug(KWIN_CORE) << "getaddrinfo failed with error:" << gai_strerror(error);
+        return {};
+    }
+    return std::shared_ptr<addrinfo>(address, freeaddrinfo);
+}
+
 GetAddrInfo::GetAddrInfo(const QString &hostName, QObject *parent)
     : QObject(parent)
     , m_resolving(false)
-    , m_resolved(false)
-    , m_ownResolved(false)
     , m_hostName(hostName)
-    , m_addressHints(std::make_unique<addrinfo>())
-    , m_address(nullptr)
-    , m_ownAddress(nullptr)
-    , m_watcher(std::make_unique<QFutureWatcher<int>>())
-    , m_ownAddressWatcher(std::make_unique<QFutureWatcher<int>>())
+    , m_watcher(std::make_unique<QFutureWatcher<std::shared_ptr<addrinfo>>>())
+    , m_ownAddressWatcher(std::make_unique<QFutureWatcher<std::shared_ptr<addrinfo>>>())
 {
     // watcher will be deleted together with the GetAddrInfo once the future
     // got canceled or finished
-    connect(m_watcher.get(), &QFutureWatcher<int>::canceled, this, &GetAddrInfo::deleteLater);
-    connect(m_watcher.get(), &QFutureWatcher<int>::finished, this, &GetAddrInfo::slotResolved);
-    connect(m_ownAddressWatcher.get(), &QFutureWatcher<int>::canceled, this, &GetAddrInfo::deleteLater);
-    connect(m_ownAddressWatcher.get(), &QFutureWatcher<int>::finished, this, &GetAddrInfo::slotOwnAddressResolved);
+    connect(m_watcher.get(), &QFutureWatcher<std::shared_ptr<addrinfo>>::canceled, this, &GetAddrInfo::deleteLater);
+    connect(m_watcher.get(), &QFutureWatcher<std::shared_ptr<addrinfo>>::finished, this, &GetAddrInfo::slotResolved);
+    connect(m_ownAddressWatcher.get(), &QFutureWatcher<std::shared_ptr<addrinfo>>::canceled, this, &GetAddrInfo::deleteLater);
+    connect(m_ownAddressWatcher.get(), &QFutureWatcher<std::shared_ptr<addrinfo>>::finished, this, &GetAddrInfo::slotOwnAddressResolved);
 }
 
 GetAddrInfo::~GetAddrInfo()
 {
     if (m_watcher && m_watcher->isRunning()) {
+        m_watcher->disconnect(this);
         m_watcher->cancel();
-        m_watcher->waitForFinished();
     }
     if (m_ownAddressWatcher && m_ownAddressWatcher->isRunning()) {
+        m_ownAddressWatcher->disconnect(this);
         m_ownAddressWatcher->cancel();
-        m_ownAddressWatcher->waitForFinished();
-    }
-    if (m_address) {
-        freeaddrinfo(m_address);
-    }
-    if (m_ownAddress) {
-        freeaddrinfo(m_ownAddress);
     }
 }
 
@@ -89,60 +93,43 @@ void GetAddrInfo::resolve()
         return;
     }
     m_resolving = true;
-    *m_addressHints = {};
-    m_addressHints->ai_family = PF_UNSPEC;
-    m_addressHints->ai_socktype = SOCK_STREAM;
-    m_addressHints->ai_flags |= AI_CANONNAME;
-
-    m_watcher->setFuture(QtConcurrent::run([this]() {
-        return getaddrinfo(m_hostName.toLocal8Bit().constData(), nullptr, m_addressHints.get(), &m_address);
+    m_watcher->setFuture(QtConcurrent::run([hostName = m_hostName.toLocal8Bit()] {
+        return getAddressInfo(hostName);
     }));
-    m_ownAddressWatcher->setFuture(QtConcurrent::run([this] {
-        // needs to be performed in a lambda as getHostName() returns a temporary value which would
-        // get destroyed in the main thread before the getaddrinfo thread is able to read it
-        return getaddrinfo(getHostName().toLocal8Bit().constData(), nullptr, m_addressHints.get(), &m_ownAddress);
+    m_ownAddressWatcher->setFuture(QtConcurrent::run([] {
+        return getAddressInfo(getHostName().toLocal8Bit());
     }));
 }
 
 void GetAddrInfo::slotResolved()
 {
-    if (resolved(m_watcher.get())) {
-        m_resolved = true;
-        compare();
+    m_address = m_watcher->result();
+    if (!m_address) {
+        deleteLater();
+        return;
     }
+    compare();
 }
 
 void GetAddrInfo::slotOwnAddressResolved()
 {
-    if (resolved(m_ownAddressWatcher.get())) {
-        m_ownResolved = true;
-        compare();
-    }
-}
-
-bool GetAddrInfo::resolved(QFutureWatcher<int> *watcher)
-{
-    if (!watcher->isFinished()) {
-        return false;
-    }
-    if (watcher->result() != 0) {
-        qCDebug(KWIN_CORE) << "getaddrinfo failed with error:" << gai_strerror(watcher->result());
-        // call failed;
+    m_ownAddress = m_ownAddressWatcher->result();
+    if (!m_ownAddress) {
         deleteLater();
-        return false;
+        return;
     }
-    return true;
+    compare();
 }
 
 void GetAddrInfo::compare()
 {
-    if (!m_resolved || !m_ownResolved) {
+    if (!m_address || !m_ownAddress) {
         return;
     }
-    addrinfo *address = m_address;
+    addrinfo *address = m_address.get();
     while (address) {
         if (address->ai_canonname && m_hostName == QByteArray(address->ai_canonname).toLower()) {
-            addrinfo *ownAddress = m_ownAddress;
+            addrinfo *ownAddress = m_ownAddress.get();
             bool localFound = false;
             while (ownAddress) {
                 if (ownAddress->ai_canonname && QByteArray(ownAddress->ai_canonname).toLower() == m_hostName) {

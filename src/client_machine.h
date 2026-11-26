@@ -43,16 +43,12 @@ private Q_SLOTS:
 
 private:
     void compare();
-    bool resolved(QFutureWatcher<int> *watcher);
     bool m_resolving;
-    bool m_resolved;
-    bool m_ownResolved;
     QString m_hostName;
-    std::unique_ptr<addrinfo> m_addressHints;
-    addrinfo *m_address;
-    addrinfo *m_ownAddress;
-    std::unique_ptr<QFutureWatcher<int>> m_watcher;
-    std::unique_ptr<QFutureWatcher<int>> m_ownAddressWatcher;
+    std::shared_ptr<addrinfo> m_address;
+    std::shared_ptr<addrinfo> m_ownAddress;
+    std::unique_ptr<QFutureWatcher<std::shared_ptr<addrinfo>>> m_watcher;
+    std::unique_ptr<QFutureWatcher<std::shared_ptr<addrinfo>>> m_ownAddressWatcher;
 };
 
 class ClientMachine : public QObject
