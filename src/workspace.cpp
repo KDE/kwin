@@ -1007,25 +1007,24 @@ void Workspace::addWaylandWindow(Window *window)
     Q_ASSERT(!m_windows.contains(window));
     m_windows.append(window);
     addToStack(window);
+    updateStackingOrder(true);
 
-    const bool shouldActivate = window->acceptsFocus() && !window->isPopupWindow() && mayActivateOnMap(window);
-    if (!window->isMinimized() && !shouldActivate && !window->isPopupWindow()) {
-        // This window won't be activated, so move it out of the way
-        // of the active window
-        restackWindowUnderActive(window);
+    if (!window->isPopupWindow() && !window->isMinimized()) {
+        if (window->acceptsFocus() && mayActivateOnMap(window)) {
+            activateWindow(window);
+        } else {
+            // This window won't be activated, so move it out of the way of the active window.
+            restackWindowUnderActive(window);
+            if (!window->activationToken().isEmpty()) {
+                window->demandAttention();
+            }
+        }
     }
 
-    updateStackingOrder(true);
     if (window->hasStrut()) {
         rearrange();
     }
-    if (!window->isMinimized()) {
-        if (shouldActivate) {
-            activateWindow(window);
-        } else if (!window->activationToken().isEmpty()) {
-            window->demandAttention();
-        }
-    }
+
     Q_EMIT windowAdded(window);
 }
 
