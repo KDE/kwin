@@ -38,6 +38,7 @@ private Q_SLOTS:
     void handleTextureChanged();
     void updateGeometry();
     void updateVisibility();
+    void updateOpacity();
 
 private:
     Window *m_window;

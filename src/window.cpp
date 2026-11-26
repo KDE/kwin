@@ -2687,6 +2687,11 @@ void Window::setDecoration(std::shared_ptr<KDecoration3::Decoration> decoration)
                 updateShadow();
             }
         });
+        connect(decoration.get(), &KDecoration3::Decoration::shadowOpacityChanged, this, [this]() {
+            if (!isDeleted()) {
+                updateShadow();
+            }
+        });
         connect(decoration.get(), &KDecoration3::Decoration::bordersChanged, this, [this]() {
             if (!isDeleted()) {
                 updateDecorationInputShape();

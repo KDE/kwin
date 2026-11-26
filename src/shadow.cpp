@@ -179,31 +179,42 @@ bool Shadow::init(const QList<uint32_t> &data)
                         data[ShadowElementsCount],
                         data[ShadowElementsCount + 1],
                         data[ShadowElementsCount + 2]);
+    m_opacity = 1.0;
     Q_EMIT offsetChanged();
     Q_EMIT textureChanged();
+    Q_EMIT opacityChanged();
     return true;
 }
 
 bool Shadow::init(KDecoration3::Decoration *decoration)
 {
-    if (m_decorationShadow) {
-        // disconnect previous connections
-        disconnect(m_decorationShadow.get(), &KDecoration3::DecorationShadow::innerShadowRectChanged, m_window, &Window::updateShadow);
-        disconnect(m_decorationShadow.get(), &KDecoration3::DecorationShadow::shadowChanged, m_window, &Window::updateShadow);
-        disconnect(m_decorationShadow.get(), &KDecoration3::DecorationShadow::paddingChanged, m_window, &Window::updateShadow);
-    }
-    m_decorationShadow = decoration->shadow();
-    if (!m_decorationShadow) {
-        return false;
-    }
-    // setup connections - all just mapped to recreate
-    connect(m_decorationShadow.get(), &KDecoration3::DecorationShadow::innerShadowRectChanged, m_window, &Window::updateShadow);
-    connect(m_decorationShadow.get(), &KDecoration3::DecorationShadow::shadowChanged, m_window, &Window::updateShadow);
-    connect(m_decorationShadow.get(), &KDecoration3::DecorationShadow::paddingChanged, m_window, &Window::updateShadow);
+    if (auto shadow = decoration->shadow(); m_decorationShadow != shadow) {
+        if (m_decorationShadow) {
+            // disconnect previous connections
+            disconnect(m_decorationShadow.get(), &KDecoration3::DecorationShadow::innerShadowRectChanged, m_window, &Window::updateShadow);
+            disconnect(m_decorationShadow.get(), &KDecoration3::DecorationShadow::shadowChanged, m_window, &Window::updateShadow);
+            disconnect(m_decorationShadow.get(), &KDecoration3::DecorationShadow::paddingChanged, m_window, &Window::updateShadow);
+        }
 
-    m_offset = m_decorationShadow->padding();
-    Q_EMIT offsetChanged();
-    Q_EMIT textureChanged();
+        m_decorationShadow = shadow;
+        if (!m_decorationShadow) {
+            return false;
+        }
+        // setup connections - all just mapped to recreate
+        connect(m_decorationShadow.get(), &KDecoration3::DecorationShadow::innerShadowRectChanged, m_window, &Window::updateShadow);
+        connect(m_decorationShadow.get(), &KDecoration3::DecorationShadow::shadowChanged, m_window, &Window::updateShadow);
+        connect(m_decorationShadow.get(), &KDecoration3::DecorationShadow::paddingChanged, m_window, &Window::updateShadow);
+
+        m_offset = m_decorationShadow->padding();
+        Q_EMIT offsetChanged();
+        Q_EMIT textureChanged();
+    }
+
+    if (m_opacity != decoration->shadowOpacity()) {
+        m_opacity = decoration->shadowOpacity();
+        Q_EMIT opacityChanged();
+    }
+
     return true;
 }
 
@@ -234,8 +245,10 @@ bool Shadow::init(const QPointer<ShadowInterface> &shadow)
     m_shadowElements[ShadowElementTopLeft] = shadowTileForBuffer(shadow->topLeft());
 
     m_offset = shadow->offset().toMargins();
+    m_opacity = 1.0;
     Q_EMIT offsetChanged();
     Q_EMIT textureChanged();
+    Q_EMIT opacityChanged();
     return true;
 }
 
@@ -265,8 +278,10 @@ bool Shadow::init(const QWindow *window)
     m_shadowElements[ShadowElementBottomLeft] = bottomLeftTile;
 
     m_offset = window->property("kwin_shadow_padding").value<QMargins>();
+    m_opacity = 1.0;
     Q_EMIT offsetChanged();
     Q_EMIT textureChanged();
+    Q_EMIT opacityChanged();
     return true;
 }
 

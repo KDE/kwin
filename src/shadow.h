@@ -115,10 +115,16 @@ public:
         return m_shadowElements[element];
     }
 
+    qreal opacity() const
+    {
+        return m_opacity;
+    }
+
 Q_SIGNALS:
     void offsetChanged();
     void rectChanged();
     void textureChanged();
+    void opacityChanged();
 
 public Q_SLOTS:
     void geometryChanged();
@@ -139,6 +145,7 @@ private:
     QMarginsF m_offset;
     // caches
     QSizeF m_cachedSize;
+    qreal m_opacity = 1.0;
     // Decoration based shadows
     std::shared_ptr<KDecoration3::DecorationShadow> m_decorationShadow;
 };

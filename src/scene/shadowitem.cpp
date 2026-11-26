@@ -42,11 +42,13 @@ ShadowItem::ShadowItem(Shadow *shadow, Window *window, Item *parent)
     connect(shadow, &Shadow::offsetChanged, this, &ShadowItem::updateGeometry);
     connect(shadow, &Shadow::rectChanged, this, &ShadowItem::updateGeometry);
     connect(shadow, &Shadow::textureChanged, this, &ShadowItem::handleTextureChanged);
+    connect(shadow, &Shadow::opacityChanged, this, &ShadowItem::updateOpacity);
 
     connect(window, &Window::maximizedChanged, this, &ShadowItem::updateVisibility);
     connect(window, &Window::fullScreenChanged, this, &ShadowItem::updateVisibility);
 
     updateGeometry();
+    updateOpacity();
     handleTextureChanged();
     updateVisibility();
 }
@@ -88,6 +90,11 @@ void ShadowItem::handleTextureChanged()
 void ShadowItem::updateVisibility()
 {
     setVisible(m_window->wantsShadowToBeRendered());
+}
+
+void ShadowItem::updateOpacity()
+{
+    setOpacity(m_shadow->opacity());
 }
 
 static inline void distributeHorizontally(RectF &leftRect, RectF &rightRect)
