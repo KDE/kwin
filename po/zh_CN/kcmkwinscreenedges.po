@@ -14,8 +14,8 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf6-trunk/messages/kwin/kcmkwinscreenedges.pot\n"
-"X-Crowdin-File-ID: 42991\n"
+"X-Crowdin-File: /kf6-stable/messages/kwin/kcmkwinscreenedges.pot\n"
+"X-Crowdin-File-ID: 50516\n"
 
 #: main.cpp:151 touch.cpp:119
 #, kde-format
@@ -80,12 +80,12 @@ msgstr "网格"
 #: main.cpp:168 touch.cpp:136
 #, kde-format
 msgid "Toggle window switching"
-msgstr "触发窗口切换"
+msgstr "触发窗口切换器"
 
 #: main.cpp:169 touch.cpp:137
 #, kde-format
 msgid "Toggle alternative window switching"
-msgstr "触发备选窗口切换"
+msgstr "触发第二窗口切换器"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23

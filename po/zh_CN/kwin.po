@@ -14,8 +14,8 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf6-trunk/messages/kwin/kwin.pot\n"
-"X-Crowdin-File-ID: 43661\n"
+"X-Crowdin-File: /kf6-stable/messages/kwin/kwin.pot\n"
+"X-Crowdin-File-ID: 52930\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1792,37 +1792,37 @@ msgstr "全屏窗口"
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:9
 #, kde-format
 msgid "Delay Time"
-msgstr ""
+msgstr "延迟时间"
 
 #. i18n: ectx: label, entry (DwellTime), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:13
 #, kde-format
 msgid "Dwell Time"
-msgstr ""
+msgstr "悬停时间"
 
 #. i18n: ectx: label, entry (MotionThreshold), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:17
 #, kde-format
 msgid "Motion Threshold"
-msgstr ""
+msgstr "移动阈值"
 
 #. i18n: ectx: label, entry (DefaultButton), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:21
 #, kde-format
 msgid "Default Button"
-msgstr ""
+msgstr "默认按钮"
 
 #. i18n: ectx: label, entry (ButtonLocked), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:33
 #, kde-format
 msgid "Lock Button"
-msgstr ""
+msgstr "锁定按钮"
 
 #. i18n: ectx: label, entry (DwellColor), group (Effect-dwellclicker)
 #: plugins/dwellclicker/dwellclickerconfig.kcfg:37
 #, kde-format
 msgid "Dwell Color"
-msgstr ""
+msgstr "悬停颜色"
 
 #: plugins/eis/eisinputcapturemanager.cpp:140
 #, kde-format
@@ -2462,7 +2462,7 @@ msgstr "色温预览"
 #, kde-format
 msgctxt "@label"
 msgid "Built-in Screen"
-msgstr "内置屏幕"
+msgstr "自带屏幕"
 
 #: plugins/overview/DesktopBar.qml:162
 #, kde-format
@@ -3674,11 +3674,11 @@ msgstr "遍历窗口 (反向)"
 
 #: tabbox/tabbox.cpp:321
 msgid "Walk Through Windows Alternative"
-msgstr "遍历窗口交替"
+msgstr "遍历窗口 (第二切换器)"
 
 #: tabbox/tabbox.cpp:322
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr "遍历窗口交替 (反向)"
+msgstr "遍历窗口 (第二切换器) (反向)"
 
 #: tabbox/tabbox.cpp:323
 msgid "Walk Through Windows of Current Application"
@@ -3690,11 +3690,11 @@ msgstr "遍历当前应用程序窗口 (反向)"
 
 #: tabbox/tabbox.cpp:325
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr "遍历当前应用程序窗口交替"
+msgstr "遍历当前应用程序窗口 (第二切换器)"
 
 #: tabbox/tabbox.cpp:326
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr "遍历当前应用程序窗口交替 (反向)"
+msgstr "遍历当前应用程序窗口 (第二切换器) (反向)"
 
 #: tabbox/tabboxhandler.cpp:190
 #, kde-format
@@ -4324,12 +4324,12 @@ msgstr "会话不在活动状态"
 #: wayland/outputmanagement_v2.cpp:747
 #, kde-format
 msgid "More displays are enabled than are supported by the graphics card."
-msgstr ""
+msgstr "启用的显示器数量超出显卡支持的上限。"
 
 #: wayland/outputmanagement_v2.cpp:750
 #, kde-format
 msgid "The driver rejected the output configuration: %s"
-msgstr ""
+msgstr "驱动程序拒绝了输出配置：%s"
 
 #: window.cpp:3178
 #, kde-format
@@ -4340,7 +4340,7 @@ msgstr "(没有响应)"
 #: workspace.cpp:1360
 #, kde-format
 msgid "Built-in Screen"
-msgstr "内置屏幕"
+msgstr "自带屏幕"
 
 #: workspace.cpp:1373
 #, kde-format
@@ -4385,10 +4385,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgid "OpenGL compositing is required for screencasting"
-#~ msgstr "OpenGL 显示特效合成是屏幕录像所必须的"
-
-#~ msgctxt "@label"
-#~ msgid "Paint Amount"
-#~ msgstr "绘制数量"
