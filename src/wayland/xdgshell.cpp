@@ -1220,8 +1220,8 @@ static QPointF popupOffset(const RectF &anchorRect, const Qt::Edges anchorEdge, 
 
 RectF XdgPositioner::placement(const RectF &bounds) const
 {
-    // returns if a target is within the supplied bounds, optional edges argument states which side to check
-    auto inBounds = [bounds](const RectF &target, Qt::Edges edges = Qt::LeftEdge | Qt::RightEdge | Qt::TopEdge | Qt::BottomEdge) -> bool {
+    // returns if a target is within the supplied bounds, edges argument states which side to check
+    auto inBounds = [bounds](const RectF &target, Qt::Edges edges) -> bool {
         if (edges & Qt::LeftEdge && target.left() < bounds.left()) {
             return false;
         }
@@ -1245,7 +1245,7 @@ RectF XdgPositioner::placement(const RectF &bounds) const
     RectF popupRect(popupOffset(anchorRect, d->anchorEdges, d->gravityEdges, size) + offset, size);
 
     // if that fits, we don't need to do anything
-    if (inBounds(popupRect)) {
+    if (inBounds(popupRect, Qt::LeftEdge | Qt::RightEdge | Qt::TopEdge | Qt::BottomEdge)) {
         return popupRect;
     }
     // otherwise apply constraint adjustment per axis in order XDG Shell Popup states
