@@ -5,7 +5,6 @@
 */
 
 #include "bouncekeys.h"
-#include "keyboard_input.h"
 
 BounceKeysFilter::BounceKeysFilter()
     : KWin::InputEventFilter(KWin::InputFilterOrder::BounceKeys)
