@@ -1350,14 +1350,14 @@ XkbKeymapPtr Xkb::createKeymapForKeysym(xkb_keycode_t newKeycode,
 {
     char symName[64];
     if (xkb_keysym_get_name(customSym, symName, sizeof(symName)) <= 0) {
-        qWarning() << "Could not find name for keysym" << customSym;
+        qCWarning(KWIN_XKB) << "Could not find name for keysym" << customSym;
         return {};
     }
 
     const int keycode = newKeycode + EVDEV_OFFSET;
     const char *keyName = xkb_keymap_key_get_name(m_keymap.get(), keycode);
     if (!keyName) {
-        qWarning() << "Could not find key name for keycode" << keycode;
+        qCWarning(KWIN_XKB) << "Could not find key name for keycode" << keycode;
         return {};
     }
 
