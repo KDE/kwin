@@ -1381,7 +1381,7 @@ void Workspace::slotWindowLower()
             if (options->isNextFocusPrefersMouse()) {
                 Window *next = windowUnderMouse(m_activeWindow->output());
                 if (next && next != m_activeWindow) {
-                    requestFocus(next, false);
+                    requestFocus(next);
                 }
             } else {
                 activateWindow(topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop(m_activeWindow->output())));

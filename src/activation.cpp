@@ -338,7 +338,7 @@ void Workspace::activateWindow(Window *window, bool force)
 
     // TODO force should perhaps allow this only if the window already contains the mouse
     if (options->focusPolicyIsReasonable() || force) {
-        requestFocus(window, force);
+        requestFocus(window);
     }
 
 #if KWIN_BUILD_X11
@@ -363,7 +363,7 @@ void Workspace::activateWindow(Window *window, bool force)
  *
  * @see activateWindow
  */
-bool Workspace::requestFocus(Window *window, bool force)
+bool Workspace::requestFocus(Window *window)
 {
     // the 'if ( window == m_activeWindow ) return;' optimization mustn't be done here
     if (!focusChangeEnabled() && (window != m_activeWindow)) {
@@ -381,10 +381,6 @@ bool Workspace::requestFocus(Window *window, bool force)
         window = modal;
     }
     cancelDelayFocus();
-
-    if (!force && window->isSplash()) {
-        return false; // toplevel menus don't take focus if not forced
-    }
 
     if (!window->isShown()) { // shouldn't happen, call activateWindow() if needed
         qCWarning(KWIN_CORE) << "Cannot focus a window that is hidden";
@@ -638,7 +634,7 @@ bool Workspace::mayActivate(Window *window, const QString &token) const
 
 bool Workspace::mayActivateOnMap(Window *window)
 {
-    if (window->isDesktop()) {
+    if (window->isDesktop() || window->isSplash()) {
         if (activeWindow()) {
             return false;
         } else {

@@ -214,7 +214,7 @@ void Workspace::workspaceEvent(xcb_generic_event_t *e)
                 const bool lostFocusPointerToRoot = currentInput->focus == kwinApp()->x11RootWindow() && event->detail == XCB_NOTIFY_DETAIL_INFERIOR;
                 if (currentInput->focus == XCB_WINDOW_NONE || currentInput->focus == XCB_INPUT_FOCUS_POINTER_ROOT || lostFocusPointerToRoot) {
                     if (Window *window = activeWindow()) {
-                        requestFocus(window, true);
+                        requestFocus(window);
                     } else {
                         activateNextWindow(nullptr);
                     }
@@ -373,7 +373,7 @@ void X11Window::mapRequestEvent(xcb_map_request_event_t *e)
         setMinimized(false);
     }
     if (!isOnCurrentDesktop()) {
-        if (allowWindowActivation()) {
+        if (allowWindowActivationOnMap()) {
             workspace()->activateWindow(this);
         } else {
             demandAttention();

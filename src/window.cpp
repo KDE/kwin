@@ -2052,7 +2052,7 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
         if (isActive() && options->focusPolicyIsReasonable()) {
             Window *next = workspace()->windowUnderMouse(output());
             if (next && next != this) {
-                workspace()->requestFocus(next, false);
+                workspace()->requestFocus(next);
             }
         }
         break;
