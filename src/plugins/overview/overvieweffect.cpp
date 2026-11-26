@@ -32,6 +32,8 @@ OverviewEffect::OverviewEffect()
     , m_shutdownTimer(new QTimer(this))
     , m_manager(new KRunner::RunnerManager(this))
 {
+    qmlRegisterUncreatableType<EffectTogglableState>("org.kde.KWin.Effect.Overview", 1, 0, "TogglableState", QStringLiteral("TogglableState cannot be created in QML"));
+
     auto gesture = new EffectTogglableGesture(m_overviewState);
     gesture->addTouchpadSwipeGesture(SwipeDirection::Up, 4);
     gesture->addTouchscreenSwipeGesture(SwipeDirection::Up, 3);
@@ -46,6 +48,7 @@ OverviewEffect::OverviewEffect()
     gridGesture->addTouchscreenSwipeGesture(SwipeDirection::Down, 3);
 
     connect(m_overviewState, &EffectTogglableState::inProgressChanged, this, &OverviewEffect::overviewGestureInProgressChanged);
+    connect(m_overviewState, &EffectTogglableState::statusChanged, this, &OverviewEffect::overviewStatusChanged);
     connect(m_overviewState, &EffectTogglableState::partialActivationFactorChanged, this, &OverviewEffect::overviewPartialActivationFactorChanged);
 
     connect(m_overviewState, &EffectTogglableState::statusChanged, this, [this](EffectTogglableState::Status status) {
@@ -248,6 +251,11 @@ qreal OverviewEffect::overviewPartialActivationFactor() const
 bool OverviewEffect::overviewGestureInProgress() const
 {
     return m_overviewState->inProgress();
+}
+
+EffectTogglableState::Status OverviewEffect::overviewStatus() const
+{
+    return m_overviewState->status();
 }
 
 qreal OverviewEffect::transitionPartialActivationFactor() const

@@ -12,6 +12,7 @@ import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
+import org.kde.KWin.Effect.Overview
 import org.kde.milou as Milou
 import org.kde.plasma.components as PC3
 import org.kde.plasma.extras as PlasmaExtras
@@ -738,6 +739,14 @@ FocusScope {
                                     } else {
                                         window.desktops = [mainBackground.desktop];
                                     }
+                                }
+                            }
+                        }
+                        Connections {
+                            target: effect
+                            function onOverviewStatusChanged() {
+                                if (effect.overviewStatus === TogglableState.Deactivating && hovered) {
+                                    KWinComponents.Workspace.activeWindow = window;
                                 }
                             }
                         }

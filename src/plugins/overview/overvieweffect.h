@@ -25,6 +25,7 @@ class OverviewEffect : public QuickSceneEffect
     Q_PROPERTY(qreal overviewPartialActivationFactor READ overviewPartialActivationFactor NOTIFY overviewPartialActivationFactorChanged)
     // More efficient from a property binding pov rather than checking if partialActivationFactor is strictly between 0 and 1
     Q_PROPERTY(bool overviewGestureInProgress READ overviewGestureInProgress NOTIFY overviewGestureInProgressChanged)
+    Q_PROPERTY(KWin::EffectTogglableState::Status overviewStatus READ overviewStatus NOTIFY overviewStatusChanged)
     Q_PROPERTY(qreal transitionPartialActivationFactor READ transitionPartialActivationFactor NOTIFY transitionPartialActivationFactorChanged)
     Q_PROPERTY(bool transitionGestureInProgress READ transitionGestureInProgress NOTIFY transitionGestureInProgressChanged)
     Q_PROPERTY(qreal gridPartialActivationFactor READ gridPartialActivationFactor NOTIFY gridPartialActivationFactorChanged)
@@ -47,6 +48,7 @@ public:
 
     qreal overviewPartialActivationFactor() const;
     bool overviewGestureInProgress() const;
+    EffectTogglableState::Status overviewStatus() const;
     qreal transitionPartialActivationFactor() const;
     bool transitionGestureInProgress() const;
     qreal gridPartialActivationFactor() const;
@@ -64,6 +66,7 @@ Q_SIGNALS:
     void animationDurationChanged();
     void overviewPartialActivationFactorChanged();
     void overviewGestureInProgressChanged();
+    void overviewStatusChanged();
     void transitionPartialActivationFactorChanged();
     void transitionGestureInProgressChanged();
     void gridPartialActivationFactorChanged();

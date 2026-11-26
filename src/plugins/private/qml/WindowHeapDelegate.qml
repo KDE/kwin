@@ -24,6 +24,7 @@ ExpoCell {
     required property WindowHeap windowHeap
 
     readonly property bool selected: windowHeap.selectedIndex === index
+    readonly property alias hovered: hoverHandler.hovered
     property bool gestureInProgress: effect.gestureInProgress
     // Where the internal contentItem will be parented to
     property Item contentItemParent: this
