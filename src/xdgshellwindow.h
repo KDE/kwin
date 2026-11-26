@@ -86,7 +86,7 @@ protected:
     // The gravity that's applied when the geometry changes due to a configure event.
     Gravity m_configureGravity = Gravity::BottomRight;
 
-    XdgSurfaceInterface *m_shellSurface;
+    XdgSurfaceInterface *m_xdgSurface;
     QTimer *m_configureTimer;
     QQueue<XdgSurfaceConfigure *> m_configureEvents;
     std::unique_ptr<XdgSurfaceConfigure> m_lastAcknowledgedConfigure;

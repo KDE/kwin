@@ -45,7 +45,7 @@ namespace KWin
 
 XdgSurfaceWindow::XdgSurfaceWindow(XdgSurfaceInterface *shellSurface)
     : WaylandWindow(shellSurface->surface())
-    , m_shellSurface(shellSurface)
+    , m_xdgSurface(shellSurface)
     , m_configureTimer(new QTimer(this))
 {
     connect(shellSurface, &XdgSurfaceInterface::configureAcknowledged,
@@ -100,7 +100,7 @@ void XdgSurfaceWindow::handleConfigureAcknowledged(quint32 serial)
 
 void XdgSurfaceWindow::handleCommit()
 {
-    if (!m_shellSurface->isConfigured()) {
+    if (!m_xdgSurface->isConfigured()) {
         return;
     }
 
@@ -170,8 +170,8 @@ RectF XdgSurfaceWindow::frameRectToBufferRect(const RectF &rect) const
 
 void XdgSurfaceWindow::handleRoleDestroyed()
 {
-    m_shellSurface->disconnect(this);
-    m_shellSurface->surface()->disconnect(this);
+    m_xdgSurface->disconnect(this);
+    m_xdgSurface->surface()->disconnect(this);
 }
 
 void XdgSurfaceWindow::destroyWindow()
