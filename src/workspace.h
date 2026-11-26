@@ -440,6 +440,7 @@ public:
 
     void setActivationToken(const QString &token, UInt32Serial serial, const QString &appId);
     bool mayActivate(Window *window, const QString &token) const;
+    bool mayActivateOnMap(Window *window);
 
     enum class DpmsState {
         Off,

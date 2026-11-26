@@ -636,4 +636,21 @@ bool Workspace::mayActivate(Window *window, const QString &token) const
     return false;
 }
 
+bool Workspace::mayActivateOnMap(Window *window)
+{
+    if (window->isDesktop()) {
+        if (activeWindow()) {
+            return false;
+        } else {
+            return window->isOnActiveOutput();
+        }
+    }
+
+    if (options->focusStealingPreventionLevel() <= FocusStealingPreventionLevel::Low) {
+        return true;
+    }
+
+    return mayActivate(window, window->activationToken());
+}
+
 } // namespace
