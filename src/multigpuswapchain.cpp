@@ -175,7 +175,7 @@ static std::optional<CopyRet> createCopy(RenderDevice *device,
             const auto fmt = chooseFormat(sourceFormat, device->vulkanDevice()->transferFormats(), formats);
             if (fmt) {
                 options.format = fmt->format;
-                if (s_forceLinear.value_or(device->drmDevice() && device->drmDevice()->isAmdgpu() && allocator == device->allocator())
+                if (s_forceLinear.value_or(device->drmDevice() && device->drmDevice()->isAmdgpu())
                     && fmt->modifiers.contains(DRM_FORMAT_MOD_LINEAR)) {
                     options.modifiers = {DRM_FORMAT_MOD_LINEAR};
                 } else {
