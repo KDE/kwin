@@ -171,7 +171,7 @@ public:
     Window *windowUnderMouse(LogicalOutput *output) const;
 
     void activateWindow(Window *window, bool force = false);
-    bool requestFocus(Window *window, bool force = false);
+    bool requestFocus(Window *window);
     void resetFocus();
     bool restoreFocus();
     void activateNextWindow(Window *window);

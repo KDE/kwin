@@ -232,6 +232,7 @@ public:
     void finishSync();
 
     bool allowWindowActivation(xcb_timestamp_t time = -1U);
+    bool allowWindowActivationOnMap(xcb_timestamp_t time = -1U);
 
     quint64 surfaceSerial() const;
 

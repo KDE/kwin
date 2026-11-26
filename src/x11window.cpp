@@ -825,7 +825,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         if (session) {
             allow = session->active && (!workspace()->wasUserInteraction() || workspace()->activeWindow() == nullptr || workspace()->activeWindow()->isDesktop());
         } else {
-            allow = allowWindowActivation(userTime());
+            allow = allowWindowActivationOnMap(userTime());
         }
 
         const bool isSessionSaving = workspace()->sessionManager()->state() == SessionState::Saving;
@@ -4235,6 +4235,19 @@ bool X11Window::allowWindowActivation(xcb_timestamp_t time)
     qCDebug(KWIN_CORE) << "Activation, compared:" << window << ":" << time << ":" << user_time
                        << ":" << (NET::timestampCompare(time, user_time) >= 0);
     return NET::timestampCompare(time, user_time) >= 0; // time >= user_time
+}
+
+bool X11Window::allowWindowActivationOnMap(xcb_timestamp_t time)
+{
+    if (isSplash()) {
+        if (workspace()->activeWindow()) {
+            return false;
+        } else {
+            return isOnActiveOutput();
+        }
+    }
+
+    return allowWindowActivation(time);
 }
 
 void X11Window::restackWindow(xcb_window_t above, int detail, NET::RequestSource src, xcb_timestamp_t timestamp)
