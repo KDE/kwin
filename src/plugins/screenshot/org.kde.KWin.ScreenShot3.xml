@@ -53,6 +53,7 @@
             * "format" (u): The image format, as defined in QImage::Format.
                             Available only if the image type is "raw"
             * "windowId" (s): The window id of the captured window
+            * "caption" (s): The window title
             * "scale" (d): The ratio between the native size and the logical
                            size of the contents, corresponds to QImage::devicePixelRatio()
         -->
@@ -96,6 +97,7 @@
             * "format" (u): The image format, as defined in QImage::Format.
                             Available only if the image type is "raw"
             * "windowId" (s): The window id of the captured window
+            * "caption" (s): The window title
             * "scale" (d): The ratio between the native size and the logical
                            size of the contents, corresponds to QImage::devicePixelRatio()
         -->
@@ -275,6 +277,7 @@
             The following results get returned when taking a window screenshot:
 
             * "windowId" (s): The window id of the captured window
+            * "caption" (s): The window title
 
             The following results get returned when taking a monitor screenshot:
 

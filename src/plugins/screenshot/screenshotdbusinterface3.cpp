@@ -260,6 +260,7 @@ void ScreenShotDBusInterface3::takeScreenShot(Window *window, ScreenShotFlags fl
     if (auto result = m_effect->takeScreenShot(window, flags)) {
         send(std::move(*result), {
                                      {QStringLiteral("windowId"), window->internalId().toString()},
+                                     {QStringLiteral("caption"), window->caption()},
                                  },
              message);
     } else {
