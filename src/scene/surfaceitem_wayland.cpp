@@ -245,15 +245,31 @@ void SurfaceItemWayland::handleCommitTiming()
 
 SceneView *SurfaceItemWayland::primaryView() const
 {
+    if (rect().isEmpty()) {
+        return nullptr;
+    }
+    uint64_t currentPixels = 0;
+    SceneView *current = nullptr;
     const auto views = scene()->sceneViews();
-    auto relevant = views | std::views::filter([this](SceneView *view) {
-        const RectF geometry = mapToView(boundingRect(), view);
-        return view->viewport().intersects(geometry);
-    });
-    auto it = std::ranges::max_element(relevant, [](SceneView *left, SceneView *right) {
-        return left->refreshRate() < right->refreshRate();
-    });
-    return it == relevant.end() ? nullptr : *it;
+    for (SceneView *view : views) {
+        const Rect local = view->mapToDeviceCoordinates(mapToView(rect(), view)).rounded() & view->deviceRect();
+        if (local.isEmpty()) {
+            continue;
+        }
+        if (!current) {
+            current = view;
+            continue;
+        }
+        const uint64_t pixels = local.width() * local.height();
+        if (pixels < currentPixels) {
+            continue;
+        }
+        if (pixels > currentPixels || view->refreshRate() > current->refreshRate()) {
+            current = view;
+            currentPixels = pixels;
+        }
+    }
+    return current;
 }
 
 void SurfaceItemWayland::handlePrepareFrame(SceneView *view, std::chrono::nanoseconds timestamp)
