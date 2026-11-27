@@ -261,18 +261,31 @@ static RenderDevice *selectRenderDevice()
 
 bool Compositor::attemptOpenGLCompositing()
 {
-    if (!m_primaryDevice) {
-        m_primaryDevice = selectRenderDevice();
-        if (!m_primaryDevice) {
+    RenderDevice *device = m_primaryDevice;
+    if (!device) {
+        device = selectRenderDevice();
+        if (!device) {
             qCWarning(KWIN_CORE, "Found no render device!");
             return false;
         }
-        qCDebug(KWIN_CORE, "Chose %s as the primary GPU", qPrintable(m_primaryDevice->path()));
+        qCDebug(KWIN_CORE, "Chose %s as the primary GPU", qPrintable(device->path()));
     }
-    std::unique_ptr<EglBackend> backend = std::make_unique<EglBackend>(m_primaryDevice);
+    std::unique_ptr<EglBackend> backend = std::make_unique<EglBackend>(device);
     if (!backend->init()) {
-        return false;
+        if (!m_primaryDevice) {
+            device = GpuManager::self()->softwareDevice();
+            backend = std::make_unique<EglBackend>(device);
+            if (backend->init()) {
+                qCWarning(KWIN_CORE, "Falling back to a software device!");
+            } else {
+                return false;
+            }
+        } else {
+            qCWarning(KWIN_CORE, "Initializing OpenGL renderer failed!");
+            return false;
+        }
     }
+    m_primaryDevice = device;
 
     KCrash::setGPUData(collectCrashInformation(backend.get()));
 
