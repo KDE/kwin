@@ -96,10 +96,18 @@ WorkspaceScene::WorkspaceScene()
     , m_overlayItem(std::make_unique<RootItem>(this))
     , m_cursorItem(std::make_unique<CursorItem>(m_overlayItem.get()))
 {
+    const bool softwareCursorForced = environmentVariableBoolValue("KWIN_FORCE_SW_CURSOR").value_or(false);
+    if (softwareCursorForced) {
+        m_softwareCursorLockCount++;
+    }
+
     setGeometry(workspace()->geometry());
     connect(workspace(), &Workspace::geometryChanged, this, [this]() {
         setGeometry(workspace()->geometry());
     });
+
+    connect(workspace(), &Workspace::interactiveMoveResizeStarted, this, &WorkspaceScene::forceSoftwareCursor);
+    connect(workspace(), &Workspace::interactiveMoveResizeFinished, this, &WorkspaceScene::unforceSoftwareCursor);
 
     connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, &WorkspaceScene::createDndIconItem);
     connect(waylandServer()->seat(), &SeatInterface::dragEnded, this, &WorkspaceScene::destroyDndIconItem);
@@ -123,6 +131,17 @@ WorkspaceScene::WorkspaceScene()
 
 WorkspaceScene::~WorkspaceScene()
 {
+}
+
+void WorkspaceScene::forceSoftwareCursor()
+{
+    m_softwareCursorLockCount++;
+}
+
+void WorkspaceScene::unforceSoftwareCursor()
+{
+    Q_ASSERT(m_softwareCursorLockCount > 0);
+    m_softwareCursorLockCount--;
 }
 
 void WorkspaceScene::attachRenderer(RenderDevice *device, std::unique_ptr<ItemRenderer> &&renderer)
@@ -385,8 +404,6 @@ static std::optional<bool> findOverlayCandidates(SceneView *view, Item *item, ss
     return std::nullopt;
 }
 
-static const bool s_forceSoftwareCursor = environmentVariableBoolValue("KWIN_FORCE_SW_CURSOR").value_or(false);
-
 QList<Item *> WorkspaceScene::layerCandidates(ssize_t maxTotalCount) const
 {
     // This algorithm searches for candidates to put on their own layers.
@@ -418,7 +435,7 @@ QList<Item *> WorkspaceScene::layerCandidates(ssize_t maxTotalCount) const
     const auto fallback = [this, maxTotalCount]() {
         QList<Item *> ret;
         if (maxTotalCount > 1
-            && !s_forceSoftwareCursor
+            && !m_softwareCursorLockCount
             && cursorItem()->isVisible()
             && painted_delegate->viewport().intersects(cursorItem()->mapToView(cursorItem()->boundingRect(), painted_delegate))) {
             ret.push_back(cursorItem());
@@ -441,7 +458,7 @@ QList<Item *> WorkspaceScene::layerCandidates(ssize_t maxTotalCount) const
             continue;
         }
         if (item == cursorItem()) {
-            if (s_forceSoftwareCursor) {
+            if (m_softwareCursorLockCount) {
                 needsCompositedScene = true;
                 occupied |= mapToDevice(painted_delegate, item, item->boundingRect()) & painted_delegate->deviceRect();
                 continue;

@@ -593,6 +593,9 @@ Q_SIGNALS:
     void startupChanged(const QString &id, const QIcon &icon);
     void startupRemoved(const QString &id);
 
+    void interactiveMoveResizeStarted();
+    void interactiveMoveResizeFinished();
+
 private:
     void init();
     void initShortcuts();

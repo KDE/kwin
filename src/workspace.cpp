@@ -3150,8 +3150,10 @@ void Workspace::setMoveResizeWindow(Window *window)
     m_moveResizeWindow = window;
     if (m_moveResizeWindow) {
         ++block_focus;
+        Q_EMIT interactiveMoveResizeStarted();
     } else {
         --block_focus;
+        Q_EMIT interactiveMoveResizeFinished();
     }
 }
 

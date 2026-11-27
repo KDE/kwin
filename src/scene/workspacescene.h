@@ -33,6 +33,9 @@ public:
 
     void initialize();
 
+    void forceSoftwareCursor();
+    void unforceSoftwareCursor();
+
     Item *containerItem() const;
     Item *overlayItem() const;
     Item *cursorItem() const;
@@ -124,6 +127,7 @@ private:
     std::unique_ptr<Item> m_overlayItem;
     std::unique_ptr<DragAndDropIconItem> m_dndIcon;
     std::unique_ptr<CursorItem> m_cursorItem;
+    uint m_softwareCursorLockCount = 0;
     bool m_layerDebugging = false;
 };
 
