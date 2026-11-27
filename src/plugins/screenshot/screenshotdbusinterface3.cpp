@@ -61,7 +61,6 @@ static std::optional<pid_t> pidToHide(std::optional<pid_t> callerPid, const QVar
 }
 
 static const QString s_dbusServiceName = QStringLiteral("org.kde.KWin.ScreenShot3");
-static const QString s_dbusInterface = QStringLiteral("org.kde.KWin.ScreenShot3");
 static const QString s_dbusObjectPath = QStringLiteral("/org/kde/KWin/ScreenShot3");
 
 static const QString s_errorCancelled = QStringLiteral("org.kde.KWin.ScreenShot3.Error.Cancelled");
@@ -74,8 +73,6 @@ static const QString s_errorInvalidArea = QStringLiteral("org.kde.KWin.ScreenSho
 static const QString s_errorInvalidAreaMessage = QStringLiteral("Invalid area requested");
 static const QString s_errorInvalidScreen = QStringLiteral("org.kde.KWin.ScreenShot3.Error.InvalidScreen");
 static const QString s_errorInvalidScreenMessage = QStringLiteral("Invalid screen requested");
-static const QString s_errorFileDescriptor = QStringLiteral("org.kde.KWin.ScreenShot3.Error.FileDescriptor");
-static const QString s_errorFileDescriptorMessage = QStringLiteral("No valid file descriptor");
 
 ScreenShotDBusInterface3::ScreenShotDBusInterface3(ScreenShotManager *manager)
     : QObject(manager)
