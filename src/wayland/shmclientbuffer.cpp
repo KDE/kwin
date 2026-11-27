@@ -79,6 +79,21 @@ ShmPool::ShmPool(ShmClientBufferIntegration *integration, wl_client *client, int
 #endif
 }
 
+ShmPool::~ShmPool()
+{
+    // There are a few issues: munmap() can take a long time to complete, close() can block for a while
+    // if kwin holds the last reference to the shm data. close() is cheap if the memory mapping is still
+    // around. It might be a bug in the Linux kernel.
+    //
+    // To avoid stalling the main thread for too long, the file descriptor gets closed first, it
+    // should be quick, and then asynchronously unmap the shm data from a worker thread, which can
+    // take a while to finish.
+    //
+    // All ShmClientBuffers must have their file descriptors in ShmAttributes closed by this point.
+    fd.reset();
+    mapping.reset();
+}
+
 void ShmPool::ref()
 {
     ++refCount;
@@ -207,6 +222,10 @@ ShmClientBuffer::ShmClientBuffer(ShmPool *pool, ShmAttributes attributes, wl_cli
 ShmClientBuffer::~ShmClientBuffer()
 {
     Q_ASSERT(!m_shmAccess);
+
+    m_shmAttributes.fd.reset();
+    m_udmabufAttributes.reset();
+
     m_shmPool->unref();
 }
 
