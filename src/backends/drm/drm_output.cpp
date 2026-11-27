@@ -374,8 +374,8 @@ bool DrmOutput::recommendsOverlayUse() const
         // we can take some more risks in development versions.
         return !m_gpu->drmDevice()->isNvidia();
     } else {
-        // release version: play it really safe for now, only enable on select drivers
-        return m_gpu->drmDevice()->isI915() || m_gpu->drmDevice()->isIntelXE();
+        // release version: play it really safe for now
+        return false;
     }
 }
 
