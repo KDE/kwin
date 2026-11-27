@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-20 00:54+0000\n"
+"POT-Creation-Date: 2026-11-26 09:52+0000\n"
 "PO-Revision-Date: 2024-03-10 18:32+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -24,8 +24,9 @@ msgctxt "@info:usagetip"
 msgid ""
 "Legacy X11 apps with global shortcuts and other features accessed while "
 "running in the background need to be able to listen for keystrokes all the "
-"time.<nl/><nl/>If you use any of these apps, you can choose your preferred "
-"balance of security and compatibility here."
+"time. They also often don't support screen scaling.<nl/><nl/>If you use any "
+"of these apps, you can choose your preferred balance of security and "
+"compatibility here."
 msgstr ""
 
 #: ui/main.qml:49
@@ -215,7 +216,41 @@ msgstr ""
 "tekston, kiun vi tajpas. Certiĝu, ke vi komprenas kaj akceptas ĉi tiun "
 "riskon."
 
-#: ui/main.qml:229
+#: ui/main.qml:211
+#, kde-format
+msgctxt "@title:group screen scaling/high-dpi"
+msgid "Scaling:"
+msgstr ""
+
+#: ui/main.qml:213
+#, kde-format
+msgctxt "The apps themselves should scale to fit the displays"
+msgid "Apply scaling themselves"
+msgstr ""
+
+#: ui/main.qml:223
+#, kde-format
+msgctxt "@info:usagetip"
+msgid ""
+"Legacy Applications that support scaling will use it and look crisp, however "
+"those that don’t will not be scaled at all"
+msgstr ""
+
+#: ui/main.qml:228
+#, kde-format
+msgctxt "The system will perform the x11 apps scaling"
+msgid "Scaled by the system"
+msgstr ""
+
+#: ui/main.qml:238
+#, kde-format
+msgctxt "@info:usagetip"
+msgid ""
+"All legacy applications will be scaled by the system to the correct size, "
+"however they will always look slightly blurry"
+msgstr ""
+
+#: ui/main.qml:266
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
