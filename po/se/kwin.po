@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-27 01:06+0000\n"
+"POT-Creation-Date: 2026-11-28 01:11+0000\n"
 "PO-Revision-Date: 2007-12-20 11:35+0100\n"
 "Last-Translator: Børre Gaup <boerre@skolelinux.no>\n"
 "Language-Team: Northern Sami <l10n-no@nuug.no>\n"
@@ -1097,7 +1097,6 @@ msgstr "Láset"
 #. i18n: ectx: property (text), widget (QPushButton, pickWindowButton)
 #: debug_console.ui:43
 #, fuzzy, kde-format
-#| msgid "Kill Window"
 msgctxt "@action:button"
 msgid "Pick Window…"
 msgstr "Gotte láse"
@@ -1291,12 +1290,6 @@ msgstr ""
 
 #: helpers/dialoghelper/dialoghelper.cpp:82
 #, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1310,12 +1303,6 @@ msgstr ""
 
 #: helpers/dialoghelper/dialoghelper.cpp:88
 #, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1329,12 +1316,6 @@ msgstr ""
 
 #: helpers/dialoghelper/dialoghelper.cpp:96
 #, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1347,18 +1328,12 @@ msgstr ""
 
 #: helpers/dialoghelper/dialoghelper.cpp:101
 #, fuzzy, kde-format
-#| msgid "&Fullscreen"
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
 msgstr "&Deavasšearbma"
 
 #: helpers/dialoghelper/dialoghelper.cpp:104
 #, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -1371,11 +1346,6 @@ msgstr ""
 
 #: helpers/dialoghelper/dialoghelper.cpp:109
 #, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -1389,11 +1359,6 @@ msgstr ""
 
 #: helpers/dialoghelper/dialoghelper.cpp:115
 #, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -1517,7 +1482,7 @@ msgstr ""
 msgid "name"
 msgstr "namma"
 
-#: keyboard_layout.cpp:46 keyboard_layout.cpp:54 keyboard_layout.cpp:136
+#: keyboard_layout.cpp:46 keyboard_layout.cpp:54 keyboard_layout.cpp:138
 #, kde-format
 msgid "Keyboard Layout Switcher"
 msgstr ""
@@ -3225,7 +3190,6 @@ msgstr ""
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
 #, fuzzy, kde-format
-#| msgid "Windows"
 msgid "Window tag"
 msgstr "Láset"
 
@@ -3903,7 +3867,6 @@ msgstr ""
 
 #: useractions.cpp:826
 #, fuzzy, kde-format
-#| msgid "Window Operations Menu"
 msgid "Window Menu"
 msgstr "Lásiid doaimmafállu"
 
@@ -3929,7 +3892,6 @@ msgstr "Maksimere láse láskut"
 
 #: useractions.cpp:836
 #, fuzzy, kde-format
-#| msgid "Resize Window"
 msgid "Restore Window"
 msgstr "Rievdat láse sturrodaga"
 
@@ -4377,7 +4339,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %1"
 msgstr ""
 
-#: window.cpp:3179
+#: window.cpp:3184
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -20,13 +20,7 @@ msgstr ""
 "X-Text-Markup: kde4\n"
 
 #: ui/main.qml:28
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:usagetip"
-#| msgid ""
-#| "Legacy X11 apps with global shortcuts and other features accessed while "
-#| "running in the background need to be able to listen for keystrokes all "
-#| "the time.<nl/><nl/>If you use any of these apps, you can choose your "
-#| "preferred balance of security and compatibility here."
+#, kde-kuit-format
 msgctxt "@info:usagetip"
 msgid ""
 "Legacy X11 apps with global shortcuts and other features accessed while "
@@ -35,10 +29,6 @@ msgid ""
 "of these apps, you can choose your preferred balance of security and "
 "compatibility here."
 msgstr ""
-"Eldre X11-program med globale snøggtastar og andre funksjonar du brukar mens "
-"programma køyrer i bakgrunnen, må kunna lytta til tastetrykk heile tida.<nl/"
-"><nl/>Viss du brukar nokon av desse programma, kan du her velja føretrekt "
-"balanse mellom tryggleik og  kompatibilitet."
 
 #: ui/main.qml:49
 #, kde-format

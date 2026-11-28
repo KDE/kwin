@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-27 01:06+0000\n"
+"POT-Creation-Date: 2026-11-28 01:11+0000\n"
 "PO-Revision-Date: 2014-08-21 16:21+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -1559,7 +1559,7 @@ msgstr "Naam vun't Programm, dat Du utmaken wullt"
 msgid "name"
 msgstr "Naam"
 
-#: keyboard_layout.cpp:46 keyboard_layout.cpp:54 keyboard_layout.cpp:136
+#: keyboard_layout.cpp:46 keyboard_layout.cpp:54 keyboard_layout.cpp:138
 #, fuzzy, kde-format
 #| msgid "Next Layout"
 msgid "Keyboard Layout Switcher"
@@ -4596,7 +4596,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %1"
 msgstr ""
 
-#: window.cpp:3179
+#: window.cpp:3184
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

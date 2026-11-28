@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-27 01:06+0000\n"
+"POT-Creation-Date: 2026-11-28 01:11+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -1539,7 +1539,7 @@ msgstr "समाप्त्यमानस्य आवेदनस्य न�
 msgid "name"
 msgstr "नामः"
 
-#: keyboard_layout.cpp:46 keyboard_layout.cpp:54 keyboard_layout.cpp:136
+#: keyboard_layout.cpp:46 keyboard_layout.cpp:54 keyboard_layout.cpp:138
 #, kde-format
 msgid "Keyboard Layout Switcher"
 msgstr "कीबोर्ड लेआउट स्विचर"
@@ -4453,7 +4453,7 @@ msgstr ""
 msgid "The driver rejected the output configuration: %1"
 msgstr "चालकः निर्गमविन्यासं अङ्गीकृतवान्"
 
-#: window.cpp:3179
+#: window.cpp:3184
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

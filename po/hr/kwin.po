@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin 0\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-27 01:06+0000\n"
+"POT-Creation-Date: 2026-11-28 01:11+0000\n"
 "PO-Revision-Date: 2026-10-27 09:23+0100\n"
 "Last-Translator: Igor Dobrača <igor.dobraca@gmail.com>\n"
 "Language-Team: Croatian < kde-l10n-hr@kde.org>\n"
@@ -1497,7 +1497,7 @@ msgstr "Ime aplikacije koja će biti zaustavljena"
 msgid "name"
 msgstr "ime"
 
-#: keyboard_layout.cpp:46 keyboard_layout.cpp:54 keyboard_layout.cpp:136
+#: keyboard_layout.cpp:46 keyboard_layout.cpp:54 keyboard_layout.cpp:138
 #, kde-format
 msgid "Keyboard Layout Switcher"
 msgstr "Prebacivač rasporeda tipkovnice"
@@ -4400,7 +4400,7 @@ msgstr "Omogućeno je više zaslona nego što ih grafička kartica podržava."
 msgid "The driver rejected the output configuration: %1"
 msgstr "Upravljački program je odbio izlazne postavke: %s"
 
-#: window.cpp:3179
+#: window.cpp:3184
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

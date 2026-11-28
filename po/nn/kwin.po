@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-27 01:06+0000\n"
+"POT-Creation-Date: 2026-11-28 01:11+0000\n"
 "PO-Revision-Date: 2026-10-26 22:00+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
@@ -1495,7 +1495,7 @@ msgstr "Namnet på programmet som skal avsluttast"
 msgid "name"
 msgstr "namn"
 
-#: keyboard_layout.cpp:46 keyboard_layout.cpp:54 keyboard_layout.cpp:136
+#: keyboard_layout.cpp:46 keyboard_layout.cpp:54 keyboard_layout.cpp:138
 #, kde-format
 msgid "Keyboard Layout Switcher"
 msgstr "Tastaturoppsett-bytar"
@@ -3096,7 +3096,6 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_WobblynessLevel)
 #: plugins/wobblywindows/wobblywindows_config.ui:210
 #, fuzzy, kde-format
-#| msgid "Padding:"
 msgid "Pudding"
 msgstr "Luft:"
 
@@ -4385,11 +4384,10 @@ msgstr "Fleire skjermar enn det som er støtta av skjermkortet, er påslegne."
 
 #: wayland/outputmanagement_v2.cpp:750
 #, fuzzy, kde-format
-#| msgid "The driver rejected the output configuration: %s"
 msgid "The driver rejected the output configuration: %1"
 msgstr "Drivaren avviste uteiningsoppsettet: %s"
 
-#: window.cpp:3179
+#: window.cpp:3184
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
